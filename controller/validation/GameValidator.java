@@ -1,4 +1,4 @@
-package pvz.controller.validation;
+package controller.validation;
 
 public class GameValidator {
 }

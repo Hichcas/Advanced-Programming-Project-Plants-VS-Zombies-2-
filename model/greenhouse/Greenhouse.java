@@ -1,4 +1,4 @@
-package pvz.model.greenhouse;
+package model.greenhouse;
 
 public class Greenhouse {
 }

@@ -1,4 +1,4 @@
-package pvz.model.shop;
+package model.shop;
 
 public class ShopItem {
 }

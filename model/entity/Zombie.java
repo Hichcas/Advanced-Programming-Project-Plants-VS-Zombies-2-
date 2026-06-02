@@ -1,4 +1,4 @@
-package pvz.model.entity;
+package model.entity;
 
 public abstract class Zombie {
 }

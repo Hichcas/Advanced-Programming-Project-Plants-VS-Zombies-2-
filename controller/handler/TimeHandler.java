@@ -1,4 +1,4 @@
-package pvz.controller.handler;
+package controller.handler;
 
 public class TimeHandler {
 }

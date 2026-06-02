@@ -1,4 +1,4 @@
-package pvz.model.entity.plants;
+package model.entity.plants;
 
 public class Peashooter {
 }

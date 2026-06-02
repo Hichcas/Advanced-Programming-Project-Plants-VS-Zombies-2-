@@ -1,4 +1,4 @@
-package pvz.util;
+package util;
 
 public class RandomUtils {
 }

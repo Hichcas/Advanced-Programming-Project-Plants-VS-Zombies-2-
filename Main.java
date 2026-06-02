@@ -1,9 +1,10 @@
-package pvz;
+import java.util.Scanner;
 
-import pvz.controller.GameController;
+import controller.GameController;
 
 public class Main {
     public static void main(String[] args) {
-        new GameController().start();
+        Scanner scanner = new Scanner(System.in);
+        GameController.start();
     }
 }

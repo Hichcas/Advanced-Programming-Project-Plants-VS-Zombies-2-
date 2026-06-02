@@ -1,4 +1,4 @@
-package pvz.exception;
+package exception;
 
 public class GameException extends Exception {
 }

@@ -1,4 +1,4 @@
-package pvz.controller;
+package view.input;
 
 public class CommandParser {
 }

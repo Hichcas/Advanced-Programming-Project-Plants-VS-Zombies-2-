@@ -1,4 +1,4 @@
-package pvz.model.leaderboard;
+package model.leaderboard;
 
 public class Leaderboard {
 }

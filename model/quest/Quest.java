@@ -1,4 +1,4 @@
-package pvz.model.quest;
+package model.quest;
 
 public class Quest {
 }

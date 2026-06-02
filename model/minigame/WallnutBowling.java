@@ -1,4 +1,4 @@
-package pvz.model.minigame;
+package model.minigame;
 
 public class WallnutBowling {
 }

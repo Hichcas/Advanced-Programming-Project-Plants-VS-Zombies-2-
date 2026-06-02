@@ -1,4 +1,4 @@
-package pvz.model.game;
+package model.game;
 
 public class SunManager {
 }

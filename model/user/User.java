@@ -1,4 +1,4 @@
-package pvz.model.user;
+package model.user;
 
 public class User {
 }

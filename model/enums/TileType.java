@@ -1,4 +1,4 @@
-package pvz.model.enums;
+package model.enums;
 
 public enum TileType {
 }

@@ -1,4 +1,4 @@
-package pvz.view;
+package view.input;
 
 public class GreenhouseView {
 }

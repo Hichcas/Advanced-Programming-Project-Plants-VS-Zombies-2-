@@ -1,4 +1,4 @@
-package pvz.config;
+package config;
 
 public class GameConfig {
     
