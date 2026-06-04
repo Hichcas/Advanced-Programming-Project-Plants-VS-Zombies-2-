@@ -1,8 +1,8 @@
 package model.entity;
 
 // import model.map.GameMap;
-import java.util.*;
-import java.util.stream.Collectors;
+// import java.util.*;
+// import java.util.stream.Collectors;
 
 /**
  * Abstract base class for all zombies.
