@@ -1,5 +1,7 @@
 package model.user;
 
+import model.greenhouse.GreenhouseState;
+
 public class User {
     public Profile profile;
     public UserStats userStats;

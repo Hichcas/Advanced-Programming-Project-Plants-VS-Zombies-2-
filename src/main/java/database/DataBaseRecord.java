@@ -1,5 +1,10 @@
 package database;
 
-public class DataBaseRecord {
+public class DatabaseRecord {
+    public String username;
+
+    public String getUsername() {
+        return username;
+    }
     
 }

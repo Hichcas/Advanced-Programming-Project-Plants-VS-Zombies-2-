@@ -2,13 +2,13 @@ package database;
 
 import java.util.Optional;
 
-public interface DataBaseConnection {
+public interface DatabaseConnection {
 
     // ۱. متدهای مدیریت رکوردهای کاربران (CRUD خالص و عمومی)
-    public void addRecord(DataBaseRecord record);
-    public Optional<DataBaseRecord> getUser(String username);
-    public void updateRecord(DataBaseRecord record);
-    public void removeRecord(DataBaseRecord record);
+    public void addRecord(DatabaseRecord record);
+    public Optional<DatabaseRecord> getUser(String username);
+    public void updateRecord(DatabaseRecord record);
+    public void removeRecord(DatabaseRecord record);
     public boolean containsUser(String username);
 
     // ۲. متدهای عمومی برای همگام‌سازی با هارد دیسک (I/O)
@@ -17,8 +17,8 @@ public interface DataBaseConnection {
     
     // این متد برای مدیریت فایل تک‌یوزری (یوزر لاگین مانده) است؛ 
     // کاملاً جنرال است و فقط یک استرینگ ساده را ذخیره/بازیابی می‌کند
-    public void saveActiveSession(DataBaseRecord activeInfo);
-    public Optional<DataBaseRecord> getActiveSession();
+    public void saveActiveSession(DatabaseRecord activeInfo);
+    public Optional<DatabaseRecord> getActiveSession();
     public void clearActiveSession();
     public boolean isThereAnyCurrentSession();
 }
