@@ -1,10 +1,8 @@
 package controller;
 
 
-public class GameController {
+public class AppController {
     public static void start() {
         
     }
-
-    
 }

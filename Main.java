@@ -1,10 +1,19 @@
 import java.util.Scanner;
 
-import controller.GameController;
+import controller.AppController;
 
 public class Main {
     Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
-        GameController.start();
+        // TODO 
+        /**
+         * game intialization must be started from here
+         * configs must be imported from database
+         * login user must be imported
+         * first menu to start must be defined
+         */
+
+        util.GameInitialization.initialize();;
+        AppController.start();
     }
 }
