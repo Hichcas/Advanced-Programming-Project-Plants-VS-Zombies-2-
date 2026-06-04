@@ -1,4 +1,4 @@
-package controller.menu;
+package controller.menuControllers;
 
 
 public class QuestMenuController {
