@@ -1,9 +1,6 @@
-import java.util.Scanner;
-
 import controller.AppController;
 
 public class Main {
-    Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
         // TODO 
         /**
