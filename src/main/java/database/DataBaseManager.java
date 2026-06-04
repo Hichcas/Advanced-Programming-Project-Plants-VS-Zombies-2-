@@ -19,24 +19,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DataBaseManager implements DataBaseConnection {
-    private static volatile DataBaseManager instance;
-    private final Map<String, DataBaseRecord> records = new ConcurrentHashMap<>();
+public class DatabaseManager implements DatabaseConnection {
+    private static volatile DatabaseManager instance;
+    private final Map<String, DatabaseRecord> records = new ConcurrentHashMap<>();
     private final Path mainDbFile = Paths.get("database.db");
     private final Path sessionFile = Paths.get("session.db");
     private final Gson gson = new Gson();
-    private DataBaseRecord activeSession;   // می‌تواند null باشد
+    private DatabaseRecord activeSession;   // می‌تواند null باشد
 
-    private DataBaseManager() {
+    private DatabaseManager() {
         loadMainDatabase();
         loadSession();
     }
 
-    public static DataBaseManager getInstance() {
+    public static DatabaseManager getInstance() {
         if (instance == null) {
-            synchronized (DataBaseManager.class) {
+            synchronized (DatabaseManager.class) {
                 if (instance == null) {
-                    instance = new DataBaseManager();
+                    instance = new DatabaseManager();
                 }
             }
         }
@@ -49,10 +49,10 @@ public class DataBaseManager implements DataBaseConnection {
             try {
                 String encryptedContent = Files.readString(mainDbFile);
                 String json = EncryptionEngine.decrypt(encryptedContent);
-                Type listType = new TypeToken<List<DataBaseRecord>>() {}.getType();
-                List<DataBaseRecord> loadedRecords = gson.fromJson(json, listType);
+                Type listType = new TypeToken<List<DatabaseRecord>>() {}.getType();
+                List<DatabaseRecord> loadedRecords = gson.fromJson(json, listType);
                 if (loadedRecords != null) {
-                    for (DataBaseRecord rec : loadedRecords) {
+                    for (DatabaseRecord rec : loadedRecords) {
                         records.put(rec.getUsername(), rec);
                     }
                 }
@@ -67,7 +67,7 @@ public class DataBaseManager implements DataBaseConnection {
             try {
                 String encryptedContent = Files.readString(sessionFile);
                 String json = EncryptionEngine.decrypt(encryptedContent);
-                activeSession = gson.fromJson(json, DataBaseRecord.class);
+                activeSession = gson.fromJson(json, DatabaseRecord.class);
             } catch (IOException e) {
                 System.err.println("Error loading session: " + e.getMessage());
             }
@@ -76,23 +76,23 @@ public class DataBaseManager implements DataBaseConnection {
 
     // ==================== CRUD عمومی ====================
     @Override
-    public void addRecord(DataBaseRecord record) {
+    public void addRecord(DatabaseRecord record) {
         records.put(record.getUsername(), record);
     }
 
     @Override
-    public Optional<DataBaseRecord> getUser(String username) {
+    public Optional<DatabaseRecord> getUser(String username) {
         return Optional.ofNullable(records.get(username));
     }
 
     @Override
-    public void updateRecord(DataBaseRecord record) {
+    public void updateRecord(DatabaseRecord record) {
         // فرض می‌کنیم نام کاربری تغییر نمی‌کند؛ در غیر این صورت منطق خاص خود را دارد
         records.replace(record.getUsername(), record);
     }
 
     @Override
-    public void removeRecord(DataBaseRecord record) {
+    public void removeRecord(DatabaseRecord record) {
         records.remove(record.getUsername());
     }
 
@@ -115,7 +115,7 @@ public class DataBaseManager implements DataBaseConnection {
 
     // ==================== مدیریت نشست فعال ====================
     @Override
-    public void saveActiveSession(DataBaseRecord activeInfo) {
+    public void saveActiveSession(DatabaseRecord activeInfo) {
         this.activeSession = activeInfo;
         try {
             String json = gson.toJson(activeInfo);
@@ -127,7 +127,7 @@ public class DataBaseManager implements DataBaseConnection {
     }
 
     @Override
-    public Optional<DataBaseRecord> getActiveSession() {
+    public Optional<DatabaseRecord> getActiveSession() {
         return Optional.ofNullable(activeSession);
     }
 

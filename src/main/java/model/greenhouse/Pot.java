@@ -1,5 +1,7 @@
 package model.greenhouse;
 
+import model.enums.PlantType;
+
 public class Pot {
     private boolean unlocked;
     private PlantType plantType; // null if empty
