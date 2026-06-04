@@ -1,4 +1,5 @@
-package model.user;
+package model.greenhouse;
+
 
 import model.enums.PlantType;
 
@@ -8,18 +9,18 @@ import model.enums.PlantType;
  */
 public class GreenhouseState {
 
-    public static class PotData {
+    public static class Pot {
         private boolean unlocked;
         private PlantType plantType;          // null if empty
         private long plantedTimeMillis;       // 0 if empty
 
-        public PotData() {
+        public Pot() {
             this.unlocked = false;
             this.plantType = null;
             this.plantedTimeMillis = 0;
         }
 
-        public PotData(boolean unlocked) {
+        public Pot(boolean unlocked) {
             this.unlocked = unlocked;
             this.plantType = null;
             this.plantedTimeMillis = 0;
@@ -61,25 +62,25 @@ public class GreenhouseState {
     }
 
     // ردیف‌ها ۰ تا ۳ (y = 1..4)، ستون‌ها ۰ تا ۴ (x = 1..5)
-    private PotData[][] pots;
+    private Pot[][] pots;
 
     // ---------- سازنده ----------
     public GreenhouseState() {
-        pots = new PotData[4][5];
+        pots = new Pot[4][5];
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 5; col++) {
                 // ردیف اول (row 0) باز، بقیه قفل
-                pots[row][col] = new PotData(row == 0);
+                pots[row][col] = new Pot(row == 0);
             }
         }
     }
 
     // ---------- Getter / Setter (برای سریالایز) ----------
-    public PotData[][] getPots() {
+    public Pot[][] getPots() {
         return pots;
     }
 
-    public void setPots(PotData[][] pots) {
+    public void setPots(Pot[][] pots) {
         this.pots = pots;
     }
 
@@ -88,7 +89,7 @@ public class GreenhouseState {
      * دریافت اطلاعات یک گلدان با مختصات (x,y) که x از ۱ تا ۵ و y از ۱ تا ۴.
      * @throws IllegalArgumentException اگر مختصات خارج از محدوده باشد
      */
-    public PotData getPot(int x, int y) {
+    public Pot getPot(int x, int y) {
         if (x < 1 || x > 5 || y < 1 || y > 4) {
             throw new IllegalArgumentException("Invalid greenhouse coordinates: (" + x + ", " + y + ")");
         }
@@ -102,7 +103,7 @@ public class GreenhouseState {
 
     /** کاشت یک گیاه در گلدان (باید باز و خالی باشد) */
     public void plantInPot(int x, int y, PlantType plantType, long currentTimeMillis) {
-        PotData pot = getPot(x, y);
+        Pot pot = getPot(x, y);
         if (!pot.isReadyForPlanting()) {
             throw new IllegalStateException("Pot is not available for planting.");
         }
@@ -112,7 +113,7 @@ public class GreenhouseState {
 
     /** برداشت گیاه (خالی کردن گلدان و برگرداندن نوع گیاه قبلی) */
     public PlantType collectFromPot(int x, int y) {
-        PotData pot = getPot(x, y);
+        Pot pot = getPot(x, y);
         if (pot.isEmpty()) {
             throw new IllegalStateException("Pot is empty.");
         }
@@ -124,7 +125,7 @@ public class GreenhouseState {
 
     /** تسریع رشد (بلافاصله گیاه را آمادهٔ برداشت می‌کند – صرفاً plantedTimeMillis را صفر می‌کند) */
     public void accelerateGrowth(int x, int y) {
-        PotData pot = getPot(x, y);
+        Pot pot = getPot(x, y);
         if (pot.isEmpty()) {
             throw new IllegalStateException("No plant to accelerate.");
         }
@@ -133,7 +134,7 @@ public class GreenhouseState {
 
     /** بررسی آماده بودن گیاه برای برداشت بر اساس زمان فعلی و نوع گیاه */
     public boolean isPlantReady(int x, int y, long currentTimeMillis) {
-        PotData pot = getPot(x, y);
+        Pot pot = getPot(x, y);
         if (pot.isEmpty()) return false;
         long growthDurationMillis = getGrowthDurationMillis(pot.getPlantType());
         return (currentTimeMillis - pot.getPlantedTimeMillis()) >= growthDurationMillis;
