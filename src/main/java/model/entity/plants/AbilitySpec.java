@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -12,13 +11,10 @@ public class AbilitySpec {
     @JsonAlias({"id", "abilityId", "key"})
     private String id;
 
-    @JsonAlias({"kind", "abilityKind", "abilityType", "type"})
-    private String kind;
-
     @JsonAlias({"raw", "text", "description"})
     private String raw;
 
-    @JsonAlias({"behaviorId", "behaviorKey"})
+    @JsonAlias({"kind", "behaviorId", "behaviorKey", "type"})
     private String behaviorId;
 
     private String note;
@@ -36,25 +32,6 @@ public class AbilitySpec {
     public AbilitySpec setId(String id) {
         this.id = id;
         return this;
-    }
-
-    public String getKind() {
-        return kind;
-    }
-
-    public AbilitySpec setKind(String kind) {
-        this.kind = kind;
-        return this;
-    }
-
-    public String getNormalizedKind() {
-        if (kind == null) {
-            return null;
-        }
-        return kind.trim()
-                .toLowerCase(Locale.ROOT)
-                .replace('-', '_')
-                .replace(' ', '_');
     }
 
     public String getRaw() {
@@ -79,13 +56,7 @@ public class AbilitySpec {
         if (behaviorId != null && !behaviorId.isBlank()) {
             return behaviorId;
         }
-        if (id != null && !id.isBlank()) {
-            return id;
-        }
-        if (kind != null && !kind.isBlank()) {
-            return kind;
-        }
-        return null;
+        return id;
     }
 
     public String getNote() {

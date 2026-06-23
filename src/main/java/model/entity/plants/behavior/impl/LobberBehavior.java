@@ -37,13 +37,13 @@ public class LobberBehavior implements PlantBehavior {
         int pierce = Math.max(1, plant.getStats().getPierce() == 0 ? 1 : plant.getStats().getPierce());
 
         int hits = 0;
-        for (Zombie zombie : zombies) {
+        /*for (Zombie zombie : zombies) {
             zombie.takeDamage(damage);
             hits++;
             if (hits >= pierce) {
                 break;
             }
-        }
+        }*/
 
         plant.putRuntimeState("lobTimer", timer);
     }

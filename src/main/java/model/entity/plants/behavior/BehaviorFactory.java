@@ -2,20 +2,20 @@ package model.entity.plants.behavior;
 
 import model.entity.plants.AbilitySpec;
 import model.entity.plants.PlantDefinition;
-import model.entity.plants.PlantInstance;
+import model.entity.plants.PlantStats;
 import model.entity.plants.behavior.impl.DefaultPlantFoodBehavior;
 import model.entity.plants.behavior.impl.EmptyBehavior;
 import model.entity.plants.behavior.impl.ExplosiveBehavior;
 import model.entity.plants.behavior.impl.LobberBehavior;
 import model.entity.plants.behavior.impl.MintBehavior;
 import model.entity.plants.behavior.impl.ModifierBehavior;
+import model.entity.plants.behavior.impl.ProjectileFactory;
 import model.entity.plants.behavior.impl.ShooterBehavior;
 import model.entity.plants.behavior.impl.SunProducerBehavior;
 import model.entity.plants.behavior.impl.WallBehavior;
-import model.entity.zombies.base.Zombie;
 
-import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public final class BehaviorFactory {
     private BehaviorFactory() {
@@ -36,14 +36,14 @@ public final class BehaviorFactory {
         }
 
         return switch (normalize(behaviorId)) {
-            case "sun_production", "growing_sun" -> new SunProducerBehavior();
-            case "instant_sun" -> new InstantSunBehavior();
-            case "direct_shot", "burst_shot", "fire_shot", "piercing_shot", "homing_shot", "wall_defense", "hypnotize" -> new ShooterBehavior();
-            case "bounce_shot", "lobber_kernel" -> new LobberBehavior();
-            case "explosion" -> new ExplosiveBehavior();
-            case "melee_eat" -> new MeleeBehavior();
-            case "move_zombies", "water_support", "copy_plant", "magnet_disarm" -> new ModifierBehavior();
-            case "mint_family_buff" -> new MintBehavior();
+            case "sun_producer", "sunproducer", "produce_sun", "sun", "sun_burst" -> new SunProducerBehavior();
+            case "shooter", "pea_shooter", "peashooter", "direct_shot", "burst_shot", "fire_shot", "ice_shot", "poison_shot" -> new ShooterBehavior();
+            case "lobber", "lobber_shot", "pult", "lob" -> new LobberBehavior();
+            case "explosive", "bomb", "mine", "aoe", "burst_explode" -> new ExplosiveBehavior();
+            case "wall", "wall_nut", "defense" -> new WallBehavior();
+            case "mint", "mint_behavior", "family_buff" -> new MintBehavior();
+            case "modifier", "utility" -> new ModifierBehavior();
+            case "through_strike", "pierce", "piercing_shot", "homing", "target_lock" -> new ShooterBehavior();
             default -> fallbackByCategory(definition);
         };
     }
@@ -60,43 +60,46 @@ public final class BehaviorFactory {
             return new DefaultPlantFoodBehavior();
         }
 
-        return switch (normalize(behaviorId)) {
-            case "instant_sun" -> (plant, context) -> {
-                int amount = plantFood.getIntParam("sunAmount", 150);
-                int duration = Math.max(1, plantFood.getIntParam("durationSeconds", 1));
+        String normalized = normalize(behaviorId);
+
+        if ("burst_sun".equals(normalized) || "instant_sun".equals(normalized) || "sun_burst".equals(normalized)) {
+            return (plant, context) -> {
+                int amount = plantFood.getIntParam("instantSunAmount",
+                        plantFood.getIntParam("sunAmount", 150));
+                int duration = plantFood.getIntParam("durationSeconds", 5);
+
                 plant.setPlantFoodActive(true);
                 plant.setPlantFoodTicksRemaining(duration);
                 context.spawnSun(amount);
             };
-            case "burst_attack" -> (plant, context) -> {
-                int duration = Math.max(1, plantFood.getIntParam("durationSeconds", 5));
-                int projectiles = Math.max(1, plantFood.getIntParam("projectiles", 5));
+        }
+
+        if ("burst_shot".equals(normalized) || "multi_shot".equals(normalized) || "double_projectile".equals(normalized)) {
+            return (plant, context) -> {
+                int duration = plantFood.getIntParam("durationSeconds", 5);
+                int projectiles = plantFood.getIntParam("projectiles", 5);
                 double damageMultiplier = plantFood.getDoubleParam("damageMultiplier", 1.5);
+
                 plant.setPlantFoodActive(true);
                 plant.setPlantFoodTicksRemaining(duration);
                 plant.getStats().putExtra("projectileCount", projectiles);
-                plant.getStats().putExtra("projectileDamageMultiplier", damageMultiplier);
-                plant.getStats().putExtra("projectileType", plantFood.getStringParam("projectileType", "PEA"));
-                plant.getStats().putExtra("projectileEffect", plantFood.getStringParam("effect", "BURST"));
+                plant.getStats().putExtra("damageMultiplier", damageMultiplier);
+                plant.getStats().putExtra("plantFoodProjectileType", "burst");
             };
-            case "freeze_burst", "fire_burst", "plasma_burst", "hypnotize", "water_clone", "lane_clear", "magnet_pulse" -> (plant, context) -> {
-                plant.setPlantFoodActive(true);
-                plant.setPlantFoodTicksRemaining(Math.max(1, plantFood.getIntParam("durationSeconds", 1)));
-                plant.putRuntimeState("plantFoodEffect", normalize(behaviorId));
-                plant.putRuntimeState("plantFoodEffectParams", plantFood.getParams());
-            };
-            case "explosion" -> (plant, context) -> {
+        }
+
+        if ("explosive".equals(normalized) || "burst_explode".equals(normalized) || "aoe".equals(normalized)) {
+            return (plant, context) -> {
+                int duration = plantFood.getIntParam("durationSeconds", 1);
                 int damage = plantFood.getIntParam("damage", plant.getStats().getAoeDamage());
-                int duration = Math.max(1, plantFood.getIntParam("durationSeconds", 1));
+
                 plant.setPlantFoodActive(true);
                 plant.setPlantFoodTicksRemaining(duration);
-                Integer lane = asInt(plant.getRuntimeState().get("lane"), 0);
-                Integer row = asInt(plant.getRuntimeState().get("row"), 0);
-                context.damageArea(lane, row, damage);
+                context.damageArea(getIntRuntime(plant, "lane", 0), getIntRuntime(plant, "row", 0), damage);
             };
-            case "none" -> new DefaultPlantFoodBehavior();
-            default -> new DefaultPlantFoodBehavior();
-        };
+        }
+
+        return new DefaultPlantFoodBehavior();
     }
 
     private static PlantBehavior fallbackByCategory(PlantDefinition definition) {
@@ -125,32 +128,26 @@ public final class BehaviorFactory {
             return null;
         }
 
-        if (abilitySpec.getResolvedBehaviorId() != null && !abilitySpec.getResolvedBehaviorId().isBlank()) {
-            return abilitySpec.getResolvedBehaviorId();
+        if (abilitySpec.getBehaviorId() != null && !abilitySpec.getBehaviorId().isBlank()) {
+            return abilitySpec.getBehaviorId();
         }
 
-        if (abilitySpec.getKind() != null && !abilitySpec.getKind().isBlank()) {
-            return abilitySpec.getKind();
-        }
-
-        if (abilitySpec.getRaw() != null && !abilitySpec.getRaw().isBlank()) {
-            return abilitySpec.getRaw();
+        if (abilitySpec.getId() != null && !abilitySpec.getId().isBlank()) {
+            return abilitySpec.getId();
         }
 
         return abilitySpec.getStringParam("behaviorId", null);
     }
 
     private static String normalize(String value) {
-        if (value == null) {
-            return null;
-        }
         return value.trim()
                 .toLowerCase(Locale.ROOT)
                 .replace('-', '_')
                 .replace(' ', '_');
     }
 
-    private static Integer asInt(Object value, int defaultValue) {
+    private static int getIntRuntime(model.entity.plants.PlantInstance plant, String key, int defaultValue) {
+        Object value = plant.getRuntimeState().get(key);
         if (value instanceof Number number) {
             return number.intValue();
         }
@@ -158,48 +155,6 @@ public final class BehaviorFactory {
             return value == null ? defaultValue : Integer.parseInt(String.valueOf(value));
         } catch (NumberFormatException ex) {
             return defaultValue;
-        }
-    }
-
-    private static final class InstantSunBehavior implements PlantBehavior {
-        @Override
-        public void onUpdate(PlantInstance plant, BehaviorContext context, double deltaTime) {
-            if (plant == null || context == null) {
-                return;
-            }
-
-            Boolean triggered = (Boolean) plant.getRuntimeState().getOrDefault("instantSunTriggered", Boolean.FALSE);
-            if (Boolean.TRUE.equals(triggered)) {
-                return;
-            }
-
-            int amount = plant.getStats().getSunAmount();
-            context.spawnSun(amount);
-            plant.putRuntimeState("instantSunTriggered", Boolean.TRUE);
-            plant.setCurrentHp(0);
-        }
-    }
-
-    private static final class MeleeBehavior implements PlantBehavior {
-        @Override
-        public void onUpdate(PlantInstance plant, BehaviorContext context, double deltaTime) {
-            if (plant == null || context == null) {
-                return;
-            }
-
-            Integer lane = asInt(plant.getRuntimeState().get("lane"), 0);
-            List<Zombie> zombies = context.getZombiesInLane(lane);
-            if (zombies.isEmpty()) {
-                return;
-            }
-
-            int damage = Math.max(1, plant.getStats().getDamage());
-            for (Zombie zombie : zombies) {
-                if (zombie != null && zombie.isInMeleeRange()) {
-                    zombie.takeDamage(damage);
-                    break;
-                }
-            }
         }
     }
 }
