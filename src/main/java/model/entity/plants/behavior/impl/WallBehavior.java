@@ -17,11 +17,11 @@ public class WallBehavior implements PlantBehavior {
             return;
         }
 
-        for (Zombie zombie : zombies) {
+        /*for (Zombie zombie : zombies) {
             if (zombie != null && zombie.isInMeleeRange()) {
                 zombie.setBlockedByWall(true);
                 return;
             }
-        }
+        }*/
     }
 }

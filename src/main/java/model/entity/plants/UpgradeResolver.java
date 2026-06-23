@@ -6,8 +6,6 @@ import model.enums.PlantFlag;
 import model.enums.PlantStatType;
 import model.enums.SpecialUpgradeType;
 
-import java.util.Locale;
-
 public final class UpgradeResolver {
     private UpgradeResolver() {
     }
@@ -30,7 +28,6 @@ public final class UpgradeResolver {
             }
         }
 
-        stats.putExtra("resolvedLevel", targetLevel);
         return stats;
     }
 
@@ -41,15 +38,14 @@ public final class UpgradeResolver {
         stats.setDamage(definition.getEffectiveDamage());
         stats.setActionIntervalSeconds(definition.getActionIntervalSeconds());
         stats.setRechargeSeconds(definition.getRechargeSeconds());
-        stats.putExtra("plantId", definition.getId());
-        stats.putExtra("plantKey", definition.getPlantKey());
-        stats.putExtra("plantName", definition.getName());
-        stats.putExtra("category", definition.getCategory());
-        stats.putExtra("tags", definition.getTags());
-        stats.putExtra("tagEnums", definition.getTagEnums());
 
-        applyAbilityMetadata(stats, definition.getBaseAbility(), "baseAbility");
-        applyAbilityMetadata(stats, definition.getPlantFoodEffect(), "plantFood");
+        if (definition.getBaseAbility() != null) {
+            stats.putExtra("baseAbilityId", definition.getBaseAbility().getResolvedBehaviorId());
+        }
+        if (definition.getPlantFoodEffect() != null) {
+            stats.putExtra("plantFoodAbilityId", definition.getPlantFoodEffect().getResolvedBehaviorId());
+        }
+
         return stats;
     }
 
@@ -66,8 +62,6 @@ public final class UpgradeResolver {
             case FAMILY, BEHAVIOR -> applyBehaviorUpgrade(stats, rule);
             case UNKNOWN -> stats.putExtra("unknown_upgrade_" + rule.getLevel(), rule.getRaw());
         }
-
-        stats.putExtra("lastAppliedUpgradeLevel", rule.getLevel());
     }
 
     private static void applyStatUpgrade(PlantStats stats, UpgradeRule rule) {
@@ -79,12 +73,10 @@ public final class UpgradeResolver {
             case COST -> stats.setCost(applyInt(stats.getCost(), operation, value));
             case HP -> stats.setMaxHp(applyInt(stats.getMaxHp(), operation, value));
             case DAMAGE -> stats.setDamage(applyInt(stats.getDamage(), operation, value));
-            case DAMAGE_PER_TICK -> stats.setDamagePerTick(applyInt(stats.getDamagePerTick(), operation, value));
             case COOLDOWN, RECHARGE -> stats.setRechargeSeconds(applyDouble(stats.getRechargeSeconds(), operation, value));
             case PRODUCTION_TIME -> stats.setProductionTimeSeconds(applyDouble(stats.getProductionTimeSeconds(), operation, value));
-            case GROW_TIME, GROWTH_TIME -> stats.setGrowthTimeSeconds(applyDouble(stats.getGrowthTimeSeconds(), operation, value));
+            case GROW_TIME -> stats.setGrowthTimeSeconds(applyDouble(stats.getGrowthTimeSeconds(), operation, value));
             case CHARGE_TIME -> stats.setChargeTimeSeconds(applyDouble(stats.getChargeTimeSeconds(), operation, value));
-            case ATTACK_SPEED -> stats.setActionIntervalSeconds(applyDouble(stats.getActionIntervalSeconds(), operation, value));
             case PLANT_FOOD_CHANCE -> stats.setPlantFoodChancePercent(applyDouble(stats.getPlantFoodChancePercent(), operation, value));
             case FREEZE_TIME -> stats.setFreezeTimeSeconds(applyDouble(stats.getFreezeTimeSeconds(), operation, value));
             case CHILL_TIME -> stats.setChillTimeSeconds(applyDouble(stats.getChillTimeSeconds(), operation, value));
@@ -144,9 +136,6 @@ public final class UpgradeResolver {
             case WARMTH_RADIUS_UP -> stats.putExtra("warmthRadiusBoost", Boolean.TRUE);
             case SUMMON_ALLY -> stats.putExtra("summonAlly", Boolean.TRUE);
             case TRANSFORM_TARGET -> stats.putExtra("transformTarget", Boolean.TRUE);
-            case CAN_CRUSH_2X -> stats.putExtra("canCrush2x", Boolean.TRUE);
-            case ZOMBIE_HP_BUFF -> stats.putExtra("zombieHpBuff", Boolean.TRUE);
-            case ZOMBIE_DAMAGE_BUFF -> stats.putExtra("zombieDamageBuff", Boolean.TRUE);
             case UNKNOWN -> stats.putExtra("special:" + rule.getRaw(), rule.getParams());
         }
     }
@@ -161,93 +150,6 @@ public final class UpgradeResolver {
         if (rule.getRaw() != null) {
             stats.putExtra("behavior:" + rule.getRaw(), rule.getParams());
         }
-    }
-
-    private static void applyAbilityMetadata(PlantStats stats, AbilitySpec ability, String prefix) {
-        if (stats == null || ability == null) {
-            return;
-        }
-
-        String kind = normalize(ability.getResolvedBehaviorId());
-        stats.putExtra(prefix + "Kind", ability.getKind());
-        stats.putExtra(prefix + "ResolvedBehaviorId", ability.getResolvedBehaviorId());
-        stats.putExtra(prefix + "Raw", ability.getRaw());
-        stats.putExtra(prefix + "Params", ability.getParams());
-
-        if (kind == null) {
-            return;
-        }
-
-        switch (kind) {
-            case "sun_production" -> {
-                stats.setSunAmount(ability.getIntParam("sunAmount", stats.getSunAmount()));
-                stats.setProductionTimeSeconds(ability.getDoubleParam("intervalSeconds", stats.getProductionTimeSeconds()));
-            }
-            case "growing_sun" -> {
-                stats.setSunAmount(ability.getIntParam("sunAmount", stats.getSunAmount()));
-                stats.setProductionTimeSeconds(ability.getDoubleParam("intervalSeconds", stats.getProductionTimeSeconds()));
-                stats.putExtra(prefix + "SunAmounts", ability.getParam("sunAmounts"));
-                stats.putExtra(prefix + "GrowthStageTimes", ability.getParam("growthStageTimes"));
-            }
-            case "instant_sun" -> {
-                stats.setSunAmount(ability.getIntParam("sunAmount", stats.getSunAmount()));
-                stats.setDurationSeconds(Math.max(stats.getDurationSeconds(), 1.0));
-            }
-            case "direct_shot", "burst_shot", "fire_shot", "piercing_shot", "homing_shot", "wall_defense", "hypnotize" -> {
-                stats.putExtra("projectileType", ability.getStringParam("projectileType", inferProjectileType(kind)));
-                stats.putExtra("projectileEffect", inferProjectileEffect(kind, ability));
-                stats.putExtra("projectileCount", ability.getIntParam("projectiles", ability.getIntParam("burstCount", 1)));
-                stats.putExtra("targetPriority", ability.getStringParam("targetPriority", null));
-                if (ability.hasParam("pierce")) {
-                    stats.setPierce(Math.max(stats.getPierce(), ability.getIntParam("pierce", stats.getPierce())));
-                }
-            }
-            case "bounce_shot", "lobber_kernel" -> {
-                stats.putExtra("projectileType", ability.getStringParam("projectileType", "LOB"));
-                stats.putExtra("projectileEffect", inferProjectileEffect(kind, ability));
-            }
-            case "explosion" -> {
-                stats.setArmTimeSeconds(ability.getDoubleParam("armTimeSeconds", stats.getArmTimeSeconds()));
-                stats.setExplodeDamage(ability.getIntParam("damage", stats.getExplodeDamage()));
-                stats.setAoeDamage(ability.getIntParam("aoeDamage", stats.getAoeDamage()));
-            }
-            case "melee_eat" -> stats.putExtra("meleeRange", ability.getIntParam("range", stats.getRange()));
-            case "move_zombies" -> stats.putExtra("moveZombies", Boolean.TRUE);
-            case "magnet_disarm" -> stats.putExtra("disarmTargets", ability.getStringParam("targets", "METAL_ARMOR"));
-            case "copy_plant" -> stats.putExtra("copies", ability.getIntParam("copies", 2));
-            case "water_support" -> stats.putExtra("surface", ability.getStringParam("surface", "WATER"));
-            case "mint_family_buff" -> stats.putExtra("family", ability.getStringParam("family", "MINT"));
-            default -> {
-                // keep the raw metadata only
-            }
-        }
-    }
-
-    private static String inferProjectileType(String kind) {
-        return switch (kind) {
-            case "fire_shot" -> "FIRE_PEA";
-            case "hypnotize" -> "SEED";
-            case "burst_shot", "direct_shot", "homing_shot", "wall_defense" -> "PEA";
-            case "lobber_kernel", "bounce_shot" -> "LOB";
-            default -> "PEA";
-        };
-    }
-
-    private static String inferProjectileEffect(String kind, AbilitySpec ability) {
-        if (ability != null) {
-            String explicitEffect = ability.getStringParam("effect", null);
-            if (explicitEffect != null && !explicitEffect.isBlank()) {
-                return explicitEffect;
-            }
-        }
-
-        return switch (kind) {
-            case "fire_shot" -> "FIRE";
-            case "piercing_shot" -> "FIRE";
-            case "hypnotize" -> "HYPNOTIZE";
-            case "burst_shot" -> "BURST";
-            default -> "NONE";
-        };
     }
 
     private static int applyInt(int current, UpgradeOperation operation, double value) {
@@ -268,15 +170,5 @@ public final class UpgradeResolver {
             case MULTIPLY -> current * value;
             case UNKNOWN -> current;
         };
-    }
-
-    private static String normalize(String value) {
-        if (value == null) {
-            return null;
-        }
-        return value.trim()
-                .toLowerCase(Locale.ROOT)
-                .replace('-', '_')
-                .replace(' ', '_');
     }
 }
