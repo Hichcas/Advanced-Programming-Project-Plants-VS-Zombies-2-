@@ -1,7 +1,7 @@
 import controller.AppController;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String [] args) {
         // TODO 
         /**
          * game intialization must be started from here
