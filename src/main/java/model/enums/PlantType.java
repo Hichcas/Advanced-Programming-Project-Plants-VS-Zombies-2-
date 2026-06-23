@@ -1,5 +1,10 @@
 package model.enums;
 
+import model.entity.Plant;
+import model.entity.plants.PlantDefinition;
+import model.entity.plants.PlantFactory;
+import model.entity.plants.PlantLibrary;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
@@ -115,6 +120,16 @@ public enum PlantType {
         return displayName;
     }
 
+    public PlantDefinition getDefinition() {
+        return PlantLibrary.findByType(this)
+                .or(() -> PlantLibrary.findByName(displayName))
+                .orElse(null);
+    }
+
+    public Plant create(int userLevel) {
+        return PlantFactory.createPlant(this, userLevel);
+    }
+
     public static PlantType fromId(int id) {
         PlantType type = BY_ID.get(id);
         if (type == null) {
@@ -131,17 +146,10 @@ public enum PlantType {
         return type;
     }
 
-    public static boolean exists(String name) {
-        return BY_NAME.containsKey(normalize(name));
-    }
-
     private static String normalize(String value) {
         if (value == null) {
             return "";
         }
-        return value.trim()
-                .toLowerCase(Locale.ROOT)
-                .replace('-', '_')
-                .replace(' ', '_');
+        return value.trim().toLowerCase(Locale.ROOT);
     }
 }

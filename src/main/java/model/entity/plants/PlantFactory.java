@@ -1,9 +1,10 @@
 package model.entity.plants;
 
+import model.entity.Plant;
 import model.enums.PlantType;
-import model.user.CollectionState;
 
 public final class PlantFactory {
+
     private PlantFactory() {
     }
 
@@ -12,51 +13,41 @@ public final class PlantFactory {
             throw new IllegalArgumentException("Plant definition cannot be null");
         }
 
-        int finalLevel = Math.max(1, level);
-        PlantStats stats = UpgradeResolver.resolveStats(definition, finalLevel);
-        PlantInstance instance = new PlantInstance(definition, stats, finalLevel);
-
-        instance.putRuntimeState("plantType", definition.getType());
-        instance.putRuntimeState("plantName", definition.getName());
-        instance.putRuntimeState("category", definition.getCategoryEnum());
-        instance.putRuntimeState("tags", definition.getTagEnums());
-
-        instance.putRuntimeState(
-                "baseAbilityId",
-                definition.getBaseAbility() == null ? null : definition.getBaseAbility().getResolvedBehaviorId()
-        );
-        instance.putRuntimeState(
-                "baseBehaviorId",
-                definition.getBaseAbility() == null ? null : definition.getBaseAbility().getResolvedBehaviorId()
-        );
-        instance.putRuntimeState(
-                "plantFoodAbilityId",
-                definition.getPlantFoodEffect() == null ? null : definition.getPlantFoodEffect().getResolvedBehaviorId()
-        );
-        instance.putRuntimeState(
-                "plantFoodBehaviorId",
-                definition.getPlantFoodEffect() == null ? null : definition.getPlantFoodEffect().getResolvedBehaviorId()
-        );
-
-        return instance;
+        int safeLevel = Math.max(1, level);
+        PlantStats stats = UpgradeResolver.resolveStats(definition, safeLevel);
+        return new PlantInstance(definition, stats, safeLevel);
     }
 
-    public static PlantInstance createByType(PlantType type, int level) {
-        return create(PlantLibrary.getByType(type), level);
+    public static Plant createPlant(PlantDefinition definition, int userLevel) {
+        PlantInstance instance = create(definition, userLevel);
+        return new Plant(instance);
     }
 
-    public static PlantInstance createByName(String name, int level) {
-        return create(PlantLibrary.getByName(name), level);
+    public static Plant createPlant(String name, int userLevel) {
+        PlantDefinition definition = PlantLibrary.findByName(name).orElse(null);
+
+        if (definition == null) {
+            System.err.println(" Factory Warning: Cannot create plant. Unknown plant name: " + name);
+            return null;
+        }
+
+        PlantInstance instance = create(definition, userLevel);
+        Plant created = new Plant(instance);
+        System.out.println(" Factory: Created " + created.getType() + " (Level " + instance.getLevel() + ")");
+        return created;
     }
 
-    public static PlantInstance createFromCollection(PlantType type, CollectionState collectionState) {
-        int level = collectionState == null ? 1 : collectionState.getPlantLevel(type);
-        return createByType(type, level);
-    }
+    public static Plant createPlant(PlantType type, int userLevel) {
+        if (type == null) {
+            return null;
+        }
 
-    public static PlantInstance createFromCollection(String name, CollectionState collectionState) {
-        PlantType type = PlantType.fromName(name);
-        int level = collectionState == null ? 1 : collectionState.getPlantLevel(type);
-        return createByType(type, level);
+        PlantDefinition definition = type.getDefinition();
+        if (definition == null) {
+            System.err.println(" Factory Warning: Cannot create plant. Unknown plant type: " + type);
+            return null;
+        }
+
+        return createPlant(definition, userLevel);
     }
 }
