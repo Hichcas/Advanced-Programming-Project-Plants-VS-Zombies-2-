@@ -46,20 +46,12 @@ public class ShooterBehavior implements PlantBehavior {
                 context.getZombiesInLane(lane);
 
         if (zombies.isEmpty()) {
-            plant.putRuntimeState("attackTimer", attackTimer);
             return;
         }
 
         int damage =
                 plant.getStats()
                         .getDamage();
-
-        if (plant.getStats().getDamagePerTick() > 0) {
-            damage = plant.getStats().getDamagePerTick();
-        }
-
-        double multiplier = plant.getStats().getDoubleExtra("projectileDamageMultiplier", 1.0);
-        damage = (int) Math.max(0, Math.round(damage * multiplier));
 
         int projectileCount =
                 plant.getStats()

@@ -3,8 +3,6 @@ package model.entity.plants.behavior.impl;
 import model.entity.plants.PlantInstance;
 import model.enums.PlantFlag;
 
-import java.util.Locale;
-
 public final class ProjectileFactory {
     private ProjectileFactory() {
     }
@@ -26,8 +24,6 @@ public final class ProjectileFactory {
             projectile.setRow(asInt(plant.getRuntimeState().get("row"), 0));
             projectile.putExtra("plantType", plant.getType());
             projectile.putExtra("behaviorId", plant.getMainBehaviorId());
-            projectile.putExtra("projectileEffect", plant.getStats().getExtra("projectileEffect"));
-            projectile.putExtra("projectileType", plant.getStats().getExtra("projectileType"));
         }
 
         return projectile;
@@ -67,30 +63,6 @@ public final class ProjectileFactory {
             return ProjectileType.UNKNOWN;
         }
 
-        Object explicitType = plant.getStats().getExtra("projectileType");
-        if (explicitType != null) {
-            ProjectileType resolved = resolveTypeFromString(String.valueOf(explicitType));
-            if (resolved != ProjectileType.UNKNOWN) {
-                return resolved;
-            }
-        }
-
-        Object explicitEffect = plant.getStats().getExtra("projectileEffect");
-        if (explicitEffect != null) {
-            ProjectileType resolved = resolveTypeFromEffect(String.valueOf(explicitEffect));
-            if (resolved != ProjectileType.UNKNOWN) {
-                return resolved;
-            }
-        }
-
-        String behaviorId = plant.getMainBehaviorId();
-        if (behaviorId != null) {
-            ProjectileType resolved = resolveTypeFromString(behaviorId);
-            if (resolved != ProjectileType.UNKNOWN) {
-                return resolved;
-            }
-        }
-
         if (plant.getStats().hasFlag(PlantFlag.CHILL_ON_HIT)) {
             return ProjectileType.ICE_PEA;
         }
@@ -104,34 +76,6 @@ public final class ProjectileFactory {
         return ProjectileType.PEA;
     }
 
-    private static ProjectileType resolveTypeFromEffect(String effect) {
-        String value = normalize(effect);
-        return switch (value) {
-            case "fire" -> ProjectileType.FIRE_PEA;
-            case "ice", "freeze", "chill" -> ProjectileType.ICE_PEA;
-            case "hypnotize", "magic" -> ProjectileType.SEED;
-            case "plasma", "beam" -> ProjectileType.BEAM;
-            case "bomb", "explosion" -> ProjectileType.BOMB;
-            case "sun" -> ProjectileType.SUN;
-            default -> ProjectileType.UNKNOWN;
-        };
-    }
-
-    private static ProjectileType resolveTypeFromString(String raw) {
-        String value = normalize(raw);
-        return switch (value) {
-            case "fire_pea", "fire_pult", "fire_shot" -> ProjectileType.FIRE_PEA;
-            case "ice_pea", "ice_shot", "freeze_shot" -> ProjectileType.ICE_PEA;
-            case "lob", "lobber", "cabbage_pult", "kernel", "melon", "pult" -> ProjectileType.LOB;
-            case "seed", "hypno", "hypnotize", "magic" -> ProjectileType.SEED;
-            case "bomb", "explode", "explosion" -> ProjectileType.BOMB;
-            case "beam", "plasma", "laser" -> ProjectileType.BEAM;
-            case "sun" -> ProjectileType.SUN;
-            case "pea", "direct_shot", "burst_shot", "homing_shot", "wall_defense", "poison" -> ProjectileType.PEA;
-            default -> ProjectileType.UNKNOWN;
-        };
-    }
-
     private static double resolveSpeed(PlantInstance plant) {
         if (plant == null || plant.getStats() == null) {
             return 1.0;
@@ -139,16 +83,6 @@ public final class ProjectileFactory {
 
         if (plant.getStats().hasFlag(PlantFlag.BURST_SHOT)) {
             return 2.0;
-        }
-
-        Object explicitSpeed = plant.getStats().getExtra("projectileSpeed");
-        if (explicitSpeed instanceof Number number) {
-            return number.doubleValue();
-        }
-
-        Object projectileType = plant.getStats().getExtra("projectileType");
-        if (projectileType != null && "BEAM".equalsIgnoreCase(String.valueOf(projectileType))) {
-            return 2.5;
         }
 
         return 1.0;
@@ -163,15 +97,5 @@ public final class ProjectileFactory {
         } catch (NumberFormatException ex) {
             return defaultValue;
         }
-    }
-
-    private static String normalize(String raw) {
-        if (raw == null) {
-            return "";
-        }
-        return raw.trim()
-                .toLowerCase(Locale.ROOT)
-                .replace('-', '_')
-                .replace(' ', '_');
     }
 }
