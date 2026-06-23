@@ -18,22 +18,25 @@ public final class PlantFactory {
 
         instance.putRuntimeState("plantType", definition.getType());
         instance.putRuntimeState("plantName", definition.getName());
-        instance.putRuntimeState("plantKey", definition.getPlantKey());
         instance.putRuntimeState("category", definition.getCategoryEnum());
         instance.putRuntimeState("tags", definition.getTagEnums());
-        instance.putRuntimeState("baseAbilityKind",
-                definition.getBaseAbility() == null ? null : definition.getBaseAbility().getKind());
-        instance.putRuntimeState("baseAbilityId",
-                definition.getBaseAbility() == null ? null : definition.getBaseAbility().getResolvedBehaviorId());
-        instance.putRuntimeState("baseAbilityParams",
-                definition.getBaseAbility() == null ? null : definition.getBaseAbility().getParams());
-        instance.putRuntimeState("plantFoodKind",
-                definition.getPlantFoodEffect() == null ? null : definition.getPlantFoodEffect().getKind());
-        instance.putRuntimeState("plantFoodId",
-                definition.getPlantFoodEffect() == null ? null : definition.getPlantFoodEffect().getResolvedBehaviorId());
-        instance.putRuntimeState("plantFoodParams",
-                definition.getPlantFoodEffect() == null ? null : definition.getPlantFoodEffect().getParams());
-        instance.putRuntimeState("resolvedLevel", finalLevel);
+
+        instance.putRuntimeState(
+                "baseAbilityId",
+                definition.getBaseAbility() == null ? null : definition.getBaseAbility().getResolvedBehaviorId()
+        );
+        instance.putRuntimeState(
+                "baseBehaviorId",
+                definition.getBaseAbility() == null ? null : definition.getBaseAbility().getResolvedBehaviorId()
+        );
+        instance.putRuntimeState(
+                "plantFoodAbilityId",
+                definition.getPlantFoodEffect() == null ? null : definition.getPlantFoodEffect().getResolvedBehaviorId()
+        );
+        instance.putRuntimeState(
+                "plantFoodBehaviorId",
+                definition.getPlantFoodEffect() == null ? null : definition.getPlantFoodEffect().getResolvedBehaviorId()
+        );
 
         return instance;
     }

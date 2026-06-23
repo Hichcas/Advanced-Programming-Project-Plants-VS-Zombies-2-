@@ -26,10 +26,10 @@ public class PlantInstance {
         this.currentHp = stats.getMaxHp();
 
         if (definition != null && definition.getBaseAbility() != null) {
-            this.mainBehaviorId = definition.getBaseAbility().getResolvedBehaviorId();
+            this.mainBehaviorId = definition.getBaseAbility().getBehaviorId();
         }
         if (definition != null && definition.getPlantFoodEffect() != null) {
-            this.plantFoodBehaviorId = definition.getPlantFoodEffect().getResolvedBehaviorId();
+            this.plantFoodBehaviorId = definition.getPlantFoodEffect().getBehaviorId();
         }
     }
 

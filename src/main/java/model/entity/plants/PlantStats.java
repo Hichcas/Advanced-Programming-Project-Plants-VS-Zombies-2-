@@ -12,7 +12,6 @@ public class PlantStats {
     private int cost;
     private int maxHp;
     private int damage;
-    private int damagePerTick;
 
     private double actionIntervalSeconds;
     private double rechargeSeconds;
@@ -53,7 +52,6 @@ public class PlantStats {
         copy.cost = cost;
         copy.maxHp = maxHp;
         copy.damage = damage;
-        copy.damagePerTick = damagePerTick;
         copy.actionIntervalSeconds = actionIntervalSeconds;
         copy.rechargeSeconds = rechargeSeconds;
         copy.productionTimeSeconds = productionTimeSeconds;
@@ -108,14 +106,6 @@ public class PlantStats {
 
     public void setDamage(int damage) {
         this.damage = damage;
-    }
-
-    public int getDamagePerTick() {
-        return damagePerTick;
-    }
-
-    public void setDamagePerTick(int damagePerTick) {
-        this.damagePerTick = damagePerTick;
     }
 
     public double getActionIntervalSeconds() {
@@ -426,7 +416,6 @@ public class PlantStats {
                 + "cost=" + cost
                 + ", maxHp=" + maxHp
                 + ", damage=" + damage
-                + ", damagePerTick=" + damagePerTick
                 + ", flags=" + flags
                 + ", extras=" + extras.keySet()
                 + '}';
