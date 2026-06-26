@@ -2,6 +2,7 @@ package model.menus;
 
 import controller.menuControllers.ShopMenuController;
 import view.input.InputDTO;
+import view.output.OutputDTO;
 
 public class ShopMenu extends Menu {
     @Override
@@ -10,7 +11,8 @@ public class ShopMenu extends Menu {
     }
 
     @Override
-    public void handleInput(InputDTO input) {
-        ShopMenuController.handle(input);
+    public OutputDTO handleInput(InputDTO input) {
+        return null;
     }
+
 }

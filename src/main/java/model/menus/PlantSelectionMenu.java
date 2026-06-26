@@ -2,6 +2,7 @@ package model.menus;
 
 import controller.menuControllers.PlantSelectionMenuController;
 import view.input.InputDTO;
+import view.output.OutputDTO;
 
 public class PlantSelectionMenu extends Menu {
     @Override
@@ -10,8 +11,9 @@ public class PlantSelectionMenu extends Menu {
     }
 
     @Override
-    public void handleInput(InputDTO input) {
-        PlantSelectionMenuController.handle(input);
+    public OutputDTO handleInput(InputDTO input) {
+        return null;
     }
+
 
 }
