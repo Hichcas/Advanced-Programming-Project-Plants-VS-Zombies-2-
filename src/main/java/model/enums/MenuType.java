@@ -3,6 +3,7 @@ package model.enums;
 import model.menus.*;
 
 public enum MenuType {
+
     REGISTER(new RegisterMenu()),
     LOGIN(new LoginMenu()),
     MAIN(new MainMenu()),
@@ -19,10 +20,13 @@ public enum MenuType {
     NETWORK(new NetworkMenu()),
     IN_GAME(new InGameMenu());
 
-    public final Menu currentMenu;
+    private final Menu currentMenu;
 
     MenuType(Menu currentMenu) {
         this.currentMenu = currentMenu;
     }
 
+    public Menu getCurrentMenu() {
+        return currentMenu;
+    }
 }

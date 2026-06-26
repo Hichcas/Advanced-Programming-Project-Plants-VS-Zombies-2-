@@ -12,6 +12,6 @@ public class CommandParser {
         public static InputDTO getNext() {
         String command = AppStatus.scanner.nextLine();
         MenuType MenuType = AppStatus.currentMenuType;
-        return MenuType.currentMenu.parseNextCommand(command);
+        return MenuType.getCurrentMenu().parseNextCommand(command);
     }
 }

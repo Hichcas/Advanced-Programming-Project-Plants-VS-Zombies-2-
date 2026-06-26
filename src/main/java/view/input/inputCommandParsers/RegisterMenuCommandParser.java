@@ -1,10 +1,27 @@
 package view.input.inputCommandParsers;
 
-import view.input.InputDTO;
+import model.enums.RegisterCommand;
+import view.input.DTO.RegisterInputDTO;
+
+import java.util.regex.Matcher;
 
 public class RegisterMenuCommandParser {
-    public static InputDTO parseCommand(String command) {
-        //TODO
-        return null;
+
+    private RegisterMenuCommandParser() {
     }
+
+    public static RegisterInputDTO parseCommand(String input) {
+
+        for (RegisterCommand command : RegisterCommand.values()) {
+
+            Matcher matcher = command.matcher(input);
+
+            if (matcher.matches()) {
+                return command.createDTO(matcher);
+            }
+        }
+
+        return RegisterInputDTO.invalid();
+    }
+
 }
