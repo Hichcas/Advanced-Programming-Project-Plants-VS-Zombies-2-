@@ -9,9 +9,27 @@ import com.PVZ.model.status.AppStatus;
  */
 
 public class CommandParser {
-        public static InputDTO getNext() {
-        String command = AppStatus.scanner.nextLine();
+    private static ConsoleInputHandler console;
+
+    public static InputDTO getNext() {
+        String command = console.pollCommand();
+        if (command == null)
+            return null;
+        command = command.trim();
         MenuType MenuType = AppStatus.currentMenuType;
         return MenuType.getCurrentMenu().parseNextCommand(command);
+    }
+
+    public static void start() {
+        System.out.println("Command input thread is started");
+        console = new ConsoleInputHandler();
+        console.start();
+    }
+
+    public static void end() {
+        if (console != null) {
+            console.stop();
+            console = null;
+        }
     }
 }

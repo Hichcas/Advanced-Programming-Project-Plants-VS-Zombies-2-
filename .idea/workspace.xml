@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fc1a961d-1b04-49f4-b2a2-83dc72dc852d" name="Changes" comment="" />
+    <list default="true" id="fc1a961d-1b04-49f4-b2a2-83dc72dc852d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/ConsoleInputHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/controller/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/controller/AppController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/CommandParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/CommandParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/GetInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/GetInput.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,7 +32,7 @@
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="New folder (2)" type="f1a62948:ProjectNode" />
+                <item name="libGDX PVZ" type="f1a62948:ProjectNode" />
               </path>
             </expand>
             <select />
@@ -34,6 +40,16 @@
         </projects_view>
       </state>
     </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0,
@@ -49,11 +65,14 @@
     "Gradle.New folder (2) [:lwjgl3:run].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "mahdi",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/mahdi/Desktop/New folder (2)",
+    "last_opened_file_path": "C:/Users/mahdi/Desktop/libGDX PVZ",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
   }
@@ -64,7 +83,7 @@
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
+        <option name="scriptParameters" value="--stacktrace" />
         <option name="taskDescriptions">
           <list />
         </option>

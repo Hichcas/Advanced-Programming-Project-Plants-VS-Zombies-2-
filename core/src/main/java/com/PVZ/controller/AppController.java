@@ -11,14 +11,13 @@ public class AppController {
     private AppController() {
     }
 
-    public static void start() {
+    public static void render() {
 
-        while (true) {
 
             InputDTO input = GetInput.get();
 
             if (input == null)
-                continue;
+                return;
 
             OutputDTO output =
                     AppStatus.currentMenuType.getCurrentMenu()
@@ -26,7 +25,6 @@ public class AppController {
 
             ShowOutput.show(output);
 
-        }
 
     }
 
