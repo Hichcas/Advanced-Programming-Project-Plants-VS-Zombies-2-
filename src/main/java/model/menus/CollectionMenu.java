@@ -2,6 +2,7 @@ package model.menus;
 
 import controller.menuControllers.CollectionMenuController;
 import view.input.InputDTO;
+import view.output.OutputDTO;
 
 public class CollectionMenu extends Menu {
     @Override
@@ -10,7 +11,9 @@ public class CollectionMenu extends Menu {
     }
 
     @Override
-    public void handleInput(InputDTO input) {
-        CollectionMenuController.handle(input);
+    public OutputDTO handleInput(InputDTO input) {
+        return null;
     }
+
+
 }

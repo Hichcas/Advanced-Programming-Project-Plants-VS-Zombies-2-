@@ -2,15 +2,20 @@ package model.menus;
 
 import controller.menuControllers.ChapterAndLevelSelectionMenuController;
 import view.input.InputDTO;
+import view.output.OutputDTO;
 
 public class ChapterAndLevelSelectionMenu extends Menu {
+
+
     @Override
     public InputDTO parseNextCommand(String command) {
-        return view.input.inputCommandParsers.ChapterAndLevelSelectionMenuCommandParser.parseCommand(command);
+        return null;
     }
 
-     @Override
-    public void handleInput(InputDTO input) {
-        ChapterAndLevelSelectionMenuController.handle(input);
+    @Override
+    public OutputDTO handleInput(InputDTO input) {
+        return null;
     }
+
+
 }

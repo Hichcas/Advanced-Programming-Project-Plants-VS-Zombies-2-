@@ -9,25 +9,36 @@ public class User {
     public CollectionState collectionState;
     public GreenhouseState greenhouseState;
     public AppStats appStats;
+    public NewsState newsState;
+    private boolean stayLoggedIn;
 
     public User() {
     }
 
     public static User createNewUser(String username, String passwordHash, String nickname,
-            String email, String gender,
-            String securityQuestion, String securityAnswerHash) {
-        // ایجاد پروفایل با اطلاعات ثبت‌نام
+                                     String email, String gender,
+                                     String securityQuestion, String securityAnswerHash) {
         Profile profile = new Profile(username, passwordHash, nickname, email, gender,
                 securityQuestion, securityAnswerHash);
 
         User user = new User();
         user.profile = profile;
-        user.userStats = new UserStats(); // همه آمار صفر
-        user.appStats = new AppStats(); // سختی ۳، صدا ۱۵
-        user.collectionState = new CollectionState(); // مجموعه‌های خالی
-        user.progressState = new ProgressState(); // همه مراحل صفر
-        user.greenhouseState = new GreenhouseState(); // ردیف اول باز، بقیه قفل
+        user.userStats = new UserStats();
+        user.appStats = new AppStats();
+        user.newsState = new NewsState();
+        user.collectionState = new CollectionState();
+        user.progressState = new ProgressState();
+        user.greenhouseState = new GreenhouseState();
+        user.stayLoggedIn = false;
 
         return user;
+    }
+
+    public boolean isStayLoggedIn() {
+        return stayLoggedIn;
+    }
+
+    public void setStayLoggedIn(boolean stayLoggedIn) {
+        this.stayLoggedIn = stayLoggedIn;
     }
 }

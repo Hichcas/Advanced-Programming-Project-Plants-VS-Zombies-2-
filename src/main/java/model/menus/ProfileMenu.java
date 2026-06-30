@@ -2,15 +2,20 @@ package model.menus;
 
 import controller.menuControllers.ProfileMenuController;
 import view.input.InputDTO;
+import view.input.inputCommandParsers.ProfileMenuCommandParser;
+import view.output.OutputDTO;
 
 public class ProfileMenu extends Menu {
+
+    private final ProfileMenuController controller = new ProfileMenuController();
+
     @Override
     public InputDTO parseNextCommand(String command) {
-        return view.input.inputCommandParsers.ProfileMenuCommandParser.parseCommand(command);
+        return ProfileMenuCommandParser.parseCommand(command);
     }
 
     @Override
-    public void handleInput(InputDTO input) {
-        ProfileMenuController.handle(input);
+    public OutputDTO handleInput(InputDTO input) {
+        return controller.handle(input);
     }
 }

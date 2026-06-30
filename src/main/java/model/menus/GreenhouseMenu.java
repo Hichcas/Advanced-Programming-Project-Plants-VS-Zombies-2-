@@ -2,6 +2,7 @@ package model.menus;
 
 import controller.menuControllers.GreenhouseMenuController;
 import view.input.InputDTO;
+import view.output.OutputDTO;
 
 public class GreenhouseMenu extends Menu {
     @Override
@@ -10,7 +11,8 @@ public class GreenhouseMenu extends Menu {
     }
 
     @Override
-    public void handleInput(InputDTO input) {
-        GreenhouseMenuController.handle(input);
+    public OutputDTO handleInput(InputDTO input) {
+        return null;
     }
+
 }
