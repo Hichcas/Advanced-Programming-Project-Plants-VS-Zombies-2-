@@ -4,260 +4,115 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c238490-9585-4b1f-a8c9-53b9fd8c3f46" name="Changes" comment="change project to maven">
-      <change afterPath="$PROJECT_DIR$/src/main/java/model/enums/LoginCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/model/enums/MainMenuCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/model/enums/RegisterCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/model/user/UserRegistry.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/view/input/DTO/LoginInputDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/view/input/DTO/MainMenuInputDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/view/input/DTO/RegisterInputDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/AppController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/menuControllers/LoginMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/menuControllers/LoginMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/menuControllers/MainMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/menuControllers/MainMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/menuControllers/NewsMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/menuControllers/NewsMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/menuControllers/ProfileMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/menuControllers/ProfileMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/menuControllers/RegisterMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/menuControllers/RegisterMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/menuControllers/SettingsMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/menuControllers/SettingsMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/enums/MenuType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/enums/MenuType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/ChapterAndLevelSelectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/ChapterAndLevelSelectionMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/CollectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/CollectionMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/GreenhouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/GreenhouseMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/InGameMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/InGameMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/LeaderboardMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/LeaderboardMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/LoginMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/LoginMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/MainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/MainMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/NetworkMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/NetworkMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/NewsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/NewsMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/PlantSelectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/PlantSelectionMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/ProfileMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/ProfileMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/RegisterMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/RegisterMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/SettingsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/SettingsMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/ShopMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/ShopMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/menus/TravelLogMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/menus/TravelLogMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/status/AppStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/status/AppStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/user/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/input/CommandParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/input/CommandParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/input/GetInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/input/GetInput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/input/inputCommandParsers/LoginMenuCommandParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/input/inputCommandParsers/LoginMenuCommandParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/input/inputCommandParsers/MainMenuCommandParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/input/inputCommandParsers/MainMenuCommandParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/input/inputCommandParsers/NewsMenuCommandParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/input/inputCommandParsers/NewsMenuCommandParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/input/inputCommandParsers/ProfileMenuCommandParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/input/inputCommandParsers/ProfileMenuCommandParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/input/inputCommandParsers/RegisterMenuCommandParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/input/inputCommandParsers/RegisterMenuCommandParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/input/inputCommandParsers/SettingsMenuCommandParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/input/inputCommandParsers/SettingsMenuCommandParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/output/OutputDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/output/OutputDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/view/output/ShowOutput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/output/ShowOutput.java" afterDir="false" />
-    </list>
+    <list default="true" id="fc1a961d-1b04-49f4-b2a2-83dc72dc852d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-        <option value="Enum" />
-      </list>
-    </option>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
   </component>
-  <component name="Git.Settings">
-    <option name="PREVIOUS_COMMIT_AUTHORS">
-      <list>
-        <option value="Mahdi HajEbrahimi &lt;mahdihajebrahiminasab@gmail.com&gt;" />
-      </list>
-    </option>
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="fatemeh" />
-      </map>
-    </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;AMFMICSI&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/MahdiHEbrahimi/Advanced-Programming-Project-Plants-VS-Zombies-2-.git&quot;,
-    &quot;accountId&quot;: &quot;5e74ba2d-985d-4e8d-a211-0e58d6aa8ed9&quot;
-  }
-}</component>
-  <component name="McpProjectServerCommands">
-    <commands />
-    <urls />
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="New folder (2)" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 4
+  &quot;associatedIndex&quot;: 0,
+  &quot;fromUser&quot;: false
 }</component>
-  <component name="ProjectId" id="3EfjmMcsSzCrsAHxt0Dpx8eWOSN" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectId" id="3Fqp1ZdYSotS6E4izV6zqv7P5rr" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/term2/AP/pvzProject-V2/Advanced-Programming-Project-Plants-VS-Zombies-2-&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.New folder (2) [:lwjgl3:run].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/mahdi/Desktop/New folder (2)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Sharif\2_Term\Uni\AP\Tamrin\PracticeIsTheBest\LearnGraphic\Advanced-Programming-Project-Plants-VS-Zombies-2-\src\main" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="" />
-    </key>
-  </component>
+}]]></component>
   <component name="RunManager">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="C:/Program Files/Java/jdk-17" />
-      <option name="MAIN_CLASS_NAME" value="Main" />
-      <module name="plants-vs-zombies-2" />
+    <configuration name="New folder (2) [:lwjgl3:run]" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":lwjgl3:run" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Application.Main" />
-      </list>
-    </recent_temporary>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.24374.151" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.24374.151" />
       </set>
     </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="2c238490-9585-4b1f-a8c9-53b9fd8c3f46" name="Changes" comment="" />
-      <created>1780576675449</created>
+      <changelist id="fc1a961d-1b04-49f4-b2a2-83dc72dc852d" name="Changes" comment="" />
+      <created>1782812241786</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1780576675449</updated>
-      <workItem from="1780576676967" duration="1681000" />
-      <workItem from="1780578413776" duration="8689000" />
-      <workItem from="1780588121772" duration="14060000" />
-      <workItem from="1780733568837" duration="6474000" />
-      <workItem from="1780762931102" duration="2743000" />
-      <workItem from="1780769000966" duration="70000" />
-      <workItem from="1782455969829" duration="7691000" />
-      <workItem from="1782469636013" duration="2383000" />
+      <updated>1782812241786</updated>
     </task>
-    <task id="LOCAL-00001" summary="controllers and handlers packaging fix">
-      <option name="closed" value="true" />
-      <created>1780576873515</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1780576873515</updated>
-    </task>
-    <task id="LOCAL-00002" summary="change project to maven">
-      <option name="closed" value="true" />
-      <created>1780588182414</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1780588182414</updated>
-    </task>
-    <task id="LOCAL-00003" summary="change project to maven">
-      <option name="closed" value="true" />
-      <created>1780592483783</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1780592483783</updated>
-    </task>
-    <task id="LOCAL-00004" summary="change project to maven">
-      <option name="closed" value="true" />
-      <created>1780593007472</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1780593007472</updated>
-    </task>
-    <task id="LOCAL-00005" summary="change project to maven">
-      <option name="closed" value="true" />
-      <created>1780593201947</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1780593201947</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="main" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="controllers and handlers packaging fix" />
-    <MESSAGE value="change project to maven" />
-    <option name="LAST_COMMIT_MESSAGE" value="change project to maven" />
   </component>
 </project>
