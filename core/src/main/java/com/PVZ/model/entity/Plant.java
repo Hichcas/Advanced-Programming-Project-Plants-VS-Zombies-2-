@@ -9,6 +9,7 @@ import com.PVZ.model.entity.plants.behavior.BehaviorFactory;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 import com.PVZ.model.entity.plants.behavior.PlantFoodBehavior;
 import com.PVZ.model.enums.PlantType;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.Map;
 
@@ -106,6 +107,8 @@ public class Plant {
     public Object getRuntimeState(String key) {
         return instance.getRuntimeState(key);
     }
+
+    public void draw(SpriteBatch batch) {}
 
     public void update(BehaviorContext context, double deltaTimeSeconds) {
         mainBehavior.onUpdate(instance, context, deltaTimeSeconds);
