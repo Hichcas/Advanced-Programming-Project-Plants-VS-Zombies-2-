@@ -1,0 +1,27 @@
+package com.PVZ.view.input.inputCommandParsers;
+
+import com.PVZ.model.enums.RegisterCommand;
+import com.PVZ.view.input.DTO.RegisterInputDTO;
+
+import java.util.regex.Matcher;
+
+public class RegisterMenuCommandParser {
+
+    private RegisterMenuCommandParser() {
+    }
+
+    public static RegisterInputDTO parseCommand(String input) {
+
+        for (RegisterCommand command : RegisterCommand.values()) {
+
+            Matcher matcher = command.matcher(input);
+
+            if (matcher.matches()) {
+                return command.createDTO(matcher);
+            }
+        }
+
+        return RegisterInputDTO.invalid();
+    }
+
+}
