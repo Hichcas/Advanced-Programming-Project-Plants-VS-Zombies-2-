@@ -12,18 +12,18 @@ public class Wave {
     }
 
     public static class WaveEntry{
-        private final String zomeAlias;
+        private final String zombieAlias;
         private final int count;
         private final float spawnDelay ;
 
         public WaveEntry(String zomeAtlias, int count, float spawnDelay) {
-            this.zomeAlias = zomeAtlias;
+            this.zombieAlias = zomeAtlias;
             this.count = count;
             this.spawnDelay = spawnDelay;
         }
 
-        public String getZomeAlias() {
-            return zomeAlias;
+        public String getZombieAlias() {
+            return zombieAlias;
         }
         public int getCount() {
             return count;

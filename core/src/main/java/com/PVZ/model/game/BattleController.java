@@ -1,7 +1,7 @@
 package com.PVZ.model.game;
 
 import com.PVZ.model.entity.Plant;
-import com.PVZ.model.entity.Projectile;
+import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
 
 import java.util.Iterator;
@@ -35,13 +35,11 @@ public class BattleController {
         Iterator<Projectile> projIt = projectiles.iterator();
         while (projIt.hasNext()) {
             Projectile p = projIt.next();
-            boolean hit = false;
             for (Zombie z : zombies) {
                 if (z.isDead()) continue;
                 if (p.getHitbox().overlaps(z.getHitbox())) {
                     engine.takeDamage(z, p.getDamage());
                     projIt.remove();
-                    hit = true;
                     break;
                 }
             }

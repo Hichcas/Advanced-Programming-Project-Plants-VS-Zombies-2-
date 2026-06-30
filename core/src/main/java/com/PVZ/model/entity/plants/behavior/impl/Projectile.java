@@ -1,5 +1,8 @@
 package com.PVZ.model.entity.plants.behavior.impl;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,9 +12,12 @@ public class Projectile {
     private int pierce;
     private int lane;
     private int row;
+    private int col;
     private double positionX;
     private double speed;
     private boolean fromPlantFood;
+    private boolean destroyed = false;
+    private Rectangle hitbox = new Rectangle();
 
     private final Map<String, Object> extras = new HashMap<>();
 
@@ -93,4 +99,18 @@ public class Projectile {
     public void putExtra(String key, Object value) {
         extras.put(key, value);
     }
+
+    public void update(float delta) {
+        if (destroyed) return;
+        positionX += speed * delta;
+        hitbox.set((float)positionX, (float)row * 100, 20, 20);
+    }
+
+    public void draw(SpriteBatch batch) {}
+
+    public Rectangle getHitbox() { return hitbox; }
+
+    public void hit() { destroyed = true; }
+
+    public boolean isDestroyed() { return destroyed; }
 }

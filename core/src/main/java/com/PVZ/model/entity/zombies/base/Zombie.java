@@ -98,6 +98,9 @@ public abstract class Zombie {
         }
     }
 
+    public void stopMoving() { this.moving = false; }
+    public void startMoving() { this.moving = true; }
+
     public boolean isDead() { return hitpoints <= 0 && (armor == null || armor.isDestroyed()); }
       public abstract void onSpawn();
       public abstract void onUpdate(double deltaTime);
