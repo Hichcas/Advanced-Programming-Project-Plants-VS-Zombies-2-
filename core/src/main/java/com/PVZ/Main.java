@@ -2,9 +2,11 @@ package com.PVZ;
 
 import com.PVZ.controller.AppController;
 import com.PVZ.model.enums.MenuType;
+import com.PVZ.model.game.Game;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.view.input.CommandParser;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -13,6 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
     private Texture image;
+    private Game game;
 
     @Override
     public void create() {
@@ -22,10 +25,13 @@ public class Main extends ApplicationAdapter {
 //        AppController.render();
         batch = new SpriteBatch();
         image = new Texture("libgdx.png");
+        game = new Game();
     }
 
     @Override
     public void render() {
+        float delta = Gdx.graphics.getDeltaTime();
+        game.update(delta);
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         batch.begin();
         batch.draw(image, 140, 210);
