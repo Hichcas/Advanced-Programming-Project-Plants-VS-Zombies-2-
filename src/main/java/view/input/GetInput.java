@@ -1,11 +1,19 @@
 package view.input;
 
-/**
- * this file will be modified after graphic
- */
+import model.status.AppStatus;
 
 public class GetInput {
-    public static InputDTO get() {
-        return CommandParser.getNext();
+
+    private GetInput() {
     }
+
+    public static InputDTO get() {
+
+        String command = AppStatus.scanner.nextLine().trim();
+
+        return AppStatus.currentMenuType
+                .getCurrentMenu()
+                .parseNextCommand(command);
+    }
+
 }

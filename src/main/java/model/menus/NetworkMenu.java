@@ -2,6 +2,7 @@ package model.menus;
 
 import controller.menuControllers.NetworkMenuController;
 import view.input.InputDTO;
+import view.output.OutputDTO;
 
 public class NetworkMenu extends Menu {
     @Override
@@ -10,7 +11,9 @@ public class NetworkMenu extends Menu {
     }
 
     @Override
-    public void handleInput(InputDTO input) {
-        NetworkMenuController.handle(input);
+    public OutputDTO handleInput(InputDTO input) {
+        return null;
     }
+
+
 }

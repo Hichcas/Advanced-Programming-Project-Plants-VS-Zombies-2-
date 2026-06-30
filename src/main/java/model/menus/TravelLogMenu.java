@@ -2,6 +2,7 @@ package model.menus;
 
 import controller.menuControllers.TravelLogMenuController;
 import view.input.InputDTO;
+import view.output.OutputDTO;
 
 public class TravelLogMenu extends Menu {
     @Override
@@ -10,7 +11,9 @@ public class TravelLogMenu extends Menu {
     }
 
     @Override
-    public void handleInput(InputDTO input) {
-        TravelLogMenuController.handle(input);
+    public OutputDTO handleInput(InputDTO input) {
+      return  null;
     }
+
+
 }

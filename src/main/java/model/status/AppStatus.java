@@ -1,10 +1,16 @@
 package model.status;
 
+import model.enums.MenuType;
+import model.user.User;
+
 import java.util.Scanner;
 
-import model.enums.MenuType;
+public final class AppStatus {
 
-public class AppStatus {
-    public static Scanner scanner = new Scanner(System.in);
-    public static MenuType currentMenuType;
+    private AppStatus() {
+    }
+
+    public static final Scanner scanner = new Scanner(System.in);
+    public static MenuType currentMenuType = MenuType.REGISTER;
+    public static User currentUser = null;
 }

@@ -2,6 +2,7 @@ package model.menus;
 
 import controller.menuControllers.LeaderboardMenuController;
 import view.input.InputDTO;
+import view.output.OutputDTO;
 
 public class LeaderboardMenu extends Menu {
     @Override
@@ -10,7 +11,9 @@ public class LeaderboardMenu extends Menu {
     }
 
     @Override
-    public void handleInput(InputDTO input) {
-        LeaderboardMenuController.handle(input);
+    public OutputDTO handleInput(InputDTO input) {
+        return null;
     }
+
+
 }
