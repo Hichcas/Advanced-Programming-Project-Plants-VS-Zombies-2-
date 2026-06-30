@@ -1,0 +1,60 @@
+package com.PVZ.screen;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.PVZ.model.game.GameHud;
+import com.PVZ.model.game.GameEngine;
+import com.PVZ.model.status.AppStatus;
+import com.PVZ.screen.manager.MusicManager;
+
+public class GameScreen extends BaseScreen {
+
+    private final SpriteBatch gameBatch;
+    private GameHud gameHud;
+    private final GameEngine gameEngine;
+    private final String mapPath;
+    private final String musicPath;
+
+    // * تکسچر پس‌زمینه مستقیماً اینجا مدیریت می‌شود
+    private Texture backgroundTexture;
+
+    public GameScreen(String mapPath, String musicPath, GameEngine gameEngine) {
+        super();
+        this.gameBatch = new SpriteBatch();
+        this.mapPath = mapPath;
+        this.musicPath = musicPath;
+
+        backgroundTexture = new Texture(mapPath);
+
+        MusicManager.getInstance().playMusic(musicPath);
+        this.gameEngine = gameEngine ;
+        AppStatus.setGameEngine(gameEngine);
+
+        gameHud = new GameHud();
+        stage.addActor(gameHud);
+    }
+
+    @Override
+    protected void renderScreen(float delta) {
+        // ۱. به‌روزرسانی منطق بازی (زامبی‌ها، گیاهان و ...)
+        gameEngine.render(Math.min(delta, 1 / 30f), gameBatch);
+
+        // ۲. رسم پس‌زمینه ثابت
+        gameBatch.setProjectionMatrix(camera.combined);
+        gameBatch.begin();
+        // * کل صفحه را با تکسچر پس‌زمینه پر می‌کنیم
+        // * (ابعاد VIRTUAL_WIDTH/HEIGHT از BaseScreen برابر 2560x1440 است)
+        gameBatch.draw(backgroundTexture, 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        gameBatch.end();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (gameBatch != null) gameBatch.dispose();
+        if (gameEngine != null) gameEngine.dispose();
+        // * آزادسازی تکسچر پس‌زمینه
+        if (backgroundTexture != null) backgroundTexture.dispose();
+        System.out.println("[GameScreen] PVZ resources disposed cleanly.");
+    }
+}
