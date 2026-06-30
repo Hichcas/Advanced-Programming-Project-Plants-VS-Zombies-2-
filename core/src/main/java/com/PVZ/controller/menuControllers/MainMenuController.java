@@ -35,6 +35,10 @@ public class MainMenuController {
                 AppStatus.currentMenuType = MenuType.CHAPTER_AND_LEVEL_SELECTION;
                 yield new OutputDTO(true, "Entered Play Menu.");
             }
+            case "collection" -> {
+                AppStatus.currentMenuType = MenuType.COLLECTION;
+                yield new OutputDTO(true, "Entered Collection Menu.");
+            }
             case "settings" -> {
                 AppStatus.currentMenuType = MenuType.SETTINGS;
                 yield new OutputDTO(true, "Entered Settings Menu.");

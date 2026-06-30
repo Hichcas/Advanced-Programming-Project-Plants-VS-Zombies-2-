@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public enum MainMenuCommand {
 
-    ENTER_MENU("^\\s*menu\\s+enter\\s+(?<menu>play|settings|news|profile)\\s*$") {
+    ENTER_MENU("^\\s*menu\\s+enter\\s+(?<menu>play|collection|settings|news|profile)\\s*$") {
         @Override
         public MainMenuInputDTO createDTO(Matcher matcher) {
             return new MainMenuInputDTO(this, matcher.group("menu"));
