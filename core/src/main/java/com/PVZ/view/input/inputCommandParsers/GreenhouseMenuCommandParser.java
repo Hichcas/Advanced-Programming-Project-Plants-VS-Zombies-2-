@@ -1,10 +1,23 @@
 package com.PVZ.view.input.inputCommandParsers;
 
+import com.PVZ.model.enums.GreenhouseCommand;
+import com.PVZ.view.input.DTO.GreenhouseInputDTO;
 import com.PVZ.view.input.InputDTO;
 
+import java.util.regex.Matcher;
+
 public class GreenhouseMenuCommandParser {
+
+    private GreenhouseMenuCommandParser() {
+    }
+
     public static InputDTO parseCommand(String command) {
-        //TODO
-        return null;
+        for (GreenhouseCommand greenhouseCommand : GreenhouseCommand.values()) {
+            Matcher matcher = greenhouseCommand.matcher(command);
+            if (matcher.matches()) {
+                return greenhouseCommand.createDTO(matcher);
+            }
+        }
+        return GreenhouseInputDTO.invalid();
     }
 }

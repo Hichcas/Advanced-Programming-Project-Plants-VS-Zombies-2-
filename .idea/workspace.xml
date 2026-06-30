@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fc1a961d-1b04-49f4-b2a2-83dc72dc852d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/ConsoleInputHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/controller/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/controller/AppController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/CommandParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/CommandParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/GetInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/GetInput.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/status/AppStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/status/AppStatus.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +29,7 @@
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="libGDX PVZ" type="f1a62948:ProjectNode" />
+                <item name="Advanced-Programming-Project-Plants-VS-Zombies-2-" type="f1a62948:ProjectNode" />
               </path>
             </expand>
             <select />
@@ -50,6 +47,10 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0,
@@ -69,12 +70,13 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "mahdi",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/mahdi/Desktop/libGDX PVZ",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler"
   }
 }]]></component>
   <component name="RunManager">
@@ -101,15 +103,6 @@
       <RunAsTest>false</RunAsTest>
       <GradleProfilingDisabled>false</GradleProfilingDisabled>
       <GradleCoverageDisabled>false</GradleCoverageDisabled>
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <option name="filePath" />
       <method v="2" />
     </configuration>
   </component>

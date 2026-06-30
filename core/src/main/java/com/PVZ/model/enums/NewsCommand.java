@@ -7,28 +7,28 @@ import java.util.regex.Pattern;
 
 public enum NewsCommand {
 
-    SHOW_UNREAD("^\s*(?:menu\s+news\s+)?show-unread\s*$") {
+    SHOW_UNREAD("^\\s*(?:menu\\s+news\\s+)?show-unread\\s*$") {
         @Override
         public NewsInputDTO createDTO(Matcher matcher) {
             return new NewsInputDTO(this);
         }
     },
 
-    SHOW_ALL("^\s*(?:menu\s+news\s+)?show-all\s*$") {
+    SHOW_ALL("^\\s*(?:menu\\s+news\\s+)?show-all\\s*$") {
         @Override
         public NewsInputDTO createDTO(Matcher matcher) {
             return new NewsInputDTO(this);
         }
     },
 
-    SHOW_CURRENT_MENU("^menu\s+show\s+current$|^show\s+current\s+menu$") {
+    SHOW_CURRENT_MENU("^\\s*menu\\s+show\\s+current\\s*$|^\\s*show\\s+current\\s+menu\\s*$") {
         @Override
         public NewsInputDTO createDTO(Matcher matcher) {
             return new NewsInputDTO(this);
         }
     },
 
-    EXIT("^menu\s+exit$") {
+    EXIT("^\\s*menu\\s+exit\\s*$") {
         @Override
         public NewsInputDTO createDTO(Matcher matcher) {
             return new NewsInputDTO(this);

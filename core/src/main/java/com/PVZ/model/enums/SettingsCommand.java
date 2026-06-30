@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public enum SettingsCommand {
 
     CHANGE_DIFFICULTY(
-            "^\s*(?:menu\s+settings\s+)?change-difficulty\s+-l\s+(?<level>\\d+)\s*$"
+            "^\\s*(?:menu\\s+settings\\s+)?change-difficulty\\s+-l\\s+(?<level>\\d+)\\s*$"
     ) {
         @Override
         public SettingsInputDTO createDTO(Matcher matcher) {
@@ -16,14 +16,14 @@ public enum SettingsCommand {
         }
     },
 
-    SHOW_CURRENT_MENU("^\s*menu\s+show\s+current\s*$|^\s*show\s+current\s+menu\s*$") {
+    SHOW_CURRENT_MENU("^\\s*menu\\s+show\\s+current\\s*$|^\\s*show\\s+current\\s+menu\\s*$") {
         @Override
         public SettingsInputDTO createDTO(Matcher matcher) {
             return new SettingsInputDTO(this, null);
         }
     },
 
-    EXIT("^\s*menu\s+exit\s*$") {
+    EXIT("^\\s*menu\\s+exit\\s*$") {
         @Override
         public SettingsInputDTO createDTO(Matcher matcher) {
             return new SettingsInputDTO(this, null);
