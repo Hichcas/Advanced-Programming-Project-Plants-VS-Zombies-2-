@@ -10,6 +10,7 @@ import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 import com.PVZ.model.entity.plants.behavior.PlantFoodBehavior;
 import com.PVZ.model.enums.PlantType;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Map;
 
@@ -125,5 +126,9 @@ public class Plant {
 
     public String getPlantFoodBehaviorId() {
         return instance.getPlantFoodBehaviorId();
+    }
+
+    public Rectangle getHitbox() {
+        return new Rectangle((int)getRuntimeState("col") * 100, (int)getRuntimeState("row") * 100, 80, 80);
     }
 }

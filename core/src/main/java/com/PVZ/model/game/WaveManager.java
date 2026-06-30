@@ -1,6 +1,5 @@
 package com.PVZ.model.game;
 
-import com.PVZ.model.game.ZombieEngine;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class WaveManager {
         }
 
         spawnTimer += delta;
-        if (spawnTimer >= currentEntry.getSpawnInterval() && spawned < currentEntry.getCount()) {
+        if (spawnTimer >= currentEntry.getSpawnDelay() && spawned < currentEntry.getCount()) {
             engine.spawnZombie(currentEntry.getZombieAlias(), randomRow(), 950);
             spawned++;
             spawnTimer = 0;

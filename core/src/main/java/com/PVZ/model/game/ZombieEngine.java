@@ -1,7 +1,7 @@
 package com.PVZ.model.game;
 
 import com.PVZ.model.entity.Plant;
-import com.PVZ.model.entity.Projectile;
+import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.Sun;
 import com.PVZ.model.entity.zombies.base.Zombie;
 
