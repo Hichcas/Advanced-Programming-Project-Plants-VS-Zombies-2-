@@ -58,6 +58,7 @@ run {
   //setIgnoreExitValue(true)
   jvmArgs += "--enable-native-access=ALL-UNNAMED"
   if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
+  standardInput = System.in
 }
 
 jar {

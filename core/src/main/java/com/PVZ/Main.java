@@ -3,6 +3,7 @@ package com.PVZ;
 import com.PVZ.controller.AppController;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.status.AppStatus;
+import com.PVZ.view.input.CommandParser;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,8 +17,9 @@ public class Main extends ApplicationAdapter {
     @Override
     public void create() {
 //          // here is what we used to have in previous Main.java file
-//        AppStatus.currentMenuType = MenuType.REGISTER;
-//        AppController.start();
+        CommandParser.start();
+        AppStatus.currentMenuType = MenuType.REGISTER;
+//        AppController.render();
         batch = new SpriteBatch();
         image = new Texture("libgdx.png");
     }
@@ -28,10 +30,13 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         batch.draw(image, 140, 210);
         batch.end();
+//        System.out.println("the Start is triggered");
+        AppController.render();
     }
 
     @Override
     public void dispose() {
+        CommandParser.end();
         batch.dispose();
         image.dispose();
     }
