@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fc1a961d-1b04-49f4-b2a2-83dc72dc852d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/ConsoleInputHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/controller/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/controller/AppController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/CommandParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/CommandParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/GetInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/view/input/GetInput.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/status/AppStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/status/AppStatus.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +66,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "mahdi",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/mahdi/Desktop/libGDX PVZ",
