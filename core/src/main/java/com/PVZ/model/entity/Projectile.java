@@ -7,6 +7,7 @@ public abstract class Projectile {
     private double positionX,  positionY, row, col;
     private boolean destroyed = false;
     private Rectangle hitbox = new Rectangle();
+    private double speed;
 
     public void update(float delta) {
         if (destroyed) return;
