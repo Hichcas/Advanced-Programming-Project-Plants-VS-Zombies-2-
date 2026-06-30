@@ -1,9 +1,12 @@
 package com.PVZ.model.entity.zombies.base;
 
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import java.util.List;
 
 public abstract class Zombie {
+    protected double x, row;
       protected String alias;
       protected double hitpoints;
       protected double eatDPS;
@@ -12,7 +15,7 @@ public abstract class Zombie {
       protected int weight;
       protected List<ScaledProperty> scaledProps;
       protected ZombieArmor armor;
-      
+
       public Zombie(String alias, double hitpoints, double eatDPS, double speed,
                     int wavePointCost, int weight, List<ScaledProperty> scaledProps) {
             this.alias = alias;
@@ -24,15 +27,19 @@ public abstract class Zombie {
             this.scaledProps = scaledProps;
             this.armor = null;
       }
-      
+
+      public void update(float delta){}
+
+    public void draw(SpriteBatch batch){}
+
       public void setArmor(ZombieArmor armor) {
             this.armor = armor;
       }
-      
+
       public ZombieArmor getArmor() {
             return armor;
       }
-      
+
       public double getEffectiveHitpoints() {
             double base = hitpoints;
             if (armor != null) {
@@ -40,11 +47,11 @@ public abstract class Zombie {
             }
             return base;
       }
-      
+
       public abstract void onSpawn();
       public abstract void onUpdate(double deltaTime);
       public abstract void onDestroy();
-      
+
       public String getAlias() { return alias; }
       public double getHitpoints() { return hitpoints; }
       public double getEatDPS() { return eatDPS; }
