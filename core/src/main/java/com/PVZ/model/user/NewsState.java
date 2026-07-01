@@ -1,5 +1,7 @@
 package com.PVZ.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +24,7 @@ public class NewsState {
         news.add(new NewsEntry(text));
     }
 
+    @JsonIgnore
     public List<NewsEntry> getUnreadNews() {
         List<NewsEntry> unread = new ArrayList<>();
         for (NewsEntry entry : news) {
@@ -32,6 +35,7 @@ public class NewsState {
         return unread;
     }
 
+    @JsonIgnore
     public List<NewsEntry> getAllNews() {
         return Collections.unmodifiableList(news);
     }

@@ -2,18 +2,18 @@ package com.PVZ.model.game;
 
 public class GameStatus {
     private int sunflower;
-    private int remainingZomieWaveInPercent;
+    private int remainingZombieWaveInPercent;
 
-    public int getRemainingZomieWaveInPercent() {
-        return remainingZomieWaveInPercent;
+    public int getRemainingZombieWaveInPercent() {
+        return remainingZombieWaveInPercent;
     }
 
     public int getSunflower() {
         return sunflower;
     }
 
-    public void setRemainingZomieWaveInPercent(int remainingZomieWaveInPercent) {
-        this.remainingZomieWaveInPercent = remainingZomieWaveInPercent;
+    public void setRemainingZombieWaveInPercent(int remainingZombieWaveInPercent) {
+        this.remainingZombieWaveInPercent = remainingZombieWaveInPercent;
     }
 
     public void setSunflower(int sunflower) {

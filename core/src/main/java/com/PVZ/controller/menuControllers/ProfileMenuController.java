@@ -65,6 +65,7 @@ public class ProfileMenuController {
         }
 
         currentUser.profile.setNickname(newNickname);
+        UserRegistry.markDirty(currentUser.profile.getUsername());
         return new OutputDTO(true, "Nickname changed successfully.");
     }
 
@@ -81,6 +82,7 @@ public class ProfileMenuController {
         }
 
         currentUser.profile.setEmail(newEmail);
+        UserRegistry.markDirty(currentUser.profile.getUsername());
         return new OutputDTO(true, "Email changed successfully.");
     }
 
@@ -116,6 +118,7 @@ public class ProfileMenuController {
         }
 
         currentUser.profile.setPasswordHash(newHash);
+        UserRegistry.markDirty(currentUser.profile.getUsername());
         return new OutputDTO(true, "Password changed successfully.");
     }
 

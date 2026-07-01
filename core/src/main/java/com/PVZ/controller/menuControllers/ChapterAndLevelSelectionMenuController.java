@@ -5,6 +5,7 @@ import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.view.input.DTO.ChapterAndLevelSelectionInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
@@ -92,6 +93,7 @@ public class ChapterAndLevelSelectionMenuController {
             case "diamond" -> currentUser.userStats.addDiamonds(amount);
             default -> { return new OutputDTO(false, "Invalid cheat currency."); }
         }
+        UserRegistry.markDirty(currentUser.profile.getUsername());
         return new OutputDTO(true, "Cheat applied successfully.");
     }
 

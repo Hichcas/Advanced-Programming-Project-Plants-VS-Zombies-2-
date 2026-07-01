@@ -33,7 +33,7 @@ public class GameHud extends Group {
 
         // خواندن مقادیر از وضعیت بازی
         sunflowerCount = AppStatus.getGameEngine().gameStatus.getSunflower();
-        zombieWavePercent = AppStatus.getGameEngine().gameStatus.getRemainingZomieWaveInPercent();
+        zombieWavePercent = AppStatus.getGameEngine().gameStatus.getRemainingZombieWaveInPercent();
     }
 
     @Override
