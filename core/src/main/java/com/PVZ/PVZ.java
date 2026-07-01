@@ -19,7 +19,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
-
+import com.PVZ.util.GameInitialization;
+import java.io.IOException;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class PVZ extends Game {
     private SpriteBatch batch;
@@ -28,7 +29,11 @@ public class PVZ extends Game {
     @Override
     public void create() {
 //          // here is what we used to have in previous Main.java file
-
+        try {
+            GameInitialization.initialize();
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to load plant data JSON", e);
+        }
         com.PVZ.screen.manager.ScreenManager.getInstance().init(this);
         AppStatus.setPVZ(this);
         CommandParser.start();
