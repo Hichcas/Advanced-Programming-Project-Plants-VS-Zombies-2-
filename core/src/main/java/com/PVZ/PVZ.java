@@ -1,11 +1,13 @@
 package com.PVZ;
 
 import com.PVZ.controller.AppController;
+import com.PVZ.database.UserDatabase;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.game.GameStatus;
 import com.PVZ.model.game.RegularGameEngine;
 import com.PVZ.model.graphics.GraphicsQuality;
 import com.PVZ.model.status.AppStatus;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.screen.GameScreen;
 import com.PVZ.screen.manager.BrightnessController;
 import com.PVZ.screen.manager.FontManager;
@@ -34,6 +36,13 @@ public class PVZ extends Game {
         AppStatus.setQuality(GraphicsQuality.Ultra_High);
 //        batch = new SpriteBatch();
 //        image = new Texture("libgdx.png");
+
+        try {
+            UserDatabase.init();
+        } catch (Exception e) {
+            System.err.println("UserDatabase init failed: " + e.getMessage());
+        }
+
         ScreenManager.getInstance().startWithFadeIn(new GameScreen("libgdx.png", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));
     }
 
@@ -49,10 +58,12 @@ public class PVZ extends Game {
 
 //        System.out.println("the Start is triggered");
         AppController.render();
+        UserRegistry.saveAllDirtyUsers();
     }
 
     @Override
     public void dispose() {
+        UserRegistry.clear();
         MusicManager.getInstance().dispose();
         FontManager.getInstance().dispose();
         ScreenManager.getInstance().dispose();

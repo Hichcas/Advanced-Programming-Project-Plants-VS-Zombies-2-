@@ -49,16 +49,6 @@ public abstract class Zombie {
         col = 8 - (int) (x / 100);
         hitbox.setPosition((float) x, (float) y);
 
-        int tileCol = (int) (x / 100) + 1;
-        Plant plant = engine.getPlantAt((int) row, tileCol);
-
-        if (plant != null) {
-            moving = false;
-            engine.takeDamage(plant, eatDPS * delta);
-        } else {
-            moving = true;
-        }
-
         onUpdate(delta);
 
         if (x <= -50) {

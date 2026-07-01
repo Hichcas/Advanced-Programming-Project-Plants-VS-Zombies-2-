@@ -48,20 +48,20 @@ public class LoginMenuController {
             return new OutputDTO(false, "Invalid username or password.");
         }
 
-        String passwordHash;
-        try {
-            passwordHash = EncryptionEngine.hash(password);
-        } catch (Exception e) {
-            return new OutputDTO(false, "Failed to verify password.");
-        }
+        // load user from database file
+        User user = UserRegistry.loginUser(username);
 
-        if (!UserRegistry.authenticate(username, passwordHash)) {
-            return new OutputDTO(false, "Invalid username or password.");
-        }
-
-        User user = UserRegistry.getUser(username);
         if (user == null) {
             return new OutputDTO(false, "Invalid username or password.");
+        }
+
+        // verify password hash
+        try {
+            if (!user.profile.getPasswordHash().equals(EncryptionEngine.hash(password))) {
+                return new OutputDTO(false, "Invalid username or password.");
+            }
+        } catch (Exception e) {
+            return new OutputDTO(false, "Failed to verify password.");
         }
 
         user.setStayLoggedIn(input.isStayLoggedIn());
@@ -137,6 +137,7 @@ public class LoginMenuController {
         }
 
         pendingResetUser.profile.setPasswordHash(newPasswordHash);
+        UserRegistry.saveUserToDatabase(pendingResetUser.profile.getUsername());
         pendingResetUser = null;
         resetState = ResetState.NONE;
 
