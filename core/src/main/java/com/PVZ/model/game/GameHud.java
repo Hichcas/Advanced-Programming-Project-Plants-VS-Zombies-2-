@@ -16,7 +16,6 @@ public class GameHud extends Group {
     private int zombieWavePercent = 0;
 
     // ارتفاع مجازی (ثابت در BaseScreen)
-    private static final float VIRTUAL_HEIGHT = 1440f;
 
     public GameHud() {
         // ۱. گرفتن فونت از FontManager (دقیقاً مثل قدیم)
@@ -24,7 +23,7 @@ public class GameHud extends Group {
 
         // ۲. اندازه گروه را برابر کل فضای مجازی می‌دهیم
         //    تا کل صفحه را پوشش دهد (برای رسم در مختصات دلخواه)
-        setSize(2560, VIRTUAL_HEIGHT);
+        setSize(AppStatus.getQuality().width, AppStatus.getQuality().height);
     }
 
     @Override
@@ -44,11 +43,11 @@ public class GameHud extends Group {
         // تنظیم رنگ قلم
         font.setColor(Color.GOLD);
         // رسم متن اول: Sunflowers
-        font.draw(batch, "Sunflowers: " + sunflowerCount, 20, VIRTUAL_HEIGHT - 50);
+        font.draw(batch, "Sunflowers: " + sunflowerCount, 20, AppStatus.getQuality().height - 50);
 
         font.setColor(Color.RED);
         // رسم متن دوم: Zombie Wave
-        font.draw(batch, "Zombie Wave: " + zombieWavePercent + "%", 20, VIRTUAL_HEIGHT - 100);
+        font.draw(batch, "Zombie Wave: " + zombieWavePercent + "%", 20, AppStatus.getQuality().height - 100);
 
         // بعد از رسم، رنگ را به سفید برگردانیم (اختیاری برای ایمنی)
         font.setColor(Color.WHITE);

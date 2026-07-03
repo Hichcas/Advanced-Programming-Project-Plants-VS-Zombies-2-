@@ -8,6 +8,7 @@ import com.PVZ.model.graphics.GraphicsQuality;
 import com.PVZ.model.user.User;
 import com.PVZ.screen.manager.BrightnessController;
 import com.PVZ.screen.manager.MusicManager;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import java.util.LinkedHashSet;
 import java.util.Scanner;
@@ -17,6 +18,7 @@ public final class AppStatus {
     private static GameEngine gameEngine;
     private PVZ pvzGame;
     public static GraphicsQuality Quality = GraphicsQuality.Ultra_High;
+    public static OrthographicCamera camera;
 
     public static GraphicsQuality getQuality() {
         return Quality;
@@ -82,5 +84,13 @@ public final class AppStatus {
 
     public static void setPVZ(PVZ PVZ) {
         AppStatus.PVZ = PVZ;
+    }
+
+    public static OrthographicCamera getCamera() {
+        return camera;
+    }
+
+    public static void setCamera(OrthographicCamera camera) {
+        AppStatus.camera = camera;
     }
 }
