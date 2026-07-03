@@ -30,6 +30,8 @@ public abstract class BaseScreen implements Screen {
         viewport = new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
         camera.position.set(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 0);
 
+        AppStatus.setCamera(camera);
+
         stage = new Stage(viewport);
         stage.addActor(BrightnessController.getInstance());
 
@@ -80,6 +82,7 @@ public abstract class BaseScreen implements Screen {
     @Override
     public void hide() {
         // 🌟 پاک کردن پردازنده ورودی هنگام تغییر اسکرین
+        dispose();
         Gdx.input.setInputProcessor(null);
     }
 

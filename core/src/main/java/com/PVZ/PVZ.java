@@ -48,8 +48,7 @@ public class PVZ extends Game {
             System.err.println("UserDatabase init failed: " + e.getMessage());
         }
 
-        ScreenManager.getInstance().startWithFadeIn(new GameScreen("libgdx.png", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));
-    }
+        ScreenManager.getInstance().startWithFadeIn(new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));    }
 
     @Override
     public void render() {
