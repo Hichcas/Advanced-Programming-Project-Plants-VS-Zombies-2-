@@ -5,23 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fc1a961d-1b04-49f4-b2a2-83dc72dc852d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/libgdx.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/PVZ.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/PVZ.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/Tile.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/Tile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/GameEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/GameEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/GameHud.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/GameHud.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/data/users_index.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/data/users_index.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/controller/menuControllers/InGameMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/controller/menuControllers/InGameMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/Plant.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/Plant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/Sun.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/Sun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/plants/behavior/BehaviorContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/plants/behavior/BehaviorContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/plants/behavior/BehaviorFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/plants/behavior/BehaviorFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/plants/behavior/impl/LobberBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/plants/behavior/impl/LobberBehavior.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/plants/behavior/impl/ShooterBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/plants/behavior/impl/ShooterBehavior.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/plants/behavior/impl/SunProducerBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/plants/behavior/impl/SunProducerBehavior.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/plants/behavior/impl/WallBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/entity/plants/behavior/impl/WallBehavior.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/enums/PlantCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/enums/PlantCategory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/Map.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/PlantFoodManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/PlantFoodManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/RegularGameEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/RegularGameEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/status/AppStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/status/AppStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/screen/BaseScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/screen/BaseScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/RegularInputProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/RegularInputProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/SunManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/model/game/SunManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/PVZ/screen/GameScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/PVZ/screen/GameScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_D:/term2/AP/pvzVersion3/Advanced-Programming-Project-Plants-VS-Zombies-2-" value="3Fqp1ZdYSotS6E4izV6zqv7P5rr" />
+      <entry key="_D:/term2/AP/pvzVersion3/New folder/Advanced-Programming-Project-Plants-VS-Zombies-2-" value="3G4Su3mwyST2bUMfxgP7ZPUUIEh" />
+    </persistenceIdMap>
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -36,12 +52,7 @@
         </task>
         <projects_view>
           <tree_state>
-            <expand>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="Advanced-Programming-Project-Plants-VS-Zombies-2-" type="f1a62948:ProjectNode" />
-              </path>
-            </expand>
+            <expand />
             <select />
           </tree_state>
         </projects_view>
@@ -71,24 +82,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.New folder (2) [:lwjgl3:run].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "mahdi",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/mahdi/Desktop/libGDX PVZ",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.projectsettings.compiler.javacompiler"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.New folder (2) [:lwjgl3:run].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/term2/AP/pvzVersion3/New folder/Advanced-Programming-Project-Plants-VS-Zombies-2-&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="New folder (2) [:lwjgl3:run]" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
       <ExternalSystemSettings>
@@ -119,8 +135,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.24374.151" />
-        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.24374.151" />
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
@@ -131,10 +147,26 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1782812241786</updated>
+      <workItem from="1783102798173" duration="2721000" />
+      <workItem from="1783146442630" duration="16000" />
+      <workItem from="1783229572183" duration="3736000" />
+      <workItem from="1783241982585" duration="2114000" />
+      <workItem from="1783252929105" duration="3718000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

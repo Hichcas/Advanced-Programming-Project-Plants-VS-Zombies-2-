@@ -2,8 +2,7 @@ package com.PVZ.controller.menuControllers;
 
 import com.PVZ.model.enums.InGameCommand;
 import com.PVZ.model.enums.MenuType;
-import com.PVZ.model.enums.PlantType;
-import com.PVZ.model.enums.ZombieType;
+import com.PVZ.model.game.RegularGameEngine;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.InGameInputDTO;
@@ -19,41 +18,72 @@ public class InGameMenuController {
         if (dto.getCommand() == null) {
             return new OutputDTO(false, "Invalid Command.");
         }
+
+        RegularGameEngine engine = getEngine();
         return switch (dto.getCommand()) {
-            case ADVANCE_TIME -> new OutputDTO(true, "Advanced time by " + dto.getTickCount() + " ticks.");
-            case COLLECT_SUN -> new OutputDTO(true, "Sun collected at the given location.");
-            case SHOW_SUN_AMOUNT -> showSunAmount();
-            case CHEAT_ADD_SUNS -> cheatAddSuns(dto.getAmount());
-            case CHEAT_REMOVE_COOLDOWN -> new OutputDTO(true, "Cooldowns removed.");
-            case CHEAT_ADD_PLANT_FOOD -> new OutputDTO(true, "Added one plant food.");
+            case ADVANCE_TIME -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.advanceTimeText(dto.getTickCount()));
+            case COLLECT_SUN -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.collectSunAt(dto.getX(), dto.getY()));
+            case SHOW_SUN_AMOUNT -> showSunAmount(engine);
+            case CHEAT_ADD_SUNS -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.addSunsCheat(dto.getAmount()));
+            case CHEAT_REMOVE_COOLDOWN -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.removeCooldownCheat());
+            case CHEAT_ADD_PLANT_FOOD -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.addPlantFoodCheat());
             case CHEAT_SPAWN_ZOMBIE -> new OutputDTO(true, "Zombie spawned: " + dto.getZombieType());
             case CHEAT_RELEASE_NUKE -> new OutputDTO(true, "Nuke released.");
-            case PLANT_PLANT -> new OutputDTO(true, "Plant placed: " + dto.getPlantType());
-            case PLUCK_PLANT -> new OutputDTO(true, "Plant plucked.");
-            case FEED_PLANT -> new OutputDTO(true, "Plant fed.");
-            case START_ZOMBIE_WAVES -> new OutputDTO(true, "Zombie waves started.");
-            case SHOW_MAP -> new OutputDTO(true, "Map shown.");
-            case SHOW_PLANTS_STATUS -> new OutputDTO(true, "Plants status shown.");
-            case SHOW_TILE_STATUS -> new OutputDTO(true, "Tile status shown.");
-            case ZOMBIES_INFO -> new OutputDTO(true, "Zombies info shown.");
+            case PLANT_PLANT -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.plantPlant(dto.getPlantType(), dto.getX(), dto.getY()));
+            case PLUCK_PLANT -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.pluckPlant(dto.getX(), dto.getY()));
+            case FEED_PLANT -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.feedPlant(dto.getX(), dto.getY()));
+            case START_ZOMBIE_WAVES -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.startZombieWavesText());
+            case SHOW_MAP -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.showMapText());
+            case SHOW_PLANTS_STATUS -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.showPlantsStatusText());
+            case SHOW_TILE_STATUS -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.showTileStatusText(dto.getX(), dto.getY()));
+            case ZOMBIES_INFO -> engine == null
+                    ? new OutputDTO(false, "Game engine is not ready.")
+                    : new OutputDTO(true, engine.zombiesInfoText());
             case EXIT -> exitToGameMenu();
             case SHOW_CURRENT_MENU -> new OutputDTO(true, AppStatus.currentMenuType.name());
         };
     }
 
-    private OutputDTO showSunAmount() {
+    private OutputDTO showSunAmount(RegularGameEngine engine) {
         User user = AppStatus.currentUser;
-        if (user == null || user.userStats == null) {
+        if (user == null) {
             return new OutputDTO(false, "You must be logged in.");
         }
-        return new OutputDTO(true, "Sun amount: 0");
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        return new OutputDTO(true, engine.showSunAmountText());
     }
 
-    private OutputDTO cheatAddSuns(Integer amount) {
-        if (amount == null || amount <= 0) {
-            return new OutputDTO(false, "Invalid amount.");
+    private RegularGameEngine getEngine() {
+        if (AppStatus.getGameEngine() instanceof RegularGameEngine regularGameEngine) {
+            return regularGameEngine;
         }
-        return new OutputDTO(true, "Added " + amount + " suns.");
+        return null;
     }
 
     private OutputDTO exitToGameMenu() {

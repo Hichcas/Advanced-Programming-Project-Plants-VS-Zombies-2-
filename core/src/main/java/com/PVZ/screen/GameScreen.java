@@ -1,14 +1,22 @@
 package com.PVZ.screen;
 
+import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.game.GameEngine;
 import com.PVZ.model.game.GameHud;
 import com.PVZ.model.game.Map;
+import com.PVZ.model.game.RegularGameEngine;
 import com.PVZ.model.game.RegularInputProcessor;
+import com.PVZ.model.game.SeedPacketBar;
 import com.PVZ.model.status.AppStatus;
+import com.PVZ.screen.manager.FontManager;
 import com.PVZ.screen.manager.MusicManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameScreen extends BaseScreen {
 
@@ -19,6 +27,7 @@ public class GameScreen extends BaseScreen {
     private final String musicPath;
     private Map gameMap;
     private ShapeRenderer shapeDebug;
+    private final BitmapFont hudFont;
 
     // * تکسچر پس‌زمینه مستقیماً اینجا مدیریت می‌شود
     private Texture backgroundTexture;
@@ -30,6 +39,15 @@ public class GameScreen extends BaseScreen {
         multiplexer.addProcessor(gameEngine.inputProcessor); // اول این
         multiplexer.addProcessor(stage); // بعد stage
         super.show();
+
+        refreshSeedPacketBar();
+    }
+
+    private void refreshSeedPacketBar() {
+        if (gameEngine instanceof RegularGameEngine regularGameEngine) {
+            List<PlantType> loadout = new ArrayList<>(AppStatus.selectedPlants);
+            regularGameEngine.getSeedPacketBar().layout(loadout, 40f, VIRTUAL_HEIGHT - 150f);
+        }
     }
 
 
@@ -50,13 +68,25 @@ public class GameScreen extends BaseScreen {
 
         gameMap = new Map(550, 1240, 1600, 1170, 5, 9);  // 5 ردیف، 9 ستون
         shapeDebug = new ShapeRenderer();
+        hudFont = FontManager.getInstance().getEnglishMenuFont();
 
         // اضافه کردن gameMap به engine (اگر نیاز است)
         gameEngine.setMap(gameMap);
+
+        // نوار بذر باید فقط گیاهانی را نشان دهد که بازیکن در «منوی انتخاب گیاه»
+        // برای همین مرحله انتخاب کرده (AppStatus.selectedPlants)، نه کل کلکسیون آنلاک‌شده.
+        if (gameEngine instanceof RegularGameEngine regularGameEngine) {
+            List<PlantType> loadout = new ArrayList<>(AppStatus.selectedPlants);
+            regularGameEngine.getSeedPacketBar().layout(loadout, 40f, VIRTUAL_HEIGHT - 150f);
+        }
     }
 
     @Override
     protected void renderScreen(float delta) {
+        // نوار بذرها باید از آخرین loadout کاربر refresh شود؛ چون GameScreen
+        // از ابتدای برنامه ساخته می‌شود و selectedPlants ممکن است بعداً پر شود.
+        refreshSeedPacketBar();
+
         // ۱. به‌روزرسانی منطق بازی (زامبی‌ها، گیاهان و ...)
         gameEngine.render(Math.min(delta, 1 / 30f), gameBatch);
 
@@ -71,6 +101,19 @@ public class GameScreen extends BaseScreen {
         shapeDebug.begin(ShapeRenderer.ShapeType.Line);
         gameMap.renderBorders(shapeDebug);   // اینجا ۴۵ مستطیل سبز می‌کشد
         shapeDebug.end();
+
+        // ۳. رسم نوار بذرها (سلکت/عدم سلکت با رنگ مشخص می‌شود)
+        if (gameEngine instanceof RegularGameEngine regularGameEngine) {
+            SeedPacketBar seedBar = regularGameEngine.getSeedPacketBar();
+
+            shapeDebug.begin(ShapeRenderer.ShapeType.Filled);
+            seedBar.drawBackgrounds(shapeDebug, regularGameEngine, regularGameEngine.getSelectedPlantType());
+            shapeDebug.end();
+
+            gameBatch.begin();
+            seedBar.drawIconsAndLabels(gameBatch, hudFont);
+            gameBatch.end();
+        }
     }
 
     @Override

@@ -109,7 +109,8 @@ public class Plant {
         return instance.getRuntimeState(key);
     }
 
-    public void draw(SpriteBatch batch) {}
+    public void draw(SpriteBatch batch) {
+    }
 
     public void update(BehaviorContext context, double deltaTimeSeconds) {
         mainBehavior.onUpdate(instance, context, deltaTimeSeconds);
@@ -129,6 +130,19 @@ public class Plant {
     }
 
     public Rectangle getHitbox() {
-        return new Rectangle((int)getRuntimeState("col") * 100, (int)getRuntimeState("row") * 100, 80, 80);
+        int row = asInt(getRuntimeState("row"), 0);
+        int col = asInt(getRuntimeState("col"), 0);
+        return new Rectangle(col * 100f, row * 100f, 80, 80);
+    }
+
+    private static int asInt(Object value, int defaultValue) {
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        try {
+            return value == null ? defaultValue : Integer.parseInt(String.valueOf(value));
+        } catch (NumberFormatException ex) {
+            return defaultValue;
+        }
     }
 }
