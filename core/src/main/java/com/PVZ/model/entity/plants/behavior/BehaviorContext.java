@@ -1,5 +1,7 @@
 package com.PVZ.model.entity.plants.behavior;
 
+import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.zombies.base.Zombie;
 
 import java.util.List;
@@ -8,14 +10,55 @@ public interface BehaviorContext {
 
     List<Zombie> getZombiesInLane(int lane);
 
+    default List<Zombie> getAllZombies() {
+        return List.of();
+    }
+
+    default Plant getPlantAt(int row, int col) {
+        return null;
+    }
+
     void spawnProjectile(Object projectile);
 
     void spawnSun(int amount);
 
-    void damageArea(
-            int lane,
-            int row,
-            int damage
-    );
+    default void spawnSunAt(int row, int col, int amount) {
+        spawnSun(amount);
+    }
+
+    void damageArea(int lane, int row, int damage);
+
+    default void freezeZombiesInLane(int lane, double seconds) {
+    }
+
+    default void freezeAllZombies(double seconds) {
+    }
+
+    default void disarmZombiesInLane(int lane) {
+    }
+
+    default void moveZombiesFromLane(int sourceLane, int targetLane) {
+    }
+
+    default void pullAdjacentZombiesToLane(int lane) {
+    }
+
+    default void killRandomZombies(int count) {
+    }
+
+    default void killClosestZombieInLane(int lane) {
+    }
+
+    default void hypnotizeZombiesInLane(int lane, double seconds) {
+    }
+
+    default void healPlantAt(int row, int col, int amount) {
+    }
+
+    default void fortifyPlantAt(int row, int col, int amount) {
+    }
+
+    default void consumePlantFood(PlantInstance plant) {
+    }
 
 }
