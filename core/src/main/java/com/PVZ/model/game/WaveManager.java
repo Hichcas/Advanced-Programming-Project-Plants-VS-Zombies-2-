@@ -19,7 +19,7 @@ public class WaveManager {
     }
 
     public void update(float delta, ZombieEngine engine) {
-        if (currentWave >= waves.size()) return;
+        if (!started || currentWave >= waves.size()) return;
 
         Wave wave = waves.get(currentWave);
 
@@ -35,7 +35,7 @@ public class WaveManager {
 
         spawnTimer += delta;
         if (spawnTimer >= currentEntry.getSpawnDelay() && spawned < currentEntry.getCount()) {
-            engine.spawnZombie(currentEntry.getZombieAlias(), randomRow(), 950);
+            engine.spawnZombie(currentEntry.getZombieAlias(), randomRow(), 8);
             spawned++;
             spawnTimer = 0;
         }
@@ -60,6 +60,9 @@ public class WaveManager {
     private int randomRow() {
         return (int) (Math.random() * 5);
     }
+
+    private boolean started = false;
+    public void start() { started = true; }
 
     public int getCurrentWave() { return currentWave; }
     public int getTotalWaves() { return waves.size(); }
