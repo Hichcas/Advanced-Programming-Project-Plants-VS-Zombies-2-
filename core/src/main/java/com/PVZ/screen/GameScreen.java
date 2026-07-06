@@ -83,14 +83,11 @@ public class GameScreen extends BaseScreen {
         // ست کردن پروجکشن برای رندر
         gameBatch.setProjectionMatrix(camera.combined);
 
-        // به‌روزرسانی منطق بازی
-        gameEngine.render(Math.min(delta, 1 / 30f), gameBatch);
-
         // رسم پس‌زمینه
         gameBatch.begin();
         gameBatch.draw(backgroundTexture, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
         gameBatch.end();
-
+        gameEngine.render(Math.min(delta, 1 / 30f), gameBatch);
         // مرزهای گرید
         shapeDebug.setProjectionMatrix(camera.combined);
         shapeDebug.begin(ShapeRenderer.ShapeType.Line);
