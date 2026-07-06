@@ -1,6 +1,7 @@
 package com.PVZ.model.game;
 
 public class GameStatus {
+    private boolean gameOver = false;
     private int sunflower;
     private int remainingZombieWaveInPercent;
 
@@ -18,5 +19,13 @@ public class GameStatus {
 
     public void setSunflower(int sunflower) {
         this.sunflower = sunflower;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 }

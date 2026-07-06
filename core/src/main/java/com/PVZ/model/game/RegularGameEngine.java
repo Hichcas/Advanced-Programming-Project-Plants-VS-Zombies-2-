@@ -8,8 +8,8 @@ import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
-import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.enums.PlantType;
+import com.PVZ.model.status.AppStatus;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class RegularGameEngine extends GameEngine implements ZombieEngine, BehaviorContext {
@@ -30,29 +29,65 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     private final SunManager sunManager = new SunManager();
     private final PlantFoodManager plantFoodManager = new PlantFoodManager();
     private final Random random = new Random();
-    private final Map<Zombie, Integer> freezeTimers = new IdentityHashMap<>();
-    private final Map<Zombie, Integer> hypnotizeTimers = new IdentityHashMap<>();
+    private final java.util.Map<Zombie, Integer> freezeTimers = new IdentityHashMap<>();
+    private final java.util.Map<Zombie, Integer> hypnotizeTimers = new IdentityHashMap<>();
     private float tickAccumulator = 0f;
     private boolean zombieWavesStarted = false;
 
-    /** Currently selected seed packet (set by clicking the SeedPacketBar), or null if none. */
+    /**
+     * Currently selected seed packet (set by clicking the SeedPacketBar), or null
+     * if none.
+     */
     private PlantType selectedPlantType;
 
     /** Per plant-type recharge cooldown remaining, in seconds. */
-    private final Map<PlantType, Double> rechargeRemaining = new java.util.EnumMap<>(PlantType.class);
+    private final java.util.Map<PlantType, Double> rechargeRemaining = new java.util.EnumMap<>(PlantType.class);
 
     private final SeedPacketBar seedPacketBar = new SeedPacketBar();
+
+    private final RegularZombieEngine zombieEngine;
+    private final List<Plant> plants = new ArrayList<>();
+    private WaveManager waveManager;
+    private BattleController battleController;
 
     public RegularGameEngine(GameStatus gameStatus) {
         super(gameStatus, new RegularInputProcessor());
         ((RegularInputProcessor) inputProcessor).setRegularGameEngine(this);
+
         if (gameStatus != null && gameStatus.getSunflower() <= 0) {
             gameStatus.setSunflower(0);
+        }
+
+        this.zombieEngine = new RegularZombieEngine();
+        this.battleController = new BattleController(zombieEngine.getZombies(), plants, projectiles, gameStatus);
+
+        List<Wave> waves = new ArrayList<>();
+        List<Wave.WaveEntry> e = new ArrayList<>();
+        e.add(new Wave.WaveEntry("ZombieTutorialDefault", 5, 1.5f));
+        waves.add(new Wave(e, 5f));
+        this.waveManager = new WaveManager(waves);
+    }
+
+    @Override
+    public void setMap(Map map) {
+        super.setMap(map);
+        if (zombieEngine != null) {
+            zombieEngine.bindMap(map);
+        }
+        if (battleController != null) {
+            battleController.setMap(map);
         }
     }
 
     @Override
     public void update(float delta) {
+        if (waveManager != null) {
+            waveManager.update(delta, zombieEngine);
+        }
+        if (battleController != null) {
+            battleController.update(delta);
+        }
+
         tickAccumulator += delta;
         while (tickAccumulator >= TICK_SECONDS) {
             tickAccumulator -= TICK_SECONDS;
@@ -75,7 +110,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         rechargeRemaining.replaceAll((type, remaining) -> Math.max(0.0, remaining - TICK_SECONDS));
 
         if (gameStatus != null) {
-            gameStatus.setRemainingZombieWaveInPercent(zombieWavesStarted ? Math.min(100, gameStatus.getRemainingZombieWaveInPercent() + 1) : 0);
+            gameStatus.setRemainingZombieWaveInPercent(
+                    zombieWavesStarted ? Math.min(100, gameStatus.getRemainingZombieWaveInPercent() + 1) : 0);
         }
     }
 
@@ -98,7 +134,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
                 if (plant.isDead()) {
                     if (plant.getStats().getBooleanExtra("explodeOnDeath", false)) {
-                        damageArea(row, row, Math.max(plant.getStats().getExplodeDamage(), plant.getStats().getDamage()));
+                        damageArea(row, row,
+                                Math.max(plant.getStats().getExplodeDamage(), plant.getStats().getDamage()));
                     }
                     map.removePlant(row, col);
                 }
@@ -127,9 +164,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         decrementTimers(hypnotizeTimers, true);
     }
 
-    private void decrementTimers(Map<Zombie, Integer> timers, boolean restoreMovement) {
+    private void decrementTimers(java.util.Map<Zombie, Integer> timers, boolean restoreMovement) {
         List<Zombie> toRestore = new ArrayList<>();
-        for (Map.Entry<Zombie, Integer> entry : timers.entrySet()) {
+        for (java.util.Map.Entry<Zombie, Integer> entry : timers.entrySet()) {
             int remaining = Math.max(0, entry.getValue() - 1);
             entry.setValue(remaining);
             if (remaining == 0) {
@@ -146,6 +183,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     @Override
     public void draw(SpriteBatch batch) {
+        if (zombieEngine != null) {
+            zombieEngine.draw(batch);
+        }
     }
 
     @Override
@@ -156,6 +196,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         plantFoodManager.reset();
         freezeTimers.clear();
         hypnotizeTimers.clear();
+
+        if (zombieEngine != null) {
+            zombieEngine.dispose();
+        }
     }
 
     @Override
@@ -164,7 +208,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             return List.of();
         }
         List<Zombie> result = new ArrayList<>();
-        for (Zombie zombie : zombies) {
+        for (Zombie zombie : getZombieList()) {
             if (zombie != null && (int) zombie.getRow() == lane && !zombie.isDead()) {
                 result.add(zombie);
             }
@@ -174,17 +218,15 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     @Override
     public List<Zombie> getAllZombies() {
-        return Collections.unmodifiableList(zombies);
+        return Collections.unmodifiableList(getZombieList());
     }
 
     @Override
     public void kill(Object entity) {
-
     }
 
     @Override
     public void takeDamage(Object entity, double amount) {
-
     }
 
     @Override
@@ -250,7 +292,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     @Override
     public void freezeAllZombies(double seconds) {
-        for (Zombie zombie : zombies) {
+        for (Zombie zombie : getZombieList()) {
             if (zombie != null && !zombie.isDead()) {
                 zombie.stopMoving();
                 freezeTimers.put(zombie, Math.max(1, (int) Math.ceil(seconds / TICK_SECONDS)));
@@ -287,7 +329,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     @Override
     public void killRandomZombies(int count) {
         List<Zombie> alive = new ArrayList<>();
-        for (Zombie zombie : zombies) {
+        for (Zombie zombie : getZombieList()) {
             if (zombie != null && !zombie.isDead()) {
                 alive.add(zombie);
             }
@@ -353,12 +395,16 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     @Override
     public void spawnProjectile(Projectile p) {
-
+        if (p != null) {
+            projectiles.add(p);
+        }
     }
 
     @Override
     public void spawnZombie(String alias, int row, double x) {
-        // zombie side intentionally kept minimal in this patch
+        if (zombieEngine != null) {
+            zombieEngine.spawnZombie(alias, row, x);
+        }
     }
 
     @Override
@@ -379,7 +425,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return plantPlant(type, x, y);
     }
 
-    /** Places {@code type} at grid location (x, y) per the design doc's 1-based "-l (x, y)" convention. */
+    /**
+     * Places {@code type} at grid location (x, y) per the design doc's 1-based "-l
+     * (x, y)" convention.
+     */
     public String plantPlant(PlantType type, int x, int y) {
         if (map == null) {
             return "Map is not ready.";
@@ -400,8 +449,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             return type.getDisplayName() + " is still recharging.";
         }
 
-        // Only plants chosen in the pre-level Plant Selection Menu (AppStatus.selectedPlants)
-        // can actually be planted during the level, per the design doc.
         if (!AppStatus.selectedPlants.isEmpty() && !AppStatus.selectedPlants.contains(type)) {
             return "Plant was not selected for this level: " + type.getDisplayName();
         }
@@ -437,8 +484,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             rechargeRemaining.put(type, recharge);
         }
 
-        // A plant boosted (2 diamonds) in the selection menu has its plant-food effect
-        // triggered immediately every time it's planted during this level.
         if (AppStatus.boostedPlants.contains(type)) {
             plant.applyPlantFood(this);
         }
@@ -466,7 +511,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return seedPacketBar;
     }
 
-    /** Plants whatever seed is currently selected at (x, y) and clears the selection afterwards. */
+    /**
+     * Plants whatever seed is currently selected at (x, y) and clears the selection
+     * afterwards.
+     */
     public String plantSelectedAt(int x, int y) {
         if (selectedPlantType == null) {
             return "No seed selected.";
@@ -606,9 +654,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                     if (plant == null) {
                         continue;
                     }
-                    // Reset every "*Timer" runtime-state key generically (attackTimer, lobTimer,
-                    // sunTimer, meleeTimer, sunDropTimer, magnetTimer, hypnoTimer, moveTimer, ...)
-                    // instead of hardcoding a handful of names, so new behaviors are covered too.
                     for (String key : new ArrayList<>(plant.getRuntimeState().keySet())) {
                         if (key.endsWith("Timer")) {
                             plant.putRuntimeState(key, 999.0);
@@ -622,11 +667,20 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     public String startZombieWavesText() {
         zombieWavesStarted = true;
+        if (waveManager != null) {
+            waveManager.start();
+        }
         return "Zombie waves started.";
     }
 
     public String zombiesInfoText() {
-        return "Zombies: " + zombies.size();
+        StringBuilder sb = new StringBuilder();
+        for (Zombie zombie : getZombieList()) {
+            if (zombie != null && !zombie.isDead()) {
+                sb.append(zombie.getStatusString()).append('\n');
+            }
+        }
+        return sb.length() == 0 ? "No zombies." : sb.toString().trim();
     }
 
     public String currentMenuText() {
@@ -638,7 +692,29 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return "Advanced time by " + ticks + " ticks.";
     }
 
+    public RegularZombieEngine getZombieEngine() {
+        return zombieEngine;
+    }
+
+    public BattleController getBattleController() {
+        return battleController;
+    }
+
+    public void startWaves() {
+        if (waveManager != null) {
+            waveManager.start();
+        }
+    }
+
+    private List<Zombie> getZombieList() {
+        if (zombieEngine != null && zombieEngine.getZombies() != null) {
+            return zombieEngine.getZombies();
+        }
+        return zombies;
+    }
+
     private int normalizeIndex(int value) {
         return Math.max(0, value - 1);
     }
+
 }
