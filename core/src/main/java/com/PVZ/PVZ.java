@@ -48,8 +48,9 @@ public class PVZ extends Game {
             System.err.println("UserDatabase init failed: " + e.getMessage());
         }
 
-        ScreenManager.getInstance().startWithFadeIn(new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));    }
-
+        ScreenManager.getInstance().startWithFadeIn(new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));
+        AppStatus.currentMenuType = MenuType.IN_GAME;
+    }
     @Override
     public void render() {
         com.PVZ.screen.manager.MusicManager.getInstance().update(Gdx.graphics.getDeltaTime());
