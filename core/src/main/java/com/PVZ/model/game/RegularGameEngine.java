@@ -401,11 +401,13 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     }
 
     @Override
-    public void spawnZombie(String alias, int row, double x) {
+    public void spawnZombie(String alias, int row, int x) {
         if (zombieEngine != null) {
             zombieEngine.spawnZombie(alias, row, x);
         }
     }
+
+
 
     @Override
     public void removePlant(int row, int col) {
@@ -413,6 +415,11 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             return;
         }
         map.removePlant(row, col);
+    }
+
+    @Override
+    public int getTileColumn(float worldX) {
+        return 0;
     }
 
     public String plantPlant(String plantType, int x, int y) {
