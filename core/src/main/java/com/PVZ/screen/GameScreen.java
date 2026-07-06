@@ -57,16 +57,18 @@ public class GameScreen extends BaseScreen {
 
     @Override
     protected void renderScreen(float delta) {
-        // ۱. به‌روزرسانی منطق بازی (زامبی‌ها، گیاهان و ...)
-        gameEngine.render(Math.min(delta, 1 / 30f), gameBatch);
+        gameBatch.setProjectionMatrix(camera.combined);
 
         // ۲. رسم پس‌زمینه ثابت
-        gameBatch.setProjectionMatrix(camera.combined);
         gameBatch.begin();
         // * کل صفحه را با تکسچر پس‌زمینه پر می‌کنیم
         // * (ابعاد VIRTUAL_WIDTH/HEIGHT از BaseScreen برابر 2560x1440 است)
         gameBatch.draw(backgroundTexture, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
         gameBatch.end();
+
+        // ۱. به‌روزرسانی منطق بازی (زامبی‌ها، گیاهان و ...)
+        gameEngine.render(Math.min(delta, 1 / 30f), gameBatch);
+
         shapeDebug.setProjectionMatrix(camera.combined);
         shapeDebug.begin(ShapeRenderer.ShapeType.Line);
         gameMap.renderBorders(shapeDebug);   // اینجا ۴۵ مستطیل سبز می‌کشد

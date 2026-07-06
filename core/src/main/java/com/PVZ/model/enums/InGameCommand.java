@@ -103,6 +103,30 @@ public enum InGameCommand {
             return new InGameInputDTO(this, null, null, null, null, null, null);
         }
     },
+    FREEZE_ZOMBIE("^\\s*freeze\\s+zombie\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y")));
+        }
+    },
+    POISON_ZOMBIE("^\\s*poison\\s+zombie\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y")));
+        }
+    },
+    KILL_ZOMBIE("^\\s*kill\\s+zombie\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y")));
+        }
+    },
+    KILL_ALL_ZOMBIES("^\\s*kill\\-all\\s+zombies\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            return new InGameInputDTO(this, null, null, null, null, null, null);
+        }
+    },
     SHOW_CURRENT_MENU("^menu\\s+show\\s+current$|^show\\s+current\\s+menu$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
