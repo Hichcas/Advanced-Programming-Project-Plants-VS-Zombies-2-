@@ -1,7 +1,9 @@
 package com.PVZ.model.entity.zombies.types.heavy_gargantuar;
 
+import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.game.BattleController;
 
 import java.util.List;
 
@@ -29,13 +31,10 @@ public abstract class AbstractGargantuar extends Zombie {
     public void onSpawn() {}
 
     @Override
-    public void onUpdate(double deltaTime) {}
-
-    @Override
     public void onDestroy() {}
 
-    public abstract void smash();
-    public abstract void throwImp();
+    public abstract void smash(BattleController ctrl, Plant target);
+    public abstract void throwImp(BattleController ctrl);
 
     public double getSmashDamage() { return smashDamage; }
     public double getHealthThresholdToThrowImp() { return healthThresholdToThrowImp; }

@@ -1,6 +1,8 @@
 package com.PVZ.model.entity.zombies.types.ranged_caster;
 
+import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +29,19 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
     }
 
     @Override
-    public void shoot() {}
+    public void shoot(BattleController controller, Plant target) {
+        if (canRaiseTomb()) {
+            raiseTomb();
+        }
+    }
 
     @Override
-    public void onHit() {}
+    public void onHit(Plant target) {}
+
+    @Override
+    public String getDebugString() {
+        return super.getDebugString() + "\nTOMBS:" + tombsRaised + "/" + maxTombs;
+    }
 
     public boolean canRaiseTomb() { return tombsRaised < maxTombs; }
     public void raiseTomb() { if (canRaiseTomb()) tombsRaised++; }

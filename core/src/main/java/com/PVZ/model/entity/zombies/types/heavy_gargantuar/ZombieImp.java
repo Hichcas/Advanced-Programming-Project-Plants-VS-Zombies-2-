@@ -28,8 +28,8 @@ public class ZombieImp extends Zombie {
     @Override
     public void onSpawn() {}
 
-    @Override
-    public void onUpdate(double deltaTime) {}
+//    @Override
+//    public void onUpdate(double deltaTime) {}
 
     @Override
     public void onDestroy() {}

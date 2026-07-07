@@ -42,6 +42,7 @@ public class Tile {
 
     // getters & setters
     public TileType getType() { return type; }
+    public void setType(TileType type) { this.type = type; }
     public Plant getPlant() { return plant; }
     public void setPlant(Plant plant) { this.plant = plant; }
     public int getGridRow() { return gridRow; }
