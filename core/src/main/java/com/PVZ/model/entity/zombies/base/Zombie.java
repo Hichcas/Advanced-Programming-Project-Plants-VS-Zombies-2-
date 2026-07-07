@@ -25,10 +25,10 @@ public abstract class Zombie {
     protected boolean isGlowing;
     protected List<StatusEffect> activeEffects;
     private float poisonDps = 10.0f;
-    private Rectangle hitbox;
+    protected Rectangle hitbox;
     protected boolean moving = true;
-    private static Texture defaultTexture;
-    private static boolean textureLoaded = false;
+    private Texture texture;
+    protected boolean hypnotized = false;
 
     public Zombie(String alias, double hitpoints, double eatDPS, double speed,
                   int wavePointCost, int weight, List<ScaledProperty> scaledProps) {
@@ -74,17 +74,22 @@ public abstract class Zombie {
             move(delta, controller);
         }
         hitbox.setPosition((float) x, (float) y);
-        onUpdate(delta);
+        onUpdate(delta, controller);
     }
 
     protected void move(float delta, BattleController controller) {
-        x -= currentSpeed * delta * 100;
-        if (x <= 0) {
-            controller.triggerGameOver();
+        if (hypnotized) {
+            x += currentSpeed * delta * 100;
+        } else {
+            x -= currentSpeed * delta * 100;
+            if (x <= 0) {
+                controller.triggerGameOver();
+            }
         }
     }
 
     protected void attack(Plant targetPlant, float delta) {
+        if (hypnotized) return;
         attackCooldownTimer += delta;
         if (attackCooldownTimer >= 1.0f) {
             targetPlant.takeDamage((int) eatDPS);
@@ -109,6 +114,11 @@ public abstract class Zombie {
     public void poison(float duration, float dps) {
         poisonDps = dps;
         activeEffects.add(new StatusEffect(DamageType.POISON, duration));
+    }
+
+    public void hypnotize(float duration) {
+        hypnotized = true;
+        activeEffects.add(new StatusEffect(DamageType.HYPNOTIZE, duration));
     }
 
     public String getStatusString() {
@@ -147,7 +157,7 @@ public abstract class Zombie {
         takeDamage((int) damage, DamageType.NORMAL);
     }
 
-    private void updateEffects(float delta) {
+    public void updateEffects(float delta) {
         Iterator<StatusEffect> it = activeEffects.iterator();
         while (it.hasNext()) {
             StatusEffect e = it.next();
@@ -155,6 +165,9 @@ public abstract class Zombie {
                 it.remove();
                 if (e.getType() == DamageType.ICE) {
                     currentSpeed = speed;
+                }
+                if (e.getType() == DamageType.HYPNOTIZE) {
+                    hypnotized = false;
                 }
             }
         }
@@ -175,11 +188,11 @@ public abstract class Zombie {
     }
 
     public void draw(SpriteBatch batch){
-        if(!textureLoaded){
-            defaultTexture = new Texture("Zombies/Zombie.png");
-            textureLoaded = true;
+        if (texture == null) {
+            String path = ZombieTexturePaths.getPath(alias);
+            texture = new Texture(path);
         }
-        batch.draw(defaultTexture, (float) x, (float) y, 50, 70);
+        batch.draw(texture, (float) x, (float) y, 100, 120);
     }
 
     public double getEffectiveHitpoints() {
@@ -190,12 +203,26 @@ public abstract class Zombie {
         return base;
     }
 
+    public String getDebugString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("HP:").append((int)hitpoints);
+        sb.append(" (").append((int)x).append(",").append((int)y).append(")");
+        sb.append(" R:").append((int)row).append(" C:").append((int)col);
+        sb.append("\n");
+        sb.append("SPD:").append(String.format("%.2f", currentSpeed));
+        for (StatusEffect e : activeEffects) {
+            sb.append(" [").append(e.getType()).append(":").append(String.format("%.1f", e.getDuration())).append("s]");
+        }
+        return sb.toString();
+    }
+
     public void stopMoving() { this.moving = false; }
     public void startMoving() { this.moving = true; }
 
     public boolean isDead() { return hitpoints <= 0 && (armor == null || armor.isDestroyed()); }
+    public void onProjectileHit(Plant target) { }
     public abstract void onSpawn();
-    public abstract void onUpdate(double deltaTime);
+    public void onUpdate(float delta, BattleController controller) { }
     public abstract void onDestroy();
 
     public void setArmor(ZombieArmor armor) {

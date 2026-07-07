@@ -3,6 +3,7 @@ package com.PVZ.controller.menuControllers;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.InGameCommand;
 import com.PVZ.model.enums.MenuType;
+import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.BattleController;
 import com.PVZ.model.game.GameEngine;
 import com.PVZ.model.game.RegularGameEngine;
@@ -50,6 +51,8 @@ public class InGameMenuController {
 
             case CHEAT_SPAWN_ZOMBIE -> cheatSpawnZombie(dto);
 
+            case CHEAT_SET_WATER -> setTileWater(dto);
+            case CHEAT_SET_DRY -> setTileDry(dto);
             case CHEAT_RELEASE_NUKE -> new OutputDTO(true, "Nuke released.");
 
             case PLANT_PLANT -> engine == null
@@ -86,20 +89,11 @@ public class InGameMenuController {
                     ? new OutputDTO(false, "Game engine is not ready.")
                     : new OutputDTO(true, engine.showTileStatusText(dto.getX(), dto.getY()));
 
-            case ZOMBIES_INFO -> {
-                if (engine == null) {
-                    yield zombiesInfo();
-                }
-                String mergedInfo = engine.zombiesInfoText();
-                String detailedInfo = zombiesInfoDetails();
-                if (!detailedInfo.isBlank()) {
-                    mergedInfo += "\n" + detailedInfo;
-                }
-                yield new OutputDTO(true, mergedInfo);
-            }
+            case ZOMBIES_INFO -> zombiesInfo();
 
             case FREEZE_ZOMBIE -> zombieAction(dto, "freeze");
             case POISON_ZOMBIE -> zombieAction(dto, "poison");
+            case HYPNOTIZE_ZOMBIE -> zombieAction(dto, "hypnotize");
             case KILL_ZOMBIE -> zombieAction(dto, "kill");
             case KILL_ALL_ZOMBIES -> killAllZombies();
 
@@ -139,8 +133,29 @@ public class InGameMenuController {
         String alias = dto.getZombieType();
         int row = dto.getY() != null ? dto.getY() : 2;
         int x = dto.getX() != null ? dto.getX() : 8;
+
+        if (row < 0 || row > 4 || x < 0 || x > 8) {
+            return new OutputDTO(false, "Invalid position: (" + x + ", " + row + "). Must be col 0-8, row 0-4.");
+        }
+
         rge.getZombieEngine().spawnZombie(alias, row, x);
         return new OutputDTO(true, "Zombie spawned: " + alias + " at row " + row);
+    }
+
+    private OutputDTO setTileWater(InGameInputDTO dto) {
+        RegularGameEngine rge = getEngine();
+        if (rge == null) return new OutputDTO(false, "Not in a regular game.");
+        int row = dto.getY(), col = dto.getX();
+        rge.getBattleController().setTileTypeAt(row, col, TileType.WATER);
+        return new OutputDTO(true, "Tile (" + col + ", " + row + ") set to WATER.");
+    }
+
+    private OutputDTO setTileDry(InGameInputDTO dto) {
+        RegularGameEngine rge = getEngine();
+        if (rge == null) return new OutputDTO(false, "Not in a regular game.");
+        int row = dto.getY(), col = dto.getX();
+        rge.getBattleController().setTileTypeAt(row, col, TileType.NORMAL);
+        return new OutputDTO(true, "Tile (" + col + ", " + row + ") set to NORMAL.");
     }
 
     private OutputDTO zombiesInfo() {
@@ -189,6 +204,10 @@ public class InGameMenuController {
             case "poison" -> {
                 z.poison(5.0f, 10.0f);
                 yield new OutputDTO(true, "Poisoned zombie at (" + dto.getX() + ", " + dto.getY() + ").");
+            }
+            case "hypnotize" -> {
+                z.hypnotize(5.0f);
+                yield new OutputDTO(true, "Hypnotized zombie at (" + dto.getX() + ", " + dto.getY() + ").");
             }
             case "kill" -> {
                 z.die(bc);

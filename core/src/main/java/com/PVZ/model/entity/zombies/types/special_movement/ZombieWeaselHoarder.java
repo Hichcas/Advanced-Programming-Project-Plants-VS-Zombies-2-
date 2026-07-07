@@ -1,6 +1,7 @@
 package com.PVZ.model.entity.zombies.types.special_movement;
 
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,25 @@ public class ZombieWeaselHoarder extends AbstractSpecialMovementZombie {
     }
 
     @Override
-    public void onMove() {}
+    public void onMove(BattleController ctrl) {}
+
+    @Override
+    public void die(BattleController controller) {
+        for (int i = 0; i < weaselsToRelease; i++) {
+            ZombieWeasel weasel = new ZombieWeasel();
+            weasel.initPosition(x + (i * 20), y, row);
+            weasel.setCol(col);
+            weasel.onSpawn();
+            controller.addZombie(weasel);
+        }
+        System.out.println(alias + " released " + weaselsToRelease + " weasels!");
+        super.die(controller);
+    }
+
+    @Override
+    public String getDebugString() {
+        return super.getDebugString() + "\nW:" + weaselsToRelease;
+    }
 
     public int getWeaselsToRelease() { return weaselsToRelease; }
-    public void releaseWeasel() { if (weaselsToRelease > 0) weaselsToRelease--; }
 }
