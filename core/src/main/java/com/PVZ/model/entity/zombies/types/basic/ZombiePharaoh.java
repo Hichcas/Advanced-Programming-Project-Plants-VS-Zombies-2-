@@ -24,14 +24,14 @@ public class ZombiePharaoh extends AbstractBasicZombie {
         return list;
     }
 
-    @Override
-    public void onUpdate(double deltaTime) {
-        if (!sarcophagusBroken && armor != null && armor.isDestroyed()) {
-            sarcophagusBroken = true;
-            armor = null;
-            speed = 0.3;
-        }
-    }
+//    @Override
+//    public void onUpdate(double deltaTime) {
+//        if (!sarcophagusBroken && armor != null && armor.isDestroyed()) {
+//            sarcophagusBroken = true;
+//            armor = null;
+//            speed = 0.3;
+//        }
+//    }
 
     public boolean isSarcophagusBroken() { return sarcophagusBroken; }
 }

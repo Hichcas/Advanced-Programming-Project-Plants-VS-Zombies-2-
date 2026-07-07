@@ -49,6 +49,18 @@ public enum InGameCommand {
             return new InGameInputDTO(this, null, null, null, matcher.group("zombieType"), Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y")));
         }
     },
+    CHEAT_SET_WATER("^\\s*cheat\\s+set-water\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y")));
+        }
+    },
+    CHEAT_SET_DRY("^\\s*cheat\\s+set-dry\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y")));
+        }
+    },
     CHEAT_RELEASE_NUKE("^\\s*release\\s+the\\s+nuke\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
@@ -118,6 +130,12 @@ public enum InGameCommand {
         }
     },
     KILL_ZOMBIE("^\\s*kill\\s+zombie\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y")));
+        }
+    },
+    HYPNOTIZE_ZOMBIE("^\\s*hypnotize\\s+zombie\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y")));
