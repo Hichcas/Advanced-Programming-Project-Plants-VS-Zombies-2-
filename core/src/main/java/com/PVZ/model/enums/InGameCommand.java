@@ -58,7 +58,9 @@ public enum InGameCommand {
     PLANT_PLANT("^\\s*plant\\s+plant\\s+-t\\s+(?<plantType>.+?)\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
-            return new InGameInputDTO(this, null, null, matcher.group("plantType"), null, Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y")));
+            int x = Integer.parseInt(matcher.group("x")) + 1;
+            int y = Integer.parseInt(matcher.group("y")) + 1;
+            return new InGameInputDTO(this, null, null, matcher.group("plantType"), null, x, y);
         }
     },
     PLUCK_PLANT("^\\s*pluck\\s+plant\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
