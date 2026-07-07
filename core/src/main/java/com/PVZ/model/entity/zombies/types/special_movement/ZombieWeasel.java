@@ -1,6 +1,7 @@
 package com.PVZ.model.entity.zombies.types.special_movement;
 
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,5 +21,15 @@ public class ZombieWeasel extends AbstractSpecialMovementZombie {
     }
 
     @Override
-    public void onMove() {}
+    public void onMove(BattleController ctrl) {}
+
+    @Override
+    public void onSpawn() {
+        System.out.println("Weasel spawned at x=" + String.format("%.1f", x) + " row=" + (int)row);
+    }
+
+    @Override
+    public String getDebugString() {
+        return super.getDebugString() + "\nWEASEL";
+    }
 }

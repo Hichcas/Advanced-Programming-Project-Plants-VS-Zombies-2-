@@ -12,6 +12,7 @@ public class FontManager {
     // فونت‌های انگلیسی
     private BitmapFont englishMenuFont;
     private BitmapFont englishTitleFont;
+    private BitmapFont englishTinyFont;
 
     // فونت‌های فارسی
     private BitmapFont persianMenuFont;
@@ -36,6 +37,9 @@ public class FontManager {
 
         parameter.size = 72;
         englishTitleFont = generator.generateFont(parameter);
+
+        parameter.size = 20;
+        englishTinyFont = generator.generateFont(parameter);
 
         generator.dispose();
     }
@@ -66,6 +70,7 @@ public class FontManager {
 
     public BitmapFont getEnglishMenuFont() { return englishMenuFont; }
     public BitmapFont getEnglishTitleFont() { return englishTitleFont; }
+    public BitmapFont getEnglishTinyFont() { return englishTinyFont; }
 
     public BitmapFont getPersianMenuFont() { return persianMenuFont; }
     public BitmapFont getPersianTitleFont() { return persianTitleFont; }
@@ -73,6 +78,7 @@ public class FontManager {
     public void dispose() {
         if (englishMenuFont != null) englishMenuFont.dispose();
         if (englishTitleFont != null) englishTitleFont.dispose();
+        if (englishTinyFont != null) englishTinyFont.dispose();
         if (persianMenuFont != null) persianMenuFont.dispose();
         if (persianTitleFont != null) persianTitleFont.dispose();
     }

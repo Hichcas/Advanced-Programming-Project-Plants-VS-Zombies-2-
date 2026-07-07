@@ -14,8 +14,7 @@ public abstract class AbstractBasicZombie extends Zombie {
     @Override
     public void onSpawn() {}
 
-    @Override
-    public void onUpdate(double deltaTime) {}
+
 
     @Override
     public void onDestroy() {}

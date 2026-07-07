@@ -1,6 +1,7 @@
 package com.PVZ.model.entity.zombies.types.special_movement;
 
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,29 @@ public class ZombieIceAgeDodo extends AbstractSpecialMovementZombie {
     }
 
     @Override
-    public void onMove() {}
+    public void onMove(BattleController ctrl) {}
+
+    @Override
+    public void update(float delta, BattleController ctrl) {
+        updateEffects(delta);
+        if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
+            die(ctrl);
+            return;
+        }
+        int tileCol = ctrl.getTileColumn((float) x);
+        col = tileCol;
+
+        // Dodo flies over plants — never stops for them
+        moving = true;
+        move(delta, ctrl);
+        hitbox.setPosition((float) x, (float) y);
+        onUpdate(delta, ctrl);
+    }
+
+    @Override
+    public String getDebugString() {
+        return super.getDebugString() + (isFlying ? "\nFLYING" : "");
+    }
 
     public boolean isFlying() { return isFlying; }
     public void setFlying(boolean flying) { isFlying = flying; }
