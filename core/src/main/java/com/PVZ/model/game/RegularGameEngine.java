@@ -10,6 +10,9 @@ import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
+import com.PVZ.screen.manager.FontManager;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
@@ -29,8 +32,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     private final SunManager sunManager = new SunManager();
     private final PlantFoodManager plantFoodManager = new PlantFoodManager();
     private final Random random = new Random();
-    private final java.util.Map<Zombie, Integer> freezeTimers = new IdentityHashMap<>();
-    private final java.util.Map<Zombie, Integer> hypnotizeTimers = new IdentityHashMap<>();
     private float tickAccumulator = 0f;
     private boolean zombieWavesStarted = false;
 
@@ -98,7 +99,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     public void advanceTicks(int ticks) {
         int safeTicks = Math.max(0, ticks);
         for (int i = 0; i < safeTicks; i++) {
-            advanceOneTick();
+            update((float) TICK_SECONDS);
         }
     }
 
@@ -106,7 +107,13 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         updatePlants();
         updateProjectiles((float) TICK_SECONDS);
         updateSunManager((float) TICK_SECONDS);
-        updateStatusEffects();
+
+        for (Zombie z : getZombieList()) {
+            if (z != null && !z.isDead()) {
+                z.updateEffects((float) TICK_SECONDS);
+            }
+        }
+
         rechargeRemaining.replaceAll((type, remaining) -> Math.max(0.0, remaining - TICK_SECONDS));
 
         if (gameStatus != null) {
@@ -159,11 +166,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         sunManager.update(delta);
     }
 
-    private void updateStatusEffects() {
-        decrementTimers(freezeTimers, true);
-        decrementTimers(hypnotizeTimers, true);
-    }
-
     private void decrementTimers(java.util.Map<Zombie, Integer> timers, boolean restoreMovement) {
         List<Zombie> toRestore = new ArrayList<>();
         for (java.util.Map.Entry<Zombie, Integer> entry : timers.entrySet()) {
@@ -186,6 +188,27 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (zombieEngine != null) {
             zombieEngine.draw(batch);
         }
+        batch.begin();
+        if (battleController != null) {
+            battleController.drawProjectiles(batch);
+        }
+
+        //zombies's info:
+        BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
+        font.setColor(Color.BLACK);
+        for (Zombie z : getZombieList()) {
+            if (z != null && !z.isDead()) {
+                String[] lines = z.getDebugString().split("\n");
+                float yOff = (float)z.getY() + 130;
+                for (String line : lines) {
+                    font.draw(batch, line, (float)z.getX(), yOff);
+                    yOff -= 15;
+                }
+            }
+        }
+        font.setColor(Color.WHITE);
+
+        batch.end();
     }
 
     @Override
@@ -194,8 +217,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         zombies.clear();
         sunManager.clear();
         plantFoodManager.reset();
-        freezeTimers.clear();
-        hypnotizeTimers.clear();
 
         if (zombieEngine != null) {
             zombieEngine.dispose();
@@ -281,11 +302,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     @Override
     public void freezeZombiesInLane(int lane, double seconds) {
-        int ticks = Math.max(1, (int) Math.ceil(seconds / TICK_SECONDS));
         for (Zombie zombie : getZombiesInLane(lane)) {
             if (zombie != null) {
-                zombie.stopMoving();
-                freezeTimers.put(zombie, ticks);
+                zombie.freeze((float) seconds);
             }
         }
     }
@@ -294,8 +313,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     public void freezeAllZombies(double seconds) {
         for (Zombie zombie : getZombieList()) {
             if (zombie != null && !zombie.isDead()) {
-                zombie.stopMoving();
-                freezeTimers.put(zombie, Math.max(1, (int) Math.ceil(seconds / TICK_SECONDS)));
+                zombie.freeze((float) seconds);
             }
         }
     }
@@ -352,11 +370,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     @Override
     public void hypnotizeZombiesInLane(int lane, double seconds) {
-        int ticks = Math.max(1, (int) Math.ceil(seconds / TICK_SECONDS));
         for (Zombie zombie : getZombiesInLane(lane)) {
             if (zombie != null) {
-                zombie.stopMoving();
-                hypnotizeTimers.put(zombie, ticks);
+                zombie.hypnotize((float) seconds);
             }
         }
     }
@@ -495,7 +511,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             plant.applyPlantFood(this);
         }
 
-        return "Planted " + type.getDisplayName() + " at (" + row + ", " + col + ").";
+        return "Planted " + type.getDisplayName() + " at (" + col + ", " + row + ").";
     }
 
     public boolean isOnCooldown(PlantType type) {
@@ -542,7 +558,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             return "No plant at selected tile.";
         }
         map.removePlant(row, col);
-        return "Plant plucked from (" + row + ", " + col + ").";
+        return "Plant plucked from (" + col + ", " + row + ")";
     }
 
     public String feedPlant(int x, int y) {
@@ -559,7 +575,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             return "No plant food available.";
         }
         plant.applyPlantFood(this);
-        return "Plant fed at (" + row + ", " + col + ").";
+        return 	"Plant fed at (" + col + ", " + row + ")";
     }
 
     public String collectSunAt(int x, int y) {
@@ -610,9 +626,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 if (plant != null) {
                     builder.append(plant.getType().getDisplayName())
                             .append(" at (")
-                            .append(row)
-                            .append(", ")
                             .append(col)
+                            .append(", ")
+                            .append(row)
                             .append(") hp=")
                             .append(plant.getCurrentHp())
                             .append(plant.isPlantFoodActive() ? " [plant food]" : "")
@@ -635,9 +651,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         Tile tile = map.getTile(row, col);
         Plant plant = tile == null ? null : tile.getPlant();
         if (plant == null) {
-            return "Tile (" + row + ", " + col + ") is empty.";
+            return "Tile (" + col + ", " + row + ") is empty.";
         }
-        return "Tile (" + row + ", " + col + ") contains " + plant.getType().getDisplayName()
+        return "Tile (" + col + ", " + row + ") contains " + plant.getType().getDisplayName()
                 + " hp=" + plant.getCurrentHp()
                 + (plant.isPlantFoodActive() ? " [plant food]" : "");
     }

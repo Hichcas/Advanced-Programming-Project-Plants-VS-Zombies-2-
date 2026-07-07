@@ -1,6 +1,8 @@
 package com.PVZ.model.entity.zombies.types.special_movement;
 
+import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,22 @@ public class ZombieBeachSurfer extends AbstractSpecialMovementZombie {
     }
 
     @Override
-    public void onMove() {}
+    public void onMove(BattleController ctrl) {
+        if (!hasSurfboard) return;
+        int targetCol = (int)col - 1;
+        if (targetCol >= 0) {
+            Plant p = ctrl.getPlantAt((int)row, targetCol);
+            if (p != null && !p.isDead()) {
+                loseSurfboard();
+                System.out.println(alias + " lost surfboard to a plant!");
+            }
+        }
+    }
+
+    @Override
+    public String getDebugString() {
+        return super.getDebugString() + (hasSurfboard ? "\nBRD" : "\nWALK");
+    }
 
     public boolean hasSurfboard() { return hasSurfboard; }
     public void loseSurfboard() {
