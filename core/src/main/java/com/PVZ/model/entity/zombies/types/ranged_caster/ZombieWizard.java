@@ -1,6 +1,9 @@
 package com.PVZ.model.entity.zombies.types.ranged_caster;
 
+import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.entity.zombies.base.ZombieProjectile;
+import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +28,21 @@ public class ZombieWizard extends AbstractRangedCasterZombie {
     }
 
     @Override
-    public void shoot() {}
+    public void shoot(BattleController controller, Plant target) {
+        if (!hasMagicStaff) return;
+        controller.addZombieProjectile(new ZombieProjectile(
+            (float) x, (float) y, (int) projectileDamage, (float) projectileSpeed, (int) row, this));
+    }
 
     @Override
-    public void onHit() {}
+    public void onHit(Plant target) {
+        transformPlantToSheep(target);
+    }
+
+    @Override
+    public String getDebugString() {
+        return super.getDebugString() + (hasMagicStaff ? "\nSTAFF" : "\nNOSTAFF");
+    }
 
     public boolean hasMagicStaff() { return hasMagicStaff; }
     public void transformPlantToSheep(Object target) { this.hasMagicStaff = false; }

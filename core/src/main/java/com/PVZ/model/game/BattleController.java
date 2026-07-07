@@ -1,10 +1,15 @@
 package com.PVZ.model.game;
 
 import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.plants.behavior.impl.ProjectileType;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.entity.zombies.base.ZombieProjectile;
 import com.PVZ.model.enums.DamageType;
+import com.PVZ.model.enums.TileType;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +19,7 @@ public class BattleController {
     private final List<Zombie> zombies;
     private final List<Plant> plants;
     private final List<Projectile> projectiles;
+    private final List<ZombieProjectile> zombieProjectiles = new java.util.ArrayList<>();
     private final GameStatus gameStatus;
     private Map map;
 
@@ -34,6 +40,24 @@ public class BattleController {
             zombies.get(i).update(delta, this);
         }
 
+        // zombie projectiles
+        java.util.Iterator<ZombieProjectile> zpIt = zombieProjectiles.iterator();
+        while (zpIt.hasNext()) {
+            ZombieProjectile zp = zpIt.next();
+            zp.update(delta);
+            if (zp.isDestroyed()) { zpIt.remove(); continue; }
+
+            int zpCol = getTileColumn(zp.getX());
+            Plant p = getPlantAt(zp.getRow(), zpCol);
+            if (p != null && !p.isDead()) {
+                p.takeDamage(zp.getDamage());
+                zp.getOwner().onProjectileHit(p);
+                zp.destroy();
+                zpIt.remove();
+            }
+        }
+
+        // plant projectiles
         Iterator<Projectile> projIt = projectiles.iterator();
         while (projIt.hasNext()) {
             Projectile p = projIt.next();
@@ -65,6 +89,8 @@ public class BattleController {
         return map != null ? map.getPlantAt(row, col) : null;
     }
 
+    public List<Plant> getPlants() { return plants; }
+
     public int getTileColumn(float worldX) {
         return map != null ? map.worldToCol(worldX) : 0;
     }
@@ -75,10 +101,19 @@ public class BattleController {
     }
 
     public void addSun(int amount) {
+        gameStatus.setSunflower(gameStatus.getSunflower() + amount);
     }
 
     public void removeZombie(Zombie zombie) {
         zombies.remove(zombie);
+    }
+
+    public void damageArea(int row, int damage) {
+        for (Zombie z : zombies) {
+            if ((int) z.getRow() == row && !z.isDead()) {
+                z.takeDamage(damage);
+            }
+        }
     }
 
     private DamageType resolveDamageType(Projectile p) {
@@ -94,5 +129,33 @@ public class BattleController {
                 return z;
         }
         return null;
+    }
+
+    public void addZombieProjectile(ZombieProjectile p) {
+        zombieProjectiles.add(p);
+    }
+
+    public void drawProjectiles(SpriteBatch batch) {
+        for (ZombieProjectile zp : zombieProjectiles) {
+            zp.draw(batch);
+        }
+    }
+
+    public void addZombie(Zombie z) {
+        zombies.add(z);
+    }
+
+    public TileType getTileTypeAt(int row, int col) {
+        Tile tile = map.getTile(row, col);
+        return tile != null ? tile.getType() : TileType.NORMAL;
+    }
+
+    public void setTileTypeAt(int row, int col, TileType type) {
+        Tile tile = map.getTile(row, col);
+        if (tile != null) tile.setType(type);
+    }
+
+    public void dispose() {
+        zombieProjectiles.clear();
     }
 }
