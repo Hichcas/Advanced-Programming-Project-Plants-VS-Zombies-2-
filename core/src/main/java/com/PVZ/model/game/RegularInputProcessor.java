@@ -52,12 +52,12 @@ public class RegularInputProcessor extends InputAdapter {
             for (int col = 0; col < 9; col++) {
                 Tile tile = regularGameEngine.getMap().getTile(row, col);
                 if (tile != null && tile.contains(worldX, worldY)) {
-                    System.out.println("Clicked on Tile (" + row + ", " + col + ")");
+                    System.out.println("Clicked on Tile (" + col + ", " + row + ")");
 
                     if (regularGameEngine.getSelectedPlantType() != null) {
                         // plantPlant/plantSelectedAt use the design doc's 1-based (x, y)
                         // convention, so we convert from the 0-based grid indices here.
-                        String result = regularGameEngine.plantSelectedAt(col + 1, row + 1);
+                        String result = regularGameEngine.plantSelectedAt(col , row );
                         System.out.println(result);
                     }
                     return true;

@@ -511,7 +511,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             plant.applyPlantFood(this);
         }
 
-        return "Planted " + type.getDisplayName() + " at (" + col + ", " + row + ").";
+        return "Planted " + type.getDisplayName() + " at (" + col+ ", " + row + ").";
     }
 
     public boolean isOnCooldown(PlantType type) {
@@ -737,7 +737,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     }
 
     private int normalizeIndex(int value) {
-        return Math.max(0, value - 1);
+        return value;
     }
 
 }
