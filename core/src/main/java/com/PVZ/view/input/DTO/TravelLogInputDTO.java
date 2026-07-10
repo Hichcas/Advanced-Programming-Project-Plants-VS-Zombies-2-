@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.TravelLogCommand;
+import com.PVZ.model.enums.commands.TravelLogCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class TravelLogInputDTO implements InputDTO {

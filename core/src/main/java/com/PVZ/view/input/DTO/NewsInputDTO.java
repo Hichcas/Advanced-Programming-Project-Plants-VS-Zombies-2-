@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.NewsCommand;
+import com.PVZ.model.enums.commands.NewsCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class NewsInputDTO implements InputDTO {

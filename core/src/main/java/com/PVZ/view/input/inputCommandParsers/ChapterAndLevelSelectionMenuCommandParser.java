@@ -1,6 +1,6 @@
 package com.PVZ.view.input.inputCommandParsers;
 
-import com.PVZ.model.enums.ChapterAndLevelSelectionCommand;
+import com.PVZ.model.enums.commands.ChapterAndLevelSelectionCommand;
 import com.PVZ.view.input.DTO.ChapterAndLevelSelectionInputDTO;
 import com.PVZ.view.input.InputDTO;
 

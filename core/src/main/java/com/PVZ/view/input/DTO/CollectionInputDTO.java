@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.CollectionCommand;
+import com.PVZ.model.enums.commands.CollectionCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class CollectionInputDTO implements InputDTO {

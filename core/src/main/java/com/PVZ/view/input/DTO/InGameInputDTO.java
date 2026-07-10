@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.InGameCommand;
+import com.PVZ.model.enums.commands.InGameCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class InGameInputDTO implements InputDTO {

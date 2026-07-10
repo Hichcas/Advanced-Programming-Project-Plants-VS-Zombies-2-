@@ -1,6 +1,6 @@
 package com.PVZ.view.input.inputCommandParsers;
 
-import com.PVZ.model.enums.GreenhouseCommand;
+import com.PVZ.model.enums.commands.GreenhouseCommand;
 import com.PVZ.view.input.DTO.GreenhouseInputDTO;
 import com.PVZ.view.input.InputDTO;
 

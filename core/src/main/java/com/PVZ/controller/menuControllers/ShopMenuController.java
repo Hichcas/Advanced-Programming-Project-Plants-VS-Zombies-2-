@@ -2,7 +2,6 @@
 package com.PVZ.controller.menuControllers;
 
 import com.PVZ.model.enums.MenuType;
-import com.PVZ.model.enums.ShopCommand;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.ShopInputDTO;

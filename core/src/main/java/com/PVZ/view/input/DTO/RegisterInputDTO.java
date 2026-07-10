@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.RegisterCommand;
+import com.PVZ.model.enums.commands.RegisterCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class RegisterInputDTO implements InputDTO {

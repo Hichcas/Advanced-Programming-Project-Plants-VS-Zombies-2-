@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.ProfileCommand;
+import com.PVZ.model.enums.commands.ProfileCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class ProfileInputDTO implements InputDTO {

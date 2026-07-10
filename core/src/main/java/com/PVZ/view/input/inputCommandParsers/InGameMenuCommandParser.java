@@ -1,6 +1,6 @@
 package com.PVZ.view.input.inputCommandParsers;
 
-import com.PVZ.model.enums.InGameCommand;
+import com.PVZ.model.enums.commands.InGameCommand;
 import com.PVZ.view.input.DTO.InGameInputDTO;
 import com.PVZ.view.input.InputDTO;
 

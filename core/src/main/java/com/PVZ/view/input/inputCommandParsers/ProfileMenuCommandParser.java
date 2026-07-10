@@ -1,6 +1,6 @@
 package com.PVZ.view.input.inputCommandParsers;
 
-import com.PVZ.model.enums.ProfileCommand;
+import com.PVZ.model.enums.commands.ProfileCommand;
 import com.PVZ.view.input.DTO.ProfileInputDTO;
 import com.PVZ.view.input.InputDTO;
 

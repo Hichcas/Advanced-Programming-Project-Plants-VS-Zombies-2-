@@ -1,7 +1,7 @@
 
 package com.PVZ.controller.menuControllers;
 
-import com.PVZ.model.enums.GreenhouseCommand;
+import com.PVZ.model.enums.commands.GreenhouseCommand;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.greenhouse.GreenhouseState;

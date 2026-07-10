@@ -1,6 +1,6 @@
 package com.PVZ.view.input.inputCommandParsers;
 
-import com.PVZ.model.enums.ShopCommand;
+import com.PVZ.model.enums.commands.ShopCommand;
 import com.PVZ.view.input.DTO.ShopInputDTO;
 import com.PVZ.view.input.InputDTO;
 

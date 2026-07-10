@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.MainMenuCommand;
+import com.PVZ.model.enums.commands.MainMenuCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class MainMenuInputDTO implements InputDTO {

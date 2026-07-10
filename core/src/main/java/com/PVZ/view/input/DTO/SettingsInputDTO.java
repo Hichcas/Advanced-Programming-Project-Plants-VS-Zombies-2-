@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.SettingsCommand;
+import com.PVZ.model.enums.commands.SettingsCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class SettingsInputDTO implements InputDTO {

@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.LeaderboardCommand;
+import com.PVZ.model.enums.commands.LeaderboardCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class LeaderboardInputDTO implements InputDTO {
