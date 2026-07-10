@@ -1,6 +1,6 @@
 package com.PVZ.view.input.inputCommandParsers;
 
-import com.PVZ.model.enums.RegisterCommand;
+import com.PVZ.model.enums.commands.RegisterCommand;
 import com.PVZ.view.input.DTO.RegisterInputDTO;
 
 import java.util.regex.Matcher;

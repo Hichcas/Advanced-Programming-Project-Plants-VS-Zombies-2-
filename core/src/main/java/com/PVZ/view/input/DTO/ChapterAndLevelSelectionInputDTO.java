@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.ChapterAndLevelSelectionCommand;
+import com.PVZ.model.enums.commands.ChapterAndLevelSelectionCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class ChapterAndLevelSelectionInputDTO implements InputDTO {

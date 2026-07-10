@@ -1,4 +1,4 @@
-package com.PVZ.model.enums;
+package com.PVZ.model.enums.commands;
 
 import com.PVZ.view.input.DTO.PlantSelectionInputDTO;
 

@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.PlantSelectionCommand;
+import com.PVZ.model.enums.commands.PlantSelectionCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class PlantSelectionInputDTO implements InputDTO {

@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.LoginCommand;
+import com.PVZ.model.enums.commands.LoginCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class LoginInputDTO implements InputDTO {

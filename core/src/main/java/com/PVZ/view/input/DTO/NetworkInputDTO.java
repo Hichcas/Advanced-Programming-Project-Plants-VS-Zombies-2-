@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.NetworkCommand;
+import com.PVZ.model.enums.commands.NetworkCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class NetworkInputDTO implements InputDTO {

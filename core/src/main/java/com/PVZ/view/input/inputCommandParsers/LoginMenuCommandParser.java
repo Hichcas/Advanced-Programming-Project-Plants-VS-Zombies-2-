@@ -1,7 +1,7 @@
 package com.PVZ.view.input.inputCommandParsers;
 
 import com.PVZ.controller.menuControllers.LoginMenuController;
-import com.PVZ.model.enums.LoginCommand;
+import com.PVZ.model.enums.commands.LoginCommand;
 import com.PVZ.view.input.DTO.LoginInputDTO;
 import com.PVZ.view.input.InputDTO;
 

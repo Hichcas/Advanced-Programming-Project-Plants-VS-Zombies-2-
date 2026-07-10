@@ -1,7 +1,6 @@
 package com.PVZ.controller.menuControllers;
 
 import com.PVZ.database.EncryptionEngine;
-import com.PVZ.model.enums.LoginCommand;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;

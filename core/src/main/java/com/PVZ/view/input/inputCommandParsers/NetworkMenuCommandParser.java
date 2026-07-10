@@ -1,6 +1,6 @@
 package com.PVZ.view.input.inputCommandParsers;
 
-import com.PVZ.model.enums.NetworkCommand;
+import com.PVZ.model.enums.commands.NetworkCommand;
 import com.PVZ.view.input.DTO.NetworkInputDTO;
 import com.PVZ.view.input.InputDTO;
 

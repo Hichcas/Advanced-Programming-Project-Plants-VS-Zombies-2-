@@ -1,6 +1,6 @@
 package com.PVZ.view.input.inputCommandParsers;
 
-import com.PVZ.model.enums.LeaderboardCommand;
+import com.PVZ.model.enums.commands.LeaderboardCommand;
 import com.PVZ.view.input.DTO.LeaderboardInputDTO;
 import com.PVZ.view.input.InputDTO;
 

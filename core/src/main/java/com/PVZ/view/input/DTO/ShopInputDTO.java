@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.ShopCommand;
+import com.PVZ.model.enums.commands.ShopCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class ShopInputDTO implements InputDTO {

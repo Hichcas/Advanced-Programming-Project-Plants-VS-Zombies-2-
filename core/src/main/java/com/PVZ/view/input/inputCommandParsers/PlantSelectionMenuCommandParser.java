@@ -1,6 +1,6 @@
 package com.PVZ.view.input.inputCommandParsers;
 
-import com.PVZ.model.enums.PlantSelectionCommand;
+import com.PVZ.model.enums.commands.PlantSelectionCommand;
 import com.PVZ.view.input.DTO.PlantSelectionInputDTO;
 import com.PVZ.view.input.InputDTO;
 

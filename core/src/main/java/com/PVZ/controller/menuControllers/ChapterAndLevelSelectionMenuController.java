@@ -1,6 +1,6 @@
 package com.PVZ.controller.menuControllers;
 
-import com.PVZ.model.enums.ChapterAndLevelSelectionCommand;
+import com.PVZ.model.enums.commands.ChapterAndLevelSelectionCommand;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;

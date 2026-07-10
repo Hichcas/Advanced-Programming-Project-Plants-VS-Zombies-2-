@@ -1,6 +1,6 @@
 package com.PVZ.view.input.DTO;
 
-import com.PVZ.model.enums.GreenhouseCommand;
+import com.PVZ.model.enums.commands.GreenhouseCommand;
 import com.PVZ.view.input.InputDTO;
 
 public class GreenhouseInputDTO implements InputDTO {

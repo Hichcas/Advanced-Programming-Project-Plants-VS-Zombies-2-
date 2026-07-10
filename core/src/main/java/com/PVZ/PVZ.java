@@ -39,8 +39,6 @@ public class PVZ extends Game {
         CommandParser.start();
         AppStatus.currentMenuType = MenuType.REGISTER;
         AppStatus.setQuality(GraphicsQuality.Ultra_High);
-//        batch = new SpriteBatch();
-//        image = new Texture("libgdx.png");
 
         try {
             UserDatabase.init();
@@ -54,14 +52,9 @@ public class PVZ extends Game {
     @Override
     public void render() {
         com.PVZ.screen.manager.MusicManager.getInstance().update(Gdx.graphics.getDeltaTime());
-//        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-//        batch.begin();
-//        batch.draw(image, 140, 210);
-//        batch.end();
         super.render();
         com.PVZ.screen.manager.ScreenManager.getInstance().updateAndRender(Gdx.graphics.getDeltaTime());
 
-//        System.out.println("the Start is triggered");
         AppController.render();
         UserRegistry.saveAllDirtyUsers();
     }
@@ -74,8 +67,6 @@ public class PVZ extends Game {
         ScreenManager.getInstance().dispose();
         BrightnessController.getInstance().dispose();
         CommandParser.end();
-//        batch.dispose();
-//        image.dispose();
     }
 
     public void updateGraphics(GraphicsQuality quality) {
