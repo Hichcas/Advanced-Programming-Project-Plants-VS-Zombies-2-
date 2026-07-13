@@ -40,6 +40,18 @@ public enum ShopCommand {
         public ShopInputDTO createDTO(Matcher matcher) {
             return new ShopInputDTO(this, null, null, null);
         }
+    },
+    COINS ("show coins") {
+        @Override
+        public ShopInputDTO createDTO(Matcher matcher) {
+            return new ShopInputDTO(this, null, null, null);
+        }
+    },
+    UNLOCK_ALL_PLANTS("unlock all plants") {
+        @Override
+        public ShopInputDTO createDTO(Matcher matcher) {
+            return new ShopInputDTO(this, null, null, null);
+        }
     };
 
     private final Pattern pattern;

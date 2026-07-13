@@ -4,8 +4,8 @@ import com.PVZ.model.enums.PlantType;
 
 public class Pot {
     private boolean unlocked;
-    private PlantType plantType; // null if empty
-    private long plantedTimeMillis; // 0 if empty
+    private PlantType plantType;          // null if empty
+    private long plantedTimeMillis;       // 0 if empty
 
     public Pot() {
         this.unlocked = false;
