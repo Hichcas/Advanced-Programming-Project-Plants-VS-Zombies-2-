@@ -68,7 +68,7 @@ public abstract class Zombie {
         Plant plant = controller.getPlantAt((int) row, tileCol);
         if (plant != null && !plant.isDead()) {
             moving = false;
-            attack(plant, delta);
+            attack(plant, delta, controller);
         } else {
             moving = true;
             move(delta, controller);
@@ -88,11 +88,11 @@ public abstract class Zombie {
         }
     }
 
-    protected void attack(Plant targetPlant, float delta) {
+    protected void attack(Plant targetPlant, float delta, BattleController controller) {
         if (hypnotized) return;
         attackCooldownTimer += delta;
         if (attackCooldownTimer >= 1.0f) {
-            targetPlant.takeDamage((int) eatDPS);
+            targetPlant.takeDamage((int) eatDPS, this, controller);
             if (targetPlant.isDead()) {
                 // controller will clean up dead plants
             }

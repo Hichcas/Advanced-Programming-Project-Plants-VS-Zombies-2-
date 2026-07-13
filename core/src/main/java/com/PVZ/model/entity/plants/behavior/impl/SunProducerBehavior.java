@@ -104,6 +104,22 @@ public class SunProducerBehavior implements PlantBehavior {
         plant.putRuntimeState("sunTimer", timer);
     }
 
+
+    @Override
+    public void onDamaged(PlantInstance plant, BehaviorContext context, Zombie attacker, int damageAmount, boolean destroyed) {
+        if (plant == null || context == null) {
+            return;
+        }
+        String plantKey = plant.getDefinition() == null || plant.getDefinition().getPlantKey() == null
+                ? ""
+                : plant.getDefinition().getPlantKey().toLowerCase();
+        if (!"sun_bean".equals(plantKey)) {
+            return;
+        }
+        int amount = plant.getStats() == null ? 5 : Math.max(5, plant.getStats().getSunDropAmount());
+        context.addSun(amount);
+    }
+
     private static List<?> asList(Object value) {
         if (value instanceof List<?> list) {
             return list;

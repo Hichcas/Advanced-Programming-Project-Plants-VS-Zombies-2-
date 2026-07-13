@@ -40,7 +40,7 @@ public class ZombieZombossMechEgypt extends AbstractZomboss {
         Set<Integer> targetRows = new HashSet<>();
         List<Integer> rowsWithPlants = new ArrayList<>();
         for (Plant p : plants) {
-            int r = (int) p.getRuntimeState("row");
+            int r = asInt(p.getRuntimeState("row"), 0);
             if (!rowsWithPlants.contains(r)) rowsWithPlants.add(r);
         }
         if (rowsWithPlants.isEmpty()) return;
@@ -53,12 +53,23 @@ public class ZombieZombossMechEgypt extends AbstractZomboss {
         }
         int hitCount = 0;
         for (Plant p : plants) {
-            if (targetRows.contains((int) p.getRuntimeState("row"))) {
+            if (targetRows.contains(asInt(p.getRuntimeState("row"), Integer.MIN_VALUE))) {
                 p.takeDamage(damage);
                 hitCount++;
             }
         }
         System.out.println("[ZombossEgypt] Pyramid Stomp x" + numStomps + " rows=" + targetRows
             + " damage=" + damage + " hit=" + hitCount + " plants");
+    }
+
+    private static int asInt(Object value, int defaultValue) {
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        try {
+            return value == null ? defaultValue : Integer.parseInt(String.valueOf(value));
+        } catch (NumberFormatException ex) {
+            return defaultValue;
+        }
     }
 }

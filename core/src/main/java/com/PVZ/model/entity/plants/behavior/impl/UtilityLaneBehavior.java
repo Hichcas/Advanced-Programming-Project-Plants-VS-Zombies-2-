@@ -3,6 +3,7 @@ package com.PVZ.model.entity.plants.behavior.impl;
 import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
+import com.PVZ.model.entity.zombies.base.Zombie;
 
 /**
  * Handles the small set of plants whose whole job is "every few seconds, do a
@@ -55,6 +56,24 @@ public class UtilityLaneBehavior implements PlantBehavior {
         }
 
         plant.putRuntimeState("utilityTimer", 0.0);
+    }
+
+
+    @Override
+    public void onDamaged(PlantInstance plant, BehaviorContext context, Zombie attacker, int damageAmount, boolean destroyed) {
+        if (plant == null || context == null || attacker == null) {
+            return;
+        }
+        if (mode != Mode.HYPNOTIZE || !destroyed) {
+            return;
+        }
+        String plantKey = plant.getDefinition() == null || plant.getDefinition().getPlantKey() == null
+                ? ""
+                : plant.getDefinition().getPlantKey().toLowerCase();
+        if (!"hypno_shroom".equals(plantKey)) {
+            return;
+        }
+        attacker.hypnotize(6.0f);
     }
 
     private static int asInt(Object value, int defaultValue) {

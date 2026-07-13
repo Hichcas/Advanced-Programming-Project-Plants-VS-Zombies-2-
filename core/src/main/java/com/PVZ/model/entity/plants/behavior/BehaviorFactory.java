@@ -20,6 +20,9 @@ import com.PVZ.model.entity.plants.behavior.impl.TorchwoodBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.UtilityLaneBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.WallBehavior;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 public final class BehaviorFactory {
@@ -209,6 +212,20 @@ public final class BehaviorFactory {
             return (plant, context) -> {
                 plant.setPlantFoodActive(true);
                 plant.setPlantFoodTicksRemaining(4);
+
+                if ("caulipower".equals(plantKey)) {
+                    List<com.PVZ.model.entity.zombies.base.Zombie> zombies = new ArrayList<>(context.getAllZombies());
+                    Collections.shuffle(zombies);
+                    int targets = Math.min(3, zombies.size());
+                    for (int i = 0; i < targets; i++) {
+                        com.PVZ.model.entity.zombies.base.Zombie zombie = zombies.get(i);
+                        if (zombie != null && !zombie.isDead()) {
+                            zombie.hypnotize(5.0f);
+                        }
+                    }
+                    return;
+                }
+
                 int lane = asInt(plant.getRuntimeState().getOrDefault("lane", 0), 0);
                 context.hypnotizeZombiesInLane(lane, 5.0);
             };
@@ -239,7 +256,17 @@ public final class BehaviorFactory {
             return (plant, context) -> {
                 plant.setPlantFoodActive(true);
                 plant.setPlantFoodTicksRemaining(3);
-                plant.putRuntimeState("waterCloneReady", Boolean.TRUE);
+
+                switch (plantKey) {
+                    case "torchwood" -> {
+                        plant.getStats().putExtra("fireAttack", Boolean.TRUE);
+                        plant.getStats().putExtra("damageMultiplier", 3.0);
+                        plant.getStats().putExtra("plantFoodDamageMultiplier", 3.0);
+                        plant.getStats().putExtra("torchwoodBoost", Boolean.TRUE);
+                    }
+                    case "tangle_kelp" -> context.killRandomZombies(3);
+                    default -> plant.putRuntimeState("waterCloneReady", Boolean.TRUE);
+                }
             };
         }
 

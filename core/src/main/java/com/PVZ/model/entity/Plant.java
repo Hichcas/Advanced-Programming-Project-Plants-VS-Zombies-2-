@@ -4,6 +4,8 @@ import com.PVZ.model.entity.plants.PlantDefinition;
 import com.PVZ.model.entity.plants.PlantFactory;
 import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.PlantStats;
+import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.game.BattleController;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.BehaviorFactory;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
@@ -67,6 +69,14 @@ public class Plant {
 
     public void takeDamage(int amount) {
         instance.takeDamage(amount);
+    }
+
+    public void takeDamage(int amount, Zombie attacker, BattleController controller) {
+        if (amount <= 0) {
+            return;
+        }
+        instance.takeDamage(amount);
+        mainBehavior.onDamaged(instance, controller, attacker, amount, instance.isDead());
     }
 
     public void heal(int amount) {

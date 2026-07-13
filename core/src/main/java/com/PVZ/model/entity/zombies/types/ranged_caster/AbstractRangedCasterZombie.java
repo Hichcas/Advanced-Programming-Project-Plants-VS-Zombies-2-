@@ -46,7 +46,7 @@ public abstract class AbstractRangedCasterZombie extends Zombie {
 
         if (plantInFront != null && !plantInFront.isDead()) {
             moving = false;
-            attack(plantInFront, delta);
+            attack(plantInFront, delta, ctrl);
         } else if (rangedTarget != null) {
             moving = false;
             rangedCooldown += delta;

@@ -8,6 +8,8 @@ import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 import com.PVZ.model.entity.zombies.base.Zombie;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -140,8 +142,25 @@ public class ManualPlantBehavior implements PlantBehavior {
             plant.putRuntimeState("hypnoTimer", timer);
             return;
         }
+
+        String plantKey = definition == null || definition.getPlantKey() == null
+                ? ""
+                : normalize(definition.getPlantKey());
+
         timer = 0.0;
-        context.hypnotizeZombiesInLane(lane, 3.0);
+        if ("caulipower".equals(plantKey)) {
+            List<Zombie> zombies = new ArrayList<>(context.getAllZombies());
+            Collections.shuffle(zombies);
+            int targets = Math.min(3, zombies.size());
+            for (int i = 0; i < targets; i++) {
+                Zombie zombie = zombies.get(i);
+                if (zombie != null && !zombie.isDead()) {
+                    zombie.hypnotize(5.0f);
+                }
+            }
+        } else {
+            context.hypnotizeZombiesInLane(lane, 3.0);
+        }
         plant.putRuntimeState("hypnoTimer", timer);
     }
 

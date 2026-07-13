@@ -2,6 +2,7 @@ package com.PVZ.model.game;
 
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.Tile;
+import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.plants.behavior.impl.ProjectileType;
 import com.PVZ.model.entity.zombies.base.Zombie;
@@ -14,7 +15,7 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.Iterator;
 import java.util.List;
 
-public class BattleController {
+public class BattleController implements BehaviorContext {
 
     private final List<Zombie> zombies;
     private final List<Plant> plants;
@@ -75,45 +76,100 @@ public class BattleController {
         while (pit.hasNext()) {
             Plant p = pit.next();
             if (p.isDead()) {
-                int r = (int) p.getRuntimeState("row");
-                int c = (int) p.getRuntimeState("col");
+                int r = asInt(p.getRuntimeState("row"), 0);
+                int c = asInt(p.getRuntimeState("col"), 0);
                 if (map != null) map.removePlant(r, c);
                 pit.remove();
             }
         }
     }
 
-    // ── zombie callback methods ──
+    @Override
+    public List<Zombie> getZombiesInLane(int lane) {
+        java.util.List<Zombie> out = new java.util.ArrayList<>();
+        for (Zombie zombie : zombies) {
+            if (zombie != null && !zombie.isDead() && (int) zombie.getRow() == lane) {
+                out.add(zombie);
+            }
+        }
+        return out;
+    }
 
+    @Override
+    public List<Zombie> getAllZombies() {
+        return new java.util.ArrayList<>(zombies);
+    }
+
+    @Override
     public Plant getPlantAt(int row, int col) {
         return map != null ? map.getPlantAt(row, col) : null;
     }
 
-    public List<Plant> getPlants() { return plants; }
+    @Override
+    public List<Plant> getAllPlants() {
+        return new java.util.ArrayList<>(plants);
+    }
+
+    public List<Plant> getPlants() {
+        return plants;
+    }
+
+    @Override
+    public void removePlant(int row, int col) {
+        if (map != null) {
+            map.removePlant(row, col);
+        }
+        plants.removeIf(p -> p != null && !p.isDead()
+                && asInt(p.getRuntimeState("row"), Integer.MIN_VALUE) == row
+                && asInt(p.getRuntimeState("col"), Integer.MIN_VALUE) == col);
+    }
+
+    @Override
+    public void spawnProjectile(Object projectile) {
+        if (projectile instanceof Projectile p) {
+            projectiles.add(p);
+        }
+    }
+
+    @Override
+    public void spawnSun(int amount) {
+        addSun(amount);
+    }
+
+    @Override
+    public void addSun(int amount) {
+        if (gameStatus == null || amount == 0) {
+            return;
+        }
+        gameStatus.setSunflower(Math.max(0, gameStatus.getSunflower() + amount));
+    }
+
+    @Override
+    public void damageArea(int lane, int row, int damage) {
+        if (damage <= 0) {
+            return;
+        }
+        for (Zombie zombie : getZombiesInLane(lane)) {
+            if (zombie != null) {
+                zombie.takeDamage(damage);
+            }
+        }
+    }
+
+    // ── zombie callback methods ──
 
     public int getTileColumn(float worldX) {
         return map != null ? map.worldToCol(worldX) : 0;
     }
+
 
     public void triggerGameOver() {
         System.out.println("GAME OVER — zombie reached the house!");
         gameStatus.setGameOver(true);
     }
 
-    public void addSun(int amount) {
-        gameStatus.setSunflower(gameStatus.getSunflower() + amount);
-    }
-
     public void removeZombie(Zombie zombie) {
         zombies.remove(zombie);
-    }
-
-    public void damageArea(int row, int damage) {
-        for (Zombie z : zombies) {
-            if ((int) z.getRow() == row && !z.isDead()) {
-                z.takeDamage(damage);
-            }
-        }
     }
 
     private DamageType resolveDamageType(Projectile p) {
@@ -158,5 +214,16 @@ public class BattleController {
 
     public void dispose() {
         zombieProjectiles.clear();
+    }
+
+    private static int asInt(Object value, int defaultValue) {
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        try {
+            return value == null ? defaultValue : Integer.parseInt(String.valueOf(value));
+        } catch (NumberFormatException ex) {
+            return defaultValue;
+        }
     }
 }
