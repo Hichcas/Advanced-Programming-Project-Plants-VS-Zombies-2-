@@ -109,7 +109,65 @@ public class Plant {
         return instance.getRuntimeState(key);
     }
 
+    private com.badlogic.gdx.graphics.Texture bodyTexture;
+    private boolean triedRealTexture = false;
+
     public void draw(SpriteBatch batch) {
+        if (isDead()) {
+            return;
+        }
+        Rectangle box = getHitbox();
+        if (bodyTexture == null) {
+            bodyTexture = loadTexture();
+        }
+        batch.draw(bodyTexture, box.x, box.y, box.width, box.height);
+    }
+
+    private com.badlogic.gdx.graphics.Texture loadTexture() {
+        if (!triedRealTexture) {
+            triedRealTexture = true;
+            String key = getType() != null ? getType().name() : null;
+            if (key != null) {
+                String path = PlantTexturePaths.getPath(key);
+                try {
+                    if (com.badlogic.gdx.Gdx.files.internal(path).exists()) {
+                        return new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(path));
+                    }
+                    System.out.println("[Plant] no icon found for " + key + " at assets/" + path
+                        + " -> falling back to placeholder circle");
+                } catch (RuntimeException ex) {
+                    System.out.println("[Plant] failed loading texture for " + key + " at assets/" + path
+                        + " -> " + ex.getMessage());
+                }
+            }
+        }
+        return buildBodyTexture();
+    }
+
+    private com.badlogic.gdx.graphics.Texture buildBodyTexture() {
+        int w = 64;
+        int h = 64;
+        com.badlogic.gdx.graphics.Pixmap pixmap = new com.badlogic.gdx.graphics.Pixmap(w, h, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+        // simple deterministic color per plant type so different plants are visually distinct
+        int hash = getType() != null ? getType().name().hashCode() : 0;
+        float r = 0.3f + ((hash & 0xFF) / 255f) * 0.6f;
+        float g = 0.5f + (((hash >> 8) & 0xFF) / 255f) * 0.5f;
+        float b = 0.2f + (((hash >> 16) & 0xFF) / 255f) * 0.4f;
+        pixmap.setColor(r, g, b, 1f);
+        pixmap.fillCircle(w / 2, h / 2, w / 2 - 2);
+        pixmap.setColor(0f, 0f, 0f, 0.6f);
+        pixmap.drawCircle(w / 2, h / 2, w / 2 - 2);
+        com.badlogic.gdx.graphics.Texture tex = new com.badlogic.gdx.graphics.Texture(pixmap);
+        pixmap.dispose();
+        return tex;
+    }
+
+    public void disposeTexture() {
+        if (bodyTexture != null) {
+            bodyTexture.dispose();
+            bodyTexture = null;
+        }
+        triedRealTexture = false;
     }
 
     public void update(BehaviorContext context, double deltaTimeSeconds) {
@@ -130,6 +188,18 @@ public class Plant {
     }
 
     public Rectangle getHitbox() {
+        Object wx = getRuntimeState("worldX");
+        Object wy = getRuntimeState("worldY");
+        Object tw = getRuntimeState("tileWidth");
+        Object th = getRuntimeState("tileHeight");
+        if (wx instanceof Number && wy instanceof Number) {
+            float width = tw instanceof Number ? ((Number) tw).floatValue() * 0.7f : 80f;
+            float height = th instanceof Number ? ((Number) th).floatValue() * 0.7f : 80f;
+            float x = ((Number) wx).floatValue() + (tw instanceof Number ? ((Number) tw).floatValue() * 0.15f : 0f);
+            float y = ((Number) wy).floatValue() + (th instanceof Number ? ((Number) th).floatValue() * 0.15f : 0f);
+            return new Rectangle(x, y, width, height);
+        }
+        // fallback (plant not yet placed on a Map, e.g. in unit tests)
         int row = asInt(getRuntimeState("row"), 0);
         int col = asInt(getRuntimeState("col"), 0);
         return new Rectangle(col * 100f, row * 100f, 80, 80);

@@ -68,6 +68,14 @@ public class Map {
             plant.putRuntimeState("row", row);
             plant.putRuntimeState("col", col);
             plant.putRuntimeState("lane", row);
+            float tileWidth = getTileWidth();
+            float tileHeight = getTileHeight();
+            float worldX = startX + col * tileWidth;
+            float worldY = startY - (row + 1) * tileHeight;
+            plant.putRuntimeState("worldX", worldX);
+            plant.putRuntimeState("worldY", worldY);
+            plant.putRuntimeState("tileWidth", tileWidth);
+            plant.putRuntimeState("tileHeight", tileHeight);
         }
     }
 

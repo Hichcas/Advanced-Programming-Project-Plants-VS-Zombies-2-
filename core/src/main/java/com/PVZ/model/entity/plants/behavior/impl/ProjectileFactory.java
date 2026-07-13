@@ -22,6 +22,7 @@ public final class ProjectileFactory {
         if (plant != null) {
             projectile.setLane(asInt(plant.getRuntimeState().get("lane"), 0));
             projectile.setRow(asInt(plant.getRuntimeState().get("row"), 0));
+            projectile.putExtra("originCol", asInt(plant.getRuntimeState().get("col"), 0));
             projectile.putExtra("plantType", plant.getType());
             projectile.putExtra("behaviorId", plant.getMainBehaviorId());
         }

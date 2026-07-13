@@ -15,7 +15,34 @@ public final class PlantFactory {
 
         int safeLevel = Math.max(1, level);
         PlantStats stats = UpgradeResolver.resolveStats(definition, safeLevel);
+        applyInnateSpecials(definition, stats);
         return new PlantInstance(definition, stats, safeLevel);
+    }
+
+    /**
+     * A handful of plants have a base-kit passive that isn't represented anywhere in the
+     * generic JSON ability schema (WallBehavior already knows how to *use* sunDropAmount /
+     * reflectDamage once set — via UpgradeResolver's REFLECT_DAMAGE/SUN_DROP upgrade kind —
+     * but nothing was ever setting a base value at level 1). This fills those in.
+     */
+    private static void applyInnateSpecials(PlantDefinition definition, PlantStats stats) {
+        String key = definition.getPlantKey();
+        if (key == null) {
+            return;
+        }
+        switch (key) {
+            case "sun_bean" -> {
+                if (stats.getSunDropAmount() <= 0) {
+                    stats.setSunDropAmount(5);
+                }
+            }
+            case "endurian" -> {
+                if (stats.getReflectDamage() <= 0) {
+                    stats.setReflectDamage(Math.max(20, stats.getDamage()));
+                }
+            }
+            default -> { }
+        }
     }
 
     public static Plant createPlant(PlantDefinition definition, int userLevel) {

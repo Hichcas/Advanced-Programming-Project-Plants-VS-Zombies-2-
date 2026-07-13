@@ -67,4 +67,15 @@ public class RegularInputProcessor extends InputAdapter {
 
         return false;
     }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        OrthographicCamera camera = AppStatus.getCamera();
+        if (camera == null || regularGameEngine == null) {
+            return false;
+        }
+        Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
+        regularGameEngine.collectSunAtWorldPoint(worldCoords.x, worldCoords.y);
+        return false;
+    }
 }

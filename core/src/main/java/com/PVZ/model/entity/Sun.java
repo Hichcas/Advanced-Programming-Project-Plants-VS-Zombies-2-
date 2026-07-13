@@ -1,9 +1,17 @@
 package com.PVZ.model.entity;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Sun {
+    private static final String TEXTURE_PATH = "Sun/Sun.png";
+    private static Texture sharedTexture;
+    private static boolean triedLoad = false;
+
     private double x;
     private double y;
     private int amount;
@@ -52,6 +60,49 @@ public class Sun {
     }
 
     public void draw(SpriteBatch batch) {
+        if (collected) {
+            return;
+        }
+        Texture texture = getOrLoadTexture();
+        batch.draw(texture, (float) x, (float) y, hitbox.width, hitbox.height);
+    }
+
+    /**
+     * One shared texture for every sun on screen (they all look the same), lazily loaded from
+     * assets/Sun/Sun.png. Falls back to a generated gold circle if the file isn't there yet, so
+     * the game still runs before the art asset is dropped in.
+     */
+    private static Texture getOrLoadTexture() {
+        if (sharedTexture != null) {
+            return sharedTexture;
+        }
+        if (!triedLoad) {
+            triedLoad = true;
+            try {
+                if (Gdx.files.internal(TEXTURE_PATH).exists()) {
+                    sharedTexture = new Texture(Gdx.files.internal(TEXTURE_PATH));
+                    return sharedTexture;
+                }
+                System.out.println("[Sun] no icon found at assets/" + TEXTURE_PATH
+                    + " -> falling back to placeholder circle");
+            } catch (RuntimeException ex) {
+                System.out.println("[Sun] failed loading texture at assets/" + TEXTURE_PATH + " -> " + ex.getMessage());
+            }
+        }
+        sharedTexture = buildPlaceholderTexture();
+        return sharedTexture;
+    }
+
+    private static Texture buildPlaceholderTexture() {
+        int size = 40;
+        Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.GOLD);
+        pixmap.fillCircle(size / 2, size / 2, size / 2 - 1);
+        pixmap.setColor(1f, 1f, 0.6f, 0.8f);
+        pixmap.fillCircle(size / 2, size / 2, size / 4);
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
     }
 
     private void updateHitbox() {

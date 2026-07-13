@@ -14,6 +14,7 @@ import com.PVZ.screen.manager.FontManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -118,7 +119,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
         if (gameStatus != null) {
             gameStatus.setRemainingZombieWaveInPercent(
-                    zombieWavesStarted ? Math.min(100, gameStatus.getRemainingZombieWaveInPercent() + 1) : 0);
+                zombieWavesStarted ? Math.min(100, gameStatus.getRemainingZombieWaveInPercent() + 1) : 0);
         }
     }
 
@@ -142,7 +143,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 if (plant.isDead()) {
                     if (plant.getStats().getBooleanExtra("explodeOnDeath", false)) {
                         damageArea(row, row,
-                                Math.max(plant.getStats().getExplodeDamage(), plant.getStats().getDamage()));
+                            Math.max(plant.getStats().getExplodeDamage(), plant.getStats().getDamage()));
                     }
                     map.removePlant(row, col);
                 }
@@ -191,6 +192,35 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         batch.begin();
         if (battleController != null) {
             battleController.drawProjectiles(batch);
+        }
+
+        // plant projectiles (peas/lobs/etc — these are separate from zombie projectiles)
+        for (Projectile projectile : projectiles) {
+            projectile.draw(batch);
+        }
+
+        // falling / collectible suns
+        for (com.PVZ.model.entity.Sun sun : sunManager.getSuns()) {
+            sun.draw(batch);
+        }
+
+        // plants on the lawn — read straight from the map grid (same source updatePlants()
+        // uses) instead of the 'plants' field list, which nothing ever adds entries to.
+        BitmapFont plantFont = FontManager.getInstance().getEnglishTinyFont();
+        plantFont.setColor(Color.WHITE);
+        if (map != null) {
+            for (int row = 0; row < ROWS; row++) {
+                for (int col = 0; col < COLS; col++) {
+                    Plant plant = map.getPlantAt(row, col);
+                    if (plant == null || plant.isDead()) {
+                        continue;
+                    }
+                    plant.draw(batch);
+                    Rectangle box = plant.getHitbox();
+                    String label = plant.getType() + " (" + plant.getCurrentHp() + "hp)";
+                    plantFont.draw(batch, label, box.x, box.y + box.height + 4);
+                }
+            }
         }
 
         //zombies's info:
@@ -261,8 +291,51 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     @Override
     public void spawnProjectile(Object projectile) {
         if (projectile instanceof Projectile p) {
+            placeProjectileOnMap(p);
             projectiles.add(p);
         }
+    }
+
+    /**
+     * Plant behaviors only know a projectile's row/lane (grid coordinates), they
+     * have no idea where that is on screen. This converts that into a real world
+     * x/y (using the same tile geometry as the Map/Tile classes and Zombie
+     * positions) and gives it a real pixels/second speed, so the projectile
+     * actually moves across the lawn each tick and its hitbox can overlap a
+     * zombie's hitbox (which is in world coordinates too).
+     */
+    private void placeProjectileOnMap(Projectile p) {
+        if (p.isWorldPositioned()) {
+            return;
+        }
+        int row = p.getRow();
+        float tileWidth = 177f;
+        float tileHeight = 234f;
+        float startX = 550f;
+        float startY = 1240f;
+        if (map != null) {
+            tileWidth = map.getTileWidth();
+            tileHeight = map.getTileHeight();
+            startX = map.getStartX();
+            startY = map.getStartY();
+        }
+
+        int col = 0;
+        Object colState = p.getExtra("originCol");
+        if (colState instanceof Number number) {
+            col = number.intValue();
+        }
+
+        float worldX = startX + col * tileWidth + tileWidth * 0.5f;
+        float worldY = startY - (row + 1) * tileHeight + tileHeight * 0.35f;
+
+        // ~1.5 tiles per second feels like the classic PVZ pea speed.
+        float speedPxPerSec = tileWidth * 1.5f;
+        if (p.getType() == com.PVZ.model.entity.plants.behavior.impl.ProjectileType.LOB) {
+            speedPxPerSec = tileWidth * 0.9f;
+        }
+
+        p.initWorldPosition(worldX, worldY, speedPxPerSec);
     }
 
     @Override
@@ -412,6 +485,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     @Override
     public void spawnProjectile(Projectile p) {
         if (p != null) {
+            placeProjectileOnMap(p);
             projectiles.add(p);
         }
     }
@@ -578,6 +652,20 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return 	"Plant fed at (" + col + ", " + row + ")";
     }
 
+    /**
+     * Collects any sun under the given world (pixel) point — used for mouse-hover collection.
+     * Unlike collectSunAt(x, y), which takes 1-based tile coordinates for the CLI "collect sun"
+     * command, this takes raw world pixel coordinates straight from an unprojected mouse point.
+     */
+    public int collectSunAtWorldPoint(float worldX, float worldY) {
+        Rectangle pointer = new Rectangle(worldX - 8f, worldY - 8f, 16f, 16f);
+        int collected = sunManager.collectAt(pointer);
+        if (collected > 0) {
+            addSun(collected);
+        }
+        return collected;
+    }
+
     public String collectSunAt(int x, int y) {
         int row = normalizeIndex(y);
         int col = normalizeIndex(x);
@@ -601,11 +689,39 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     public String showMapText() {
         StringBuilder builder = new StringBuilder();
+        builder.append("Sun: ").append(getSunCount())
+            .append(" | Wave: ").append(waveManager == null ? 0 : waveManager.getCurrentWave())
+            .append('\n');
+
+        // bucket zombies by (row, col) so the ascii map can show 'Z' where they currently are.
+        // this is the whole point of "show map": each call should reflect that time/zombies moved on.
+        boolean[][] zombieAt = new boolean[ROWS][COLS];
+        for (Zombie z : getZombieList()) {
+            if (z == null || z.isDead()) {
+                continue;
+            }
+            int row = (int) Math.round(z.getRow());
+            int col = map != null ? map.worldToCol((float) z.getX()) : -1;
+            if (row >= 0 && row < ROWS && col >= 0 && col < COLS) {
+                zombieAt[row][col] = true;
+            }
+        }
+
         builder.append("Map:\n");
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 Plant plant = map == null ? null : map.getPlantAt(row, col);
-                builder.append(plant == null ? "." : plant.getType().name().charAt(0));
+                char cell;
+                if (zombieAt[row][col] && plant != null) {
+                    cell = '#'; // zombie currently overlapping a plant's tile
+                } else if (zombieAt[row][col]) {
+                    cell = 'Z';
+                } else if (plant != null) {
+                    cell = plant.getType().name().charAt(0);
+                } else {
+                    cell = '.';
+                }
+                builder.append(cell);
                 if (col + 1 < COLS) {
                     builder.append(' ');
                 }
@@ -625,14 +741,14 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 Plant plant = map.getPlantAt(row, col);
                 if (plant != null) {
                     builder.append(plant.getType().getDisplayName())
-                            .append(" at (")
-                            .append(col)
-                            .append(", ")
-                            .append(row)
-                            .append(") hp=")
-                            .append(plant.getCurrentHp())
-                            .append(plant.isPlantFoodActive() ? " [plant food]" : "")
-                            .append('\n');
+                        .append(" at (")
+                        .append(col)
+                        .append(", ")
+                        .append(row)
+                        .append(") hp=")
+                        .append(plant.getCurrentHp())
+                        .append(plant.isPlantFoodActive() ? " [plant food]" : "")
+                        .append('\n');
                 }
             }
         }
@@ -654,8 +770,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             return "Tile (" + col + ", " + row + ") is empty.";
         }
         return "Tile (" + col + ", " + row + ") contains " + plant.getType().getDisplayName()
-                + " hp=" + plant.getCurrentHp()
-                + (plant.isPlantFoodActive() ? " [plant food]" : "");
+            + " hp=" + plant.getCurrentHp()
+            + (plant.isPlantFoodActive() ? " [plant food]" : "");
     }
 
     public String addSunsCheat(int amount) {
