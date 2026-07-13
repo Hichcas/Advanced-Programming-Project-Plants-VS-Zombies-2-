@@ -31,7 +31,7 @@ public abstract class AbstractSpecialMovementZombie extends Zombie {
         Plant plant = ctrl.getPlantAt((int) row, tileCol);
         if (plant != null && !plant.isDead()) {
             moving = false;
-            attack(plant, delta);
+            attack(plant, delta, ctrl);
         } else {
             moving = true;
             move(delta, ctrl);

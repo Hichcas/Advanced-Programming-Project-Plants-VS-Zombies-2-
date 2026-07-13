@@ -25,17 +25,22 @@ public class TorchwoodBehavior implements PlantBehavior {
         int row = asInt(plant.getRuntimeState().getOrDefault("row", 0), 0);
         int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
 
-        applyAura(context, row, col - 1);
-        applyAura(context, row, col + 1);
+        applyAura(plant, context, row, col - 1);
+        applyAura(plant, context, row, col + 1);
     }
 
-    private void applyAura(BehaviorContext context, int row, int col) {
+    private void applyAura(PlantInstance plant, BehaviorContext context, int row, int col) {
         Plant neighbor = context.getPlantAt(row, col);
         if (neighbor == null || neighbor.isDead()) {
             return;
         }
         neighbor.getStats().putExtra("fireAttack", Boolean.TRUE);
         neighbor.getStats().putExtra("meltBoost", Boolean.TRUE);
+        double desiredMultiplier = plant != null && plant.isPlantFoodActive() ? 3.0 : 2.0;
+        double currentMultiplier = neighbor.getStats().getDoubleExtra("damageMultiplier", 1.0);
+        if (currentMultiplier < desiredMultiplier) {
+            neighbor.getStats().putExtra("damageMultiplier", desiredMultiplier);
+        }
     }
 
     private static int asInt(Object value, int defaultValue) {

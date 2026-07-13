@@ -3,6 +3,7 @@ package com.PVZ.model.entity.plants.behavior.impl;
 import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
+import com.PVZ.model.entity.zombies.base.Zombie;
 
 /**
  * Runs several PlantBehaviors on the same plant instance every tick. Used for plants
@@ -14,6 +15,16 @@ public class CompositeBehavior implements PlantBehavior {
 
     public CompositeBehavior(PlantBehavior... delegates) {
         this.delegates = delegates;
+    }
+
+
+    @Override
+    public void onDamaged(PlantInstance plant, BehaviorContext context, Zombie attacker, int damageAmount, boolean destroyed) {
+        for (PlantBehavior delegate : delegates) {
+            if (delegate != null) {
+                delegate.onDamaged(plant, context, attacker, damageAmount, destroyed);
+            }
+        }
     }
 
     @Override

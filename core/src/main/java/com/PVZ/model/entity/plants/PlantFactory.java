@@ -70,6 +70,9 @@ public final class PlantFactory {
 
         if (definition.hasTag(PlantTag.FIRE)) {
             stats.putExtra("fireAttack", Boolean.TRUE);
+            if (stats.getDoubleExtra("damageMultiplier", 1.0) <= 1.0) {
+                stats.putExtra("damageMultiplier", 2.0);
+            }
         }
         if (definition.hasTag(PlantTag.ICE)) {
             stats.putExtra("iceAttack", Boolean.TRUE);

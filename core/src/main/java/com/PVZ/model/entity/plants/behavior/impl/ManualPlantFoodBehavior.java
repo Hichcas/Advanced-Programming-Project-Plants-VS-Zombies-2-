@@ -91,6 +91,18 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
                 plant.getStats().putExtra("pierceBoost", 99);
                 plant.getStats().putExtra("plantFoodDamageMultiplier", 4.0);
                 plant.getStats().putExtra("passThrough", Boolean.TRUE);
+                List<Zombie> zombies = context.getZombiesInLane(lane);
+                if (!zombies.isEmpty()) {
+                    double plantX = asDouble(plant.getRuntimeState().getOrDefault("worldX", col * 177.0), col * 177.0);
+                    for (Zombie zombie : zombies) {
+                        if (zombie != null && !zombie.isDead()) {
+                            zombie.setX(zombie.getX() + 120.0);
+                            if (zombie.getX() < plantX) {
+                                zombie.setX(plantX + 120.0);
+                            }
+                        }
+                    }
+                }
             }
             case "cabbage_pult", "melon_pult", "winter_melon", "pepper_pult" -> {
                 plant.getStats().putExtra("plantFoodProjectileCount", 3);
@@ -103,9 +115,33 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
                 }
             }
             case "iceberg_lettuce" -> context.freezeAllZombies(5.0);
-            case "phat_beet" -> context.damageArea(lane, row, Math.max(plant.getStats().getAoeDamage(), plant.getStats().getDamage() * 4));
-            case "chomper" -> context.killClosestZombieInLane(lane);
-            case "wasabi_whip" -> context.damageArea(lane, row, Math.max(plant.getStats().getDamage() * 3, 120));
+            case "phat_beet" -> {
+                int aoe = Math.max(plant.getStats().getAoeDamage(), plant.getStats().getDamage() * 4);
+                context.damageArea(lane, row, aoe);
+                if (lane > 0) {
+                    context.damageArea(lane - 1, row, aoe);
+                }
+                context.damageArea(lane + 1, row, aoe);
+            }
+            case "chomper" -> {
+                List<Zombie> zombies = new java.util.ArrayList<>(context.getZombiesInLane(lane));
+                zombies.sort((a, b) -> Double.compare(a.getX(), b.getX()));
+                int bites = Math.min(3, zombies.size());
+                for (int i = 0; i < bites; i++) {
+                    Zombie zombie = zombies.get(i);
+                    if (zombie != null && !zombie.isDead()) {
+                        zombie.takeDamage(999999);
+                    }
+                }
+            }
+            case "wasabi_whip" -> {
+                int damage = Math.max(plant.getStats().getDamage() * 3, 120);
+                context.damageArea(lane, row, damage);
+                if (lane > 0) {
+                    context.damageArea(lane - 1, row, damage);
+                }
+                context.damageArea(lane + 1, row, damage);
+            }
             case "wall_nut", "tall_nut", "endurian", "pumpkin" -> {
                 plant.heal(Math.max(plant.getStats().getMaxHp() / 2, 500));
                 plant.getStats().putExtra("fortified", Boolean.TRUE);
@@ -115,7 +151,11 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
                 plant.getStats().putExtra("explodeOnDeath", Boolean.TRUE);
                 plant.heal(Math.max(plant.getStats().getMaxHp() / 2, 400));
             }
-            case "sun_bean" -> plant.getStats().putExtra("sunDropAmount", 5);
+            case "sun_bean" -> {
+                int fortifyAmount = Math.max(plant.getStats().getMaxHp() / 2, 500);
+                context.fortifyPlantAt(row, col, fortifyAmount);
+                plant.getStats().putExtra("fortified", Boolean.TRUE);
+            }
             case "hypno_shroom" -> context.hypnotizeZombiesInLane(lane, 6.0);
             default -> handleGenericCustom(plant, context, lane, row, col, plantKey);
         }

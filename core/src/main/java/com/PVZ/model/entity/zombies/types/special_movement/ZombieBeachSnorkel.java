@@ -53,7 +53,7 @@ public class ZombieBeachSnorkel extends AbstractSpecialMovementZombie {
             surfaceTimer -= delta;
             if (hasPlant) {
                 moving = false;
-                attack(plant, delta);
+                attack(plant, delta, ctrl);
             } else {
                 moving = true;
                 move(delta, ctrl);

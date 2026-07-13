@@ -29,6 +29,9 @@ public interface BehaviorContext {
 
     void spawnSun(int amount);
 
+    default void addSun(int amount) {
+    }
+
     default void spawnSunAt(int row, int col, int amount) {
         spawnSun(amount);
     }
