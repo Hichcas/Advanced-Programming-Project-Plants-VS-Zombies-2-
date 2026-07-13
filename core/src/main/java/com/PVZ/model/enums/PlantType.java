@@ -152,4 +152,11 @@ public enum PlantType {
         }
         return value.trim().toLowerCase(Locale.ROOT);
     }
+
+    public static PlantType valueof (String name) {
+        for (PlantType plantType : PlantType.values())
+            if (name.toLowerCase().equals(plantType.displayName.toLowerCase()))
+                return plantType;
+        return null;
+    }
 }

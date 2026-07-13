@@ -2,67 +2,12 @@ package com.PVZ.model.greenhouse;
 
 
 import com.PVZ.model.enums.PlantType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * وضعیت گلخانهٔ کاربر شامل ۲۰ گلدان در یک شبکهٔ ۴×۵.
  * ردیف اول (y=1) در ابتدا باز است، ردیف‌های ۲ تا ۴ قفل هستند و با خرید باز می‌شوند.
  */
 public class GreenhouseState {
-
-    public static class Pot {
-        private boolean unlocked;
-        private PlantType plantType;          // null if empty
-        private long plantedTimeMillis;       // 0 if empty
-
-        public Pot() {
-            this.unlocked = false;
-            this.plantType = null;
-            this.plantedTimeMillis = 0;
-        }
-
-        public Pot(boolean unlocked) {
-            this.unlocked = unlocked;
-            this.plantType = null;
-            this.plantedTimeMillis = 0;
-        }
-
-        public boolean isUnlocked() {
-            return unlocked;
-        }
-
-        public void setUnlocked(boolean unlocked) {
-            this.unlocked = unlocked;
-        }
-
-        public PlantType getPlantType() {
-            return plantType;
-        }
-
-        public void setPlantType(PlantType plantType) {
-            this.plantType = plantType;
-        }
-
-        public long getPlantedTimeMillis() {
-            return plantedTimeMillis;
-        }
-
-        public void setPlantedTimeMillis(long plantedTimeMillis) {
-            this.plantedTimeMillis = plantedTimeMillis;
-        }
-
-        /** آیا گلدان خالی است (گیاهی در آن کاشته نشده) */
-        @JsonIgnore
-        public boolean isEmpty() {
-            return plantType == null;
-        }
-
-        /** آیا گلدان باز و خالی است (آمادهٔ کاشت) */
-        @JsonIgnore
-        public boolean isReadyForPlanting() {
-            return unlocked && isEmpty();
-        }
-    }
 
     // ردیف‌ها ۰ تا ۳ (y = 1..4)، ستون‌ها ۰ تا ۴ (x = 1..5)
     private Pot[][] pots;
@@ -97,6 +42,44 @@ public class GreenhouseState {
             throw new IllegalArgumentException("Invalid greenhouse coordinates: (" + x + ", " + y + ")");
         }
         return pots[y - 1][x - 1];
+    }
+
+    /**
+     * باز کردن گلدان‌ها به تعداد مشخص شده.
+     * ترتیب باز شدن به صورت ردیف به ردیف (از چپ به راست) است.
+     * گلدان‌هایی که از قبل باز شده‌اند نادیده گرفته می‌شوند.
+     */
+    public void unlockPots(int count) {
+        if (count <= 0) return;
+
+        int unlockedSoFar = 0;
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < 5; col++) {
+                if (!pots[row][col].isUnlocked()) {
+                    pots[row][col].setUnlocked(true);
+                    unlockedSoFar++;
+
+                    if (unlockedSoFar == count) {
+                        return; // به تعداد مورد نظر باز شد، خروج از متد
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * تعداد کل گلدان‌های قفل‌شده در گلخانه را برمی‌گرداند.
+     */
+    public int getNumberOfLockedPots() {
+        // کل گلدان‌ها ۲۰ تاست، پس گلدان‌های قفل شده یعنی ۲۰ منهای باز شده‌ها
+        return 20 - getNumberOfUnlockedPots();
+    }
+
+    /**
+     * بررسی می‌کند که آیا هنوز گلدان قفل‌شده‌ای باقی مانده است یا خیر.
+     */
+    public boolean hasLockedPots() {
+        return getNumberOfLockedPots() > 0;
     }
 
     /** باز کردن قفل یک گلدان (با خرید) */
@@ -141,6 +124,16 @@ public class GreenhouseState {
         if (pot.isEmpty()) return false;
         long growthDurationMillis = getGrowthDurationMillis(pot.getPlantType());
         return (currentTimeMillis - pot.getPlantedTimeMillis()) >= growthDurationMillis;
+    }
+
+    public int getNumberOfUnlockedPots() {
+        int numberOfUnlockedPots = 0;
+        for (Pot[] pots : pots) {
+            for (Pot pot : pots) {
+                if (pot.isUnlocked()) numberOfUnlockedPots ++;
+            }
+        }
+        return numberOfUnlockedPots;
     }
 
     /** زمان لازم برای رشد کامل یک گیاه (به میلی‌ثانیه) */
