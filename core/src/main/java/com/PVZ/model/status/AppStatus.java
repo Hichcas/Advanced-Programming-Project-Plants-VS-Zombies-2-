@@ -78,6 +78,8 @@ public final class AppStatus {
     public static final Set<PlantType> selectedPlants = new LinkedHashSet<>();
     public static final Set<PlantType> boostedPlants = new LinkedHashSet<>();
 
+    public static User getCurrentUser() { return currentUser;}
+
     public static PVZ getPVZ() {
         return PVZ;
     }
