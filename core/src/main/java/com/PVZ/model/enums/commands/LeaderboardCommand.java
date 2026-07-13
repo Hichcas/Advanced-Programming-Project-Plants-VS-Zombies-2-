@@ -1,5 +1,6 @@
 package com.PVZ.model.enums.commands;
 
+import com.PVZ.model.leaderboard.LeaderboardSortField;
 import com.PVZ.view.input.DTO.LeaderboardInputDTO;
 
 import java.util.regex.Matcher;
@@ -11,6 +12,23 @@ public enum LeaderboardCommand {
         @Override
         public LeaderboardInputDTO createDTO(Matcher matcher) {
             return new LeaderboardInputDTO(this);
+        }
+    },
+    SHOW_LEADERBOARD_SORTED(
+        "^\\s*show\\s+leaderboard\\s+-s\\s+(?<field>score|stages|minigames|daily|nondaily)\\s+(?<order>asc|desc)\\s*$"
+    ) {
+        @Override
+        public LeaderboardInputDTO createDTO(Matcher matcher) {
+            LeaderboardSortField field = switch (matcher.group("field")) {
+                case "score" -> LeaderboardSortField.HIGHEST_SCORE;
+                case "stages" -> LeaderboardSortField.LAST_STAGE;
+                case "minigames" -> LeaderboardSortField.MINIGAMES;
+                case "daily" -> LeaderboardSortField.DAILY_QUESTS;
+                case "nondaily" -> LeaderboardSortField.NON_DAILY_QUESTS;
+                default -> LeaderboardSortField.USERNAME;
+            };
+            boolean asc = matcher.group("order").equals("asc");
+            return new LeaderboardInputDTO(this, field, asc);
         }
     },
     SHOW_CURRENT_MENU("^menu\\s+show\\s+current$|^show\\s+current\\s+menu$") {
