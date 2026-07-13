@@ -1,7 +1,9 @@
 package com.PVZ.model.entity.plants.behavior.impl;
 
 import com.PVZ.model.entity.plants.PlantInstance;
+import com.PVZ.model.enums.DamageType;
 import com.PVZ.model.enums.PlantFlag;
+import com.PVZ.model.enums.PlantTag;
 
 public final class ProjectileFactory {
     private ProjectileFactory() {
@@ -25,6 +27,12 @@ public final class ProjectileFactory {
             projectile.putExtra("originCol", asInt(plant.getRuntimeState().get("col"), 0));
             projectile.putExtra("plantType", plant.getType());
             projectile.putExtra("behaviorId", plant.getMainBehaviorId());
+            boolean poisonAttack = (plant.getDefinition() != null && plant.getDefinition().hasTag(PlantTag.POISON))
+                    || plant.getStats().hasFlag(PlantFlag.POISON_ON_HIT)
+                    || plant.getStats().getBooleanExtra("poisonAttack", false);
+            if (poisonAttack) {
+                projectile.putExtra("damageType", DamageType.POISON);
+            }
         }
 
         return projectile;
@@ -64,16 +72,22 @@ public final class ProjectileFactory {
             return ProjectileType.UNKNOWN;
         }
 
-        if (plant.getStats().hasFlag(PlantFlag.CHILL_ON_HIT)) {
+        boolean fireAttack = plant.getStats().getBooleanExtra("fireAttack", false)
+                || (plant.getDefinition() != null && plant.getDefinition().hasTag(PlantTag.FIRE));
+        boolean iceAttack = plant.getStats().getBooleanExtra("iceAttack", false)
+                || plant.getStats().hasFlag(PlantFlag.CHILL_ON_HIT)
+                || (plant.getDefinition() != null && plant.getDefinition().hasTag(PlantTag.ICE));
+        boolean burstShot = plant.getStats().hasFlag(PlantFlag.BURST_SHOT);
+
+        if (iceAttack) {
             return ProjectileType.ICE_PEA;
         }
-        if (plant.getStats().hasFlag(PlantFlag.POISON_ON_HIT)) {
-            return ProjectileType.PEA;
+        if (fireAttack) {
+            return ProjectileType.FIRE_PEA;
         }
-        if (plant.getStats().hasFlag(PlantFlag.BURST_SHOT)) {
+        if (burstShot) {
             return ProjectileType.BEAM;
         }
-
         return ProjectileType.PEA;
     }
 

@@ -3,7 +3,9 @@ package com.PVZ.model.entity.plants.behavior;
 import com.PVZ.model.entity.plants.AbilitySpec;
 import com.PVZ.model.entity.plants.PlantDefinition;
 import com.PVZ.model.entity.plants.PlantStats;
+import com.PVZ.model.entity.plants.behavior.impl.CompositeBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.DefaultPlantFoodBehavior;
+import com.PVZ.model.entity.plants.behavior.impl.ElectricBlueberryBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.EmptyBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.ExplosiveBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.LobberBehavior;
@@ -14,6 +16,7 @@ import com.PVZ.model.entity.plants.behavior.impl.MintBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.ModifierBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.ShooterBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.SunProducerBehavior;
+import com.PVZ.model.entity.plants.behavior.impl.TorchwoodBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.UtilityLaneBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.WallBehavior;
 
@@ -35,6 +38,46 @@ public final class BehaviorFactory {
         String behaviorId = resolveBehaviorId(definition.getBaseAbility());
         if (behaviorId == null || behaviorId.isBlank()) {
             return fallbackByCategory(definition);
+        }
+
+        String plantKeyForWallCheck = definition.getPlantKey() == null ? "" : normalize(definition.getPlantKey());
+        if (definition.getCategoryEnum() == com.PVZ.model.enums.PlantCategory.WALL
+                && !"garlic".equals(plantKeyForWallCheck)) {
+            return new WallBehavior();
+        }
+
+        // These plants' baseAbility.kind is the same generic string as an ordinary
+        // peashooter/lobber (direct_shot / bounce_shot / homing_shot), but their raw
+        // Persian description is a genuinely different shot pattern (multi-lane,
+        // diagonal, front+back, whole-lawn homing, staggered bounce). ManualPlantBehavior
+        // now has dedicated handlers for each of these, keyed by plant id.
+        String plantKey = definition.getPlantKey() == null ? "" : normalize(definition.getPlantKey());
+        switch (plantKey) {
+            case "rotobaga", "threepeater", "split_pea", "starfruit", "cat_tail", "bowling_bulb" -> {
+                return new ManualPlantBehavior(definition, definition.getBaseAbility());
+            }
+            case "garlic" -> {
+                // "با خورده شدن، زامبی را مجبور به حرکت به لاین مجاور می‌کند" - blocks like a
+                // wall AND periodically shoves the attacking zombie into an adjacent lane.
+                // It was previously forced into plain WallBehavior by the category==WALL
+                // rule above and never pushed anyone.
+                return new CompositeBehavior(new WallBehavior(),
+                        new UtilityLaneBehavior(UtilityLaneBehavior.Mode.MOVE_ZOMBIES));
+            }
+            case "torchwood" -> {
+                // "تبدیل تیر عبوری به آتشی" - torchwood itself never attacks; it just makes
+                // its lane-neighbors' shots fire-shots. Previously it fell through to
+                // ShooterBehavior (its kind is PIERCING_SHOT) and incorrectly shot at zombies
+                // on its own.
+                return new TorchwoodBehavior();
+            }
+            case "electric_blueberry" -> {
+                // "شلیک رعدوبرق (جهت رندوم، نابودی کامل یک زامبی)" - an instant kill, not
+                // ordinary projectile damage, so plain ShooterBehavior undersells it.
+                return new ElectricBlueberryBehavior();
+            }
+            default -> {
+            }
         }
 
         return switch (normalize(behaviorId)) {
@@ -61,6 +104,7 @@ public final class BehaviorFactory {
         }
 
         AbilitySpec plantFood = definition.getPlantFoodEffect();
+        String plantKey = definition.getPlantKey() == null ? "" : normalize(definition.getPlantKey());
         String behaviorId = resolveBehaviorId(plantFood);
         if (behaviorId == null || behaviorId.isBlank()) {
             return new DefaultPlantFoodBehavior();
@@ -95,6 +139,44 @@ public final class BehaviorFactory {
                 int duration = plantFood.getIntParam("durationSeconds", 5);
                 int projectiles = plantFood.getIntParam("projectiles", 5);
                 double damageMultiplier = plantFood.getDoubleParam("damageMultiplier", 2.0);
+
+                switch (plantKey) {
+                    case "rotobaga" -> {
+                        projectiles = 4;
+                        damageMultiplier = 2.0;
+                    }
+                    case "pea_pod" -> {
+                        projectiles = 1;
+                        damageMultiplier = 20.0;
+                    }
+                    case "repeater" -> {
+                        projectiles = 3;
+                        damageMultiplier = 20.0;
+                    }
+                    case "threepeater" -> {
+                        projectiles = 3;
+                        damageMultiplier = 2.0;
+                    }
+                    case "split_pea" -> {
+                        projectiles = 3;
+                        damageMultiplier = 2.0;
+                    }
+                    case "starfruit" -> {
+                        projectiles = 5;
+                        damageMultiplier = 2.0;
+                    }
+                    case "cat_tail", "cattail" -> {
+                        projectiles = 1;
+                        damageMultiplier = 2.0;
+                    }
+                    case "mega_gatling_pea" -> {
+                        projectiles = 4;
+                        damageMultiplier = 20.0;
+                    }
+                    default -> {
+                    }
+                }
+
                 plant.setPlantFoodActive(true);
                 plant.setPlantFoodTicksRemaining(Math.max(1, duration));
                 plant.getStats().putExtra("projectileCount", projectiles);

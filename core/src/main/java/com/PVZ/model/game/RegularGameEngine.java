@@ -289,6 +289,23 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     }
 
     @Override
+    public List<Plant> getAllPlants() {
+        if (map == null) {
+            return List.of();
+        }
+        List<Plant> result = new ArrayList<>();
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                Plant plant = map.getPlantAt(row, col);
+                if (plant != null && !plant.isDead()) {
+                    result.add(plant);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
     public void spawnProjectile(Object projectile) {
         if (projectile instanceof Projectile p) {
             placeProjectileOnMap(p);
@@ -334,8 +351,20 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (p.getType() == com.PVZ.model.entity.plants.behavior.impl.ProjectileType.LOB) {
             speedPxPerSec = tileWidth * 0.9f;
         }
+        float speedMultiplier = (float) Math.max(0.1, Math.abs(p.getSpeed()));
+        speedPxPerSec *= speedMultiplier;
 
-        p.initWorldPosition(worldX, worldY, speedPxPerSec);
+        double horizontalSign = p.getSpeed() < 0 ? -1.0 : 1.0;
+        double verticalSpeed = 0.0;
+        Object targetLaneState = p.getExtra("targetLane");
+        if (targetLaneState instanceof Number number) {
+            int targetLane = number.intValue();
+            if (targetLane != row) {
+                verticalSpeed = Math.signum(targetLane - row) * speedPxPerSec;
+            }
+        }
+
+        p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
     }
 
     @Override

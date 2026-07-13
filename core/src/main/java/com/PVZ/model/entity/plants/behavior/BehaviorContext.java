@@ -18,6 +18,13 @@ public interface BehaviorContext {
         return null;
     }
 
+    default List<Plant> getAllPlants() {
+        return List.of();
+    }
+
+    default void removePlant(int row, int col) {
+    }
+
     void spawnProjectile(Object projectile);
 
     void spawnSun(int amount);
