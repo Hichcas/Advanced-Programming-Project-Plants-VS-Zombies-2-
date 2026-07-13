@@ -8,6 +8,8 @@ public class UserStats {
     private int stagesCompleted; // تعداد کل مراحل گذرانده‌شده (همهٔ فصل‌ها)
     private int highestScore; // بیشترین میوپوینت در بازی امتیازی
     // private int difficultyLevel; // سطح سختی فعلی (۱ تا ۵، پیش‌فرض ۳)
+    private int dailyQuestsCompleted;
+    private int nonDailyQuestsCompleted;
 
     public int getGamesPlayed() {
         return gamesPlayed;
@@ -48,6 +50,13 @@ public class UserStats {
     public void setHighestScore(int highestScore) {
         this.highestScore = highestScore;
     }
+
+    public int getDailyQuestsCompleted() { return dailyQuestsCompleted; }
+    public void setDailyQuestsCompleted(int n) { this.dailyQuestsCompleted = n; }
+    public int getNonDailyQuestsCompleted() { return nonDailyQuestsCompleted; }
+    public void setNonDailyQuestsCompleted(int n) { this.nonDailyQuestsCompleted = n; }
+    public void incrementDailyQuestsCompleted() { this.dailyQuestsCompleted++; }
+    public void incrementNonDailyQuestsCompleted() { this.nonDailyQuestsCompleted++; }
 
     // ---------- متدهای کمکی ----------
     /** افزایش تعداد بازی‌های انجام‌شده */
