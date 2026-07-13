@@ -26,6 +26,7 @@ import java.util.Map;
  * PlantType, and re-attached to the fresh packets on every layout() call.
  */
 public class SeedPacketBar {
+    static private final float Xoffset = 600f;
 
     private static final float SLOT_SIZE = 110f;
     private static final float GAP = 12f;
@@ -37,7 +38,7 @@ public class SeedPacketBar {
     /** Lays out one packet per unlocked plant, left to right, starting at (startX, startY). */
     public void layout(List<PlantType> unlockedPlants, float startX, float startY) {
         packets.clear();
-        float x = startX;
+        float x = startX + Xoffset;   // <-- آفست اینجا اضافه بشه
         for (PlantType type : unlockedPlants) {
             Rectangle bounds = new Rectangle(x, startY, SLOT_SIZE, SLOT_SIZE);
             SeedPacket packet = new SeedPacket(type, bounds);
