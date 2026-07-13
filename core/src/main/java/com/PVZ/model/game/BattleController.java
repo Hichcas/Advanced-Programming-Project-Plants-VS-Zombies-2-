@@ -120,6 +120,7 @@ public class BattleController {
         if (p.getType() == ProjectileType.ICE_PEA) return DamageType.ICE;
         Object dt = p.getExtra("damageType");
         if (dt instanceof DamageType) return (DamageType) dt;
+        if (p.getType() == ProjectileType.FIRE_PEA) return DamageType.NORMAL;
         return DamageType.NORMAL;
     }
 

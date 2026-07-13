@@ -4,6 +4,7 @@ import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.PlantTag;
 
 import java.util.List;
 
@@ -21,6 +22,11 @@ public class ShooterBehavior implements PlantBehavior {
         double cooldown = plant.getStats().getActionIntervalSeconds();
         if (cooldown <= 0) {
             cooldown = 1.5;
+        }
+        if (plant.getDefinition() != null && plant.getDefinition().hasTag(PlantTag.CHARGE)) {
+            cooldown = Math.max(cooldown, Math.max(1.0, plant.getStats().getChargeTimeSeconds() > 0
+                    ? plant.getStats().getChargeTimeSeconds()
+                    : 2.0));
         }
 
         if (attackTimer < cooldown) {

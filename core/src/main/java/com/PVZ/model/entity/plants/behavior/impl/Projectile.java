@@ -21,6 +21,7 @@ public class Projectile {
     private double positionX;
     private double positionY;
     private double speed;
+    private double verticalSpeed;
     private boolean fromPlantFood;
     private boolean destroyed = false;
     private boolean worldPositioned = false;
@@ -40,9 +41,14 @@ public class Projectile {
      * behaviors themselves don't know about the Map's pixel geometry.
      */
     public void initWorldPosition(float worldX, float worldY, float worldSpeedPxPerSec) {
+        initWorldPosition(worldX, worldY, worldSpeedPxPerSec, 0.0f);
+    }
+
+    public void initWorldPosition(float worldX, float worldY, float worldSpeedPxPerSec, float worldVerticalSpeedPxPerSec) {
         this.positionX = worldX;
         this.positionY = worldY;
         this.speed = worldSpeedPxPerSec;
+        this.verticalSpeed = worldVerticalSpeedPxPerSec;
         this.worldPositioned = true;
         this.hitbox.set((float) positionX, (float) positionY, SIZE, SIZE);
     }
@@ -115,6 +121,14 @@ public class Projectile {
         this.speed = speed;
     }
 
+    public double getVerticalSpeed() {
+        return verticalSpeed;
+    }
+
+    public void setVerticalSpeed(double verticalSpeed) {
+        this.verticalSpeed = verticalSpeed;
+    }
+
     public boolean isFromPlantFood() {
         return fromPlantFood;
     }
@@ -141,6 +155,7 @@ public class Projectile {
             return;
         }
         positionX += speed * delta;
+        positionY += verticalSpeed * delta;
         hitbox.setPosition((float) positionX, (float) positionY);
     }
 
