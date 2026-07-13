@@ -3,10 +3,7 @@ package com.PVZ.model.user;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.ZombieType;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * نگه‌دارندهٔ وضعیت کلکسیون کاربر:
@@ -30,7 +27,7 @@ public class CollectionState {
         // No need to pre-populate plantLevels with zeros;
         // getPlantLevel() returns 0 as default for missing keys.
     }
-    
+
 
     // ---------- Getter و Setter (برای سریالایز) ----------
     public Set<PlantType> getUnlockedPlants() {
@@ -125,6 +122,10 @@ public class CollectionState {
         int newLevel = getPlantLevel(plant) + 1;
         plantLevels.put(plant, newLevel);
         return newLevel;
+    }
+
+    public void setAllPlantsUnlocked() {
+        unlockedPlants.addAll(Arrays.asList(PlantType.values()));
     }
 
     // ---------- بوست‌های گلخانه ----------

@@ -10,6 +10,7 @@ public class User {
     public GreenhouseState greenhouseState;
     public AppStats appStats;
     public NewsState newsState;
+    public ShopDaily shopDaily;
     private boolean stayLoggedIn;
 
     public User() {
@@ -30,6 +31,7 @@ public class User {
         user.progressState = new ProgressState();
         user.greenhouseState = new GreenhouseState();
         user.stayLoggedIn = false;
+        user.shopDaily = new ShopDaily();
 
         return user;
     }

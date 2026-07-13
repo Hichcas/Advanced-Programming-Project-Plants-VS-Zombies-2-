@@ -5,6 +5,7 @@ import com.PVZ.model.enums.commands.GreenhouseCommand;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.greenhouse.GreenhouseState;
+import com.PVZ.model.greenhouse.Pot;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.GreenhouseInputDTO;
@@ -44,7 +45,7 @@ public class GreenhouseMenuController {
         StringBuilder builder = new StringBuilder();
         for (int y = 1; y <= 4; y++) {
             for (int x = 1; x <= 5; x++) {
-                GreenhouseState.Pot pot = state.getPot(x, y);
+                Pot pot = state.getPot(x, y);
                 builder.append(pot.isUnlocked() ? "[O]" : "[X]");
                 if (pot.getPlantType() != null) {
                     builder.append(pot.getPlantType().getDisplayName());
