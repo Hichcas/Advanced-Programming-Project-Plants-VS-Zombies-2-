@@ -9,10 +9,12 @@ import com.PVZ.model.entity.plants.behavior.impl.ExplosiveBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.LobberBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.ManualPlantBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.ManualPlantFoodBehavior;
+import com.PVZ.model.entity.plants.behavior.impl.MeleeEatBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.MintBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.ModifierBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.ShooterBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.SunProducerBehavior;
+import com.PVZ.model.entity.plants.behavior.impl.UtilityLaneBehavior;
 import com.PVZ.model.entity.plants.behavior.impl.WallBehavior;
 
 import java.util.Locale;
@@ -43,8 +45,12 @@ public final class BehaviorFactory {
             case "explosive", "bomb", "mine", "aoe", "burst_explode", "lane_clear" -> new ExplosiveBehavior();
             case "wall", "wall_nut", "defense", "wall_defense" -> new WallBehavior();
             case "mint", "mint_family_buff", "family_buff" -> new MintBehavior();
-            case "modifier", "utility", "water_support", "move_zombies", "magnet_disarm", "magnet_pulse", "hypnotize", "copy_plant" -> new ManualPlantBehavior(definition, definition.getBaseAbility());
-            case "melee_eat", "melee", "attack_melee" -> new ManualPlantBehavior(definition, definition.getBaseAbility());
+            case "modifier", "utility", "water_support", "copy_plant" -> new ManualPlantBehavior(definition, definition.getBaseAbility());
+            case "magnet_disarm" -> new UtilityLaneBehavior(UtilityLaneBehavior.Mode.MAGNET_DISARM);
+            case "move_zombies" -> new UtilityLaneBehavior(UtilityLaneBehavior.Mode.MOVE_ZOMBIES);
+            case "hypnotize" -> new UtilityLaneBehavior(UtilityLaneBehavior.Mode.HYPNOTIZE);
+            case "magnet_pulse" -> new ManualPlantBehavior(definition, definition.getBaseAbility());
+            case "melee_eat", "melee", "attack_melee" -> new MeleeEatBehavior();
             default -> fallbackByCategory(definition);
         };
     }
@@ -184,8 +190,9 @@ public final class BehaviorFactory {
             case MINT:
                 return new MintBehavior();
             case MODIFIER:
-            case MELEE:
                 return new ManualPlantBehavior(definition, definition.getBaseAbility());
+            case MELEE:
+                return new MeleeEatBehavior();
             default:
                 return new EmptyBehavior();
         }
