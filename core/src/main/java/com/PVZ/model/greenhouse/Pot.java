@@ -1,58 +1,53 @@
 package com.PVZ.model.greenhouse;
 
 import com.PVZ.model.enums.PlantType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Pot {
     private boolean unlocked;
-    private PlantType plantType;          // null if empty
+    private PlantType plantType;          // null if empty or marigold
     private long plantedTimeMillis;       // 0 if empty
+    private boolean marigold;             // true if this pot has a marigold (common flower)
 
     public Pot() {
         this.unlocked = false;
         this.plantType = null;
         this.plantedTimeMillis = 0;
+        this.marigold = false;
     }
 
     public Pot(boolean unlocked) {
         this.unlocked = unlocked;
         this.plantType = null;
         this.plantedTimeMillis = 0;
+        this.marigold = false;
     }
 
-    public boolean isUnlocked() {
-        return unlocked;
-    }
+    // ---------- getters/setters ----------
+    public boolean isUnlocked() { return unlocked; }
+    public void setUnlocked(boolean unlocked) { this.unlocked = unlocked; }
 
-    public void setUnlocked(boolean unlocked) {
-        this.unlocked = unlocked;
-    }
+    public PlantType getPlantType() { return plantType; }
+    public void setPlantType(PlantType plantType) { this.plantType = plantType; }
 
-    public PlantType getPlantType() {
-        return plantType;
-    }
+    public long getPlantedTimeMillis() { return plantedTimeMillis; }
+    public void setPlantedTimeMillis(long plantedTimeMillis) { this.plantedTimeMillis = plantedTimeMillis; }
 
-    public void setPlantType(PlantType plantType) {
-        this.plantType = plantType;
-    }
+    public boolean isMarigold() { return marigold; }
+    public void setMarigold(boolean marigold) { this.marigold = marigold; }
 
-    public long getPlantedTimeMillis() {
-        return plantedTimeMillis;
-    }
-
-    public void setPlantedTimeMillis(long plantedTimeMillis) {
-        this.plantedTimeMillis = plantedTimeMillis;
-    }
-
-    /** آیا گلدان خالی است (گیاهی در آن کاشته نشده) */
-    @JsonIgnore
+    // ---------- status checks ----------
+    /** گلدان کاملاً خالی (نه گیاه معمولی، نه آنلاک‌شده) */
     public boolean isEmpty() {
-        return plantType == null;
+        return plantType == null && !marigold;
     }
 
     /** آیا گلدان باز و خالی است (آمادهٔ کاشت) */
-    @JsonIgnore
     public boolean isReadyForPlanting() {
         return unlocked && isEmpty();
+    }
+
+    /** آیا گلدان گیاه دارد (از هر نوع) */
+    public boolean hasPlant() {
+        return !isEmpty();
     }
 }
