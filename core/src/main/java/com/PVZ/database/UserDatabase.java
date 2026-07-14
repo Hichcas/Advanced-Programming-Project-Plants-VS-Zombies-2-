@@ -3,6 +3,7 @@ package com.PVZ.database;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.PVZ.model.user.User;
 
@@ -12,12 +13,22 @@ import java.util.List;
 
 public class UserDatabase {
 
-    private static final Path DATA_DIR = Paths.get("data");
+    private static final Path DATA_DIR = findProjectRoot().resolve("core/src/main/resources/data").normalize();
+
+    private static Path findProjectRoot() {
+        Path dir = Paths.get(System.getProperty("user.dir"));
+        while (dir != null) {
+            if (Files.exists(dir.resolve("settings.gradle"))) return dir;
+            dir = dir.getParent();
+        }
+        throw new RuntimeException("Cannot find project root (settings.gradle)");
+    }
     private static final Path USERS_DIR = DATA_DIR.resolve("users");
     private static final Path INDEX_FILE = DATA_DIR.resolve("users_index.json");
 
     private static final ObjectMapper mapper = new ObjectMapper()
-        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     public static void init() throws Exception {
         Files.createDirectories(USERS_DIR);
