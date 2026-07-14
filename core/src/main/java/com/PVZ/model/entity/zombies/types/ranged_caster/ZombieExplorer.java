@@ -4,6 +4,7 @@ import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
 import com.PVZ.model.entity.zombies.base.ZombieProjectile;
 import com.PVZ.model.game.BattleController;
+import com.PVZ.model.game.Map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,26 @@ public class ZombieExplorer extends AbstractRangedCasterZombie {
     }
 
     @Override
-    public void onHit(Plant target) {}
+    public void onHit(Plant target) { }
+
+    @Override
+    public void burnPlantsAhead(Map map, BattleController controller) {
+        if (!torchOn || map == null || controller == null) {
+            return;
+        }
+        int r = (int) row;
+        int currentCol = controller.getTileColumn((float) x);
+        for (int c = currentCol - 1; c >= Math.max(0, currentCol - 1); c--) {
+            Plant plant = controller.getPlantAt(r, c);
+            if (plant != null && !plant.isDead()) {
+                plant.takeDamage(9999);
+            }
+        }
+    }
+
+    public void reigniteTorch() {
+        torchOn = true;
+    }
 
     @Override
     public String getDebugString() {

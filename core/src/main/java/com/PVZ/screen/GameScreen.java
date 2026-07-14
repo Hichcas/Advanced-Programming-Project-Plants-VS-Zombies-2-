@@ -69,7 +69,8 @@ public class GameScreen extends BaseScreen {
     }
 
     private void refreshSeedPacketBar() {
-        if (gameEngine instanceof RegularGameEngine regularGameEngine) {
+        GameEngine activeEngine = AppStatus.getGameEngine();
+        if (activeEngine instanceof RegularGameEngine regularGameEngine) {
             List<PlantType> loadout = new ArrayList<>(AppStatus.selectedPlants);
             regularGameEngine.getSeedPacketBar().layout(loadout, 40f, VIRTUAL_HEIGHT - 150f);
         }
@@ -77,28 +78,34 @@ public class GameScreen extends BaseScreen {
 
     @Override
     protected void renderScreen(float delta) {
-        // نوار بذرها باید از آخرین loadout کاربر refresh شود
+        // Refresh seed packet bar from latest loadout
         refreshSeedPacketBar();
 
-        // ست کردن پروجکشن برای رندر
+        // Use the engine from AppStatus (may have been replaced by startGame)
+        GameEngine activeEngine = AppStatus.getGameEngine();
+        if (activeEngine == null) {
+            activeEngine = gameEngine;
+        }
+
+        // Set projection for rendering
         gameBatch.setProjectionMatrix(camera.combined);
 
-        // رسم پس‌زمینه
+        // Draw background
         gameBatch.begin();
         gameBatch.draw(backgroundTexture, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
         gameBatch.end();
 
-        // به‌روزرسانی منطق بازی
-        gameEngine.render(Math.min(delta, 1 / 30f), gameBatch);
+        // Update game logic
+        activeEngine.render(Math.min(delta, 1 / 30f), gameBatch);
 
-        // مرزهای گرید
+        // Grid borders
         shapeDebug.setProjectionMatrix(camera.combined);
         shapeDebug.begin(ShapeRenderer.ShapeType.Line);
         gameMap.renderBorders(shapeDebug);
         shapeDebug.end();
 
-        // نوار بذرها
-        if (gameEngine instanceof RegularGameEngine regularGameEngine) {
+        // Seed packet bar
+        if (activeEngine instanceof RegularGameEngine regularGameEngine) {
             SeedPacketBar seedBar = regularGameEngine.getSeedPacketBar();
 
             shapeDebug.begin(ShapeRenderer.ShapeType.Filled);

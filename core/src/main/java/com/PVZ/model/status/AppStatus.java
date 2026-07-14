@@ -75,6 +75,8 @@ public final class AppStatus {
     public static User currentUser = null;
     public static final Scanner scanner = new Scanner(System.in);
     public static String currentChapterName = null;
+    public static com.PVZ.model.game.chapter.Chapter currentChapter = null;
+    public static int currentStageNumber = 1;
     public static final Set<PlantType> selectedPlants = new LinkedHashSet<>();
     public static final Set<PlantType> boostedPlants = new LinkedHashSet<>();
 

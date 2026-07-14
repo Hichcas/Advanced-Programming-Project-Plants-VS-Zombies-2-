@@ -93,8 +93,8 @@ public class RegularZombieEngine implements ZombieEngine{
     public void spawnProjectile(Projectile p) { }
 
     @Override
-    public void spawnZombie(String alias, int row, int col) {
-        if (map == null || !map.isWithinBounds(row, col)) return;
+    public Zombie spawnZombie(String alias, int row, int col) {
+        if (map == null || !map.isWithinBounds(row, col)) return null;
         Zombie zombie = ZombieType.fromAlias(alias).create();
         Tile tile = map.getTile(row, col);
         float y = tile.getY() + (tile.getHeight() - 70f) / 2f;
@@ -102,6 +102,7 @@ public class RegularZombieEngine implements ZombieEngine{
         zombie.initPosition(x, y, row);
         zombie.onSpawn();
         zombies.add(zombie);
+        return zombie;
     }
 
     @Override
