@@ -3,12 +3,20 @@ package com.PVZ.controller.menuControllers;
 
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
+import com.PVZ.model.game.GameEngine;
+import com.PVZ.model.game.GameStatus;
+import com.PVZ.model.game.RegularGameEngine;
+import com.PVZ.model.game.Wave;
+import com.PVZ.model.game.chapter.ChapterLibrary;
+import com.PVZ.model.game.chapter.StageConfig;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.PlantSelectionInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringJoiner;
 
 public class PlantSelectionMenuController {
@@ -112,8 +120,58 @@ public class PlantSelectionMenuController {
     }
 
     private OutputDTO startGame() {
+        if (AppStatus.currentChapter == null || AppStatus.currentChapterName == null) {
+            return new OutputDTO(false, "No chapter selected.");
+        }
+
+        StageConfig stageConfig = ChapterLibrary.getStageConfig(
+                AppStatus.currentChapterName, AppStatus.currentStageNumber);
+        if (stageConfig == null) {
+            return new OutputDTO(false, "Invalid stage.");
+        }
+
+        if (stageConfig.getPlantLimit() > 0 && AppStatus.selectedPlants.size() > stageConfig.getPlantLimit()) {
+            return new OutputDTO(false, "Too many plants selected for this stage.");
+        }
+
+        List<Wave> waves = buildWaves(stageConfig);
+        int initialSun = stageConfig.isDisableFallingSun() ? 150 : 200;
+        GameStatus gameStatus = new GameStatus();
+        gameStatus.setSunflower(initialSun);
+
+        RegularGameEngine engine = new RegularGameEngine(gameStatus, waves);
+
+        GameEngine oldEngine = AppStatus.getGameEngine();
+        if (oldEngine != null && oldEngine.getMap() != null) {
+            engine.setMap(oldEngine.getMap());
+        }
+
+        AppStatus.currentChapter.applySetup(engine.getMap(), stageConfig);
+
+        AppStatus.setGameEngine(engine);
+        engine.startWaves();
         AppStatus.currentMenuType = MenuType.IN_GAME;
-        return new OutputDTO(true, "Entered In Game Menu.");
+
+        return new OutputDTO(true, "Game started: " + AppStatus.currentChapterName
+                + " Stage " + AppStatus.currentStageNumber);
+    }
+
+    private List<Wave> buildWaves(StageConfig stageConfig) {
+        List<Wave> waves = new ArrayList<>();
+        if (stageConfig.getWaves() == null) {
+            return waves;
+        }
+        for (StageConfig.WaveEntry we : stageConfig.getWaves()) {
+            List<Wave.WaveEntry> entries = new ArrayList<>();
+            if (we.getEntries() != null) {
+                for (StageConfig.ZombieSpawn zs : we.getEntries()) {
+                    entries.add(new Wave.WaveEntry(zs.getZombie(), zs.getCount(),
+                            (float) zs.getSpawnDelay()));
+                }
+            }
+            waves.add(new Wave(entries, (float) we.getStartDelay()));
+        }
+        return waves;
     }
 
     private OutputDTO exitToGameMenu() {

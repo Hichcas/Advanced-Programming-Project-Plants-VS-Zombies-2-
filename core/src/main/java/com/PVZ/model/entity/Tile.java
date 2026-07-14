@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 public class Tile {
     private TileType type;
     private Plant plant;
+    private int hp;
     private int gridRow, gridCol;   // موقعیت در شبکه (برای منطق)
 
     // موقعیت و اندازه در دنیای بازی
@@ -47,6 +48,9 @@ public class Tile {
     public void setPlant(Plant plant) { this.plant = plant; }
     public int getGridRow() { return gridRow; }
     public int getGridCol() { return gridCol; }
+
+    public int getHp() { return hp; }
+    public void setHp(int hp) { this.hp = hp; }
 
     public float getX() { return worldX; }
     public float getY() { return worldY; }

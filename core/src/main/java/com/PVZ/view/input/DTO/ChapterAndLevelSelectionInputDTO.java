@@ -9,19 +9,22 @@ public class ChapterAndLevelSelectionInputDTO implements InputDTO {
     private final String chapterName;
     private final Integer amount;
     private final String currency;
+    private final Integer stage;
 
     public ChapterAndLevelSelectionInputDTO(ChapterAndLevelSelectionCommand command,
                                             String chapterName,
                                             Integer amount,
-                                            String currency) {
+                                            String currency,
+                                            Integer stage) {
         this.command = command;
         this.chapterName = chapterName;
         this.amount = amount;
         this.currency = currency;
+        this.stage = stage;
     }
 
     public static ChapterAndLevelSelectionInputDTO invalid() {
-        return new ChapterAndLevelSelectionInputDTO(null, null, null, null);
+        return new ChapterAndLevelSelectionInputDTO(null, null, null, null, null);
     }
 
     public ChapterAndLevelSelectionCommand getCommand() {
@@ -38,5 +41,9 @@ public class ChapterAndLevelSelectionInputDTO implements InputDTO {
 
     public String getCurrency() {
         return currency;
+    }
+
+    public Integer getStage() {
+        return stage;
     }
 }

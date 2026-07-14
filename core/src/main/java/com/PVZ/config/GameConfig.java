@@ -9,6 +9,7 @@ import java.util.List;
 
 public final class GameConfig {
     public static final String PLANTS_DATA_RESOURCE = "data/plants_structured_v6.json";
+    public static final String CHAPTERS_DATA_RESOURCE = "data/chapters.json";
 
     private static PlantDataFile plantDataFile;
     private static boolean plantDataLoaded;

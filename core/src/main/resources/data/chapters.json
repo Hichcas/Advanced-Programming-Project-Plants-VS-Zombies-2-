@@ -1,18 +1,207 @@
 {
-  "chapters": [{
-    "name": "ANCIENT_EGYPT",
-    "displayName": "Ancient Egypt",
-    "setup":  [ { "model":"Tile", "tileType":"TOMBSTONE", "args":[[row,col], 700] } ],
-    "stages": [
-      { "stageNumber":1, "plantLimit":8, "rows":5, "cols":9, "mapTexture":"maps/Egypt.jpg",
-        "waves":[ {"startDelay":5,"entries":[{"zombie":"ZombieTutorialDefault","count":5,"spawnDelay":1.5}]} ] }
-      /* ...remaining stages of Chapter 1... */
-    ],
-    "update": [
-      { "model":"RaZombie",       "method":"stealSun",   "args":[] },
-      { "model":"ExplorerZombie", "method":"burnRow",   "args":[] },
-      { "model":"TombraiserZombie","method":"spawnGrave","args":[] },
-      { "model":"Tombstone",      "method":"update",     "args":[] }
-    ]
-  }]
+  "chapters": [
+    {
+      "name": "ANCIENT_EGYPT",
+      "displayName": "Ancient Egypt",
+      "environment": {
+        "disableFallingSun": false,
+        "description": "Graves block straight projectiles. Cyclone in final wave."
+      },
+      "setup": [
+        {
+          "action": "placeTombstone",
+          "description": "Scatter tombstones on the map at game start"
+        }
+      ],
+      "update": [
+        {
+          "action": "updateTombstones",
+          "description": "Check tombstone HP, destroy if depleted"
+        },
+        {
+          "action": "raZombieStealSun",
+          "description": "Ra zombies pull nearby ground suns toward themselves"
+        },
+        {
+          "action": "explorerBurnRow",
+          "description": "Explorer zombies destroy plants ahead in their row"
+        },
+        {
+          "action": "tombraiserSpawnGrave",
+          "description": "Tombraiser zombies create graves on random tiles every few seconds"
+        }
+      ],
+      "stages": [
+        {
+          "stageNumber": 1,
+          "type": "REGULAR",
+          "plantLimit": 8,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Egypt.jpg",
+          "tombstones": [
+            { "row": 1, "col": 3, "hp": 700 },
+            { "row": 2, "col": 5, "hp": 700 },
+            { "row": 3, "col": 7, "hp": 700 },
+            { "row": 4, "col": 2, "hp": 700 }
+          ],
+          "waves": [
+            {
+              "startDelay": 5.0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 4, "spawnDelay": 2.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 12, "spawnDelay": 0.7 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 4, "spawnDelay": 1.2 },
+                { "zombie": "ZombieMummyArmor2Default", "count": 2, "spawnDelay": 1.8 },
+                { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 2.5 },
+                { "zombie": "ZombieExplorerDefault", "count": 2, "spawnDelay": 3.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "isFinal": true,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 0.6 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 1.0 },
+                { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 1.5 },
+                { "zombie": "ZombieMummyArmor4Default", "count": 1, "spawnDelay": 2.5 },
+                { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 2.0 },
+                { "zombie": "ZombieExplorerDefault", "count": 1, "spawnDelay": 3.0 },
+                { "zombie": "ZombieTombRaiserDefault", "count": 1, "spawnDelay": 3.5 }
+              ]
+            }
+          ]
+        },
+        {
+          "stageNumber": 2,
+          "type": "CONVEYOR_BELT",
+          "plantLimit": 0,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Egypt.jpg",
+          "conveyorInterval": 13.0,
+          "tombstones": [
+            { "row": 0, "col": 4, "hp": 700 },
+            { "row": 2, "col": 6, "hp": 700 },
+            { "row": 4, "col": 3, "hp": 700 }
+          ],
+          "waves": [
+            {
+              "startDelay": 5.0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 4, "spawnDelay": 2.0 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 3.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 5, "spawnDelay": 1.5 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 2, "spawnDelay": 2.0 },
+                { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 6, "spawnDelay": 1.2 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 3, "spawnDelay": 1.8 },
+                { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 3.0 },
+                { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 8, "spawnDelay": 1.0 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 3, "spawnDelay": 1.5 },
+                { "zombie": "ZombieMummyArmor2Default", "count": 2, "spawnDelay": 2.0 },
+                { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 3.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "isFinal": true,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 12, "spawnDelay": 0.7 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 4, "spawnDelay": 1.0 },
+                { "zombie": "ZombieMummyArmor2Default", "count": 2, "spawnDelay": 1.5 },
+                { "zombie": "ZombieMummyArmor4Default", "count": 1, "spawnDelay": 2.5 },
+                { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 2.0 },
+                { "zombie": "ZombieExplorerDefault", "count": 2, "spawnDelay": 3.0 }
+              ]
+            }
+          ]
+        },
+        {
+          "stageNumber": 3,
+          "type": "NIGHT_OPS",
+          "plantLimit": 8,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Egypt.jpg",
+          "disableFallingSun": true,
+          "tombstones": [
+            { "row": 1, "col": 2, "hp": 700 },
+            { "row": 1, "col": 6, "hp": 700 },
+            { "row": 3, "col": 4, "hp": 700 },
+            { "row": 3, "col": 8, "hp": 700 }
+          ],
+          "waves": [
+            {
+              "startDelay": 5.0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 4, "spawnDelay": 1.8 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 3.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 5, "spawnDelay": 1.5 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 2, "spawnDelay": 2.0 },
+                { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 3.5 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 6, "spawnDelay": 1.2 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 3, "spawnDelay": 1.5 },
+                { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 2.5 },
+                { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 3.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 8, "spawnDelay": 1.0 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 3, "spawnDelay": 1.5 },
+                { "zombie": "ZombieMummyArmor2Default", "count": 2, "spawnDelay": 2.0 },
+                { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 2.5 },
+                { "zombie": "ZombieTombRaiserDefault", "count": 1, "spawnDelay": 4.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "isFinal": true,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 12, "spawnDelay": 0.7 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 5, "spawnDelay": 1.0 },
+                { "zombie": "ZombieMummyArmor2Default", "count": 3, "spawnDelay": 1.5 },
+                { "zombie": "ZombieMummyArmor4Default", "count": 1, "spawnDelay": 2.5 },
+                { "zombie": "ZombieRaDefault", "count": 3, "spawnDelay": 2.0 },
+                { "zombie": "ZombieTombRaiserDefault", "count": 2, "spawnDelay": 3.0 }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

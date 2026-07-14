@@ -7,6 +7,7 @@ import com.PVZ.model.game.GameStatus;
 import com.PVZ.model.game.RegularGameEngine;
 import com.PVZ.model.graphics.GraphicsQuality;
 import com.PVZ.model.status.AppStatus;
+import com.PVZ.model.game.chapter.ChapterLibrary;
 import com.PVZ.model.user.UserRegistry;
 import com.PVZ.screen.GameScreen;
 import com.PVZ.screen.manager.BrightnessController;
@@ -45,6 +46,8 @@ public class PVZ extends Game {
         } catch (Exception e) {
             System.err.println("UserDatabase init failed: " + e.getMessage());
         }
+
+        ChapterLibrary.load();
 
         ScreenManager.getInstance().startWithFadeIn(new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));
         AppStatus.currentMenuType = MenuType.IN_GAME;

@@ -3,6 +3,9 @@ package com.PVZ.controller.menuControllers;
 import com.PVZ.model.enums.commands.ChapterAndLevelSelectionCommand;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
+import com.PVZ.model.game.chapter.Chapter;
+import com.PVZ.model.game.chapter.ChapterConfig;
+import com.PVZ.model.game.chapter.ChapterLibrary;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.model.user.UserRegistry;
@@ -20,7 +23,7 @@ public class ChapterAndLevelSelectionMenuController {
             return new OutputDTO(false, "Invalid Command.");
         }
         return switch (dto.getCommand()) {
-            case ENTER_CHAPTER -> enterChapter(dto.getChapterName());
+            case ENTER_CHAPTER -> enterChapter(dto.getChapterName(), dto.getStage());
             case ENTER_COLLECTION -> enterCollection();
             case ENTER_GREENHOUSE -> enterGreenhouse();
             case ENTER_TRAVEL_LOG -> enterTravelLog();
@@ -33,11 +36,17 @@ public class ChapterAndLevelSelectionMenuController {
         };
     }
 
-    private OutputDTO enterChapter(String chapterName) {
+    private OutputDTO enterChapter(String chapterName, Integer stage) {
         if (chapterName == null || chapterName.isBlank()) {
             return new OutputDTO(false, "Invalid chapter.");
         }
+        ChapterConfig config = ChapterLibrary.getChapterConfig(chapterName.trim());
+        if (config == null) {
+            return new OutputDTO(false, "Unknown chapter: " + chapterName);
+        }
         AppStatus.currentChapterName = chapterName.trim();
+        AppStatus.currentChapter = ChapterLibrary.getChapter(chapterName.trim());
+        AppStatus.currentStageNumber = (stage != null && stage > 0) ? stage : 1;
         AppStatus.selectedPlants.clear();
         AppStatus.boostedPlants.clear();
         AppStatus.currentMenuType = MenuType.PLANT_SELECTION;

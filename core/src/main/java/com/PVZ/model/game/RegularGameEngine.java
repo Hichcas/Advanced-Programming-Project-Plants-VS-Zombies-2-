@@ -53,6 +53,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     private BattleController battleController;
 
     public RegularGameEngine(GameStatus gameStatus) {
+        this(gameStatus, createDefaultWaves());
+    }
+
+    public RegularGameEngine(GameStatus gameStatus, List<Wave> waves) {
         super(gameStatus, new RegularInputProcessor());
         ((RegularInputProcessor) inputProcessor).setRegularGameEngine(this);
 
@@ -62,12 +66,15 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
         this.zombieEngine = new RegularZombieEngine();
         this.battleController = new BattleController(zombieEngine.getZombies(), plants, projectiles, gameStatus);
+        this.waveManager = new WaveManager(waves);
+    }
 
+    private static List<Wave> createDefaultWaves() {
         List<Wave> waves = new ArrayList<>();
         List<Wave.WaveEntry> e = new ArrayList<>();
         e.add(new Wave.WaveEntry("ZombieTutorialDefault", 5, 1.5f));
         waves.add(new Wave(e, 5f));
-        this.waveManager = new WaveManager(waves);
+        return waves;
     }
 
     @Override
@@ -120,6 +127,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (gameStatus != null) {
             gameStatus.setRemainingZombieWaveInPercent(
                 zombieWavesStarted ? Math.min(100, gameStatus.getRemainingZombieWaveInPercent() + 1) : 0);
+        }
+
+        if (AppStatus.currentChapter != null) {
+            AppStatus.currentChapter.update(map, this);
         }
     }
 
@@ -520,10 +531,11 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     }
 
     @Override
-    public void spawnZombie(String alias, int row, int x) {
+    public Zombie spawnZombie(String alias, int row, int x) {
         if (zombieEngine != null) {
-            zombieEngine.spawnZombie(alias, row, x);
+            return zombieEngine.spawnZombie(alias, row, x);
         }
+        return null;
     }
 
 
@@ -862,6 +874,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     public RegularZombieEngine getZombieEngine() {
         return zombieEngine;
+    }
+
+    public SunManager getSunManager() {
+        return sunManager;
     }
 
     public BattleController getBattleController() {

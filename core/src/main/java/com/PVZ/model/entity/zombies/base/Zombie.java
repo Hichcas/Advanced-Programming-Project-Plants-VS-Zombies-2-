@@ -1,8 +1,11 @@
 package com.PVZ.model.entity.zombies.base;
 
 import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.Sun;
 import com.PVZ.model.enums.DamageType;
+import com.PVZ.model.game.Map;
 import com.PVZ.model.game.BattleController;
+import com.PVZ.model.game.SunManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,6 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 public abstract class Zombie {
     protected double x, y, row, col;
@@ -250,4 +254,9 @@ public abstract class Zombie {
     public void setY(double y) { this.y = y; }
     public void setRow(double row) { this.row = row; }
     public void setCol(double col) { this.col = col; }
+
+    // Chapter behavior hooks — default no-ops, overridden by specific zombie types
+    public void stealNearbySun(SunManager sunManager) { }
+    public void burnPlantsAhead(Map map, BattleController controller) { }
+    public void maybeSpawnGraves(Map map, Random random) { }
 }

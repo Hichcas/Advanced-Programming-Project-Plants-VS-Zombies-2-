@@ -13,7 +13,7 @@ public interface ZombieEngine {
         int getSunCount();
         void addSun(int amount);
         void spawnProjectile(Projectile p);
-    void spawnZombie(String alias, int row, int col);
+    Zombie spawnZombie(String alias, int row, int col);
     void removePlant(int row, int col);
     int getTileColumn(float worldX);
 }

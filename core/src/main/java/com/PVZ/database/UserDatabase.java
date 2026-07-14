@@ -47,12 +47,12 @@ public class UserDatabase {
         List<String> list = loadIndex();
         if (!list.contains(username)) {
             list.add(username);
-            Files.writeString(INDEX_FILE, mapper.writeValueAsString(list));
+            Files.writeString(INDEX_FILE, mapper.writerWithDefaultPrettyPrinter().writeValueAsString(list));
         }
     }
 
     public static void save(String username, User user) throws Exception {
-        String json = mapper.writeValueAsString(user);
+        String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user);
         Files.writeString(USERS_DIR.resolve(username + ".dat"), json);
     }
 
@@ -71,6 +71,6 @@ public class UserDatabase {
         Files.deleteIfExists(USERS_DIR.resolve(username + ".dat"));
         List<String> list = loadIndex();
         list.remove(username);
-        Files.writeString(INDEX_FILE, mapper.writeValueAsString(list));
+        Files.writeString(INDEX_FILE, mapper.writerWithDefaultPrettyPrinter().writeValueAsString(list));
     }
 }
