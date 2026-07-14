@@ -30,6 +30,8 @@ public final class UserRegistry {
             return true;
         } catch (Exception e) {
             USERS.remove(username);
+            System.err.println("Registration save failed: " + e);
+            e.printStackTrace();
             return false;
         }
     }

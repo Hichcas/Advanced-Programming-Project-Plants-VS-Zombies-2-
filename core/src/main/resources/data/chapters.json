@@ -1,0 +1,18 @@
+{
+  "chapters": [{
+    "name": "ANCIENT_EGYPT",
+    "displayName": "Ancient Egypt",
+    "setup":  [ { "model":"Tile", "tileType":"TOMBSTONE", "args":[[row,col], 700] } ],
+    "stages": [
+      { "stageNumber":1, "plantLimit":8, "rows":5, "cols":9, "mapTexture":"maps/Egypt.jpg",
+        "waves":[ {"startDelay":5,"entries":[{"zombie":"ZombieTutorialDefault","count":5,"spawnDelay":1.5}]} ] }
+      /* ...remaining stages of Chapter 1... */
+    ],
+    "update": [
+      { "model":"RaZombie",       "method":"stealSun",   "args":[] },
+      { "model":"ExplorerZombie", "method":"burnRow",   "args":[] },
+      { "model":"TombraiserZombie","method":"spawnGrave","args":[] },
+      { "model":"Tombstone",      "method":"update",     "args":[] }
+    ]
+  }]
+}

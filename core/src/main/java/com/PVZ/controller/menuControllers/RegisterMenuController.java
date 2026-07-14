@@ -104,8 +104,11 @@ public class RegisterMenuController {
                     answerHash
             );
 
-            UserRegistry.register(createdUser);
+            boolean ok = UserRegistry.register(createdUser);
             pendingRegistration = null;
+            if (!ok) {
+                return new OutputDTO(false, "Registration failed. See logs.");
+            }
             AppStatus.currentMenuType = MenuType.LOGIN;
 
             return new OutputDTO(true, "Security question saved successfully.\nEntered Login Menu.");
