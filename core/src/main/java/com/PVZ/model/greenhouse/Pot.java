@@ -1,6 +1,7 @@
 package com.PVZ.model.greenhouse;
 
 import com.PVZ.model.enums.PlantType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Pot {
     private boolean unlocked;
@@ -44,11 +45,13 @@ public class Pot {
     }
 
     /** آیا گلدان خالی است (گیاهی در آن کاشته نشده) */
+    @JsonIgnore
     public boolean isEmpty() {
         return plantType == null;
     }
 
     /** آیا گلدان باز و خالی است (آمادهٔ کاشت) */
+    @JsonIgnore
     public boolean isReadyForPlanting() {
         return unlocked && isEmpty();
     }

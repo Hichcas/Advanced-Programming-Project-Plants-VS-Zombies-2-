@@ -2,6 +2,7 @@ package com.PVZ.model.greenhouse;
 
 
 import com.PVZ.model.enums.PlantType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * وضعیت گلخانهٔ کاربر شامل ۲۰ گلدان در یک شبکهٔ ۴×۵.
@@ -70,6 +71,7 @@ public class GreenhouseState {
     /**
      * تعداد کل گلدان‌های قفل‌شده در گلخانه را برمی‌گرداند.
      */
+    @JsonIgnore
     public int getNumberOfLockedPots() {
         // کل گلدان‌ها ۲۰ تاست، پس گلدان‌های قفل شده یعنی ۲۰ منهای باز شده‌ها
         return 20 - getNumberOfUnlockedPots();
@@ -78,6 +80,7 @@ public class GreenhouseState {
     /**
      * بررسی می‌کند که آیا هنوز گلدان قفل‌شده‌ای باقی مانده است یا خیر.
      */
+    @JsonIgnore
     public boolean hasLockedPots() {
         return getNumberOfLockedPots() > 0;
     }
@@ -126,6 +129,7 @@ public class GreenhouseState {
         return (currentTimeMillis - pot.getPlantedTimeMillis()) >= growthDurationMillis;
     }
 
+    @JsonIgnore
     public int getNumberOfUnlockedPots() {
         int numberOfUnlockedPots = 0;
         for (Pot[] pots : pots) {
