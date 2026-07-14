@@ -88,6 +88,15 @@ public class GameScreen extends BaseScreen {
         gameBatch.draw(backgroundTexture, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
         gameBatch.end();
 
+        // The battle sim (zombies, plants, falling suns, lawn mowers, ...) should only run
+        // while the player is actually inside a level. Previously gameEngine.render() ran
+        // unconditionally every frame starting the moment the app booted (and kept running
+        // after exiting back to a menu), which is why things like the sky sun kept dropping
+        // before "start game" was ever typed.
+        if (AppStatus.currentMenuType != com.PVZ.model.enums.MenuType.IN_GAME) {
+            return;
+        }
+
         // به‌روزرسانی منطق بازی
         gameEngine.render(Math.min(delta, 1 / 30f), gameBatch);
 
@@ -106,7 +115,7 @@ public class GameScreen extends BaseScreen {
             shapeDebug.end();
 
             gameBatch.begin();
-            seedBar.drawIconsAndLabels(gameBatch, hudFont);
+            seedBar.drawIconsAndLabels(gameBatch, hudFont, regularGameEngine);
             gameBatch.end();
         }
     }

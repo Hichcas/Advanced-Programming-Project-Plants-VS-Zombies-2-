@@ -12,6 +12,7 @@ public class Sun {
     private static Texture sharedTexture;
     private static boolean triedLoad = false;
 
+    private static final float SIZE = 70f;
     private double x;
     private double y;
     private int amount;
@@ -94,7 +95,7 @@ public class Sun {
     }
 
     private static Texture buildPlaceholderTexture() {
-        int size = 40;
+        int size = (int) SIZE;
         Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.GOLD);
         pixmap.fillCircle(size / 2, size / 2, size / 2 - 1);
@@ -106,7 +107,7 @@ public class Sun {
     }
 
     private void updateHitbox() {
-        hitbox.set((float) x, (float) y, 40, 40);
+        hitbox.set((float) x, (float) y, SIZE, SIZE);
     }
 
     public Rectangle getHitbox() {
