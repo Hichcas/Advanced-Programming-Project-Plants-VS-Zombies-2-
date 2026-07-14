@@ -127,6 +127,15 @@ public class SeedPacketBar {
     }
 
     public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font) {
+        drawIconsAndLabels(batch, font, null);
+    }
+
+    /**
+     * @param engine optional — when given, packets currently recharging get darkened
+     *               (drawn on top of the icon, not hidden behind it like before) and show
+     *               a "N s" countdown of exactly how long until they're plantable again.
+     */
+    public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font, RegularGameEngine engine) {
         for (SeedPacket packet : packets) {
             Rectangle b = packet.getBounds();
             if (packet.getIcon() != null) {
@@ -135,6 +144,36 @@ public class SeedPacketBar {
                 font.setColor(Color.WHITE);
                 font.draw(batch, packet.getPlantType().getDisplayName(), b.x + 4, b.y + b.height - 8, b.width - 8, -1, true);
             }
+
+            if (engine == null) {
+                continue;
+            }
+            double remaining = engine.getRechargeRemainingSeconds(packet.getPlantType());
+            if (remaining <= 0) {
+                continue;
+            }
+
+            batch.setColor(0f, 0f, 0f, 0.55f);
+            batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
+            batch.setColor(Color.WHITE);
+
+            font.setColor(Color.WHITE);
+            String countdown = (Math.ceil(remaining * 10) / 10.0) + "s";
+            font.draw(batch, countdown, b.x, b.y + b.height / 2f + 8, b.width, 1, true);
         }
+    }
+
+    private com.badlogic.gdx.graphics.Texture darkOverlayTexture;
+
+    private com.badlogic.gdx.graphics.Texture darkOverlayPixel() {
+        if (darkOverlayTexture == null) {
+            com.badlogic.gdx.graphics.Pixmap pixmap =
+                    new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+            pixmap.setColor(1f, 1f, 1f, 1f);
+            pixmap.fill();
+            darkOverlayTexture = new com.badlogic.gdx.graphics.Texture(pixmap);
+            pixmap.dispose();
+        }
+        return darkOverlayTexture;
     }
 }

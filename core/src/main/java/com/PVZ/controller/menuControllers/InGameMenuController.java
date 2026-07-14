@@ -25,6 +25,21 @@ public class InGameMenuController {
         }
 
         RegularGameEngine engine = getEngine();
+
+        if (engine != null && engine.gameStatus != null && engine.gameStatus.isGameOver()) {
+            // Player already lost this level (e.g. the lawn mower's row was breached a
+            // second time). Per the design doc, the game ends and the player is sent back
+            // to before "start game" — same target menu the other "exit to menu" paths use.
+            // The board itself was already wiped by the engine when the loss happened;
+            // clear the flag here (now that it's been consumed) so re-entering this level
+            // starts a fresh game instead of immediately bouncing back out again.
+            com.PVZ.model.status.AppStatus.currentMenuType =
+                    com.PVZ.model.enums.MenuType.CHAPTER_AND_LEVEL_SELECTION;
+            engine.gameStatus.setGameOver(false);
+            return new OutputDTO(true,
+                    "The zombie ate your brain; LOSER!!! Returning to level select.");
+        }
+
         return switch (dto.getCommand()) {
             case ADVANCE_TIME -> engine == null
                     ? new OutputDTO(false, "Game engine is not ready.")

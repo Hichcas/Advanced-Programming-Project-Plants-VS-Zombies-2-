@@ -86,9 +86,11 @@ public abstract class Zombie {
             x += currentSpeed * delta * 100;
         } else {
             x -= currentSpeed * delta * 100;
-            if (x <= 0) {
-                controller.triggerGameOver();
-            }
+            // Reaching x<=0 used to immediately end the game here, which completely bypassed
+            // the lawn mower (a zombie could never actually be stopped by it). Whether this is
+            // "the mower saves you" or "you lose" is now decided once per tick by
+            // RegularGameEngine.updateLawnMowers(), which is the only place that knows both
+            // this row's mower state and where its trigger line actually is.
         }
     }
 

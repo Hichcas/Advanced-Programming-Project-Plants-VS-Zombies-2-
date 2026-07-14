@@ -1,8 +1,6 @@
 package com.PVZ.model.greenhouse;
 
-
 import com.PVZ.model.enums.PlantType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * وضعیت گلخانهٔ کاربر شامل ۲۰ گلدان در یک شبکهٔ ۴×۵.
@@ -10,15 +8,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class GreenhouseState {
 
-    // ردیف‌ها ۰ تا ۳ (y = 1..4)، ستون‌ها ۰ تا ۴ (x = 1..5)
     private Pot[][] pots;
 
-    // ---------- سازنده ----------
     public GreenhouseState() {
         pots = new Pot[4][5];
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 5; col++) {
-                // ردیف اول (row 0) باز، بقیه قفل
+                // ردیف اول باز، بقیه قفل
                 pots[row][col] = new Pot(row == 0);
             }
         }
@@ -33,7 +29,6 @@ public class GreenhouseState {
         this.pots = pots;
     }
 
-    // ---------- دسترسی بر اساس مختصات بازی (۱-based) ----------
     /**
      * دریافت اطلاعات یک گلدان با مختصات (x,y) که x از ۱ تا ۵ و y از ۱ تا ۴.
      * @throws IllegalArgumentException اگر مختصات خارج از محدوده باشد
@@ -59,48 +54,53 @@ public class GreenhouseState {
                 if (!pots[row][col].isUnlocked()) {
                     pots[row][col].setUnlocked(true);
                     unlockedSoFar++;
-
                     if (unlockedSoFar == count) {
-                        return; // به تعداد مورد نظر باز شد، خروج از متد
+                        return;
                     }
                 }
             }
         }
     }
 
-    /**
-     * تعداد کل گلدان‌های قفل‌شده در گلخانه را برمی‌گرداند.
-     */
-    @JsonIgnore
+    /** تعداد کل گلدان‌های قفل‌شده در گلخانه را برمی‌گرداند. */
     public int getNumberOfLockedPots() {
-        // کل گلدان‌ها ۲۰ تاست، پس گلدان‌های قفل شده یعنی ۲۰ منهای باز شده‌ها
         return 20 - getNumberOfUnlockedPots();
     }
 
-    /**
-     * بررسی می‌کند که آیا هنوز گلدان قفل‌شده‌ای باقی مانده است یا خیر.
-     */
-    @JsonIgnore
+    /** بررسی می‌کند که آیا هنوز گلدان قفل‌شده‌ای باقی مانده است یا خیر. */
     public boolean hasLockedPots() {
         return getNumberOfLockedPots() > 0;
     }
 
-    /** باز کردن قفل یک گلدان (با خرید) */
+    /** باز کردن قفل یک گلدان خاص */
     public void unlockPot(int x, int y) {
         getPot(x, y).setUnlocked(true);
     }
 
-    /** کاشت یک گیاه در گلدان (باید باز و خالی باشد) */
+    /** کاشت گیاه آنلاک‌شده (گیاه معمولی بازی) */
     public void plantInPot(int x, int y, PlantType plantType, long currentTimeMillis) {
         Pot pot = getPot(x, y);
         if (!pot.isReadyForPlanting()) {
             throw new IllegalStateException("Pot is not available for planting.");
         }
         pot.setPlantType(plantType);
+        pot.setMarigold(false);
         pot.setPlantedTimeMillis(currentTimeMillis);
     }
 
-    /** برداشت گیاه (خالی کردن گلدان و برگرداندن نوع گیاه قبلی) */
+    /** کاشت گل معمولی (Marigold) */
+    public void plantMarigold(int x, int y, long currentTimeMillis) {
+        Pot pot = getPot(x, y);
+        if (!pot.isReadyForPlanting()) {
+            throw new IllegalStateException("Pot is not available for planting.");
+        }
+        pot.setPlantType(null);
+        pot.setMarigold(true);
+        pot.setPlantedTimeMillis(currentTimeMillis);
+    }
+
+    /** برداشت گیاه (خالی کردن گلدان و برگرداندن نوع گیاه قبلی)
+     *  برای Marigold مقدار null برمی‌گرداند. */
     public PlantType collectFromPot(int x, int y) {
         Pot pot = getPot(x, y);
         if (pot.isEmpty()) {
@@ -108,50 +108,67 @@ public class GreenhouseState {
         }
         PlantType harvested = pot.getPlantType();
         pot.setPlantType(null);
+        pot.setMarigold(false);
         pot.setPlantedTimeMillis(0);
-        return harvested;
+        return harvested;   // برای marigold، null است
     }
 
-    /** تسریع رشد (بلافاصله گیاه را آمادهٔ برداشت می‌کند – صرفاً plantedTimeMillis را صفر می‌کند) */
+    /** آیا گلدان مشخص شده Marigold دارد؟ */
+    public boolean isMarigold(int x, int y) {
+        return getPot(x, y).isMarigold();
+    }
+
+    /** تسریع رشد (بلافاصله گیاه را آمادهٔ برداشت می‌کند) */
     public void accelerateGrowth(int x, int y) {
         Pot pot = getPot(x, y);
-        if (pot.isEmpty()) {
+        if (pot.isEmpty() && !pot.isMarigold()) {
             throw new IllegalStateException("No plant to accelerate.");
         }
-        pot.setPlantedTimeMillis(0); // ready instantly
+        pot.setPlantedTimeMillis(0);   // ready instantly
     }
 
-    /** بررسی آماده بودن گیاه برای برداشت بر اساس زمان فعلی و نوع گیاه */
+    /** بررسی آماده بودن گیاه برای برداشت بر اساس زمان فعلی */
     public boolean isPlantReady(int x, int y, long currentTimeMillis) {
         Pot pot = getPot(x, y);
         if (pot.isEmpty()) return false;
-        long growthDurationMillis = getGrowthDurationMillis(pot.getPlantType());
-        return (currentTimeMillis - pot.getPlantedTimeMillis()) >= growthDurationMillis;
+        long duration = getGrowthDurationMillis(pot);
+        return (currentTimeMillis - pot.getPlantedTimeMillis()) >= duration;
     }
 
-    @JsonIgnore
+    /** ساعت باقی‌مانده تا رشد کامل (به صورت اعشاری) */
+    public double getRemainingHours(int x, int y, long currentTimeMillis) {
+        Pot pot = getPot(x, y);
+        if (pot.isEmpty()) return 0;
+        long elapsed = currentTimeMillis - pot.getPlantedTimeMillis();
+        long total = getGrowthDurationMillis(pot);
+        if (elapsed >= total) return 0;
+        return (total - elapsed) / (1000.0 * 3600.0);
+    }
+
+    /** زمان رشد بر اساس نوع گیاه موجود در گلدان (Marigold یا غیر آن) */
+    public long getGrowthDurationMillis(Pot pot) {
+        if (pot.isMarigold()) {
+            return 2L * 60 * 60 * 1000;   // 2 ساعت
+        }
+        return 8L * 60 * 60 * 1000;       // 8 ساعت برای سایر گیاهان
+    }
+
+    /** تعداد گلدان‌های باز */
     public int getNumberOfUnlockedPots() {
-        int numberOfUnlockedPots = 0;
-        for (Pot[] pots : pots) {
-            for (Pot pot : pots) {
-                if (pot.isUnlocked()) numberOfUnlockedPots ++;
+        int c = 0;
+        for (Pot[] row : pots) {
+            for (Pot p : row) {
+                if (p.isUnlocked()) c++;
             }
         }
-        return numberOfUnlockedPots;
+        return c;
     }
 
-    /** زمان لازم برای رشد کامل یک گیاه (به میلی‌ثانیه) */
-    private long getGrowthDurationMillis(PlantType plantType) {
-        // marigold (= معمولی) 2 ساعت، سایر گیاهان 8 ساعت
-
-
-
-        // TODO this method must be completed later
-        // if (plantType == PlantType.MARIGOLD) { // فرض می‌کنیم MARIGOLD در PlantType تعریف شده باشد
-        //     return 2L * 60 * 60 * 1000;
-        // }
-
-
+    /**
+     * متد کمکی قدیمی (برای جاهایی که PlantType بدون Pot نیاز است)
+     * فعلاً همان ۸ ساعت را برمی‌گرداند.
+     */
+    public long getGrowthDurationMillis(PlantType plantType) {
         return 8L * 60 * 60 * 1000;
     }
 }
