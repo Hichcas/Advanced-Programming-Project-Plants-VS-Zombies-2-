@@ -79,10 +79,91 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (battleController != null) {
             battleController.setMap(map);
         }
+        initLawnMowers(map);
+    }
+
+    private final com.PVZ.model.entity.LawnMower[] lawnMowers = new com.PVZ.model.entity.LawnMower[ROWS];
+
+    private void initLawnMowers(Map map) {
+        if (map == null) {
+            return;
+        }
+        float tileWidth = map.getTileWidth();
+        float tileHeight = map.getTileHeight();
+        float startX = map.getStartX();
+        float startY = map.getStartY();
+        // parked just to the left of column 0; sweeps all the way past the right edge of
+        // the visible screen (VIRTUAL_WIDTH = 2560) instead of stopping at the last column,
+        // so it visibly drives off-screen before disappearing
+        double triggerX = startX - tileWidth * 0.75;
+        double travelLimitX = 2560 + tileWidth;
+        for (int row = 0; row < ROWS; row++) {
+            com.PVZ.model.entity.LawnMower mower = new com.PVZ.model.entity.LawnMower();
+            double parkY = startY - (row + 1) * tileHeight + tileHeight * 0.15;
+            mower.init(row, parkY, triggerX, travelLimitX);
+            lawnMowers[row] = mower;
+        }
+    }
+
+    /**
+     * "ماشین چمن‌زنی که اول اولین ستون قرار داره؛ اولین بار که زامبی بهش برسه فعال میشه و
+     * زامبی‌های اون لاین رو می‌کشه؛ بعدش یک‌بارمصرفه؛ اگه دومین زامبی هم به همون‌جا برسه،
+     * بازیکن می‌بازه." Zombie.move() no longer decides game-over on its own — this is now
+     * the single source of truth for both "row cleared by mower" and "player lost".
+     */
+    private void updateLawnMowers(float delta) {
+        for (com.PVZ.model.entity.LawnMower mower : lawnMowers) {
+            if (mower == null) {
+                continue;
+            }
+
+            // "reached the mower" = the zombie's leading edge crossed the mower's FRONT
+            // (lawn-facing) line — i.e. the beginning of the mower, not its far/back edge.
+            if (!mower.isTriggered() && !mower.isUsed()) {
+                for (Zombie z : getZombiesInLane(mower.getRow())) {
+                    if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
+                        mower.trigger();
+                        // the zombie that triggers the mower is run over immediately,
+                        // not just whichever zombies happen to overlap on later frames
+                        zombieEngine.kill(z);
+                        break;
+                    }
+                }
+            }
+
+            if (mower.isTriggered() && !mower.isUsed()) {
+                mower.advance(delta);
+                for (Zombie z : getZombiesInLane(mower.getRow())) {
+                    if (z != null && !z.isDead() && mower.getHitbox().overlaps(z.getHitbox())) {
+                        zombieEngine.kill(z);
+                    }
+                }
+            }
+
+            // mower already spent for this row (a second zombie reached the same front
+            // line): game over. Guarded by isGameOver() so — even if several zombies in
+            // this lane are past the line on the same tick — the message only prints once
+            // and the board is only reset once.
+            if (mower.isUsed() && gameStatus != null && !gameStatus.isGameOver()) {
+                for (Zombie z : getZombiesInLane(mower.getRow())) {
+                    if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
+                        System.out.println("The zombie ate your brain; LOSER!!!");
+                        if (battleController != null) {
+                            battleController.triggerGameOver();
+                        }
+                        resetBoardAfterGameOver();
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void update(float delta) {
+        if (gameStatus != null && gameStatus.isGameOver()) {
+            return;
+        }
         if (waveManager != null) {
             waveManager.update(delta, zombieEngine);
         }
@@ -105,9 +186,16 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     }
 
     private void advanceOneTick() {
+        if (gameStatus != null && gameStatus.isGameOver()) {
+            // already lost — stop simulating (zombies, mower, waves...) so the loss
+            // check below can't keep re-firing and spamming the loss message every tick
+            return;
+        }
         updatePlants();
         updateProjectiles((float) TICK_SECONDS);
         updateSunManager((float) TICK_SECONDS);
+        updateSkySun((float) TICK_SECONDS);
+        updateLawnMowers((float) TICK_SECONDS);
 
         for (Zombie z : getZombieList()) {
             if (z != null && !z.isDead()) {
@@ -120,6 +208,38 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (gameStatus != null) {
             gameStatus.setRemainingZombieWaveInPercent(
                 zombieWavesStarted ? Math.min(100, gameStatus.getRemainingZombieWaveInPercent() + 1) : 0);
+        }
+    }
+
+    /**
+     * Wipes the board after a loss — every plant, zombie, projectile and lawn mower is
+     * cleared so the player can plant and drive waves again from a clean slate next time
+     * they enter this level. gameStatus.isGameOver() is deliberately left true here; the
+     * menu controller reads it once to redirect to the level-select menu, then clears it
+     * itself so the next "start game" isn't immediately bounced back out.
+     */
+    private void resetBoardAfterGameOver() {
+        if (map != null) {
+            for (int row = 0; row < ROWS; row++) {
+                for (int col = 0; col < COLS; col++) {
+                    map.removePlant(row, col);
+                }
+            }
+        }
+        projectiles.clear();
+        zombies.clear();
+        if (zombieEngine != null) {
+            zombieEngine.getZombies().clear();
+        }
+        initLawnMowers(map);
+        zombieWavesStarted = false;
+        tickAccumulator = 0f;
+        selectedPlantType = null;
+        rechargeRemaining.clear();
+        sunManager.clear();
+        plantFoodManager.reset();
+        if (gameStatus != null) {
+            gameStatus.setRemainingZombieWaveInPercent(0);
         }
     }
 
@@ -167,6 +287,42 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         sunManager.update(delta);
     }
 
+    private static final double SKY_SUN_INTERVAL_SECONDS = 10.0;
+    private double skySunTimer = 0.0;
+
+    /**
+     * "علاوه بر سانفلاورها، هر ۱۰ ثانیه یک خورشید هم به‌صورت رندوم از آسمان می‌افتد" —
+     * independent of any sunflower, drops in a random column, falls from above the top
+     * of the lawn down to that tile's ground, and is collectible exactly like a
+     * sunflower-produced sun (same Sun/SunManager pipeline, same "New sun is dropping..."
+     * / "Sun reached the ground..." messages).
+     */
+    private void updateSkySun(float delta) {
+        if (map == null) {
+            return;
+        }
+        skySunTimer += delta;
+        if (skySunTimer < SKY_SUN_INTERVAL_SECONDS) {
+            return;
+        }
+        skySunTimer = 0.0;
+
+        int row = random.nextInt(ROWS);
+        int col = random.nextInt(COLS);
+        Tile tile = map.getTile(row, col);
+        if (tile == null) {
+            return;
+        }
+
+        double landingX = tile.getX() + tile.getWidth() / 2.0;
+        double groundY = tile.getY() + tile.getHeight() / 2.0;
+        // start well above the top of the lawn so it visibly falls down onto the grid,
+        // not just pop into existence at its landing tile like sunflower suns do.
+        double startY = map.getStartY() + map.getTileHeight() * 2.0;
+
+        sunManager.spawnFalling(landingX, startY, 25, groundY);
+    }
+
     private void decrementTimers(java.util.Map<Zombie, Integer> timers, boolean restoreMovement) {
         List<Zombie> toRestore = new ArrayList<>();
         for (java.util.Map.Entry<Zombie, Integer> entry : timers.entrySet()) {
@@ -202,6 +358,12 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         // falling / collectible suns
         for (com.PVZ.model.entity.Sun sun : sunManager.getSuns()) {
             sun.draw(batch);
+        }
+
+        for (com.PVZ.model.entity.LawnMower mower : lawnMowers) {
+            if (mower != null) {
+                mower.draw(batch);
+            }
         }
 
         // plants on the lawn — read straight from the map grid (same source updatePlants()
@@ -619,6 +781,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     public boolean isOnCooldown(PlantType type) {
         return rechargeRemaining.getOrDefault(type, 0.0) > 0.0;
+    }
+
+    public double getRechargeRemainingSeconds(PlantType type) {
+        return rechargeRemaining.getOrDefault(type, 0.0);
     }
 
     public void selectPlant(PlantType type) {
