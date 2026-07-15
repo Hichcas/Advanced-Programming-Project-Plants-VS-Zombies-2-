@@ -1,0 +1,30 @@
+{
+  "vasebreaker": {
+    "levels": [
+      {
+        "id": 1,
+        "rows": 5,
+        "cols": 9,
+        "random": true,
+        "vaseCount": 45,
+        "plantVaseChance": 0.22,
+        "gargantuarVaseChance": 0.08,
+        "zombiePool": [],
+        "plantPool": [],
+        "seedPacketLifetimeSeconds": 8
+      }
+    ]
+  },
+  "wallnut_bowling": {
+    "levels": []
+  },
+  "i_zombie": {
+    "levels": []
+  },
+  "beghouled": {
+    "levels": []
+  },
+  "zombotany": {
+    "levels": []
+  }
+}

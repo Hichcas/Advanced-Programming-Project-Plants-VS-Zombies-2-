@@ -18,9 +18,15 @@ public class TravelLogMenuController {
         }
         return switch (dto.getCommand()) {
             case SHOW_PAGE -> new OutputDTO(true, "Travel log page: " + dto.getPageName());
+            case ENTER_VASEBREAKER -> enterVasebreaker();
             case SHOW_CURRENT_MENU -> new OutputDTO(true, AppStatus.currentMenuType.name());
             case EXIT -> exitToGameMenu();
         };
+    }
+
+    private OutputDTO enterVasebreaker() {
+        AppStatus.currentMenuType = MenuType.VASEBREAKER;
+        return new OutputDTO(true, "Entered Vasebreaker menu. Use 'vasebreaker start <id>' to begin a level.");
     }
 
     private OutputDTO exitToGameMenu() {

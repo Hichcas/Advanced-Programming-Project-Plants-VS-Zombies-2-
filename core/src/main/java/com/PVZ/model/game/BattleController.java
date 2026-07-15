@@ -127,8 +127,64 @@ public class BattleController implements BehaviorContext {
     @Override
     public void spawnProjectile(Object projectile) {
         if (projectile instanceof Projectile p) {
+            placeProjectileOnMap(p);
             projectiles.add(p);
         }
+    }
+
+    /**
+     * Plant behaviors only know a projectile's row/lane (grid coordinates) and
+     * have no idea where that is on screen. This converts it into a real world
+     * x/y (using the same tile geometry as the Map/Tile classes and Zombie
+     * positions) and gives it a real pixels/second speed, so the projectile
+     * actually moves across the lawn each tick and its hitbox can overlap a
+     * zombie's hitbox (which is in world coordinates too). Without this,
+     * projectiles are created but never move or hit anything.
+     */
+    private void placeProjectileOnMap(Projectile p) {
+        if (p == null || p.isWorldPositioned()) {
+            return;
+        }
+        int row = p.getRow();
+        float tileWidth = 177f;
+        float tileHeight = 234f;
+        float startX = 550f;
+        float startY = 1240f;
+        if (map != null) {
+            tileWidth = map.getTileWidth();
+            tileHeight = map.getTileHeight();
+            startX = map.getStartX();
+            startY = map.getStartY();
+        }
+
+        int col = 0;
+        Object colState = p.getExtra("originCol");
+        if (colState instanceof Number number) {
+            col = number.intValue();
+        }
+
+        float worldX = startX + col * tileWidth + tileWidth * 0.5f;
+        float worldY = startY - (row + 1) * tileHeight + tileHeight * 0.35f;
+
+        // ~1.5 tiles per second feels like the classic PVZ pea speed.
+        float speedPxPerSec = tileWidth * 1.5f;
+        if (p.getType() == ProjectileType.LOB) {
+            speedPxPerSec = tileWidth * 0.9f;
+        }
+        float speedMultiplier = (float) Math.max(0.1, Math.abs(p.getSpeed()));
+        speedPxPerSec *= speedMultiplier;
+
+        double horizontalSign = p.getSpeed() < 0 ? -1.0 : 1.0;
+        double verticalSpeed = 0.0;
+        Object targetLaneState = p.getExtra("targetLane");
+        if (targetLaneState instanceof Number number) {
+            int targetLane = number.intValue();
+            if (targetLane != row) {
+                verticalSpeed = Math.signum(targetLane - row) * speedPxPerSec;
+            }
+        }
+
+        p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
     }
 
     @Override
