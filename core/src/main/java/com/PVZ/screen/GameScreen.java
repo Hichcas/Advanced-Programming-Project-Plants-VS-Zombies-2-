@@ -61,11 +61,26 @@ public class GameScreen extends BaseScreen {
     @Override
     public void show() {
         multiplexer.clear();
-        multiplexer.addProcessor(gameEngine.inputProcessor);
+        multiplexer.addProcessor(new com.badlogic.gdx.InputAdapter() {
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                return activeInputProcessor().touchDown(screenX, screenY, pointer, button);
+            }
+
+            @Override
+            public boolean mouseMoved(int screenX, int screenY) {
+                return activeInputProcessor().mouseMoved(screenX, screenY);
+            }
+        });
         multiplexer.addProcessor(stage);
         super.show();
 
         refreshSeedPacketBar();
+    }
+
+    private com.badlogic.gdx.InputProcessor activeInputProcessor() {
+        GameEngine activeEngine = AppStatus.getGameEngine();
+        return (activeEngine != null ? activeEngine : gameEngine).inputProcessor;
     }
 
     private void refreshSeedPacketBar() {
@@ -90,18 +105,26 @@ public class GameScreen extends BaseScreen {
         // Set projection for rendering
         gameBatch.setProjectionMatrix(camera.combined);
 
-        // Draw background
+        // Draw background (minigames may override this, e.g. Vasebreaker's own backdrop)
+        Texture activeBackground = activeEngine.getBackgroundOverride();
+        if (activeBackground == null) {
+            activeBackground = backgroundTexture;
+        }
         gameBatch.begin();
-        gameBatch.draw(backgroundTexture, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
+        gameBatch.draw(activeBackground, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
         gameBatch.end();
 
         // Update game logic
         activeEngine.render(Math.min(delta, 1 / 30f), gameBatch);
 
-        // Grid borders
+        // Grid borders (use the active engine's own map, in case it differs from the default one)
+        Map activeMap = activeEngine.getMap();
+        if (activeMap == null) {
+            activeMap = gameMap;
+        }
         shapeDebug.setProjectionMatrix(camera.combined);
         shapeDebug.begin(ShapeRenderer.ShapeType.Line);
-        gameMap.renderBorders(shapeDebug);
+        activeMap.renderBorders(shapeDebug);
         shapeDebug.end();
 
         // Seed packet bar

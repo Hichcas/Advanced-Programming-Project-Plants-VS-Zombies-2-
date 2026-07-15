@@ -1,0 +1,307 @@
+package com.PVZ.model.game;
+
+import com.PVZ.model.entity.LawnMower;
+import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.plants.PlantFactory;
+import com.PVZ.model.entity.plants.behavior.impl.Projectile;
+import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.PlantType;
+import com.PVZ.model.minigame.vasebreaker.DroppedSeedPacket;
+import com.PVZ.model.minigame.vasebreaker.Vase;
+import com.PVZ.model.minigame.vasebreaker.VasebreakerGame;
+import com.PVZ.model.minigame.vasebreaker.VasebreakerTexturePaths;
+import com.PVZ.screen.manager.FontManager;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, com.PVZ.model.minigame.vasebreaker.VasebreakerEngineCallback {
+
+    private static final double TICK_SECONDS = 0.1;
+
+    private final List<Projectile> projectiles = new ArrayList<>();
+    private final List<Plant> plants = new ArrayList<>();
+    private final RegularZombieEngine zombieEngine = new RegularZombieEngine();
+    private final BattleController battleController;
+    private LawnMower[] lawnMowers;
+    private float tickAccumulator = 0f;
+    private boolean levelWon = false;
+
+    private VasebreakerGame game;
+    private Texture vaseNormal;
+    private Texture vasePlant;
+    private Texture vaseGargantuar;
+    private Texture seedPacketGround;
+    private Texture background;
+    private BitmapFont font;
+
+    public VasebreakerGameEngine() {
+        super(new GameStatus(), new VasebreakerInputProcessor());
+        ((VasebreakerInputProcessor) inputProcessor).setEngine(this);
+        this.battleController = new BattleController(zombieEngine.getZombies(), plants, projectiles, gameStatus);
+    }
+
+    /** Exposes the running game model to the input processor and screen. */
+    public VasebreakerGame getGame() {
+        return game;
+    }
+
+    /**
+     * Links this engine to the {@link VasebreakerGame} model it is running.
+     * Required so the engine can advance the ground seed-packet timers each
+     * frame and render the vase grid (vases are otherwise invisible/unbreakable).
+     */
+    public void setGame(VasebreakerGame game) {
+        this.game = game;
+    }
+
+    @Override
+    public void setMap(Map map) {
+        super.setMap(map);
+        zombieEngine.bindMap(map);
+        battleController.setMap(map);
+        initLawnMowers(map);
+    }
+
+    private void initLawnMowers(Map map) {
+        if (map == null) return;
+        int rows = game != null ? game.getRows() : 5;
+        lawnMowers = new LawnMower[rows];
+        float tileWidth = map.getTileWidth();
+        float tileHeight = map.getTileHeight();
+        float startX = map.getStartX();
+        float startY = map.getStartY();
+        double triggerX = startX - tileWidth * 0.75;
+        double travelLimitX = 2560 + tileWidth;
+        for (int row = 0; row < rows; row++) {
+            LawnMower mower = new LawnMower();
+            double parkY = startY - (row + 1) * tileHeight + tileHeight * 0.15;
+            mower.init(row, parkY, triggerX, travelLimitX);
+            lawnMowers[row] = mower;
+        }
+    }
+
+    @Override
+    public void update(float delta) {
+        if (gameStatus.isGameOver()) return;
+        if (game != null) game.update(delta);
+        battleController.update(delta);
+        tickAccumulator += delta;
+        while (tickAccumulator >= TICK_SECONDS) {
+            tickAccumulator -= TICK_SECONDS;
+            advanceOneTick();
+        }
+    }
+
+    private void advanceOneTick() {
+        if (gameStatus.isGameOver()) return;
+        updatePlants();
+        for (Projectile p : projectiles) {
+            p.update((float) TICK_SECONDS);
+        }
+        projectiles.removeIf(Projectile::isDestroyed);
+        updateLawnMowers((float) TICK_SECONDS);
+        for (Zombie z : zombieEngine.getZombies()) {
+            if (!z.isDead()) z.updateEffects((float) TICK_SECONDS);
+        }
+    }
+
+    private void updatePlants() {
+        if (map == null) return;
+        List<Plant> snapshot = new ArrayList<>(plants);
+        for (Plant plant : snapshot) {
+            plant.update(battleController, TICK_SECONDS);
+            if (plant.isDead()) {
+                int row = asInt(plant.getRuntimeState("row"));
+                int col = asInt(plant.getRuntimeState("col"));
+                map.removePlant(row, col);
+                plants.remove(plant);
+            }
+        }
+    }
+
+    private void updateLawnMowers(float delta) {
+        if (lawnMowers == null) return;
+        for (LawnMower mower : lawnMowers) {
+            if (mower == null) continue;
+
+            if (!mower.isTriggered() && !mower.isUsed()) {
+                for (Zombie z : getZombiesInLane(mower.getRow())) {
+                    if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
+                        mower.trigger();
+                        zombieEngine.kill(z);
+                        break;
+                    }
+                }
+            }
+
+            if (mower.isTriggered() && !mower.isUsed()) {
+                mower.advance(delta);
+                for (Zombie z : getZombiesInLane(mower.getRow())) {
+                    if (z != null && !z.isDead() && mower.getHitbox().overlaps(z.getHitbox())) {
+                        zombieEngine.kill(z);
+                    }
+                }
+            }
+
+            if (mower.isUsed() && !gameStatus.isGameOver()) {
+                for (Zombie z : getZombiesInLane(mower.getRow())) {
+                    if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
+                        battleController.triggerGameOver();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void draw(SpriteBatch batch) {
+        batch.begin();
+        for (Plant plant : plants) {
+            plant.draw(batch);
+        }
+        for (Projectile p : projectiles) {
+            p.draw(batch);
+        }
+        batch.end();
+        zombieEngine.draw(batch);
+        if (lawnMowers != null) {
+            batch.begin();
+            for (LawnMower mower : lawnMowers) {
+                if (mower != null) mower.draw(batch);
+            }
+            batch.end();
+        }
+        drawVases(batch);
+    }
+
+    private void drawVases(SpriteBatch batch) {
+        if (game == null || map == null) return;
+        ensureVaseTexturesLoaded();
+
+        batch.begin();
+        for (int row = 0; row < game.getRows(); row++) {
+            for (int col = 0; col < game.getCols(); col++) {
+                Vase vase = game.getVase(row, col);
+                if (vase == null || vase.isBroken()) continue;
+                com.PVZ.model.entity.Tile tile = map.getTile(row, col);
+                if (tile == null) continue;
+                Texture texture = switch (vase.getType()) {
+                    case NORMAL -> vaseNormal;
+                    case PLANT -> vasePlant;
+                    case GARGANTUAR -> vaseGargantuar;
+                };
+                float margin = tile.getWidth() * 0.08f;
+                batch.draw(texture, tile.getX() + margin, tile.getY() + margin,
+                        tile.getWidth() - margin * 2, tile.getHeight() - margin * 2);
+            }
+        }
+
+        for (DroppedSeedPacket packet : game.getGroundSeedPackets()) {
+            com.PVZ.model.entity.Tile tile = map.getTile(packet.getRow(), packet.getCol());
+            if (tile == null) continue;
+            float w = tile.getWidth() * 0.5f;
+            float h = tile.getHeight() * 0.5f;
+            batch.draw(seedPacketGround, tile.getX() + (tile.getWidth() - w) / 2f,
+                    tile.getY() + (tile.getHeight() - h) / 2f, w, h);
+        }
+
+        if (game.isFinished()) {
+            font.draw(batch, "LEVEL COMPLETE!", map.getStartX() + 40f, map.getStartY() + 60f);
+        }
+        batch.end();
+    }
+
+    private void ensureVaseTexturesLoaded() {
+        if (vaseNormal != null) return;
+        vaseNormal = new Texture(VasebreakerTexturePaths.NORMAL);
+        vasePlant = new Texture(VasebreakerTexturePaths.PLANT);
+        vaseGargantuar = new Texture(VasebreakerTexturePaths.GARGANTUAR);
+        seedPacketGround = new Texture(VasebreakerTexturePaths.SEED_PACKET_GROUND);
+        background = new Texture(VasebreakerTexturePaths.BACKGROUND);
+        font = FontManager.getInstance().getEnglishMenuFont();
+    }
+
+    @Override
+    public Texture getBackgroundOverride() {
+        ensureVaseTexturesLoaded();
+        return background;
+    }
+
+    @Override
+    public void dispose() {
+        zombieEngine.dispose();
+        battleController.dispose();
+        if (vaseNormal != null) vaseNormal.dispose();
+        if (vasePlant != null) vasePlant.dispose();
+        if (vaseGargantuar != null) vaseGargantuar.dispose();
+        if (seedPacketGround != null) seedPacketGround.dispose();
+        if (background != null) background.dispose();
+    }
+
+    // ── VasebreakerEngineCallback ──
+
+    @Override
+    public void releaseZombieFromVase(String alias, int row, int col) {
+        zombieEngine.spawnZombie(alias, row, col);
+    }
+
+    @Override
+    public void plantAt(int row, int col, PlantType plantType) {
+        if (map == null || map.getPlantAt(row, col) != null) return;
+        Plant plant = PlantFactory.createPlant(plantType, 1);
+        map.setPlant(row, col, plant);
+        plants.add(plant);
+    }
+
+    @Override
+    public void onLevelWon() {
+        levelWon = true;
+    }
+
+    public boolean isLevelWon() { return levelWon; }
+
+    // ── ZombieEngine ──
+
+    @Override
+    public void kill(Object entity) { zombieEngine.kill(entity); }
+
+    @Override
+    public void takeDamage(Object entity, double amount) { zombieEngine.takeDamage(entity, amount); }
+
+    @Override
+    public Plant getPlantAt(int row, int col) { return map != null ? map.getPlantAt(row, col) : null; }
+
+    @Override
+    public List<Zombie> getZombiesInLane(int lane) { return zombieEngine.getZombiesInLane(lane); }
+
+    @Override
+    public int getSunCount() { return 0; }
+
+    @Override
+    public void addSun(int amount) { }
+
+    @Override
+    public void spawnProjectile(Projectile p) { projectiles.add(p); }
+
+    @Override
+    public Zombie spawnZombie(String alias, int row, int col) { return zombieEngine.spawnZombie(alias, row, col); }
+
+    @Override
+    public void removePlant(int row, int col) {
+        if (map != null) map.removePlant(row, col);
+    }
+
+    @Override
+    public int getTileColumn(float worldX) { return map != null ? map.worldToCol(worldX) : 0; }
+
+    public boolean isGameOver() { return gameStatus.isGameOver(); }
+
+    private static int asInt(Object value) {
+        return value instanceof Number number ? number.intValue() : 0;
+    }
+}

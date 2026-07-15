@@ -13,6 +13,13 @@ public enum TravelLogCommand {
             return new TravelLogInputDTO(this, matcher.group("pageName"));
         }
     },
+    ENTER_VASEBREAKER("^\\s*travel\\s+log\\s+enter\\s+vasebreaker\\s*$") {
+        @Override
+        public TravelLogInputDTO createDTO(Matcher matcher) {
+            return new TravelLogInputDTO(this, null);
+        }
+    },
+
     SHOW_CURRENT_MENU("^menu\\s+show\\s+current$|^show\\s+current\\s+menu$") {
         @Override
         public TravelLogInputDTO createDTO(Matcher matcher) {

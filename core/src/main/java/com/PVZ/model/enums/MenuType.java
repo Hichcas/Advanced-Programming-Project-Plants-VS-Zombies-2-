@@ -17,6 +17,7 @@ public enum MenuType {
     SHOP(new ShopMenu()),
     TRAVEL_LOG(new TravelLogMenu()),
     LEADERBOARD(new LeaderboardMenu()),
+    VASEBREAKER(new VasebreakerMenu()),
     IN_GAME(new InGameMenu());
 
     private final Menu currentMenu;
