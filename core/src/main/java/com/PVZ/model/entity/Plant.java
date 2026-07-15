@@ -27,6 +27,7 @@ public class Plant {
         }
 
         this.instance = instance;
+        this.maxHp = instance.getCurrentHp();
         this.mainBehavior = BehaviorFactory.createMainBehavior(instance.getDefinition());
         this.plantFoodBehavior = BehaviorFactory.createPlantFoodBehavior(instance.getDefinition());
     }
@@ -57,6 +58,10 @@ public class Plant {
 
     public int getCurrentHp() {
         return instance.getCurrentHp();
+    }
+
+    public int getMaxHp() {
+        return maxHp;
     }
 
     public void setCurrentHp(int currentHp) {
@@ -121,6 +126,7 @@ public class Plant {
 
     private com.badlogic.gdx.graphics.Texture bodyTexture;
     private boolean triedRealTexture = false;
+    private final int maxHp;
 
     public void draw(SpriteBatch batch) {
         if (isDead()) {

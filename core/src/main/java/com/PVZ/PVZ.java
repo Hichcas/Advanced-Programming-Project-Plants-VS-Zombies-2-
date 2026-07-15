@@ -9,6 +9,7 @@ import com.PVZ.model.graphics.GraphicsQuality;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.game.chapter.ChapterLibrary;
 import com.PVZ.model.user.UserRegistry;
+import com.PVZ.model.user.User;
 import com.PVZ.screen.GameScreen;
 import com.PVZ.screen.manager.BrightnessController;
 import com.PVZ.screen.manager.FontManager;
@@ -38,7 +39,6 @@ public class PVZ extends Game {
         com.PVZ.screen.manager.ScreenManager.getInstance().init(this);
         AppStatus.setPVZ(this);
         CommandParser.start();
-        AppStatus.currentMenuType = MenuType.REGISTER;
         AppStatus.setQuality(GraphicsQuality.Ultra_High);
 
         try {
@@ -49,8 +49,25 @@ public class PVZ extends Game {
 
         ChapterLibrary.load();
 
+        // Pick the starting menu from any persisted "stay logged in" session:
+        // already logged in -> Main Menu, otherwise -> Register Menu.
+        // Do NOT jump straight into a running game (IN_GAME) on launch.
+        UserRegistry.loadAllFromDatabase();
+        User autoUser = null;
+        for (User u : UserRegistry.allUsers()) {
+            if (u.isStayLoggedIn()) {
+                autoUser = u;
+                break;
+            }
+        }
+        if (autoUser != null) {
+            AppStatus.currentUser = autoUser;
+            AppStatus.currentMenuType = MenuType.MAIN;
+        } else {
+            AppStatus.currentMenuType = MenuType.REGISTER;
+        }
+
         ScreenManager.getInstance().startWithFadeIn(new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));
-        AppStatus.currentMenuType = MenuType.IN_GAME;
     }
     @Override
     public void render() {

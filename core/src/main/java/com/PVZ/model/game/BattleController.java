@@ -9,6 +9,7 @@ import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.entity.zombies.base.ZombieProjectile;
 import com.PVZ.model.enums.DamageType;
 import com.PVZ.model.enums.TileType;
+import com.PVZ.model.status.AppStatus;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -220,8 +221,12 @@ public class BattleController implements BehaviorContext {
 
 
     public void triggerGameOver() {
+        if (gameStatus == null || gameStatus.isGameOver()) {
+            return;
+        }
         System.out.println("GAME OVER — zombie reached the house!");
         gameStatus.setGameOver(true);
+        AppStatus.returnToMainMenu();
     }
 
     public void removeZombie(Zombie zombie) {

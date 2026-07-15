@@ -9,6 +9,9 @@
         "vaseCount": 45,
         "plantVaseChance": 0.22,
         "gargantuarVaseChance": 0.08,
+        "normalEmptyChance": 0.12,
+        "normalZombieChance": 0.60,
+        "normalSeedChance": 0.28,
         "zombiePool": [],
         "plantPool": [],
         "seedPacketLifetimeSeconds": 8

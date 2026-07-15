@@ -11,6 +11,7 @@ import com.PVZ.model.minigame.vasebreaker.Vase;
 import com.PVZ.model.minigame.vasebreaker.VasebreakerGame;
 import com.PVZ.model.minigame.vasebreaker.VasebreakerTexturePaths;
 import com.PVZ.screen.manager.FontManager;
+import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -163,12 +164,22 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
         batch.begin();
         for (Plant plant : plants) {
             plant.draw(batch);
+            com.badlogic.gdx.math.Rectangle box = plant.getHitbox();
+            HealthBarRenderer.draw(batch, box.x, box.y + box.height + 2, box.width,
+                (float) plant.getCurrentHp() / Math.max(1, plant.getMaxHp()), true);
         }
         for (Projectile p : projectiles) {
             p.draw(batch);
         }
         batch.end();
         zombieEngine.draw(batch);
+        batch.begin();
+        for (Zombie z : zombieEngine.getZombies()) {
+            if (z == null || z.isDead()) continue;
+            HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
+                (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
+        }
+        batch.end();
         if (lawnMowers != null) {
             batch.begin();
             for (LawnMower mower : lawnMowers) {

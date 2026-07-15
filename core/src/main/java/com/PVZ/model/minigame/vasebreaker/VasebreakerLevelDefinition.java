@@ -22,6 +22,13 @@ public class VasebreakerLevelDefinition {
     private Double plantVaseChance = 0.20;
     private Double gargantuarVaseChance = 0.08;
 
+    // Outcome distribution for a NORMAL vase (the one whose contents are rolled
+    // randomly). These are normalized at runtime, so they don't strictly have to
+    // sum to 1. Kept low on "empty" so a normal vase is almost always useful.
+    private Double normalEmptyChance = 0.12;
+    private Double normalZombieChance = 0.60;
+    private Double normalSeedChance = 0.28;
+
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -54,4 +61,13 @@ public class VasebreakerLevelDefinition {
 
     public Double getGargantuarVaseChance() { return gargantuarVaseChance; }
     public void setGargantuarVaseChance(Double gargantuarVaseChance) { this.gargantuarVaseChance = gargantuarVaseChance; }
+
+    public Double getNormalEmptyChance() { return normalEmptyChance; }
+    public void setNormalEmptyChance(Double normalEmptyChance) { this.normalEmptyChance = normalEmptyChance; }
+
+    public Double getNormalZombieChance() { return normalZombieChance; }
+    public void setNormalZombieChance(Double normalZombieChance) { this.normalZombieChance = normalZombieChance; }
+
+    public Double getNormalSeedChance() { return normalSeedChance; }
+    public void setNormalSeedChance(Double normalSeedChance) { this.normalSeedChance = normalSeedChance; }
 }

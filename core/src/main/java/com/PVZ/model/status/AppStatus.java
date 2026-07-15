@@ -6,6 +6,10 @@ import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.game.GameEngine;
 import com.PVZ.model.graphics.GraphicsQuality;
 import com.PVZ.model.user.User;
+import com.PVZ.model.game.GameStatus;
+import com.PVZ.model.game.RegularGameEngine;
+import com.PVZ.screen.GameScreen;
+import com.PVZ.screen.manager.ScreenManager;
 import com.PVZ.screen.manager.BrightnessController;
 import com.PVZ.screen.manager.MusicManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -93,8 +97,16 @@ public final class AppStatus {
     public static OrthographicCamera getCamera() {
         return camera;
     }
-
     public static void setCamera(OrthographicCamera camera) {
         AppStatus.camera = camera;
     }
+
+    /** Return to the main menu screen (used on game over for both the main game and minigames). */
+    public static void returnToMainMenu() {
+        currentMenuType = MenuType.MAIN;
+        setGameEngine(null);
+        ScreenManager.getInstance().performTransition(() ->
+            new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));
+    }
+
 }

@@ -20,6 +20,7 @@ public class VasebreakerGame {
     private final List<DroppedSeedPacket> groundSeedPackets = new ArrayList<>();
     private final Random random = new Random();
     private final VasebreakerEngineCallback callback;
+    private final VasebreakerLevelDefinition level;
     private int gargantuarVasesRemaining;
     private boolean finished;
 
@@ -31,6 +32,7 @@ public class VasebreakerGame {
         this.plantPool = resolvePlantPool(level.getPlantPool());
         this.seedPacketLifetimeSeconds = level.getSeedPacketLifetimeSeconds();
         this.callback = callback;
+        this.level = level;
         buildGrid(level);
     }
 
@@ -177,13 +179,18 @@ public class VasebreakerGame {
     }
 
     private String breakNormalVase(Vase vase) {
-        double roll = random.nextDouble();
+        double empty = Math.max(0.0, level.getNormalEmptyChance() != null ? level.getNormalEmptyChance() : 0.12);
+        double zombie = Math.max(0.0, level.getNormalZombieChance() != null ? level.getNormalZombieChance() : 0.60);
+        double seed = Math.max(0.0, level.getNormalSeedChance() != null ? level.getNormalSeedChance() : 0.28);
+        double total = empty + zombie + seed;
+        if (total <= 0.0) total = 1.0;
+        double roll = random.nextDouble() * total;
         VaseOutcome outcome;
         String message;
-        if (roll < 0.45) {
+        if (roll < empty) {
             outcome = VaseOutcome.EMPTY;
             message = "vase broke.rakab khordi :) It is empty";
-        } else if (roll < 0.80) {
+        } else if (roll < empty + zombie) {
             outcome = VaseOutcome.ZOMBIE;
             String alias = releaseZombie(vase.getRow(), vase.getCol());
             message = "vase broke and (" + alias + ") spawned!";
@@ -287,3 +294,4 @@ public class VasebreakerGame {
         return groundSeedPackets;
     }
 }
+

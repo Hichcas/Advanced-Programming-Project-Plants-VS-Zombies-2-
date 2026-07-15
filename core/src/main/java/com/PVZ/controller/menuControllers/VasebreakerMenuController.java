@@ -84,14 +84,6 @@ public class VasebreakerMenuController {
     }
 
     private OutputDTO exit() {
-        currentGame = null;
-        if (currentEngine != null) {
-            currentEngine.dispose();
-        }
-        currentEngine = null;
-        if (AppStatus.getGameEngine() == null || AppStatus.getGameEngine() instanceof VasebreakerGameEngine) {
-            AppStatus.setGameEngine(null);
-        }
         AppStatus.currentMenuType = MenuType.TRAVEL_LOG;
         return new OutputDTO(true, "Exited Vasebreaker. Returning to Travel Log.");
     }
