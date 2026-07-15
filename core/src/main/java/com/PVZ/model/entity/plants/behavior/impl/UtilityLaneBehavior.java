@@ -5,16 +5,7 @@ import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 import com.PVZ.model.entity.zombies.base.Zombie;
 
-/**
- * Handles the small set of plants whose whole job is "every few seconds, do a
- * lane-wide utility effect on the zombies in front of me" using hooks the engine
- * already implements fully (disarmZombiesInLane / moveZombiesFromLane):
- *  - magnet_shroom: periodically strips metal armor (bucket/cone) off zombies in its lane.
- *  - garlic: periodically nudges a zombie in its lane into a random adjacent lane
- *    (approximation of "forces the zombie away on being bitten" — garlic normally
- *    triggers once when eaten down to its last HP, but BehaviorContext has no
- *    "on plant damaged" hook yet, so this uses a cooldown instead).
- */
+
 public class UtilityLaneBehavior implements PlantBehavior {
 
     public enum Mode { MAGNET_DISARM, MOVE_ZOMBIES, HYPNOTIZE }
@@ -49,7 +40,6 @@ public class UtilityLaneBehavior implements PlantBehavior {
             case MAGNET_DISARM -> context.disarmZombiesInLane(lane);
             case HYPNOTIZE -> context.hypnotizeZombiesInLane(lane, 999.0);
             case MOVE_ZOMBIES -> {
-                // push into whichever adjacent lane exists; prefer the lane below, fall back to above
                 context.moveZombiesFromLane(lane, lane + 1);
                 context.moveZombiesFromLane(lane, lane - 1);
             }

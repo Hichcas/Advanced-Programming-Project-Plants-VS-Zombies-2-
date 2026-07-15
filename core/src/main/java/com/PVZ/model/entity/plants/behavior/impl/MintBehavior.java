@@ -6,21 +6,7 @@ import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 import com.PVZ.model.enums.PlantCategory;
 
-/**
- * All 9 "-mint" plants share the exact same Persian description:
- * "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود" — i.e. planting one instantly
- * triggers the Plant Food effect on every OTHER already-planted plant that belongs
- * to its family. In this data set each mint's own {@code category} already IS its
- * family (e.g. enlighten_mint -> SUN_PRODUCER, appease_mint -> SHOOTER, ...), so
- * "same family" == "same PlantCategory as this mint".
- *
- * Previously this class just called context.damageArea(...) once, which had
- * nothing to do with the ability at all. Now it looks up every other living plant
- * on the lawn, and for anyone sharing this mint's category, calls their own
- * plantFoodBehavior via Plant.applyPlantFood(context) - i.e. it really does
- * "give them plant food", using each plant's own already-correct plant food logic
- * instead of re-implementing every effect here.
- */
+
 public class MintBehavior implements PlantBehavior {
     @Override
     public void onUpdate(PlantInstance plant, BehaviorContext context, double deltaTime) {

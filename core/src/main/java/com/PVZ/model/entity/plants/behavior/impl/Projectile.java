@@ -33,13 +33,6 @@ public class Projectile {
     public Projectile() {
     }
 
-    /**
-     * Places the projectile at a real on-screen (world) position and gives it a
-     * real pixels/second speed so it can actually travel across the lawn and hit
-     * a zombie's hitbox (which is also in world coordinates). Must be called by
-     * the game engine right after the projectile is spawned, since the plant
-     * behaviors themselves don't know about the Map's pixel geometry.
-     */
     public void initWorldPosition(float worldX, float worldY, float worldSpeedPxPerSec) {
         initWorldPosition(worldX, worldY, worldSpeedPxPerSec, 0.0f);
     }

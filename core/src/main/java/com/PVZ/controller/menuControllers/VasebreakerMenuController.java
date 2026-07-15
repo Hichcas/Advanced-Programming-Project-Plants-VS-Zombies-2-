@@ -1,6 +1,7 @@
 package com.PVZ.controller.menuControllers;
 
 import com.PVZ.model.enums.MenuType;
+import com.PVZ.model.game.Map;
 import com.PVZ.model.game.VasebreakerGameEngine;
 import com.PVZ.model.minigame.vasebreaker.Vase;
 import com.PVZ.model.minigame.vasebreaker.VasebreakerGame;
@@ -37,7 +38,7 @@ public class VasebreakerMenuController {
         currentGame = new VasebreakerGame(level, currentEngine);
         currentEngine.setGame(currentGame);
 
-        com.PVZ.model.game.Map map = new com.PVZ.model.game.Map(
+        Map map = new Map(
                 550, 1240, 1600, 1170, currentGame.getRows(), currentGame.getCols());
         currentEngine.setMap(map);
 
