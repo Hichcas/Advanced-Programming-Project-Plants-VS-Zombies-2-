@@ -19,6 +19,7 @@ public abstract class Zombie {
     protected double x, y, row, col;
     protected String alias;
     protected double hitpoints;
+    protected double maxHitpoints;
     protected double eatDPS;
     protected double speed, currentSpeed;
     protected int wavePointCost;
@@ -38,6 +39,7 @@ public abstract class Zombie {
                   int wavePointCost, int weight, List<ScaledProperty> scaledProps) {
         this.alias = alias;
         this.hitpoints = hitpoints;
+        this.maxHitpoints = hitpoints;
         this.eatDPS = eatDPS;
         this.speed = speed;
         this.currentSpeed = speed;
@@ -240,6 +242,7 @@ public abstract class Zombie {
 
     public String getAlias() { return alias; }
     public double getHitpoints() { return hitpoints; }
+    public double getMaxHitpoints() { return maxHitpoints; }
     public double getEatDPS() { return eatDPS; }
     public double getSpeed() { return speed; }
     public double getCurrentSpeed() { return currentSpeed; }

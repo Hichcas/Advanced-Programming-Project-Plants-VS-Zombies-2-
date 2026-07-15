@@ -11,6 +11,7 @@ import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.screen.manager.FontManager;
+import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -390,6 +391,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                     }
                     plant.draw(batch);
                     Rectangle box = plant.getHitbox();
+                    HealthBarRenderer.draw(batch, box.x, box.y + box.height + 2, box.width,
+                        (float) plant.getCurrentHp() / Math.max(1, plant.getMaxHp()), true);
                     String label = plant.getType() + " (" + plant.getCurrentHp() + "hp)";
                     plantFont.draw(batch, label, box.x, box.y + box.height + 4);
                 }
@@ -407,6 +410,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                     font.draw(batch, line, (float)z.getX(), yOff);
                     yOff -= 15;
                 }
+                HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
+                    (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
             }
         }
         font.setColor(Color.WHITE);
