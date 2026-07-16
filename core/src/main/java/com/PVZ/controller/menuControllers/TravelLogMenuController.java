@@ -21,6 +21,10 @@ public class TravelLogMenuController {
             case ENTER_VASEBREAKER -> enterVasebreaker();
             case SHOW_CURRENT_MENU -> new OutputDTO(true, AppStatus.currentMenuType.name());
             case EXIT -> exitToGameMenu();
+            case ENTER_QUEST -> {
+                AppStatus.currentMenuType = MenuType.QUEST;
+                yield new OutputDTO(true, "Entered Quest Menu.");
+            }
         };
     }
 
