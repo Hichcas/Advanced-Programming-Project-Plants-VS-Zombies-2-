@@ -1,33 +1,130 @@
 {
-  "vasebreaker": {
-    "levels": [
-      {
-        "id": 1,
-        "rows": 5,
-        "cols": 9,
-        "random": true,
-        "vaseCount": 45,
-        "plantVaseChance": 0.22,
-        "gargantuarVaseChance": 0.08,
-        "normalEmptyChance": 0.12,
-        "normalZombieChance": 0.60,
-        "normalSeedChance": 0.28,
-        "zombiePool": [],
-        "plantPool": [],
-        "seedPacketLifetimeSeconds": 8
-      }
-    ]
-  },
-  "wallnut_bowling": {
-    "levels": []
-  },
-  "i_zombie": {
-    "levels": []
-  },
-  "beghouled": {
-    "levels": []
-  },
-  "zombotany": {
-    "levels": []
-  }
+ "vasebreaker": {
+  "levels": [
+   {
+    "id": 1,
+    "rows": 5,
+    "cols": 9,
+    "random": true,
+    "vaseCount": 45,
+    "plantVaseChance": 0.22,
+    "gargantuarVaseChance": 0.08,
+    "normalEmptyChance": 0.12,
+    "normalZombieChance": 0.6,
+    "normalSeedChance": 0.28,
+    "zombiePool": [],
+    "plantPool": [],
+    "seedPacketLifetimeSeconds": 8
+   }
+  ]
+ },
+ "wallnut_bowling": {
+  "levels": [
+   {
+    "id": 1,
+    "rows": 5,
+    "cols": 9,
+    "redLineCol": 2,
+    "nutPool": [
+     {
+      "type": "NORMAL",
+      "weight": 65
+     },
+     {
+      "type": "EXPLOSIVE",
+      "weight": 20
+     },
+     {
+      "type": "GIANT",
+      "weight": 15
+     }
+    ],
+    "zombiePool": [
+     "ZombieTutorialDefault"
+    ],
+    "totalZombies": 8,
+    "waveIntervalSeconds": 7.0,
+    "minWaveIntervalSeconds": 3.5,
+    "waveIntervalDecreasePerWave": 0.4,
+    "nutSpeed": 420.0,
+    "nutDamage": 190,
+    "explosionDamage": 1800,
+    "launchCooldownSeconds": 3.0
+   },
+   {
+    "id": 2,
+    "rows": 5,
+    "cols": 9,
+    "redLineCol": 3,
+    "nutPool": [
+     {
+      "type": "NORMAL",
+      "weight": 50
+     },
+     {
+      "type": "EXPLOSIVE",
+      "weight": 30
+     },
+     {
+      "type": "GIANT",
+      "weight": 20
+     }
+    ],
+    "zombiePool": [
+     "ZombieTutorialDefault",
+     "ZombieTutorialArmor1Default"
+    ],
+    "totalZombies": 13,
+    "waveIntervalSeconds": 6.0,
+    "minWaveIntervalSeconds": 2.5,
+    "waveIntervalDecreasePerWave": 0.4,
+    "nutSpeed": 470.0,
+    "nutDamage": 190,
+    "explosionDamage": 1800,
+    "launchCooldownSeconds": 2.5
+   },
+   {
+    "id": 3,
+    "rows": 5,
+    "cols": 9,
+    "redLineCol": 3,
+    "nutPool": [
+     {
+      "type": "NORMAL",
+      "weight": 40
+     },
+     {
+      "type": "EXPLOSIVE",
+      "weight": 35
+     },
+     {
+      "type": "GIANT",
+      "weight": 25
+     }
+    ],
+    "zombiePool": [
+     "ZombieTutorialDefault",
+     "ZombieTutorialArmor1Default",
+     "ZombieTutorialArmor2Default"
+    ],
+    "totalZombies": 18,
+    "waveIntervalSeconds": 5.0,
+    "minWaveIntervalSeconds": 1.8,
+    "waveIntervalDecreasePerWave": 0.35,
+    "nutSpeed": 520.0,
+    "nutDamage": 190,
+    "explosionDamage": 1800,
+    "launchCooldownSeconds": 2.0
+   }
+  ]
+ },
+ "i_zombie": {
+  "levels": []
+ },
+ "beghouled": {
+  "levels": []
+ },
+ "zombotany": {
+  "levels": []
+ }
 }

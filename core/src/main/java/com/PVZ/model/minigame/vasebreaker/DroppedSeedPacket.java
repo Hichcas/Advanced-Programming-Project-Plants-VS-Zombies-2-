@@ -13,8 +13,6 @@ public class DroppedSeedPacket {
         this.plantType = plantType;
         this.row = row;
         this.col = col;
-        // Seed packet disappears if the player doesn't plant it within the
-        // given number of seconds (classic Vasebreaker behaviour).
         this.remainingSeconds = lifetimeSeconds;
     }
 

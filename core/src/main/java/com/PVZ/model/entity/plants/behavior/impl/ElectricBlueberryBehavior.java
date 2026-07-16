@@ -4,10 +4,7 @@ import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 
-/**
- * "شلیک رعدوبرق (جهت رندوم، نابودی کامل یک زامبی)" — every cooldown, instantly
- * destroys one random zombie on the lawn (not lane-limited, matching "جهت رندوم").
- */
+
 public class ElectricBlueberryBehavior implements PlantBehavior {
 
     @Override

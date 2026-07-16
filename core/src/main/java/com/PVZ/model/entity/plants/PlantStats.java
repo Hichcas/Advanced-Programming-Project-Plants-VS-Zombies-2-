@@ -12,7 +12,6 @@ public class PlantStats {
     private int cost;
     private int maxHp;
     private int damage;
-
     private double actionIntervalSeconds;
     private double rechargeSeconds;
     private double productionTimeSeconds;
