@@ -62,7 +62,7 @@ public class QuestMenuController {
 
         for (Quest q : quests) {
             sb.append(String.format("[%s] %s (%s)\n", q.getId(), q.getTitle(), q.getType()));
-            sb.append("  Description: ").append(q.getDescription()).append("\n");
+            sb.append("  Description: ").append(q.getFormattedDescription()).append("\n");
             sb.append("  Progress: ").append(q.getCurrentCount()).append("/").append(q.getTargetCount());
             if (q.isCompleted()) {
                 if (q.isClaimed()) {
@@ -121,12 +121,12 @@ public class QuestMenuController {
             case DIAMONDS -> user.userStats.addDiamonds(reward.getAmount());
             case UNLOCK_PLANT -> {
                 // فرض می‌کنیم target اسم گیاه است (مثلاً "CABBAGE_PULT")
-                if (reward.getTarget() != null) {
+                if (reward.getTargetPlant() != null) {
                     try {
-                        PlantType plant = PlantType.valueOf(reward.getTarget().toUpperCase());
+                        PlantType plant = reward.getTargetPlant();
                         user.collectionState.unlockPlant(plant);
                     } catch (IllegalArgumentException e) {
-                        System.err.println("Invalid plant type in reward: " + reward.getTarget());
+                        System.err.println("Invalid plant type in reward: " + reward.getTargetPlant());
                     }
                 }
             }
@@ -144,7 +144,7 @@ public class QuestMenuController {
         return switch (r.getType()) {
             case COINS -> r.getAmount() + " coins";
             case DIAMONDS -> r.getAmount() + " diamonds";
-            case UNLOCK_PLANT -> "Unlock plant: " + r.getTarget();
+            case UNLOCK_PLANT -> "Unlock plant: " + (r.getTargetPlant() != null ? r.getTargetPlant().getDisplayName() : "unknown");
             case SEED_PACKETS -> r.getAmount() + " seed packets (random)";
         };
     }
