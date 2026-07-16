@@ -11,20 +11,10 @@ public class VasebreakerLevelDefinition {
     private List<String> zombiePool;
     private List<String> plantPool;
     private float seedPacketLifetimeSeconds = 8f;
-
-    // ── Randomization controls ──
-    // When true (or when no explicit `vases` list is supplied) the engine builds
-    // a fresh random board every time the level is started: which cells hold a
-    // vase and what each vase contains (plant / zombie / gargantuar) is decided
-    // randomly, so no two runs look the same.
     private Boolean random;
     private Integer vaseCount;
     private Double plantVaseChance = 0.20;
     private Double gargantuarVaseChance = 0.08;
-
-    // Outcome distribution for a NORMAL vase (the one whose contents are rolled
-    // randomly). These are normalized at runtime, so they don't strictly have to
-    // sum to 1. Kept low on "empty" so a normal vase is almost always useful.
     private Double normalEmptyChance = 0.12;
     private Double normalZombieChance = 0.60;
     private Double normalSeedChance = 0.28;
