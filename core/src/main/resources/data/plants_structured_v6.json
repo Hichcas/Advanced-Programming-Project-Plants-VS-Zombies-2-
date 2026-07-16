@@ -1,4219 +1,4296 @@
 {
-  "schemaVersion": 6,
-  "source": {
-    "workbook": "plants(1).xlsx",
-    "sheet": "Plants",
-    "rows": 69
-  },
-  "notes": [
-    "raw text is preserved for display",
-    "kind/params are for Java behavior resolution",
-    "use Java to execute behaviors; do not try to infer everything from text at runtime",
-    "manualMappingRequired means the value is descriptive, but Java must decide the exact mechanics"
-  ],
-  "plants": [
-    {
-      "legacyId": 1,
-      "id": "sunflower",
-      "name": "Sunflower",
-      "category": "SUN_PRODUCER",
-      "tags": [
-        "DAY"
-      ],
-      "cost": 50,
-      "baseHp": 300,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "SUN_PRODUCTION",
-        "raw": "تولید ۵۰ خورشید هر ۲۴ ثانیه.",
-        "params": {
-          "sunAmount": 50,
-          "intervalSeconds": 24
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "INSTANT_SUN",
-        "raw": "تولید فوری ۱۵۰ خورشید.",
-        "params": {
-          "sunAmount": 150
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Prod. Time -2s",
-          "kind": "STAT",
-          "stat": "PRODUCTION_TIME",
-          "op": "SUBTRACT",
-          "value": 2,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "HP +150",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Double Sun Chance",
-          "kind": "SPECIAL",
-          "special": "DOUBLE_SUN_CHANCE",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 24.0,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 2,
-      "id": "twin_sunflower",
-      "name": "Twin Sunflower",
-      "category": "SUN_PRODUCER",
-      "tags": [
-        "DAY"
-      ],
-      "cost": 125,
-      "baseHp": 300,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "SUN_PRODUCTION",
-        "raw": "تولید ۱۰۰ خورشید در هر دور.",
-        "params": {
-          "sunAmount": 100
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "INSTANT_SUN",
-        "raw": "تولید فوری ۲۵۰ خورشید.",
-        "params": {
-          "sunAmount": 250
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Prod. Time -2s",
-          "kind": "STAT",
-          "stat": "PRODUCTION_TIME",
-          "op": "SUBTRACT",
-          "value": 2,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "HP +150",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 24.0,
-      "rechargeSeconds": 15.0
-    },
-    {
-      "legacyId": 3,
-      "id": "sun_shroom",
-      "name": "Sun-shroom",
-      "category": "SUN_PRODUCER",
-      "tags": [
-        "SHROOM",
-        "WRAMP_UP",
-        "NIGHT"
-      ],
-      "cost": 25,
-      "baseHp": 300,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "GROWING_SUN",
-        "raw": "رشد در ۳ مرحله و تولید خورشید بیشتر(۲۵/۵۰/۷۵). To Stg2: 24s | To Stg3: 72s",
-        "params": {
-          "sunAmounts": [
-            25,
-            50,
-            75
-          ],
-          "growthStageTimes": [
-            24,
-            72
-          ]
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "INSTANT_SUN",
-        "raw": "رشد آنی به سایز آخر و تولید ۲۲۵ خورشید.",
-        "params": {
-          "sunAmount": 225
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Grow Time -5s",
-          "kind": "STAT",
-          "stat": "GROWTH_TIME",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "HP +150",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Double Sun Chance",
-          "kind": "SPECIAL",
-          "special": "DOUBLE_SUN_CHANCE",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 24.0,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 4,
-      "id": "primal_sunflower",
-      "name": "Primal Sunflower",
-      "category": "SUN_PRODUCER",
-      "tags": [],
-      "cost": 75,
-      "baseHp": 300,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "SUN_PRODUCTION",
-        "raw": "تولید خورشید بزرگ ۷۵ تایی از ابتدا.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "INSTANT_SUN",
-        "raw": "تولید فوری ۲۲۵ خورشید.",
-        "params": {
-          "sunAmount": 225
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Prod. Time -2s",
-          "kind": "STAT",
-          "stat": "PRODUCTION_TIME",
-          "op": "SUBTRACT",
-          "value": 2,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "HP +150",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 24.0,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 5,
-      "id": "gold_bloom",
-      "name": "Gold Bloom",
-      "category": "SUN_PRODUCER",
-      "tags": [],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "INSTANT_SUN",
-        "raw": "تولید فوری و یک‌باره مقدار زیادی خورشید و سپس ناپدید شدن.(۳۷۵ خورشید)",
-        "params": {
-          "sunAmount": 375,
-          "instant": true
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Sun +50",
-          "kind": "STAT",
-          "stat": "SUN_AMOUNT",
-          "op": "ADD",
-          "value": 50,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 0.0,
-      "rechargeSeconds": 75.0
-    },
-    {
-      "legacyId": 6,
-      "id": "peashooter",
-      "name": "Peashooter",
-      "category": "SHOOTER",
-      "tags": [
-        "PEA"
-      ],
-      "cost": 100,
-      "baseHp": 300,
-      "damageRaw": "20",
-      "damageSpec": {
-        "raw": "20",
-        "kind": "single",
-        "totalDamage": 20,
-        "projectiles": 1,
-        "damagePerProjectile": 20
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک تیر مستقیم.",
-        "params": {
-          "projectileType": "PEA"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک رگباری سریع برای چند ثانیه.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "HP +150",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 7,
-      "id": "repeater",
-      "name": "Repeater",
-      "category": "SHOOTER",
-      "tags": [
-        "PEA"
-      ],
-      "cost": 200,
-      "baseHp": 300,
-      "damageRaw": "20x2",
-      "damageSpec": {
-        "raw": "20x2",
-        "kind": "multiProjectile",
-        "totalDamage": 40,
-        "projectiles": 2,
-        "damagePerProjectile": 20
-      },
-      "baseAbility": {
-        "kind": "BURST_SHOT",
-        "raw": "شلیک ۲ تیر مستقیم متوالی.",
-        "params": {
-          "burst": true,
-          "projectileType": "PEA"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک رگباری سنگین + ۱ نخود غول‌پیکر (دمیج 20 برابر).",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 8,
-      "id": "threepeater",
-      "name": "Threepeater",
-      "category": "SHOOTER",
-      "tags": [
-        "PEA"
-      ],
-      "cost": 300,
-      "baseHp": 300,
-      "damageRaw": "20",
-      "damageSpec": {
-        "raw": "20",
-        "kind": "single",
-        "totalDamage": 20,
-        "projectiles": 1,
-        "damagePerProjectile": 20
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک همزمان تیر در ۳ لاین موازی.",
-        "params": {
-          "targetScope": "LANE"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک رگباری بادبزنی در تمام لاین‌ها.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 9,
-      "id": "snow_pea",
-      "name": "Snow Pea",
-      "category": "SHOOTER",
-      "tags": [
-        "ICE",
-        "PEA"
-      ],
-      "cost": 150,
-      "baseHp": 300,
-      "damageRaw": "20",
-      "damageSpec": {
-        "raw": "20",
-        "kind": "single",
-        "totalDamage": 20,
-        "projectiles": 1,
-        "damagePerProjectile": 20
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک تیر مستقیم کندکننده سرعت.",
-        "params": {
-          "projectileType": "PEA"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "FREEZE_BURST",
-        "raw": "انجماد لاین و شلیک رگباری یخی.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Chill Time +2s",
-          "kind": "STAT",
-          "stat": "CHILL_TIME",
-          "op": "ADD",
-          "value": 2,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 10,
-      "id": "rotobaga",
-      "name": "Rotobaga",
-      "category": "SHOOTER",
-      "tags": [],
-      "cost": 150,
-      "baseHp": 300,
-      "damageRaw": "10x3",
-      "damageSpec": {
-        "raw": "10x3",
-        "kind": "multiProjectile",
-        "totalDamage": 30,
-        "projectiles": 3,
-        "damagePerProjectile": 10
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک در ۴ جهت اریب.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک رگباری در هر ۴ جهت اریب.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "HP +150",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 11,
-      "id": "pea_pod",
-      "name": "Pea Pod",
-      "category": "SHOOTER",
-      "tags": [
-        "PEA",
-        "STACK"
-      ],
-      "cost": 125,
-      "baseHp": 300,
-      "damageRaw": "20/40/60/80/100",
-      "damageSpec": {
-        "raw": "20/40/60/80/100",
-        "kind": "tiered",
-        "tiers": [
-          20,
-          40,
-          60,
-          80,
-          100
-        ],
-        "totalDamage": 300,
-        "projectiles": 5
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک تیر مستقیم به ازای هر سر کاشته شده روی هم (تا ۵ سر).",
-        "params": {
-          "projectileType": "PEA"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک یک نخود غول‌پیکر به ازای هر سر(دمیج 20 برابر).",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 12,
-      "id": "split_pea",
-      "name": "Split Pea",
-      "category": "SHOOTER",
-      "tags": [
-        "PEA"
-      ],
-      "cost": 125,
-      "baseHp": 300,
-      "damageRaw": "20",
-      "damageSpec": {
-        "raw": "20",
-        "kind": "single",
-        "totalDamage": 20,
-        "projectiles": 1,
-        "damagePerProjectile": 20
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک ۱ تیر به جلو و ۲ تیر به عقب.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک رگباری همزمان از جلو و عقب.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 13,
-      "id": "citron",
-      "name": "Citron",
-      "category": "SHOOTER",
-      "tags": [
-        "CHARGE"
-      ],
-      "cost": 350,
-      "baseHp": 300,
-      "damageRaw": "800",
-      "damageSpec": {
-        "raw": "800",
-        "kind": "single",
-        "totalDamage": 800,
-        "projectiles": 1,
-        "damagePerProjectile": 800
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک تیر سنگین مستقیم (نیازمند زمان شارژ).",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "PLASMA_BURST",
-        "raw": "شلیک توپ پلاسمایی پاکسازی‌کننده کل لاین.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Charge Time -1s",
-          "kind": "STAT",
-          "stat": "CHARGE_TIME",
-          "op": "SUBTRACT",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +150",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -50",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 50,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 9.0,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 14,
-      "id": "caulipower",
-      "name": "Caulipower",
-      "category": "HOMING",
-      "tags": [
-        "MAGIC",
-        "CHARGE"
-      ],
-      "cost": 250,
-      "baseHp": 300,
-      "damageRaw": "Insta-kill",
-      "damageSpec": {
-        "raw": "Insta-kill",
-        "kind": "instantKill",
-        "projectiles": 1
-      },
-      "baseAbility": {
-        "kind": "HYPNOTIZE",
-        "raw": "شلیک تیر جادویی (جهت رندوم، عبور از موانع، هیپنوتیزم‌کننده).",
-        "params": {
-          "effect": "HYPNOTIZE"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "HYPNOTIZE",
-        "raw": "هیپنوتیزم کردن چند زامبی تصادفی در باغچه.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Cooldown -2s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 2,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "HP +150",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -50",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 50,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 12.0,
-      "rechargeSeconds": 15.0
-    },
-    {
-      "legacyId": 15,
-      "id": "electric_blueberry",
-      "name": "Electric Blueberry",
-      "category": "HOMING",
-      "tags": [
-        "CHARGE"
-      ],
-      "cost": 150,
-      "baseHp": 300,
-      "damageRaw": "5000",
-      "damageSpec": {
-        "raw": "5000",
-        "kind": "single",
-        "totalDamage": 5000,
-        "projectiles": 1,
-        "damagePerProjectile": 5000
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک رعدوبرق (جهت رندوم، نابودی کامل یک زامبی).",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "نابودی کامل ۳ زامبی تصادفی.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Cooldown -2s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 2,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Target Priority Up",
-          "kind": "SPECIAL",
-          "special": "TARGET_PRIORITY_UP",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 12.0,
-      "rechargeSeconds": 15.0
-    },
-    {
-      "legacyId": 16,
-      "id": "bowling_bulb",
-      "name": "Bowling Bulb",
-      "category": "SHOOTER",
-      "tags": [
-        "CHARGE"
-      ],
-      "cost": 200,
-      "baseHp": 300,
-      "damageRaw": "40/120/180",
-      "damageSpec": {
-        "raw": "40/120/180",
-        "kind": "tiered",
-        "tiers": [
-          40,
-          120,
-          180
-        ],
-        "totalDamage": 340,
-        "projectiles": 3
-      },
-      "baseAbility": {
-        "kind": "BOUNCE_SHOT",
-        "raw": "شلیک 3 نوع پیاز که بین لاین‌ها کمانه می‌کند (مثل wall nut bowling). تاخیر هر یک Cyan: 2s | Blue: 5s | Orange: 10s",
-        "params": {
-          "targetScope": "LANE",
-          "ricochet": true
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک ۳ پیاز انفجاری بزرگ که کمانه می‌کنند.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Regen -1s",
-          "kind": "STAT",
-          "stat": "REGEN",
-          "op": "SUBTRACT",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +15",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 15,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 2.0,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 17,
-      "id": "cactus",
-      "name": "Cactus",
-      "category": "STRIKE_THROUGH",
-      "tags": [],
-      "cost": 175,
-      "baseHp": 300,
-      "damageRaw": "30",
-      "damageSpec": {
-        "raw": "30",
-        "kind": "single",
-        "totalDamage": 30,
-        "projectiles": 1,
-        "damagePerProjectile": 30
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک خار مستقیم (عبور از ۳ زامبی).",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "تیغ‌های برقی با دمیج بالا و نفوذ نامحدود.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Pierce +1",
-          "kind": "STAT",
-          "stat": "PIERCE",
-          "op": "ADD",
-          "value": 1,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 18,
-      "id": "fire_peashooter",
-      "name": "Fire Peashooter",
-      "category": "SHOOTER",
-      "tags": [
-        "FIRE",
-        "PEA"
-      ],
-      "cost": 175,
-      "baseHp": 300,
-      "damageRaw": "40",
-      "damageSpec": {
-        "raw": "40",
-        "kind": "single",
-        "totalDamage": 40,
-        "projectiles": 1,
-        "damagePerProjectile": 40
-      },
-      "baseAbility": {
-        "kind": "FIRE_SHOT",
-        "raw": "شلیک تیر مستقیم آتشی (دمیج ۲ برابر).",
-        "params": {
-          "effect": "FIRE",
-          "projectileType": "PEA"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "FIRE_BURST",
-        "raw": "شلیک رگباری آتشین در کل لاین.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 19,
-      "id": "starfruit",
-      "name": "Starfruit",
-      "category": "SHOOTER",
-      "tags": [],
-      "cost": 150,
-      "baseHp": 300,
-      "damageRaw": "20",
-      "damageSpec": {
-        "raw": "20",
-        "kind": "single",
-        "totalDamage": 20,
-        "projectiles": 1,
-        "damagePerProjectile": 20
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک در ۵ جهت ستاره‌ای شامل عقب.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک رگباری ستاره در تمام جهات.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Atk Speed +10%",
-          "kind": "STAT",
-          "stat": "ATTACK_SPEED",
-          "op": "ADD",
-          "value": 10,
-          "unit": "%",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 20,
-      "id": "goo_peashooter",
-      "name": "Goo Peashooter",
-      "category": "SHOOTER",
-      "tags": [
-        "POISON"
-      ],
-      "cost": 125,
-      "baseHp": 300,
-      "damageRaw": "20",
-      "damageSpec": {
-        "raw": "20",
-        "kind": "single",
-        "totalDamage": 20,
-        "projectiles": 1,
-        "damagePerProjectile": 20
-      },
-      "baseAbility": {
-        "kind": "WALL_DEFENSE",
-        "raw": "شلیک تیر مستقیم (نادیده گرفتن زره + آسیب مستمر).",
-        "params": {
-          "role": "WALL"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک رگباری سمی که زامبی‌ها را درجا مسموم می‌کند.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg/Tick +5",
-          "kind": "STAT",
-          "stat": "DAMAGE_PER_TICK",
-          "op": "ADD",
-          "value": 5,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "HP +150",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 21,
-      "id": "mega_gatling_pea",
-      "name": "Mega Gatling Pea",
-      "category": "SHOOTER",
-      "tags": [
-        "PEA"
-      ],
-      "cost": 400,
-      "baseHp": 300,
-      "damageRaw": "20x4",
-      "damageSpec": {
-        "raw": "20x4",
-        "kind": "multiProjectile",
-        "totalDamage": 80,
-        "projectiles": 4,
-        "damagePerProjectile": 20
-      },
-      "baseAbility": {
-        "kind": "BURST_SHOT",
-        "raw": "شلیک ۴ تیر مستقیم متوالی با سرعت بسیار بالا.",
-        "params": {
-          "burst": true,
-          "projectileType": "PEA"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک رگباری عظیم و طولانی در لاین به همراه 4 تیر غول‌پیکر.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Plant Food Chance +5%",
-          "kind": "STAT",
-          "stat": "PLANT_FOOD_CHANCE",
-          "op": "ADD",
-          "value": 5,
-          "unit": "%",
-          "level": 3
-        },
-        {
-          "raw": "Cost -50",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 50,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 22,
-      "id": "sea_shroom",
-      "name": "Sea-shroom",
-      "category": "SHOOTER",
-      "tags": [
-        "SHROOM",
-        "WATER"
-      ],
-      "cost": 0,
-      "baseHp": 300,
-      "damageRaw": "20",
-      "damageSpec": {
-        "raw": "20",
-        "kind": "single",
-        "totalDamage": 20,
-        "projectiles": 1,
-        "damagePerProjectile": 20
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک رگباری و ریست شدن طول عمر تمام Sea-shroomها.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Range +1 Tile",
-          "kind": "STAT",
-          "stat": "RANGE",
-          "op": "ADD",
-          "value": 1,
-          "unit": "Tile",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +5",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 5,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Lifespan +10s",
-          "kind": "STAT",
-          "stat": "LIFESPAN",
-          "op": "ADD",
-          "value": 10,
-          "unit": "s",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 15.0
-    },
-    {
-      "legacyId": 23,
-      "id": "puff_shroom",
-      "name": "Puff-shroom",
-      "category": "SHOOTER",
-      "tags": [
-        "SHROOM"
-      ],
-      "cost": 0,
-      "baseHp": 300,
-      "damageRaw": "20",
-      "damageSpec": {
-        "raw": "20",
-        "kind": "single",
-        "totalDamage": 20,
-        "projectiles": 1,
-        "damagePerProjectile": 20
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک رگباری و ریست شدن طول عمر تمامی Puff-shroomها.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Lifespan +10s",
-          "kind": "STAT",
-          "stat": "LIFESPAN",
-          "op": "ADD",
-          "value": 10,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Range +1 Tile",
-          "kind": "STAT",
-          "stat": "RANGE",
-          "op": "ADD",
-          "value": 1,
-          "unit": "Tile",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 24,
-      "id": "fume_shroom",
-      "name": "Fume-shroom",
-      "category": "STRIKE_THROUGH",
-      "tags": [
-        "SHROOM"
-      ],
-      "cost": 125,
-      "baseHp": 300,
-      "damageRaw": "20",
-      "damageSpec": {
-        "raw": "20",
-        "kind": "single",
-        "totalDamage": 20,
-        "projectiles": 1,
-        "damagePerProjectile": 20
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک دود با برد متوسط که از زامبی‌ها رد می‌شود.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "پرتاب توده دود عظیم که زامبی‌ها را به عقب می‌راند.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Range +1 Tile",
-          "kind": "STAT",
-          "stat": "RANGE",
-          "op": "ADD",
-          "value": 1,
-          "unit": "Tile",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 25,
-      "id": "cabbage_pult",
-      "name": "Cabbage-pult",
-      "category": "LOBBER",
-      "tags": [],
-      "cost": 100,
-      "baseHp": 300,
-      "damageRaw": "40",
-      "damageSpec": {
-        "raw": "40",
-        "kind": "single",
-        "totalDamage": 40,
-        "projectiles": 1,
-        "damagePerProjectile": 40
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک هوایی از روی موانع.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "پرتاب کلم به چند زامبی تصادفی.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Atk Speed +15%",
-          "kind": "STAT",
-          "stat": "ATTACK_SPEED",
-          "op": "ADD",
-          "value": 15,
-          "unit": "%",
-          "level": 3
-        },
-        {
-          "raw": "HP +150",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 2.9,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 26,
-      "id": "kernel_pult",
-      "name": "Kernel-pult",
-      "category": "LOBBER",
-      "tags": [],
-      "cost": 100,
-      "baseHp": 300,
-      "damageRaw": "20/40",
-      "damageSpec": {
-        "raw": "20/40",
-        "kind": "tiered",
-        "tiers": [
-          20,
-          40
-        ],
-        "totalDamage": 60,
-        "projectiles": 2
-      },
-      "baseAbility": {
-        "kind": "LOBBER_KERNEL",
-        "raw": "شلیک دانه ذرت (آسیب کم) یا کره (توقف موقت زامبی).",
-        "params": {
-          "projectileType": "KERNEL"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "EXPLOSION",
-        "raw": "پرتاب کره به سر تمامی زامبی‌های زمین.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Butter +5%",
-          "kind": "STAT",
-          "stat": "BUTTER",
-          "op": "ADD",
-          "value": 5,
-          "unit": "%",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "HP +150",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 2.9,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 27,
-      "id": "melon_pult",
-      "name": "Melon-pult",
-      "category": "LOBBER",
-      "tags": [
-        "AOE"
-      ],
-      "cost": 325,
-      "baseHp": 300,
-      "damageRaw": "80",
-      "damageSpec": {
-        "raw": "80",
-        "kind": "single",
-        "totalDamage": 80,
-        "projectiles": 1,
-        "damagePerProjectile": 80
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک هوایی سنگین با آسیب مساحتی.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "پرتاب هندوانه غول‌پیکر به زامبی‌های تصادفی.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "AoE Dmg +15",
-          "kind": "STAT",
-          "stat": "AOE_DAMAGE",
-          "op": "ADD",
-          "value": 15,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Dmg +30",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 30,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 2.9,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 28,
-      "id": "winter_melon",
-      "name": "Winter Melon",
-      "category": "LOBBER",
-      "tags": [
-        "ICE",
-        "AOE"
-      ],
-      "cost": 500,
-      "baseHp": 300,
-      "damageRaw": "80",
-      "damageSpec": {
-        "raw": "80",
-        "kind": "single",
-        "totalDamage": 80,
-        "projectiles": 1,
-        "damagePerProjectile": 80
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک هوایی سنگین با آسیب مساحتی (کندکننده سرعت).",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "پرتاب هندوانه یخی به زامبی‌های تصادفی.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Cost -50",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 50,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "AoE Dmg +15",
-          "kind": "STAT",
-          "stat": "AOE_DAMAGE",
-          "op": "ADD",
-          "value": 15,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 2.9,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 29,
-      "id": "pepper_pult",
-      "name": "Pepper-pult",
-      "category": "LOBBER",
-      "tags": [
-        "FIRE",
-        "AOE"
-      ],
-      "cost": 200,
-      "baseHp": 300,
-      "damageRaw": "50",
-      "damageSpec": {
-        "raw": "50",
-        "kind": "single",
-        "totalDamage": 50,
-        "projectiles": 1,
-        "damagePerProjectile": 50
-      },
-      "baseAbility": {
-        "kind": "DIRECT_SHOT",
-        "raw": "شلیک هوایی با آسیب مساحتی (گرم‌کننده محیط اطراف).",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "پرتاب فلفل‌های بزرگ به ۳ زامبی تصادفی.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +15",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 15,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Warmth Radius +1",
-          "kind": "STAT",
-          "stat": "WARMTH_RADIUS",
-          "op": "ADD",
-          "value": 1,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 2.9,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 30,
-      "id": "potato_mine",
-      "name": "Potato Mine",
-      "category": "EXPLOSIVE",
-      "tags": [
-        "TRAP",
-        "CHARGE"
-      ],
-      "cost": 25,
-      "baseHp": 300,
-      "damageRaw": "1800",
-      "damageSpec": {
-        "raw": "1800",
-        "kind": "single",
-        "totalDamage": 1800,
-        "projectiles": 1,
-        "damagePerProjectile": 1800
-      },
-      "baseAbility": {
-        "kind": "EXPLOSION",
-        "raw": "مسلح شدن با تاخیر ۱۵ ثانیه؛ انفجار هنگام تماس.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "EXPLOSION",
-        "raw": "مسلح شدن آنی و پرتاب ۲ مین کلون دیگر.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Arm Time -3s",
-          "kind": "STAT",
-          "stat": "ARM_TIME",
-          "op": "SUBTRACT",
-          "value": 3,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "Dmg +600",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 600,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 25.0
-    },
-    {
-      "legacyId": 31,
-      "id": "primal_potato_mine",
-      "name": "Primal Potato Mine",
-      "category": "EXPLOSIVE",
-      "tags": [
-        "TRAP",
-        "CHARGE"
-      ],
-      "cost": 50,
-      "baseHp": 300,
-      "damageRaw": "2400",
-      "damageSpec": {
-        "raw": "2400",
-        "kind": "single",
-        "totalDamage": 2400,
-        "projectiles": 1,
-        "damagePerProjectile": 2400
-      },
-      "baseAbility": {
-        "kind": "EXPLOSION",
-        "raw": "مسلح شدن سریع‌تر ۵ ثانیه ای و انفجار مساحتی ۳x۳.",
-        "params": {
-          "radius": "3x3"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "EXPLOSION",
-        "raw": "مسلح شدن آنی و پرتاب ۲ مین به نقاط دیگر.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Arm Time -1s",
-          "kind": "STAT",
-          "stat": "ARM_TIME",
-          "op": "SUBTRACT",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -3s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 3,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "Dmg +400",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 400,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 32,
-      "id": "cherry_bomb",
-      "name": "Cherry Bomb",
-      "category": "EXPLOSIVE",
-      "tags": [],
-      "cost": 150,
-      "baseHp": 0,
-      "damageRaw": "1800",
-      "damageSpec": {
-        "raw": "1800",
-        "kind": "single",
-        "totalDamage": 1800,
-        "projectiles": 1,
-        "damagePerProjectile": 1800
-      },
-      "baseAbility": {
-        "kind": "EXPLOSION",
-        "raw": "انفجار فوری مساحت ۳x۳.",
-        "params": {
-          "radius": "3x3"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +600",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 600,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 35.0
-    },
-    {
-      "legacyId": 33,
-      "id": "squash",
-      "name": "Squash",
-      "category": "EXPLOSIVE",
-      "tags": [
-        "TRAP"
-      ],
-      "cost": 50,
-      "baseHp": 300,
-      "damageRaw": "1800",
-      "damageSpec": {
-        "raw": "1800",
-        "kind": "single",
-        "totalDamage": 1800,
-        "projectiles": 1,
-        "damagePerProjectile": 1800
-      },
-      "baseAbility": {
-        "kind": "EXPLOSION",
-        "raw": "له کردن اولین زامبی مجاور.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "EXPLOSION",
-        "raw": "له کردن ۲ زامبی تصادفی در سطح زمین.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Cooldown -3s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 3,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +600",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 600,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Can crush 2x",
-          "kind": "SPECIAL",
-          "special": "CAN_CRUSH_2X",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 20.0
-    },
-    {
-      "legacyId": 34,
-      "id": "grapeshot",
-      "name": "Grapeshot",
-      "category": "EXPLOSIVE",
-      "tags": [],
-      "cost": 150,
-      "baseHp": 0,
-      "damageRaw": "1800",
-      "damageSpec": {
-        "raw": "1800",
-        "kind": "single",
-        "totalDamage": 1800,
-        "projectiles": 1,
-        "damagePerProjectile": 1800
-      },
-      "baseAbility": {
-        "kind": "EXPLOSION",
-        "raw": "انفجار مساحتی ۳x۳ و پرتاب حبه‌های کمانه‌کننده که پس از ۵ ثانیه نابود می‌شوند.",
-        "params": {
-          "radius": "3x3"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +600",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 600,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Bounces +1",
-          "kind": "STAT",
-          "stat": "BOUNCES",
-          "op": "ADD",
-          "value": 1,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 35.0
-    },
-    {
-      "legacyId": 35,
-      "id": "jalapeno",
-      "name": "Jalapeno",
-      "category": "EXPLOSIVE",
-      "tags": [
-        "FIRE"
-      ],
-      "cost": 125,
-      "baseHp": 0,
-      "damageRaw": "1800",
-      "damageSpec": {
-        "raw": "1800",
-        "kind": "single",
-        "totalDamage": 1800,
-        "projectiles": 1,
-        "damagePerProjectile": 1800
-      },
-      "baseAbility": {
-        "kind": "EXPLOSION",
-        "raw": "آتش زدن کل زامبی‌های یک لاین به صورت آنی (ذوب یخ).",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +600",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 600,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 35.0
-    },
-    {
-      "legacyId": 36,
-      "id": "doom_shroom",
-      "name": "Doom-shroom",
-      "category": "EXPLOSIVE",
-      "tags": [
-        "SHROOM"
-      ],
-      "cost": 125,
-      "baseHp": 0,
-      "damageRaw": "1800",
-      "damageSpec": {
-        "raw": "1800",
-        "kind": "single",
-        "totalDamage": 1800,
-        "projectiles": 1,
-        "damagePerProjectile": 1800
-      },
-      "baseAbility": {
-        "kind": "EXPLOSION",
-        "raw": "انفجار مهیب در کل باغچه و ایجاد یک گودال غیرقابل کشت.",
-        "params": {
-          "radius": "BOARD",
-          "createsPit": true,
-          "scope": "GLOBAL"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +800",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 800,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -50",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 50,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 15.0
-    },
-    {
-      "legacyId": 37,
-      "id": "tangle_kelp",
-      "name": "Tangle Kelp",
-      "category": "EXPLOSIVE",
-      "tags": [
-        "TRAP",
-        "WATER"
-      ],
-      "cost": 25,
-      "baseHp": 300,
-      "damageRaw": "Insta-kill",
-      "damageSpec": {
-        "raw": "Insta-kill",
-        "kind": "instantKill",
-        "projectiles": 1
-      },
-      "baseAbility": {
-        "kind": "EXPLOSION",
-        "raw": "کشیدن اولین زامبی آبی به زیر آب و نابودی آن (مخصوص ساحل).",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "WATER_CLONE",
-        "raw": "کشیدن چند زامبی تصادفی در آب به زیر آب.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Targets +1",
-          "kind": "STAT",
-          "stat": "TARGETS",
-          "op": "ADD",
-          "value": 1,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 15.0
-    },
-    {
-      "legacyId": 38,
-      "id": "iceberg_lettuce",
-      "name": "Iceberg Lettuce",
-      "category": "EXPLOSIVE",
-      "tags": [
-        "TRAP",
-        "ICE"
-      ],
-      "cost": 0,
-      "baseHp": 300,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "EXPLOSION",
-        "raw": "یخ زدن اولین زامبی که روی آن پا بگذارد.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "یخ زدن تمامی زامبی‌های موجود در تصویر.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Cooldown -2s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 2,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Freeze Time +2s",
-          "kind": "STAT",
-          "stat": "FREEZE_TIME",
-          "op": "ADD",
-          "value": 2,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "Cost -0",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 0,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 20.0
-    },
-    {
-      "legacyId": 39,
-      "id": "bonk_choy",
-      "name": "Bonk Choy",
-      "category": "MELEE",
-      "tags": [],
-      "cost": 150,
-      "baseHp": 300,
-      "damageRaw": "15",
-      "damageSpec": {
-        "raw": "15",
-        "kind": "single",
-        "totalDamage": 15,
-        "projectiles": 1,
-        "damagePerProjectile": 15
-      },
-      "baseAbility": {
-        "kind": "MELEE_EAT",
-        "raw": "ضربه فیزیکی به خانه‌های جلو و عقب.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "مشت زدن رگباری به شعاع ۳x۳ اطراف خود.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +5",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 5,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Atk Speed +10%",
-          "kind": "STAT",
-          "stat": "ATTACK_SPEED",
-          "op": "ADD",
-          "value": 10,
-          "unit": "%",
-          "level": 3
-        },
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 0.25,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 40,
-      "id": "phat_beet",
-      "name": "Phat Beet",
-      "category": "MELEE",
-      "tags": [
-        "AOE"
-      ],
-      "cost": 150,
-      "baseHp": 300,
-      "damageRaw": "15",
-      "damageSpec": {
-        "raw": "15",
-        "kind": "single",
-        "totalDamage": 15,
-        "projectiles": 1,
-        "damagePerProjectile": 15
-      },
-      "baseAbility": {
-        "kind": "MELEE_EAT",
-        "raw": "ضربه صوتی به مساحت ۳x۳ اطراف.",
-        "params": {
-          "count": 3
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "ضربه صوتی بسیار قدرتمند به تمام زامبی‌های اطراف.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Atk Speed +10%",
-          "kind": "STAT",
-          "stat": "ATTACK_SPEED",
-          "op": "ADD",
-          "value": 10,
-          "unit": "%",
-          "level": 3
-        },
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 2.0,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 41,
-      "id": "chomper",
-      "name": "Chomper",
-      "category": "MELEE",
-      "tags": [],
-      "cost": 150,
-      "baseHp": 300,
-      "damageRaw": "Insta-kill",
-      "damageSpec": {
-        "raw": "Insta-kill",
-        "kind": "instantKill",
-        "projectiles": 1
-      },
-      "baseAbility": {
-        "kind": "MELEE_EAT",
-        "raw": "بلعیدن آنی؛ نابودی یک زامبی درجا و سپس توقف برای هضم به مدت ۴۰ ثانیه.",
-        "params": {
-          "digest": true
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "بلعیدن همزمان ۳ زامبی از فاصله دور.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Digest -2s",
-          "kind": "STAT",
-          "stat": "DIGEST",
-          "op": "SUBTRACT",
-          "value": 2,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Digest -3s",
-          "kind": "STAT",
-          "stat": "DIGEST",
-          "op": "SUBTRACT",
-          "value": 3,
-          "unit": "s",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 40.0,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 42,
-      "id": "wasabi_whip",
-      "name": "Wasabi Whip",
-      "category": "MELEE",
-      "tags": [
-        "FIRE"
-      ],
-      "cost": 150,
-      "baseHp": 300,
-      "damageRaw": "40",
-      "damageSpec": {
-        "raw": "40",
-        "kind": "single",
-        "totalDamage": 40,
-        "projectiles": 1,
-        "damagePerProjectile": 40
-      },
-      "baseAbility": {
-        "kind": "MELEE_EAT",
-        "raw": "ضربه شلاق به خانه‌های جلو و عقب (گرم‌کننده محیط).",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "چرخش شلاق در مساحت ۳x۳.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Range +1 Tile",
-          "kind": "STAT",
-          "stat": "RANGE",
-          "op": "ADD",
-          "value": 1,
-          "unit": "Tile",
-          "level": 3
-        },
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 2.0,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 43,
-      "id": "kiwibeast",
-      "name": "Kiwibeast",
-      "category": "MELEE",
-      "tags": [
-        "AOE",
-        "WRAMP_UP"
-      ],
-      "cost": 175,
-      "baseHp": 300,
-      "damageRaw": "15/30/45",
-      "damageSpec": {
-        "raw": "15/30/45",
-        "kind": "tiered",
-        "tiers": [
-          15,
-          30,
-          45
-        ],
-        "totalDamage": 90,
-        "projectiles": 3
-      },
-      "baseAbility": {
-        "kind": "MELEE_EAT",
-        "raw": "موج صوتی مساحتی؛ با گذر زمان بزرگتر شده و دمیج بیشتر می‌دهد. To Stg2: 24s | To Stg3: 72s",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "EXPLOSION",
-        "raw": "پرش و کوبیدن محکم به زمین با دمیج مساحتی.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Dmg +15",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 15,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Max Size +1",
-          "kind": "STAT",
-          "stat": "MAX_SIZE",
-          "op": "ADD",
-          "value": 1,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 2.0,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 44,
-      "id": "wall_nut",
-      "name": "Wall-nut",
-      "category": "WALL_NUT",
-      "tags": [],
-      "cost": 50,
-      "baseHp": 4000,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "WALL_DEFENSE",
-        "raw": "سد دفاعی مقاوم برای متوقف کردن زامبی‌ها.",
-        "params": {
-          "role": "WALL"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "دریافت زره دائمی به اندازه ۴۰۰۰ جان اضافه‌تر.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "HP +1000",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 1000,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "HP +1500",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 1500,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 20.0
-    },
-    {
-      "legacyId": 45,
-      "id": "tall_nut",
-      "name": "Tall-nut",
-      "category": "WALL_NUT",
-      "tags": [],
-      "cost": 125,
-      "baseHp": 8000,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "WALL_DEFENSE",
-        "raw": "سد بلند؛ جلوگیری از پریدن زامبی‌ها از روی آن.",
-        "params": {
-          "role": "WALL"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "دریافت زره دائمی ۸۰۰۰ تایی.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "HP +2000",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 2000,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "HP +3000",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 3000,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 20.0
-    },
-    {
-      "legacyId": 46,
-      "id": "endurian",
-      "name": "Endurian",
-      "category": "WALL_NUT",
-      "tags": [],
-      "cost": 100,
-      "baseHp": 3000,
-      "damageRaw": "20",
-      "damageSpec": {
-        "raw": "20",
-        "kind": "single",
-        "totalDamage": 20,
-        "projectiles": 1,
-        "damagePerProjectile": 20
-      },
-      "baseAbility": {
-        "kind": "WALL_DEFENSE",
-        "raw": "سد دفاعی با قابلیت بازتاب دمیج به زامبی مهاجم.",
-        "params": {
-          "role": "WALL"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "دریافت زره فلزی و افزایش دمیج انعکاسی.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Reflect Dmg +5",
-          "kind": "STAT",
-          "stat": "REFLECT_DAMAGE",
-          "op": "ADD",
-          "value": 5,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "HP +1000",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 1000,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 15.0
-    },
-    {
-      "legacyId": 47,
-      "id": "garlic",
-      "name": "Garlic",
-      "category": "WALL_NUT",
-      "tags": [
-        "MOVEZOMBIES"
-      ],
-      "cost": 50,
-      "baseHp": 300,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "MOVE_ZOMBIES",
-        "raw": "با خورده شدن، زامبی را مجبور به حرکت به لاین مجاور می‌کند.",
-        "params": {
-          "effect": "MOVE_LANE"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "LANE_CLEAR",
-        "raw": "انتقال اجباری تمام زامبی‌های لاین به لاین‌های دیگر.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "HP +150",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -3s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 3,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "HP +250",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 250,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 20.0
-    },
-    {
-      "legacyId": 48,
-      "id": "sweet_potato",
-      "name": "Sweet Potato",
-      "category": "WALL_NUT",
-      "tags": [
-        "MOVEZOMBIES"
-      ],
-      "cost": 150,
-      "baseHp": 3000,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "WALL_DEFENSE",
-        "raw": "جذب‌کننده؛ زامبی‌های لاین‌های مجاور را به لاین خود می‌کشد.",
-        "params": {
-          "role": "WALL"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "جذب تمام زامبی‌های اطراف و بازیابی کامل جان.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "HP +1000",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 1000,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "HP +1500",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 1500,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 20.0
-    },
-    {
-      "legacyId": 49,
-      "id": "explode_o_nut",
-      "name": "Explode-o-nut",
-      "category": "WALL_NUT",
-      "tags": [
-        "EXPLOSIVE"
-      ],
-      "cost": 50,
-      "baseHp": 4000,
-      "damageRaw": "1800",
-      "damageSpec": {
-        "raw": "1800",
-        "kind": "single",
-        "totalDamage": 1800,
-        "projectiles": 1,
-        "damagePerProjectile": 1800
-      },
-      "baseAbility": {
-        "kind": "WALL_DEFENSE",
-        "raw": "سد دفاعی که به محض از بین رفتن جانش، انفجار مساحتی ایجاد می‌کند.",
-        "params": {
-          "role": "WALL"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "دریافت زره فلزی (هنگام نابودی زره نیز منفجر می‌شود).",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "HP +1000",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 1000,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Explode Dmg +200",
-          "kind": "STAT",
-          "stat": "EXPLODE_DAMAGE",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 20.0
-    },
-    {
-      "legacyId": 50,
-      "id": "pumpkin",
-      "name": "Pumpkin",
-      "category": "WALL_NUT",
-      "tags": [
-        "STACK"
-      ],
-      "cost": 150,
-      "baseHp": 4000,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "WALL_DEFENSE",
-        "raw": "سد دفاعی پوششی؛ روی سایر گیاهان کاشته می‌شود تا از آن‌ها محافظت کند.",
-        "params": {
-          "role": "WALL"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "دریافت زره فلزی قدرتمند.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "HP +1000",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 1000,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "HP +1500",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 1500,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 20.0
-    },
-    {
-      "legacyId": 51,
-      "id": "sun_bean",
-      "name": "Sun Bean",
-      "category": "WALL_NUT",
-      "tags": [
-        "SUN"
-      ],
-      "cost": 50,
-      "baseHp": 1000,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "SUN_PRODUCTION",
-        "raw": "مثل دیوار دفاعی عمل می‌کند و با هر ضربه 5 خورشید تولید می‌کند.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "دریافت زره فلزی قدرتمند.",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Sun Drop +5",
-          "kind": "STAT",
-          "stat": "SUN_DROP",
-          "op": "ADD",
-          "value": 5,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "HP +150",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 150,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 20.0
-    },
-    {
-      "legacyId": 52,
-      "id": "torchwood",
-      "name": "Torchwood",
-      "category": "MODIFIER",
-      "tags": [
-        "FIRE"
-      ],
-      "cost": 175,
-      "baseHp": 300,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "PIERCING_SHOT",
-        "raw": "تغییر خواص تیر؛ تبدیل تیر عبوری به آتشی (دمیج دو برابر و ذوب یخ).",
-        "params": {
-          "pierce": true,
-          "effect": "FIRE"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "WATER_CLONE",
-        "raw": "ایجاد شعله آبی (دمیج تیرها را ۳ برابر می‌کند).",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "HP +300",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 300,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "AoE on Death",
-          "kind": "SPECIAL",
-          "special": "AOE_ON_DEATH",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 53,
-      "id": "magnet_shroom",
-      "name": "Magnet-shroom",
-      "category": "HOMING",
-      "tags": [
-        "SHROOM",
-        "MAGIC"
-      ],
-      "cost": 100,
-      "baseHp": 300,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "MAGNET_DISARM",
-        "raw": "خلع سلاح؛ جذب اشیای فلزی (سطل/کلاهخود) از سر زامبی‌ها.",
-        "params": {
-          "targets": "METAL_ARMOR"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "MAGNET_PULSE",
-        "raw": "جذب چندین فلز همزمان و هضم آنها",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Range +1 Tile",
-          "kind": "STAT",
-          "stat": "RANGE",
-          "op": "ADD",
-          "value": 1,
-          "unit": "Tile",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 10.0,
-      "rechargeSeconds": 15.0
-    },
-    {
-      "legacyId": 54,
-      "id": "hypno_shroom",
-      "name": "Hypno-shroom",
-      "category": "MODIFIER",
-      "tags": [
-        "SHROOM",
-        "MAGIC"
-      ],
-      "cost": 125,
-      "baseHp": 300,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "HYPNOTIZE",
-        "raw": "با خورده شدن، زامبی مهاجم هیپنوتیزم شده و به نفع بازیکن می‌جنگد.",
-        "params": {
-          "effect": "HYPNOTIZE"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "CUSTOM",
-        "raw": "تبدیل زامبی خورنده به غول متفق (Gargantuar).",
-        "params": {
-          "manualMappingRequired": true
-        }
-      },
-      "upgrades": [
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "Zombie HP Buff",
-          "kind": "SPECIAL",
-          "special": "ZOMBIE_HP_BUFF",
-          "level": 3
-        },
-        {
-          "raw": "Zombie Dmg Buff",
-          "kind": "SPECIAL",
-          "special": "ZOMBIE_DAMAGE_BUFF",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 20.0
-    },
-    {
-      "legacyId": 55,
-      "id": "cat_tail",
-      "name": "Cat-tail",
-      "category": "HOMING",
-      "tags": [],
-      "cost": 175,
-      "baseHp": 300,
-      "damageRaw": "15",
-      "damageSpec": {
-        "raw": "15",
-        "kind": "single",
-        "totalDamage": 15,
-        "projectiles": 1,
-        "damagePerProjectile": 15
-      },
-      "baseAbility": {
-        "kind": "HOMING_SHOT",
-        "raw": "تیر هدف‌دار به سمت نزدیک‌ترین زامبی شلیک می‌کند",
-        "params": {
-          "targetPriority": "NEAREST"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "BURST_ATTACK",
-        "raw": "شلیک رگباری تیر هدف‌دار",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Dmg +10",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 10,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": 1.5,
-      "rechargeSeconds": 20.0
-    },
-    {
-      "legacyId": 56,
-      "id": "imitater",
-      "name": "Imitater",
-      "category": "MODIFIER",
-      "tags": [],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "COPY_PLANT",
-        "raw": "کپی کردن یک گیاه دیگر (امکان استفاده از دو کارت یکسان).",
-        "params": {
-          "copies": 2
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (بر اساس گیاه کپی شده)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Cooldown -2s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 2,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "plant food on enterance",
-          "kind": "SPECIAL",
-          "special": "PLANT_FOOD_ON_ENTRANCE",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 0.0
-    },
-    {
-      "legacyId": 57,
-      "id": "ice_shroom",
-      "name": "Ice-shroom",
-      "category": "EXPLOSIVE",
-      "tags": [
-        "SHROOM",
-        "ICE"
-      ],
-      "cost": 75,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "EXPLOSION",
-        "raw": "یخ زدن و توقف موقت تمامی زامبی‌های موجود در کل نقشه.",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Freeze Time +2s",
-          "kind": "STAT",
-          "stat": "FREEZE_TIME",
-          "op": "ADD",
-          "value": 2,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "Dmg +50",
-          "kind": "STAT",
-          "stat": "DAMAGE",
-          "op": "ADD",
-          "value": 50,
-          "unit": "",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 50.0
-    },
-    {
-      "legacyId": 58,
-      "id": "lily_pad",
-      "name": "Lily Pad",
-      "category": "MODIFIER",
-      "tags": [
-        "WATER",
-        "STACK"
-      ],
-      "cost": 25,
-      "baseHp": 300,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "WATER_SUPPORT",
-        "raw": "بستر کاشت سایر گیاهان روی آب (ضروری برای ساحل).",
-        "params": {
-          "surface": "WATER"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "WATER_CLONE",
-        "raw": "ایجاد چند کپی از خود روی خانه‌های خالی آب.",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Cost -25",
-          "kind": "STAT",
-          "stat": "COST",
-          "op": "SUBTRACT",
-          "value": 25,
-          "unit": "",
-          "level": 2
-        },
-        {
-          "raw": "HP +200",
-          "kind": "STAT",
-          "stat": "HP",
-          "op": "ADD",
-          "value": 200,
-          "unit": "",
-          "level": 3
-        },
-        {
-          "raw": "Cooldown -2s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 2,
-          "unit": "s",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 59,
-      "id": "hot_potato",
-      "name": "Hot Potato",
-      "category": "EXPLOSIVE",
-      "tags": [
-        "FIRE"
-      ],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "EXPLOSION",
-        "raw": "کاشت روی یخ برای آب کردن فوری آن (ضروری برای غار یخ‌زده).",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Cooldown -2s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 2,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Melt Area 3x3",
-          "kind": "UNKNOWN",
-          "level": 3
-        },
-        {
-          "raw": "Explode on Finish",
-          "kind": "SPECIAL",
-          "special": "EXPLODE_ON_FINISH",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 5.0
-    },
-    {
-      "legacyId": 60,
-      "id": "grave_buster",
-      "name": "Grave Buster",
-      "category": "EXPLOSIVE",
-      "tags": [],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "Insta-kill",
-      "damageSpec": {
-        "raw": "Insta-kill",
-        "kind": "instantKill",
-        "projectiles": 1
-      },
-      "baseAbility": {
-        "kind": "EXPLOSION",
-        "raw": "از بین بردن قبرها. (ضروری برای مراحل مصر باستان و قرون تاریک).",
-        "params": {}
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Eat Time -1s",
-          "kind": "STAT",
-          "stat": "EAT_TIME",
-          "op": "SUBTRACT",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -2s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 2,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "Explode on Finish",
-          "kind": "SPECIAL",
-          "special": "EXPLODE_ON_FINISH",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 10.0
-    },
-    {
-      "legacyId": 61,
-      "id": "enlighten_mint",
-      "name": "Enlighten-mint",
-      "category": "SUN_PRODUCER",
-      "tags": [],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "MINT_FAMILY_BUFF",
-        "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
-        "params": {
-          "family": "MINT"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Duration +1s",
-          "kind": "STAT",
-          "stat": "DURATION",
-          "op": "ADD",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "reset family cooldowns",
-          "kind": "SPECIAL",
-          "special": "RESET_FAMILY_COOLDOWNS",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 85.0
-    },
-    {
-      "legacyId": 62,
-      "id": "appease_mint",
-      "name": "Appease-mint",
-      "category": "SHOOTER",
-      "tags": [],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "MINT_FAMILY_BUFF",
-        "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
-        "params": {
-          "family": "MINT"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Duration +1s",
-          "kind": "STAT",
-          "stat": "DURATION",
-          "op": "ADD",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "reset family cooldowns",
-          "kind": "SPECIAL",
-          "special": "RESET_FAMILY_COOLDOWNS",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 85.0
-    },
-    {
-      "legacyId": 63,
-      "id": "arma_mint",
-      "name": "Arma-mint",
-      "category": "LOBBER",
-      "tags": [],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "MINT_FAMILY_BUFF",
-        "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
-        "params": {
-          "family": "MINT"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Duration +1s",
-          "kind": "STAT",
-          "stat": "DURATION",
-          "op": "ADD",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "reset family cooldowns",
-          "kind": "SPECIAL",
-          "special": "RESET_FAMILY_COOLDOWNS",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 85.0
-    },
-    {
-      "legacyId": 64,
-      "id": "bombard_mint",
-      "name": "Bombard-mint",
-      "category": "EXPLOSIVE",
-      "tags": [],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "MINT_FAMILY_BUFF",
-        "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
-        "params": {
-          "family": "MINT"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Duration +1s",
-          "kind": "STAT",
-          "stat": "DURATION",
-          "op": "ADD",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "reset family cooldowns",
-          "kind": "SPECIAL",
-          "special": "RESET_FAMILY_COOLDOWNS",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 85.0
-    },
-    {
-      "legacyId": 65,
-      "id": "enforce_mint",
-      "name": "Enforce-mint",
-      "category": "MELEE",
-      "tags": [],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "MINT_FAMILY_BUFF",
-        "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
-        "params": {
-          "family": "MINT"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Duration +1s",
-          "kind": "STAT",
-          "stat": "DURATION",
-          "op": "ADD",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "reset family cooldowns",
-          "kind": "SPECIAL",
-          "special": "RESET_FAMILY_COOLDOWNS",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 85.0
-    },
-    {
-      "legacyId": 66,
-      "id": "reinforce_mint",
-      "name": "Reinforce-mint",
-      "category": "WALL_NUT",
-      "tags": [],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "MINT_FAMILY_BUFF",
-        "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
-        "params": {
-          "family": "MINT"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Duration +1s",
-          "kind": "STAT",
-          "stat": "DURATION",
-          "op": "ADD",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "reset family cooldowns",
-          "kind": "SPECIAL",
-          "special": "RESET_FAMILY_COOLDOWNS",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 85.0
-    },
-    {
-      "legacyId": 67,
-      "id": "enchant_mint",
-      "name": "Enchant-mint",
-      "category": "MODIFIER",
-      "tags": [],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "MINT_FAMILY_BUFF",
-        "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
-        "params": {
-          "family": "MINT"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Duration +1s",
-          "kind": "STAT",
-          "stat": "DURATION",
-          "op": "ADD",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "reset family cooldowns",
-          "kind": "SPECIAL",
-          "special": "RESET_FAMILY_COOLDOWNS",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 85.0
-    },
-    {
-      "legacyId": 68,
-      "id": "pierce_mint",
-      "name": "Pierce-mint",
-      "category": "STRIKE_THROUGH",
-      "tags": [],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "MINT_FAMILY_BUFF",
-        "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
-        "params": {
-          "family": "MINT"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Duration +1s",
-          "kind": "STAT",
-          "stat": "DURATION",
-          "op": "ADD",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "reset family cooldowns",
-          "kind": "SPECIAL",
-          "special": "RESET_FAMILY_COOLDOWNS",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 85.0
-    },
-    {
-      "legacyId": 69,
-      "id": "cattail_mint",
-      "name": "catTail-mint",
-      "category": "HOMING",
-      "tags": [],
-      "cost": 0,
-      "baseHp": 0,
-      "damageRaw": "0",
-      "damageSpec": {
-        "raw": "0",
-        "kind": "single",
-        "totalDamage": 0,
-        "projectiles": 1,
-        "damagePerProjectile": 0
-      },
-      "baseAbility": {
-        "kind": "MINT_FAMILY_BUFF",
-        "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
-        "params": {
-          "family": "MINT"
-        }
-      },
-      "plantFoodEffect": {
-        "kind": "NONE",
-        "raw": "ندارد (مصرفی آنی)",
-        "params": {}
-      },
-      "upgrades": [
-        {
-          "raw": "Duration +1s",
-          "kind": "STAT",
-          "stat": "DURATION",
-          "op": "ADD",
-          "value": 1,
-          "unit": "s",
-          "level": 2
-        },
-        {
-          "raw": "Cooldown -5s",
-          "kind": "STAT",
-          "stat": "RECHARGE",
-          "op": "SUBTRACT",
-          "value": 5,
-          "unit": "s",
-          "level": 3
-        },
-        {
-          "raw": "reset family cooldowns",
-          "kind": "SPECIAL",
-          "special": "RESET_FAMILY_COOLDOWNS",
-          "level": 4
-        }
-      ],
-      "actionIntervalSeconds": null,
-      "rechargeSeconds": 85.0
+ "schemaVersion": 6,
+ "source": {
+  "workbook": "plants(1).xlsx",
+  "sheet": "Plants",
+  "rows": 69
+ },
+ "notes": [
+  "raw text is preserved for display",
+  "kind/params are for Java behavior resolution",
+  "use Java to execute behaviors; do not try to infer everything from text at runtime",
+  "manualMappingRequired means the value is descriptive, but Java must decide the exact mechanics"
+ ],
+ "plants": [
+  {
+   "legacyId": 1,
+   "id": "sunflower",
+   "name": "Sunflower",
+   "category": "SUN_PRODUCER",
+   "tags": [
+    "DAY"
+   ],
+   "cost": 50,
+   "baseHp": 300,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "SUN_PRODUCTION",
+    "raw": "تولید ۵۰ خورشید هر ۲۴ ثانیه.",
+    "params": {
+     "sunAmount": 50,
+     "intervalSeconds": 24
     }
-  ]
+   },
+   "plantFoodEffect": {
+    "kind": "INSTANT_SUN",
+    "raw": "تولید فوری ۱۵۰ خورشید.",
+    "params": {
+     "sunAmount": 150
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Prod. Time -2s",
+     "kind": "STAT",
+     "stat": "PRODUCTION_TIME",
+     "op": "SUBTRACT",
+     "value": 2,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "HP +150",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Double Sun Chance",
+     "kind": "SPECIAL",
+     "special": "DOUBLE_SUN_CHANCE",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 24.0,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 2,
+   "id": "twin_sunflower",
+   "name": "Twin Sunflower",
+   "category": "SUN_PRODUCER",
+   "tags": [
+    "DAY"
+   ],
+   "cost": 125,
+   "baseHp": 300,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "SUN_PRODUCTION",
+    "raw": "تولید ۱۰۰ خورشید در هر دور.",
+    "params": {
+     "sunAmount": 100
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "INSTANT_SUN",
+    "raw": "تولید فوری ۲۵۰ خورشید.",
+    "params": {
+     "sunAmount": 250
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Prod. Time -2s",
+     "kind": "STAT",
+     "stat": "PRODUCTION_TIME",
+     "op": "SUBTRACT",
+     "value": 2,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "HP +150",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 24.0,
+   "rechargeSeconds": 15.0
+  },
+  {
+   "legacyId": 3,
+   "id": "sun_shroom",
+   "name": "Sun-shroom",
+   "category": "SUN_PRODUCER",
+   "tags": [
+    "SHROOM",
+    "WRAMP_UP",
+    "NIGHT"
+   ],
+   "cost": 25,
+   "baseHp": 300,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "GROWING_SUN",
+    "raw": "رشد در ۳ مرحله و تولید خورشید بیشتر(۲۵/۵۰/۷۵). To Stg2: 24s | To Stg3: 72s",
+    "params": {
+     "sunAmounts": [
+      25,
+      50,
+      75
+     ],
+     "growthStageTimes": [
+      24,
+      72
+     ]
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "INSTANT_SUN",
+    "raw": "رشد آنی به سایز آخر و تولید ۲۲۵ خورشید.",
+    "params": {
+     "sunAmount": 225
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Grow Time -5s",
+     "kind": "STAT",
+     "stat": "GROWTH_TIME",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "HP +150",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Double Sun Chance",
+     "kind": "SPECIAL",
+     "special": "DOUBLE_SUN_CHANCE",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 24.0,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 4,
+   "id": "primal_sunflower",
+   "name": "Primal Sunflower",
+   "category": "SUN_PRODUCER",
+   "tags": [],
+   "cost": 75,
+   "baseHp": 300,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "SUN_PRODUCTION",
+    "raw": "تولید خورشید بزرگ ۷۵ تایی از ابتدا.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "INSTANT_SUN",
+    "raw": "تولید فوری ۲۲۵ خورشید.",
+    "params": {
+     "sunAmount": 225
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Prod. Time -2s",
+     "kind": "STAT",
+     "stat": "PRODUCTION_TIME",
+     "op": "SUBTRACT",
+     "value": 2,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "HP +150",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 24.0,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 5,
+   "id": "gold_bloom",
+   "name": "Gold Bloom",
+   "category": "SUN_PRODUCER",
+   "tags": [],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "INSTANT_SUN",
+    "raw": "تولید فوری و یک‌باره مقدار زیادی خورشید و سپس ناپدید شدن.(۳۷۵ خورشید)",
+    "params": {
+     "sunAmount": 375,
+     "instant": true
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Sun +50",
+     "kind": "STAT",
+     "stat": "SUN_AMOUNT",
+     "op": "ADD",
+     "value": 50,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 0.0,
+   "rechargeSeconds": 75.0
+  },
+  {
+   "legacyId": 6,
+   "id": "peashooter",
+   "name": "Peashooter",
+   "category": "SHOOTER",
+   "tags": [
+    "PEA"
+   ],
+   "cost": 100,
+   "baseHp": 300,
+   "damageRaw": "20",
+   "damageSpec": {
+    "raw": "20",
+    "kind": "single",
+    "totalDamage": 20,
+    "projectiles": 1,
+    "damagePerProjectile": 20
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک تیر مستقیم.",
+    "params": {
+     "projectileType": "PEA"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک رگباری سریع برای چند ثانیه.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "HP +150",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 7,
+   "id": "repeater",
+   "name": "Repeater",
+   "category": "SHOOTER",
+   "tags": [
+    "PEA"
+   ],
+   "cost": 200,
+   "baseHp": 300,
+   "damageRaw": "20x2",
+   "damageSpec": {
+    "raw": "20x2",
+    "kind": "multiProjectile",
+    "totalDamage": 40,
+    "projectiles": 2,
+    "damagePerProjectile": 20
+   },
+   "baseAbility": {
+    "kind": "BURST_SHOT",
+    "raw": "شلیک ۲ تیر مستقیم متوالی.",
+    "params": {
+     "burst": true,
+     "projectileType": "PEA"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک رگباری سنگین + ۱ نخود غول‌پیکر (دمیج 20 برابر).",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 8,
+   "id": "threepeater",
+   "name": "Threepeater",
+   "category": "SHOOTER",
+   "tags": [
+    "PEA"
+   ],
+   "cost": 300,
+   "baseHp": 300,
+   "damageRaw": "20",
+   "damageSpec": {
+    "raw": "20",
+    "kind": "single",
+    "totalDamage": 20,
+    "projectiles": 1,
+    "damagePerProjectile": 20
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک همزمان تیر در ۳ لاین موازی.",
+    "params": {
+     "targetScope": "LANE"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک رگباری بادبزنی در تمام لاین‌ها.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 9,
+   "id": "snow_pea",
+   "name": "Snow Pea",
+   "category": "SHOOTER",
+   "tags": [
+    "ICE",
+    "PEA"
+   ],
+   "cost": 150,
+   "baseHp": 300,
+   "damageRaw": "20",
+   "damageSpec": {
+    "raw": "20",
+    "kind": "single",
+    "totalDamage": 20,
+    "projectiles": 1,
+    "damagePerProjectile": 20
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک تیر مستقیم کندکننده سرعت.",
+    "params": {
+     "projectileType": "PEA"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "FREEZE_BURST",
+    "raw": "انجماد لاین و شلیک رگباری یخی.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Chill Time +2s",
+     "kind": "STAT",
+     "stat": "CHILL_TIME",
+     "op": "ADD",
+     "value": 2,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 10,
+   "id": "rotobaga",
+   "name": "Rotobaga",
+   "category": "SHOOTER",
+   "tags": [],
+   "cost": 150,
+   "baseHp": 300,
+   "damageRaw": "10x3",
+   "damageSpec": {
+    "raw": "10x3",
+    "kind": "multiProjectile",
+    "totalDamage": 30,
+    "projectiles": 3,
+    "damagePerProjectile": 10
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک در ۴ جهت اریب.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک رگباری در هر ۴ جهت اریب.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "HP +150",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 11,
+   "id": "pea_pod",
+   "name": "Pea Pod",
+   "category": "SHOOTER",
+   "tags": [
+    "PEA",
+    "STACK"
+   ],
+   "cost": 125,
+   "baseHp": 300,
+   "damageRaw": "20/40/60/80/100",
+   "damageSpec": {
+    "raw": "20/40/60/80/100",
+    "kind": "tiered",
+    "tiers": [
+     20,
+     40,
+     60,
+     80,
+     100
+    ],
+    "totalDamage": 300,
+    "projectiles": 5
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک تیر مستقیم به ازای هر سر کاشته شده روی هم (تا ۵ سر).",
+    "params": {
+     "projectileType": "PEA"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک یک نخود غول‌پیکر به ازای هر سر(دمیج 20 برابر).",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 12,
+   "id": "split_pea",
+   "name": "Split Pea",
+   "category": "SHOOTER",
+   "tags": [
+    "PEA"
+   ],
+   "cost": 125,
+   "baseHp": 300,
+   "damageRaw": "20",
+   "damageSpec": {
+    "raw": "20",
+    "kind": "single",
+    "totalDamage": 20,
+    "projectiles": 1,
+    "damagePerProjectile": 20
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک ۱ تیر به جلو و ۲ تیر به عقب.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک رگباری همزمان از جلو و عقب.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 13,
+   "id": "citron",
+   "name": "Citron",
+   "category": "SHOOTER",
+   "tags": [
+    "CHARGE"
+   ],
+   "cost": 350,
+   "baseHp": 300,
+   "damageRaw": "800",
+   "damageSpec": {
+    "raw": "800",
+    "kind": "single",
+    "totalDamage": 800,
+    "projectiles": 1,
+    "damagePerProjectile": 800
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک تیر سنگین مستقیم (نیازمند زمان شارژ).",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "PLASMA_BURST",
+    "raw": "شلیک توپ پلاسمایی پاکسازی‌کننده کل لاین.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Charge Time -1s",
+     "kind": "STAT",
+     "stat": "CHARGE_TIME",
+     "op": "SUBTRACT",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +150",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -50",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 50,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 9.0,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 14,
+   "id": "caulipower",
+   "name": "Caulipower",
+   "category": "HOMING",
+   "tags": [
+    "MAGIC",
+    "CHARGE"
+   ],
+   "cost": 250,
+   "baseHp": 300,
+   "damageRaw": "Insta-kill",
+   "damageSpec": {
+    "raw": "Insta-kill",
+    "kind": "instantKill",
+    "projectiles": 1
+   },
+   "baseAbility": {
+    "kind": "HYPNOTIZE",
+    "raw": "شلیک تیر جادویی (جهت رندوم، عبور از موانع، هیپنوتیزم‌کننده).",
+    "params": {
+     "effect": "HYPNOTIZE"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "HYPNOTIZE",
+    "raw": "هیپنوتیزم کردن چند زامبی تصادفی در باغچه.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Cooldown -2s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 2,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "HP +150",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -50",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 50,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 12.0,
+   "rechargeSeconds": 15.0
+  },
+  {
+   "legacyId": 15,
+   "id": "electric_blueberry",
+   "name": "Electric Blueberry",
+   "category": "HOMING",
+   "tags": [
+    "CHARGE"
+   ],
+   "cost": 150,
+   "baseHp": 300,
+   "damageRaw": "5000",
+   "damageSpec": {
+    "raw": "5000",
+    "kind": "single",
+    "totalDamage": 5000,
+    "projectiles": 1,
+    "damagePerProjectile": 5000
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک رعدوبرق (جهت رندوم، نابودی کامل یک زامبی).",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "نابودی کامل ۳ زامبی تصادفی.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Cooldown -2s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 2,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Target Priority Up",
+     "kind": "SPECIAL",
+     "special": "TARGET_PRIORITY_UP",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 12.0,
+   "rechargeSeconds": 15.0
+  },
+  {
+   "legacyId": 16,
+   "id": "bowling_bulb",
+   "name": "Bowling Bulb",
+   "category": "SHOOTER",
+   "tags": [
+    "CHARGE"
+   ],
+   "cost": 200,
+   "baseHp": 300,
+   "damageRaw": "40/120/180",
+   "damageSpec": {
+    "raw": "40/120/180",
+    "kind": "tiered",
+    "tiers": [
+     40,
+     120,
+     180
+    ],
+    "totalDamage": 340,
+    "projectiles": 3
+   },
+   "baseAbility": {
+    "kind": "BOUNCE_SHOT",
+    "raw": "شلیک 3 نوع پیاز که بین لاین‌ها کمانه می‌کند (مثل wall nut bowling). تاخیر هر یک Cyan: 2s | Blue: 5s | Orange: 10s",
+    "params": {
+     "targetScope": "LANE",
+     "ricochet": true
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک ۳ پیاز انفجاری بزرگ که کمانه می‌کنند.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Regen -1s",
+     "kind": "STAT",
+     "stat": "REGEN",
+     "op": "SUBTRACT",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +15",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 15,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 2.0,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 17,
+   "id": "cactus",
+   "name": "Cactus",
+   "category": "STRIKE_THROUGH",
+   "tags": [],
+   "cost": 175,
+   "baseHp": 300,
+   "damageRaw": "30",
+   "damageSpec": {
+    "raw": "30",
+    "kind": "single",
+    "totalDamage": 30,
+    "projectiles": 1,
+    "damagePerProjectile": 30
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک خار مستقیم (عبور از ۳ زامبی).",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "تیغ‌های برقی با دمیج بالا و نفوذ نامحدود.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Pierce +1",
+     "kind": "STAT",
+     "stat": "PIERCE",
+     "op": "ADD",
+     "value": 1,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 18,
+   "id": "fire_peashooter",
+   "name": "Fire Peashooter",
+   "category": "SHOOTER",
+   "tags": [
+    "FIRE",
+    "PEA"
+   ],
+   "cost": 175,
+   "baseHp": 300,
+   "damageRaw": "40",
+   "damageSpec": {
+    "raw": "40",
+    "kind": "single",
+    "totalDamage": 40,
+    "projectiles": 1,
+    "damagePerProjectile": 40
+   },
+   "baseAbility": {
+    "kind": "FIRE_SHOT",
+    "raw": "شلیک تیر مستقیم آتشی (دمیج ۲ برابر).",
+    "params": {
+     "effect": "FIRE",
+     "projectileType": "PEA"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "FIRE_BURST",
+    "raw": "شلیک رگباری آتشین در کل لاین.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 19,
+   "id": "starfruit",
+   "name": "Starfruit",
+   "category": "SHOOTER",
+   "tags": [],
+   "cost": 150,
+   "baseHp": 300,
+   "damageRaw": "20",
+   "damageSpec": {
+    "raw": "20",
+    "kind": "single",
+    "totalDamage": 20,
+    "projectiles": 1,
+    "damagePerProjectile": 20
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک در ۵ جهت ستاره‌ای شامل عقب.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک رگباری ستاره در تمام جهات.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Atk Speed +10%",
+     "kind": "STAT",
+     "stat": "ATTACK_SPEED",
+     "op": "ADD",
+     "value": 10,
+     "unit": "%",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 20,
+   "id": "goo_peashooter",
+   "name": "Goo Peashooter",
+   "category": "SHOOTER",
+   "tags": [
+    "POISON"
+   ],
+   "cost": 125,
+   "baseHp": 300,
+   "damageRaw": "20",
+   "damageSpec": {
+    "raw": "20",
+    "kind": "single",
+    "totalDamage": 20,
+    "projectiles": 1,
+    "damagePerProjectile": 20
+   },
+   "baseAbility": {
+    "kind": "WALL_DEFENSE",
+    "raw": "شلیک تیر مستقیم (نادیده گرفتن زره + آسیب مستمر).",
+    "params": {
+     "role": "WALL"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک رگباری سمی که زامبی‌ها را درجا مسموم می‌کند.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg/Tick +5",
+     "kind": "STAT",
+     "stat": "DAMAGE_PER_TICK",
+     "op": "ADD",
+     "value": 5,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "HP +150",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 21,
+   "id": "mega_gatling_pea",
+   "name": "Mega Gatling Pea",
+   "category": "SHOOTER",
+   "tags": [
+    "PEA"
+   ],
+   "cost": 400,
+   "baseHp": 300,
+   "damageRaw": "20x4",
+   "damageSpec": {
+    "raw": "20x4",
+    "kind": "multiProjectile",
+    "totalDamage": 80,
+    "projectiles": 4,
+    "damagePerProjectile": 20
+   },
+   "baseAbility": {
+    "kind": "BURST_SHOT",
+    "raw": "شلیک ۴ تیر مستقیم متوالی با سرعت بسیار بالا.",
+    "params": {
+     "burst": true,
+     "projectileType": "PEA"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک رگباری عظیم و طولانی در لاین به همراه 4 تیر غول‌پیکر.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Plant Food Chance +5%",
+     "kind": "STAT",
+     "stat": "PLANT_FOOD_CHANCE",
+     "op": "ADD",
+     "value": 5,
+     "unit": "%",
+     "level": 3
+    },
+    {
+     "raw": "Cost -50",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 50,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 22,
+   "id": "sea_shroom",
+   "name": "Sea-shroom",
+   "category": "SHOOTER",
+   "tags": [
+    "SHROOM",
+    "WATER"
+   ],
+   "cost": 0,
+   "baseHp": 300,
+   "damageRaw": "20",
+   "damageSpec": {
+    "raw": "20",
+    "kind": "single",
+    "totalDamage": 20,
+    "projectiles": 1,
+    "damagePerProjectile": 20
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک رگباری و ریست شدن طول عمر تمام Sea-shroomها.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Range +1 Tile",
+     "kind": "STAT",
+     "stat": "RANGE",
+     "op": "ADD",
+     "value": 1,
+     "unit": "Tile",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +5",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 5,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Lifespan +10s",
+     "kind": "STAT",
+     "stat": "LIFESPAN",
+     "op": "ADD",
+     "value": 10,
+     "unit": "s",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 15.0
+  },
+  {
+   "legacyId": 23,
+   "id": "puff_shroom",
+   "name": "Puff-shroom",
+   "category": "SHOOTER",
+   "tags": [
+    "SHROOM"
+   ],
+   "cost": 0,
+   "baseHp": 300,
+   "damageRaw": "20",
+   "damageSpec": {
+    "raw": "20",
+    "kind": "single",
+    "totalDamage": 20,
+    "projectiles": 1,
+    "damagePerProjectile": 20
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک رگباری و ریست شدن طول عمر تمامی Puff-shroomها.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Lifespan +10s",
+     "kind": "STAT",
+     "stat": "LIFESPAN",
+     "op": "ADD",
+     "value": 10,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Range +1 Tile",
+     "kind": "STAT",
+     "stat": "RANGE",
+     "op": "ADD",
+     "value": 1,
+     "unit": "Tile",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 24,
+   "id": "fume_shroom",
+   "name": "Fume-shroom",
+   "category": "STRIKE_THROUGH",
+   "tags": [
+    "SHROOM"
+   ],
+   "cost": 125,
+   "baseHp": 300,
+   "damageRaw": "20",
+   "damageSpec": {
+    "raw": "20",
+    "kind": "single",
+    "totalDamage": 20,
+    "projectiles": 1,
+    "damagePerProjectile": 20
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک دود با برد متوسط که از زامبی‌ها رد می‌شود.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "پرتاب توده دود عظیم که زامبی‌ها را به عقب می‌راند.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Range +1 Tile",
+     "kind": "STAT",
+     "stat": "RANGE",
+     "op": "ADD",
+     "value": 1,
+     "unit": "Tile",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 25,
+   "id": "cabbage_pult",
+   "name": "Cabbage-pult",
+   "category": "LOBBER",
+   "tags": [],
+   "cost": 100,
+   "baseHp": 300,
+   "damageRaw": "40",
+   "damageSpec": {
+    "raw": "40",
+    "kind": "single",
+    "totalDamage": 40,
+    "projectiles": 1,
+    "damagePerProjectile": 40
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک هوایی از روی موانع.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "پرتاب کلم به چند زامبی تصادفی.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Atk Speed +15%",
+     "kind": "STAT",
+     "stat": "ATTACK_SPEED",
+     "op": "ADD",
+     "value": 15,
+     "unit": "%",
+     "level": 3
+    },
+    {
+     "raw": "HP +150",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 2.9,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 26,
+   "id": "kernel_pult",
+   "name": "Kernel-pult",
+   "category": "LOBBER",
+   "tags": [],
+   "cost": 100,
+   "baseHp": 300,
+   "damageRaw": "20/40",
+   "damageSpec": {
+    "raw": "20/40",
+    "kind": "tiered",
+    "tiers": [
+     20,
+     40
+    ],
+    "totalDamage": 60,
+    "projectiles": 2
+   },
+   "baseAbility": {
+    "kind": "LOBBER_KERNEL",
+    "raw": "شلیک دانه ذرت (آسیب کم) یا کره (توقف موقت زامبی).",
+    "params": {
+     "projectileType": "KERNEL"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "EXPLOSION",
+    "raw": "پرتاب کره به سر تمامی زامبی‌های زمین.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Butter +5%",
+     "kind": "STAT",
+     "stat": "BUTTER",
+     "op": "ADD",
+     "value": 5,
+     "unit": "%",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "HP +150",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 2.9,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 27,
+   "id": "melon_pult",
+   "name": "Melon-pult",
+   "category": "LOBBER",
+   "tags": [
+    "AOE"
+   ],
+   "cost": 325,
+   "baseHp": 300,
+   "damageRaw": "80",
+   "damageSpec": {
+    "raw": "80",
+    "kind": "single",
+    "totalDamage": 80,
+    "projectiles": 1,
+    "damagePerProjectile": 80
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک هوایی سنگین با آسیب مساحتی.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "پرتاب هندوانه غول‌پیکر به زامبی‌های تصادفی.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "AoE Dmg +15",
+     "kind": "STAT",
+     "stat": "AOE_DAMAGE",
+     "op": "ADD",
+     "value": 15,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Dmg +30",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 30,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 2.9,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 28,
+   "id": "winter_melon",
+   "name": "Winter Melon",
+   "category": "LOBBER",
+   "tags": [
+    "ICE",
+    "AOE"
+   ],
+   "cost": 500,
+   "baseHp": 300,
+   "damageRaw": "80",
+   "damageSpec": {
+    "raw": "80",
+    "kind": "single",
+    "totalDamage": 80,
+    "projectiles": 1,
+    "damagePerProjectile": 80
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک هوایی سنگین با آسیب مساحتی (کندکننده سرعت).",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "پرتاب هندوانه یخی به زامبی‌های تصادفی.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Cost -50",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 50,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "AoE Dmg +15",
+     "kind": "STAT",
+     "stat": "AOE_DAMAGE",
+     "op": "ADD",
+     "value": 15,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 2.9,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 29,
+   "id": "pepper_pult",
+   "name": "Pepper-pult",
+   "category": "LOBBER",
+   "tags": [
+    "FIRE",
+    "AOE"
+   ],
+   "cost": 200,
+   "baseHp": 300,
+   "damageRaw": "50",
+   "damageSpec": {
+    "raw": "50",
+    "kind": "single",
+    "totalDamage": 50,
+    "projectiles": 1,
+    "damagePerProjectile": 50
+   },
+   "baseAbility": {
+    "kind": "DIRECT_SHOT",
+    "raw": "شلیک هوایی با آسیب مساحتی (گرم‌کننده محیط اطراف).",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "پرتاب فلفل‌های بزرگ به ۳ زامبی تصادفی.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +15",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 15,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Warmth Radius +1",
+     "kind": "STAT",
+     "stat": "WARMTH_RADIUS",
+     "op": "ADD",
+     "value": 1,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 2.9,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 30,
+   "id": "potato_mine",
+   "name": "Potato Mine",
+   "category": "EXPLOSIVE",
+   "tags": [
+    "TRAP",
+    "CHARGE"
+   ],
+   "cost": 25,
+   "baseHp": 300,
+   "damageRaw": "1800",
+   "damageSpec": {
+    "raw": "1800",
+    "kind": "single",
+    "totalDamage": 1800,
+    "projectiles": 1,
+    "damagePerProjectile": 1800
+   },
+   "baseAbility": {
+    "kind": "EXPLOSION",
+    "raw": "مسلح شدن با تاخیر ۱۵ ثانیه؛ انفجار هنگام تماس.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "EXPLOSION",
+    "raw": "مسلح شدن آنی و پرتاب ۲ مین کلون دیگر.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Arm Time -3s",
+     "kind": "STAT",
+     "stat": "ARM_TIME",
+     "op": "SUBTRACT",
+     "value": 3,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "Dmg +600",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 600,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 25.0
+  },
+  {
+   "legacyId": 31,
+   "id": "primal_potato_mine",
+   "name": "Primal Potato Mine",
+   "category": "EXPLOSIVE",
+   "tags": [
+    "TRAP",
+    "CHARGE"
+   ],
+   "cost": 50,
+   "baseHp": 300,
+   "damageRaw": "2400",
+   "damageSpec": {
+    "raw": "2400",
+    "kind": "single",
+    "totalDamage": 2400,
+    "projectiles": 1,
+    "damagePerProjectile": 2400
+   },
+   "baseAbility": {
+    "kind": "EXPLOSION",
+    "raw": "مسلح شدن سریع‌تر ۵ ثانیه ای و انفجار مساحتی ۳x۳.",
+    "params": {
+     "radius": "3x3"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "EXPLOSION",
+    "raw": "مسلح شدن آنی و پرتاب ۲ مین به نقاط دیگر.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Arm Time -1s",
+     "kind": "STAT",
+     "stat": "ARM_TIME",
+     "op": "SUBTRACT",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -3s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 3,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "Dmg +400",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 400,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 32,
+   "id": "cherry_bomb",
+   "name": "Cherry Bomb",
+   "category": "EXPLOSIVE",
+   "tags": [],
+   "cost": 150,
+   "baseHp": 0,
+   "damageRaw": "1800",
+   "damageSpec": {
+    "raw": "1800",
+    "kind": "single",
+    "totalDamage": 1800,
+    "projectiles": 1,
+    "damagePerProjectile": 1800
+   },
+   "baseAbility": {
+    "kind": "EXPLOSION",
+    "raw": "انفجار فوری مساحت ۳x۳.",
+    "params": {
+     "radius": "3x3"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +600",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 600,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 35.0
+  },
+  {
+   "legacyId": 33,
+   "id": "squash",
+   "name": "Squash",
+   "category": "EXPLOSIVE",
+   "tags": [
+    "TRAP"
+   ],
+   "cost": 50,
+   "baseHp": 300,
+   "damageRaw": "1800",
+   "damageSpec": {
+    "raw": "1800",
+    "kind": "single",
+    "totalDamage": 1800,
+    "projectiles": 1,
+    "damagePerProjectile": 1800
+   },
+   "baseAbility": {
+    "kind": "EXPLOSION",
+    "raw": "له کردن اولین زامبی مجاور.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "EXPLOSION",
+    "raw": "له کردن ۲ زامبی تصادفی در سطح زمین.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Cooldown -3s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 3,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +600",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 600,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Can crush 2x",
+     "kind": "SPECIAL",
+     "special": "CAN_CRUSH_2X",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 20.0
+  },
+  {
+   "legacyId": 34,
+   "id": "grapeshot",
+   "name": "Grapeshot",
+   "category": "EXPLOSIVE",
+   "tags": [],
+   "cost": 150,
+   "baseHp": 0,
+   "damageRaw": "1800",
+   "damageSpec": {
+    "raw": "1800",
+    "kind": "single",
+    "totalDamage": 1800,
+    "projectiles": 1,
+    "damagePerProjectile": 1800
+   },
+   "baseAbility": {
+    "kind": "EXPLOSION",
+    "raw": "انفجار مساحتی ۳x۳ و پرتاب حبه‌های کمانه‌کننده که پس از ۵ ثانیه نابود می‌شوند.",
+    "params": {
+     "radius": "3x3"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +600",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 600,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Bounces +1",
+     "kind": "STAT",
+     "stat": "BOUNCES",
+     "op": "ADD",
+     "value": 1,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 35.0
+  },
+  {
+   "legacyId": 35,
+   "id": "jalapeno",
+   "name": "Jalapeno",
+   "category": "EXPLOSIVE",
+   "tags": [
+    "FIRE"
+   ],
+   "cost": 125,
+   "baseHp": 0,
+   "damageRaw": "1800",
+   "damageSpec": {
+    "raw": "1800",
+    "kind": "single",
+    "totalDamage": 1800,
+    "projectiles": 1,
+    "damagePerProjectile": 1800
+   },
+   "baseAbility": {
+    "kind": "EXPLOSION",
+    "raw": "آتش زدن کل زامبی‌های یک لاین به صورت آنی (ذوب یخ).",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +600",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 600,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 35.0
+  },
+  {
+   "legacyId": 36,
+   "id": "doom_shroom",
+   "name": "Doom-shroom",
+   "category": "EXPLOSIVE",
+   "tags": [
+    "SHROOM"
+   ],
+   "cost": 125,
+   "baseHp": 0,
+   "damageRaw": "1800",
+   "damageSpec": {
+    "raw": "1800",
+    "kind": "single",
+    "totalDamage": 1800,
+    "projectiles": 1,
+    "damagePerProjectile": 1800
+   },
+   "baseAbility": {
+    "kind": "EXPLOSION",
+    "raw": "انفجار مهیب در کل باغچه و ایجاد یک گودال غیرقابل کشت.",
+    "params": {
+     "radius": "BOARD",
+     "createsPit": true,
+     "scope": "GLOBAL"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +800",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 800,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -50",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 50,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 15.0
+  },
+  {
+   "legacyId": 37,
+   "id": "tangle_kelp",
+   "name": "Tangle Kelp",
+   "category": "EXPLOSIVE",
+   "tags": [
+    "TRAP",
+    "WATER"
+   ],
+   "cost": 25,
+   "baseHp": 300,
+   "damageRaw": "Insta-kill",
+   "damageSpec": {
+    "raw": "Insta-kill",
+    "kind": "instantKill",
+    "projectiles": 1
+   },
+   "baseAbility": {
+    "kind": "EXPLOSION",
+    "raw": "کشیدن اولین زامبی آبی به زیر آب و نابودی آن (مخصوص ساحل).",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "WATER_CLONE",
+    "raw": "کشیدن چند زامبی تصادفی در آب به زیر آب.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Targets +1",
+     "kind": "STAT",
+     "stat": "TARGETS",
+     "op": "ADD",
+     "value": 1,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 15.0
+  },
+  {
+   "legacyId": 38,
+   "id": "iceberg_lettuce",
+   "name": "Iceberg Lettuce",
+   "category": "EXPLOSIVE",
+   "tags": [
+    "TRAP",
+    "ICE"
+   ],
+   "cost": 0,
+   "baseHp": 300,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "EXPLOSION",
+    "raw": "یخ زدن اولین زامبی که روی آن پا بگذارد.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "یخ زدن تمامی زامبی‌های موجود در تصویر.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Cooldown -2s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 2,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Freeze Time +2s",
+     "kind": "STAT",
+     "stat": "FREEZE_TIME",
+     "op": "ADD",
+     "value": 2,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "Cost -0",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 0,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 20.0
+  },
+  {
+   "legacyId": 39,
+   "id": "bonk_choy",
+   "name": "Bonk Choy",
+   "category": "MELEE",
+   "tags": [],
+   "cost": 150,
+   "baseHp": 300,
+   "damageRaw": "15",
+   "damageSpec": {
+    "raw": "15",
+    "kind": "single",
+    "totalDamage": 15,
+    "projectiles": 1,
+    "damagePerProjectile": 15
+   },
+   "baseAbility": {
+    "kind": "MELEE_EAT",
+    "raw": "ضربه فیزیکی به خانه‌های جلو و عقب.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "مشت زدن رگباری به شعاع ۳x۳ اطراف خود.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +5",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 5,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Atk Speed +10%",
+     "kind": "STAT",
+     "stat": "ATTACK_SPEED",
+     "op": "ADD",
+     "value": 10,
+     "unit": "%",
+     "level": 3
+    },
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 0.25,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 40,
+   "id": "phat_beet",
+   "name": "Phat Beet",
+   "category": "MELEE",
+   "tags": [
+    "AOE"
+   ],
+   "cost": 150,
+   "baseHp": 300,
+   "damageRaw": "15",
+   "damageSpec": {
+    "raw": "15",
+    "kind": "single",
+    "totalDamage": 15,
+    "projectiles": 1,
+    "damagePerProjectile": 15
+   },
+   "baseAbility": {
+    "kind": "MELEE_EAT",
+    "raw": "ضربه صوتی به مساحت ۳x۳ اطراف.",
+    "params": {
+     "count": 3
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "ضربه صوتی بسیار قدرتمند به تمام زامبی‌های اطراف.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Atk Speed +10%",
+     "kind": "STAT",
+     "stat": "ATTACK_SPEED",
+     "op": "ADD",
+     "value": 10,
+     "unit": "%",
+     "level": 3
+    },
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 2.0,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 41,
+   "id": "chomper",
+   "name": "Chomper",
+   "category": "MELEE",
+   "tags": [],
+   "cost": 150,
+   "baseHp": 300,
+   "damageRaw": "Insta-kill",
+   "damageSpec": {
+    "raw": "Insta-kill",
+    "kind": "instantKill",
+    "projectiles": 1
+   },
+   "baseAbility": {
+    "kind": "MELEE_EAT",
+    "raw": "بلعیدن آنی؛ نابودی یک زامبی درجا و سپس توقف برای هضم به مدت ۴۰ ثانیه.",
+    "params": {
+     "digest": true
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "بلعیدن همزمان ۳ زامبی از فاصله دور.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Digest -2s",
+     "kind": "STAT",
+     "stat": "DIGEST",
+     "op": "SUBTRACT",
+     "value": 2,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Digest -3s",
+     "kind": "STAT",
+     "stat": "DIGEST",
+     "op": "SUBTRACT",
+     "value": 3,
+     "unit": "s",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 40.0,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 42,
+   "id": "wasabi_whip",
+   "name": "Wasabi Whip",
+   "category": "MELEE",
+   "tags": [
+    "FIRE"
+   ],
+   "cost": 150,
+   "baseHp": 300,
+   "damageRaw": "40",
+   "damageSpec": {
+    "raw": "40",
+    "kind": "single",
+    "totalDamage": 40,
+    "projectiles": 1,
+    "damagePerProjectile": 40
+   },
+   "baseAbility": {
+    "kind": "MELEE_EAT",
+    "raw": "ضربه شلاق به خانه‌های جلو و عقب (گرم‌کننده محیط).",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "چرخش شلاق در مساحت ۳x۳.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Range +1 Tile",
+     "kind": "STAT",
+     "stat": "RANGE",
+     "op": "ADD",
+     "value": 1,
+     "unit": "Tile",
+     "level": 3
+    },
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 2.0,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 43,
+   "id": "kiwibeast",
+   "name": "Kiwibeast",
+   "category": "MELEE",
+   "tags": [
+    "AOE",
+    "WRAMP_UP"
+   ],
+   "cost": 175,
+   "baseHp": 300,
+   "damageRaw": "15/30/45",
+   "damageSpec": {
+    "raw": "15/30/45",
+    "kind": "tiered",
+    "tiers": [
+     15,
+     30,
+     45
+    ],
+    "totalDamage": 90,
+    "projectiles": 3
+   },
+   "baseAbility": {
+    "kind": "MELEE_EAT",
+    "raw": "موج صوتی مساحتی؛ با گذر زمان بزرگتر شده و دمیج بیشتر می‌دهد. To Stg2: 24s | To Stg3: 72s",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "EXPLOSION",
+    "raw": "پرش و کوبیدن محکم به زمین با دمیج مساحتی.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Dmg +15",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 15,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Max Size +1",
+     "kind": "STAT",
+     "stat": "MAX_SIZE",
+     "op": "ADD",
+     "value": 1,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 2.0,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 44,
+   "id": "wall_nut",
+   "name": "Wall-nut",
+   "category": "WALL_NUT",
+   "tags": [],
+   "cost": 50,
+   "baseHp": 4000,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "WALL_DEFENSE",
+    "raw": "سد دفاعی مقاوم برای متوقف کردن زامبی‌ها.",
+    "params": {
+     "role": "WALL"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "دریافت زره دائمی به اندازه ۴۰۰۰ جان اضافه‌تر.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "HP +1000",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 1000,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "HP +1500",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 1500,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 20.0
+  },
+  {
+   "legacyId": 45,
+   "id": "tall_nut",
+   "name": "Tall-nut",
+   "category": "WALL_NUT",
+   "tags": [],
+   "cost": 125,
+   "baseHp": 8000,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "WALL_DEFENSE",
+    "raw": "سد بلند؛ جلوگیری از پریدن زامبی‌ها از روی آن.",
+    "params": {
+     "role": "WALL"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "دریافت زره دائمی ۸۰۰۰ تایی.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "HP +2000",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 2000,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "HP +3000",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 3000,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 20.0
+  },
+  {
+   "legacyId": 46,
+   "id": "endurian",
+   "name": "Endurian",
+   "category": "WALL_NUT",
+   "tags": [],
+   "cost": 100,
+   "baseHp": 3000,
+   "damageRaw": "20",
+   "damageSpec": {
+    "raw": "20",
+    "kind": "single",
+    "totalDamage": 20,
+    "projectiles": 1,
+    "damagePerProjectile": 20
+   },
+   "baseAbility": {
+    "kind": "WALL_DEFENSE",
+    "raw": "سد دفاعی با قابلیت بازتاب دمیج به زامبی مهاجم.",
+    "params": {
+     "role": "WALL"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "دریافت زره فلزی و افزایش دمیج انعکاسی.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Reflect Dmg +5",
+     "kind": "STAT",
+     "stat": "REFLECT_DAMAGE",
+     "op": "ADD",
+     "value": 5,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "HP +1000",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 1000,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 15.0
+  },
+  {
+   "legacyId": 47,
+   "id": "garlic",
+   "name": "Garlic",
+   "category": "WALL_NUT",
+   "tags": [
+    "MOVEZOMBIES"
+   ],
+   "cost": 50,
+   "baseHp": 300,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "MOVE_ZOMBIES",
+    "raw": "با خورده شدن، زامبی را مجبور به حرکت به لاین مجاور می‌کند.",
+    "params": {
+     "effect": "MOVE_LANE"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "LANE_CLEAR",
+    "raw": "انتقال اجباری تمام زامبی‌های لاین به لاین‌های دیگر.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "HP +150",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -3s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 3,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "HP +250",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 250,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 20.0
+  },
+  {
+   "legacyId": 48,
+   "id": "sweet_potato",
+   "name": "Sweet Potato",
+   "category": "WALL_NUT",
+   "tags": [
+    "MOVEZOMBIES"
+   ],
+   "cost": 150,
+   "baseHp": 3000,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "WALL_DEFENSE",
+    "raw": "جذب‌کننده؛ زامبی‌های لاین‌های مجاور را به لاین خود می‌کشد.",
+    "params": {
+     "role": "WALL"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "جذب تمام زامبی‌های اطراف و بازیابی کامل جان.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "HP +1000",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 1000,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "HP +1500",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 1500,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 20.0
+  },
+  {
+   "legacyId": 49,
+   "id": "explode_o_nut",
+   "name": "Explode-o-nut",
+   "category": "WALL_NUT",
+   "tags": [
+    "EXPLOSIVE"
+   ],
+   "cost": 50,
+   "baseHp": 4000,
+   "damageRaw": "1800",
+   "damageSpec": {
+    "raw": "1800",
+    "kind": "single",
+    "totalDamage": 1800,
+    "projectiles": 1,
+    "damagePerProjectile": 1800
+   },
+   "baseAbility": {
+    "kind": "WALL_DEFENSE",
+    "raw": "سد دفاعی که به محض از بین رفتن جانش، انفجار مساحتی ایجاد می‌کند.",
+    "params": {
+     "role": "WALL"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "دریافت زره فلزی (هنگام نابودی زره نیز منفجر می‌شود).",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "HP +1000",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 1000,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Explode Dmg +200",
+     "kind": "STAT",
+     "stat": "EXPLODE_DAMAGE",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 20.0
+  },
+  {
+   "legacyId": 50,
+   "id": "pumpkin",
+   "name": "Pumpkin",
+   "category": "WALL_NUT",
+   "tags": [
+    "STACK"
+   ],
+   "cost": 150,
+   "baseHp": 4000,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "WALL_DEFENSE",
+    "raw": "سد دفاعی پوششی؛ روی سایر گیاهان کاشته می‌شود تا از آن‌ها محافظت کند.",
+    "params": {
+     "role": "WALL"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "دریافت زره فلزی قدرتمند.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "HP +1000",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 1000,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "HP +1500",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 1500,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 20.0
+  },
+  {
+   "legacyId": 51,
+   "id": "sun_bean",
+   "name": "Sun Bean",
+   "category": "WALL_NUT",
+   "tags": [
+    "SUN"
+   ],
+   "cost": 50,
+   "baseHp": 1000,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "SUN_PRODUCTION",
+    "raw": "مثل دیوار دفاعی عمل می‌کند و با هر ضربه 5 خورشید تولید می‌کند.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "دریافت زره فلزی قدرتمند.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Sun Drop +5",
+     "kind": "STAT",
+     "stat": "SUN_DROP",
+     "op": "ADD",
+     "value": 5,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "HP +150",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 150,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 20.0
+  },
+  {
+   "legacyId": 52,
+   "id": "torchwood",
+   "name": "Torchwood",
+   "category": "MODIFIER",
+   "tags": [
+    "FIRE"
+   ],
+   "cost": 175,
+   "baseHp": 300,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "PIERCING_SHOT",
+    "raw": "تغییر خواص تیر؛ تبدیل تیر عبوری به آتشی (دمیج دو برابر و ذوب یخ).",
+    "params": {
+     "pierce": true,
+     "effect": "FIRE"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "WATER_CLONE",
+    "raw": "ایجاد شعله آبی (دمیج تیرها را ۳ برابر می‌کند).",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "HP +300",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 300,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "AoE on Death",
+     "kind": "SPECIAL",
+     "special": "AOE_ON_DEATH",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 53,
+   "id": "magnet_shroom",
+   "name": "Magnet-shroom",
+   "category": "HOMING",
+   "tags": [
+    "SHROOM",
+    "MAGIC"
+   ],
+   "cost": 100,
+   "baseHp": 300,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "MAGNET_DISARM",
+    "raw": "خلع سلاح؛ جذب اشیای فلزی (سطل/کلاهخود) از سر زامبی‌ها.",
+    "params": {
+     "targets": "METAL_ARMOR"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "MAGNET_PULSE",
+    "raw": "جذب چندین فلز همزمان و هضم آنها",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Range +1 Tile",
+     "kind": "STAT",
+     "stat": "RANGE",
+     "op": "ADD",
+     "value": 1,
+     "unit": "Tile",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 10.0,
+   "rechargeSeconds": 15.0
+  },
+  {
+   "legacyId": 54,
+   "id": "hypno_shroom",
+   "name": "Hypno-shroom",
+   "category": "MODIFIER",
+   "tags": [
+    "SHROOM",
+    "MAGIC"
+   ],
+   "cost": 125,
+   "baseHp": 300,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "HYPNOTIZE",
+    "raw": "با خورده شدن، زامبی مهاجم هیپنوتیزم شده و به نفع بازیکن می‌جنگد.",
+    "params": {
+     "effect": "HYPNOTIZE"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "تبدیل زامبی خورنده به غول متفق (Gargantuar).",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "Zombie HP Buff",
+     "kind": "SPECIAL",
+     "special": "ZOMBIE_HP_BUFF",
+     "level": 3
+    },
+    {
+     "raw": "Zombie Dmg Buff",
+     "kind": "SPECIAL",
+     "special": "ZOMBIE_DAMAGE_BUFF",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 20.0
+  },
+  {
+   "legacyId": 55,
+   "id": "cat_tail",
+   "name": "Cat-tail",
+   "category": "HOMING",
+   "tags": [],
+   "cost": 175,
+   "baseHp": 300,
+   "damageRaw": "15",
+   "damageSpec": {
+    "raw": "15",
+    "kind": "single",
+    "totalDamage": 15,
+    "projectiles": 1,
+    "damagePerProjectile": 15
+   },
+   "baseAbility": {
+    "kind": "HOMING_SHOT",
+    "raw": "تیر هدف‌دار به سمت نزدیک‌ترین زامبی شلیک می‌کند",
+    "params": {
+     "targetPriority": "NEAREST"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "BURST_ATTACK",
+    "raw": "شلیک رگباری تیر هدف‌دار",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Dmg +10",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 10,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": 1.5,
+   "rechargeSeconds": 20.0
+  },
+  {
+   "legacyId": 56,
+   "id": "imitater",
+   "name": "Imitater",
+   "category": "MODIFIER",
+   "tags": [],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "COPY_PLANT",
+    "raw": "کپی کردن یک گیاه دیگر (امکان استفاده از دو کارت یکسان).",
+    "params": {
+     "copies": 2
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (بر اساس گیاه کپی شده)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Cooldown -2s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 2,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "plant food on enterance",
+     "kind": "SPECIAL",
+     "special": "PLANT_FOOD_ON_ENTRANCE",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 0.0
+  },
+  {
+   "legacyId": 57,
+   "id": "ice_shroom",
+   "name": "Ice-shroom",
+   "category": "EXPLOSIVE",
+   "tags": [
+    "SHROOM",
+    "ICE"
+   ],
+   "cost": 75,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "EXPLOSION",
+    "raw": "یخ زدن و توقف موقت تمامی زامبی‌های موجود در کل نقشه.",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Freeze Time +2s",
+     "kind": "STAT",
+     "stat": "FREEZE_TIME",
+     "op": "ADD",
+     "value": 2,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "Dmg +50",
+     "kind": "STAT",
+     "stat": "DAMAGE",
+     "op": "ADD",
+     "value": 50,
+     "unit": "",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 50.0
+  },
+  {
+   "legacyId": 58,
+   "id": "lily_pad",
+   "name": "Lily Pad",
+   "category": "MODIFIER",
+   "tags": [
+    "WATER",
+    "STACK"
+   ],
+   "cost": 25,
+   "baseHp": 300,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "WATER_SUPPORT",
+    "raw": "بستر کاشت سایر گیاهان روی آب (ضروری برای ساحل).",
+    "params": {
+     "surface": "WATER"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "WATER_CLONE",
+    "raw": "ایجاد چند کپی از خود روی خانه‌های خالی آب.",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Cost -25",
+     "kind": "STAT",
+     "stat": "COST",
+     "op": "SUBTRACT",
+     "value": 25,
+     "unit": "",
+     "level": 2
+    },
+    {
+     "raw": "HP +200",
+     "kind": "STAT",
+     "stat": "HP",
+     "op": "ADD",
+     "value": 200,
+     "unit": "",
+     "level": 3
+    },
+    {
+     "raw": "Cooldown -2s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 2,
+     "unit": "s",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 59,
+   "id": "hot_potato",
+   "name": "Hot Potato",
+   "category": "EXPLOSIVE",
+   "tags": [
+    "FIRE"
+   ],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "EXPLOSION",
+    "raw": "کاشت روی یخ برای آب کردن فوری آن (ضروری برای غار یخ‌زده).",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Cooldown -2s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 2,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Melt Area 3x3",
+     "kind": "UNKNOWN",
+     "level": 3
+    },
+    {
+     "raw": "Explode on Finish",
+     "kind": "SPECIAL",
+     "special": "EXPLODE_ON_FINISH",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 5.0
+  },
+  {
+   "legacyId": 60,
+   "id": "grave_buster",
+   "name": "Grave Buster",
+   "category": "EXPLOSIVE",
+   "tags": [],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "Insta-kill",
+   "damageSpec": {
+    "raw": "Insta-kill",
+    "kind": "instantKill",
+    "projectiles": 1
+   },
+   "baseAbility": {
+    "kind": "EXPLOSION",
+    "raw": "از بین بردن قبرها. (ضروری برای مراحل مصر باستان و قرون تاریک).",
+    "params": {}
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Eat Time -1s",
+     "kind": "STAT",
+     "stat": "EAT_TIME",
+     "op": "SUBTRACT",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -2s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 2,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "Explode on Finish",
+     "kind": "SPECIAL",
+     "special": "EXPLODE_ON_FINISH",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 10.0
+  },
+  {
+   "legacyId": 61,
+   "id": "enlighten_mint",
+   "name": "Enlighten-mint",
+   "category": "SUN_PRODUCER",
+   "tags": [],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "MINT_FAMILY_BUFF",
+    "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
+    "params": {
+     "family": "MINT"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Duration +1s",
+     "kind": "STAT",
+     "stat": "DURATION",
+     "op": "ADD",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "reset family cooldowns",
+     "kind": "SPECIAL",
+     "special": "RESET_FAMILY_COOLDOWNS",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 85.0
+  },
+  {
+   "legacyId": 62,
+   "id": "appease_mint",
+   "name": "Appease-mint",
+   "category": "SHOOTER",
+   "tags": [],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "MINT_FAMILY_BUFF",
+    "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
+    "params": {
+     "family": "MINT"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Duration +1s",
+     "kind": "STAT",
+     "stat": "DURATION",
+     "op": "ADD",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "reset family cooldowns",
+     "kind": "SPECIAL",
+     "special": "RESET_FAMILY_COOLDOWNS",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 85.0
+  },
+  {
+   "legacyId": 63,
+   "id": "arma_mint",
+   "name": "Arma-mint",
+   "category": "LOBBER",
+   "tags": [],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "MINT_FAMILY_BUFF",
+    "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
+    "params": {
+     "family": "MINT"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Duration +1s",
+     "kind": "STAT",
+     "stat": "DURATION",
+     "op": "ADD",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "reset family cooldowns",
+     "kind": "SPECIAL",
+     "special": "RESET_FAMILY_COOLDOWNS",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 85.0
+  },
+  {
+   "legacyId": 64,
+   "id": "bombard_mint",
+   "name": "Bombard-mint",
+   "category": "EXPLOSIVE",
+   "tags": [],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "MINT_FAMILY_BUFF",
+    "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
+    "params": {
+     "family": "MINT"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Duration +1s",
+     "kind": "STAT",
+     "stat": "DURATION",
+     "op": "ADD",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "reset family cooldowns",
+     "kind": "SPECIAL",
+     "special": "RESET_FAMILY_COOLDOWNS",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 85.0
+  },
+  {
+   "legacyId": 65,
+   "id": "enforce_mint",
+   "name": "Enforce-mint",
+   "category": "MELEE",
+   "tags": [],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "MINT_FAMILY_BUFF",
+    "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
+    "params": {
+     "family": "MINT"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Duration +1s",
+     "kind": "STAT",
+     "stat": "DURATION",
+     "op": "ADD",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "reset family cooldowns",
+     "kind": "SPECIAL",
+     "special": "RESET_FAMILY_COOLDOWNS",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 85.0
+  },
+  {
+   "legacyId": 66,
+   "id": "reinforce_mint",
+   "name": "Reinforce-mint",
+   "category": "WALL_NUT",
+   "tags": [],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "MINT_FAMILY_BUFF",
+    "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
+    "params": {
+     "family": "MINT"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Duration +1s",
+     "kind": "STAT",
+     "stat": "DURATION",
+     "op": "ADD",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "reset family cooldowns",
+     "kind": "SPECIAL",
+     "special": "RESET_FAMILY_COOLDOWNS",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 85.0
+  },
+  {
+   "legacyId": 67,
+   "id": "enchant_mint",
+   "name": "Enchant-mint",
+   "category": "MODIFIER",
+   "tags": [],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "MINT_FAMILY_BUFF",
+    "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
+    "params": {
+     "family": "MINT"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Duration +1s",
+     "kind": "STAT",
+     "stat": "DURATION",
+     "op": "ADD",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "reset family cooldowns",
+     "kind": "SPECIAL",
+     "special": "RESET_FAMILY_COOLDOWNS",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 85.0
+  },
+  {
+   "legacyId": 68,
+   "id": "pierce_mint",
+   "name": "Pierce-mint",
+   "category": "STRIKE_THROUGH",
+   "tags": [],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "MINT_FAMILY_BUFF",
+    "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
+    "params": {
+     "family": "MINT"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Duration +1s",
+     "kind": "STAT",
+     "stat": "DURATION",
+     "op": "ADD",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "reset family cooldowns",
+     "kind": "SPECIAL",
+     "special": "RESET_FAMILY_COOLDOWNS",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 85.0
+  },
+  {
+   "legacyId": 69,
+   "id": "cattail_mint",
+   "name": "catTail-mint",
+   "category": "HOMING",
+   "tags": [],
+   "cost": 0,
+   "baseHp": 0,
+   "damageRaw": "0",
+   "damageSpec": {
+    "raw": "0",
+    "kind": "single",
+    "totalDamage": 0,
+    "projectiles": 1,
+    "damagePerProjectile": 0
+   },
+   "baseAbility": {
+    "kind": "MINT_FAMILY_BUFF",
+    "raw": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود",
+    "params": {
+     "family": "MINT"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "NONE",
+    "raw": "ندارد (مصرفی آنی)",
+    "params": {}
+   },
+   "upgrades": [
+    {
+     "raw": "Duration +1s",
+     "kind": "STAT",
+     "stat": "DURATION",
+     "op": "ADD",
+     "value": 1,
+     "unit": "s",
+     "level": 2
+    },
+    {
+     "raw": "Cooldown -5s",
+     "kind": "STAT",
+     "stat": "RECHARGE",
+     "op": "SUBTRACT",
+     "value": 5,
+     "unit": "s",
+     "level": 3
+    },
+    {
+     "raw": "reset family cooldowns",
+     "kind": "SPECIAL",
+     "special": "RESET_FAMILY_COOLDOWNS",
+     "level": 4
+    }
+   ],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 85.0
+  },
+  {
+   "legacyId": 70,
+   "id": "wallnut_bowling",
+   "name": "Bowling Wallnut",
+   "category": "WALL_NUT",
+   "tags": [
+    "MINIGAME_ONLY",
+    "BOWLING"
+   ],
+   "cost": 0,
+   "baseHp": 4000,
+   "damageRaw": "190",
+   "damageSpec": {
+    "raw": "190",
+    "kind": "single",
+    "totalDamage": 190,
+    "projectiles": 1,
+    "damagePerProjectile": 190
+   },
+   "baseAbility": {
+    "kind": "BOWLING_ROLL",
+    "raw": "پس از کاشته شدن مانند توپ بولینگ در خطی مستقیم به سمت زامبی‌ها حرکت می‌کند. با برخورد اول ۴۵ درجه و برخوردهای بعدی ۹۰ درجه می‌چرخد (همچنین با برخورد به بالا/پایین صفحه).",
+    "params": {
+     "role": "BOWLING_BALL",
+     "firstTurnDegrees": 45,
+     "laterTurnDegrees": 90
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "فقط در مینی‌گیم بولینگ گردویی در دسترس است.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 0.0
+  },
+  {
+   "legacyId": 71,
+   "id": "giant_wallnut",
+   "name": "Giant Wallnut",
+   "category": "WALL_NUT",
+   "tags": [
+    "MINIGAME_ONLY",
+    "BOWLING",
+    "CRUSHER"
+   ],
+   "cost": 0,
+   "baseHp": 8000,
+   "damageRaw": "9999",
+   "damageSpec": {
+    "raw": "9999",
+    "kind": "single",
+    "totalDamage": 9999,
+    "projectiles": 1,
+    "damagePerProjectile": 9999
+   },
+   "baseAbility": {
+    "kind": "BOWLING_CRUSH",
+    "raw": "پس از کاشته شدن کاملاً مستقیم حرکت می‌کند و هرگاه به زامبی‌ای برخورد کند آن را له کرده و حرکت رو به جلوی خود را بدون توقف یا چرخش ادامه می‌دهد.",
+    "params": {
+     "role": "CRUSHER"
+    }
+   },
+   "plantFoodEffect": {
+    "kind": "CUSTOM",
+    "raw": "فقط در مینی‌گیم بولینگ گردویی در دسترس است.",
+    "params": {
+     "manualMappingRequired": true
+    }
+   },
+   "upgrades": [],
+   "actionIntervalSeconds": null,
+   "rechargeSeconds": 0.0
+  }
+ ]
 }
