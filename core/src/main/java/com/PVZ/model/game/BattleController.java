@@ -63,6 +63,27 @@ public class BattleController implements BehaviorContext {
         Iterator<Projectile> projIt = projectiles.iterator();
         while (projIt.hasNext()) {
             Projectile p = projIt.next();
+
+            // tombstone blocks straight projectiles (lobbed arc over)
+            if (map != null && p.getType() != ProjectileType.LOB) {
+                int pRow = map.worldToRow((float) p.getPositionY());
+                int pCol = map.worldToCol((float) p.getPositionX());
+                if (map.isWithinBounds(pRow, pCol)) {
+                    Tile tile = map.getTile(pRow, pCol);
+                    if (tile != null && tile.getType() == TileType.TOMBSTONE) {
+                        int newHp = tile.getHp() - (int) p.getDamage();
+                        if (newHp <= 0) {
+                            tile.setType(TileType.NORMAL);
+                            tile.setHp(0);
+                        } else {
+                            tile.setHp(newHp);
+                        }
+                        projIt.remove();
+                        continue;
+                    }
+                }
+            }
+
             for (Zombie z : zombies) {
                 if (z.isDead()) continue;
                 if (p.getHitbox().overlaps(z.getHitbox())) {
