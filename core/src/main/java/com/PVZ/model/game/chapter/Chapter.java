@@ -40,7 +40,7 @@ public class Chapter {
                 return;
             }
             for (Zombie z : engine.getAllZombies()) {
-                if (z != null && !z.isDead() && "ZombieRaDefault".equals(z.getAlias())) {
+                if (z != null && !z.isDead() && "ZombieRa".equals(z.getAlias())) {
                     z.stealNearbySun(engine.getSunManager());
                 }
             }
@@ -51,7 +51,7 @@ public class Chapter {
                 return;
             }
             for (Zombie z : engine.getAllZombies()) {
-                if (z != null && !z.isDead() && "ZombieExplorerDefault".equals(z.getAlias())) {
+                if (z != null && !z.isDead() && "ZombieExplorer".equals(z.getAlias())) {
                     z.burnPlantsAhead(map, engine.getBattleController());
                 }
             }
@@ -62,7 +62,7 @@ public class Chapter {
                 return;
             }
             for (Zombie z : engine.getAllZombies()) {
-                if (z != null && !z.isDead() && "ZombieTombRaiserDefault".equals(z.getAlias())) {
+                if (z != null && !z.isDead() && "ZombieTombRaiser".equals(z.getAlias())) {
                     z.maybeSpawnGraves(map, random);
                 }
             }
