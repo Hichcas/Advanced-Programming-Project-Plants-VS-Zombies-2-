@@ -18,6 +18,7 @@ public enum MenuType {
     TRAVEL_LOG(new TravelLogMenu()),
     LEADERBOARD(new LeaderboardMenu()),
     VASEBREAKER(new VasebreakerMenu()),
+    WALLNUT_BOWLING(new WallnutBowlingMenu()),
     IN_GAME(new InGameMenu());
 
     private final Menu currentMenu;

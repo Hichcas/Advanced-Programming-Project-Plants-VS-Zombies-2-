@@ -85,7 +85,11 @@ public enum PlantType {
     REINFORCE_MINT(66, "Reinforce-mint"),
     ENCHANT_MINT(67, "Enchant-mint"),
     PIERCE_MINT(68, "Pierce-mint"),
-    CAT_TAIL_MINT(69, "catTail-mint");
+    CAT_TAIL_MINT(69, "catTail-mint"),
+
+    // Wallnut Bowling minigame exclusives
+    WALLNUT_BOWLING(70, "Bowling Wallnut"),
+    GIANT_WALLNUT(71, "Giant Wallnut");
 
     private static final Map<Integer, PlantType> BY_ID;
     private static final Map<String, PlantType> BY_NAME;
