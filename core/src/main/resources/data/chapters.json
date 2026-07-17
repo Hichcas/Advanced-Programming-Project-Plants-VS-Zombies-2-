@@ -202,6 +202,64 @@
           ]
         }
       ]
+    },
+    {
+      "name": "FROSTBITE_CAVES",
+      "displayName": "Frostbite Caves",
+      "environment": {
+        "disableFallingSun": false,
+        "description": "Ice wind freezes non-fiery plants each wave; slippery tiles push zombies; fire plants melt ice."
+      },
+      "setup": [],
+      "update": [
+        { "action": "iceWindTick", "description": "Ice wind freezes non-fire plants each wave" },
+        { "action": "meltIceNearFire", "description": "Fire plants melt ice on adjacent plants at 60 HP/s" }
+      ],
+      "stages": [
+        {
+          "stageNumber": 1,
+          "type": "REGULAR",
+          "plantLimit": 8,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Frostbite.jpg",
+          "tiles": [
+            { "row": 0, "col": 2, "type": "ICE" },
+            { "row": 1, "col": 4, "type": "ICE" },
+            { "row": 2, "col": 6, "type": "ICE" },
+            { "row": 3, "col": 1, "type": "SLIPPERY_UP" },
+            { "row": 3, "col": 7, "type": "SLIPPERY_DOWN" },
+            { "row": 4, "col": 3, "type": "SLIPPERY_UP" },
+            { "row": 4, "col": 5, "type": "SLIPPERY_DOWN" }
+          ],
+          "waves": [
+            {
+              "startDelay": 5.0,
+              "entries": [
+                { "zombie": "ZombieIceageDefault", "count": 4, "spawnDelay": 2.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieIceageDefault", "count": 3, "spawnDelay": 0.8 },
+                { "zombie": "ZombieIceAgeHunter", "count": 2, "spawnDelay": 2.5 },
+                { "zombie": "ZombieIceageImpDefault", "count": 3, "spawnDelay": 1.5 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "isFinal": true,
+              "entries": [
+                { "zombie": "ZombieIceageDefault", "count": 1, "spawnDelay": 0.6 },
+                { "zombie": "ZombieIceAgeHunter", "count": 1, "spawnDelay": 2.0 },
+                { "zombie": "ZombieIceageImpDefault", "count": 1, "spawnDelay": 1.5 },
+                { "zombie": "ZombieIceAgeGargantuar", "count": 1, "spawnDelay": 3.0 }
+              ]
+            }
+          ]
+        }
+      ]
     }
-  ]
+    ]
 }

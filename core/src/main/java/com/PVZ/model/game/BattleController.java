@@ -37,6 +37,10 @@ public class BattleController implements BehaviorContext {
         this.map = map;
     }
 
+    public Map getMap() {
+        return map;
+    }
+
     public void update(float delta) {
         for (int i = zombies.size() - 1; i >= 0; i--) {
             zombies.get(i).update(delta, this);
@@ -87,7 +91,16 @@ public class BattleController implements BehaviorContext {
             for (Zombie z : zombies) {
                 if (z.isDead()) continue;
                 if (p.getHitbox().overlaps(z.getHitbox())) {
-                    z.takeDamage((int) p.getDamage(), resolveDamageType(p));
+                    if (p.getType() == ProjectileType.FIRE_PEA && z.isFrozen()) {
+                        z.thaw();
+                    } else if (p.getType() == ProjectileType.ICE_PEA && z.isFrozen()) {
+                        z.setIceHp(z.getIceHp() - (int) p.getDamage());
+                        if (z.getIceHp() <= 0) {
+                            z.thaw();
+                        }
+                    } else {
+                        z.takeDamage((int) p.getDamage(), resolveDamageType(p));
+                    }
                     projIt.remove();
                     break;
                 }
