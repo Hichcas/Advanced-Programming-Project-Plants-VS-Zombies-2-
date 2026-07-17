@@ -27,6 +27,13 @@ public enum TravelLogCommand {
         }
     },
 
+    ENTER_IZOMBIE("^\\s*travel\\s+log\\s+enter\\s+izombie\\s*$") {
+        @Override
+        public TravelLogInputDTO createDTO(Matcher matcher) {
+            return new TravelLogInputDTO(this, null);
+        }
+    },
+
     SHOW_CURRENT_MENU("^menu\\s+show\\s+current$|^show\\s+current\\s+menu$") {
         @Override
         public TravelLogInputDTO createDTO(Matcher matcher) {

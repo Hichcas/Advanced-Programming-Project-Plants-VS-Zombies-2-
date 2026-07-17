@@ -140,16 +140,33 @@ public class WallnutBowlingGame {
         return random.nextInt(rows);
     }
 
-    public boolean tickWave(float delta) {
-        if (zombiesSpawned >= totalZombies) return false;
+    public List<Integer> nextWaveRows(int count) {
+        List<Integer> pool = new ArrayList<>();
+        for (int r = 0; r < rows; r++) pool.add(r);
+        java.util.Collections.shuffle(pool, random);
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            result.add(pool.get(i % pool.size()));
+        }
+        return result;
+    }
+
+    private static final int MIN_BURST_SIZE = 5;
+    private static final int MAX_BURST_SIZE = 6;
+
+    public int tickWave(float delta) {
+        if (zombiesSpawned >= totalZombies) return 0;
         waveTimer -= delta;
         if (waveTimer <= 0) {
             waveTimer = currentWaveInterval;
             currentWaveInterval = Math.max(minWaveInterval, currentWaveInterval - waveIntervalDecrease);
-            zombiesSpawned++;
-            return true;
+            int remaining = totalZombies - zombiesSpawned;
+            int burst = MIN_BURST_SIZE + random.nextInt(MAX_BURST_SIZE - MIN_BURST_SIZE + 1);
+            burst = Math.min(burst, remaining);
+            zombiesSpawned += burst;
+            return burst;
         }
-        return false;
+        return 0;
     }
 
     public boolean allZombiesSpawned() {

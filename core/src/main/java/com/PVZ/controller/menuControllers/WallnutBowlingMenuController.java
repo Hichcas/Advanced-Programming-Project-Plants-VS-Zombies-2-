@@ -1,6 +1,5 @@
 package com.PVZ.controller.menuControllers;
 
-import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.game.Map;
 import com.PVZ.model.game.WallnutBowlingGameEngine;
 import com.PVZ.model.minigame.wallnutbowling.BowlingNut;
@@ -108,7 +107,9 @@ public class WallnutBowlingMenuController {
     }
 
     private OutputDTO exit() {
-        AppStatus.currentMenuType = MenuType.TRAVEL_LOG;
+        currentGame = null;
+        currentEngine = null;
+        AppStatus.returnToTravelLog();
         return new OutputDTO(true, "Exited Wallnut Bowling. Returning to Travel Log.");
     }
 
