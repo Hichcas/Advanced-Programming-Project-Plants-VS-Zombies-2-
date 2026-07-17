@@ -160,6 +160,23 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             tickAccumulator -= TICK_SECONDS;
             advanceOneTick();
         }
+
+        // win condition: all waves finished and all zombies dead
+        if (gameStatus != null && !gameStatus.isGameOver() && !gameStatus.isWon()
+                && waveManager != null && waveManager.isFinished()) {
+            boolean anyAlive = false;
+            for (Zombie z : getZombieList()) {
+                if (z != null && !z.isDead()) {
+                    anyAlive = true;
+                    break;
+                }
+            }
+            if (!anyAlive) {
+                System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
+                gameStatus.setWon(true);
+                AppStatus.returnToMainMenu();
+            }
+        }
     }
 
     public void advanceTicks(int ticks) {
