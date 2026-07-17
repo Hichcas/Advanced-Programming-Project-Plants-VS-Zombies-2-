@@ -272,7 +272,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         }
     }
 
-    private void updatePlants() {
+    protected void updatePlants() {
         if (map == null) {
             return;
         }
@@ -287,7 +287,12 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 plant.putRuntimeState("row", row);
                 plant.putRuntimeState("col", col);
                 plant.putRuntimeState("lane", row);
-                plant.update(this, TICK_SECONDS);
+
+                Object freezeLv = plant.getRuntimeState("freezeLevel");
+                boolean isPlantFrozen = freezeLv instanceof Number && ((Number) freezeLv).intValue() >= 3;
+                if (!isPlantFrozen) {
+                    plant.update(this, TICK_SECONDS);
+                }
 
                 if (plant.isDead()) {
                     if (plant.getStats().getBooleanExtra("explodeOnDeath", false)) {
@@ -412,6 +417,14 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                         (float) plant.getCurrentHp() / Math.max(1, plant.getMaxHp()), true);
                     String label = plant.getType() + " (" + plant.getCurrentHp() + "hp)";
                     plantFont.draw(batch, label, box.x, box.y + box.height + 4);
+
+                    Object pFreezeLv = plant.getRuntimeState("freezeLevel");
+                    if (pFreezeLv instanceof Number && ((Number) pFreezeLv).intValue() >= 3) {
+                        Color c = batch.getColor();
+                        batch.setColor(0.3f, 0.6f, 1f, 0.45f);
+                        batch.draw(iceOverlayTexture(), box.x, box.y, box.width, box.height);
+                        batch.setColor(c);
+                    }
                 }
             }
         }
@@ -429,6 +442,13 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 }
                 HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
                     (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
+
+                if (z.isFrozen()) {
+                    Color c = batch.getColor();
+                    batch.setColor(0.3f, 0.6f, 1f, 0.45f);
+                    batch.draw(iceOverlayTexture(), (float) z.getX(), (float) z.getY(), 100, 120);
+                    batch.setColor(c);
+                }
             }
         }
         font.setColor(Color.WHITE);
@@ -1072,6 +1092,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return battleController;
     }
 
+    public WaveManager getWaveManager() {
+        return waveManager;
+    }
+
     public void startWaves() {
         if (waveManager != null) {
             waveManager.start();
@@ -1087,6 +1111,19 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     private int normalizeIndex(int value) {
         return value;
+    }
+
+    private com.badlogic.gdx.graphics.Texture iceOverlayTex;
+
+    private com.badlogic.gdx.graphics.Texture iceOverlayTexture() {
+        if (iceOverlayTex == null) {
+            com.badlogic.gdx.graphics.Pixmap pm = new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+            pm.setColor(0.4f, 0.7f, 1f, 1f);
+            pm.fill();
+            iceOverlayTex = new com.badlogic.gdx.graphics.Texture(pm);
+            pm.dispose();
+        }
+        return iceOverlayTex;
     }
 
 }

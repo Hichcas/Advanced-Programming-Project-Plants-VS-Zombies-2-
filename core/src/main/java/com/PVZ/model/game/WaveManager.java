@@ -51,6 +51,8 @@ public class WaveManager {
                 Zombie z = engine.spawnZombie(currentEntry.getZombieAlias(), randomRow(), 8);
                 if (z != null) {
                     waveZombies.add(z);
+                } else {
+                    System.out.println("[WaveManager] WARNING: failed to spawn " + currentEntry.getZombieAlias());
                 }
                 spawned++;
                 spawnTimer = 0;
@@ -75,6 +77,10 @@ public class WaveManager {
             if (!hpConditionMet) {
                 if (totalWaveHP == 0 || remainingHP <= totalWaveHP * 0.25) {
                     hpConditionMet = true;
+                    System.out.println("[WaveManager] HP condition met: remainingHP=" + String.format("%.0f", remainingHP) + " / totalWaveHP=" + String.format("%.0f", totalWaveHP) + " (75% threshold=" + String.format("%.0f", totalWaveHP * 0.25) + ")");
+                    if (currentWave + 1 < waves.size()) {
+                        System.out.println("[WaveManager] The next wave is almost ready...");
+                    }
                 }
             }
             if (hpConditionMet) {
@@ -93,6 +99,7 @@ public class WaveManager {
         waveZombies.clear();
         spawned = 0;
         spawnTimer = 0;
+        System.out.println("[WaveManager] *** A huge wave of zombies is approaching! (Wave " + (currentWave + 1) + "/" + waves.size() + ") ***");
         nextEntry();
     }
 
@@ -111,6 +118,7 @@ public class WaveManager {
         waitingForHP = true;
         hpConditionMet = false;
         hpWaitTimer = 0;
+        System.out.println("[WaveManager] Finished spawning wave " + (currentWave + 1) + ". waveZombies=" + waveZombies.size() + ", totalWaveHP=" + String.format("%.0f", totalWaveHP));
     }
 
     private void advanceWave() {
@@ -120,6 +128,7 @@ public class WaveManager {
         waveZombies.clear();
         setupTimer = 0;
         hpWaitTimer = 0;
+        System.out.println("[WaveManager] Advanced to wave " + (currentWave + 1) + "/" + waves.size());
     }
 
     private int randomRow() {
