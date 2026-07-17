@@ -10,7 +10,7 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 15000000,
+    "coins" : 35000000,
     "diamonds" : 0,
     "stagesCompleted" : 0,
     "highestScore" : 0,
@@ -181,8 +181,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfUnlockedPots" : 5,
-    "numberOfLockedPots" : 15
+    "numberOfLockedPots" : 15,
+    "numberOfUnlockedPots" : 5
   },
   "appStats" : {
     "difficultyLevel" : 3,

@@ -430,16 +430,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         }
 
         //zombies's info:
-        BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
-        font.setColor(Color.BLACK);
         for (Zombie z : getZombieList()) {
             if (z != null && !z.isDead()) {
-                String[] lines = z.getDebugString().split("\n");
-                float yOff = (float)z.getY() + 130;
-                for (String line : lines) {
-                    font.draw(batch, line, (float)z.getX(), yOff);
-                    yOff -= 15;
-                }
                 HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
                     (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
 
@@ -451,7 +443,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 }
             }
         }
-        font.setColor(Color.WHITE);
 
         batch.end();
     }
