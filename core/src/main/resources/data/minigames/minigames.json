@@ -42,7 +42,7 @@
     "zombiePool": [
      "ZombieTutorialDefault"
     ],
-    "totalZombies": 8,
+    "totalZombies": 24,
     "waveIntervalSeconds": 7.0,
     "minWaveIntervalSeconds": 3.5,
     "waveIntervalDecreasePerWave": 0.4,
@@ -74,7 +74,7 @@
      "ZombieTutorialDefault",
      "ZombieTutorialArmor1Default"
     ],
-    "totalZombies": 13,
+    "totalZombies": 36,
     "waveIntervalSeconds": 6.0,
     "minWaveIntervalSeconds": 2.5,
     "waveIntervalDecreasePerWave": 0.4,
@@ -107,7 +107,7 @@
      "ZombieTutorialArmor1Default",
      "ZombieTutorialArmor2Default"
     ],
-    "totalZombies": 18,
+    "totalZombies": 48,
     "waveIntervalSeconds": 5.0,
     "minWaveIntervalSeconds": 1.8,
     "waveIntervalDecreasePerWave": 0.35,
@@ -119,7 +119,128 @@
   ]
  },
  "i_zombie": {
-  "levels": []
+  "levels": [
+   {
+    "id": 1,
+    "rows": 5,
+    "cols": 9,
+    "redLineCol": 5,
+    "startingSun": 150,
+    "plantDensity": 0.45,
+    "sunZombieAlias": "ZombieTutorialArmor2Default",
+    "sunProductionBase": 5.0,
+    "sunProductionGrowthPerTick": 0.4,
+    "sunProductionIntervalSeconds": 5.0,
+    "sunProductionCap": 20.0,
+    "zombieRoster": [
+     {
+      "alias": "ZombieTutorialDefault",
+      "cost": 50,
+      "displayName": "Basic Zombie"
+     },
+     {
+      "alias": "ZombieTutorialArmor1Default",
+      "cost": 75,
+      "displayName": "Conehead Zombie"
+     },
+     {
+      "alias": "ZombieMummyDefault",
+      "cost": 50,
+      "displayName": "Mummy Zombie"
+     },
+     {
+      "alias": "ZombieIceageDefault",
+      "cost": 50,
+      "displayName": "Iceage Zombie"
+     },
+     {
+      "alias": "ZombieBeachDefault",
+      "cost": 60,
+      "displayName": "Beach Zombie"
+     }
+    ]
+   },
+   {
+    "id": 2,
+    "rows": 5,
+    "cols": 9,
+    "redLineCol": 4,
+    "startingSun": 150,
+    "plantDensity": 0.55,
+    "sunZombieAlias": "ZombieTutorialArmor2Default",
+    "sunProductionBase": 6.0,
+    "sunProductionGrowthPerTick": 0.5,
+    "sunProductionIntervalSeconds": 4.5,
+    "sunProductionCap": 24.0,
+    "zombieRoster": [
+     {
+      "alias": "ZombieTutorialArmor2Default",
+      "cost": 125,
+      "displayName": "Buckethead Zombie"
+     },
+     {
+      "alias": "ZombieMummyArmor1Default",
+      "cost": 75,
+      "displayName": "Mummy Conehead"
+     },
+     {
+      "alias": "ZombieDarkDefault",
+      "cost": 60,
+      "displayName": "Dark Zombie"
+     },
+     {
+      "alias": "ZombieIceageArmor1Default",
+      "cost": 75,
+      "displayName": "Iceage Conehead"
+     },
+     {
+      "alias": "ZombieBeachArmor1Default",
+      "cost": 75,
+      "displayName": "Beach Conehead"
+     }
+    ]
+   },
+   {
+    "id": 3,
+    "rows": 5,
+    "cols": 9,
+    "redLineCol": 4,
+    "startingSun": 175,
+    "plantDensity": 0.65,
+    "sunZombieAlias": "ZombieMummyArmor2Default",
+    "sunProductionBase": 7.0,
+    "sunProductionGrowthPerTick": 0.6,
+    "sunProductionIntervalSeconds": 4.0,
+    "sunProductionCap": 28.0,
+    "zombieRoster": [
+     {
+      "alias": "ZombieTutorialDefault",
+      "cost": 50,
+      "displayName": "Basic Zombie"
+     },
+     {
+      "alias": "ZombieMummyArmor1Default",
+      "cost": 75,
+      "displayName": "Mummy Conehead"
+     },
+     {
+      "alias": "ZombieDarkArmor1Default",
+      "cost": 90,
+      "displayName": "Dark Conehead"
+     },
+     {
+      "alias": "ZombieBeachArmor2Default",
+      "cost": 150,
+      "displayName": "Beach Buckethead"
+     },
+     {
+      "alias": "ZombieIceageArmor2Default",
+      "cost": 150,
+      "displayName": "Iceage Buckethead"
+     }
+    ]
+   }
+  ]
  },
  "beghouled": {
   "levels": []
