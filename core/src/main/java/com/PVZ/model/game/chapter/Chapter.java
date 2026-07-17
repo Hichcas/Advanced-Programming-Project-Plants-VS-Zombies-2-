@@ -40,7 +40,7 @@ public class Chapter {
                 return;
             }
             for (Zombie z : engine.getAllZombies()) {
-                if (z != null && !z.isDead() && "ZombieRaDefault".equals(z.getAlias())) {
+                if (z != null && !z.isDead() && "ZombieRa".equals(z.getAlias())) {
                     z.stealNearbySun(engine.getSunManager());
                 }
             }
@@ -51,7 +51,7 @@ public class Chapter {
                 return;
             }
             for (Zombie z : engine.getAllZombies()) {
-                if (z != null && !z.isDead() && "ZombieExplorerDefault".equals(z.getAlias())) {
+                if (z != null && !z.isDead() && "ZombieExplorer".equals(z.getAlias())) {
                     z.burnPlantsAhead(map, engine.getBattleController());
                 }
             }
@@ -62,22 +62,38 @@ public class Chapter {
                 return;
             }
             for (Zombie z : engine.getAllZombies()) {
-                if (z != null && !z.isDead() && "ZombieTombRaiserDefault".equals(z.getAlias())) {
+                if (z != null && !z.isDead() && "ZombieTombRaiser".equals(z.getAlias())) {
                     z.maybeSpawnGraves(map, random);
                 }
             }
         });
+
+        actions.put("iceWindTick", (map, engine) -> {
+
+        });
+
+
     }
 
     public void applySetup(com.PVZ.model.game.Map map, StageConfig stage) {
-        if (map == null || stage == null || stage.getTombstones() == null) {
+        if (map == null || stage == null) {
             return;
         }
-        for (StageConfig.TombstoneEntry t : stage.getTombstones()) {
-            Tile tile = map.getTile(t.getRow(), t.getCol());
-            if (tile != null) {
-                tile.setType(TileType.TOMBSTONE);
-                tile.setHp(t.getHp());
+        if (stage.getTombstones() != null) {
+            for (StageConfig.TombstoneEntry t : stage.getTombstones()) {
+                Tile tile = map.getTile(t.getRow(), t.getCol());
+                if (tile != null) {
+                    tile.setType(TileType.TOMBSTONE);
+                    tile.setHp(t.getHp());
+                }
+            }
+        }
+        if (stage.getTiles() != null) {
+            for (StageConfig.TileEntry te : stage.getTiles()) {
+                Tile tile = map.getTile(te.getRow(), te.getCol());
+                if (tile != null) {
+                    tile.setType(TileType.valueOf(te.getType()));
+                }
             }
         }
     }

@@ -14,7 +14,22 @@ public class StageConfig {
     private boolean disableFallingSun;
     private double conveyorInterval;
     private List<TombstoneEntry> tombstones;
+    private List<TileEntry> tiles;
     private List<WaveEntry> waves;
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class TileEntry {
+        private int row;
+        private int col;
+        private String type;
+
+        public int getRow() { return row; }
+        public void setRow(int row) { this.row = row; }
+        public int getCol() { return col; }
+        public void setCol(int col) { this.col = col; }
+        public String getType() { return type; }
+        public void setType(String type) { this.type = type; }
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TombstoneEntry {
@@ -76,6 +91,8 @@ public class StageConfig {
     public void setConveyorInterval(double conveyorInterval) { this.conveyorInterval = conveyorInterval; }
     public List<TombstoneEntry> getTombstones() { return tombstones; }
     public void setTombstones(List<TombstoneEntry> tombstones) { this.tombstones = tombstones; }
+    public List<TileEntry> getTiles() { return tiles; }
+    public void setTiles(List<TileEntry> tiles) { this.tiles = tiles; }
     public List<WaveEntry> getWaves() { return waves; }
     public void setWaves(List<WaveEntry> waves) { this.waves = waves; }
 }
