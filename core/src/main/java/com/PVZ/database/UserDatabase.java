@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.PVZ.model.user.User;
 
 import java.nio.file.*;
@@ -27,8 +29,10 @@ public class UserDatabase {
     private static final Path INDEX_FILE = DATA_DIR.resolve("users_index.json");
 
     private static final ObjectMapper mapper = new ObjectMapper()
-        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY)
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .registerModule(new JavaTimeModule())
+        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
     public static void init() throws Exception {
         Files.createDirectories(USERS_DIR);

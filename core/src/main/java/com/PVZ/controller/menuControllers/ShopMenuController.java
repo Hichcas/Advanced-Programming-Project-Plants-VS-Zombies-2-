@@ -6,6 +6,7 @@ import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.ShopDaily;
 import com.PVZ.model.user.User;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.view.input.DTO.ShopInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
@@ -110,6 +111,7 @@ public class ShopMenuController {
                 // 3. انجام عملیات (کسر سکه + باز کردن گلدان)
                 user.userStats.spendCoins(cost);
                 user.greenhouseState.unlockPots(count);
+                UserRegistry.markDirty(user.profile.getUsername());
                 log.append("Bought ").append(count).append(" pot(s) for ").append(cost).append(" coins.");
                 return new OutputDTO(true, log.toString());
             }
@@ -152,6 +154,7 @@ public class ShopMenuController {
                     user.collectionState.addSeedPackets(randomPlant, 5);
                     log.append(" - 5 seed packets for ").append(randomPlant.getDisplayName()).append("\n");
                 }
+                UserRegistry.markDirty(user.profile.getUsername());
                 return new OutputDTO(true, log.toString().trim());
             }
 
@@ -179,6 +182,7 @@ public class ShopMenuController {
                 user.userStats.spendDiamonds(cost);
                 int totalPackets = 10 * count;
                 user.collectionState.addSeedPackets(selected, totalPackets);
+                UserRegistry.markDirty(user.profile.getUsername());
                 log.append("Bought ").append(count).append(" selected seed pack(s) for ")
                     .append(selected.getDisplayName()).append(" (").append(totalPackets)
                     .append(" packets) for ").append(cost).append(" diamonds.");
@@ -194,6 +198,7 @@ public class ShopMenuController {
                 // 2. تبدیل
                 user.userStats.spendDiamonds(diamondsCost);
                 user.userStats.addCoins(500 * count);
+                UserRegistry.markDirty(user.profile.getUsername());
                 log.append("Exchanged ").append(diamondsCost).append(" diamonds for ")
                     .append(500 * count).append(" coins.");
                 return new OutputDTO(true, log.toString());
@@ -213,6 +218,7 @@ public class ShopMenuController {
                 user.userStats.spendCoins(cost);
                 user.collectionState.addSeedPackets(user.shopDaily.getOfferPlant(), 10);
                 user.shopDaily.markAsPurchased();
+                UserRegistry.markDirty(user.profile.getUsername());
                 log.append("Purchased daily offer: 10 seed packets for ")
                     .append(user.shopDaily.getOfferPlant().name())
                     .append(" for ").append(cost).append(" coins.");

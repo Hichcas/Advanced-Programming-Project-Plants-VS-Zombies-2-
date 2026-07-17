@@ -6,6 +6,7 @@ import com.PVZ.model.greenhouse.GreenhouseState;
 import com.PVZ.model.greenhouse.Pot;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.view.input.DTO.GreenhouseInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
@@ -97,11 +98,13 @@ public class GreenhouseMenuController {
             // 50% marigold, یا اگر گیاه آنلاک‌شده‌ای وجود ندارد، قطعاً marigold
             if (unlocked.isEmpty() || random.nextDouble() < 0.5) {
                 user.greenhouseState.plantMarigold(x, y, now);
+                UserRegistry.markDirty(user.profile.getUsername());
                 return new OutputDTO(true, "Planted Marigold in pot (" + x + "," + y + ").");
             } else {
                 PlantType[] arr = unlocked.toArray(new PlantType[0]);
                 PlantType chosen = arr[random.nextInt(arr.length)];
                 user.greenhouseState.plantInPot(x, y, chosen, now);
+                UserRegistry.markDirty(user.profile.getUsername());
                 return new OutputDTO(true, String.format("Planted %s in pot (%d,%d).", chosen.getDisplayName(), x, y));
             }
         } catch (Exception e) {
@@ -128,15 +131,18 @@ public class GreenhouseMenuController {
 
             if (isMarigold) {
                 user.userStats.addCoins(500);
+                UserRegistry.markDirty(user.profile.getUsername());
                 return new OutputDTO(true, "Collected Marigold. +500 coins.");
             } else {
                 // harvested حتماً یک گیاه آنلاک‌شده است
                 if (user.collectionState.hasGreenhouseBoost(harvested)) {
+                    UserRegistry.markDirty(user.profile.getUsername());
                     return new OutputDTO(true, String.format(
                         "Collected %s, but boost already stored. No additional boost added.",
                         harvested.getDisplayName()));
                 } else {
                     user.collectionState.addGreenhouseBoost(harvested);
+                    UserRegistry.markDirty(user.profile.getUsername());
                     return new OutputDTO(true, String.format(
                         "Collected %s. Greenhouse boost stored!", harvested.getDisplayName()));
                 }
@@ -168,6 +174,7 @@ public class GreenhouseMenuController {
             }
             user.userStats.spendDiamonds(cost);
             user.greenhouseState.accelerateGrowth(x, y);
+            UserRegistry.markDirty(user.profile.getUsername());
             return new OutputDTO(true, String.format(
                 "Growth accelerated for %d diamonds. Plant is now ready.", cost));
         } catch (Exception e) {
