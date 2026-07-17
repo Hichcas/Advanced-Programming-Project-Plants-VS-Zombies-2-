@@ -67,17 +67,33 @@ public class Chapter {
                 }
             }
         });
+
+        actions.put("iceWindTick", (map, engine) -> {
+
+        });
+
+
     }
 
     public void applySetup(com.PVZ.model.game.Map map, StageConfig stage) {
-        if (map == null || stage == null || stage.getTombstones() == null) {
+        if (map == null || stage == null) {
             return;
         }
-        for (StageConfig.TombstoneEntry t : stage.getTombstones()) {
-            Tile tile = map.getTile(t.getRow(), t.getCol());
-            if (tile != null) {
-                tile.setType(TileType.TOMBSTONE);
-                tile.setHp(t.getHp());
+        if (stage.getTombstones() != null) {
+            for (StageConfig.TombstoneEntry t : stage.getTombstones()) {
+                Tile tile = map.getTile(t.getRow(), t.getCol());
+                if (tile != null) {
+                    tile.setType(TileType.TOMBSTONE);
+                    tile.setHp(t.getHp());
+                }
+            }
+        }
+        if (stage.getTiles() != null) {
+            for (StageConfig.TileEntry te : stage.getTiles()) {
+                Tile tile = map.getTile(te.getRow(), te.getCol());
+                if (tile != null) {
+                    tile.setType(TileType.valueOf(te.getType()));
+                }
             }
         }
     }
