@@ -109,4 +109,19 @@ public final class AppStatus {
             new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));
     }
 
+    /**
+     * Return to the Travel Log screen (used when an "advanced" minigame like I, Zombie
+     * finishes — won or lost). The single persistent GameScreen always renders whatever
+     * engine is currently set via setGameEngine(), regardless of currentMenuType, so simply
+     * flipping currentMenuType (without also swapping the engine/screen like this) leaves the
+     * finished minigame's engine stuck on screen — and, since nothing else expects to keep
+     * ticking a finished engine, that eventually blows up instead of returning to the menu.
+     */
+    public static void returnToTravelLog() {
+        currentMenuType = MenuType.TRAVEL_LOG;
+        setGameEngine(null);
+        ScreenManager.getInstance().performTransition(() ->
+            new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));
+    }
+
 }

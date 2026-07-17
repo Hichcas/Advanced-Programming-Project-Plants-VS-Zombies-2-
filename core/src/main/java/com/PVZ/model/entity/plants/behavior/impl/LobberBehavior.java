@@ -36,7 +36,23 @@ public class LobberBehavior implements PlantBehavior {
             return;
         }
 
-        int damage = Math.max(0, plant.getStats().getDamage());
+        List<Integer> tiers = plant.getDefinition() != null && plant.getDefinition().getDamageSpec() != null
+                ? plant.getDefinition().getDamageSpec().getTiers()
+                : null;
+
+        int damage;
+        boolean stunShot = false;
+        if (tiers != null && tiers.size() > 1) {
+            // Kernel-pult: "شلیک دانه ذرت (آسیب کم) یا کره (توقف موقت زامبی)" — alternate
+            // between the low-damage kernel and the stunning butter shot each time it fires,
+            // instead of always firing an identical single shot.
+            int tierIndex = asInt(plant.getRuntimeState().getOrDefault("lobTierIndex", 0), 0);
+            damage = tiers.get(tierIndex % tiers.size());
+            stunShot = (tierIndex % tiers.size()) == tiers.size() - 1;
+            plant.putRuntimeState("lobTierIndex", tierIndex + 1);
+        } else {
+            damage = Math.max(0, plant.getStats().getDamage());
+        }
         double damageMultiplier = plant.getStats().getDoubleExtra("damageMultiplier", 1.0);
         if (plant.isPlantFoodActive()) {
             damageMultiplier = Math.max(damageMultiplier, plant.getStats().getDoubleExtra("plantFoodDamageMultiplier", 2.0));
@@ -51,6 +67,9 @@ public class LobberBehavior implements PlantBehavior {
             }
             if (plant.getStats().getBooleanExtra("fireAttack", false)) {
                 projectile.setType(ProjectileType.FIRE_PEA);
+            }
+            if (stunShot) {
+                projectile.putExtra("stunOnHit", Boolean.TRUE);
             }
             context.spawnProjectile(projectile);
         }

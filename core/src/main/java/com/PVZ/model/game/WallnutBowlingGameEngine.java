@@ -122,9 +122,10 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     }
 
     private void updateWaves(float delta) {
-        if (game.tickWave(delta)) {
+        int burst = game.tickWave(delta);
+        if (burst <= 0) return;
+        for (int row : game.nextWaveRows(burst)) {
             String alias = game.randomZombieAlias();
-            int row = game.nextWaveRow();
             zombieEngine.spawnZombie(alias, row, game.getCols() - 1);
         }
     }

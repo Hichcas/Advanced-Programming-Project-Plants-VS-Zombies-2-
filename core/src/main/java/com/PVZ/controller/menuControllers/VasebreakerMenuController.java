@@ -1,6 +1,5 @@
 package com.PVZ.controller.menuControllers;
 
-import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.game.Map;
 import com.PVZ.model.game.VasebreakerGameEngine;
 import com.PVZ.model.minigame.vasebreaker.Vase;
@@ -85,7 +84,9 @@ public class VasebreakerMenuController {
     }
 
     private OutputDTO exit() {
-        AppStatus.currentMenuType = MenuType.TRAVEL_LOG;
+        currentGame = null;
+        currentEngine = null;
+        AppStatus.returnToTravelLog();
         return new OutputDTO(true, "Exited Vasebreaker. Returning to Travel Log.");
     }
 
