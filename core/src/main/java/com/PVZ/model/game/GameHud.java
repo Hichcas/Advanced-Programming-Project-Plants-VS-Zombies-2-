@@ -30,9 +30,12 @@ public class GameHud extends Group {
     public void act(float delta) {
         super.act(delta);
 
-        // خواندن مقادیر از وضعیت بازی
-        sunflowerCount = AppStatus.getGameEngine().gameStatus.getSunflower();
-        zombieWavePercent = AppStatus.getGameEngine().gameStatus.getRemainingZombieWaveInPercent();
+        GameEngine engine = AppStatus.getGameEngine();
+        if (engine == null || engine.gameStatus == null) {
+            return;
+        }
+        sunflowerCount = engine.gameStatus.getSunflower();
+        zombieWavePercent = engine.gameStatus.getRemainingZombieWaveInPercent();
     }
 
     @Override
