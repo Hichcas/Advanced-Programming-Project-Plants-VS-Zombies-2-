@@ -37,6 +37,10 @@ public class BattleController implements BehaviorContext {
         this.map = map;
     }
 
+    public Map getMap() {
+        return map;
+    }
+
     public void update(float delta) {
         for (int i = zombies.size() - 1; i >= 0; i--) {
             zombies.get(i).update(delta, this);
@@ -63,10 +67,43 @@ public class BattleController implements BehaviorContext {
         Iterator<Projectile> projIt = projectiles.iterator();
         while (projIt.hasNext()) {
             Projectile p = projIt.next();
+
+            // tombstone blocks straight projectiles (lobbed arc over)
+            if (map != null && p.getType() != ProjectileType.LOB) {
+                int pRow = map.worldToRow((float) p.getPositionY());
+                int pCol = map.worldToCol((float) p.getPositionX());
+                if (map.isWithinBounds(pRow, pCol)) {
+                    Tile tile = map.getTile(pRow, pCol);
+                    if (tile != null && tile.getType() == TileType.TOMBSTONE) {
+                        int newHp = tile.getHp() - (int) p.getDamage();
+                        if (newHp <= 0) {
+                            tile.setType(TileType.NORMAL);
+                            tile.setHp(0);
+                        } else {
+                            tile.setHp(newHp);
+                        }
+                        projIt.remove();
+                        continue;
+                    }
+                }
+            }
+
             for (Zombie z : zombies) {
                 if (z.isDead()) continue;
                 if (p.getHitbox().overlaps(z.getHitbox())) {
-                    z.takeDamage((int) p.getDamage(), resolveDamageType(p));
+                    if (p.getType() == ProjectileType.FIRE_PEA && z.isFrozen()) {
+                        z.thaw();
+                    } else if (p.getType() == ProjectileType.ICE_PEA && z.isFrozen()) {
+                        z.setIceHp(z.getIceHp() - (int) p.getDamage());
+                        if (z.getIceHp() <= 0) {
+                            z.thaw();
+                        }
+                    } else {
+                        z.takeDamage((int) p.getDamage(), resolveDamageType(p));
+                    }
+                    if (Boolean.TRUE.equals(p.getExtra("stunOnHit"))) {
+                        z.freeze(1.5f); // Kernel-pult's "butter" shot: brief stun on contact
+                    }
                     projIt.remove();
                     break;
                 }
@@ -133,15 +170,6 @@ public class BattleController implements BehaviorContext {
         }
     }
 
-    /**
-     * Plant behaviors only know a projectile's row/lane (grid coordinates) and
-     * have no idea where that is on screen. This converts it into a real world
-     * x/y (using the same tile geometry as the Map/Tile classes and Zombie
-     * positions) and gives it a real pixels/second speed, so the projectile
-     * actually moves across the lawn each tick and its hitbox can overlap a
-     * zombie's hitbox (which is in world coordinates too). Without this,
-     * projectiles are created but never move or hit anything.
-     */
     private void placeProjectileOnMap(Projectile p) {
         if (p == null || p.isWorldPositioned()) {
             return;
@@ -184,6 +212,10 @@ public class BattleController implements BehaviorContext {
                 verticalSpeed = Math.signum(targetLane - row) * speedPxPerSec;
             }
         }
+        if (p.getType() == ProjectileType.LOB && verticalSpeed == 0.0) {
+            p.initArcPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec));
+            return;
+        }
 
         p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
     }
@@ -212,8 +244,6 @@ public class BattleController implements BehaviorContext {
             }
         }
     }
-
-    // ── zombie callback methods ──
 
     public int getTileColumn(float worldX) {
         return map != null ? map.worldToCol(worldX) : 0;

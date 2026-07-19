@@ -76,8 +76,6 @@ public class VasebreakerGame {
     }
 
     private void buildGrid(VasebreakerLevelDefinition level) {
-        // Decide whether to build a fixed board (explicit `vases` list with
-        // random=false) or a fresh random board every run.
         boolean useFixedLayout = level.getRandom() != null && !level.getRandom()
                 && level.getVases() != null && !level.getVases().isEmpty();
 
@@ -115,14 +113,11 @@ public class VasebreakerGame {
     }
 
     private void buildRandomGrid(VasebreakerLevelDefinition level) {
-        // Start with an empty board.
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 grid[r][c] = null;
             }
         }
-
-        // Collect every cell and shuffle them so the vase placement is random.
         List<int[]> allCells = new ArrayList<>();
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
@@ -137,7 +132,6 @@ public class VasebreakerGame {
 
         double plantChance = level.getPlantVaseChance() != null ? level.getPlantVaseChance() : 0.20;
         double gargChance = level.getGargantuarVaseChance() != null ? level.getGargantuarVaseChance() : 0.08;
-        // Keep gargantuar chance sensible relative to plant chance.
         gargChance = Math.min(gargChance, Math.max(0.0, 1.0 - plantChance));
 
         for (int i = 0; i < vaseCount; i++) {
