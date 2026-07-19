@@ -19,6 +19,40 @@ public enum QuestCommand {
             return new QuestInputDTO(this, matcher.group("questId"), null);
         }
     },
+
+    // ---------- Debug Commands ----------
+    DEBUG_SUN("^\\s*quest\\s+debug\\s+sun\\s+(?<amount>\\d+)\\s*$") {
+        @Override
+        public QuestInputDTO createDTO(Matcher matcher) {
+            return new QuestInputDTO(this, "sun", matcher.group("amount"));
+        }
+    },
+    DEBUG_KILL("^\\s*quest\\s+debug\\s+kill\\s+(?<count>\\d+)\\s*$") {
+        @Override
+        public QuestInputDTO createDTO(Matcher matcher) {
+            return new QuestInputDTO(this, "kill", matcher.group("count"));
+        }
+    },
+    DEBUG_PLANT("^\\s*quest\\s+debug\\s+plant\\s+(?<plant>\\S+)\\s*$") {
+        @Override
+        public QuestInputDTO createDTO(Matcher matcher) {
+            return new QuestInputDTO(this, "plant", matcher.group("plant"));
+        }
+    },
+    DEBUG_WIN("^\\s*quest\\s+debug\\s+win\\s*$") {
+        @Override
+        public QuestInputDTO createDTO(Matcher matcher) {
+            return new QuestInputDTO(this, "win", null);
+        }
+    },
+    DEBUG_RESET_DAILY("^\\s*quest\\s+debug\\s+reset\\s+daily\\s*$") {
+        @Override
+        public QuestInputDTO createDTO(Matcher matcher) {
+            return new QuestInputDTO(this, "reset_daily", null);
+        }
+    },
+
+    // ---------- عمومی ----------
     SHOW_CURRENT_MENU("^menu\\s+show\\s+current$|^show\\s+current\\s+menu$") {
         @Override
         public QuestInputDTO createDTO(Matcher matcher) {
