@@ -1,6 +1,8 @@
 package com.PVZ.model.quest;
 
 import com.PVZ.model.game.Map;
+import com.PVZ.model.enums.PlantType;
+import com.PVZ.model.enums.PlantFamily;
 import java.util.List;
 import java.util.Set;
 
@@ -10,8 +12,8 @@ public class LevelResult {
     private int plantsLost;
     private int zombiesKilledByLawnmower;
     private boolean won;
-    private Set<String> plantFamiliesUsed;   // e.g., "pepper-mint", "explosive", "sun-producer"
-    private List<String> plantTypesUsed;     // plant type names (e.g., "PEASHOOTER")
+    private Set<PlantFamily> plantFamiliesUsed;
+    private List<PlantType> plantTypesUsed;
     private int difficultyLevel;
     private boolean isDayLevel;
 
@@ -32,11 +34,11 @@ public class LevelResult {
     public boolean isWon() { return won; }
     public void setWon(boolean won) { this.won = won; }
 
-    public Set<String> getPlantFamiliesUsed() { return plantFamiliesUsed; }
-    public void setPlantFamiliesUsed(Set<String> plantFamiliesUsed) { this.plantFamiliesUsed = plantFamiliesUsed; }
+    public Set<PlantFamily> getPlantFamiliesUsed() { return plantFamiliesUsed; }
+    public void setPlantFamiliesUsed(Set<PlantFamily> plantFamiliesUsed) { this.plantFamiliesUsed = plantFamiliesUsed; }
 
-    public List<String> getPlantTypesUsed() { return plantTypesUsed; }
-    public void setPlantTypesUsed(List<String> plantTypesUsed) { this.plantTypesUsed = plantTypesUsed; }
+    public List<PlantType> getPlantTypesUsed() { return plantTypesUsed; }
+    public void setPlantTypesUsed(List<PlantType> plantTypesUsed) { this.plantTypesUsed = plantTypesUsed; }
 
     public int getDifficultyLevel() { return difficultyLevel; }
     public void setDifficultyLevel(int difficultyLevel) { this.difficultyLevel = difficultyLevel; }

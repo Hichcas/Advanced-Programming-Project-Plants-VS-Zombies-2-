@@ -1,0 +1,30 @@
+package com.PVZ.model.enums;
+
+public enum PlantFamily {
+    PEPPER_MINT,
+    WINTER_MINT,
+    ENLIGHTEN_MINT,
+    APPEASE_MINT,
+    ARMA_MINT,
+    BOMBARD_MINT,
+    ENFORCE_MINT,
+    REINFORCE_MINT,
+    ENCHANT_MINT,
+    PIERCE_MINT,
+    CAT_TAIL_MINT,
+    EXPLOSIVE,
+    SUN_PRODUCER,
+    MUSHROOM,
+    WALL,
+    MELEE,
+    SHOOTER,
+    LOBBER,
+    MODIFIER,
+    GENERAL;
+
+    public static final PlantFamily[] MINT_FAMILIES = {
+        PEPPER_MINT, WINTER_MINT, ENLIGHTEN_MINT, APPEASE_MINT,
+        ARMA_MINT, BOMBARD_MINT, ENFORCE_MINT, REINFORCE_MINT,
+        ENCHANT_MINT, PIERCE_MINT, CAT_TAIL_MINT
+    };
+}

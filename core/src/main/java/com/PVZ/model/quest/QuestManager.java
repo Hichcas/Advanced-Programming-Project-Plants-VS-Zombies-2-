@@ -1,6 +1,5 @@
 package com.PVZ.model.quest;
 
-import com.PVZ.model.entity.plants.PlantDefinition;
 import com.PVZ.model.enums.*;
 import com.PVZ.model.quest.Quest.Reward;
 import com.PVZ.model.game.Map;
@@ -14,26 +13,21 @@ public class QuestManager {
     private LocalDate lastDailyRefresh;
     private int consecutiveMaxDifficultyWins = 0;
 
-    // Template pools
-    private static final List<Quest> DAILY_POOL = new ArrayList<>();
-    private static final List<Quest> STORY_POOL = new ArrayList<>();
-    private static final List<Quest> EPIC_POOL = new ArrayList<>();
+    private static final List<Quest> DAILY_TEMPLATES = new ArrayList<>();
+    private static final List<Quest> STORY_TEMPLATES = new ArrayList<>();
+    private static final List<Quest> EPIC_TEMPLATES = new ArrayList<>();
 
     static {
-        // ---------- Daily ----------
-        DAILY_POOL.addAll(List.of(
+        DAILY_TEMPLATES.addAll(List.of(
             quest("daily_sun", "Daily Sun Catcher", "Collect {sun_amount} sun in one day",
-                QuestType.DAILY, QuestPriority.MEDIUM, "collect_sun", 3000,
-                new Reward(Reward.RewardType.COINS, 30, null),
-                java.util.Map.of("sun_amount", 3000)),
-            quest("daily_kill_family", "Family Slaughter", "Kill zombies using only plants from family {family}",
+                QuestType.DAILY, QuestPriority.MEDIUM, "collect_sun", 0,
+                new Reward(Reward.RewardType.COINS, 0, null), null),
+            quest("daily_kill_family", "Family Slaughter", "Kill zombies using only {family} plants",
                 QuestType.DAILY, QuestPriority.MEDIUM, "family_kill_only", 0,
-                new Reward(Reward.RewardType.COINS, 1000, null),
-                java.util.Map.of("family", "pepper-mint")),
-            quest("daily_no_family", "Blossom in Limitations", "Win without using any plant from family {family}",
+                new Reward(Reward.RewardType.COINS, 1000, null), null),
+            quest("daily_no_family", "Blossom in Limitations", "Win without using any {family} plant",
                 QuestType.DAILY, QuestPriority.HIGH, "no_family_used", 0,
-                new Reward(Reward.RewardType.DIAMONDS, 100, null),
-                java.util.Map.of("family", "winter-mint")),
+                new Reward(Reward.RewardType.DIAMONDS, 100, null), null),
             quest("daily_symmetry", "Symmetry", "Final garden layout must be symmetric",
                 QuestType.DAILY, QuestPriority.HIGH, "symmetry", 0,
                 new Reward(Reward.RewardType.COINS, 500, null), null),
@@ -42,21 +36,19 @@ public class QuestManager {
                 new Reward(Reward.RewardType.COINS, 800, null), null),
             quest("daily_column_empty", "One Column Less", "Win with column {col} completely empty",
                 QuestType.DAILY, QuestPriority.HIGH, "column_empty", 0,
-                new Reward(Reward.RewardType.DIAMONDS, 10, null), java.util.Map.of("col", 1)),
+                new Reward(Reward.RewardType.DIAMONDS, 10, null), null),
             quest("daily_row_empty", "Defenseless Row", "Win with row {row} completely empty",
                 QuestType.DAILY, QuestPriority.HIGH, "row_empty", 0,
-                new Reward(Reward.RewardType.DIAMONDS, 20, null), java.util.Map.of("row", 1)),
+                new Reward(Reward.RewardType.DIAMONDS, 20, null), null),
             quest("daily_cross_empty", "Defenseless Cross", "Win with column {col} and row {row} empty",
                 QuestType.DAILY, QuestPriority.HIGH, "cross_empty", 0,
-                new Reward(Reward.RewardType.DIAMONDS, 25, null), java.util.Map.of("col", 1, "row", 2)),
+                new Reward(Reward.RewardType.DIAMONDS, 25, null), null),
             quest("daily_plant_pro", "Pro with {plant}", "Kill 10 zombies using only {plant}",
                 QuestType.DAILY, QuestPriority.HIGH, "specific_plant_kill", 10,
-                new Reward(Reward.RewardType.SEED_PACKETS, 5, null),
-                java.util.Map.of("plant", PlantType.PEASHOOTER)),
+                new Reward(Reward.RewardType.SEED_PACKETS, 5, null), null),
             quest("daily_only_cactus", "Only Cactus", "Kill 10 zombies using only Cactus",
                 QuestType.DAILY, QuestPriority.HIGH, "specific_plant_kill", 10,
-                new Reward(Reward.RewardType.DIAMONDS, 20, null),
-                java.util.Map.of("plant", PlantType.CACTUS)),
+                new Reward(Reward.RewardType.DIAMONDS, 20, null), null),
             quest("daily_explosive", "Demolition Expert", "Use 3 explosive plants in one level",
                 QuestType.DAILY, QuestPriority.LOW, "use_explosive", 3,
                 new Reward(Reward.RewardType.COINS, 100, null), null),
@@ -71,24 +63,19 @@ public class QuestManager {
                 new Reward(Reward.RewardType.COINS, 300, null), null)
         ));
 
-        // ---------- Story ----------
-        STORY_POOL.addAll(List.of(
-            quest("story_chapter_hunt", "Chapter Hunter", "Defeat 50 zombies from chapter {chapter}",
+        STORY_TEMPLATES.addAll(List.of(
+            quest("story_chapter_hunt", "Chapter Hunter", "Defeat 50 zombies from {chapter}",
                 QuestType.STORY, QuestPriority.HIGH, "chapter_zombie_kill", 50,
-                new Reward(Reward.RewardType.SEED_PACKETS, 10, null),
-                java.util.Map.of("chapter", ChapterEnum.ANCIENT_EGYPT)),
+                new Reward(Reward.RewardType.SEED_PACKETS, 10, null), null),
             quest("story_economy", "Economic Herbivore", "Win without losing more than {n} plants",
                 QuestType.STORY, QuestPriority.HIGH, "max_plant_loss", 0,
-                new Reward(Reward.RewardType.SEED_PACKETS, 20, null),
-                java.util.Map.of("n", 2)),
+                new Reward(Reward.RewardType.SEED_PACKETS, 20, null), null),
             quest("story_speed", "Speed Run", "Kill 10 zombies within 30 seconds of the first wave",
                 QuestType.STORY, QuestPriority.MEDIUM, "speed_kill", 10,
-                new Reward(Reward.RewardType.COINS, 500, null),
-                java.util.Map.of("seconds", 30))
+                new Reward(Reward.RewardType.COINS, 500, null), null)
         ));
 
-        // ---------- Epic ----------
-        EPIC_POOL.addAll(List.of(
+        EPIC_TEMPLATES.addAll(List.of(
             quest("epic_defense", "Master of Defense", "End a level with exactly 0 sun",
                 QuestType.EPIC, QuestPriority.CRITICAL, "zero_sun_end", 0,
                 new Reward(Reward.RewardType.DIAMONDS, 200, null), null),
@@ -96,9 +83,8 @@ public class QuestManager {
                 QuestType.EPIC, QuestPriority.HIGH, "day_with_mushrooms", 0,
                 new Reward(Reward.RewardType.DIAMONDS, 20, null), null),
             quest("epic_lawnmower", "Lawnmower Time", "Kill at least {n} zombies with lawnmowers",
-                QuestType.EPIC, QuestPriority.MEDIUM, "lawnmower_kill", 10,
-                new Reward(Reward.RewardType.DIAMONDS, 10, null),
-                java.util.Map.of("n", 10))
+                QuestType.EPIC, QuestPriority.MEDIUM, "lawnmower_kill", 0,
+                new Reward(Reward.RewardType.DIAMONDS, 0, null), null)
         ));
     }
 
@@ -112,42 +98,57 @@ public class QuestManager {
     }
 
     private void addInitialQuests() {
-        for (Quest template : STORY_POOL) {
+        for (Quest template : STORY_TEMPLATES) {
             if (activeQuests.stream().noneMatch(q -> q.getId().equals(template.getId()) && q.isClaimed())) {
-                activeQuests.add(copyQuest(template, template.getId()));
+                Quest q = copyQuest(template, template.getId());
+                if ("chapter_zombie_kill".equals(q.getConditionKey())) {
+                    q.getParameters().put("chapter", randomChapter());
+                }
+                if ("max_plant_loss".equals(q.getConditionKey())) {
+                    q.getParameters().put("n", new Random().nextInt(6));
+                }
+                activeQuests.add(q);
             }
         }
-        for (Quest template : EPIC_POOL) {
+        for (Quest template : EPIC_TEMPLATES) {
             if (activeQuests.stream().noneMatch(q -> q.getId().equals(template.getId()) && q.isClaimed())) {
-                activeQuests.add(copyQuest(template, template.getId()));
+                Quest q = copyQuest(template, template.getId());
+                if ("lawnmower_kill".equals(q.getConditionKey())) {
+                    int n = 10 * (new Random().nextInt(5) + 1);
+                    q.getParameters().put("n", n);
+                    q.setTargetCount(n);
+                }
+                activeQuests.add(q);
             }
         }
     }
 
     private Quest copyQuest(Quest template, String newId) {
-        return new Quest(
-            newId,
-            template.getTitle(),
-            template.getDescriptionTemplate(),
-            template.getType(),
-            template.getPriority(),
-            template.getConditionKey(),
-            template.getTargetCount(),
-            template.getReward(),
-            template.getParameters()
-        );
+        return new Quest(newId, template.getTitle(), template.getDescriptionTemplate(),
+            template.getType(), template.getPriority(), template.getConditionKey(),
+            template.getTargetCount(), template.getReward(), template.getParameters());
     }
 
-    // ---------- Reset timing ----------
-    public static LocalDateTime getNextMidnight() {
-        return LocalDate.now().plusDays(1).atStartOfDay();
+    private ChapterEnum randomChapter() {
+        ChapterEnum[] chapters = ChapterEnum.values();
+        return chapters[new Random().nextInt(chapters.length)];
     }
 
-    public String getTimeUntilReset() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime next = getNextMidnight();
-        Duration d = Duration.between(now, next);
-        return d.toHours() + "h " + d.toMinutesPart() + "m";
+    private PlantFamily randomMintFamily() {
+        return PlantFamily.MINT_FAMILIES[new Random().nextInt(PlantFamily.MINT_FAMILIES.length)];
+    }
+
+    private PlantType randomAttackingPlant() {
+        List<PlantType> attackers = new ArrayList<>();
+        for (PlantType p : PlantType.values()) {
+            if (p == PlantType.CACTUS) continue;
+            PlantFamily family = PlantFamilyMapper.getFamily(p);
+            if (family == PlantFamily.SHOOTER || family == PlantFamily.MELEE ||
+                family == PlantFamily.LOBBER || family == PlantFamily.EXPLOSIVE) {
+                attackers.add(p);
+            }
+        }
+        return attackers.isEmpty() ? PlantType.PEASHOOTER : attackers.get(new Random().nextInt(attackers.size()));
     }
 
     public void refreshDailyIfNeeded() {
@@ -155,60 +156,80 @@ public class QuestManager {
         if (lastDailyRefresh != null && lastDailyRefresh.equals(today)) return;
 
         activeQuests.removeIf(q -> q.getType() == QuestType.DAILY);
-        List<Quest> shuffled = new ArrayList<>(DAILY_POOL);
+        List<Quest> shuffled = new ArrayList<>(DAILY_TEMPLATES);
         Collections.shuffle(shuffled);
         int toAdd = Math.min(3, shuffled.size());
         for (int i = 0; i < toAdd; i++) {
             Quest template = shuffled.get(i);
-            Quest newDaily = copyQuest(template, template.getId() + "_" + System.currentTimeMillis());
-            activeQuests.add(newDaily);
+            Quest q = copyQuest(template, template.getId() + "_" + System.currentTimeMillis());
+
+            switch (q.getConditionKey()) {
+                case "collect_sun" -> {
+                    int[] options = {3000, 4000, 5000};
+                    int sun = options[new Random().nextInt(options.length)];
+                    q.getParameters().put("sun_amount", sun);
+                    q.setTargetCount(sun);
+                    q.getReward().setAmount(sun / 100);
+                }
+                case "family_kill_only" -> q.getParameters().put("family", randomMintFamily());
+                case "no_family_used" -> q.getParameters().put("family", randomMintFamily());
+                case "column_empty" -> q.getParameters().put("col", new Random().nextInt(9) + 1);
+                case "row_empty" -> q.getParameters().put("row", new Random().nextInt(5) + 1);
+                case "cross_empty" -> {
+                    q.getParameters().put("col", new Random().nextInt(9) + 1);
+                    q.getParameters().put("row", new Random().nextInt(5) + 1);
+                }
+                case "specific_plant_kill" -> {
+                    if (q.getId().startsWith("daily_plant_pro")) {
+                        q.getParameters().put("plant", randomAttackingPlant());
+                    } else if (q.getId().startsWith("daily_only_cactus")) {
+                        q.getParameters().put("plant", PlantType.CACTUS);
+                    }
+                }
+            }
+            activeQuests.add(q);
         }
         lastDailyRefresh = today;
     }
 
-    // ================== IN-GAME EVENT HANDLERS ==================
+    public String getTimeUntilReset() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime next = LocalDate.now().plusDays(1).atStartOfDay();
+        Duration d = Duration.between(now, next);
+        return d.toHours() + "h " + d.toMinutesPart() + "m";
+    }
 
-    public void onZombieKilled(String zombieType, ChapterEnum chapter, int count) {
+    // ========== event handlers ==========
+    public void onZombieKilled(ZombieType zombieType, ChapterEnum chapter, int count) {
         for (Quest q : activeQuests) {
             if (q.isCompleted()) continue;
             if ("chapter_zombie_kill".equals(q.getConditionKey())) {
                 ChapterEnum required = (ChapterEnum) q.getParameters().get("chapter");
-                if (required == chapter) {
-                    q.incrementProgress(count);
-                }
+                if (required == chapter) q.incrementProgress(count);
             }
         }
     }
 
     public void onSunCollected(int amount) {
-        for (Quest q : activeQuests) {
-            if (!q.isCompleted() && "collect_sun".equals(q.getConditionKey())) {
+        for (Quest q : activeQuests)
+            if (!q.isCompleted() && "collect_sun".equals(q.getConditionKey()))
                 q.incrementProgress(amount);
-            }
-        }
     }
 
-    public void onPlantPlaced(PlantType plantType, String family) {
+    public void onPlantPlaced(PlantType plantType) {
+        PlantFamily family = PlantFamilyMapper.getFamily(plantType);
         for (Quest q : activeQuests) {
             if (q.isCompleted()) continue;
-            switch (q.getConditionKey()) {
-                case "use_explosive":
-                    if ("EXPLOSIVE".equalsIgnoreCase(family)) {
-                        q.incrementProgress(1);
-                    }
-                    break;
-                // max_sun_producers counted externally, engine must provide count.
-            }
+            if ("use_explosive".equals(q.getConditionKey()) && family == PlantFamily.EXPLOSIVE)
+                q.incrementProgress(1);
         }
     }
 
     public void onFirstWaveStarted() {
         long now = System.currentTimeMillis();
-        for (Quest q : activeQuests) {
-            if (!q.isCompleted() && "speed_kill".equals(q.getConditionKey())) {
+        for (Quest q : activeQuests)
+            if (!q.isCompleted() && "speed_kill".equals(q.getConditionKey()))
                 q.getRuntimeState().put("waveStartTime", now);
-            }
-        }
     }
 
     public void onZombieKilledInTimeWindow(long killTimeMillis) {
@@ -216,9 +237,8 @@ public class QuestManager {
             if (!q.isCompleted() && "speed_kill".equals(q.getConditionKey())) {
                 Long start = (Long) q.getRuntimeState().get("waveStartTime");
                 int sec = (int) q.getParameters().getOrDefault("seconds", 30);
-                if (start != null && (killTimeMillis - start) <= sec * 1000L) {
+                if (start != null && (killTimeMillis - start) <= sec * 1000L)
                     q.incrementProgress(1);
-                }
             }
         }
     }
@@ -227,112 +247,79 @@ public class QuestManager {
         for (Quest q : activeQuests) {
             if (!q.isCompleted() && "specific_plant_kill".equals(q.getConditionKey())) {
                 PlantType required = (PlantType) q.getParameters().get("plant");
-                if (required == plantType) {
-                    q.incrementProgress(1);
-                }
+                if (required == plantType) q.incrementProgress(1);
             }
         }
     }
 
-    // ================== END-OF-LEVEL EVALUATION ==================
-
+    // ========== end-of-level evaluation ==========
     public void evaluateEndLevelQuests(LevelResult result) {
         if (!result.isWon()) {
             consecutiveMaxDifficultyWins = 0;
             return;
         }
-
-        if (result.getDifficultyLevel() == 5) {
-            consecutiveMaxDifficultyWins++;
-        } else {
-            consecutiveMaxDifficultyWins = 0;
-        }
+        if (result.getDifficultyLevel() == 5) consecutiveMaxDifficultyWins++;
+        else consecutiveMaxDifficultyWins = 0;
 
         for (Quest q : activeQuests) {
             if (q.isCompleted() || q.isClaimed()) continue;
 
             switch (q.getConditionKey()) {
-                case "symmetry":
-                    if (checkSymmetry(result.getFinalMap())) q.setCompleted(true);
-                    break;
-                case "no_symmetry":
-                    if (checkNoSymmetry(result.getFinalMap())) q.setCompleted(true);
-                    break;
-                case "column_empty":
+                case "symmetry" -> { if (checkSymmetry(result.getFinalMap())) q.setCompleted(true); }
+                case "no_symmetry" -> { if (checkNoSymmetry(result.getFinalMap())) q.setCompleted(true); }
+                case "column_empty" -> {
                     int col = (int) q.getParameters().get("col");
                     if (isColumnEmpty(result.getFinalMap(), col)) q.setCompleted(true);
-                    break;
-                case "row_empty":
+                }
+                case "row_empty" -> {
                     int row = (int) q.getParameters().get("row");
                     if (isRowEmpty(result.getFinalMap(), row)) q.setCompleted(true);
-                    break;
-                case "cross_empty":
+                }
+                case "cross_empty" -> {
                     int c = (int) q.getParameters().get("col");
                     int r = (int) q.getParameters().get("row");
                     if (isColumnEmpty(result.getFinalMap(), c) && isRowEmpty(result.getFinalMap(), r))
                         q.setCompleted(true);
-                    break;
-                case "zero_sun_end":
-                    if (result.getFinalSunCount() == 0) q.setCompleted(true);
-                    break;
-                case "max_plant_loss":
+                }
+                case "zero_sun_end" -> { if (result.getFinalSunCount() == 0) q.setCompleted(true); }
+                case "max_plant_loss" -> {
                     int maxLoss = (int) q.getParameters().get("n");
                     if (result.getPlantsLost() <= maxLoss) q.setCompleted(true);
-                    break;
-                case "day_with_mushrooms":
-                    if (result.isDayLevel() &&
-                        result.getPlantTypesUsed().stream().allMatch(QuestManager::isMushroom)) {
+                }
+                case "day_with_mushrooms" -> {
+                    if (result.isDayLevel() && result.getPlantTypesUsed().stream().allMatch(
+                        pt -> PlantFamilyMapper.getFamily(pt) == PlantFamily.MUSHROOM))
                         q.setCompleted(true);
-                    }
-                    break;
-                case "no_family_used":
-                    String forbidden = (String) q.getParameters().get("family");
+                }
+                case "no_family_used" -> {
+                    PlantFamily forbidden = (PlantFamily) q.getParameters().get("family");
                     if (!result.getPlantFamiliesUsed().contains(forbidden)) q.setCompleted(true);
-                    break;
-                case "lawnmower_kill":
+                }
+                case "lawnmower_kill" -> {
                     int needed = (int) q.getParameters().get("n");
                     if (result.getZombiesKilledByLawnmower() >= needed) q.setCompleted(true);
-                    break;
-                case "streak":
-                    if (consecutiveMaxDifficultyWins >= q.getTargetCount()) q.setCompleted(true);
-                    break;
-                // family_kill_only must be verified by engine ensuring only that family dealt damage.
-                // lawnless_col1_kill must be tracked via a dedicated method during level.
-                // specific_plant_kill already tracked via onZombieKilledByPlant.
+                }
+                case "streak" -> { if (consecutiveMaxDifficultyWins >= q.getTargetCount()) q.setCompleted(true); }
             }
         }
-
         activeQuests.forEach(q -> q.getRuntimeState().clear());
     }
 
-    private static boolean isMushroom(String plantTypeName) {
-        try {
-            PlantType pt = PlantType.fromName(plantTypeName);
-            PlantDefinition def = pt.getDefinition();
-            if (def != null && def.getTags().contains(PlantTag.SHROOM)) return true;
-        } catch (Exception ignored) {}
-        return false;
-    }
-
-    // ---------- Map helpers ----------
+    // ---------- map helpers ----------
     private boolean checkSymmetry(Map map) {
-        int cols = map.getCols();
-        int rows = map.getRows();
-        for (int r = 0; r < rows; r++) {
+        int cols = map.getCols(), rows = map.getRows();
+        for (int r = 0; r < rows; r++)
             for (int c = 0; c < cols / 2; c++) {
                 Plant left = map.getPlantAt(r, c);
                 Plant right = map.getPlantAt(r, cols - 1 - c);
                 if ((left == null) != (right == null)) return false;
                 if (left != null && !left.getType().equals(right.getType())) return false;
             }
-        }
         return true;
     }
 
     private boolean checkNoSymmetry(Map map) {
-        int cols = map.getCols();
-        int rows = map.getRows();
-        int midRow = rows / 2;
+        int cols = map.getCols(), rows = map.getRows(), midRow = rows / 2;
         for (int r = 0; r < rows; r++) {
             if (r == midRow) continue;
             for (int c = 0; c < cols / 2; c++) {
@@ -347,25 +334,19 @@ public class QuestManager {
 
     private boolean isColumnEmpty(Map map, int colIndex) {
         int col = colIndex - 1;
-        for (int r = 0; r < map.getRows(); r++) {
+        for (int r = 0; r < map.getRows(); r++)
             if (map.getPlantAt(r, col) != null) return false;
-        }
         return true;
     }
 
     private boolean isRowEmpty(Map map, int rowIndex) {
         int row = rowIndex - 1;
-        for (int c = 0; c < map.getCols(); c++) {
+        for (int c = 0; c < map.getCols(); c++)
             if (map.getPlantAt(row, c) != null) return false;
-        }
         return true;
     }
 
-    // ================== PUBLIC API ==================
-
-    public List<Quest> getActiveQuests() {
-        return activeQuests;
-    }
+    public List<Quest> getActiveQuests() { return activeQuests; }
 
     public boolean claimQuest(String questId) {
         for (Quest q : activeQuests) {

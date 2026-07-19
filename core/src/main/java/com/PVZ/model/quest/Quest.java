@@ -9,7 +9,7 @@ import java.util.Map;
 public class Quest {
     private String id;
     private String title;
-    private String descriptionTemplate;   // contains placeholders like {plant}, {col}, etc.
+    private String descriptionTemplate;
     private QuestType type;
     private QuestPriority priority;
 
@@ -20,7 +20,7 @@ public class Quest {
     private boolean claimed;
     private Reward reward;
 
-    private Map<String, Object> parameters;   // e.g., "plant" -> PlantType.PEASHOOTER, "col" -> 2
+    private Map<String, Object> parameters;
     private transient Map<String, Object> runtimeState;
 
     public Quest() {
@@ -44,7 +44,6 @@ public class Quest {
         this.runtimeState = new HashMap<>();
     }
 
-    // ---------- getters/setters ----------
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -107,10 +106,6 @@ public class Quest {
         this.completed = false;
     }
 
-    /**
-     * Returns the description with placeholders replaced by their parameter values.
-     * e.g., "Kill 10 zombies using only {plant}" -> "Kill 10 zombies using only Peashooter"
-     */
     public String getFormattedDescription() {
         String desc = descriptionTemplate;
         if (parameters != null) {
@@ -130,16 +125,18 @@ public class Quest {
         if (value instanceof com.PVZ.model.enums.ChapterEnum) {
             return ((com.PVZ.model.enums.ChapterEnum) value).getDisplayName();
         }
+        if (value instanceof com.PVZ.model.enums.PlantFamily) {
+            return ((com.PVZ.model.enums.PlantFamily) value).name().toLowerCase().replace('_', '-');
+        }
         return String.valueOf(value);
     }
 
-    // ---------- Reward ----------
     public static class Reward {
         public enum RewardType { COINS, DIAMONDS, UNLOCK_PLANT, SEED_PACKETS }
 
         private RewardType type;
         private int amount;
-        private PlantType targetPlant;   // used for UNLOCK_PLANT reward
+        private PlantType targetPlant;
 
         public Reward() {}
         public Reward(RewardType type, int amount, PlantType targetPlant) {
