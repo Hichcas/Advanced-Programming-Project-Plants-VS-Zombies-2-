@@ -28,18 +28,21 @@ public class Projectile {
     private Rectangle hitbox = new Rectangle();
     private Texture texture;
 
+    // Arc (lobbed) flight state: pult-type plants (Cabbage-pult, Melon-pult, Kernel-pult,
+    // Winter Melon, Pepper-pult...) throw their payload up and over obstacles instead of
+    // shooting it flat, so it needs to rise then come back down rather than moving in a
+    // straight line like a peashooter pea.
+    private boolean arcMotion = false;
+    private double baseY;
+    private double arcElapsed;
+    private double arcDuration = 0.9;
+    private double arcHeight = 150.0;
+
     private final Map<String, Object> extras = new HashMap<>();
 
     public Projectile() {
     }
 
-    /**
-     * Places the projectile at a real on-screen (world) position and gives it a
-     * real pixels/second speed so it can actually travel across the lawn and hit
-     * a zombie's hitbox (which is also in world coordinates). Must be called by
-     * the game engine right after the projectile is spawned, since the plant
-     * behaviors themselves don't know about the Map's pixel geometry.
-     */
     public void initWorldPosition(float worldX, float worldY, float worldSpeedPxPerSec) {
         initWorldPosition(worldX, worldY, worldSpeedPxPerSec, 0.0f);
     }
@@ -50,6 +53,24 @@ public class Projectile {
         this.speed = worldSpeedPxPerSec;
         this.verticalSpeed = worldVerticalSpeedPxPerSec;
         this.worldPositioned = true;
+        this.arcMotion = false;
+        this.hitbox.set((float) positionX, (float) positionY, SIZE, SIZE);
+    }
+
+    /**
+     * Positions a lobbed projectile that should visibly arc up then back down onto its
+     * landing row (a parabola in screen space) instead of flying in a straight line, while
+     * still moving toward the target lane at {@code worldSpeedPxPerSec}.
+     */
+    public void initArcPosition(float worldX, float worldY, float worldSpeedPxPerSec) {
+        this.positionX = worldX;
+        this.positionY = worldY;
+        this.baseY = worldY;
+        this.speed = worldSpeedPxPerSec;
+        this.verticalSpeed = 0.0;
+        this.worldPositioned = true;
+        this.arcMotion = true;
+        this.arcElapsed = 0.0;
         this.hitbox.set((float) positionX, (float) positionY, SIZE, SIZE);
     }
 
@@ -155,7 +176,16 @@ public class Projectile {
             return;
         }
         positionX += speed * delta;
-        positionY += verticalSpeed * delta;
+        if (arcMotion) {
+            arcElapsed += delta;
+            // A simple sine arc: 0 at launch, peaks at arcHeight halfway through the flight,
+            // back to baseY (ground level) at the end — so a lobbed shot visibly rises and
+            // then comes back down instead of drifting upward forever or flying flat.
+            double t = Math.min(1.0, arcElapsed / arcDuration);
+            positionY = baseY + arcHeight * Math.sin(Math.PI * t);
+        } else {
+            positionY += verticalSpeed * delta;
+        }
         hitbox.setPosition((float) positionX, (float) positionY);
     }
 

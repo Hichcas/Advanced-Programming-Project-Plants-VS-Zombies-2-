@@ -76,6 +76,11 @@ public class Map {
             plant.putRuntimeState("worldY", worldY);
             plant.putRuntimeState("tileWidth", tileWidth);
             plant.putRuntimeState("tileHeight", tileHeight);
+            TileType tileType = tiles[row][col].getType();
+            if (tileType == TileType.ICE || tileType == TileType.TOMBSTONE) {
+                plant.putRuntimeState("freezeLevel", 3);
+                plant.putRuntimeState("iceHp", 600);
+            }
         }
     }
 

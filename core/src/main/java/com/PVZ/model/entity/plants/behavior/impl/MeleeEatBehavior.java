@@ -8,20 +8,6 @@ import com.PVZ.model.enums.DamageType;
 
 import java.util.List;
 
-/**
- * Covers all MELEE_EAT plants (bonk_choy, phat_beet, chomper, wasabi_whip, kiwibeast).
- * They don't shoot projectiles — they directly damage whatever zombie is close enough,
- * on a per-plant cooldown/damage/range read straight from the JSON-driven PlantStats
- * (actionIntervalSeconds + damage already differ correctly per plant, e.g. chomper is
- * a 40s cooldown + effectively-infinite damage because its damageSpec is "instantKill").
- *
- * Range approximation: since BehaviorContext only exposes "zombies in a lane" (not exact
- * tile occupancy), "front/back only" plants (bonk_choy, wasabi_whip, chomper) hit the
- * closest zombie within ~1.2 tiles of the plant in its own lane, while "area" plants
- * (phat_beet's 3x3, kiwibeast's growing wave) also reach into the two neighboring lanes
- * with a slightly larger radius. This is a reasonable stand-in until BehaviorContext
- * exposes exact per-tile zombie queries.
- */
 public class MeleeEatBehavior implements PlantBehavior {
 
     @Override

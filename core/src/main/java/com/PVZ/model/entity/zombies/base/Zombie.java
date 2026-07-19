@@ -3,6 +3,7 @@ package com.PVZ.model.entity.zombies.base;
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.Sun;
 import com.PVZ.model.enums.DamageType;
+import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.Map;
 import com.PVZ.model.game.BattleController;
 import com.PVZ.model.game.SunManager;
@@ -34,6 +35,8 @@ public abstract class Zombie {
     protected boolean moving = true;
     private Texture texture;
     protected boolean hypnotized = false;
+    protected int icingLevel = 0;
+    protected int iceHp = 0;
 
     public Zombie(String alias, double hitpoints, double eatDPS, double speed,
                   int wavePointCost, int weight, List<ScaledProperty> scaledProps) {
@@ -69,6 +72,11 @@ public abstract class Zombie {
             die(controller);
             return;
         }
+        if (isFrozen()) {
+            hitbox.setPosition((float) x, (float) y);
+            onUpdate(delta, controller);
+            return;
+        }
         int tileCol = controller.getTileColumn((float) x);
         col = tileCol;
         Plant plant = controller.getPlantAt((int) row, tileCol);
@@ -84,19 +92,24 @@ public abstract class Zombie {
     }
 
     protected void move(float delta, BattleController controller) {
+        if(isFrozen()) return;
         if (hypnotized) {
             x += currentSpeed * delta * 100;
         } else {
             x -= currentSpeed * delta * 100;
-            // Reaching x<=0 used to immediately end the game here, which completely bypassed
-            // the lawn mower (a zombie could never actually be stopped by it). Whether this is
-            // "the mower saves you" or "you lose" is now decided once per tick by
-            // RegularGameEngine.updateLawnMowers(), which is the only place that knows both
-            // this row's mower state and where its trigger line actually is.
+            TileType tileType = controller.getTileTypeAt((int) row, controller.getTileColumn((float) x));
+            if (tileType == TileType.SLIPPERY_UP && row > 0) {
+                row -= 1;
+                y = y + controller.getMap().getTileHeight();
+            } else if (tileType == TileType.SLIPPERY_DOWN && row < 4) {
+                row += 1;
+                y = y - controller.getMap().getTileHeight();
+            }
         }
     }
 
     protected void attack(Plant targetPlant, float delta, BattleController controller) {
+        if(isFrozen()) return;
         if (hypnotized) return;
         attackCooldownTimer += delta;
         if (attackCooldownTimer >= 1.0f) {
@@ -111,7 +124,9 @@ public abstract class Zombie {
     public void applyEffect(StatusEffect e) {
         activeEffects.add(e);
         if (e.getType() == DamageType.ICE) {
-            currentSpeed = speed * 0.5;
+            if (!"FROSTBITE_CAVES".equals(com.PVZ.model.status.AppStatus.currentChapterName)) {
+                currentSpeed = speed * 0.5;
+            }
         }
     }
 
@@ -149,7 +164,9 @@ public abstract class Zombie {
                 if (e.getType() == DamageType.ICE) { hasSlow = true; break; }
             }
             if (!hasSlow) activeEffects.add(new StatusEffect(DamageType.ICE, 3.0f));
-            currentSpeed = speed * 0.5;
+            if (!"FROSTBITE_CAVES".equals(com.PVZ.model.status.AppStatus.currentChapterName)) {
+                currentSpeed = speed * 0.5;
+            }
         }
         if (armor != null && !armor.isDestroyed()) {
             armor.takeDamage(amount);
@@ -182,6 +199,12 @@ public abstract class Zombie {
         for (StatusEffect e : activeEffects) {
             if (e.getType() == DamageType.POISON) {
                 hitpoints -= poisonDps * delta;
+            }
+        }
+        if (isFrozen()) {
+            iceHp -= (int)(delta * 60);
+            if (iceHp <= 0) {
+                thaw();
             }
         }
     }
@@ -218,6 +241,9 @@ public abstract class Zombie {
         sb.append(" R:").append((int)row).append(" C:").append((int)col);
         sb.append("\n");
         sb.append("SPD:").append(String.format("%.2f", currentSpeed));
+        if (isFrozen()) {
+            sb.append(" [FROZEN iceHp:").append(iceHp).append("]");
+        }
         for (StatusEffect e : activeEffects) {
             sb.append(" [").append(e.getType()).append(":").append(String.format("%.1f", e.getDuration())).append("s]");
         }
@@ -242,6 +268,7 @@ public abstract class Zombie {
 
     public String getAlias() { return alias; }
     public double getHitpoints() { return hitpoints; }
+    public void setHitpoints(double hp) { this.hitpoints = hp; }
     public double getMaxHitpoints() { return maxHitpoints; }
     public double getEatDPS() { return eatDPS; }
     public double getSpeed() { return speed; }
@@ -264,4 +291,20 @@ public abstract class Zombie {
     public void stealNearbySun(SunManager sunManager) { }
     public void burnPlantsAhead(Map map, BattleController controller) { }
     public void maybeSpawnGraves(Map map, Random random) { }
+
+    public int getIcingLevel() { return icingLevel; }
+    public void setIcingLevel(int l) { this.icingLevel = l; }
+    public int getIceHp() { return iceHp; }
+    public void setIceHp(int hp) { this.iceHp = hp; }
+    public boolean isFrozen() { return icingLevel >= 3; }
+    public void freezeSolid() {
+        this.icingLevel = 3;
+        this.iceHp = 600;
+        this.stopMoving();
+    }
+    public void thaw() {
+        this.icingLevel = 0;
+        this.iceHp = 0;
+        this.startMoving();
+    }
 }

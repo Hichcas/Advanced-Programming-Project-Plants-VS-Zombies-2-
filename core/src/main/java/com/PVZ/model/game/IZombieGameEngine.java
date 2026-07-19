@@ -1,0 +1,315 @@
+package com.PVZ.model.game;
+
+import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.Tile;
+import com.PVZ.model.entity.plants.PlantFactory;
+import com.PVZ.model.entity.plants.behavior.impl.Projectile;
+import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.PlantType;
+import com.PVZ.model.enums.ZombieType;
+import com.PVZ.model.minigame.izombie.IZombieGame;
+import com.PVZ.model.minigame.izombie.IZombieTexturePaths;
+import com.PVZ.model.minigame.izombie.ZombieOption;
+import com.PVZ.screen.manager.FontManager;
+import com.PVZ.view.HealthBarRenderer;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Random;
+
+public class IZombieGameEngine extends GameEngine implements ZombieEngine {
+
+    private static final double TICK_SECONDS = 0.1;
+
+    private final List<Plant> plants = new ArrayList<>();
+    private final List<Projectile> projectiles = new ArrayList<>();
+    private final RegularZombieEngine zombieEngine = new RegularZombieEngine();
+    private final BattleController battleController;
+    private final Random random = new Random();
+    private float tickAccumulator = 0f;
+
+    private final HashMap<Integer, Zombie> sunZombiesByRow = new HashMap<>();
+
+    private IZombieGame game;
+    private Texture background;
+    private BitmapFont font;
+    private BitmapFont tinyFont;
+    private final ZombiePacketBar zombiePacketBar = new ZombiePacketBar();
+
+    public IZombieGameEngine() {
+        super(new GameStatus(), new IZombieInputProcessor());
+        ((IZombieInputProcessor) inputProcessor).setEngine(this);
+        this.battleController = new BattleController(zombieEngine.getZombies(), plants, projectiles, gameStatus);
+    }
+
+    public IZombieGame getGame() { return game; }
+
+    public void setGame(IZombieGame game) { this.game = game; }
+
+    @Override
+    public void setMap(Map map) {
+        super.setMap(map);
+        zombieEngine.bindMap(map);
+        battleController.setMap(map);
+    }
+
+    public void initializeBoard() {
+        if (map == null || game == null) return;
+        seedRandomPlants();
+        spawnSunZombies();
+        layoutZombieBar();
+    }
+
+    private void layoutZombieBar() {
+        float barX = map.getStartX() + map.getTileWidth() * game.getCols() + 40f;
+        float topY = map.getStartY() - map.getTileHeight() * 0.3f;
+        zombiePacketBar.layout(game, barX, topY);
+    }
+
+    public ZombiePacketBar getZombiePacketBar() { return zombiePacketBar; }
+
+    private void seedRandomPlants() {
+        PlantType[] allPlants = PlantType.values();
+        for (int row = 0; row < game.getRows(); row++) {
+            for (int col = 0; col < game.getRedLineCol(); col++) {
+                PlantType type = allPlants[random.nextInt(allPlants.length)];
+                Plant plant = PlantFactory.createPlant(type, 1);
+                if (plant == null) continue;
+                map.setPlant(row, col, plant);
+                plants.add(plant);
+            }
+        }
+    }
+
+    private void spawnSunZombies() {
+        String alias = game.getSunZombieAlias();
+        for (int row = 0; row < game.getRows(); row++) {
+            Zombie z = zombieEngine.spawnZombie(alias, row, game.getCols() - 1);
+            if (z != null) sunZombiesByRow.put(row, z);
+        }
+    }
+
+    public String deployZombie(String alias, int row, int col) {
+        if (game == null || map == null) return "No active I, Zombie game.";
+        if (!map.isWithinBounds(row, col)) return "Invalid tile.";
+        if (!game.isInDeployZone(col)) {
+            return "Can't deploy there. Col must be greater than " + game.getRedLineCol()
+                    + " (right of the red line).";
+        }
+        ZombieOption option = game.findOption(alias);
+        if (option == null) return "Unknown zombie: " + alias;
+        if (!game.trySpend(option)) return "Not enough sun.";
+
+        Zombie z = zombieEngine.spawnZombie(option.getAlias(), row, col);
+        if (z == null) {
+            game.addSun(option.getCost());
+            return "Could not deploy zombie.";
+        }
+        return "Deployed " + option.getDisplayName() + " at row " + row + ", col " + col
+                + ". Sun remaining: " + game.getSun();
+    }
+
+    @Override
+    public void update(float delta) {
+        if (gameStatus.isGameOver() || (game != null && game.isFinished())) return;
+        battleController.update(delta);
+        tickAccumulator += delta;
+        while (tickAccumulator >= TICK_SECONDS) {
+            tickAccumulator -= TICK_SECONDS;
+            advanceOneTick((float) TICK_SECONDS);
+        }
+        checkLoss();
+    }
+
+    private void advanceOneTick(float delta) {
+        if (game == null || map == null) return;
+        updatePlants(delta);
+        updateProjectiles(delta);
+        updateSunZombies();
+        game.tickSunProduction(delta);
+        checkBrains();
+        for (Zombie z : zombieEngine.getZombies()) {
+            if (!z.isDead()) z.updateEffects(delta);
+        }
+    }
+
+    private void updatePlants(float delta) {
+        for (int row = 0; row < game.getRows(); row++) {
+            for (int col = 0; col < game.getCols(); col++) {
+                Plant plant = map.getPlantAt(row, col);
+                if (plant == null) continue;
+                plant.putRuntimeState("row", row);
+                plant.putRuntimeState("col", col);
+                plant.putRuntimeState("lane", row);
+                plant.update(battleController, (float) TICK_SECONDS);
+            }
+        }
+        plants.removeIf(p -> {
+            if (p != null && p.isDead()) {
+                int r = intState(p, "row");
+                int c = intState(p, "col");
+                map.removePlant(r, c);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private int intState(Plant p, String key) {
+        Object v = p.getRuntimeState(key);
+        return v instanceof Number ? ((Number) v).intValue() : 0;
+    }
+
+    private void updateProjectiles(float delta) {
+        for (Projectile p : projectiles) p.update(delta);
+        projectiles.removeIf(Projectile::isDestroyed);
+    }
+
+    private void updateSunZombies() {
+        for (Entry<Integer, Zombie> entry : sunZombiesByRow.entrySet()) {
+            int row = entry.getKey();
+            Zombie z = entry.getValue();
+            if (z != null && z.isDead() && game.isSunZombieAlive(row)) {
+                game.markSunZombieDead(row);
+            }
+        }
+    }
+
+    private void checkBrains() {
+        float brainLineX = map.getStartX() + map.getTileWidth() * 0.1f;
+        for (Zombie z : new ArrayList<>(zombieEngine.getZombies())) {
+            if (z == null || z.isDead()) continue;
+            int row = (int) z.getRow();
+            if (game.isBrainEaten(row)) continue;
+            if (z.getX() <= brainLineX) {
+                game.eatBrain(row);
+                zombieEngine.kill(z);
+                if (!gameStatus.isGameOver() && game.isWon()) {
+                    gameStatus.setGameOver(true);
+                    com.PVZ.model.status.AppStatus.returnToTravelLog();
+                }
+            }
+        }
+    }
+
+    private void checkLoss() {
+        if (game == null || game.isFinished()) return;
+        boolean anyZombieAlive = false;
+        for (Zombie z : zombieEngine.getZombies()) {
+            if (z != null && !z.isDead()) { anyZombieAlive = true; break; }
+        }
+        if (anyZombieAlive) return;
+
+        boolean canAffordAnything = false;
+        for (ZombieOption option : game.getRoster()) {
+            if (game.getSun() >= option.getCost()) { canAffordAnything = true; break; }
+        }
+        if (!canAffordAnything) {
+            game.markLost();
+            gameStatus.setGameOver(true);
+            com.PVZ.model.status.AppStatus.returnToTravelLog();
+        }
+    }
+
+    @Override
+    public void draw(SpriteBatch batch) {
+        zombieEngine.draw(batch);
+        batch.begin();
+        for (Zombie z : zombieEngine.getZombies()) {
+            if (z == null || z.isDead()) continue;
+            HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
+                    (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
+        }
+        for (Plant p : plants) {
+            if (p == null || p.isDead()) continue;
+            p.draw(batch);
+            Rectangle box = p.getHitbox();
+            HealthBarRenderer.draw(batch, box.x, box.y + box.height + 2, box.width,
+                    (float) p.getCurrentHp() / Math.max(1, p.getMaxHp()), true);
+        }
+        for (Projectile p : projectiles) {
+            if (p != null) p.draw(batch);
+        }
+        batch.end();
+        drawHud(batch);
+    }
+
+    private void drawHud(SpriteBatch batch) {
+        if (game == null || map == null) return;
+        ensureTexturesLoaded();
+        batch.begin();
+        String selectedAlias = ((IZombieInputProcessor) inputProcessor).getSelectedAlias();
+        zombiePacketBar.draw(batch, font, tinyFont, game, selectedAlias);
+        if (game.isWon()) {
+            font.draw(batch, "LEVEL COMPLETE! All brains eaten!", map.getStartX() + 40f, map.getStartY() + 60f);
+        } else if (game.isLost()) {
+            font.draw(batch, "GAME OVER! Out of sun and zombies.", map.getStartX() + 40f, map.getStartY() + 60f);
+        } else {
+            String label = String.format("Sun: %d | Brains left: %d/%d | Sun rate: %.1f",
+                    game.getSun(), game.getBrainsRemaining(), game.getRows(), game.getCurrentSunRate());
+            font.draw(batch, label, map.getStartX() + 20f, map.getStartY() + 40f);
+        }
+        batch.end();
+    }
+
+    private void ensureTexturesLoaded() {
+        if (font != null) return;
+        background = new Texture(IZombieTexturePaths.BACKGROUND);
+        font = FontManager.getInstance().getEnglishMenuFont();
+        tinyFont = FontManager.getInstance().getEnglishTinyFont();
+    }
+
+    @Override
+    public Texture getBackgroundOverride() {
+        ensureTexturesLoaded();
+        return background;
+    }
+
+    @Override
+    public void dispose() {
+        zombieEngine.dispose();
+        battleController.dispose();
+        zombiePacketBar.dispose();
+        if (background != null) background.dispose();
+    }
+
+    @Override
+    public void kill(Object entity) { zombieEngine.kill(entity); }
+
+    @Override
+    public void takeDamage(Object entity, double amount) { zombieEngine.takeDamage(entity, amount); }
+
+    @Override
+    public Plant getPlantAt(int row, int col) { return map != null ? map.getPlantAt(row, col) : null; }
+
+    @Override
+    public List<Zombie> getZombiesInLane(int lane) { return zombieEngine.getZombiesInLane(lane); }
+
+    @Override
+    public int getSunCount() { return game != null ? game.getSun() : 0; }
+
+    @Override
+    public void addSun(int amount) { if (game != null) game.addSun(amount); }
+
+    @Override
+    public void spawnProjectile(Projectile p) { projectiles.add(p); }
+
+    @Override
+    public Zombie spawnZombie(String alias, int row, int col) { return zombieEngine.spawnZombie(alias, row, col); }
+
+    @Override
+    public void removePlant(int row, int col) {
+        if (map != null) map.removePlant(row, col);
+    }
+
+    @Override
+    public int getTileColumn(float worldX) { return map != null ? map.worldToCol(worldX) : 0; }
+
+    public boolean isGameOver() { return gameStatus.isGameOver(); }
+}

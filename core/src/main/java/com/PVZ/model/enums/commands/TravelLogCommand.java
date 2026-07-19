@@ -20,6 +20,20 @@ public enum TravelLogCommand {
         }
     },
 
+    ENTER_WALLNUT_BOWLING("^\\s*travel\\s+log\\s+enter\\s+wallnutbowling\\s*$") {
+        @Override
+        public TravelLogInputDTO createDTO(Matcher matcher) {
+            return new TravelLogInputDTO(this, null);
+        }
+    },
+
+    ENTER_IZOMBIE("^\\s*travel\\s+log\\s+enter\\s+izombie\\s*$") {
+        @Override
+        public TravelLogInputDTO createDTO(Matcher matcher) {
+            return new TravelLogInputDTO(this, null);
+        }
+    },
+
     SHOW_CURRENT_MENU("^menu\\s+show\\s+current$|^show\\s+current\\s+menu$") {
         @Override
         public TravelLogInputDTO createDTO(Matcher matcher) {

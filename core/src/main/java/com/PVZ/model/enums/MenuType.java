@@ -19,7 +19,10 @@ public enum MenuType {
     LEADERBOARD(new LeaderboardMenu()),
     VASEBREAKER(new VasebreakerMenu()),
     IN_GAME(new InGameMenu()),
-    QUEST(new QuestMenu());
+    QUEST(new QuestMenu()),
+    WALLNUT_BOWLING(new WallnutBowlingMenu()),
+    I_ZOMBIE(new IZombieMenu());
+
 
     private final Menu currentMenu;
 

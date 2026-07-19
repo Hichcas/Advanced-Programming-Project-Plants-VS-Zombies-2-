@@ -19,6 +19,8 @@ public class TravelLogMenuController {
         return switch (dto.getCommand()) {
             case SHOW_PAGE -> new OutputDTO(true, "Travel log page: " + dto.getPageName());
             case ENTER_VASEBREAKER -> enterVasebreaker();
+            case ENTER_WALLNUT_BOWLING -> enterWallnutBowling();
+            case ENTER_IZOMBIE -> enterIZombie();
             case SHOW_CURRENT_MENU -> new OutputDTO(true, AppStatus.currentMenuType.name());
             case EXIT -> exitToGameMenu();
             case ENTER_QUEST -> {
@@ -31,6 +33,16 @@ public class TravelLogMenuController {
     private OutputDTO enterVasebreaker() {
         AppStatus.currentMenuType = MenuType.VASEBREAKER;
         return new OutputDTO(true, "Entered Vasebreaker menu. Use 'vasebreaker start <id>' to begin a level.");
+    }
+
+    private OutputDTO enterWallnutBowling() {
+        AppStatus.currentMenuType = MenuType.WALLNUT_BOWLING;
+        return new OutputDTO(true, "Entered Wallnut Bowling menu. Use 'wallnutbowling start <id>' to begin a level.");
+    }
+
+    private OutputDTO enterIZombie() {
+        AppStatus.currentMenuType = MenuType.I_ZOMBIE;
+        return new OutputDTO(true, "Entered I, Zombie menu. Use 'izombie start <id>' to begin a level.");
     }
 
     private OutputDTO exitToGameMenu() {

@@ -10,7 +10,7 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 0,
+    "coins" : 35000000,
     "diamonds" : 0,
     "stagesCompleted" : 0,
     "highestScore" : 0,
@@ -43,84 +43,146 @@
     "pots" : [ [ {
       "unlocked" : true,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
     }, {
       "unlocked" : true,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
     }, {
       "unlocked" : true,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
     }, {
       "unlocked" : true,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
     }, {
       "unlocked" : true,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
     } ], [ {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     } ], [ {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     } ], [ {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
-      "plantedTimeMillis" : 0
-    } ] ]
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    } ] ],
+    "numberOfLockedPots" : 15,
+    "numberOfUnlockedPots" : 5
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -133,8 +195,8 @@
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "availableToday" : false,
-    "forToday" : false
+    "forToday" : false,
+    "availableToday" : false
   },
-  "stayLoggedIn" : false
+  "stayLoggedIn" : true
 }
