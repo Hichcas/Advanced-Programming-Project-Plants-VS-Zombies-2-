@@ -148,7 +148,9 @@ public class GameScreen extends BaseScreen {
             gameBatch.end();
         }
 
-        // Tile debug overlay: draw the default-mechanic label on each special tile.
+        // Tile debug overlay: draw the default-mechanic label (centered, no background)
+        // on each special tile. Uses the single shared label source
+        // (RegularGameEngine.tileDebugLabel) so the on-screen glyph matches the terminal legend.
         if (com.PVZ.model.status.AppStatus.tileDebugEnabled && activeMap != null) {
             gameBatch.begin();
             for (int r = 0; r < activeMap.getRows(); r++) {
@@ -157,31 +159,17 @@ public class GameScreen extends BaseScreen {
                     if (tile == null || tile.getType() == com.PVZ.model.enums.TileType.NORMAL) {
                         continue;
                     }
-                    String label = tileDebugLabel(tile.getType());
-                    float x = tile.getX() + tile.getWidth() * 0.5f - 18;
-                    float y = tile.getY() + tile.getHeight() * 0.5f + 8;
+                    String label = com.PVZ.model.game.RegularGameEngine.tileDebugLabel(tile.getType());
+                    float cx = tile.getX() + tile.getWidth() * 0.5f;
+                    float cy = tile.getY() + tile.getHeight() * 0.5f;
+                    float x = cx - label.length() * 5f;
+                    float y = cy + hudFont.getCapHeight() * 0.5f;
                     hudFont.setColor(1, 1, 0, 1);
                     hudFont.draw(gameBatch, label, x, y);
-                    hudFont.setColor(1, 1, 1, 1);
                 }
             }
+            hudFont.setColor(1, 1, 1, 1);
             gameBatch.end();
-        }
-    }
-
-    private static String tileDebugLabel(com.PVZ.model.enums.TileType type) {
-        if (type == null) return "";
-        switch (type) {
-            case TOMBSTONE: return "TOMB";
-            case WATER: return "WATER";
-            case TIDE: return "TIDE";
-            case ICE: return "ICE";
-            case SLIPPERY_UP: return "SLIP_U";
-            case SLIPPERY_DOWN: return "SLIP_D";
-            case NECROMANCY: return "NECRO";
-            case LOW_COAST: return "LOWC";
-            case CRATER: return "CRATER";
-            default: return "";
         }
     }
 
