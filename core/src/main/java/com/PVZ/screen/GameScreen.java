@@ -37,7 +37,13 @@ public class GameScreen extends BaseScreen {
         this.mapPath = mapPath;
         this.musicPath = musicPath;
 
-        backgroundTexture = new Texture(mapPath);
+        String bgInternal = mapPath.startsWith("assets/") ? mapPath : "assets/" + mapPath;
+        if (com.badlogic.gdx.Gdx.files.internal(bgInternal).exists()) {
+            backgroundTexture = new Texture(com.badlogic.gdx.Gdx.files.internal(bgInternal));
+        } else {
+            System.out.println("GameScreen: background not found: " + bgInternal);
+            backgroundTexture = null;
+        }
 
         MusicManager.getInstance().playMusic(musicPath);
         this.gameEngine = gameEngine;
@@ -111,7 +117,9 @@ public class GameScreen extends BaseScreen {
             activeBackground = backgroundTexture;
         }
         gameBatch.begin();
-        gameBatch.draw(activeBackground, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
+        if (activeBackground != null) {
+            gameBatch.draw(activeBackground, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
+        }
         gameBatch.end();
 
         // Update game logic
@@ -138,6 +146,42 @@ public class GameScreen extends BaseScreen {
             gameBatch.begin();
             seedBar.drawIconsAndLabels(gameBatch, hudFont);
             gameBatch.end();
+        }
+
+        // Tile debug overlay: draw the default-mechanic label on each special tile.
+        if (com.PVZ.model.status.AppStatus.tileDebugEnabled && activeMap != null) {
+            gameBatch.begin();
+            for (int r = 0; r < activeMap.getRows(); r++) {
+                for (int c = 0; c < activeMap.getCols(); c++) {
+                    com.PVZ.model.entity.Tile tile = activeMap.getTile(r, c);
+                    if (tile == null || tile.getType() == com.PVZ.model.enums.TileType.NORMAL) {
+                        continue;
+                    }
+                    String label = tileDebugLabel(tile.getType());
+                    float x = tile.getX() + tile.getWidth() * 0.5f - 18;
+                    float y = tile.getY() + tile.getHeight() * 0.5f + 8;
+                    hudFont.setColor(1, 1, 0, 1);
+                    hudFont.draw(gameBatch, label, x, y);
+                    hudFont.setColor(1, 1, 1, 1);
+                }
+            }
+            gameBatch.end();
+        }
+    }
+
+    private static String tileDebugLabel(com.PVZ.model.enums.TileType type) {
+        if (type == null) return "";
+        switch (type) {
+            case TOMBSTONE: return "TOMB";
+            case WATER: return "WATER";
+            case TIDE: return "TIDE";
+            case ICE: return "ICE";
+            case SLIPPERY_UP: return "SLIP_U";
+            case SLIPPERY_DOWN: return "SLIP_D";
+            case NECROMANCY: return "NECRO";
+            case LOW_COAST: return "LOWC";
+            case CRATER: return "CRATER";
+            default: return "";
         }
     }
 

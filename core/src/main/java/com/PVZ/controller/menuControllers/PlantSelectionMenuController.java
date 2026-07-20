@@ -138,8 +138,10 @@ public class PlantSelectionMenuController {
         int initialSun = stageConfig.isDisableFallingSun() ? 150 : 200;
         GameStatus gameStatus = new GameStatus();
         gameStatus.setSunflower(initialSun);
+        gameStatus.setNoSkySun(stageConfig.isDisableFallingSun());
 
         RegularGameEngine engine = new RegularGameEngine(gameStatus, waves);
+        engine.setBackgroundTexturePath(stageConfig.getMapTexture());
 
         GameEngine oldEngine = AppStatus.getGameEngine();
         if (oldEngine != null && oldEngine.getMap() != null) {

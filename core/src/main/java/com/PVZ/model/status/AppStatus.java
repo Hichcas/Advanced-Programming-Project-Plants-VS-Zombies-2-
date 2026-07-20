@@ -84,6 +84,9 @@ public final class AppStatus {
     public static final Set<PlantType> selectedPlants = new LinkedHashSet<>();
     public static final Set<PlantType> boostedPlants = new LinkedHashSet<>();
 
+    // When true, the in-game map draws the default-mechanic label on top of each tile.
+    public static boolean tileDebugEnabled = false;
+
     public static User getCurrentUser() { return currentUser;}
 
     public static PVZ getPVZ() {

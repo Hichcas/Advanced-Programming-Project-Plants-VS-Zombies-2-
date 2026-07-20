@@ -97,7 +97,11 @@ public abstract class Zombie {
             x += currentSpeed * delta * 100;
         } else {
             x -= currentSpeed * delta * 100;
-            TileType tileType = controller.getTileTypeAt((int) row, controller.getTileColumn((float) x));
+            int hereCol = controller.getTileColumn((float) x);
+            TileType tileType = controller.getTileTypeAt((int) row, hereCol);
+            if (tileType == TileType.SLIPPERY_UP || tileType == TileType.SLIPPERY_DOWN) {
+                x -= currentSpeed * delta * 100;
+            }
             if (tileType == TileType.SLIPPERY_UP && row > 0) {
                 row -= 1;
                 y = y + controller.getMap().getTileHeight();
@@ -254,6 +258,9 @@ public abstract class Zombie {
     public void startMoving() { this.moving = true; }
 
     public boolean isDead() { return hitpoints <= 0 && (armor == null || armor.isDestroyed()); }
+
+    /** Submerged/special zombies can be immune to plant projectiles (e.g. Snorkel underwater). */
+    public boolean isProjectileImmune() { return false; }
     public void onProjectileHit(Plant target) { }
     public abstract void onSpawn();
     public void onUpdate(float delta, BattleController controller) { }
@@ -273,6 +280,7 @@ public abstract class Zombie {
     public double getEatDPS() { return eatDPS; }
     public double getSpeed() { return speed; }
     public double getCurrentSpeed() { return currentSpeed; }
+    public void setCurrentSpeed(double currentSpeed) { this.currentSpeed = currentSpeed; }
     public int getWavePointCost() { return wavePointCost; }
     public int getWeight() { return weight; }
     public Rectangle getHitbox() { return hitbox; }
@@ -306,5 +314,10 @@ public abstract class Zombie {
         this.icingLevel = 0;
         this.iceHp = 0;
         this.startMoving();
+    }
+
+    /** Kernel-pult butter: freeze the zombie solid for a short while. */
+    public void stunOnHit() {
+        this.freezeSolid();
     }
 }

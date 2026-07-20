@@ -7,6 +7,7 @@ import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.plants.behavior.impl.ProjectileType;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.entity.zombies.base.ZombieProjectile;
+import com.PVZ.model.entity.zombies.types.ranged_caster.ZombieDarkJuggler;
 import com.PVZ.model.enums.DamageType;
 import com.PVZ.model.enums.TileType;
 import com.PVZ.model.status.AppStatus;
@@ -91,6 +92,16 @@ public class BattleController implements BehaviorContext {
             for (Zombie z : zombies) {
                 if (z.isDead()) continue;
                 if (p.getHitbox().overlaps(z.getHitbox())) {
+                    if (z.isProjectileImmune()) {
+                        break;
+                    }
+                    if (z instanceof ZombieDarkJuggler jj && jj.reflectProjectile()) {
+                        this.addZombieProjectile(new ZombieProjectile(
+                            (float) z.getX(), (float) z.getY() + 30, (int) p.getDamage(), 300f, (int) z.getRow(), jj));
+                        System.out.println(jj.getAlias() + " reflected a projectile");
+                        projIt.remove();
+                        break;
+                    }
                     if (p.getType() == ProjectileType.FIRE_PEA && z.isFrozen()) {
                         z.thaw();
                     } else if (p.getType() == ProjectileType.ICE_PEA && z.isFrozen()) {
@@ -100,6 +111,11 @@ public class BattleController implements BehaviorContext {
                         }
                     } else {
                         z.takeDamage((int) p.getDamage(), resolveDamageType(p));
+                    }
+                    Object plantTypeObj = p.getExtra("plantType");
+                    if (plantTypeObj instanceof com.PVZ.model.enums.PlantType pt
+                            && pt == com.PVZ.model.enums.PlantType.KERNEL_PULT) {
+                        z.stunOnHit();
                     }
                     projIt.remove();
                     break;
