@@ -1024,8 +1024,13 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                         .append(row)
                         .append(") hp=")
                         .append(plant.getCurrentHp())
-                        .append(plant.isPlantFoodActive() ? " [plant food]" : "")
-                        .append('\n');
+                        .append(plant.isPlantFoodActive() ? " [plant food]" : "");
+                    Object fl = plant.getRuntimeState("freezeLevel");
+                    if (fl instanceof Number && ((Number) fl).intValue() >= 3) {
+                        builder.append(" [FROZEN freezelv=").append(fl)
+                            .append(" iceHp=").append(plant.getRuntimeState("iceHp")).append("]");
+                    }
+                    builder.append("\n");
                 }
             }
         }

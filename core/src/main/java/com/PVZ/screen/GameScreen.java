@@ -164,7 +164,7 @@ public class GameScreen extends BaseScreen {
                     float cy = tile.getY() + tile.getHeight() * 0.5f;
                     float x = cx - label.length() * 5f;
                     float y = cy + hudFont.getCapHeight() * 0.5f;
-                    hudFont.setColor(1, 1, 0, 1);
+                    hudFont.setColor (0, 1, 0, 1) ;
                     hudFont.draw(gameBatch, label, x, y);
                 }
             }

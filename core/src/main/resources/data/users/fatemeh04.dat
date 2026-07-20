@@ -4,13 +4,13 @@
     "nickname" : "SaraT",
     "email" : "sara@example.com",
     "gender" : "female",
-    "passwordHash" : "e66860546f18cdbbcd86b35e18b525bffc67f772c650cedfe3ff7a0026fa1dee",
+    "passwordHash" : "mpk",
     "securityQuestion" : "What is your favorite color?",
     "securityAnswerHash" : "16477688c0e00699c6cfa4497a3612d7e83c532062b64b250fed8908128ed548"
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 165000000,
+    "coins" : 229980000,
     "diamonds" : 0,
     "stagesCompleted" : 0,
     "highestScore" : 0,
@@ -33,7 +33,7 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ ],
+    "unlockedPlants" : [ "WALL_NUT", "SNOW_PEA", "ROTOBAGA", "PEASHOOTER", "TORCHWOOD", "SUNFLOWER" ],
     "seenZombies" : [ ],
     "seedPackets" : { },
     "plantLevels" : { },
@@ -195,8 +195,8 @@
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "forToday" : false,
-    "availableToday" : false
+    "availableToday" : false,
+    "forToday" : false
   },
   "stayLoggedIn" : true
 }
