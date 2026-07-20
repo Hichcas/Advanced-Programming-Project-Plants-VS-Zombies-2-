@@ -15,16 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * The strip of unlocked-plant seed packets shown at the top of the game screen. Clicking a
- * packet (via {@link RegularInputProcessor}) selects that plant type on the engine; the next
- * tile click then plants it there, mirroring the real PvZ seed-picker flow.
- *
- * NOTE: {@link #layout} is called every frame by GameScreen (to refresh the loadout), which
- * rebuilds all {@link SeedPacket} objects from scratch — so per-packet icons set via
- * {@link #setIcon} would get wiped out every frame. Icons are therefore cached here, keyed by
- * PlantType, and re-attached to the fresh packets on every layout() call.
- */
+
 public class SeedPacketBar {
     static private final float Xoffset = 600f;
 
@@ -35,10 +26,13 @@ public class SeedPacketBar {
     private final Map<PlantType, Texture> iconCache = new HashMap<>();
     private final Map<PlantType, Boolean> missingLogged = new HashMap<>();
 
-    /** Lays out one packet per unlocked plant, left to right, starting at (startX, startY). */
+
     public void layout(List<PlantType> unlockedPlants, float startX, float startY) {
+        layout(unlockedPlants, startX, startY, true);
+    }
+    public void layout(List<PlantType> unlockedPlants, float startX, float startY, boolean applyDefaultOffset) {
         packets.clear();
-        float x = startX + Xoffset;   // <-- آفست اینجا اضافه بشه
+        float x = applyDefaultOffset ? startX + Xoffset : startX;
         for (PlantType type : unlockedPlants) {
             Rectangle bounds = new Rectangle(x, startY, SLOT_SIZE, SLOT_SIZE);
             SeedPacket packet = new SeedPacket(type, bounds);
@@ -57,11 +51,7 @@ public class SeedPacketBar {
         }
     }
 
-    /**
-     * Loads (once) and caches the real Plants/*.png icon for this plant type. Prints a single
-     * console line the first time a given plant's icon is missing, so it's obvious from the
-     * command-line run which file name/path to fix — without spamming every frame.
-     */
+
     private Texture getOrLoadIcon(PlantType type) {
         if (type == null) {
             return null;
@@ -105,12 +95,12 @@ public class SeedPacketBar {
         for (SeedPacket packet : packets) {
             Rectangle b = packet.getBounds();
             boolean affordable = engine == null
+                || engine.isConveyorBeltMode()
                 || packet.getPlantType().getDefinition() == null
                 || engine.getSunCount() >= packet.getPlantType().getDefinition().getCost();
-            boolean onCooldown = engine != null && engine.isOnCooldown(packet.getPlantType());
+            boolean onCooldown = engine != null && !engine.isConveyorBeltMode()
+                && engine.isOnCooldown(packet.getPlantType());
 
-            // once a real icon is loaded, skip painting a solid background box over it —
-            // only draw a thin selection/status tint so the artwork stays visible.
             if (packet.getIcon() != null && packet.getPlantType() != selected && !onCooldown && affordable) {
                 continue;
             }
@@ -130,11 +120,7 @@ public class SeedPacketBar {
         drawIconsAndLabels(batch, font, null);
     }
 
-    /**
-     * @param engine optional — when given, packets currently recharging get darkened
-     *               (drawn on top of the icon, not hidden behind it like before) and show
-     *               a "N s" countdown of exactly how long until they're plantable again.
-     */
+
     public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font, RegularGameEngine engine) {
         for (SeedPacket packet : packets) {
             Rectangle b = packet.getBounds();

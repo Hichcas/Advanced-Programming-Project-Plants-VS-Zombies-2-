@@ -5,6 +5,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.PVZ.PVZ;
 import com.PVZ.screen.BaseScreen;
@@ -12,18 +14,16 @@ import java.util.function.Supplier; // 🌟 اضافه شدن ابزار ساخ�
 
 public class ScreenManager {
     private static ScreenManager instance;
-
     private PVZ game;
-    // 🌟 تغییر از آبجکت مستقیم به کارخانه/تامین‌کننده اسکرین بعدی
     private Supplier<BaseScreen> pendingScreenSupplier;
     private final SpriteBatch batch;
     private final Texture blackOverlay;
-
     private enum TransitionState { NONE, FADE_OUT, FADE_IN }
     private TransitionState state = TransitionState.NONE;
-
     private float blackScreenAlpha = 0f;
     private float currentDuration = 2.5f;
+    private String activeMessage;
+    private final GlyphLayout glyphLayout = new GlyphLayout();
 
     private ScreenManager() {
         batch = new SpriteBatch();
@@ -51,14 +51,17 @@ public class ScreenManager {
         this.blackScreenAlpha = 1.0f;
     }
 
-    // 🌟 تغییر امضای متد: حالا یک تامین‌کننده (Supplier) می‌گیرد تا اسکرین جلوتر نیو نشود
     public void performTransition(Supplier<BaseScreen> screenSupplier) {
+        performTransition(screenSupplier, null);
+    }
+    public void performTransition(Supplier<BaseScreen> screenSupplier, String message) {
         if (state != TransitionState.NONE) return;
 
         this.pendingScreenSupplier = screenSupplier;
         this.currentDuration = 1.5f;
         this.state = TransitionState.FADE_OUT;
         this.blackScreenAlpha = 0f;
+        this.activeMessage = message;
     }
 
     public void updateAndRender(float delta) {
@@ -88,6 +91,7 @@ public class ScreenManager {
             if (blackScreenAlpha <= 0.0f) {
                 blackScreenAlpha = 0.0f;
                 state = TransitionState.NONE;
+                activeMessage = null;
             }
         }
 
@@ -96,6 +100,17 @@ public class ScreenManager {
         batch.setColor(1f, 1f, 1f, blackScreenAlpha);
         batch.draw(blackOverlay, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.setColor(Color.WHITE);
+
+        if (activeMessage != null) {
+            BitmapFont font = FontManager.getInstance().getEnglishTitleFont();
+            float textAlpha = Math.min(1f, blackScreenAlpha * 1.4f);
+            font.setColor(1f, 0.15f, 0.15f, textAlpha);
+            glyphLayout.setText(font, activeMessage);
+            font.draw(batch, glyphLayout,
+                (Gdx.graphics.getWidth() - glyphLayout.width) / 2f,
+                (Gdx.graphics.getHeight() + glyphLayout.height) / 2f);
+            font.setColor(Color.WHITE);
+        }
         batch.end();
     }
 

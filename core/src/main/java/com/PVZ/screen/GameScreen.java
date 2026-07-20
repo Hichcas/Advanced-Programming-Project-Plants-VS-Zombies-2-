@@ -27,9 +27,10 @@ public class GameScreen extends BaseScreen {
     private Map gameMap;
     private ShapeRenderer shapeDebug;
     private final BitmapFont hudFont;
-
-    // تکسچر پس‌زمینه
+    private final BitmapFont gameOverFont;
     private Texture backgroundTexture;
+    private float gameOverAlpha = 0f;
+    private boolean gameOverShown = false;
 
     public GameScreen(String mapPath, String musicPath, GameEngine gameEngine) {
         super();
@@ -55,12 +56,12 @@ public class GameScreen extends BaseScreen {
         gameMap = new Map(550, 1240, 1600, 1170, 5, 9);
         shapeDebug = new ShapeRenderer();
         hudFont = FontManager.getInstance().getEnglishMenuFont();
+        gameOverFont = FontManager.getInstance().getEnglishMenuFont();
 
         gameEngine.setMap(gameMap);
 
         if (gameEngine instanceof RegularGameEngine regularGameEngine) {
-            List<PlantType> loadout = new ArrayList<>(AppStatus.selectedPlants);
-            regularGameEngine.getSeedPacketBar().layout(loadout, 40f, VIRTUAL_HEIGHT - 150f);
+            layoutSeedPacketBar(regularGameEngine);
         }
     }
 
@@ -92,9 +93,24 @@ public class GameScreen extends BaseScreen {
     private void refreshSeedPacketBar() {
         GameEngine activeEngine = AppStatus.getGameEngine();
         if (activeEngine instanceof RegularGameEngine regularGameEngine) {
-            List<PlantType> loadout = new ArrayList<>(AppStatus.selectedPlants);
+            layoutSeedPacketBar(regularGameEngine);
+        }
+    }
+
+    private void layoutSeedPacketBar(RegularGameEngine regularGameEngine) {
+        List<PlantType> loadout = seedBarLoadout(regularGameEngine);
+        if (regularGameEngine.isConveyorBeltMode()) {
+            regularGameEngine.getSeedPacketBar().layout(loadout, 30f, VIRTUAL_HEIGHT - 260f, false);
+        } else {
             regularGameEngine.getSeedPacketBar().layout(loadout, 40f, VIRTUAL_HEIGHT - 150f);
         }
+    }
+
+    private List<PlantType> seedBarLoadout(RegularGameEngine regularGameEngine) {
+        if (regularGameEngine.isConveyorBeltMode()) {
+            return new ArrayList<>(regularGameEngine.getConveyorBeltQueue());
+        }
+        return new ArrayList<>(AppStatus.selectedPlants);
     }
 
     @Override
@@ -106,6 +122,32 @@ public class GameScreen extends BaseScreen {
         GameEngine activeEngine = AppStatus.getGameEngine();
         if (activeEngine == null) {
             activeEngine = gameEngine;
+        }
+
+        boolean isGameOver = false;
+        boolean isWin = false;
+        if (activeEngine instanceof RegularGameEngine regularGameEngine) {
+            isGameOver = regularGameEngine.isGameOverTriggered();
+            isWin = regularGameEngine.isGameOverWin();
+            if (isGameOver) {
+                if (!gameOverShown) {
+                    gameOverShown = true;
+                    gameOverAlpha = 0f;
+                }
+                float displayTime = regularGameEngine.getGameOverTimer();
+                if (displayTime < 1.0f) {
+                    // Fade in
+                    gameOverAlpha = Math.min(1.0f, displayTime);
+                } else if (displayTime > 2.5f) {
+                    // Fade out
+                    gameOverAlpha = Math.max(0.0f, 1.0f - (displayTime - 2.5f) / 0.5f);
+                } else {
+                    gameOverAlpha = 1.0f;
+                }
+            } else {
+                gameOverShown = false;
+                gameOverAlpha = 0f;
+            }
         }
 
         // Set projection for rendering
@@ -148,6 +190,18 @@ public class GameScreen extends BaseScreen {
             gameBatch.end();
         }
 
+        if (isGameOver && gameOverAlpha > 0) {
+            gameBatch.begin();
+            gameOverFont.setColor(1, 1, 1, gameOverAlpha);
+            String message = isWin ? "LEVEL COMPLETE!" : "GAME OVER";
+            com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout(gameOverFont, message);
+            float x = VIRTUAL_WIDTH / 2f - layout.width / 2f;
+            float y = VIRTUAL_HEIGHT / 2f + layout.height / 2f;
+            gameOverFont.draw(gameBatch, message, x, y);
+            gameOverFont.setColor(1, 1, 1, 1);
+            gameBatch.end();
+        }
+
         // Tile debug overlay: draw the default-mechanic label on each special tile.
         if (com.PVZ.model.status.AppStatus.tileDebugEnabled && activeMap != null) {
             gameBatch.begin();
@@ -187,6 +241,9 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void dispose() {
+        if (isDisposed()) {
+            return;
+        }
         super.dispose();
         if (shapeDebug != null) {
             shapeDebug.dispose();
