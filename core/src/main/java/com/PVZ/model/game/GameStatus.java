@@ -5,6 +5,7 @@ public class GameStatus {
     private boolean won = false;
     private int sunflower;
     private int remainingZombieWaveInPercent;
+    private boolean noSkySun = false;
 
     public int getRemainingZombieWaveInPercent() {
         return remainingZombieWaveInPercent;
@@ -36,5 +37,13 @@ public class GameStatus {
 
     public void setWon(boolean won) {
         this.won = won;
+    }
+
+    public boolean isNoSkySun() {
+        return noSkySun;
+    }
+
+    public void setNoSkySun(boolean noSkySun) {
+        this.noSkySun = noSkySun;
     }
 }

@@ -75,4 +75,7 @@ public class ZombieBeachSnorkel extends AbstractSpecialMovementZombie {
     public boolean isSubmerged() { return submerged; }
     public void surface() { submerged = false; }
     public void dive() { submerged = true; }
+
+    @Override
+    public boolean isProjectileImmune() { return submerged; }
 }

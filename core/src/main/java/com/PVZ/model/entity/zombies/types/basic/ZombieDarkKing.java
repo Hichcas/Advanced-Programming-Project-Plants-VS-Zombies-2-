@@ -1,6 +1,8 @@
 package com.PVZ.model.entity.zombies.types.basic;
 
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,4 +31,15 @@ public class ZombieDarkKing extends AbstractBasicZombie {
     public double getBuffRadius() { return buffRadius; }
     public double getSpeedBoost() { return speedBoost; }
     public double getDamageBoost() { return damageBoost; }
+
+    @Override
+    public void onUpdate(float delta, BattleController controller) {
+        for (Zombie z : controller.getAllZombies()) {
+            if (z == this || z.isDead()) continue;
+            double dx = Math.abs(z.getX() - this.x);
+            if (dx <= buffRadius) {
+                z.setCurrentSpeed(Math.max(z.getCurrentSpeed(), z.getSpeed() * speedBoost));
+            }
+        }
+    }
 }

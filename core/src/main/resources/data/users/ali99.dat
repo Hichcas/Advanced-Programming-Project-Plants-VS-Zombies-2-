@@ -198,5 +198,5 @@
     "forToday" : false,
     "availableToday" : false
   },
-  "stayLoggedIn" : true
+  "stayLoggedIn" : false
 }

@@ -8,7 +8,9 @@ import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.PlantTag;
 import com.PVZ.model.enums.PlantType;
+import com.PVZ.model.enums.TileType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
@@ -52,6 +54,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     private final List<Plant> plants = new ArrayList<>();
     private WaveManager waveManager;
     private BattleController battleController;
+
+    /** Per-stage background texture path (from StageConfig.mapTexture); null = use default Frontyard. */
+    private String backgroundTexturePath;
+    private com.badlogic.gdx.graphics.Texture backgroundOverrideTexture;
 
     public RegularGameEngine(GameStatus gameStatus) {
         this(gameStatus, createDefaultWaves());
@@ -335,6 +341,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (map == null) {
             return;
         }
+        if (gameStatus != null && gameStatus.isNoSkySun()) {
+            return;
+        }
         skySunTimer += delta;
         if (skySunTimer < SKY_SUN_INTERVAL_SECONDS) {
             return;
@@ -453,6 +462,11 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         zombies.clear();
         sunManager.clear();
         plantFoodManager.reset();
+
+        if (backgroundOverrideTexture != null) {
+            backgroundOverrideTexture.dispose();
+            backgroundOverrideTexture = null;
+        }
 
         if (zombieEngine != null) {
             zombieEngine.dispose();
@@ -748,6 +762,30 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return 0;
     }
 
+    public void setBackgroundTexturePath(String path) {
+        this.backgroundTexturePath = path;
+    }
+
+    @Override
+    public com.badlogic.gdx.graphics.Texture getBackgroundOverride() {
+        if (backgroundTexturePath == null || backgroundTexturePath.isEmpty()) {
+            return null;
+        }
+        if (backgroundOverrideTexture == null) {
+            String internalPath = backgroundTexturePath.startsWith("assets/")
+                    ? backgroundTexturePath
+                    : "assets/" + backgroundTexturePath;
+            if (com.badlogic.gdx.Gdx.files.internal(internalPath).exists()) {
+                backgroundOverrideTexture = new com.badlogic.gdx.graphics.Texture(
+                        com.badlogic.gdx.Gdx.files.internal(internalPath));
+            } else {
+                System.out.println("RegularGameEngine: background not found: " + internalPath);
+                return null;
+            }
+        }
+        return backgroundOverrideTexture;
+    }
+
     public String plantPlant(String plantType, int x, int y) {
         PlantType type;
         try {
@@ -798,6 +836,16 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         Plant plant = PlantFactory.createPlant(type, userLevel);
         if (plant == null) {
             return "Cannot create plant.";
+        }
+
+        TileType targetTileType = map.getTile(row, col).getType();
+        boolean plantIsAquatic = plant.getDefinition() != null
+                && plant.getDefinition().hasTag(PlantTag.WATER);
+        if ((targetTileType == TileType.WATER || targetTileType == TileType.TIDE) && !plantIsAquatic) {
+            return "Non-aquatic plants cannot be planted on water tiles.";
+        }
+        if (plantIsAquatic && targetTileType != TileType.WATER && targetTileType != TileType.TIDE) {
+            return "Aquatic plants must be planted on water tiles.";
         }
 
         int cost = plant.getStats().getCost();
@@ -927,6 +975,22 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return "Sun amount: " + getSunCount();
     }
 
+    private static String tileGlyph(TileType type) {
+        if (type == null) return ".";
+        switch (type) {
+            case TOMBSTONE: return "T";
+            case WATER: return "~";
+            case TIDE: return "^";
+            case ICE: return "*";
+            case SLIPPERY_UP: return "U";
+            case SLIPPERY_DOWN: return "D";
+            case NECROMANCY: return "N";
+            case LOW_COAST: return "L";
+            case CRATER: return "C";
+            default: return ".";
+        }
+    }
+
     public String showMapText() {
         StringBuilder builder = new StringBuilder();
         builder.append("Sun: ").append(getSunCount())
@@ -958,6 +1022,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                     cell = 'Z';
                 } else if (plant != null) {
                     cell = plant.getType().name().charAt(0);
+                } else if (map != null) {
+                    Tile tile = map.getTile(row, col);
+                    cell = tile == null ? '.' : tileGlyph(tile.getType()).charAt(0);
                 } else {
                     cell = '.';
                 }
@@ -967,6 +1034,29 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 }
             }
             builder.append('\n');
+        }
+
+        // Debug: full-name listing of every special (non-NORMAL) tile + coordinates.
+        builder.append("Tile debug:\n");
+        boolean any = false;
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                if (map == null) break;
+                Tile tile = map.getTile(row, col);
+                if (tile == null || tile.getType() == TileType.NORMAL) {
+                    continue;
+                }
+                any = true;
+                builder.append("  (").append(col).append(", ").append(row).append(") = ")
+                        .append(tile.getType().name());
+                if (tile.getType() == TileType.TOMBSTONE) {
+                    builder.append(" hp=").append(tile.getHp());
+                }
+                builder.append('\n');
+            }
+        }
+        if (!any) {
+            builder.append("  (none)\n");
         }
         return builder.toString().trim();
     }
