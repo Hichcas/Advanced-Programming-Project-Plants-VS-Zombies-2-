@@ -184,15 +184,6 @@ public class BattleController implements BehaviorContext {
         }
     }
 
-    /**
-     * Plant behaviors only know a projectile's row/lane (grid coordinates) and
-     * have no idea where that is on screen. This converts it into a real world
-     * x/y (using the same tile geometry as the Map/Tile classes and Zombie
-     * positions) and gives it a real pixels/second speed, so the projectile
-     * actually moves across the lawn each tick and its hitbox can overlap a
-     * zombie's hitbox (which is in world coordinates too). Without this,
-     * projectiles are created but never move or hit anything.
-     */
     private void placeProjectileOnMap(Projectile p) {
         if (p == null || p.isWorldPositioned()) {
             return;
@@ -277,7 +268,7 @@ public class BattleController implements BehaviorContext {
         }
         System.out.println("GAME OVER — zombie reached the house!");
         gameStatus.setGameOver(true);
-        AppStatus.returnToMainMenu();
+        AppStatus.returnToMainMenu("GAME OVER");
     }
 
     public void removeZombie(Zombie zombie) {
