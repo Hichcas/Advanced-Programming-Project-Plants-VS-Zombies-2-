@@ -722,9 +722,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             return null;
         }
         if (backgroundOverrideTexture == null) {
-            String internalPath = backgroundTexturePath.startsWith("assets/")
-                    ? backgroundTexturePath
-                    : "assets/" + backgroundTexturePath;
+            String internalPath = backgroundTexturePath;
             if (com.badlogic.gdx.Gdx.files.internal(internalPath).exists()) {
                 backgroundOverrideTexture = new com.badlogic.gdx.graphics.Texture(
                         com.badlogic.gdx.Gdx.files.internal(internalPath));
