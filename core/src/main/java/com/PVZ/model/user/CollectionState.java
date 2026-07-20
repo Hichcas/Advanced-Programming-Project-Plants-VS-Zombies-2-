@@ -20,6 +20,8 @@ public class CollectionState {
     // ---------- سازنده ----------
     public CollectionState() {
         unlockedPlants = new HashSet<>();
+        unlockedPlants.add(PlantType.PEASHOOTER);
+        unlockedPlants.add(PlantType.SUNFLOWER);
         seenZombies = new HashSet<>();
         seedPackets = new HashMap<>();
         plantLevels = new HashMap<>();
