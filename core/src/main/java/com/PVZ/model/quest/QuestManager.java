@@ -64,9 +64,6 @@ public class QuestManager {
         ));
 
         STORY_TEMPLATES.addAll(List.of(
-            quest("story_chapter_hunt", "Chapter Hunter", "Defeat 50 zombies from {chapter}",
-                QuestType.STORY, QuestPriority.HIGH, "chapter_zombie_kill", 50,
-                new Reward(Reward.RewardType.SEED_PACKETS, 10, null), null),
             quest("story_economy", "Economic Herbivore", "Win without losing more than {n} plants",
                 QuestType.STORY, QuestPriority.HIGH, "max_plant_loss", 0,
                 new Reward(Reward.RewardType.SEED_PACKETS, 20, null), null),
@@ -101,9 +98,6 @@ public class QuestManager {
         for (Quest template : STORY_TEMPLATES) {
             if (activeQuests.stream().noneMatch(q -> q.getId().equals(template.getId()) && q.isClaimed())) {
                 Quest q = copyQuest(template, template.getId());
-                if ("chapter_zombie_kill".equals(q.getConditionKey())) {
-                    q.getParameters().put("chapter", randomChapter());
-                }
                 if ("max_plant_loss".equals(q.getConditionKey())) {
                     q.getParameters().put("n", new Random().nextInt(6));
                 }
@@ -117,11 +111,48 @@ public class QuestManager {
                     int n = 10 * (new Random().nextInt(5) + 1);
                     q.getParameters().put("n", n);
                     q.setTargetCount(n);
-                    q.getReward().setAmount(n);   // <-- ADD THIS LINE
+                    q.getReward().setAmount(n);
                 }
                 activeQuests.add(q);
             }
         }
+        updateChapterQuests();
+    }
+
+    public void updateChapterQuests() {
+        ChapterEnum[] chapters = ChapterEnum.values();
+        boolean anyClaimed = activeQuests.stream().anyMatch(q -> q.getId().startsWith("story_chapter_hunt_") && q.isClaimed());
+        String firstId = "story_chapter_hunt_" + chapters[0].name();
+        boolean firstExists = activeQuests.stream().anyMatch(q -> q.getId().equals(firstId));
+        if (!anyClaimed && !firstExists) {
+            addChapterQuest(chapters[0]);
+        }
+        for (int i = 1; i < chapters.length; i++) {
+            String prevId = "story_chapter_hunt_" + chapters[i-1].name();
+            String currId = "story_chapter_hunt_" + chapters[i].name();
+            boolean prevClaimed = activeQuests.stream()
+                .anyMatch(q -> q.getId().equals(prevId) && q.isClaimed());
+            boolean currExists = activeQuests.stream()
+                .anyMatch(q -> q.getId().equals(currId));
+            if (prevClaimed && !currExists) {
+                addChapterQuest(chapters[i]);
+            }
+        }
+    }
+
+    private void addChapterQuest(ChapterEnum chapter) {
+        Quest q = new Quest(
+            "story_chapter_hunt_" + chapter.name(),
+            "Chapter Hunter",
+            "Defeat 50 zombies from {chapter}",
+            QuestType.STORY,
+            QuestPriority.HIGH,
+            "chapter_zombie_kill",
+            50,
+            new Reward(Reward.RewardType.SEED_PACKETS, 10, null),
+            java.util.Map.of("chapter", chapter)
+        );
+        activeQuests.add(q);
     }
 
     private Quest copyQuest(Quest template, String newId) {
@@ -134,7 +165,6 @@ public class QuestManager {
             template.getTargetCount(), rewardCopy, template.getParameters());
     }
 
-    // ================== safe enum retrieval ==================
     @SuppressWarnings("unchecked")
     private <T extends Enum<T>> T getParamAsEnum(java.util.Map<String, Object> params, String key, Class<T> enumClass, T fallback) {
         Object obj = params.get(key);
@@ -150,7 +180,6 @@ public class QuestManager {
         return fallback;
     }
 
-    // helpers with specific types
     private ChapterEnum getChapterParam(Quest q) {
         return getParamAsEnum(q.getParameters(), "chapter", ChapterEnum.class, ChapterEnum.ANCIENT_EGYPT);
     }
@@ -159,12 +188,6 @@ public class QuestManager {
     }
     private PlantFamily getFamilyParam(Quest q) {
         return getParamAsEnum(q.getParameters(), "family", PlantFamily.class, PlantFamily.GENERAL);
-    }
-
-    // ================== daily refresh ==================
-    private ChapterEnum randomChapter() {
-        ChapterEnum[] chapters = ChapterEnum.values();
-        return chapters[new Random().nextInt(chapters.length)];
     }
 
     private PlantFamily randomMintFamily() {
@@ -187,7 +210,6 @@ public class QuestManager {
     public void refreshDailyIfNeeded() {
         LocalDate today = LocalDate.now();
         if (lastDailyRefresh != null && lastDailyRefresh.equals(today)) return;
-
         activeQuests.removeIf(q -> q.getType() == QuestType.DAILY);
         List<Quest> shuffled = new ArrayList<>(DAILY_TEMPLATES);
         Collections.shuffle(shuffled);
@@ -195,7 +217,6 @@ public class QuestManager {
         for (int i = 0; i < toAdd; i++) {
             Quest template = shuffled.get(i);
             Quest q = copyQuest(template, template.getId() + "_" + System.currentTimeMillis());
-
             switch (q.getConditionKey()) {
                 case "collect_sun" -> {
                     int[] options = {3000, 4000, 5000};
@@ -232,7 +253,7 @@ public class QuestManager {
         return d.toHours() + "h " + d.toMinutesPart() + "m";
     }
 
-    // ========== event handlers ==========
+    // ---------- event handlers ----------
     public void onZombieKilled(ZombieType zombieType, ChapterEnum chapter, int count) {
         for (Quest q : activeQuests) {
             if (q.isCompleted()) continue;
@@ -291,7 +312,7 @@ public class QuestManager {
         }
     }
 
-    // ========== end-of-level evaluation ==========
+    // ---------- end-of-level evaluation ----------
     public void evaluateEndLevelQuests(LevelResult result) {
         if (!result.isWon()) {
             consecutiveMaxDifficultyWins = 0;
@@ -341,28 +362,31 @@ public class QuestManager {
                     if (!result.getPlantFamiliesUsed().contains(forbidden)) q.setCompleted(true);
                 }
                 case "lawnmower_kill" -> {
-                    int needed = (int) q.getParameters().get("n");
-                    if (result.getZombiesKilledByLawnmower() >= needed) q.setCompleted(true);
+                    int kills = result.getZombiesKilledByLawnmower();
+                    if (kills > 0) q.incrementProgress(kills);
+                }
+                case "lawnless_col1_kill" -> {
+                    int kills = result.getLawnlessCol1Kills();
+                    if (kills > 0) q.incrementProgress(kills);
                 }
                 case "streak" -> {
                     if (consecutiveMaxDifficultyWins >= q.getTargetCount()) {
-                        q.setCurrentCount(q.getTargetCount());  // همگام‌سازی
+                        q.setCurrentCount(q.getTargetCount());
                         q.setCompleted(true);
                     }
                 }
+                case "speed_kill", "use_explosive" -> {
+                    // Per‑level quest: reset if not completed
+                    if (!q.isCompleted()) q.resetProgress();
+                }
                 case "family_kill_only" -> {
                     Boolean violated = (Boolean) q.getRuntimeState().get("familyViolated");
-                    if ((violated == null || !violated) && q.getCurrentCount() == 0)
-                        q.incrementProgress(0); // یعنی هیچ کشتنی نبوده -> کامل نکن
-                    else if (violated == null || !violated)
+                    if (violated == null || !violated) {
                         q.setCompleted(true);
+                    }
                 }
                 case "max_sun_producers" -> {
                     if (result.getFinalMap() != null && countSunProducers(result.getFinalMap()) <= q.getTargetCount())
-                        q.setCompleted(true);
-                }
-                case "lawnless_col1_kill" -> {
-                    if (result.getLawnlessCol1Kills() >= q.getTargetCount())
                         q.setCompleted(true);
                 }
             }
@@ -370,7 +394,6 @@ public class QuestManager {
         activeQuests.forEach(q -> q.getRuntimeState().clear());
     }
 
-    // ---------- map helpers ----------
     // ---------- map helpers ----------
     private boolean checkSymmetry(Map map) {
         int cols = map.getCols(), rows = map.getRows();
@@ -423,6 +446,7 @@ public class QuestManager {
         return count;
     }
 
+    // ---------- public API ----------
     public List<Quest> getActiveQuests() {
         for (Quest q : activeQuests) {
             if ("lawnmower_kill".equals(q.getConditionKey()) && q.getReward() != null
@@ -437,6 +461,7 @@ public class QuestManager {
         for (Quest q : activeQuests) {
             if (q.getId().equals(questId) && q.isCompleted() && !q.isClaimed()) {
                 q.claim();
+                updateChapterQuests();
                 return true;
             }
         }

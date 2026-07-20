@@ -1,0 +1,179 @@
+# Quest System Documentation
+
+## 1. Overview
+
+The quest system (Travel Log) provides a set of missions for the player.
+Quests are divided into **Story**, **Epic**, and **Daily** categories.
+Each quest has a condition that, when met, marks it as complete.
+The player can then claim a reward (coins, diamonds, seed packets, or plant unlocks).
+
+Daily quests reset every real‑world day at midnight (server time).
+Story and Epic quests are persistent: once completed and claimed, they stay in the list as **Claimed** and never reappear.
+The Story quest **Chapter Hunter** is special: it appears as a chain of four quests, one per chapter (Ancient Egypt → Frostbite Caves → Big Wave Beach → Dark Ages).
+The next chapter only appears after the previous one is claimed.
+
+## 2. Quest Types and Priorities
+
+| Priority | Type | Examples |
+|----------|------|----------|
+| **CRITICAL** | Epic | Master of Defense |
+| **HIGH**    | Story & Epic | Chapter Hunter, Economic Herbivore, Day or Night, Blossom in Limitations |
+| **MEDIUM**  | Story & Daily | Speed Run, Daily Sun Catcher, Win Streak, Almost Victory |
+| **LOW**     | Daily | Demolition Expert |
+
+Quests in the list are sorted first by priority (Critical first, Low last) and then by status:
+- **Ready to claim** (purple) at the top
+- **In progress / not started** (red or yellow) in the middle
+- **Already claimed** (green) at the bottom
+
+## 3. List Display – Colors and Format
+
+When you type `quest list` you see each quest formatted as:
+
+```
+[quest-id] Title (TYPE)
+  Description: ...
+  Progress: <current>/<target>   OR   Conditional
+  Reward: ...
+```
+
+**Colors (terminal ANSI):**
+
+| Color   | Meaning |
+|---------|---------|
+| 🔴 Red    | Not started / progress = 0 |
+| 🟡 Yellow | In progress (currentCount > 0) |
+| 🟣 Purple | Ready to claim (completed, not yet claimed) |
+| 🟢 Green  | Already claimed |
+
+Conditional quests (targetCount = 0) show `Progress: Conditional` with an optional status: `(Ready to claim!)` or `(Claimed)`.
+
+## 4. Commands
+
+### Regular Commands
+
+| Command | Description |
+|---------|-------------|
+| `quest list` | Display all active quests |
+| `quest claim -i <id>` | Claim the reward of a completed quest |
+| `show current menu` | Show the current menu name |
+| `menu exit` | Return to the Travel Log |
+
+### Debug Commands (for testing)
+
+These commands simulate game events without actually playing levels.
+
+| Command | Purpose |
+|---------|---------|
+| `quest debug sun <amount>` | Simulate collecting sun |
+| `quest debug kill <count>` | Simulate killing zombies (uses the chapter from active Chapter Hunter quest) |
+| `quest debug plant <plant>` | Simulate placing a plant (e.g., `peashooter`, `cherry_bomb`) |
+| `quest debug killby <plant> <count>` | Simulate zombies killed **by a specific plant** |
+| `quest debug speedkill <count>` | Simulate speed kills (triggers `onFirstWaveStarted` + `onZombieKilledInTimeWindow`) |
+| `quest debug lawnmower <count>` | Simulate end-of-level with a given number of lawnmower kills |
+| `quest debug win [options]` | Simulate a level win with custom parameters (see below) |
+| `quest debug reset daily` | Force a daily reset (generates new daily quests) |
+
+**Options for `quest debug win`:**
+
+`--lawnmower N` `--col1kills N` `--sunproducers N` `--difficulty N` `--day true/false` `--map symmetry|nosymmetry` `--col N` `--row N`
+
+Without options, the debug win uses default values: `finalSunCount=0`, `plantsLost=1`, `dayLevel=true`, plant types = mushrooms (Puff-shroom + Sun-shroom), families = MUSHROOM + SUN_PRODUCER.
+
+## 5. Integration with the Real Game Engine
+
+To make quests track actual gameplay, you must call the following methods on `QuestManager` during the game.
+Obtain the manager via `AppStatus.currentUser.questState.getQuestManager()`.
+
+### During a Level
+
+| Event | Method to call | Parameters |
+|-------|----------------|------------|
+| Sun collected | `qm.onSunCollected(amount)` | `int amount` |
+| A zombie is killed | `qm.onZombieKilled(zombieType, chapter, count)` | `ZombieType` (can be null), `ChapterEnum` (current chapter), `int count` (usually 1) |
+| A plant is placed | `qm.onPlantPlaced(plantType)` | `PlantType` – the type of the plant |
+| Zombie killed **by a specific plant** | `qm.onZombieKilledByPlant(plantType)` | `PlantType` of the plant that dealt the killing blow |
+| The first wave starts | `qm.onFirstWaveStarted()` | none |
+| A zombie is killed within 30 seconds after the first wave | `qm.onZombieKilledInTimeWindow(System.currentTimeMillis())` | `long killTimeMillis` – current system time |
+
+### End of Level (Victory)
+
+After a level is won, create a `LevelResult` object, fill it with data from the finished level, and call `qm.evaluateEndLevelQuests(levelResult)`.
+
+**LevelResult fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `won` | boolean | Must be `true` for quests to be evaluated |
+| `finalSunCount` | int | Sun remaining at the end |
+| `plantsLost` | int | Number of plants lost during the level |
+| `zombiesKilledByLawnmower` | int | Zombies killed by lawnmowers |
+| `lawnlessCol1Kills` | int | Zombies killed in column 1 of a row without a lawnmower |
+| `difficultyLevel` | int | Difficulty (1‑5), used for Win Streak |
+| `dayLevel` | boolean | Is the level a day level? (for Day or Night) |
+| `finalMap` | `Map` (game map) | Required for symmetry/column/row quests |
+| `plantTypesUsed` | `List<PlantType>` | All plant types that were on the field at the end |
+| `plantFamiliesUsed` | `Set<PlantFamily>` | All families of plants used (for family‑based quests) |
+
+**Important:** For **per‑level** quests (Speed Run, Demolition Expert), the counter is automatically reset if the quest was not completed during that level. You do not need to do anything special.
+
+## 6. Quest‑Specific Details
+
+### Daily Quests (random selection, 3 per day)
+
+| Title | Condition Key | How it works | Reward |
+|-------|---------------|--------------|--------|
+| Daily Sun Catcher | `collect_sun` | Accumulates total sun collected across all levels of the day. | `sun_amount / 100` coins |
+| Family Slaughter | `family_kill_only` | All zombies killed must be killed **by plants of the given family**. If any zombie is killed by another family, the quest is failed. | 1000 coins |
+| Blossom in Limitations | `no_family_used` | The given family must **not** be present on the final map. | 100 diamonds |
+| Symmetry | `symmetry` | Final garden layout must be symmetric (identical plants in mirrored columns). | 500 coins |
+| No OCD | `no_symmetry` | No symmetry except the middle row (the row index `rows/2`). | 800 coins |
+| One Column Less | `column_empty` | Win with the specified column completely empty. | 10 diamonds |
+| Defenseless Row | `row_empty` | Win with the specified row completely empty. | 20 diamonds |
+| Defenseless Cross | `cross_empty` | Both the specified column and row must be empty. | 25 diamonds |
+| Pro with {plant} | `specific_plant_kill` | Kill the required number of zombies (10) **only** with the named plant. Use `onZombieKilledByPlant(plant)` to feed data. | 5 seed packets (random) |
+| Only Cactus | `specific_plant_kill` | Same as above, but always Cactus. | 20 diamonds |
+| Demolition Expert | `use_explosive` | Use 3 explosive plants **in a single level**. If the level ends without 3, the counter resets. | 100 coins |
+| Cloudy Day | `max_sun_producers` | Win with at most 3 sun‑producing plants on the map. `countSunProducers(map)` is used. | 10 diamonds |
+| Win Streak | `streak` | Win 5 levels in a row on maximum difficulty (difficulty = 5). Losing or winning on lower difficulty resets the streak. | 5000 coins |
+| Almost Victory | `lawnless_col1_kill` | Accumulate kills in column 1 of rows that have no lawnmower. Engine must set `lawnlessCol1Kills` in `LevelResult`. | 300 coins |
+
+### Story Quests
+
+| Title | Condition Key | Details | Reward |
+|-------|---------------|---------|--------|
+| Chapter Hunter | `chapter_zombie_kill` | Kill 50 zombies in the specified chapter. Chained across all four chapters. | 10 seed packets |
+| Economic Herbivore | `max_plant_loss` | Win without losing more than `n` plants (n is 0‑5 randomly chosen once). | 20 seed packets |
+| Speed Run | `speed_kill` | Kill 10 zombies within 30 seconds **of the first wave** in a single level. Failing to do so resets the counter. | 500 coins |
+
+### Epic Quests
+
+| Title | Condition Key | Details | Reward |
+|-------|---------------|---------|--------|
+| Master of Defense | `zero_sun_end` | End a level with exactly 0 sun. | 200 diamonds |
+| Day or Night | `day_with_mushrooms` | Win a day level using **only mushrooms**. All plants on the final map must have the `SHROOM` tag. | 20 diamonds |
+| Lawnmower Time | `lawnmower_kill` | Accumulate kills by lawnmowers across all levels. Target is randomly chosen (10‑50). | Target amount diamonds |
+
+## 7. Daily Reset and Chapter Hunter Chain
+
+- **Daily reset:** happens automatically when `refreshDailyIfNeeded()` is called (the `QuestMenuController` does this every time you view the quest list).
+  If the system date changed, all daily quests are removed and 3 new ones are generated.
+- **Chapter Hunter chain:** the first time you open the quest list, `ANCIENT_EGYPT` is added.
+  After claiming it, `FROSTBITE_CAVES` appears, and so on.
+  All claimed chapter quests remain in the list with green color.
+
+## 8. Debug Commands Reference
+
+Use these from the Quest menu to test without playing actual levels.
+
+- `quest debug sun 3000` – adds 3000 sun to the daily collector
+- `quest debug kill 50` – adds 50 zombie kills to the active Chapter Hunter quest (auto‑detects chapter)
+- `quest debug plant cherry_bomb` – triggers `onPlantPlaced` for Cherry Bomb
+- `quest debug killby cactus 10` – simulates 10 kills by Cactus
+- `quest debug speedkill 10` – starts the first wave and simulates 10 kills within the time window
+- `quest debug lawnmower 10` – ends a level with 10 lawnmower kills (also triggers other end‑level quests if conditions match)
+- `quest debug win --map symmetry --difficulty 5 --day true` – highly customisable win
+- `quest debug reset daily` – forces new daily quests
+
+---
+
