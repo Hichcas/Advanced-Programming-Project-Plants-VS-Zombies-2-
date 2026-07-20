@@ -295,6 +295,10 @@ public class BattleController implements BehaviorContext {
         zombieProjectiles.add(p);
     }
 
+    public void removeZombieProjectile(ZombieProjectile p) {
+        zombieProjectiles.remove(p);
+    }
+
     public void drawProjectiles(SpriteBatch batch) {
         for (ZombieProjectile zp : zombieProjectiles) {
             zp.draw(batch);

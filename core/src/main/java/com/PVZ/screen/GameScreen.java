@@ -28,7 +28,11 @@ public class GameScreen extends BaseScreen {
     private ShapeRenderer shapeDebug;
     private final BitmapFont hudFont;
     private final BitmapFont gameOverFont;
+
+    // تكستچر پس‌زمینه
     private Texture backgroundTexture;
+
+    // Game over display
     private float gameOverAlpha = 0f;
     private boolean gameOverShown = false;
 
@@ -202,7 +206,6 @@ public class GameScreen extends BaseScreen {
             gameBatch.end();
         }
 
-        // Tile debug overlay: draw the default-mechanic label on each special tile.
         if (com.PVZ.model.status.AppStatus.tileDebugEnabled && activeMap != null) {
             gameBatch.begin();
             for (int r = 0; r < activeMap.getRows(); r++) {
@@ -212,13 +215,15 @@ public class GameScreen extends BaseScreen {
                         continue;
                     }
                     String label = tileDebugLabel(tile.getType());
-                    float x = tile.getX() + tile.getWidth() * 0.5f - 18;
-                    float y = tile.getY() + tile.getHeight() * 0.5f + 8;
+                    float cx = tile.getX() + tile.getWidth() * 0.5f;
+                    float cy = tile.getY() + tile.getHeight() * 0.5f;
+                    float x = cx - label.length() * 5f;
+                    float y = cy + hudFont.getCapHeight() * 0.5f;
                     hudFont.setColor(1, 1, 0, 1);
                     hudFont.draw(gameBatch, label, x, y);
-                    hudFont.setColor(1, 1, 1, 1);
                 }
             }
+            hudFont.setColor(1, 1, 1, 1);
             gameBatch.end();
         }
     }
