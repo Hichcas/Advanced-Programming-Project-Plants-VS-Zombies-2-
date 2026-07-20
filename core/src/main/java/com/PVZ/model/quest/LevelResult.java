@@ -16,7 +16,10 @@ public class LevelResult {
     private List<PlantType> plantTypesUsed;
     private int difficultyLevel;
     private boolean isDayLevel;
+    private int lawnlessCol1Kills; // بیشترین تعداد کشته‌شده در ستون ۱ ردیفی که چمن‌زن نداشت
 
+    public int getLawnlessCol1Kills() { return lawnlessCol1Kills; }
+    public void setLawnlessCol1Kills(int lawnlessCol1Kills) { this.lawnlessCol1Kills = lawnlessCol1Kills; }
     public LevelResult() {}
 
     public Map getFinalMap() { return finalMap; }

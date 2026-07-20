@@ -106,6 +106,17 @@ public class Quest {
         this.completed = false;
     }
 
+    public String getFormattedTitle() {
+        String t = title;
+        if (parameters != null) {
+            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+                String placeholder = "{" + entry.getKey() + "}";
+                t = t.replace(placeholder, formatParamValue(entry.getValue()));
+            }
+        }
+        return t;
+    }
+
     public String getFormattedDescription() {
         String desc = descriptionTemplate;
         if (parameters != null) {
