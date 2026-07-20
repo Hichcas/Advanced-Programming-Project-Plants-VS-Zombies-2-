@@ -46,29 +46,56 @@ public class QuestMenuController {
         };
     }
 
-    // -------------------- نمایش لیست --------------------
+    private static final String RED    = "\u001B[31m";
+    private static final String YELLOW = "\u001B[33m";
+    private static final String PURPLE = "\u001B[35m";
+    private static final String GREEN  = "\u001B[32m";
+    private static final String RESET  = "\u001B[0m";
+
+    private int statusGroup(Quest q) {
+        if (q.isCompleted() && !q.isClaimed()) return 0; // ready to claim -> بالا
+        if (q.isClaimed()) return 2;                     // claimed -> ته لیست
+        return 1;                                         // در حال پیشرفت / شروع‌نشده -> وسط
+    }
+
+    private String colorFor(Quest q) {
+        if (q.isClaimed()) return GREEN;
+        if (q.isCompleted()) return PURPLE;      // ready to claim
+        if (q.getCurrentCount() > 0) return YELLOW; // در حال پر شدن
+        return RED;                              // صفر / شروع‌نشده
+    }
+
     private OutputDTO listQuests(QuestManager qm) {
         List<Quest> quests = qm.getActiveQuests();
         if (quests.isEmpty()) {
             return new OutputDTO(true, "No active quests right now. Time until daily reset: " + qm.getTimeUntilReset());
         }
 
+        // اول اولویت، بعد گروه وضعیت (sort پایدارِ جاوا ترتیب داخل گروه رو حفظ می‌کنه)
         quests.sort(Comparator.comparingInt(q -> switch (q.getPriority()) {
             case CRITICAL -> 0;
             case HIGH -> 1;
             case MEDIUM -> 2;
             case LOW -> 3;
         }));
+        quests.sort(Comparator.comparingInt(this::statusGroup));
 
         StringBuilder sb = new StringBuilder();
         sb.append("Active Quests (Next daily reset in ").append(qm.getTimeUntilReset()).append("):\n");
         sb.append("--------------------------------------------------\n");
 
         for (Quest q : quests) {
+            String color = colorFor(q);
+            sb.append(color);
             sb.append(String.format("[%s] %s (%s)\n", q.getId(), q.getFormattedTitle(), q.getType()));
             sb.append("  Description: ").append(q.getFormattedDescription()).append("\n");
             if (q.getTargetCount() == 0) {
-                sb.append("  Progress: Conditional\n");
+                sb.append("  Progress: Conditional");
+                if (q.isCompleted()) {
+                    sb.append(q.isClaimed() ? " (Claimed)\n" : " (Ready to claim!)\n");
+                } else {
+                    sb.append("\n");
+                }
             } else {
                 sb.append("  Progress: ").append(q.getCurrentCount()).append("/").append(q.getTargetCount());
                 if (q.isCompleted()) {
@@ -79,12 +106,8 @@ public class QuestMenuController {
             }
             sb.append("  Reward: ");
             Reward r = q.getReward();
-            if (r != null) {
-                sb.append(describeReward(r));
-            } else {
-                sb.append("None");
-            }
-            sb.append("\n");
+            sb.append(r != null ? describeReward(r) : "None");
+            sb.append("\n").append(RESET);
         }
         return new OutputDTO(true, sb.toString().trim());
     }
