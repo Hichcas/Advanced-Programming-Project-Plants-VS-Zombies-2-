@@ -37,7 +37,7 @@ public class GameScreen extends BaseScreen {
         this.mapPath = mapPath;
         this.musicPath = musicPath;
 
-        String bgInternal = mapPath.startsWith("assets/") ? mapPath : "assets/" + mapPath;
+        String bgInternal = mapPath;
         if (com.badlogic.gdx.Gdx.files.internal(bgInternal).exists()) {
             backgroundTexture = new Texture(com.badlogic.gdx.Gdx.files.internal(bgInternal));
         } else {
