@@ -423,7 +423,15 @@ public class QuestManager {
         return count;
     }
 
-    public List<Quest> getActiveQuests() { return activeQuests; }
+    public List<Quest> getActiveQuests() {
+        for (Quest q : activeQuests) {
+            if ("lawnmower_kill".equals(q.getConditionKey()) && q.getReward() != null
+                && q.getReward().getAmount() == 0 && q.getTargetCount() > 0) {
+                q.getReward().setAmount(q.getTargetCount());
+            }
+        }
+        return activeQuests;
+    }
 
     public boolean claimQuest(String questId) {
         for (Quest q : activeQuests) {
