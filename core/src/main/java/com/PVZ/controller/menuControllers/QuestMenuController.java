@@ -65,7 +65,7 @@ public class QuestMenuController {
         sb.append("--------------------------------------------------\n");
 
         for (Quest q : quests) {
-            sb.append(String.format("[%s] %s (%s)\n", q.getId(), q.getTitle(), q.getType()));
+            sb.append(String.format("[%s] %s (%s)\n", q.getId(), q.getFormattedTitle(), q.getType()));
             sb.append("  Description: ").append(q.getFormattedDescription()).append("\n");
             if (q.getTargetCount() == 0) {
                 sb.append("  Progress: Conditional\n");
@@ -159,9 +159,21 @@ public class QuestMenuController {
     private OutputDTO debugKill(QuestManager qm, String countStr) {
         try {
             int count = Integer.parseInt(countStr);
-            // فرض می‌کنیم زامبی‌ها از فصل Ancient Egypt و نوع Mummy هستند
-            qm.onZombieKilled(ZombieType.MUMMY_DEFAULT, ChapterEnum.ANCIENT_EGYPT, count);
-            return new OutputDTO(true, "Simulated " + count + " zombie kills.");
+            // پیدا کردن فصل مورد انتظار کوئست Chapter Hunter (اگر وجود دارد)
+            ChapterEnum chapter = ChapterEnum.ANCIENT_EGYPT; // پیش‌فرض
+            for (Quest q : qm.getActiveQuests()) {
+                if ("chapter_zombie_kill".equals(q.getConditionKey()) && !q.isCompleted()) {
+                    Object param = q.getParameters().get("chapter");
+                    if (param instanceof ChapterEnum) {
+                        chapter = (ChapterEnum) param;
+                    } else if (param instanceof String) {
+                        chapter = ChapterEnum.valueOf((String) param);
+                    }
+                    break;
+                }
+            }
+            qm.onZombieKilled(ZombieType.MUMMY_DEFAULT, chapter, count);
+            return new OutputDTO(true, "Simulated " + count + " zombie kills in " + chapter.getDisplayName());
         } catch (NumberFormatException e) {
             return new OutputDTO(false, "Invalid count.");
         }

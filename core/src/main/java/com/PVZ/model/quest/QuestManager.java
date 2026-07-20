@@ -117,6 +117,7 @@ public class QuestManager {
                     int n = 10 * (new Random().nextInt(5) + 1);
                     q.getParameters().put("n", n);
                     q.setTargetCount(n);
+                    q.getReward().setAmount(n);   // <-- ADD THIS LINE
                 }
                 activeQuests.add(q);
             }
@@ -124,11 +125,43 @@ public class QuestManager {
     }
 
     private Quest copyQuest(Quest template, String newId) {
+        Quest.Reward r = template.getReward();
+        Quest.Reward rewardCopy = (r != null)
+            ? new Quest.Reward(r.getType(), r.getAmount(), r.getTargetPlant())
+            : null;
         return new Quest(newId, template.getTitle(), template.getDescriptionTemplate(),
             template.getType(), template.getPriority(), template.getConditionKey(),
-            template.getTargetCount(), template.getReward(), template.getParameters());
+            template.getTargetCount(), rewardCopy, template.getParameters());
     }
 
+    // ================== safe enum retrieval ==================
+    @SuppressWarnings("unchecked")
+    private <T extends Enum<T>> T getParamAsEnum(java.util.Map<String, Object> params, String key, Class<T> enumClass, T fallback) {
+        Object obj = params.get(key);
+        if (obj == null) return fallback;
+        if (enumClass.isInstance(obj)) return (T) obj;
+        if (obj instanceof String) {
+            try {
+                return Enum.valueOf(enumClass, (String) obj);
+            } catch (IllegalArgumentException e) {
+                return fallback;
+            }
+        }
+        return fallback;
+    }
+
+    // helpers with specific types
+    private ChapterEnum getChapterParam(Quest q) {
+        return getParamAsEnum(q.getParameters(), "chapter", ChapterEnum.class, ChapterEnum.ANCIENT_EGYPT);
+    }
+    private PlantType getPlantParam(Quest q) {
+        return getParamAsEnum(q.getParameters(), "plant", PlantType.class, PlantType.PEASHOOTER);
+    }
+    private PlantFamily getFamilyParam(Quest q) {
+        return getParamAsEnum(q.getParameters(), "family", PlantFamily.class, PlantFamily.GENERAL);
+    }
+
+    // ================== daily refresh ==================
     private ChapterEnum randomChapter() {
         ChapterEnum[] chapters = ChapterEnum.values();
         return chapters[new Random().nextInt(chapters.length)];
@@ -204,7 +237,7 @@ public class QuestManager {
         for (Quest q : activeQuests) {
             if (q.isCompleted()) continue;
             if ("chapter_zombie_kill".equals(q.getConditionKey())) {
-                ChapterEnum required = (ChapterEnum) q.getParameters().get("chapter");
+                ChapterEnum required = getChapterParam(q);
                 if (required == chapter) q.incrementProgress(count);
             }
         }
@@ -244,10 +277,16 @@ public class QuestManager {
     }
 
     public void onZombieKilledByPlant(PlantType plantType) {
+        PlantFamily family = PlantFamilyMapper.getFamily(plantType);
         for (Quest q : activeQuests) {
-            if (!q.isCompleted() && "specific_plant_kill".equals(q.getConditionKey())) {
-                PlantType required = (PlantType) q.getParameters().get("plant");
+            if (q.isCompleted()) continue;
+            if ("specific_plant_kill".equals(q.getConditionKey())) {
+                PlantType required = getPlantParam(q);
                 if (required == plantType) q.incrementProgress(1);
+            }
+            if ("family_kill_only".equals(q.getConditionKey())) {
+                PlantFamily required = getFamilyParam(q);
+                if (family != required) q.getRuntimeState().put("familyViolated", true);
             }
         }
     }
@@ -265,21 +304,27 @@ public class QuestManager {
             if (q.isCompleted() || q.isClaimed()) continue;
 
             switch (q.getConditionKey()) {
-                case "symmetry" -> { if (checkSymmetry(result.getFinalMap())) q.setCompleted(true); }
-                case "no_symmetry" -> { if (checkNoSymmetry(result.getFinalMap())) q.setCompleted(true); }
+                case "symmetry" -> { if (result.getFinalMap() != null && checkSymmetry(result.getFinalMap())) q.setCompleted(true); }
+                case "no_symmetry" -> { if (result.getFinalMap() != null && checkNoSymmetry(result.getFinalMap())) q.setCompleted(true); }
                 case "column_empty" -> {
-                    int col = (int) q.getParameters().get("col");
-                    if (isColumnEmpty(result.getFinalMap(), col)) q.setCompleted(true);
+                    if (result.getFinalMap() != null) {
+                        int col = (int) q.getParameters().get("col");
+                        if (isColumnEmpty(result.getFinalMap(), col)) q.setCompleted(true);
+                    }
                 }
                 case "row_empty" -> {
-                    int row = (int) q.getParameters().get("row");
-                    if (isRowEmpty(result.getFinalMap(), row)) q.setCompleted(true);
+                    if (result.getFinalMap() != null) {
+                        int row = (int) q.getParameters().get("row");
+                        if (isRowEmpty(result.getFinalMap(), row)) q.setCompleted(true);
+                    }
                 }
                 case "cross_empty" -> {
-                    int c = (int) q.getParameters().get("col");
-                    int r = (int) q.getParameters().get("row");
-                    if (isColumnEmpty(result.getFinalMap(), c) && isRowEmpty(result.getFinalMap(), r))
-                        q.setCompleted(true);
+                    if (result.getFinalMap() != null) {
+                        int c = (int) q.getParameters().get("col");
+                        int r = (int) q.getParameters().get("row");
+                        if (isColumnEmpty(result.getFinalMap(), c) && isRowEmpty(result.getFinalMap(), r))
+                            q.setCompleted(true);
+                    }
                 }
                 case "zero_sun_end" -> { if (result.getFinalSunCount() == 0) q.setCompleted(true); }
                 case "max_plant_loss" -> {
@@ -292,19 +337,40 @@ public class QuestManager {
                         q.setCompleted(true);
                 }
                 case "no_family_used" -> {
-                    PlantFamily forbidden = (PlantFamily) q.getParameters().get("family");
+                    PlantFamily forbidden = getFamilyParam(q);
                     if (!result.getPlantFamiliesUsed().contains(forbidden)) q.setCompleted(true);
                 }
                 case "lawnmower_kill" -> {
                     int needed = (int) q.getParameters().get("n");
                     if (result.getZombiesKilledByLawnmower() >= needed) q.setCompleted(true);
                 }
-                case "streak" -> { if (consecutiveMaxDifficultyWins >= q.getTargetCount()) q.setCompleted(true); }
+                case "streak" -> {
+                    if (consecutiveMaxDifficultyWins >= q.getTargetCount()) {
+                        q.setCurrentCount(q.getTargetCount());  // همگام‌سازی
+                        q.setCompleted(true);
+                    }
+                }
+                case "family_kill_only" -> {
+                    Boolean violated = (Boolean) q.getRuntimeState().get("familyViolated");
+                    if ((violated == null || !violated) && q.getCurrentCount() == 0)
+                        q.incrementProgress(0); // یعنی هیچ کشتنی نبوده -> کامل نکن
+                    else if (violated == null || !violated)
+                        q.setCompleted(true);
+                }
+                case "max_sun_producers" -> {
+                    if (result.getFinalMap() != null && countSunProducers(result.getFinalMap()) <= q.getTargetCount())
+                        q.setCompleted(true);
+                }
+                case "lawnless_col1_kill" -> {
+                    if (result.getLawnlessCol1Kills() >= q.getTargetCount())
+                        q.setCompleted(true);
+                }
             }
         }
         activeQuests.forEach(q -> q.getRuntimeState().clear());
     }
 
+    // ---------- map helpers ----------
     // ---------- map helpers ----------
     private boolean checkSymmetry(Map map) {
         int cols = map.getCols(), rows = map.getRows();
@@ -344,6 +410,17 @@ public class QuestManager {
         for (int c = 0; c < map.getCols(); c++)
             if (map.getPlantAt(row, c) != null) return false;
         return true;
+    }
+
+    private int countSunProducers(Map map) {
+        int count = 0;
+        for (int r = 0; r < map.getRows(); r++)
+            for (int c = 0; c < map.getCols(); c++) {
+                Plant p = map.getPlantAt(r, c);
+                if (p != null && PlantFamilyMapper.getFamily(p.getType()) == PlantFamily.SUN_PRODUCER)
+                    count++;
+            }
+        return count;
     }
 
     public List<Quest> getActiveQuests() { return activeQuests; }
