@@ -174,6 +174,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             if (!anyAlive) {
                 System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
                 gameStatus.setWon(true);
+                gameStatus.setGameOver(true);
+                resetBoardAfterGameOver();
                 AppStatus.returnToMainMenu();
             }
         }
@@ -1005,6 +1007,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     }
 
     public void startWaves() {
+        zombieWavesStarted = true;
+        skySunTimer = 0.0;
         if (waveManager != null) {
             waveManager.start();
         }
