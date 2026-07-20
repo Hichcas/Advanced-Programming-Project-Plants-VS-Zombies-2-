@@ -15,7 +15,17 @@ public class ZombieProjectile {
     private Texture texture;
     private Zombie owner;
 
+    // Bone-projectile support: when this projectile reaches its target column it
+    // turns that tile into a TOMBSTONE (used by the TombRaiser zombie).
+    private boolean landsToTomb = false;
+    private int targetCol = -1;
+
     public ZombieProjectile(float x, float y, int damage, float speed, int row, Zombie owner) {
+        this(x, y, damage, speed, row, owner, -1, false);
+    }
+
+    public ZombieProjectile(float x, float y, int damage, float speed, int row, Zombie owner,
+                            int targetCol, boolean landsToTomb) {
         this.x = x;
         this.y = y;
         this.damage = damage;
@@ -24,15 +34,27 @@ public class ZombieProjectile {
         this.destroyed = false;
         this.hitbox = new Rectangle(x, y, 24, 24);
         this.owner = owner;
+        this.targetCol = targetCol;
+        this.landsToTomb = landsToTomb;
 
         Pixmap pixmap = new Pixmap(24, 24, Pixmap.Format.RGBA8888);
-        pixmap.setColor(1, 0.2f, 0.2f, 1);
-        pixmap.fillCircle(12, 12, 10);
-        pixmap.setColor(1, 0.6f, 0.6f, 1);
-        pixmap.fillCircle(12, 12, 6);
+        if (landsToTomb) {
+            pixmap.setColor(0.95f, 0.95f, 0.85f, 1);
+            pixmap.fillCircle(12, 12, 10);
+            pixmap.setColor(0.7f, 0.7f, 0.6f, 1);
+            pixmap.fillCircle(12, 12, 5);
+        } else {
+            pixmap.setColor(1, 0.2f, 0.2f, 1);
+            pixmap.fillCircle(12, 12, 10);
+            pixmap.setColor(1, 0.6f, 0.6f, 1);
+            pixmap.fillCircle(12, 12, 6);
+        }
         texture = new Texture(pixmap);
         pixmap.dispose();
     }
+
+    public boolean isLandsToTomb() { return landsToTomb; }
+    public int getTargetCol() { return targetCol; }
 
     public void update(float delta) {
         x -= speed * delta;
