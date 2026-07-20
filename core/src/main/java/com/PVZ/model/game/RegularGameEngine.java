@@ -8,7 +8,9 @@ import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.PlantTag;
 import com.PVZ.model.enums.PlantType;
+import com.PVZ.model.enums.TileType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
@@ -45,6 +47,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     private final List<Plant> plants = new ArrayList<>();
     private WaveManager waveManager;
     private BattleController battleController;
+
+    /** Per-stage background texture path (from StageConfig.mapTexture); null = use default Frontyard. */
+    private String backgroundTexturePath;
+    private com.badlogic.gdx.graphics.Texture backgroundOverrideTexture;
 
     public RegularGameEngine(GameStatus gameStatus) {
         this(gameStatus, createDefaultWaves());
@@ -242,7 +248,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         }
     }
 
-    private void updatePlants() {
+    protected void updatePlants() {
         if (map == null) {
             return;
         }
@@ -257,7 +263,12 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 plant.putRuntimeState("row", row);
                 plant.putRuntimeState("col", col);
                 plant.putRuntimeState("lane", row);
-                plant.update(this, TICK_SECONDS);
+
+                Object freezeLv = plant.getRuntimeState("freezeLevel");
+                boolean isPlantFrozen = freezeLv instanceof Number && ((Number) freezeLv).intValue() >= 3;
+                if (!isPlantFrozen) {
+                    plant.update(this, TICK_SECONDS);
+                }
 
                 if (plant.isDead()) {
                     if (plant.getStats().getBooleanExtra("explodeOnDeath", false)) {
@@ -292,6 +303,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     private void updateSkySun(float delta) {
         if (map == null || !zombieWavesStarted) {
+            return;
+        }
+        if (gameStatus != null && gameStatus.isNoSkySun()) {
             return;
         }
         skySunTimer += delta;
@@ -369,6 +383,14 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                         (float) plant.getCurrentHp() / Math.max(1, plant.getMaxHp()), true);
                     String label = plant.getType() + " (" + plant.getCurrentHp() + "hp)";
                     plantFont.draw(batch, label, box.x, box.y + box.height + 4);
+
+                    Object pFreezeLv = plant.getRuntimeState("freezeLevel");
+                    if (pFreezeLv instanceof Number && ((Number) pFreezeLv).intValue() >= 3) {
+                        Color c = batch.getColor();
+                        batch.setColor(0.3f, 0.6f, 1f, 0.45f);
+                        batch.draw(iceOverlayTexture(), box.x, box.y, box.width, box.height);
+                        batch.setColor(c);
+                    }
                 }
             }
         }
@@ -377,14 +399,15 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         font.setColor(Color.BLACK);
         for (Zombie z : getZombieList()) {
             if (z != null && !z.isDead()) {
-                String[] lines = z.getDebugString().split("\n");
-                float yOff = (float)z.getY() + 130;
-                for (String line : lines) {
-                    font.draw(batch, line, (float)z.getX(), yOff);
-                    yOff -= 15;
-                }
                 HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
                     (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
+
+                if (z.isFrozen()) {
+                    Color c = batch.getColor();
+                    batch.setColor(0.3f, 0.6f, 1f, 0.45f);
+                    batch.draw(iceOverlayTexture(), (float) z.getX(), (float) z.getY(), 100, 120);
+                    batch.setColor(c);
+                }
             }
         }
         font.setColor(Color.WHITE);
@@ -398,6 +421,11 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         zombies.clear();
         sunManager.clear();
         plantFoodManager.reset();
+
+        if (backgroundOverrideTexture != null) {
+            backgroundOverrideTexture.dispose();
+            backgroundOverrideTexture = null;
+        }
 
         if (zombieEngine != null) {
             zombieEngine.dispose();
@@ -684,6 +712,30 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return 0;
     }
 
+    public void setBackgroundTexturePath(String path) {
+        this.backgroundTexturePath = path;
+    }
+
+    @Override
+    public com.badlogic.gdx.graphics.Texture getBackgroundOverride() {
+        if (backgroundTexturePath == null || backgroundTexturePath.isEmpty()) {
+            return null;
+        }
+        if (backgroundOverrideTexture == null) {
+            String internalPath = backgroundTexturePath.startsWith("assets/")
+                    ? backgroundTexturePath
+                    : "assets/" + backgroundTexturePath;
+            if (com.badlogic.gdx.Gdx.files.internal(internalPath).exists()) {
+                backgroundOverrideTexture = new com.badlogic.gdx.graphics.Texture(
+                        com.badlogic.gdx.Gdx.files.internal(internalPath));
+            } else {
+                System.out.println("RegularGameEngine: background not found: " + internalPath);
+                return null;
+            }
+        }
+        return backgroundOverrideTexture;
+    }
+
     public String plantPlant(String plantType, int x, int y) {
         PlantType type;
         try {
@@ -730,6 +782,16 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         Plant plant = PlantFactory.createPlant(type, userLevel);
         if (plant == null) {
             return "Cannot create plant.";
+        }
+
+        TileType targetTileType = map.getTile(row, col).getType();
+        boolean plantIsAquatic = plant.getDefinition() != null
+                && plant.getDefinition().hasTag(PlantTag.WATER);
+        if ((targetTileType == TileType.WATER || targetTileType == TileType.TIDE) && !plantIsAquatic) {
+            return "Non-aquatic plants cannot be planted on water tiles.";
+        }
+        if (plantIsAquatic && targetTileType != TileType.WATER && targetTileType != TileType.TIDE) {
+            return "Aquatic plants must be planted on water tiles.";
         }
 
         int cost = plant.getStats().getCost();
@@ -851,6 +913,22 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return "Sun amount: " + getSunCount();
     }
 
+    private static String tileGlyph(TileType type) {
+        if (type == null) return ".";
+        switch (type) {
+            case TOMBSTONE: return "T";
+            case WATER: return "~";
+            case TIDE: return "^";
+            case ICE: return "*";
+            case SLIPPERY_UP: return "U";
+            case SLIPPERY_DOWN: return "D";
+            case NECROMANCY: return "N";
+            case LOW_COAST: return "L";
+            case CRATER: return "C";
+            default: return ".";
+        }
+    }
+
     public String showMapText() {
         StringBuilder builder = new StringBuilder();
         builder.append("Sun: ").append(getSunCount())
@@ -880,6 +958,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                     cell = 'Z';
                 } else if (plant != null) {
                     cell = plant.getType().name().charAt(0);
+                } else if (map != null) {
+                    Tile tile = map.getTile(row, col);
+                    cell = tile == null ? '.' : tileGlyph(tile.getType()).charAt(0);
                 } else {
                     cell = '.';
                 }
@@ -889,6 +970,29 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 }
             }
             builder.append('\n');
+        }
+
+        // Debug: full-name listing of every special (non-NORMAL) tile + coordinates.
+        builder.append("Tile debug:\n");
+        boolean any = false;
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                if (map == null) break;
+                Tile tile = map.getTile(row, col);
+                if (tile == null || tile.getType() == TileType.NORMAL) {
+                    continue;
+                }
+                any = true;
+                builder.append("  (").append(col).append(", ").append(row).append(") = ")
+                        .append(tile.getType().name());
+                if (tile.getType() == TileType.TOMBSTONE) {
+                    builder.append(" hp=").append(tile.getHp());
+                }
+                builder.append('\n');
+            }
+        }
+        if (!any) {
+            builder.append("  (none)\n");
         }
         return builder.toString().trim();
     }
@@ -1006,6 +1110,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return battleController;
     }
 
+    public WaveManager getWaveManager() {
+        return waveManager;
+    }
+
     public void startWaves() {
         zombieWavesStarted = true;
         skySunTimer = 0.0;
@@ -1023,6 +1131,19 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     private int normalizeIndex(int value) {
         return value;
+    }
+
+    private com.badlogic.gdx.graphics.Texture iceOverlayTex;
+
+    private com.badlogic.gdx.graphics.Texture iceOverlayTexture() {
+        if (iceOverlayTex == null) {
+            com.badlogic.gdx.graphics.Pixmap pm = new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+            pm.setColor(0.4f, 0.7f, 1f, 1f);
+            pm.fill();
+            iceOverlayTex = new com.badlogic.gdx.graphics.Texture(pm);
+            pm.dispose();
+        }
+        return iceOverlayTex;
     }
 
 }

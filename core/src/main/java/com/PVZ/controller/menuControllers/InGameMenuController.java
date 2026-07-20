@@ -99,6 +99,15 @@ public class InGameMenuController {
 
             case ZOMBIES_INFO -> zombiesInfo();
 
+            case SHOW_TILE_DEBUG -> {
+                com.PVZ.model.status.AppStatus.tileDebugEnabled = true;
+                yield new OutputDTO(true, "Tile debug overlay ON.");
+            }
+            case HIDE_TILE_DEBUG -> {
+                com.PVZ.model.status.AppStatus.tileDebugEnabled = false;
+                yield new OutputDTO(true, "Tile debug overlay OFF.");
+            }
+
             case FREEZE_ZOMBIE -> zombieAction(dto, "freeze");
             case POISON_ZOMBIE -> zombieAction(dto, "poison");
             case HYPNOTIZE_ZOMBIE -> zombieAction(dto, "hypnotize");

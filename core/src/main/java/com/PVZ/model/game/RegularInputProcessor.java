@@ -4,6 +4,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.PVZ.model.entity.Tile;
+import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
 
@@ -60,6 +61,19 @@ public class RegularInputProcessor extends InputAdapter {
                         String result = regularGameEngine.plantSelectedAt(col , row );
                         System.out.println(result);
                     }
+                    return true;
+                }
+            }
+        }
+
+        // 3) a click on a zombie prints its debug string to the terminal
+        for (Zombie z : regularGameEngine.getAllZombies()) {
+            if (z != null && !z.isDead()) {
+                float zx = (float) z.getX();
+                float zy = (float) z.getY();
+                if (worldX >= zx && worldX <= zx + 100 && worldY >= zy && worldY <= zy + 120) {
+                    System.out.println("=== Zombie clicked: " + z.getAlias() + " ===");
+                    System.out.println(z.getDebugString());
                     return true;
                 }
             }

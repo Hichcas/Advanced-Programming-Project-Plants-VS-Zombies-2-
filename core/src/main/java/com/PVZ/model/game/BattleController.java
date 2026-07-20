@@ -7,6 +7,7 @@ import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.plants.behavior.impl.ProjectileType;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.entity.zombies.base.ZombieProjectile;
+import com.PVZ.model.entity.zombies.types.ranged_caster.ZombieDarkJuggler;
 import com.PVZ.model.enums.DamageType;
 import com.PVZ.model.enums.TileType;
 import com.PVZ.model.status.AppStatus;
@@ -35,6 +36,10 @@ public class BattleController implements BehaviorContext {
 
     public void setMap(Map map) {
         this.map = map;
+    }
+
+    public Map getMap() {
+        return map;
     }
 
     public void update(float delta) {
@@ -87,9 +92,31 @@ public class BattleController implements BehaviorContext {
             for (Zombie z : zombies) {
                 if (z.isDead()) continue;
                 if (p.getHitbox().overlaps(z.getHitbox())) {
-                    z.takeDamage((int) p.getDamage(), resolveDamageType(p));
-                    if (Boolean.TRUE.equals(p.getExtra("stunOnHit"))) {
-                        z.freeze(1.5f); // Kernel-pult's "butter" shot: brief stun on contact
+                    if (z.isProjectileImmune()) {
+                        break;
+                    }
+                    if (z instanceof ZombieDarkJuggler jj && jj.reflectProjectile()) {
+                        this.addZombieProjectile(new ZombieProjectile(
+                            (float) z.getX(), (float) z.getY() + 30, (int) p.getDamage(), 300f, (int) z.getRow(), jj));
+                        System.out.println(jj.getAlias() + " reflected a projectile");
+                        projIt.remove();
+                        break;
+                    }
+                    if (p.getType() == ProjectileType.FIRE_PEA && z.isFrozen()) {
+                        z.thaw();
+                    } else if (p.getType() == ProjectileType.ICE_PEA && z.isFrozen()) {
+                        z.setIceHp(z.getIceHp() - (int) p.getDamage());
+                        if (z.getIceHp() <= 0) {
+                            z.thaw();
+                        }
+                    } else {
+                        z.takeDamage((int) p.getDamage(), resolveDamageType(p));
+                    }
+                    boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit"))
+                        || (p.getExtra("plantType") instanceof com.PVZ.model.enums.PlantType pt
+                        && pt == com.PVZ.model.enums.PlantType.KERNEL_PULT);
+                    if (isButter) {
+                        z.freeze(1.5f);
                     }
                     projIt.remove();
                     break;
@@ -157,6 +184,15 @@ public class BattleController implements BehaviorContext {
         }
     }
 
+    /**
+     * Plant behaviors only know a projectile's row/lane (grid coordinates) and
+     * have no idea where that is on screen. This converts it into a real world
+     * x/y (using the same tile geometry as the Map/Tile classes and Zombie
+     * positions) and gives it a real pixels/second speed, so the projectile
+     * actually moves across the lawn each tick and its hitbox can overlap a
+     * zombie's hitbox (which is in world coordinates too). Without this,
+     * projectiles are created but never move or hit anything.
+     */
     private void placeProjectileOnMap(Projectile p) {
         if (p == null || p.isWorldPositioned()) {
             return;
@@ -199,10 +235,6 @@ public class BattleController implements BehaviorContext {
                 verticalSpeed = Math.signum(targetLane - row) * speedPxPerSec;
             }
         }
-        if (p.getType() == ProjectileType.LOB && verticalSpeed == 0.0) {
-            p.initArcPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec));
-            return;
-        }
 
         p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
     }
@@ -231,6 +263,8 @@ public class BattleController implements BehaviorContext {
             }
         }
     }
+
+    // ── zombie callback methods ──
 
     public int getTileColumn(float worldX) {
         return map != null ? map.worldToCol(worldX) : 0;
