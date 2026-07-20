@@ -15,7 +15,7 @@ public class ZombieDarkJuggler extends AbstractRangedCasterZombie {
     public ZombieDarkJuggler() {
         super("ZombieDarkJuggler", 420, 100, 0.185, 700, 3500, defaultScaledProps(),
               120, 180, 2.0, 3);
-        this.isReflecting = false;
+        this.isReflecting = true;
         this.reflectableProjectiles = 5;
     }
 

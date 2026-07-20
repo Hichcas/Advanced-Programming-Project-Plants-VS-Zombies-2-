@@ -187,8 +187,22 @@ public class Plant {
     }
 
     public void update(BehaviorContext context, double deltaTimeSeconds) {
+        Object disabled = getRuntimeState("disabledTicks");
+        int ticks = disabled instanceof Number ? ((Number) disabled).intValue() : 0;
+        if (ticks > 0) {
+            putRuntimeState("disabledTicks", Math.max(0, ticks - 1));
+            instance.tickPlantFood();
+            return;
+        }
         mainBehavior.onUpdate(instance, context, deltaTimeSeconds);
         instance.tickPlantFood();
+    }
+
+    /** Freeze (temporary) or turn-to-sheep (very long) the plant so its behavior pauses. */
+    public void disableForTicks(int ticks) {
+        Object disabled = getRuntimeState("disabledTicks");
+        int cur = disabled instanceof Number ? ((Number) disabled).intValue() : 0;
+        putRuntimeState("disabledTicks", Math.max(cur, ticks));
     }
 
     public void applyPlantFood(BehaviorContext context) {
