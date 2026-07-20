@@ -38,7 +38,7 @@
           "plantLimit": 8,
           "rows": 5,
           "cols": 9,
-          "mapTexture": "maps/Egypt.jpg",
+          "mapTexture": "maps/Ancient_Egypt.png",
           "tombstones": [
             { "row": 1, "col": 3, "hp": 700 },
             { "row": 2, "col": 5, "hp": 700 },
@@ -83,7 +83,7 @@
           "plantLimit": 0,
           "rows": 5,
           "cols": 9,
-          "mapTexture": "maps/Egypt.jpg",
+          "mapTexture": "maps/Ancient_Egypt.png",
           "conveyorInterval": 13.0,
           "tombstones": [
             { "row": 0, "col": 4, "hp": 700 },
@@ -144,7 +144,7 @@
           "plantLimit": 8,
           "rows": 5,
           "cols": 9,
-          "mapTexture": "maps/Egypt.jpg",
+          "mapTexture": "maps/Ancient_Egypt.png",
           "disableFallingSun": true,
           "tombstones": [
             { "row": 1, "col": 2, "hp": 700 },
@@ -222,7 +222,7 @@
           "plantLimit": 8,
           "rows": 5,
           "cols": 9,
-          "mapTexture": "maps/Frostbite.jpg",
+          "mapTexture": "maps/Frostbite_Caves.png",
           "tiles": [
             { "row": 0, "col": 2, "type": "ICE" },
             { "row": 1, "col": 4, "type": "ICE" },
@@ -255,6 +255,129 @@
                 { "zombie": "ZombieIceAgeHunter", "count": 1, "spawnDelay": 2.0 },
                 { "zombie": "ZombieIceageImpDefault", "count": 1, "spawnDelay": 1.5 },
                 { "zombie": "ZombieIceAgeGargantuar", "count": 1, "spawnDelay": 3.0 }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+    ,
+    {
+      "name": "BIG_WAVE_BEACH",
+      "displayName": "Big Wave Beach",
+      "environment": {
+        "disableFallingSun": false,
+        "description": "Right columns are water (Lily Pad / aquatic only). Tide rises each wave, flooding non-aquatic plants."
+      },
+      "setup": [],
+      "update": [
+        { "action": "risingTide", "description": "Water level rises each wave, flooding the next non-water column and drowning non-aquatic plants" },
+        { "action": "lowCoastLaunch", "description": "Zombies on water beneath a low coast tile are launched back and stunned" }
+      ],
+      "stages": [
+        {
+          "stageNumber": 1,
+          "type": "REGULAR",
+          "plantLimit": 8,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Big_Wave_Beach.png",
+          "tiles": [
+            { "row": 0, "col": 8, "type": "WATER" },
+            { "row": 1, "col": 8, "type": "WATER" },
+            { "row": 2, "col": 8, "type": "WATER" },
+            { "row": 3, "col": 8, "type": "WATER" },
+            { "row": 4, "col": 8, "type": "WATER" },
+            { "row": 0, "col": 7, "type": "WATER" },
+            { "row": 1, "col": 7, "type": "WATER" },
+            { "row": 2, "col": 7, "type": "WATER" },
+            { "row": 3, "col": 7, "type": "WATER" },
+            { "row": 4, "col": 7, "type": "WATER" },
+            { "row": 0, "col": 6, "type": "LOW_COAST" },
+            { "row": 2, "col": 6, "type": "LOW_COAST" },
+            { "row": 4, "col": 6, "type": "LOW_COAST" }
+          ],
+          "waves": [
+            {
+              "startDelay": 5.0,
+              "entries": [
+                { "zombie": "ZombieBeachDefault", "count": 4, "spawnDelay": 2.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieBeachDefault", "count": 3, "spawnDelay": 0.8 },
+                { "zombie": "ZombieBeachSnorkel", "count": 2, "spawnDelay": 2.0 },
+                { "zombie": "ZombieBeachImpDefault", "count": 3, "spawnDelay": 1.5 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "isFinal": true,
+              "entries": [
+                { "zombie": "ZombieBeachDefault", "count": 1, "spawnDelay": 0.6 },
+                { "zombie": "ZombieBeachSurfer", "count": 1, "spawnDelay": 2.0 },
+                { "zombie": "ZombieBeachOctopus", "count": 1, "spawnDelay": 1.5 },
+                { "zombie": "ZombieBeachGargantuar", "count": 1, "spawnDelay": 3.0 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DARK_AGES",
+      "displayName": "Dark Ages",
+      "environment": {
+        "disableFallingSun": true,
+        "description": "Night with no sky sun. Magical graves spawn each wave; Necromancy raises zombies from graves."
+      },
+      "setup": [],
+      "update": [
+        { "action": "magicalGraves", "description": "Each wave, spawn random magical graves; some drop sun / plant food" },
+        { "action": "necromancySpawn", "description": "Raise zombies under existing Necromancy tiles" }
+      ],
+      "stages": [
+        {
+          "stageNumber": 1,
+          "type": "REGULAR",
+          "plantLimit": 8,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Dark_Ages.png",
+          "disableFallingSun": true,
+          "tiles": [
+            { "row": 1, "col": 3, "type": "NECROMANCY" },
+            { "row": 2, "col": 5, "type": "NECROMANCY" },
+            { "row": 3, "col": 7, "type": "NECROMANCY" },
+            { "row": 0, "col": 6, "type": "NECROMANCY" },
+            { "row": 4, "col": 2, "type": "NECROMANCY" }
+          ],
+          "waves": [
+            {
+              "startDelay": 5.0,
+              "entries": [
+                { "zombie": "ZombieDarkDefault", "count": 4, "spawnDelay": 2.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieDarkDefault", "count": 3, "spawnDelay": 0.8 },
+                { "zombie": "ZombieCamelDefault", "count": 2, "spawnDelay": 2.5 },
+                { "zombie": "ZombieDarkImpDefault", "count": 3, "spawnDelay": 1.5 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "isFinal": true,
+              "entries": [
+                { "zombie": "ZombieDarkDefault", "count": 1, "spawnDelay": 0.6 },
+                { "zombie": "ZombieWizardDefault", "count": 1, "spawnDelay": 2.0 },
+                { "zombie": "ZombieDarkJugglerDefault", "count": 1, "spawnDelay": 1.5 },
+                { "zombie": "ZombiePharaohDefault", "count": 1, "spawnDelay": 3.0 },
+                { "zombie": "ZombieDarkGargantuar", "count": 1, "spawnDelay": 3.5 }
               ]
             }
           ]

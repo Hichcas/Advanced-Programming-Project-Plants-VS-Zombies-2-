@@ -27,9 +27,14 @@ public class GameScreen extends BaseScreen {
     private Map gameMap;
     private ShapeRenderer shapeDebug;
     private final BitmapFont hudFont;
+    private final BitmapFont gameOverFont;
 
-    // تکسچر پس‌زمینه
+    // تكستچر پس‌زمینه
     private Texture backgroundTexture;
+
+    // Game over display
+    private float gameOverAlpha = 0f;
+    private boolean gameOverShown = false;
 
     public GameScreen(String mapPath, String musicPath, GameEngine gameEngine) {
         super();
@@ -37,7 +42,13 @@ public class GameScreen extends BaseScreen {
         this.mapPath = mapPath;
         this.musicPath = musicPath;
 
-        backgroundTexture = new Texture(mapPath);
+        String bgInternal = mapPath;
+        if (com.badlogic.gdx.Gdx.files.internal(bgInternal).exists()) {
+            backgroundTexture = new Texture(com.badlogic.gdx.Gdx.files.internal(bgInternal));
+        } else {
+            System.out.println("GameScreen: background not found: " + bgInternal);
+            backgroundTexture = null;
+        }
 
         MusicManager.getInstance().playMusic(musicPath);
         this.gameEngine = gameEngine;
@@ -49,12 +60,12 @@ public class GameScreen extends BaseScreen {
         gameMap = new Map(550, 1240, 1600, 1170, 5, 9);
         shapeDebug = new ShapeRenderer();
         hudFont = FontManager.getInstance().getEnglishMenuFont();
+        gameOverFont = FontManager.getInstance().getEnglishMenuFont();
 
         gameEngine.setMap(gameMap);
 
         if (gameEngine instanceof RegularGameEngine regularGameEngine) {
-            List<PlantType> loadout = new ArrayList<>(AppStatus.selectedPlants);
-            regularGameEngine.getSeedPacketBar().layout(loadout, 40f, VIRTUAL_HEIGHT - 150f);
+            layoutSeedPacketBar(regularGameEngine);
         }
     }
 
@@ -86,9 +97,24 @@ public class GameScreen extends BaseScreen {
     private void refreshSeedPacketBar() {
         GameEngine activeEngine = AppStatus.getGameEngine();
         if (activeEngine instanceof RegularGameEngine regularGameEngine) {
-            List<PlantType> loadout = new ArrayList<>(AppStatus.selectedPlants);
+            layoutSeedPacketBar(regularGameEngine);
+        }
+    }
+
+    private void layoutSeedPacketBar(RegularGameEngine regularGameEngine) {
+        List<PlantType> loadout = seedBarLoadout(regularGameEngine);
+        if (regularGameEngine.isConveyorBeltMode()) {
+            regularGameEngine.getSeedPacketBar().layout(loadout, 30f, VIRTUAL_HEIGHT - 260f, false);
+        } else {
             regularGameEngine.getSeedPacketBar().layout(loadout, 40f, VIRTUAL_HEIGHT - 150f);
         }
+    }
+
+    private List<PlantType> seedBarLoadout(RegularGameEngine regularGameEngine) {
+        if (regularGameEngine.isConveyorBeltMode()) {
+            return new ArrayList<>(regularGameEngine.getConveyorBeltQueue());
+        }
+        return new ArrayList<>(AppStatus.selectedPlants);
     }
 
     @Override
@@ -102,6 +128,32 @@ public class GameScreen extends BaseScreen {
             activeEngine = gameEngine;
         }
 
+        boolean isGameOver = false;
+        boolean isWin = false;
+        if (activeEngine instanceof RegularGameEngine regularGameEngine) {
+            isGameOver = regularGameEngine.isGameOverTriggered();
+            isWin = regularGameEngine.isGameOverWin();
+            if (isGameOver) {
+                if (!gameOverShown) {
+                    gameOverShown = true;
+                    gameOverAlpha = 0f;
+                }
+                float displayTime = regularGameEngine.getGameOverTimer();
+                if (displayTime < 1.0f) {
+                    // Fade in
+                    gameOverAlpha = Math.min(1.0f, displayTime);
+                } else if (displayTime > 2.5f) {
+                    // Fade out
+                    gameOverAlpha = Math.max(0.0f, 1.0f - (displayTime - 2.5f) / 0.5f);
+                } else {
+                    gameOverAlpha = 1.0f;
+                }
+            } else {
+                gameOverShown = false;
+                gameOverAlpha = 0f;
+            }
+        }
+
         // Set projection for rendering
         gameBatch.setProjectionMatrix(camera.combined);
 
@@ -111,7 +163,9 @@ public class GameScreen extends BaseScreen {
             activeBackground = backgroundTexture;
         }
         gameBatch.begin();
-        gameBatch.draw(activeBackground, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
+        if (activeBackground != null) {
+            gameBatch.draw(activeBackground, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
+        }
         gameBatch.end();
 
         // Update game logic
@@ -139,10 +193,62 @@ public class GameScreen extends BaseScreen {
             seedBar.drawIconsAndLabels(gameBatch, hudFont);
             gameBatch.end();
         }
+
+        if (isGameOver && gameOverAlpha > 0) {
+            gameBatch.begin();
+            gameOverFont.setColor(1, 1, 1, gameOverAlpha);
+            String message = isWin ? "LEVEL COMPLETE!" : "GAME OVER";
+            com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout(gameOverFont, message);
+            float x = VIRTUAL_WIDTH / 2f - layout.width / 2f;
+            float y = VIRTUAL_HEIGHT / 2f + layout.height / 2f;
+            gameOverFont.draw(gameBatch, message, x, y);
+            gameOverFont.setColor(1, 1, 1, 1);
+            gameBatch.end();
+        }
+
+        if (com.PVZ.model.status.AppStatus.tileDebugEnabled && activeMap != null) {
+            gameBatch.begin();
+            for (int r = 0; r < activeMap.getRows(); r++) {
+                for (int c = 0; c < activeMap.getCols(); c++) {
+                    com.PVZ.model.entity.Tile tile = activeMap.getTile(r, c);
+                    if (tile == null || tile.getType() == com.PVZ.model.enums.TileType.NORMAL) {
+                        continue;
+                    }
+                    String label = tileDebugLabel(tile.getType());
+                    float cx = tile.getX() + tile.getWidth() * 0.5f;
+                    float cy = tile.getY() + tile.getHeight() * 0.5f;
+                    float x = cx - label.length() * 5f;
+                    float y = cy + hudFont.getCapHeight() * 0.5f;
+                    hudFont.setColor(1, 1, 0, 1);
+                    hudFont.draw(gameBatch, label, x, y);
+                }
+            }
+            hudFont.setColor(1, 1, 1, 1);
+            gameBatch.end();
+        }
+    }
+
+    private static String tileDebugLabel(com.PVZ.model.enums.TileType type) {
+        if (type == null) return "";
+        switch (type) {
+            case TOMBSTONE: return "TOMB";
+            case WATER: return "WATER";
+            case TIDE: return "TIDE";
+            case ICE: return "ICE";
+            case SLIPPERY_UP: return "SLIP_U";
+            case SLIPPERY_DOWN: return "SLIP_D";
+            case NECROMANCY: return "NECRO";
+            case LOW_COAST: return "LOWC";
+            case CRATER: return "CRATER";
+            default: return "";
+        }
     }
 
     @Override
     public void dispose() {
+        if (isDisposed()) {
+            return;
+        }
         super.dispose();
         if (shapeDebug != null) {
             shapeDebug.dispose();

@@ -104,4 +104,8 @@ public class Map {
     public float getTileHeight() { return totalHeight / rows; }
     public float getStartX() { return startX; }
     public float getStartY() { return startY; }
+    public float getTotalWidth() { return totalWidth; }
+    public float getTotalHeight() { return totalHeight; }
+    public int getRows() { return rows; }
+    public int getCols() { return cols; }
 }

@@ -117,6 +117,18 @@ public enum InGameCommand {
             return new InGameInputDTO(this, null, null, null, null, null, null);
         }
     },
+    SHOW_TILE_DEBUG("^\\s*show\\s+tile\\s+debug\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            return new InGameInputDTO(this, null, null, null, null, null, null);
+        }
+    },
+    HIDE_TILE_DEBUG("^\\s*hide\\s+tile\\s+debug\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            return new InGameInputDTO(this, null, null, null, null, null, null);
+        }
+    },
     FREEZE_ZOMBIE("^\\s*freeze\\s+zombie\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
