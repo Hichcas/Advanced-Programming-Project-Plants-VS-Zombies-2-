@@ -36,7 +36,10 @@ public class ZombieWizard extends AbstractRangedCasterZombie {
 
     @Override
     public void onHit(Plant target) {
-        transformPlantToSheep(target);
+        if (target != null && !target.isDead()) {
+            target.disableForTicks(100000);
+            System.out.println(alias + " turned a plant into a sheep");
+        }
     }
 
     @Override

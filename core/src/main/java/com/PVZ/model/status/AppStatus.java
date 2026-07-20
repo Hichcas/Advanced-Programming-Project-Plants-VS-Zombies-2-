@@ -84,6 +84,9 @@ public final class AppStatus {
     public static final Set<PlantType> selectedPlants = new LinkedHashSet<>();
     public static final Set<PlantType> boostedPlants = new LinkedHashSet<>();
 
+    // When true, the in-game map draws the default-mechanic label on top of each tile.
+    public static boolean tileDebugEnabled = false;
+
     public static User getCurrentUser() { return currentUser;}
 
     public static PVZ getPVZ() {
@@ -103,10 +106,18 @@ public final class AppStatus {
 
     /** Return to the main menu screen (used on game over for both the main game and minigames). */
     public static void returnToMainMenu() {
+        returnToMainMenu(null);
+    }
+
+    /** Same as {@link #returnToMainMenu()}, but flashes {@code message} (e.g. "GAME OVER") while
+     *  the transition fades out — used by engines that don't already draw their own in-screen
+     *  game-over text (RegularGameEngine has its own fade via GameScreen instead). */
+    public static void returnToMainMenu(String message) {
         currentMenuType = MenuType.MAIN;
         setGameEngine(null);
         ScreenManager.getInstance().performTransition(() ->
-            new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));
+            new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())),
+            message);
     }
 
     /**

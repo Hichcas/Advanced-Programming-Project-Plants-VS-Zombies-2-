@@ -4,8 +4,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.screen.manager.FontManager;
+
+import java.util.List;
 
 public class GameHud extends Group {
 
@@ -14,6 +17,7 @@ public class GameHud extends Group {
     // مقادیری که قرار است نمایش دهیم
     private int sunflowerCount = 0;
     private int zombieWavePercent = 0;
+    private String beltLine = null;
 
     // ارتفاع مجازی (ثابت در BaseScreen)
 
@@ -36,6 +40,26 @@ public class GameHud extends Group {
         }
         sunflowerCount = engine.gameStatus.getSunflower();
         zombieWavePercent = engine.gameStatus.getRemainingZombieWaveInPercent();
+
+        if (engine instanceof RegularGameEngine regularEngine && regularEngine.isConveyorBeltMode()) {
+            beltLine = "Belt: " + formatBelt(regularEngine.getConveyorBeltQueue());
+        } else {
+            beltLine = null;
+        }
+    }
+
+    private String formatBelt(List<PlantType> queue) {
+        if (queue.isEmpty()) {
+            return "(empty, waiting...)";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (PlantType type : queue) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(type.getDisplayName());
+        }
+        return sb.toString();
     }
 
     @Override
@@ -51,6 +75,12 @@ public class GameHud extends Group {
         font.setColor(Color.RED);
         // رسم متن دوم: Zombie Wave
         font.draw(batch, "Zombie Wave: " + zombieWavePercent + "%", 20, AppStatus.getQuality().height - 100);
+
+        if (beltLine != null) {
+            font.setColor(Color.CYAN);
+            // رسم متن سوم: محتوای نوار نقاله (مرحله ویژه Conveyor Belt)
+            font.draw(batch, beltLine, 20, AppStatus.getQuality().height - 150);
+        }
 
         // بعد از رسم، رنگ را به سفید برگردانیم (اختیاری برای ایمنی)
         font.setColor(Color.WHITE);

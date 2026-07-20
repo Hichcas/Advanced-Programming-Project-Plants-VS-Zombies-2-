@@ -6,6 +6,7 @@ import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.game.chapter.Chapter;
 import com.PVZ.model.game.chapter.ChapterConfig;
 import com.PVZ.model.game.chapter.ChapterLibrary;
+import com.PVZ.model.game.chapter.StageConfig;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.model.user.UserRegistry;
@@ -49,6 +50,16 @@ public class ChapterAndLevelSelectionMenuController {
         AppStatus.currentStageNumber = (stage != null && stage > 0) ? stage : 1;
         AppStatus.selectedPlants.clear();
         AppStatus.boostedPlants.clear();
+
+        StageConfig stageConfig = ChapterLibrary.getStageConfig(
+                AppStatus.currentChapterName, AppStatus.currentStageNumber);
+
+        if (GameLauncher.isConveyorBeltStage(stageConfig)) {
+            GameLauncher.launch(stageConfig);
+            return new OutputDTO(true, "Entered stage directly: " + AppStatus.currentChapterName
+                    + " Stage " + AppStatus.currentStageNumber + " (Conveyor Belt).");
+        }
+
         AppStatus.currentMenuType = MenuType.PLANT_SELECTION;
         return new OutputDTO(true, "Entered Plant Selection Menu.");
     }

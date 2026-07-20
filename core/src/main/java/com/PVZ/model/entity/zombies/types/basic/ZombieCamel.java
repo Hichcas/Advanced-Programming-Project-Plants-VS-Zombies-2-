@@ -1,6 +1,8 @@
 package com.PVZ.model.entity.zombies.types.basic;
 
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.enums.DamageType;
+import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,29 @@ public class ZombieCamel extends AbstractBasicZombie {
     public CamelSegment getFrontSegment() { return frontSegment; }
     public CamelSegment getMiddleSegment() { return middleSegment; }
     public CamelSegment getRearSegment() { return rearSegment; }
+
+    @Override
+    public void takeDamage(int amount, DamageType type) {
+        double dmg = amount;
+        if (!rearSegment.isDestroyed()) {
+            rearSegment.takeDamage(dmg);
+        } else if (!middleSegment.isDestroyed()) {
+            middleSegment.takeDamage(dmg);
+        } else if (!frontSegment.isDestroyed()) {
+            frontSegment.takeDamage(dmg);
+        }
+        this.hitpoints = getEffectiveHitpoints();
+    }
+
+    @Override
+    public void takeDamage(double damage) {
+        takeDamage((int) damage, DamageType.NORMAL);
+    }
+
+    @Override
+    public boolean isDead() {
+        return getEffectiveHitpoints() <= 0;
+    }
 
     @Override
     public double getEffectiveHitpoints() {

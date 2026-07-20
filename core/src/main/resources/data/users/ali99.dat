@@ -33,7 +33,7 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "WASABI_WHIP", "LILY_PAD", "WALLNUT_BOWLING", "BOWLING_BULB", "CHERRY_BOMB", "PRIMAL_POTATO_MINE", "SEA_SHROOM", "SQUASH", "PEA_POD", "CAULIPOWER", "MAGNET_SHROOM", "PUMPKIN", "GRAVE_BUSTER", "ENDURIAN", "ROTOBAGA", "SPLIT_PEA", "CAT_TAIL_MINT", "GOO_PEASHOOTER", "GRAPESHOT", "ENCHANT_MINT", "STARFRUIT", "GIANT_WALLNUT", "KERNEL_PULT", "WALL_NUT", "CAT_TAIL", "APPEASE_MINT", "SUN_BEAN", "ICEBERG_LETTUCE", "SNOW_PEA", "REINFORCE_MINT", "BONK_CHOY", "PEPPER_PULT", "ICE_SHROOM", "ENFORCE_MINT", "FUME_SHROOM", "THREEPEATER", "ENLIGHTEN_MINT", "BOMBARD_MINT", "SUN_SHROOM", "IMITATER", "SUNFLOWER", "POTATO_MINE", "JALAPENO", "DOOM_SHROOM", "TORCHWOOD", "ARMA_MINT", "MEGA_GATLING_PEA", "CABBAGE_PULT", "MELON_PULT", "ELECTRIC_BLUEBERRY", "TWIN_SUNFLOWER", "SWEET_POTATO", "TALL_NUT", "PRIMAL_SUNFLOWER", "PHAT_BEET", "CHOMPER", "GARLIC", "GOLD_BLOOM", "CACTUS", "KIWIBEAST", "PEASHOOTER", "PIERCE_MINT", "PUFF_SHROOM", "WINTER_MELON", "HYPNO_SHROOM", "HOT_POTATO", "REPEATER", "CITRON", "TANGLE_KELP", "FIRE_PEASHOOTER", "EXPLODE_O_NUT" ],
+    "unlockedPlants" : [ ],
     "seenZombies" : [ ],
     "seedPackets" : { },
     "plantLevels" : { },
@@ -181,8 +181,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfUnlockedPots" : 5,
-    "numberOfLockedPots" : 15
+    "numberOfLockedPots" : 15,
+    "numberOfUnlockedPots" : 5
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -192,12 +192,11 @@
     "news" : [ ]
   },
   "shopDaily" : {
-    "offerPlant" : "CAT_TAIL",
-    "offerDate" : "2026-07-20",
+    "offerPlant" : null,
+    "offerDate" : null,
     "purchased" : false,
-    "availableToday" : true,
-    "forToday" : true
+    "forToday" : false,
+    "availableToday" : false
   },
-  "stayLoggedIn" : false,
-  "questState" : null
+  "stayLoggedIn" : false
 }
