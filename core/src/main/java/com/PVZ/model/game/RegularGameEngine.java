@@ -911,7 +911,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return "Sun amount: " + getSunCount();
     }
 
-    private static String tileGlyph(TileType type) {
+    public static String tileDebugLabel(TileType type) {
         if (type == null) return ".";
         switch (type) {
             case TOMBSTONE: return "T";
@@ -925,6 +925,37 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             case CRATER: return "C";
             default: return ".";
         }
+    }
+
+    /**
+     * Single source of truth for the tile-debug listing (special tiles + coords).
+     * Used by both the terminal `show map` output and the on-screen overlay legend.
+     */
+    public static String tileDebugList(Map map) {
+        if (map == null) {
+            return "  (none)\n";
+        }
+        StringBuilder builder = new StringBuilder();
+        boolean any = false;
+        for (int row = 0; row < map.getRows(); row++) {
+            for (int col = 0; col < map.getCols(); col++) {
+                Tile tile = map.getTile(row, col);
+                if (tile == null || tile.getType() == TileType.NORMAL) {
+                    continue;
+                }
+                any = true;
+                builder.append("  (").append(col).append(", ").append(row).append(") = ")
+                        .append(tile.getType().name());
+                if (tile.getType() == TileType.TOMBSTONE) {
+                    builder.append(" hp=").append(tile.getHp());
+                }
+                builder.append('\n');
+            }
+        }
+        if (!any) {
+            builder.append("  (none)\n");
+        }
+        return builder.toString();
     }
 
     public String showMapText() {
@@ -958,7 +989,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                     cell = plant.getType().name().charAt(0);
                 } else if (map != null) {
                     Tile tile = map.getTile(row, col);
-                    cell = tile == null ? '.' : tileGlyph(tile.getType()).charAt(0);
+                    cell = tile == null ? '.' : tileDebugLabel(tile.getType()).charAt(0);
                 } else {
                     cell = '.';
                 }
@@ -971,27 +1002,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         }
 
         // Debug: full-name listing of every special (non-NORMAL) tile + coordinates.
+        // Uses the single shared source of truth so terminal + on-screen stay in sync.
         builder.append("Tile debug:\n");
-        boolean any = false;
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLS; col++) {
-                if (map == null) break;
-                Tile tile = map.getTile(row, col);
-                if (tile == null || tile.getType() == TileType.NORMAL) {
-                    continue;
-                }
-                any = true;
-                builder.append("  (").append(col).append(", ").append(row).append(") = ")
-                        .append(tile.getType().name());
-                if (tile.getType() == TileType.TOMBSTONE) {
-                    builder.append(" hp=").append(tile.getHp());
-                }
-                builder.append('\n');
-            }
-        }
-        if (!any) {
-            builder.append("  (none)\n");
-        }
+        builder.append(tileDebugList(map));
         return builder.toString().trim();
     }
 
