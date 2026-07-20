@@ -2,6 +2,7 @@ package com.PVZ.model.entity.zombies.types.basic;
 
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
 import com.PVZ.model.entity.zombies.base.ZombieArmor;
+import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,17 @@ public class ZombiePharaoh extends AbstractBasicZombie {
 //            speed = 0.3;
 //        }
 //    }
+
+    @Override
+    public void onUpdate(float delta, BattleController controller) {
+        if (!sarcophagusBroken && armor != null && armor.isDestroyed()) {
+            sarcophagusBroken = true;
+            armor = null;
+            speed = 0.3;
+            currentSpeed = 0.3;
+            System.out.println(alias + " sarcophagus broken, speeding up");
+        }
+    }
 
     public boolean isSarcophagusBroken() { return sarcophagusBroken; }
 }

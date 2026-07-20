@@ -37,7 +37,12 @@ public class ZombieBeachOctopus extends AbstractRangedCasterZombie {
     }
 
     @Override
-    public void onHit(Plant target) {}
+    public void onHit(Plant target) {
+        if (target != null && !target.isDead()) {
+            target.disableForTicks(30);
+            System.out.println(alias + " froze a plant");
+        }
+    }
 
     @Override
     public String getDebugString() {
