@@ -76,6 +76,11 @@ public class Map {
             plant.putRuntimeState("worldY", worldY);
             plant.putRuntimeState("tileWidth", tileWidth);
             plant.putRuntimeState("tileHeight", tileHeight);
+            TileType tileType = tiles[row][col].getType();
+            if (tileType == TileType.ICE || tileType == TileType.TOMBSTONE) {
+                plant.putRuntimeState("freezeLevel", 3);
+                plant.putRuntimeState("iceHp", 600);
+            }
         }
     }
 
@@ -97,4 +102,8 @@ public class Map {
     public float getTileHeight() { return totalHeight / rows; }
     public float getStartX() { return startX; }
     public float getStartY() { return startY; }
+    public float getTotalWidth() { return totalWidth; }
+    public float getTotalHeight() { return totalHeight; }
+    public int getRows() { return rows; }
+    public int getCols() { return cols; }
 }

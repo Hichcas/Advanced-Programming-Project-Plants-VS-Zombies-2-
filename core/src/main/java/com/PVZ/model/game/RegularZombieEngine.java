@@ -53,6 +53,10 @@ public class RegularZombieEngine implements ZombieEngine{
     @Override
     public void kill(Object entity) {
         if (entity instanceof Zombie z) {
+            z.setHitpoints(0);
+            if (z.getArmor() != null) {
+                z.setArmor(null);
+            }
             z.onDestroy();
             zombies.remove(z);
         }

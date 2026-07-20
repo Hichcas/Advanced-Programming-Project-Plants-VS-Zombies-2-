@@ -31,7 +31,13 @@ public class Tile {
     }
 
     public void drawBorder(ShapeRenderer sr) {
-        sr.setColor(Color.BLUE);   // رنگ حاشیه
+        switch (type) {
+            case ICE -> sr.setColor(Color.CYAN);
+            case SLIPPERY_UP -> sr.setColor(new Color(0.3f, 0.5f, 1f, 1f));
+            case SLIPPERY_DOWN -> sr.setColor(new Color(0.3f, 0.5f, 1f, 1f));
+            case TOMBSTONE -> sr.setColor(new Color(0.5f, 0.35f, 0.2f, 1f));
+            default -> sr.setColor(Color.BLUE);
+        }
         sr.rect(worldX, worldY, width, height);
     }
 

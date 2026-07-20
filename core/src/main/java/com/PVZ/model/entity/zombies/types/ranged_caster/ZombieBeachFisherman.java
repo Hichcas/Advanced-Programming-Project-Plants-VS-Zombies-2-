@@ -27,7 +27,13 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
 
     @Override
     public void shoot(BattleController controller, Plant target) {
-        if (hasHook()) {
+        if (hasHook() && target != null && !target.isDead()) {
+            Object r = target.getRuntimeState("row");
+            Object c = target.getRuntimeState("col");
+            int row = r instanceof Number ? ((Number) r).intValue() : (int) this.row;
+            int col = c instanceof Number ? ((Number) c).intValue() : (int) this.col;
+            controller.removePlant(row, col);
+            System.out.println(alias + " hooked away a plant at (" + col + ", " + row + ")");
             useHook();
         }
     }
