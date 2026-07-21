@@ -50,6 +50,8 @@ public class ChapterAndLevelSelectionMenuController {
         AppStatus.currentStageNumber = (stage != null && stage > 0) ? stage : 1;
         AppStatus.selectedPlants.clear();
         AppStatus.boostedPlants.clear();
+        AppStatus.currentStageLockedPlants.clear();
+        AppStatus.currentStageExclusiveFamilies.clear();
 
         StageConfig stageConfig = ChapterLibrary.getStageConfig(
                 AppStatus.currentChapterName, AppStatus.currentStageNumber);
@@ -58,6 +60,11 @@ public class ChapterAndLevelSelectionMenuController {
             GameLauncher.launch(stageConfig);
             return new OutputDTO(true, "Entered stage directly: " + AppStatus.currentChapterName
                     + " Stage " + AppStatus.currentStageNumber + " (Conveyor Belt).");
+        }
+
+        if (GameLauncher.isLockedPlantsStage(stageConfig)) {
+            AppStatus.currentStageLockedPlants.addAll(GameLauncher.resolveLockedPlants(stageConfig));
+            AppStatus.currentStageExclusiveFamilies.addAll(GameLauncher.resolveExclusiveFamilies(stageConfig));
         }
 
         AppStatus.currentMenuType = MenuType.PLANT_SELECTION;

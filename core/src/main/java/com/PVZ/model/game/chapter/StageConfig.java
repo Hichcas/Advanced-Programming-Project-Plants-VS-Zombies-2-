@@ -13,6 +13,8 @@ public class StageConfig {
     private String mapTexture;
     private boolean disableFallingSun;
     private double conveyorInterval;
+    private List<String> lockedPlants;
+    private List<FamilyLockEntry> lockedFamilies;
     private List<TombstoneEntry> tombstones;
     private List<TileEntry> tiles;
     private List<WaveEntry> waves;
@@ -29,6 +31,20 @@ public class StageConfig {
         public void setCol(int col) { this.col = col; }
         public String getType() { return type; }
         public void setType(String type) { this.type = type; }
+    }
+
+    /**
+     * Type-1 "Locked Plants" rule from the doc: mark a whole plant family (e.g. EXPLOSIVE) as
+     * "pick-one" for this stage. The player may freely choose ANY member of the family; as
+     * soon as one is picked, the rest of that family locks dynamically for the remainder of
+     * plant selection (enforced in PlantSelectionMenuController, not here).
+     */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class FamilyLockEntry {
+        private String family;
+
+        public String getFamily() { return family; }
+        public void setFamily(String family) { this.family = family; }
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -89,6 +105,10 @@ public class StageConfig {
     public void setDisableFallingSun(boolean disableFallingSun) { this.disableFallingSun = disableFallingSun; }
     public double getConveyorInterval() { return conveyorInterval; }
     public void setConveyorInterval(double conveyorInterval) { this.conveyorInterval = conveyorInterval; }
+    public List<String> getLockedPlants() { return lockedPlants; }
+    public void setLockedPlants(List<String> lockedPlants) { this.lockedPlants = lockedPlants; }
+    public List<FamilyLockEntry> getLockedFamilies() { return lockedFamilies; }
+    public void setLockedFamilies(List<FamilyLockEntry> lockedFamilies) { this.lockedFamilies = lockedFamilies; }
     public List<TombstoneEntry> getTombstones() { return tombstones; }
     public void setTombstones(List<TombstoneEntry> tombstones) { this.tombstones = tombstones; }
     public List<TileEntry> getTiles() { return tiles; }

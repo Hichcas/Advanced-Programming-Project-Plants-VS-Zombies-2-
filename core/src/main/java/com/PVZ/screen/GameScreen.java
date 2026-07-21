@@ -28,11 +28,7 @@ public class GameScreen extends BaseScreen {
     private ShapeRenderer shapeDebug;
     private final BitmapFont hudFont;
     private final BitmapFont gameOverFont;
-
-    // تكستچر پس‌زمینه
     private Texture backgroundTexture;
-
-    // Game over display
     private float gameOverAlpha = 0f;
     private boolean gameOverShown = false;
 
@@ -105,6 +101,8 @@ public class GameScreen extends BaseScreen {
         List<PlantType> loadout = seedBarLoadout(regularGameEngine);
         if (regularGameEngine.isConveyorBeltMode()) {
             regularGameEngine.getSeedPacketBar().layout(loadout, 30f, VIRTUAL_HEIGHT - 260f, false);
+        } else if (regularGameEngine.isLockedPlantsMode()) {
+            regularGameEngine.getSeedPacketBar().layoutVertical(loadout, 30f, VIRTUAL_HEIGHT - 150f);
         } else {
             regularGameEngine.getSeedPacketBar().layout(loadout, 40f, VIRTUAL_HEIGHT - 150f);
         }
@@ -119,10 +117,7 @@ public class GameScreen extends BaseScreen {
 
     @Override
     protected void renderScreen(float delta) {
-        // Refresh seed packet bar from latest loadout
         refreshSeedPacketBar();
-
-        // Use the engine from AppStatus (may have been replaced by startGame)
         GameEngine activeEngine = AppStatus.getGameEngine();
         if (activeEngine == null) {
             activeEngine = gameEngine;
@@ -140,10 +135,8 @@ public class GameScreen extends BaseScreen {
                 }
                 float displayTime = regularGameEngine.getGameOverTimer();
                 if (displayTime < 1.0f) {
-                    // Fade in
                     gameOverAlpha = Math.min(1.0f, displayTime);
                 } else if (displayTime > 2.5f) {
-                    // Fade out
                     gameOverAlpha = Math.max(0.0f, 1.0f - (displayTime - 2.5f) / 0.5f);
                 } else {
                     gameOverAlpha = 1.0f;
@@ -153,11 +146,7 @@ public class GameScreen extends BaseScreen {
                 gameOverAlpha = 0f;
             }
         }
-
-        // Set projection for rendering
         gameBatch.setProjectionMatrix(camera.combined);
-
-        // Draw background (minigames may override this, e.g. Vasebreaker's own backdrop)
         Texture activeBackground = activeEngine.getBackgroundOverride();
         if (activeBackground == null) {
             activeBackground = backgroundTexture;
@@ -167,11 +156,7 @@ public class GameScreen extends BaseScreen {
             gameBatch.draw(activeBackground, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
         }
         gameBatch.end();
-
-        // Update game logic
         activeEngine.render(Math.min(delta, 1 / 30f), gameBatch);
-
-        // Grid borders (use the active engine's own map, in case it differs from the default one)
         Map activeMap = activeEngine.getMap();
         if (activeMap == null) {
             activeMap = gameMap;
@@ -181,7 +166,6 @@ public class GameScreen extends BaseScreen {
         activeMap.renderBorders(shapeDebug);
         shapeDebug.end();
 
-        // Seed packet bar
         if (activeEngine instanceof RegularGameEngine regularGameEngine) {
             SeedPacketBar seedBar = regularGameEngine.getSeedPacketBar();
 

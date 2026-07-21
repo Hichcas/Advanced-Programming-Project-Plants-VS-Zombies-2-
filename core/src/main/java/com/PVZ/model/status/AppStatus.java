@@ -2,6 +2,7 @@ package com.PVZ.model.status;
 
 import com.PVZ.PVZ;
 import com.PVZ.model.enums.MenuType;
+import com.PVZ.model.enums.PlantFamily;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.game.GameEngine;
 import com.PVZ.model.graphics.GraphicsQuality;
@@ -83,8 +84,16 @@ public final class AppStatus {
     public static int currentStageNumber = 1;
     public static final Set<PlantType> selectedPlants = new LinkedHashSet<>();
     public static final Set<PlantType> boostedPlants = new LinkedHashSet<>();
+    public static final Set<PlantType> currentStageLockedPlants = new LinkedHashSet<>();
+    /**
+     * Families that are "pick-one" for the current stage (Type-1 rule from the doc):
+     * the player may freely choose ANY member of the family, but as soon as one member
+     * is selected, the rest of that family becomes locked for the remainder of selection.
+     * This is dynamic (depends on what the player has already picked), unlike
+     * {@link #currentStageLockedPlants} which is a fixed, static lock list.
+     */
+    public static final Set<PlantFamily> currentStageExclusiveFamilies = new LinkedHashSet<>();
 
-    // When true, the in-game map draws the default-mechanic label on top of each tile.
     public static boolean tileDebugEnabled = false;
 
     public static User getCurrentUser() { return currentUser;}
@@ -103,15 +112,10 @@ public final class AppStatus {
     public static void setCamera(OrthographicCamera camera) {
         AppStatus.camera = camera;
     }
-
-    /** Return to the main menu screen (used on game over for both the main game and minigames). */
     public static void returnToMainMenu() {
         returnToMainMenu(null);
     }
 
-    /** Same as {@link #returnToMainMenu()}, but flashes {@code message} (e.g. "GAME OVER") while
-     *  the transition fades out — used by engines that don't already draw their own in-screen
-     *  game-over text (RegularGameEngine has its own fade via GameScreen instead). */
     public static void returnToMainMenu(String message) {
         currentMenuType = MenuType.MAIN;
         setGameEngine(null);
@@ -120,19 +124,26 @@ public final class AppStatus {
             message);
     }
 
-    /**
-     * Return to the Travel Log screen (used when an "advanced" minigame like I, Zombie
-     * finishes — won or lost). The single persistent GameScreen always renders whatever
-     * engine is currently set via setGameEngine(), regardless of currentMenuType, so simply
-     * flipping currentMenuType (without also swapping the engine/screen like this) leaves the
-     * finished minigame's engine stuck on screen — and, since nothing else expects to keep
-     * ticking a finished engine, that eventually blows up instead of returning to the menu.
-     */
     public static void returnToTravelLog() {
         currentMenuType = MenuType.TRAVEL_LOG;
         setGameEngine(null);
         ScreenManager.getInstance().performTransition(() ->
             new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));
+    }
+
+    /**
+     * Leaves an in-progress level (via "menu exit" or a loss) and goes back to level select.
+     * Unlike just flipping currentMenuType, this also drops the old GameEngine reference and
+     * asks the ScreenManager to dispose the current GameScreen and swap in a fresh one — without
+     * this, the old screen (and its engine) kept rendering/ticking in the background: leftover
+     * planted plants stayed on the field and sun kept falling even after "exiting" the level.
+     */
+    public static void returnToChapterAndLevelSelection(String message) {
+        currentMenuType = MenuType.CHAPTER_AND_LEVEL_SELECTION;
+        setGameEngine(null);
+        ScreenManager.getInstance().performTransition(() ->
+            new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())),
+            message);
     }
 
 }

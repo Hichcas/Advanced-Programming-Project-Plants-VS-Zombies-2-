@@ -1,7 +1,6 @@
 package com.PVZ.controller.menuControllers;
 
 import com.PVZ.model.entity.zombies.base.Zombie;
-import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.BattleController;
 import com.PVZ.model.game.GameEngine;
@@ -27,9 +26,8 @@ public class InGameMenuController {
         RegularGameEngine engine = getEngine();
 
         if (engine != null && engine.gameStatus != null && engine.gameStatus.isGameOver()) {
-            com.PVZ.model.status.AppStatus.currentMenuType =
-                    com.PVZ.model.enums.MenuType.CHAPTER_AND_LEVEL_SELECTION;
             engine.gameStatus.setGameOver(false);
+            com.PVZ.model.status.AppStatus.returnToChapterAndLevelSelection("GAME OVER");
             return new OutputDTO(true,
                     "The zombie ate your brain; LOSER!!! Returning to level select.");
         }
@@ -65,7 +63,7 @@ public class InGameMenuController {
 
             case PLANT_PLANT -> engine == null
                     ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, engine.plantPlant(dto.getPlantType(), dto.getX(), dto.getY()));
+                    : new OutputDTO(true, colorizeIfLocked(engine.plantPlant(dto.getPlantType(), dto.getX(), dto.getY())));
 
             case PLUCK_PLANT -> engine == null
                     ? new OutputDTO(false, "Game engine is not ready.")
@@ -249,8 +247,15 @@ public class InGameMenuController {
     }
 
     private OutputDTO exitToGameMenu() {
-        AppStatus.currentMenuType = MenuType.CHAPTER_AND_LEVEL_SELECTION;
+        AppStatus.returnToChapterAndLevelSelection(null);
         return new OutputDTO(true, "Entered Game Menu.");
+    }
+
+    private String colorizeIfLocked(String message) {
+        if (message != null && message.toLowerCase().contains("locked for this level")) {
+            return "\u001B[33m" + message + "\u001B[0m";
+        }
+        return message;
     }
 
 }

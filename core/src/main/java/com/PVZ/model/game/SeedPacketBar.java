@@ -21,6 +21,8 @@ public class SeedPacketBar {
 
     private static final float SLOT_SIZE = 110f;
     private static final float GAP = 12f;
+    private static final float VERTICAL_SLOT_SIZE = 120f;
+    private static final float VERTICAL_GAP = 14f;
 
     private final List<SeedPacket> packets = new ArrayList<>();
     private final Map<PlantType, Texture> iconCache = new HashMap<>();
@@ -39,6 +41,18 @@ public class SeedPacketBar {
             packet.setIcon(getOrLoadIcon(type));
             packets.add(packet);
             x += SLOT_SIZE + GAP;
+        }
+    }
+
+    public void layoutVertical(List<PlantType> unlockedPlants, float startX, float startY) {
+        packets.clear();
+        float y = startY;
+        for (PlantType type : unlockedPlants) {
+            Rectangle bounds = new Rectangle(startX, y, VERTICAL_SLOT_SIZE, VERTICAL_SLOT_SIZE);
+            SeedPacket packet = new SeedPacket(type, bounds);
+            packet.setIcon(getOrLoadIcon(type));
+            packets.add(packet);
+            y -= VERTICAL_SLOT_SIZE + VERTICAL_GAP;
         }
     }
 
@@ -77,7 +91,6 @@ public class SeedPacketBar {
         return texture;
     }
 
-    /** Returns the packet under the given world coordinates, or null if none. */
     public SeedPacket getPacketAt(float worldX, float worldY) {
         for (SeedPacket packet : packets) {
             if (packet.contains(worldX, worldY)) {

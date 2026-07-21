@@ -49,6 +49,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     private double conveyorTimer = 0.0;
     private final List<PlantType> conveyorBeltQueue = new ArrayList<>();
 
+    private boolean lockedPlantsMode = false;
+    private final java.util.Set<PlantType> lockedPlantsForStage = new java.util.LinkedHashSet<>();
+
     private final SeedPacketBar seedPacketBar = new SeedPacketBar();
 
     private final RegularZombieEngine zombieEngine;
@@ -216,7 +219,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             advanceOneTick();
         }
 
-        // win condition: all waves finished and all zombies dead
         if (gameStatus != null && !gameStatus.isGameOver() && !gameStatus.isWon()
                 && waveManager != null && waveManager.isFinished()) {
             boolean anyAlive = false;
@@ -386,8 +388,21 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     public boolean isConveyorBeltMode() {
         return conveyorBeltMode;
     }
+    public void enableLockedPlants(java.util.Collection<PlantType> locked) {
+        this.lockedPlantsMode = true;
+        this.lockedPlantsForStage.clear();
+        if (locked != null) {
+            this.lockedPlantsForStage.addAll(locked);
+        }
+    }
 
-    /** Read-only view of the plant types currently waiting on the belt, oldest first. */
+    public boolean isLockedPlantsMode() {
+        return lockedPlantsMode;
+    }
+
+    public java.util.Set<PlantType> getLockedPlantsForStage() {
+        return Collections.unmodifiableSet(lockedPlantsForStage);
+    }
     public List<PlantType> getConveyorBeltQueue() {
         return Collections.unmodifiableList(conveyorBeltQueue);
     }
@@ -866,6 +881,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             return "Plant was not selected for this level: " + type.getDisplayName();
         }
 
+        if (lockedPlantsMode && lockedPlantsForStage.contains(type)) {
+            return "Plant is locked for this level: " + type.getDisplayName();
+        }
+
         int userLevel = 1;
         if (AppStatus.currentUser != null && AppStatus.currentUser.collectionState != null) {
             var collection = AppStatus.currentUser.collectionState;
@@ -1031,10 +1050,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         }
     }
 
-    /**
-     * Single source of truth for the tile-debug listing (special tiles + coords).
-     * Used by both the terminal `show map` output and the on-screen overlay legend.
-     */
     public static String tileDebugList(Map map) {
         if (map == null) {
             return "  (none)\n";
@@ -1109,8 +1124,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             builder.append('\n');
         }
 
-        // Debug: full-name listing of every special (non-NORMAL) tile + coordinates.
-        // Uses the single shared source of truth so terminal + on-screen stay in sync.
         builder.append("Tile debug:\n");
         builder.append(tileDebugList(map));
         return builder.toString().trim();
