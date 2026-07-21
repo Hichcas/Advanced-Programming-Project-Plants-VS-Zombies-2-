@@ -20,6 +20,7 @@ public class Chapter {
     private int tideFrontier = 6;
     private int lastTideWave = -1;
     private int lastGraveWave = -1;
+    private int lastNecroWave = -1;
     private int maxTideColumn = 8;
     private boolean tideInitialized = false;
     private int tideTick = 0;
@@ -106,27 +107,29 @@ public class Chapter {
                         continue;
                     }
 
-                    if (waveChanged) {
-                        int lv = asInt(plant.getRuntimeState("freezeLevel"), 0);
-                        if (lv < 3) {
-                            lv++;
+                    int freezeLv = asInt(plant.getRuntimeState("freezeLevel"), 0);
+
+                    if (waveChanged && freezeLv < 3) {
+                        // Solid-freeze immediately so the mechanic is visible within a 3-wave stage.
+                        plant.putRuntimeState("freezeLevel", 3);
+                        Object existingIceHp = plant.getRuntimeState("iceHp");
+                        if (existingIceHp == null || asInt(existingIceHp, 0) <= 0) {
+                            plant.putRuntimeState("iceHp", 600);
                         }
-                        plant.putRuntimeState("freezeLevel", lv);
-                        if (lv >= 3) {
-                            Object existingIceHp = plant.getRuntimeState("iceHp");
-                            if (existingIceHp == null || asInt(existingIceHp, 0) <= 0) {
-                                plant.putRuntimeState("iceHp", 600);
-                            }
-                        }
+                        freezeLv = 3;
                     }
 
-                    int freezeLv = asInt(plant.getRuntimeState("freezeLevel"), 0);
                     if (freezeLv >= 3) {
+                        // Pause the plant's behavior while frozen.
+                        plant.disableForTicks(2);
+                        // Drain the plant's REAL hp so the health bar / slidebar moves (60 HP/s = 6/tick).
+                        plant.takeDamage(6);
                         int hp = asInt(plant.getRuntimeState("iceHp"), 0);
                         hp -= 60;
                         if (hp <= 0) {
                             plant.putRuntimeState("freezeLevel", 0);
                             plant.putRuntimeState("iceHp", 0);
+                            plant.putRuntimeState("disabledTicks", 0);
                         } else {
                             plant.putRuntimeState("iceHp", hp);
                         }
@@ -166,11 +169,13 @@ public class Chapter {
                             if (neighbor == null || neighbor.isDead()) continue;
                             int neighborFreeze = asInt(neighbor.getRuntimeState("freezeLevel"), 0);
                             if (neighborFreeze >= 3) {
+                                // Fire plant melts adjacent ice at 60 HP/s.
                                 int hp = asInt(neighbor.getRuntimeState("iceHp"), 0);
                                 hp -= 60;
                                 if (hp <= 0) {
                                     neighbor.putRuntimeState("freezeLevel", 0);
                                     neighbor.putRuntimeState("iceHp", 0);
+                                    neighbor.putRuntimeState("disabledTicks", 0);
                                 } else {
                                     neighbor.putRuntimeState("iceHp", hp);
                                 }
@@ -283,6 +288,7 @@ public class Chapter {
                     continue;
                 }
                 tile.setType(TileType.NECROMANCY);
+                tile.setHp(700);
                 placed++;
                 if (random.nextDouble() < 0.3) {
                     engine.addSun(50);
@@ -332,15 +338,25 @@ public class Chapter {
             if (map == null || engine == null) {
                 return;
             }
+            WaveManager wm = engine.getWaveManager();
+            if (wm == null || !wm.isStarted()) {
+                return;
+            }
+            int currentWave = wm.getCurrentWave();
+            if (currentWave <= lastNecroWave) {
+                return;
+            }
+            lastNecroWave = currentWave;
             for (int r = 0; r < 5; r++) {
                 for (int c = 0; c < 9; c++) {
                     Tile tile = map.getTile(r, c);
                     if (tile == null || tile.getType() != TileType.NECROMANCY) {
                         continue;
                     }
-                    if (random.nextDouble() < 0.04) {
-                        double x = tile.getX() + tile.getWidth() * 0.8;
-                        engine.spawnZombie("ZombieDarkDefault", r, (int) x);
+                    if (random.nextDouble() < 0.50) {
+                        engine.spawnZombie("ZombieDarkDefault", r, c);
+                        tile.setType(TileType.NORMAL);
+                        tile.setHp(0);
                     }
                 }
             }
@@ -372,6 +388,9 @@ public class Chapter {
                 Tile tile = map.getTile(te.getRow(), te.getCol());
                 if (tile != null) {
                     tile.setType(TileType.valueOf(te.getType()));
+                    if ("NECROMANCY".equals(te.getType())) {
+                        tile.setHp(700);
+                    }
                 }
             }
         }

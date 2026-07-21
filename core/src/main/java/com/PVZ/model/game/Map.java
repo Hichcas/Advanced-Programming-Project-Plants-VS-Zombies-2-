@@ -98,12 +98,12 @@ public class Map {
         return tiles[row][col];
     }
 
+    public int getRows() { return rows; }
+    public int getCols() { return cols; }
     public float getTileWidth() { return totalWidth / cols; }
     public float getTileHeight() { return totalHeight / rows; }
     public float getStartX() { return startX; }
     public float getStartY() { return startY; }
     public float getTotalWidth() { return totalWidth; }
     public float getTotalHeight() { return totalHeight; }
-    public int getRows() { return rows; }
-    public int getCols() { return cols; }
 }

@@ -31,6 +31,7 @@ public class WaveManager {
     }
 
     public void start() { started = true; }
+    public boolean isStarted() { return started; }
 
     public void update(float delta, ZombieEngine engine) {
         if (!started || currentWave >= waves.size()) return;
