@@ -203,7 +203,7 @@ public class GameScreen extends BaseScreen {
                     float cy = tile.getY() + tile.getHeight() * 0.5f;
                     float x = cx - label.length() * 5f;
                     float y = cy + hudFont.getCapHeight() * 0.5f;
-                    hudFont.setColor(1, 1, 0, 1);
+                    hudFont.setColor (0, 1, 0, 1) ;
                     hudFont.draw(gameBatch, label, x, y);
                 }
             }
@@ -213,18 +213,18 @@ public class GameScreen extends BaseScreen {
     }
 
     private static String tileDebugLabel(com.PVZ.model.enums.TileType type) {
-        if (type == null) return "";
+        if (type == null) return ".";
         switch (type) {
-            case TOMBSTONE: return "TOMB";
-            case WATER: return "WATER";
-            case TIDE: return "TIDE";
-            case ICE: return "ICE";
-            case SLIPPERY_UP: return "SLIP_U";
-            case SLIPPERY_DOWN: return "SLIP_D";
-            case NECROMANCY: return "NECRO";
-            case LOW_COAST: return "LOWC";
-            case CRATER: return "CRATER";
-            default: return "";
+            case TOMBSTONE: return "T";
+            case WATER: return "~";
+            case TIDE: return "^";
+            case ICE: return "*";
+            case SLIPPERY_UP: return "U";
+            case SLIPPERY_DOWN: return "D";
+            case NECROMANCY: return "N";
+            case LOW_COAST: return "L";
+            case CRATER: return "C";
+            default: return ".";
         }
     }
 

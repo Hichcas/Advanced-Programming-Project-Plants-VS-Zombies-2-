@@ -15,6 +15,8 @@ public class StageConfig {
     private double conveyorInterval;
     private List<String> lockedPlants;
     private List<FamilyLockEntry> lockedFamilies;
+    private String specialLevel;
+    private int maxPlantDeaths;
     private List<TombstoneEntry> tombstones;
     private List<TileEntry> tiles;
     private List<WaveEntry> waves;
@@ -109,6 +111,10 @@ public class StageConfig {
     public void setLockedPlants(List<String> lockedPlants) { this.lockedPlants = lockedPlants; }
     public List<FamilyLockEntry> getLockedFamilies() { return lockedFamilies; }
     public void setLockedFamilies(List<FamilyLockEntry> lockedFamilies) { this.lockedFamilies = lockedFamilies; }
+    public String getSpecialLevel() { return specialLevel; }
+    public void setSpecialLevel(String specialLevel) { this.specialLevel = specialLevel; }
+    public int getMaxPlantDeaths() { return maxPlantDeaths; }
+    public void setMaxPlantDeaths(int maxPlantDeaths) { this.maxPlantDeaths = maxPlantDeaths; }
     public List<TombstoneEntry> getTombstones() { return tombstones; }
     public void setTombstones(List<TombstoneEntry> tombstones) { this.tombstones = tombstones; }
     public List<TileEntry> getTiles() { return tiles; }
