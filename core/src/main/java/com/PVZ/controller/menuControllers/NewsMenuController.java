@@ -5,6 +5,7 @@ import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.NewsEntry;
 import com.PVZ.model.user.NewsState;
 import com.PVZ.model.user.User;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.view.input.DTO.NewsInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
@@ -52,11 +53,12 @@ public class NewsMenuController {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < unread.size(); i++) {
             if (i > 0) {
-                builder.append("");
+                builder.append("\n");
             }
             builder.append(i + 1).append(". ").append(unread.get(i).getText());
             unread.get(i).setRead(true);
         }
+        UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
         return new OutputDTO(true, builder.toString());
     }
 
@@ -74,7 +76,7 @@ public class NewsMenuController {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < allNews.size(); i++) {
             if (i > 0) {
-                builder.append(""); //todo (I was ('') dear Aria
+                builder.append("\n");
             }
             builder.append(i + 1).append(". ").append(allNews.get(i).getText());
             if (!allNews.get(i).isRead()) {

@@ -23,6 +23,8 @@ public class MainMenuController {
             case ENTER_MENU -> enterMenu(mainMenuInput.getMenuName());
             case LOGOUT, EXIT -> logout();
             case SHOW_CURRENT_MENU -> new OutputDTO(true, AppStatus.currentMenuType.name());
+            case SHOW_MENUS ->
+                new OutputDTO(true, "Available menus: play, collection, settings, news, profile, network.");
         };
     }
 
@@ -51,6 +53,10 @@ public class MainMenuController {
             case "profile" -> {
                 AppStatus.currentMenuType = MenuType.PROFILE;
                 yield new OutputDTO(true, "Entered Profile Menu.");
+            }
+            case "network" -> {
+                AppStatus.currentMenuType = MenuType.NETWORK;
+                yield new OutputDTO(true, "Entered Network Menu.");
             }
             default -> new OutputDTO(false, "Invalid menu.");
         };

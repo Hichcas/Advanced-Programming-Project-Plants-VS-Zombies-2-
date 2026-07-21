@@ -10,6 +10,7 @@ public enum MenuType {
     CHAPTER_AND_LEVEL_SELECTION(new ChapterAndLevelSelectionMenu()),
     PLANT_SELECTION(new PlantSelectionMenu()),
     SETTINGS(new SettingsMenu()),
+    NETWORK(new NetworkMenu()),
     NEWS(new NewsMenu()),
     PROFILE(new ProfileMenu()),
     COLLECTION(new CollectionMenu()),

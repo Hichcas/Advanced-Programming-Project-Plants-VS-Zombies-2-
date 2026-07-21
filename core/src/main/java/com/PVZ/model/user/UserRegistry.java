@@ -111,6 +111,14 @@ public final class UserRegistry {
         if (username != null) DIRTY_USERS.add(username);
     }
 
+    public static void touch(String username) {
+        if (username == null) {
+            return;
+        }
+        markDirty(username);
+        saveUserToDatabase(username);
+    }
+
     public static void saveAllDirtyUsers() {
         if (DIRTY_USERS.isEmpty()) return;
         for (String username : DIRTY_USERS) {
