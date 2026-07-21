@@ -1,9 +1,11 @@
 package com.PVZ.controller.menuControllers;
 
 import com.PVZ.model.enums.*;
+import com.PVZ.model.enums.commands.QuestCommand;
 import com.PVZ.model.quest.*;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.view.input.DTO.QuestInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
@@ -27,27 +29,34 @@ public class QuestMenuController {
         qm.refreshDailyIfNeeded();
         qm.updateChapterQuests();
 
-        return switch (dto.getCommand()) {
-            case LIST                -> listQuests(qm);
-            case CLAIM               -> claimQuest(qm, dto.getQuestId());
-            case DEBUG_SUN           -> debugSun(qm, dto.getParameter());
-            case DEBUG_KILL          -> debugKill(qm, dto.getParameter());
-            case DEBUG_PLANT         -> debugPlant(qm, dto.getParameter());
-            case DEBUG_KILLBY        -> debugKillBy(qm, dto.getParameter());
-            case DEBUG_SPEEDKILL     -> debugSpeedKill(qm, dto.getParameter());
-            case DEBUG_LAWNMOWER     -> debugLawnmower(qm, dto.getParameter());
-            case DEBUG_WIN           -> debugWin(qm, dto.getParameter());
-            case DEBUG_RESET_DAILY   -> debugResetDaily(qm);
-            case SHOW_CURRENT_MENU   -> new OutputDTO(true, AppStatus.currentMenuType.name());
-            case EXIT                -> exitToTravelLog();
+        OutputDTO output = switch (dto.getCommand()) {
+            case LIST -> listQuests(qm);
+            case CLAIM -> claimQuest(qm, dto.getQuestId());
+            case DEBUG_SUN -> debugSun(qm, dto.getParameter());
+            case DEBUG_KILL -> debugKill(qm, dto.getParameter());
+            case DEBUG_PLANT -> debugPlant(qm, dto.getParameter());
+            case DEBUG_KILLBY -> debugKillBy(qm, dto.getParameter());
+            case DEBUG_SPEEDKILL -> debugSpeedKill(qm, dto.getParameter());
+            case DEBUG_LAWNMOWER -> debugLawnmower(qm, dto.getParameter());
+            case DEBUG_WIN -> debugWin(qm, dto.getParameter());
+            case DEBUG_RESET_DAILY -> debugResetDaily(qm);
+            case SHOW_CURRENT_MENU -> new OutputDTO(true, AppStatus.currentMenuType.name());
+            case EXIT -> exitToTravelLog();
         };
+
+        if (dto.getCommand() != QuestCommand.LIST
+            && dto.getCommand() != QuestCommand.SHOW_CURRENT_MENU
+            && dto.getCommand() != QuestCommand.EXIT) {
+            UserRegistry.touch(user.profile.getUsername());
+        }
+        return output;
     }
 
-    private static final String RED    = "\u001B[31m";
+    private static final String RED = "\u001B[31m";
     private static final String YELLOW = "\u001B[33m";
     private static final String PURPLE = "\u001B[35m";
-    private static final String GREEN  = "\u001B[32m";
-    private static final String RESET  = "\u001B[0m";
+    private static final String GREEN = "\u001B[32m";
+    private static final String RESET = "\u001B[0m";
 
     private int statusGroup(Quest q) {
         if (q.isCompleted() && !q.isClaimed()) return 0;
@@ -123,6 +132,8 @@ public class QuestMenuController {
 
         applyReward(quest.getReward());
         quest.claim();
+        String username = AppStatus.currentUser.profile.getUsername();
+        UserRegistry.touch(username);
         return new OutputDTO(true, "Reward claimed: " + describeReward(quest.getReward()));
     }
 
@@ -152,7 +163,8 @@ public class QuestMenuController {
         return switch (r.getType()) {
             case COINS -> r.getAmount() + " coins";
             case DIAMONDS -> r.getAmount() + " diamonds";
-            case UNLOCK_PLANT -> "Unlock plant: " + (r.getTargetPlant() != null ? r.getTargetPlant().getDisplayName() : "unknown");
+            case UNLOCK_PLANT ->
+                "Unlock plant: " + (r.getTargetPlant() != null ? r.getTargetPlant().getDisplayName() : "unknown");
             case SEED_PACKETS -> r.getAmount() + " seed packets (random)";
         };
     }
@@ -163,7 +175,9 @@ public class QuestMenuController {
             int amount = Integer.parseInt(amountStr);
             qm.onSunCollected(amount);
             return new OutputDTO(true, "Simulated sun collection: " + amount);
-        } catch (NumberFormatException e) { return new OutputDTO(false, "Invalid amount."); }
+        } catch (NumberFormatException e) {
+            return new OutputDTO(false, "Invalid amount.");
+        }
     }
 
     private OutputDTO debugKill(QuestManager qm, String countStr) {
@@ -180,7 +194,9 @@ public class QuestMenuController {
             }
             qm.onZombieKilled(ZombieType.MUMMY_DEFAULT, chapter, count);
             return new OutputDTO(true, "Simulated " + count + " zombie kills in " + chapter.getDisplayName());
-        } catch (NumberFormatException e) { return new OutputDTO(false, "Invalid count."); }
+        } catch (NumberFormatException e) {
+            return new OutputDTO(false, "Invalid count.");
+        }
     }
 
     private OutputDTO debugPlant(QuestManager qm, String plantName) {
@@ -188,7 +204,9 @@ public class QuestMenuController {
             PlantType plant = PlantType.fromName(plantName);
             qm.onPlantPlaced(plant);
             return new OutputDTO(true, "Simulated planting: " + plant.getDisplayName());
-        } catch (IllegalArgumentException e) { return new OutputDTO(false, "Unknown plant: " + plantName); }
+        } catch (IllegalArgumentException e) {
+            return new OutputDTO(false, "Unknown plant: " + plantName);
+        }
     }
 
     private OutputDTO debugKillBy(QuestManager qm, String param) {
@@ -199,7 +217,9 @@ public class QuestMenuController {
             int count = Integer.parseInt(parts[1]);
             for (int i = 0; i < count; i++) qm.onZombieKilledByPlant(plant);
             return new OutputDTO(true, "Simulated " + count + " kills by " + plant.getDisplayName());
-        } catch (Exception e) { return new OutputDTO(false, e.getMessage()); }
+        } catch (Exception e) {
+            return new OutputDTO(false, e.getMessage());
+        }
     }
 
     private OutputDTO debugSpeedKill(QuestManager qm, String countStr) {
@@ -209,7 +229,9 @@ public class QuestMenuController {
             long now = System.currentTimeMillis();
             for (int i = 0; i < count; i++) qm.onZombieKilledInTimeWindow(now);
             return new OutputDTO(true, "Simulated " + count + " speed kills.");
-        } catch (NumberFormatException e) { return new OutputDTO(false, "Invalid count."); }
+        } catch (NumberFormatException e) {
+            return new OutputDTO(false, "Invalid count.");
+        }
     }
 
     private OutputDTO debugLawnmower(QuestManager qm, String countStr) {
@@ -224,7 +246,9 @@ public class QuestMenuController {
             res.setPlantFamiliesUsed(Set.of());
             qm.evaluateEndLevelQuests(res);
             return new OutputDTO(true, "Simulated " + count + " lawnmower kills at end of level.");
-        } catch (NumberFormatException e) { return new OutputDTO(false, "Invalid count."); }
+        } catch (NumberFormatException e) {
+            return new OutputDTO(false, "Invalid count.");
+        }
     }
 
     private OutputDTO debugWin(QuestManager qm, String args) {
@@ -238,14 +262,30 @@ public class QuestMenuController {
             String[] tokens = args.split("\\s+");
             for (int i = 0; i < tokens.length; i++) {
                 switch (tokens[i]) {
-                    case "--lawnmower": lawnmower = Integer.parseInt(tokens[++i]); break;
-                    case "--col1kills": col1kills = Integer.parseInt(tokens[++i]); break;
-                    case "--sunproducers": sunProducers = Integer.parseInt(tokens[++i]); break;
-                    case "--difficulty": difficulty = Integer.parseInt(tokens[++i]); break;
-                    case "--day": dayLevel = Boolean.parseBoolean(tokens[++i]); break;
-                    case "--map": mapType = tokens[++i]; break;
-                    case "--col": mapCol = Integer.parseInt(tokens[++i]); break;
-                    case "--row": mapRow = Integer.parseInt(tokens[++i]); break;
+                    case "--lawnmower":
+                        lawnmower = Integer.parseInt(tokens[++i]);
+                        break;
+                    case "--col1kills":
+                        col1kills = Integer.parseInt(tokens[++i]);
+                        break;
+                    case "--sunproducers":
+                        sunProducers = Integer.parseInt(tokens[++i]);
+                        break;
+                    case "--difficulty":
+                        difficulty = Integer.parseInt(tokens[++i]);
+                        break;
+                    case "--day":
+                        dayLevel = Boolean.parseBoolean(tokens[++i]);
+                        break;
+                    case "--map":
+                        mapType = tokens[++i];
+                        break;
+                    case "--col":
+                        mapCol = Integer.parseInt(tokens[++i]);
+                        break;
+                    case "--row":
+                        mapRow = Integer.parseInt(tokens[++i]);
+                        break;
                 }
             }
         }

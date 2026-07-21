@@ -8,6 +8,7 @@ import com.PVZ.model.enums.ZombieType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.CollectionState;
 import com.PVZ.model.user.User;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.view.input.DTO.CollectionInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
@@ -88,9 +89,14 @@ public class CollectionMenuController {
         if (plantName == null) {
             return new OutputDTO(false, "Invalid plant.");
         }
+        User user = AppStatus.currentUser;
+        if (user == null || user.collectionState == null) {
+            return new OutputDTO(false, "You must be logged in.");
+        }
         try {
             PlantType type = PlantType.fromName(plantName);
-            AppStatus.currentUser.collectionState.unlockPlant(type);
+            user.collectionState.unlockPlant(type);
+            UserRegistry.touch(user.profile.getUsername());
             return new OutputDTO(true, type.getDisplayName());
         } catch (Exception e) {
             return new OutputDTO(false, "Unknown plant.");
@@ -101,9 +107,14 @@ public class CollectionMenuController {
         if (zombieName == null) {
             return new OutputDTO(false, "Invalid zombie.");
         }
+        User user = AppStatus.currentUser;
+        if (user == null || user.collectionState == null) {
+            return new OutputDTO(false, "You must be logged in.");
+        }
         try {
             ZombieType type = ZombieType.fromAlias(zombieName);
-            AppStatus.currentUser.collectionState.seeZombie(type);
+            user.collectionState.seeZombie(type);
+            UserRegistry.touch(user.profile.getUsername());
             return new OutputDTO(true, type.name());
         } catch (Exception e) {
             return new OutputDTO(false, "Unknown zombie.");
@@ -125,6 +136,7 @@ public class CollectionMenuController {
                 return new OutputDTO(false, "Not enough seed packets.");
             }
             user.collectionState.setPlantLevel(type, currentLevel + 1);
+            UserRegistry.touch(user.profile.getUsername());
             return new OutputDTO(true, "Plant upgraded successfully.");
         } catch (Exception e) {
             return new OutputDTO(false, "Unknown plant.");
@@ -145,6 +157,7 @@ public class CollectionMenuController {
                 return new OutputDTO(false, "Not enough coins.");
             }
             user.collectionState.unlockPlant(type);
+            UserRegistry.touch(user.profile.getUsername());
             return new OutputDTO(true, "Plant purchased successfully.");
         } catch (Exception e) {
             return new OutputDTO(false, "Unknown plant.");
