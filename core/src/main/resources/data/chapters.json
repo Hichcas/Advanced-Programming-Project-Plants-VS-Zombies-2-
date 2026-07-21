@@ -258,10 +258,95 @@
               ]
             }
           ]
+        },
+        {
+          "stageNumber": 2,
+          "type": "NIGHT_OPS",
+          "specialLevel": "NIGHT_OPS",
+          "plantLimit": 8,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Frostbite_Caves.png",
+          "disableFallingSun": true,
+          "tiles": [
+            { "row": 0, "col": 2, "type": "ICE" },
+            { "row": 1, "col": 4, "type": "ICE" },
+            { "row": 3, "col": 1, "type": "SLIPPERY_UP" },
+            { "row": 3, "col": 7, "type": "SLIPPERY_DOWN" }
+          ],
+          "waves": [
+            {
+              "startDelay": 5.0,
+              "entries": [
+                { "zombie": "ZombieIceageDefault", "count": 4, "spawnDelay": 1.8 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieIceageDefault", "count": 5, "spawnDelay": 1.2 },
+                { "zombie": "ZombieIceAgeHunter", "count": 2, "spawnDelay": 2.5 },
+                { "zombie": "ZombieIceageImpDefault", "count": 3, "spawnDelay": 1.5 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieIceageDefault", "count": 8, "spawnDelay": 1.0 },
+                { "zombie": "ZombieIceAgeHunter", "count": 3, "spawnDelay": 1.5 },
+                { "zombie": "ZombieIceageImpDefault", "count": 4, "spawnDelay": 1.2 },
+                { "zombie": "ZombieIceAgeGargantuar", "count": 1, "spawnDelay": 3.0 }
+              ]
+            }
+          ]
+        },
+        {
+          "stageNumber": 3,
+          "type": "LOVE_YOUR_PLANTS",
+          "specialLevel": "LOVE_YOUR_PLANTS",
+          "maxPlantDeaths": 5,
+          "plantLimit": 8,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Frostbite_Caves.png",
+          "tiles": [
+            { "row": 0, "col": 2, "type": "ICE" },
+            { "row": 1, "col": 4, "type": "ICE" },
+            { "row": 2, "col": 6, "type": "ICE" },
+            { "row": 3, "col": 1, "type": "SLIPPERY_UP" },
+            { "row": 3, "col": 7, "type": "SLIPPERY_DOWN" },
+            { "row": 4, "col": 3, "type": "SLIPPERY_UP" },
+            { "row": 4, "col": 5, "type": "SLIPPERY_DOWN" }
+          ],
+          "waves": [
+            {
+              "startDelay": 5.0,
+              "entries": [
+                { "zombie": "ZombieIceageDefault", "count": 5, "spawnDelay": 1.5 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieIceageDefault", "count": 6, "spawnDelay": 1.0 },
+                { "zombie": "ZombieIceAgeHunter", "count": 3, "spawnDelay": 2.0 },
+                { "zombie": "ZombieIceageImpDefault", "count": 4, "spawnDelay": 1.2 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "isFinal": true,
+              "entries": [
+                { "zombie": "ZombieIceageDefault", "count": 10, "spawnDelay": 0.8 },
+                { "zombie": "ZombieIceAgeHunter", "count": 4, "spawnDelay": 1.5 },
+                { "zombie": "ZombieIceageImpDefault", "count": 5, "spawnDelay": 1.0 },
+                { "zombie": "ZombieIceAgeGargantuar", "count": 2, "spawnDelay": 2.5 }
+              ]
+            }
+          ]
         }
       ]
-    }
-    ,
+    },
     {
       "name": "BIG_WAVE_BEACH",
       "displayName": "Big Wave Beach",
@@ -323,6 +408,110 @@
               ]
             }
           ]
+        },
+        {
+          "stageNumber": 2,
+          "type": "LOVE_YOUR_PLANTS",
+          "specialLevel": "LOVE_YOUR_PLANTS",
+          "maxPlantDeaths": 6,
+          "plantLimit": 8,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Big_Wave_Beach.png",
+          "tiles": [
+            { "row": 0, "col": 8, "type": "WATER" },
+            { "row": 1, "col": 8, "type": "WATER" },
+            { "row": 2, "col": 8, "type": "WATER" },
+            { "row": 3, "col": 8, "type": "WATER" },
+            { "row": 4, "col": 8, "type": "WATER" },
+            { "row": 0, "col": 7, "type": "WATER" },
+            { "row": 1, "col": 7, "type": "WATER" },
+            { "row": 2, "col": 7, "type": "WATER" },
+            { "row": 3, "col": 7, "type": "WATER" },
+            { "row": 4, "col": 7, "type": "WATER" },
+            { "row": 0, "col": 6, "type": "LOW_COAST" },
+            { "row": 2, "col": 6, "type": "LOW_COAST" },
+            { "row": 4, "col": 6, "type": "LOW_COAST" }
+          ],
+          "waves": [
+            {
+              "startDelay": 5.0,
+              "entries": [
+                { "zombie": "ZombieBeachDefault", "count": 5, "spawnDelay": 1.5 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieBeachDefault", "count": 5, "spawnDelay": 1.0 },
+                { "zombie": "ZombieBeachSnorkel", "count": 3, "spawnDelay": 2.0 },
+                { "zombie": "ZombieBeachImpDefault", "count": 4, "spawnDelay": 1.2 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "isFinal": true,
+              "entries": [
+                { "zombie": "ZombieBeachDefault", "count": 8, "spawnDelay": 0.8 },
+                { "zombie": "ZombieBeachSnorkel", "count": 4, "spawnDelay": 1.5 },
+                { "zombie": "ZombieBeachSurfer", "count": 2, "spawnDelay": 2.0 },
+                { "zombie": "ZombieBeachOctopus", "count": 2, "spawnDelay": 1.5 },
+                { "zombie": "ZombieBeachGargantuar", "count": 1, "spawnDelay": 3.0 }
+              ]
+            }
+          ]
+        },
+        {
+          "stageNumber": 3,
+          "type": "NIGHT_OPS",
+          "specialLevel": "NIGHT_OPS",
+          "plantLimit": 8,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Big_Wave_Beach.png",
+          "disableFallingSun": true,
+          "tiles": [
+            { "row": 0, "col": 8, "type": "WATER" },
+            { "row": 1, "col": 8, "type": "WATER" },
+            { "row": 2, "col": 8, "type": "WATER" },
+            { "row": 3, "col": 8, "type": "WATER" },
+            { "row": 4, "col": 8, "type": "WATER" },
+            { "row": 0, "col": 7, "type": "WATER" },
+            { "row": 1, "col": 7, "type": "WATER" },
+            { "row": 2, "col": 7, "type": "WATER" },
+            { "row": 3, "col": 7, "type": "WATER" },
+            { "row": 4, "col": 7, "type": "WATER" },
+            { "row": 0, "col": 6, "type": "LOW_COAST" },
+            { "row": 2, "col": 6, "type": "LOW_COAST" },
+            { "row": 4, "col": 6, "type": "LOW_COAST" }
+          ],
+          "waves": [
+            {
+              "startDelay": 5.0,
+              "entries": [
+                { "zombie": "ZombieBeachDefault", "count": 4, "spawnDelay": 1.8 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieBeachDefault", "count": 6, "spawnDelay": 1.0 },
+                { "zombie": "ZombieBeachSnorkel", "count": 3, "spawnDelay": 1.8 },
+                { "zombie": "ZombieBeachImpDefault", "count": 4, "spawnDelay": 1.2 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "isFinal": true,
+              "entries": [
+                { "zombie": "ZombieBeachDefault", "count": 10, "spawnDelay": 0.7 },
+                { "zombie": "ZombieBeachSnorkel", "count": 4, "spawnDelay": 1.5 },
+                { "zombie": "ZombieBeachSurfer", "count": 2, "spawnDelay": 2.0 },
+                { "zombie": "ZombieBeachOctopus", "count": 3, "spawnDelay": 1.5 },
+                { "zombie": "ZombieBeachGargantuar", "count": 2, "spawnDelay": 2.5 }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -378,6 +567,94 @@
                 { "zombie": "ZombieDarkJugglerDefault", "count": 1, "spawnDelay": 1.5 },
                 { "zombie": "ZombiePharaohDefault", "count": 1, "spawnDelay": 3.0 },
                 { "zombie": "ZombieDarkGargantuar", "count": 1, "spawnDelay": 3.5 }
+              ]
+            }
+          ]
+        },
+        {
+          "stageNumber": 2,
+          "type": "NIGHT_OPS",
+          "specialLevel": "NIGHT_OPS",
+          "plantLimit": 8,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Dark_Ages.png",
+          "disableFallingSun": true,
+          "tiles": [
+            { "row": 1, "col": 3, "type": "NECROMANCY" },
+            { "row": 2, "col": 5, "type": "NECROMANCY" },
+            { "row": 3, "col": 7, "type": "NECROMANCY" }
+          ],
+          "waves": [
+            {
+              "startDelay": 5.0,
+              "entries": [
+                { "zombie": "ZombieDarkDefault", "count": 5, "spawnDelay": 1.5 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieDarkDefault", "count": 5, "spawnDelay": 1.0 },
+                { "zombie": "ZombieCamelDefault", "count": 3, "spawnDelay": 2.0 },
+                { "zombie": "ZombieDarkImpDefault", "count": 4, "spawnDelay": 1.2 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "isFinal": true,
+              "entries": [
+                { "zombie": "ZombieDarkDefault", "count": 8, "spawnDelay": 0.8 },
+                { "zombie": "ZombieCamelDefault", "count": 3, "spawnDelay": 1.5 },
+                { "zombie": "ZombieWizardDefault", "count": 2, "spawnDelay": 2.0 },
+                { "zombie": "ZombieDarkJugglerDefault", "count": 2, "spawnDelay": 1.5 },
+                { "zombie": "ZombiePharaohDefault", "count": 1, "spawnDelay": 3.0 }
+              ]
+            }
+          ]
+        },
+        {
+          "stageNumber": 3,
+          "type": "LOVE_YOUR_PLANTS",
+          "specialLevel": "LOVE_YOUR_PLANTS",
+          "maxPlantDeaths": 4,
+          "plantLimit": 8,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Dark_Ages.png",
+          "disableFallingSun": true,
+          "tiles": [
+            { "row": 1, "col": 3, "type": "NECROMANCY" },
+            { "row": 2, "col": 5, "type": "NECROMANCY" },
+            { "row": 3, "col": 7, "type": "NECROMANCY" },
+            { "row": 0, "col": 6, "type": "NECROMANCY" },
+            { "row": 4, "col": 2, "type": "NECROMANCY" }
+          ],
+          "waves": [
+            {
+              "startDelay": 5.0,
+              "entries": [
+                { "zombie": "ZombieDarkDefault", "count": 5, "spawnDelay": 1.5 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieDarkDefault", "count": 6, "spawnDelay": 1.0 },
+                { "zombie": "ZombieCamelDefault", "count": 3, "spawnDelay": 2.0 },
+                { "zombie": "ZombieDarkImpDefault", "count": 4, "spawnDelay": 1.2 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "isFinal": true,
+              "entries": [
+                { "zombie": "ZombieDarkDefault", "count": 10, "spawnDelay": 0.7 },
+                { "zombie": "ZombieCamelDefault", "count": 4, "spawnDelay": 1.5 },
+                { "zombie": "ZombieWizardDefault", "count": 2, "spawnDelay": 2.0 },
+                { "zombie": "ZombieDarkJugglerDefault", "count": 3, "spawnDelay": 1.5 },
+                { "zombie": "ZombiePharaohDefault", "count": 2, "spawnDelay": 2.5 },
+                { "zombie": "ZombieDarkGargantuar", "count": 1, "spawnDelay": 3.0 }
               ]
             }
           ]

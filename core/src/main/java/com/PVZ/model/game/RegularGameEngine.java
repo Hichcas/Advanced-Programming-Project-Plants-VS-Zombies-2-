@@ -11,6 +11,7 @@ import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantTag;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.TileType;
+import com.PVZ.model.game.chapter.sepecialLevel.SpecialLevel;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
@@ -59,6 +60,11 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     private boolean gameOverTriggered = false;
     private float gameOverTimer = 0f;
     private boolean gameOverWin = false;
+
+    private SpecialLevel specialLevel;
+
+    public SpecialLevel getSpecialLevel() { return specialLevel; }
+    public void setSpecialLevel(SpecialLevel specialLevel) { this.specialLevel = specialLevel; }
 
     private String backgroundTexturePath;
     private com.badlogic.gdx.graphics.Texture backgroundOverrideTexture;
@@ -267,6 +273,14 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (AppStatus.currentChapter != null) {
             AppStatus.currentChapter.update(map, this);
         }
+
+        if (specialLevel != null) {
+            specialLevel.onTick(this, map);
+            if (specialLevel.isLossConditionMet()) {
+                System.out.println("[SpecialLevel] Loss condition met: " + specialLevel.getName());
+                triggerGameOver(false);
+            }
+        }
     }
 
 
@@ -324,6 +338,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                             Math.max(plant.getStats().getExplodeDamage(), plant.getStats().getDamage()));
                     }
                     map.removePlant(row, col);
+                    if (specialLevel != null) {
+                        specialLevel.onPlantDestroyed(row, col, this);
+                    }
                 }
             }
         }
