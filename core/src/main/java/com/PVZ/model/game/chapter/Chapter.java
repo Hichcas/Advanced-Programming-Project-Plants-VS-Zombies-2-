@@ -20,6 +20,7 @@ public class Chapter {
     private int tideFrontier = 6;
     private int lastTideWave = -1;
     private int lastGraveWave = -1;
+    private int lastNecroWave = -1;
     private int maxTideColumn = 8;
     private boolean tideInitialized = false;
     private int tideTick = 0;
@@ -287,6 +288,7 @@ public class Chapter {
                     continue;
                 }
                 tile.setType(TileType.NECROMANCY);
+                tile.setHp(700);
                 placed++;
                 if (random.nextDouble() < 0.3) {
                     engine.addSun(50);
@@ -336,15 +338,25 @@ public class Chapter {
             if (map == null || engine == null) {
                 return;
             }
+            WaveManager wm = engine.getWaveManager();
+            if (wm == null || !wm.isStarted()) {
+                return;
+            }
+            int currentWave = wm.getCurrentWave();
+            if (currentWave <= lastNecroWave) {
+                return;
+            }
+            lastNecroWave = currentWave;
             for (int r = 0; r < 5; r++) {
                 for (int c = 0; c < 9; c++) {
                     Tile tile = map.getTile(r, c);
                     if (tile == null || tile.getType() != TileType.NECROMANCY) {
                         continue;
                     }
-                    if (random.nextDouble() < 0.04) {
-                        double x = tile.getX() + tile.getWidth() * 0.8;
-                        engine.spawnZombie("ZombieDarkDefault", r, (int) x);
+                    if (random.nextDouble() < 0.50) {
+                        engine.spawnZombie("ZombieDarkDefault", r, c);
+                        tile.setType(TileType.NORMAL);
+                        tile.setHp(0);
                     }
                 }
             }
@@ -376,6 +388,9 @@ public class Chapter {
                 Tile tile = map.getTile(te.getRow(), te.getCol());
                 if (tile != null) {
                     tile.setType(TileType.valueOf(te.getType()));
+                    if ("NECROMANCY".equals(te.getType())) {
+                        tile.setHp(700);
+                    }
                 }
             }
         }

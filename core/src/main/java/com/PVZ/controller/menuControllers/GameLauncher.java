@@ -6,6 +6,7 @@ import com.PVZ.model.game.GameStatus;
 import com.PVZ.model.game.RegularGameEngine;
 import com.PVZ.model.game.Wave;
 import com.PVZ.model.game.chapter.StageConfig;
+import com.PVZ.model.game.chapter.sepecialLevel.SpecialLevelLauncher;
 import com.PVZ.model.status.AppStatus;
 
 import java.util.ArrayList;
@@ -44,8 +45,11 @@ final class GameLauncher {
             engine.enableConveyorBelt(stageConfig.getConveyorInterval());
         }
 
+        SpecialLevelLauncher.launch(engine, stageConfig);
+
         AppStatus.setGameEngine(engine);
         AppStatus.currentMenuType = MenuType.IN_GAME;
+        engine.startWaves();
         return engine;
     }
 

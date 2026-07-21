@@ -13,6 +13,8 @@ public class StageConfig {
     private String mapTexture;
     private boolean disableFallingSun;
     private double conveyorInterval;
+    private String specialLevel;
+    private int maxPlantDeaths;
     private List<TombstoneEntry> tombstones;
     private List<TileEntry> tiles;
     private List<WaveEntry> waves;
@@ -89,6 +91,10 @@ public class StageConfig {
     public void setDisableFallingSun(boolean disableFallingSun) { this.disableFallingSun = disableFallingSun; }
     public double getConveyorInterval() { return conveyorInterval; }
     public void setConveyorInterval(double conveyorInterval) { this.conveyorInterval = conveyorInterval; }
+    public String getSpecialLevel() { return specialLevel; }
+    public void setSpecialLevel(String specialLevel) { this.specialLevel = specialLevel; }
+    public int getMaxPlantDeaths() { return maxPlantDeaths; }
+    public void setMaxPlantDeaths(int maxPlantDeaths) { this.maxPlantDeaths = maxPlantDeaths; }
     public List<TombstoneEntry> getTombstones() { return tombstones; }
     public void setTombstones(List<TombstoneEntry> tombstones) { this.tombstones = tombstones; }
     public List<TileEntry> getTiles() { return tiles; }

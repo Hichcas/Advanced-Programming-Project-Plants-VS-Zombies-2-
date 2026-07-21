@@ -75,7 +75,7 @@ public class BattleController implements BehaviorContext {
                 int pCol = map.worldToCol((float) p.getPositionX());
                 if (map.isWithinBounds(pRow, pCol)) {
                     Tile tile = map.getTile(pRow, pCol);
-                    if (tile != null && tile.getType() == TileType.TOMBSTONE) {
+                    if (tile != null && (tile.getType() == TileType.TOMBSTONE || tile.getType() == TileType.NECROMANCY)) {
                         int newHp = tile.getHp() - (int) p.getDamage();
                         if (newHp <= 0) {
                             tile.setType(TileType.NORMAL);
