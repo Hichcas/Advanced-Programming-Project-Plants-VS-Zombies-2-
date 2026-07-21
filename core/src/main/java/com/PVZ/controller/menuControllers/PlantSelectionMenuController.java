@@ -2,9 +2,11 @@
 package com.PVZ.controller.menuControllers;
 
 import com.PVZ.model.enums.MenuType;
+import com.PVZ.model.enums.PlantFamily;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.game.chapter.ChapterLibrary;
 import com.PVZ.model.game.chapter.StageConfig;
+import com.PVZ.model.quest.PlantFamilyMapper;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.PlantSelectionInputDTO;
@@ -35,9 +37,23 @@ public class PlantSelectionMenuController {
     }
 
     private OutputDTO showAllPlants() {
+        User user = AppStatus.currentUser;
         StringJoiner joiner = new StringJoiner("\n");
         for (PlantType type : PlantType.values()) {
-            joiner.add(type.getDisplayName());
+            boolean lockedForStage = AppStatus.currentStageLockedPlants.contains(type);
+            boolean ownedGlobally = user != null && user.collectionState != null
+                    && user.collectionState.isPlantUnlocked(type);
+            String tag;
+            if (lockedForStage) {
+                tag = lockedTag();
+            } else if (isFamilyLockedByOtherPick(type)) {
+                tag = familyLockedTag();
+            } else if (!ownedGlobally) {
+                tag = notOwnedTag();
+            } else {
+                tag = "";
+            }
+            joiner.add(type.getDisplayName() + tag);
         }
         return new OutputDTO(true, joiner.toString());
     }
@@ -51,8 +67,36 @@ public class PlantSelectionMenuController {
             return new OutputDTO(true, "No available plants.");
         }
         StringJoiner joiner = new StringJoiner("\n");
-        user.collectionState.getUnlockedPlants().forEach(p -> joiner.add(p.getDisplayName()));
+        user.collectionState.getUnlockedPlants().forEach(p -> {
+            boolean lockedForStage = AppStatus.currentStageLockedPlants.contains(p);
+            String tag = lockedForStage ? lockedTag()
+                    : (isFamilyLockedByOtherPick(p) ? familyLockedTag() : "");
+            joiner.add(p.getDisplayName() + tag);
+        });
         return new OutputDTO(true, joiner.toString());
+    }
+
+    private boolean isFamilyLockedByOtherPick(PlantType type) {
+        PlantFamily family = PlantFamilyMapper.getFamily(type);
+        if (!AppStatus.currentStageExclusiveFamilies.contains(family)) {
+            return false;
+        }
+        for (PlantType selected : AppStatus.selectedPlants) {
+            if (selected != type && PlantFamilyMapper.getFamily(selected) == family) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String lockedTag() {
+        return " \u001B[33m(LOCKED - this level)\u001B[0m";
+    }
+    private String familyLockedTag() {
+        return " \u001B[33m(LOCKED - already picked this family)\u001B[0m";
+    }
+    private String notOwnedTag() {
+        return " \u001B[90m(NOT OWNED)\u001B[0m";
     }
 
     private OutputDTO addPlant(String plantType) {
@@ -66,7 +110,16 @@ public class PlantSelectionMenuController {
         try {
             PlantType type = PlantType.fromName(plantType);
             if (!user.collectionState.isPlantUnlocked(type)) {
-                return new OutputDTO(false, "Plant is locked.");
+                return new OutputDTO(false, "\u001B[90mPlant is locked.\u001B[0m");
+            }
+            if (AppStatus.currentStageLockedPlants.contains(type)) {
+                return new OutputDTO(false, "\u001B[33mPlant is locked for this level: "
+                        + type.getDisplayName() + "\u001B[0m");
+            }
+            if (isFamilyLockedByOtherPick(type)) {
+                return new OutputDTO(false, "\u001B[33mYou already picked a plant from "
+                        + PlantFamilyMapper.getFamily(type) + " family for this level: "
+                        + type.getDisplayName() + "\u001B[0m");
             }
             if (!AppStatus.selectedPlants.add(type)) {
                 return new OutputDTO(false, "Plant already selected.");
