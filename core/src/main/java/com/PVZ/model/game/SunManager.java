@@ -18,7 +18,7 @@ public class SunManager {
     public Sun spawn(double x, double y, int amount) {
         Sun sun = new Sun(x, y, amount);
         suns.add(sun);
-        System.out.println("New sun is dropping at position (" + Math.round(x) + ", " + Math.round(y) + ")");
+//        System.out.println("New sun is dropping at position (" + Math.round(x) + ", " + Math.round(y) + ")");
         return sun;
     }
 
@@ -32,7 +32,7 @@ public class SunManager {
         for (Sun sun : suns) {
             sun.update(delta);
             if (sun.isFalling() && sun.hasReachedGround() && !sun.isGroundNotified()) {
-                System.out.println("Sun reached the ground at position (" + Math.round(sun.getX()) + ", " + Math.round(sun.getY()) + ")");
+//                System.out.println("Sun reached the ground at position (" + Math.round(sun.getX()) + ", " + Math.round(sun.getY()) + ")");
                 sun.setGroundNotified(true);
             }
         }

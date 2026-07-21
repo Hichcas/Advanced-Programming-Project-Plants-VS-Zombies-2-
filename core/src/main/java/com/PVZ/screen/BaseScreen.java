@@ -17,11 +17,16 @@ public abstract class BaseScreen implements Screen {
     protected FillViewport viewport;
 
     protected Stage stage;
-    // 🌟 اضافه کردن مالتی‌پلکسر برای مدیریت چند منبع ورودی به صورت همزمان
     protected InputMultiplexer multiplexer;
 
     protected static final float VIRTUAL_WIDTH = 2560;
     protected static final float VIRTUAL_HEIGHT = 1440;
+
+    private boolean disposed = false;
+
+    protected boolean isDisposed() {
+        return disposed;
+    }
 
     public BaseScreen() {
         this.game = AppStatus.getPVZ();
@@ -34,16 +39,12 @@ public abstract class BaseScreen implements Screen {
 
         stage = new Stage(viewport);
         stage.addActor(BrightnessController.getInstance());
-
-
-        // 🌟 مقداردهی اولیه مالتی‌پلکسر و اضافه کردن استیج به عنوان پردازنده‌ پیش‌فرض
         multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
     }
 
     @Override
     public void show() {
-        // 🌟 به جای استیج، کل مالتی‌پلکسر را به موتور بازی معرفی می‌کنیم
         Gdx.input.setInputProcessor(multiplexer);
     }
 
@@ -81,21 +82,23 @@ public abstract class BaseScreen implements Screen {
 
     @Override
     public void hide() {
-        // 🌟 پاک کردن پردازنده ورودی هنگام تغییر اسکرین
         dispose();
         Gdx.input.setInputProcessor(null);
     }
 
     @Override
     public void dispose() {
+        if (disposed) {
+            return;
+        }
+        disposed = true;
         if (stage != null) {
-            // ابتدا پردازنده‌ ورودی را بردار تا استیج درگیر رویداد جدیدی نشود
             if (Gdx.input.getInputProcessor() == multiplexer || Gdx.input.getInputProcessor() == stage) {
                 Gdx.input.setInputProcessor(null);
             }
 
             stage.dispose();
-            stage = null; // 🌟 بسیار مهم: نال کردن جلوی دیسپوز دوباره در فراخوانی‌های بعدی را می‌گیرد
+            stage = null;
             System.out.println("[BaseScreen] Stage disposed safely.");
         }
     }

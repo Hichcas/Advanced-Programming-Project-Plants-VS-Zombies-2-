@@ -1,0 +1,432 @@
+{
+  "profile" : {
+    "username" : "mahdiQuest3",
+    "nickname" : "mahdi",
+    "email" : "mahdi@example.com",
+    "gender" : "male",
+    "passwordHash" : "6239b479b97a15a5a494351afcc22b5b85627f37250649713c0d6f4d1d10100a",
+    "securityQuestion" : "What is your favorite color?",
+    "securityAnswerHash" : "16477688c0e00699c6cfa4497a3612d7e83c532062b64b250fed8908128ed548"
+  },
+  "userStats" : {
+    "gamesPlayed" : 0,
+    "coins" : 0,
+    "diamonds" : 0,
+    "stagesCompleted" : 0,
+    "highestScore" : 0,
+    "dailyQuestsCompleted" : 0,
+    "nonDailyQuestsCompleted" : 0
+  },
+  "progressState" : {
+    "completedLevels" : {
+      "ANCIENT_EGYPT" : 0,
+      "DARK_AGES" : 0,
+      "FROSTBITE_CAVES" : 0,
+      "BIG_WAVE_BEACH" : 0
+    },
+    "minigameClearedCounts" : {
+      "VASEBREAKER" : 0,
+      "ZOMBOTANY" : 0,
+      "BEGHOULED" : 0,
+      "I_ZOMBIE" : 0,
+      "WALLNUT_BOWLING" : 0
+    }
+  },
+  "collectionState" : {
+    "unlockedPlants" : [ ],
+    "seenZombies" : [ ],
+    "seedPackets" : { },
+    "plantLevels" : { },
+    "greenhouseBoosts" : [ ]
+  },
+  "greenhouseState" : {
+    "pots" : [ [ {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    } ], [ {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    } ], [ {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    } ], [ {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    } ] ],
+    "numberOfUnlockedPots" : 5,
+    "numberOfLockedPots" : 15
+  },
+  "appStats" : {
+    "difficultyLevel" : 3,
+    "soundVolume" : 15
+  },
+  "newsState" : {
+    "news" : [ ]
+  },
+  "shopDaily" : {
+    "offerPlant" : null,
+    "offerDate" : null,
+    "purchased" : false,
+    "forToday" : false,
+    "availableToday" : false
+  },
+  "stayLoggedIn" : false,
+  "questState" : {
+    "questManager" : {
+      "activeQuests" : [ {
+        "id" : "epic_defense",
+        "title" : "Master of Defense",
+        "descriptionTemplate" : "End a level with exactly 0 sun",
+        "type" : "EPIC",
+        "priority" : "CRITICAL",
+        "conditionKey" : "zero_sun_end",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : true,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 200,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : false,
+        "runtimeState" : { },
+        "formattedTitle" : "Master of Defense",
+        "formattedDescription" : "End a level with exactly 0 sun"
+      }, {
+        "id" : "story_economy",
+        "title" : "Economic Herbivore",
+        "descriptionTemplate" : "Win without losing more than {n} plants",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "max_plant_loss",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : true,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 20,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "n" : 2
+        },
+        "active" : false,
+        "runtimeState" : { },
+        "formattedTitle" : "Economic Herbivore",
+        "formattedDescription" : "Win without losing more than 2 plants"
+      }, {
+        "id" : "daily_row_empty_1784570552016",
+        "title" : "Defenseless Row",
+        "descriptionTemplate" : "Win with row {row} completely empty",
+        "type" : "DAILY",
+        "priority" : "HIGH",
+        "conditionKey" : "row_empty",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : true,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 20,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "row" : 1
+        },
+        "active" : false,
+        "runtimeState" : { },
+        "formattedTitle" : "Defenseless Row",
+        "formattedDescription" : "Win with row 1 completely empty"
+      }, {
+        "id" : "epic_night_day",
+        "title" : "Day or Night",
+        "descriptionTemplate" : "Win a day level using only mushrooms",
+        "type" : "EPIC",
+        "priority" : "HIGH",
+        "conditionKey" : "day_with_mushrooms",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : true,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 20,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : false,
+        "runtimeState" : { },
+        "formattedTitle" : "Day or Night",
+        "formattedDescription" : "Win a day level using only mushrooms"
+      }, {
+        "id" : "story_speed",
+        "title" : "Speed Run",
+        "descriptionTemplate" : "Kill 10 zombies within 30 seconds of the first wave",
+        "type" : "STORY",
+        "priority" : "MEDIUM",
+        "conditionKey" : "speed_kill",
+        "targetCount" : 10,
+        "currentCount" : 10,
+        "completed" : true,
+        "claimed" : false,
+        "reward" : {
+          "type" : "COINS",
+          "amount" : 500,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : false,
+        "runtimeState" : { },
+        "formattedTitle" : "Speed Run",
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
+      }, {
+        "id" : "epic_lawnmower",
+        "title" : "Lawnmower Time",
+        "descriptionTemplate" : "Kill at least {n} zombies with lawnmowers",
+        "type" : "EPIC",
+        "priority" : "MEDIUM",
+        "conditionKey" : "lawnmower_kill",
+        "targetCount" : 10,
+        "currentCount" : 0,
+        "completed" : true,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "n" : 10
+        },
+        "active" : false,
+        "runtimeState" : { },
+        "formattedTitle" : "Lawnmower Time",
+        "formattedDescription" : "Kill at least 10 zombies with lawnmowers"
+      }, {
+        "id" : "daily_plant_pro_1784570552018",
+        "title" : "Pro with {plant}",
+        "descriptionTemplate" : "Kill 10 zombies using only {plant}",
+        "type" : "DAILY",
+        "priority" : "HIGH",
+        "conditionKey" : "specific_plant_kill",
+        "targetCount" : 10,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 5,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "plant" : "POTATO_MINE"
+        },
+        "active" : true,
+        "runtimeState" : { },
+        "formattedTitle" : "Pro with Potato Mine",
+        "formattedDescription" : "Kill 10 zombies using only Potato Mine"
+      }, {
+        "id" : "story_chapter_hunt_FROSTBITE_CAVES",
+        "title" : "Chapter Hunter",
+        "descriptionTemplate" : "Defeat 50 zombies from {chapter}",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "chapter_zombie_kill",
+        "targetCount" : 50,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "chapter" : "FROSTBITE_CAVES"
+        },
+        "active" : true,
+        "runtimeState" : { },
+        "formattedTitle" : "Chapter Hunter",
+        "formattedDescription" : "Defeat 50 zombies from Frostbite Caves"
+      }, {
+        "id" : "daily_almost_win_1784570552021",
+        "title" : "Almost Victory",
+        "descriptionTemplate" : "Kill 10 zombies in column 1 of a row without a lawnmower",
+        "type" : "DAILY",
+        "priority" : "MEDIUM",
+        "conditionKey" : "lawnless_col1_kill",
+        "targetCount" : 10,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "COINS",
+          "amount" : 300,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "runtimeState" : { },
+        "formattedTitle" : "Almost Victory",
+        "formattedDescription" : "Kill 10 zombies in column 1 of a row without a lawnmower"
+      }, {
+        "id" : "story_chapter_hunt_ANCIENT_EGYPT",
+        "title" : "Chapter Hunter",
+        "descriptionTemplate" : "Defeat 50 zombies from {chapter}",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "chapter_zombie_kill",
+        "targetCount" : 50,
+        "currentCount" : 50,
+        "completed" : true,
+        "claimed" : true,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "chapter" : "ANCIENT_EGYPT"
+        },
+        "active" : false,
+        "runtimeState" : { },
+        "formattedTitle" : "Chapter Hunter",
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
+      } ],
+      "lastDailyRefresh" : "2026-07-20",
+      "consecutiveMaxDifficultyWins" : 0,
+      "timeUntilReset" : "2h 19m"
+    }
+  }
+}

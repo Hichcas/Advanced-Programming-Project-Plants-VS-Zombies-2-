@@ -18,9 +18,11 @@ public enum MenuType {
     TRAVEL_LOG(new TravelLogMenu()),
     LEADERBOARD(new LeaderboardMenu()),
     VASEBREAKER(new VasebreakerMenu()),
+    IN_GAME(new InGameMenu()),
+    QUEST(new QuestMenu()),
     WALLNUT_BOWLING(new WallnutBowlingMenu()),
-    I_ZOMBIE(new IZombieMenu()),
-    IN_GAME(new InGameMenu());
+    I_ZOMBIE(new IZombieMenu());
+
 
     private final Menu currentMenu;
 

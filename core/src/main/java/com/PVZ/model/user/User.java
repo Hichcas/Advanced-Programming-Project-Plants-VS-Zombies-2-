@@ -12,6 +12,7 @@ public class User {
     public NewsState newsState;
     public ShopDaily shopDaily;
     private boolean stayLoggedIn;
+    public QuestState questState;
 
     public User() {
     }
@@ -32,6 +33,7 @@ public class User {
         user.greenhouseState = new GreenhouseState();
         user.stayLoggedIn = false;
         user.shopDaily = new ShopDaily();
+        user.questState = new QuestState();
 
         return user;
     }
