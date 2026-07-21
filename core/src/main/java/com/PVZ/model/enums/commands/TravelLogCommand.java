@@ -7,6 +7,24 @@ import java.util.regex.Pattern;
 
 public enum TravelLogCommand {
 
+    SHOW_QUESTS("^\\s*travel\\s+log\\s+(?:show|page)\\s+quests\\s*$") {
+        @Override
+        public TravelLogInputDTO createDTO(Matcher matcher) {
+            return new TravelLogInputDTO(this, "quests");
+        }
+    },
+    SHOW_PROGRESS("^\\s*travel\\s+log\\s+(?:show|page)\\s+progress\\s*$") {
+        @Override
+        public TravelLogInputDTO createDTO(Matcher matcher) {
+            return new TravelLogInputDTO(this, "progress");
+        }
+    },
+    SHOW_MINIGAMES("^\\s*travel\\s+log\\s+(?:show|page)\\s+minigames\\s*$") {
+        @Override
+        public TravelLogInputDTO createDTO(Matcher matcher) {
+            return new TravelLogInputDTO(this, "minigames");
+        }
+    },
     SHOW_PAGE("^\\s*travel\\s+log\\s+page\\s+(?<pageName>.+?)\\s*$") {
         @Override
         public TravelLogInputDTO createDTO(Matcher matcher) {
@@ -19,27 +37,25 @@ public enum TravelLogCommand {
             return new TravelLogInputDTO(this, null);
         }
     },
-
     ENTER_WALLNUT_BOWLING("^\\s*travel\\s+log\\s+enter\\s+wallnutbowling\\s*$") {
         @Override
         public TravelLogInputDTO createDTO(Matcher matcher) {
             return new TravelLogInputDTO(this, null);
         }
     },
-
     ENTER_IZOMBIE("^\\s*travel\\s+log\\s+enter\\s+izombie\\s*$") {
         @Override
         public TravelLogInputDTO createDTO(Matcher matcher) {
             return new TravelLogInputDTO(this, null);
         }
     },
-
     SHOW_CURRENT_MENU("^menu\\s+show\\s+current$|^show\\s+current\\s+menu$") {
         @Override
         public TravelLogInputDTO createDTO(Matcher matcher) {
             return new TravelLogInputDTO(this, null);
         }
-    }, ENTER_QUEST("^\\s*enter\\s+quest\\s*$") {
+    },
+    ENTER_QUEST("^\\s*enter\\s+quest\\s*$") {
         @Override
         public TravelLogInputDTO createDTO(Matcher matcher) {
             return new TravelLogInputDTO(this, null);
