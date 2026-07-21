@@ -27,6 +27,7 @@ public class InGameMenuController {
 
         if (engine != null && engine.gameStatus != null && engine.gameStatus.isGameOver()) {
             engine.gameStatus.setGameOver(false);
+            engine.resetGameOverState();
             com.PVZ.model.status.AppStatus.returnToChapterAndLevelSelection("GAME OVER");
             return new OutputDTO(true,
                     "The zombie ate your brain; LOSER!!! Returning to level select.");

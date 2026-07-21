@@ -10,7 +10,7 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 165000000,
+    "coins" : 234980000,
     "diamonds" : 0,
     "stagesCompleted" : 0,
     "highestScore" : 0,
@@ -33,7 +33,7 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ ],
+    "unlockedPlants" : [ "PEASHOOTER", "ROTOBAGA", "TORCHWOOD", "SUNFLOWER", "SNOW_PEA", "WALL_NUT" ],
     "seenZombies" : [ ],
     "seedPackets" : { },
     "plantLevels" : { },
@@ -181,8 +181,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 15,
-    "numberOfUnlockedPots" : 5
+    "numberOfUnlockedPots" : 5,
+    "numberOfLockedPots" : 15
   },
   "appStats" : {
     "difficultyLevel" : 3,

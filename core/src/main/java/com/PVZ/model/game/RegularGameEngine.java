@@ -11,6 +11,7 @@ import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantTag;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.TileType;
+import com.PVZ.model.game.chapter.sepecialLevel.SpecialLevel;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
@@ -60,8 +61,14 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     private BattleController battleController;
 
     private boolean gameOverTriggered = false;
+    private boolean gameOverNavigated = false;
     private float gameOverTimer = 0f;
     private boolean gameOverWin = false;
+
+    private SpecialLevel specialLevel;
+
+    public SpecialLevel getSpecialLevel() { return specialLevel; }
+    public void setSpecialLevel(SpecialLevel specialLevel) { this.specialLevel = specialLevel; }
 
     private String backgroundTexturePath;
     private com.badlogic.gdx.graphics.Texture backgroundOverrideTexture;
@@ -89,16 +96,29 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return gameOverWin;
     }
 
+    public void resetGameOverState() {
+        gameOverTriggered = false;
+        gameOverNavigated = false;
+        gameOverTimer = 0f;
+        gameOverWin = false;
+    }
+
     public void updateGameOverTimer(float delta) {
-        if (gameOverTriggered) {
+        if (gameOverTriggered && !gameOverNavigated) {
             gameOverTimer += delta;
             if (gameOverTimer >= GAME_OVER_DISPLAY_DURATION) {
-                resetBoardAfterGameOver();
+                gameOverNavigated = true;
                 if (gameOverWin) {
+                    com.PVZ.model.user.UserStats stats = AppStatus.currentUser != null
+                        ? AppStatus.currentUser.userStats : null;
+                    if (stats != null) {
+                        stats.incrementStagesCompleted();
+                    }
                     AppStatus.returnToTravelLog();
                 } else {
                     AppStatus.returnToMainMenu();
                 }
+                resetBoardAfterGameOver();
             }
         }
     }
@@ -269,10 +289,26 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (AppStatus.currentChapter != null) {
             AppStatus.currentChapter.update(map, this);
         }
+
+        if (specialLevel != null) {
+            specialLevel.onTick(this, map);
+            if (specialLevel.isLossConditionMet()) {
+                System.out.println("[SpecialLevel] Loss condition met: " + specialLevel.getName());
+                triggerGameOver(false);
+            }
+        }
     }
 
 
     private void resetBoardAfterGameOver() {
+        gameOverTriggered = false;
+        gameOverNavigated = false;
+        gameOverTimer = 0f;
+        gameOverWin = false;
+        if (gameStatus != null) {
+            gameStatus.setGameOver(false);
+            gameStatus.setWon(false);
+        }
         if (map != null) {
             for (int row = 0; row < ROWS; row++) {
                 for (int col = 0; col < COLS; col++) {
@@ -326,6 +362,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                             Math.max(plant.getStats().getExplodeDamage(), plant.getStats().getDamage()));
                     }
                     map.removePlant(row, col);
+                    if (specialLevel != null) {
+                        specialLevel.onPlantDestroyed(row, col, this);
+                    }
                 }
             }
         }
@@ -1153,8 +1192,13 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                         .append(row)
                         .append(") hp=")
                         .append(plant.getCurrentHp())
-                        .append(plant.isPlantFoodActive() ? " [plant food]" : "")
-                        .append('\n');
+                        .append(plant.isPlantFoodActive() ? " [plant food]" : "");
+                    Object fl = plant.getRuntimeState("freezeLevel");
+                    if (fl instanceof Number && ((Number) fl).intValue() >= 3) {
+                        builder.append(" [FROZEN freezelv=").append(fl)
+                            .append(" iceHp=").append(plant.getRuntimeState("iceHp")).append("]");
+                    }
+                    builder.append("\n");
                 }
             }
         }
