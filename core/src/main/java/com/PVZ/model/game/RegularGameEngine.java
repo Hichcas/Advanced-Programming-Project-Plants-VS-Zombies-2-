@@ -25,11 +25,13 @@ import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.StringJoiner;
 
 public class RegularGameEngine extends GameEngine implements ZombieEngine, BehaviorContext {
     private static final double TICK_SECONDS = 0.1;
     private static final int ROWS = 5;
     private static final int COLS = 9;
+    private static final float GAME_OVER_DISPLAY_DURATION = 3.0f;
 
     private final List<Projectile> projectiles = new ArrayList<>();
     private final List<Zombie> zombies = new ArrayList<>();
@@ -41,6 +43,12 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     private PlantType selectedPlantType;
     private final java.util.Map<PlantType, Double> rechargeRemaining = new java.util.EnumMap<>(PlantType.class);
 
+    private static final double DEFAULT_CONVEYOR_INTERVAL_SECONDS = 12.0;
+    private boolean conveyorBeltMode = false;
+    private double conveyorIntervalSeconds = DEFAULT_CONVEYOR_INTERVAL_SECONDS;
+    private double conveyorTimer = 0.0;
+    private final List<PlantType> conveyorBeltQueue = new ArrayList<>();
+
     private final SeedPacketBar seedPacketBar = new SeedPacketBar();
 
     private final RegularZombieEngine zombieEngine;
@@ -48,9 +56,49 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     private WaveManager waveManager;
     private BattleController battleController;
 
-    /** Per-stage background texture path (from StageConfig.mapTexture); null = use default Frontyard. */
+    private boolean gameOverTriggered = false;
+    private float gameOverTimer = 0f;
+    private boolean gameOverWin = false;
+
     private String backgroundTexturePath;
     private com.badlogic.gdx.graphics.Texture backgroundOverrideTexture;
+
+    public void triggerGameOver(boolean win) {
+        if (gameOverTriggered) return;
+        gameOverTriggered = true;
+        gameOverTimer = 0f;
+        gameOverWin = win;
+        if (gameStatus != null) {
+            gameStatus.setGameOver(true);
+            gameStatus.setWon(win);
+        }
+    }
+
+    public boolean isGameOverTriggered() {
+        return gameOverTriggered;
+    }
+
+    public float getGameOverTimer() {
+        return gameOverTimer;
+    }
+
+    public boolean isGameOverWin() {
+        return gameOverWin;
+    }
+
+    public void updateGameOverTimer(float delta) {
+        if (gameOverTriggered) {
+            gameOverTimer += delta;
+            if (gameOverTimer >= GAME_OVER_DISPLAY_DURATION) {
+                resetBoardAfterGameOver();
+                if (gameOverWin) {
+                    AppStatus.returnToTravelLog();
+                } else {
+                    AppStatus.returnToMainMenu();
+                }
+            }
+        }
+    }
 
     public RegularGameEngine(GameStatus gameStatus) {
         this(gameStatus, createDefaultWaves());
@@ -138,10 +186,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 for (Zombie z : getZombiesInLane(mower.getRow())) {
                     if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
                         System.out.println("The zombie ate your brain; LOSER!!!");
-                        if (battleController != null) {
-                            battleController.triggerGameOver();
-                        }
-                        resetBoardAfterGameOver();
+                        triggerGameOver(false);
                         return;
                     }
                 }
@@ -151,6 +196,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     @Override
     public void update(float delta) {
+        if (gameOverTriggered) {
+            updateGameOverTimer(delta);
+            return;
+        }
         if (gameStatus != null && gameStatus.isGameOver()) {
             return;
         }
@@ -179,10 +228,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             }
             if (!anyAlive) {
                 System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
-                gameStatus.setWon(true);
-                gameStatus.setGameOver(true);
-                resetBoardAfterGameOver();
-                AppStatus.returnToMainMenu();
+                triggerGameOver(true);
             }
         }
     }
@@ -203,6 +249,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         updateSunManager((float) TICK_SECONDS);
         updateSkySun((float) TICK_SECONDS);
         updateLawnMowers((float) TICK_SECONDS);
+        updateConveyorBelt((float) TICK_SECONDS);
 
         for (Zombie z : getZombieList()) {
             if (z != null && !z.isDead()) {
@@ -241,6 +288,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         tickAccumulator = 0f;
         selectedPlantType = null;
         rechargeRemaining.clear();
+        conveyorBeltQueue.clear();
         sunManager.clear();
         plantFoodManager.reset();
         if (gameStatus != null) {
@@ -326,6 +374,52 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         double startY = map.getStartY() + map.getTileHeight() * 2.0;
 
         sunManager.spawnFalling(landingX, startY, 25, groundY);
+    }
+
+    public void enableConveyorBelt(double intervalSeconds) {
+        this.conveyorBeltMode = true;
+        this.conveyorIntervalSeconds = intervalSeconds > 0 ? intervalSeconds : DEFAULT_CONVEYOR_INTERVAL_SECONDS;
+        this.conveyorTimer = conveyorIntervalSeconds;
+        spawnConveyorPlant();
+    }
+
+    public boolean isConveyorBeltMode() {
+        return conveyorBeltMode;
+    }
+
+    /** Read-only view of the plant types currently waiting on the belt, oldest first. */
+    public List<PlantType> getConveyorBeltQueue() {
+        return Collections.unmodifiableList(conveyorBeltQueue);
+    }
+
+    private void updateConveyorBelt(double delta) {
+        if (!conveyorBeltMode) {
+            return;
+        }
+        conveyorTimer -= delta;
+        if (conveyorTimer > 0) {
+            return;
+        }
+        conveyorTimer = conveyorIntervalSeconds;
+        spawnConveyorPlant();
+    }
+
+    private void spawnConveyorPlant() {
+        List<PlantType> pool = conveyorPlantPool();
+        if (pool.isEmpty()) {
+            return;
+        }
+        PlantType type = pool.get(random.nextInt(pool.size()));
+        conveyorBeltQueue.add(type);
+        System.out.println("The conveyor belt brought a " + type.getDisplayName() + " seed packet.");
+    }
+
+    private List<PlantType> conveyorPlantPool() {
+        List<PlantType> pool = new ArrayList<>();
+        if (AppStatus.currentUser != null && AppStatus.currentUser.collectionState != null) {
+            pool.addAll(AppStatus.currentUser.collectionState.getUnlockedPlants());
+        }
+        return pool;
     }
 
     private void decrementTimers(java.util.Map<Zombie, Integer> timers, boolean restoreMovement) {
@@ -760,11 +854,15 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (map.getPlantAt(row, col) != null) {
             return "Tile is occupied.";
         }
-        if (isOnCooldown(type)) {
+        if (conveyorBeltMode) {
+            if (!conveyorBeltQueue.contains(type)) {
+                return "No " + type.getDisplayName() + " seed packet is available on the belt.";
+            }
+        } else if (isOnCooldown(type)) {
             return type.getDisplayName() + " is still recharging.";
         }
 
-        if (!AppStatus.selectedPlants.isEmpty() && !AppStatus.selectedPlants.contains(type)) {
+        if (!conveyorBeltMode && !AppStatus.selectedPlants.isEmpty() && !AppStatus.selectedPlants.contains(type)) {
             return "Plant was not selected for this level: " + type.getDisplayName();
         }
 
@@ -792,21 +890,27 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             return "Aquatic plants must be planted on water tiles.";
         }
 
-        int cost = plant.getStats().getCost();
-        if (getSunCount() < cost) {
-            return "Not enough sun.";
+        if (!conveyorBeltMode) {
+            int cost = plant.getStats().getCost();
+            if (getSunCount() < cost) {
+                return "Not enough sun.";
+            }
+            addSun(-cost);
         }
 
-        addSun(-cost);
         plant.setPlanted(true);
         plant.putRuntimeState("row", row);
         plant.putRuntimeState("col", col);
         plant.putRuntimeState("lane", row);
         map.setPlant(row, col, plant);
 
-        double recharge = plant.getStats().getRechargeSeconds();
-        if (recharge > 0) {
-            rechargeRemaining.put(type, recharge);
+        if (conveyorBeltMode) {
+            conveyorBeltQueue.remove(type);
+        } else {
+            double recharge = plant.getStats().getRechargeSeconds();
+            if (recharge > 0) {
+                rechargeRemaining.put(type, recharge);
+            }
         }
 
         if (AppStatus.boostedPlants.contains(type)) {
@@ -963,6 +1067,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         builder.append("Sun: ").append(getSunCount())
             .append(" | Wave: ").append(waveManager == null ? 0 : waveManager.getCurrentWave())
             .append('\n');
+        if (conveyorBeltMode) {
+            builder.append("Belt: ").append(conveyorBeltQueue.isEmpty() ? "(empty)" : formatBeltQueue())
+                .append('\n');
+        }
 
         boolean[][] zombieAt = new boolean[ROWS][COLS];
         for (Zombie z : getZombieList()) {
@@ -1006,6 +1114,14 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         builder.append("Tile debug:\n");
         builder.append(tileDebugList(map));
         return builder.toString().trim();
+    }
+
+    private String formatBeltQueue() {
+        StringJoiner joiner = new StringJoiner(", ");
+        for (PlantType type : conveyorBeltQueue) {
+            joiner.add(type.getDisplayName());
+        }
+        return joiner.toString();
     }
 
     public String showPlantsStatusText() {

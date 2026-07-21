@@ -39,6 +39,11 @@ public enum TravelLogCommand {
         public TravelLogInputDTO createDTO(Matcher matcher) {
             return new TravelLogInputDTO(this, null);
         }
+    }, ENTER_QUEST("^\\s*enter\\s+quest\\s*$") {
+        @Override
+        public TravelLogInputDTO createDTO(Matcher matcher) {
+            return new TravelLogInputDTO(this, null);
+        }
     },
     EXIT("^\\s*menu\\s+exit\\s*$") {
         @Override
