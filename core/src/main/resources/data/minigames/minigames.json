@@ -1,251 +1,685 @@
 {
- "vasebreaker": {
-  "levels": [
-   {
-    "id": 1,
-    "rows": 5,
-    "cols": 9,
-    "random": true,
-    "vaseCount": 45,
-    "plantVaseChance": 0.22,
-    "gargantuarVaseChance": 0.08,
-    "normalEmptyChance": 0.12,
-    "normalZombieChance": 0.6,
-    "normalSeedChance": 0.28,
-    "zombiePool": [],
-    "plantPool": [],
-    "seedPacketLifetimeSeconds": 8
-   }
-  ]
- },
- "wallnut_bowling": {
-  "levels": [
-   {
-    "id": 1,
-    "rows": 5,
-    "cols": 9,
-    "redLineCol": 2,
-    "nutPool": [
-     {
-      "type": "NORMAL",
-      "weight": 65
-     },
-     {
-      "type": "EXPLOSIVE",
-      "weight": 20
-     },
-     {
-      "type": "GIANT",
-      "weight": 15
-     }
-    ],
-    "zombiePool": [
-     "ZombieTutorialDefault"
-    ],
-    "totalZombies": 24,
-    "waveIntervalSeconds": 7.0,
-    "minWaveIntervalSeconds": 3.5,
-    "waveIntervalDecreasePerWave": 0.4,
-    "nutSpeed": 420.0,
-    "nutDamage": 190,
-    "explosionDamage": 1800,
-    "launchCooldownSeconds": 3.0
-   },
-   {
-    "id": 2,
-    "rows": 5,
-    "cols": 9,
-    "redLineCol": 3,
-    "nutPool": [
-     {
-      "type": "NORMAL",
-      "weight": 50
-     },
-     {
-      "type": "EXPLOSIVE",
-      "weight": 30
-     },
-     {
-      "type": "GIANT",
-      "weight": 20
-     }
-    ],
-    "zombiePool": [
-     "ZombieTutorialDefault",
-     "ZombieTutorialArmor1Default"
-    ],
-    "totalZombies": 36,
-    "waveIntervalSeconds": 6.0,
-    "minWaveIntervalSeconds": 2.5,
-    "waveIntervalDecreasePerWave": 0.4,
-    "nutSpeed": 470.0,
-    "nutDamage": 190,
-    "explosionDamage": 1800,
-    "launchCooldownSeconds": 2.5
-   },
-   {
-    "id": 3,
-    "rows": 5,
-    "cols": 9,
-    "redLineCol": 3,
-    "nutPool": [
-     {
-      "type": "NORMAL",
-      "weight": 40
-     },
-     {
-      "type": "EXPLOSIVE",
-      "weight": 35
-     },
-     {
-      "type": "GIANT",
-      "weight": 25
-     }
-    ],
-    "zombiePool": [
-     "ZombieTutorialDefault",
-     "ZombieTutorialArmor1Default",
-     "ZombieTutorialArmor2Default"
-    ],
-    "totalZombies": 48,
-    "waveIntervalSeconds": 5.0,
-    "minWaveIntervalSeconds": 1.8,
-    "waveIntervalDecreasePerWave": 0.35,
-    "nutSpeed": 520.0,
-    "nutDamage": 190,
-    "explosionDamage": 1800,
-    "launchCooldownSeconds": 2.0
-   }
-  ]
- },
- "i_zombie": {
-  "levels": [
-   {
-    "id": 1,
-    "rows": 5,
-    "cols": 9,
-    "redLineCol": 5,
-    "startingSun": 150,
-    "plantDensity": 0.45,
-    "sunZombieAlias": "ZombieTutorialArmor2Default",
-    "sunProductionBase": 5.0,
-    "sunProductionGrowthPerTick": 0.4,
-    "sunProductionIntervalSeconds": 5.0,
-    "sunProductionCap": 20.0,
-    "zombieRoster": [
-     {
-      "alias": "ZombieTutorialDefault",
-      "cost": 50,
-      "displayName": "Basic Zombie"
-     },
-     {
-      "alias": "ZombieTutorialArmor1Default",
-      "cost": 75,
-      "displayName": "Conehead Zombie"
-     },
-     {
-      "alias": "ZombieMummyDefault",
-      "cost": 50,
-      "displayName": "Mummy Zombie"
-     },
-     {
-      "alias": "ZombieIceageDefault",
-      "cost": 50,
-      "displayName": "Iceage Zombie"
-     },
-     {
-      "alias": "ZombieBeachDefault",
-      "cost": 60,
-      "displayName": "Beach Zombie"
-     }
+  "vasebreaker": {
+    "levels": [
+      {
+        "id": 1,
+        "rows": 5,
+        "cols": 9,
+        "random": true,
+        "vaseCount": 45,
+        "plantVaseChance": 0.22,
+        "gargantuarVaseChance": 0.08,
+        "normalEmptyChance": 0.12,
+        "normalZombieChance": 0.6,
+        "normalSeedChance": 0.28,
+        "zombiePool": [],
+        "plantPool": [],
+        "seedPacketLifetimeSeconds": 8
+      }
     ]
-   },
-   {
-    "id": 2,
-    "rows": 5,
-    "cols": 9,
-    "redLineCol": 4,
-    "startingSun": 150,
-    "plantDensity": 0.55,
-    "sunZombieAlias": "ZombieTutorialArmor2Default",
-    "sunProductionBase": 6.0,
-    "sunProductionGrowthPerTick": 0.5,
-    "sunProductionIntervalSeconds": 4.5,
-    "sunProductionCap": 24.0,
-    "zombieRoster": [
-     {
-      "alias": "ZombieTutorialArmor2Default",
-      "cost": 125,
-      "displayName": "Buckethead Zombie"
-     },
-     {
-      "alias": "ZombieMummyArmor1Default",
-      "cost": 75,
-      "displayName": "Mummy Conehead"
-     },
-     {
-      "alias": "ZombieDarkDefault",
-      "cost": 60,
-      "displayName": "Dark Zombie"
-     },
-     {
-      "alias": "ZombieIceageArmor1Default",
-      "cost": 75,
-      "displayName": "Iceage Conehead"
-     },
-     {
-      "alias": "ZombieBeachArmor1Default",
-      "cost": 75,
-      "displayName": "Beach Conehead"
-     }
+  },
+  "wallnut_bowling": {
+    "levels": [
+      {
+        "id": 1,
+        "rows": 5,
+        "cols": 9,
+        "redLineCol": 2,
+        "nutPool": [
+          {
+            "type": "NORMAL",
+            "weight": 65
+          },
+          {
+            "type": "EXPLOSIVE",
+            "weight": 20
+          },
+          {
+            "type": "GIANT",
+            "weight": 15
+          }
+        ],
+        "zombiePool": [
+          "ZombieTutorialDefault"
+        ],
+        "totalZombies": 24,
+        "waveIntervalSeconds": 7.0,
+        "minWaveIntervalSeconds": 3.5,
+        "waveIntervalDecreasePerWave": 0.4,
+        "nutSpeed": 420.0,
+        "nutDamage": 190,
+        "explosionDamage": 1800,
+        "launchCooldownSeconds": 3.0
+      },
+      {
+        "id": 2,
+        "rows": 5,
+        "cols": 9,
+        "redLineCol": 3,
+        "nutPool": [
+          {
+            "type": "NORMAL",
+            "weight": 50
+          },
+          {
+            "type": "EXPLOSIVE",
+            "weight": 30
+          },
+          {
+            "type": "GIANT",
+            "weight": 20
+          }
+        ],
+        "zombiePool": [
+          "ZombieTutorialDefault",
+          "ZombieTutorialArmor1Default"
+        ],
+        "totalZombies": 36,
+        "waveIntervalSeconds": 6.0,
+        "minWaveIntervalSeconds": 2.5,
+        "waveIntervalDecreasePerWave": 0.4,
+        "nutSpeed": 470.0,
+        "nutDamage": 190,
+        "explosionDamage": 1800,
+        "launchCooldownSeconds": 2.5
+      },
+      {
+        "id": 3,
+        "rows": 5,
+        "cols": 9,
+        "redLineCol": 3,
+        "nutPool": [
+          {
+            "type": "NORMAL",
+            "weight": 40
+          },
+          {
+            "type": "EXPLOSIVE",
+            "weight": 35
+          },
+          {
+            "type": "GIANT",
+            "weight": 25
+          }
+        ],
+        "zombiePool": [
+          "ZombieTutorialDefault",
+          "ZombieTutorialArmor1Default",
+          "ZombieTutorialArmor2Default"
+        ],
+        "totalZombies": 48,
+        "waveIntervalSeconds": 5.0,
+        "minWaveIntervalSeconds": 1.8,
+        "waveIntervalDecreasePerWave": 0.35,
+        "nutSpeed": 520.0,
+        "nutDamage": 190,
+        "explosionDamage": 1800,
+        "launchCooldownSeconds": 2.0
+      }
     ]
-   },
-   {
-    "id": 3,
-    "rows": 5,
-    "cols": 9,
-    "redLineCol": 4,
-    "startingSun": 175,
-    "plantDensity": 0.65,
-    "sunZombieAlias": "ZombieMummyArmor2Default",
-    "sunProductionBase": 7.0,
-    "sunProductionGrowthPerTick": 0.6,
-    "sunProductionIntervalSeconds": 4.0,
-    "sunProductionCap": 28.0,
-    "zombieRoster": [
-     {
-      "alias": "ZombieTutorialDefault",
-      "cost": 50,
-      "displayName": "Basic Zombie"
-     },
-     {
-      "alias": "ZombieMummyArmor1Default",
-      "cost": 75,
-      "displayName": "Mummy Conehead"
-     },
-     {
-      "alias": "ZombieDarkArmor1Default",
-      "cost": 90,
-      "displayName": "Dark Conehead"
-     },
-     {
-      "alias": "ZombieBeachArmor2Default",
-      "cost": 150,
-      "displayName": "Beach Buckethead"
-     },
-     {
-      "alias": "ZombieIceageArmor2Default",
-      "cost": 150,
-      "displayName": "Iceage Buckethead"
-     }
+  },
+  "i_zombie": {
+    "levels": [
+      {
+        "id": 1,
+        "rows": 5,
+        "cols": 9,
+        "redLineCol": 5,
+        "startingSun": 150,
+        "plantDensity": 0.45,
+        "sunZombieAlias": "ZombieTutorialArmor2Default",
+        "sunProductionBase": 5.0,
+        "sunProductionGrowthPerTick": 0.4,
+        "sunProductionIntervalSeconds": 5.0,
+        "sunProductionCap": 20.0,
+        "zombieRoster": [
+          {
+            "alias": "ZombieTutorialDefault",
+            "cost": 50,
+            "displayName": "Basic Zombie"
+          },
+          {
+            "alias": "ZombieTutorialArmor1Default",
+            "cost": 75,
+            "displayName": "Conehead Zombie"
+          },
+          {
+            "alias": "ZombieMummyDefault",
+            "cost": 50,
+            "displayName": "Mummy Zombie"
+          },
+          {
+            "alias": "ZombieIceageDefault",
+            "cost": 50,
+            "displayName": "Iceage Zombie"
+          },
+          {
+            "alias": "ZombieBeachDefault",
+            "cost": 60,
+            "displayName": "Beach Zombie"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "rows": 5,
+        "cols": 9,
+        "redLineCol": 4,
+        "startingSun": 150,
+        "plantDensity": 0.55,
+        "sunZombieAlias": "ZombieTutorialArmor2Default",
+        "sunProductionBase": 6.0,
+        "sunProductionGrowthPerTick": 0.5,
+        "sunProductionIntervalSeconds": 4.5,
+        "sunProductionCap": 24.0,
+        "zombieRoster": [
+          {
+            "alias": "ZombieTutorialArmor2Default",
+            "cost": 125,
+            "displayName": "Buckethead Zombie"
+          },
+          {
+            "alias": "ZombieMummyArmor1Default",
+            "cost": 75,
+            "displayName": "Mummy Conehead"
+          },
+          {
+            "alias": "ZombieDarkDefault",
+            "cost": 60,
+            "displayName": "Dark Zombie"
+          },
+          {
+            "alias": "ZombieIceageArmor1Default",
+            "cost": 75,
+            "displayName": "Iceage Conehead"
+          },
+          {
+            "alias": "ZombieBeachArmor1Default",
+            "cost": 75,
+            "displayName": "Beach Conehead"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "rows": 5,
+        "cols": 9,
+        "redLineCol": 4,
+        "startingSun": 175,
+        "plantDensity": 0.65,
+        "sunZombieAlias": "ZombieMummyArmor2Default",
+        "sunProductionBase": 7.0,
+        "sunProductionGrowthPerTick": 0.6,
+        "sunProductionIntervalSeconds": 4.0,
+        "sunProductionCap": 28.0,
+        "zombieRoster": [
+          {
+            "alias": "ZombieTutorialDefault",
+            "cost": 50,
+            "displayName": "Basic Zombie"
+          },
+          {
+            "alias": "ZombieMummyArmor1Default",
+            "cost": 75,
+            "displayName": "Mummy Conehead"
+          },
+          {
+            "alias": "ZombieDarkArmor1Default",
+            "cost": 90,
+            "displayName": "Dark Conehead"
+          },
+          {
+            "alias": "ZombieBeachArmor2Default",
+            "cost": 150,
+            "displayName": "Beach Buckethead"
+          },
+          {
+            "alias": "ZombieIceageArmor2Default",
+            "cost": 150,
+            "displayName": "Iceage Buckethead"
+          }
+        ]
+      }
     ]
-   }
-  ]
- },
- "beghouled": {
-  "levels": []
- },
- "zombotany": {
-  "levels": []
- }
+  },
+  "beghouled": {
+    "levels": [
+      {
+        "id": 1,
+        "rows": 5,
+        "cols": 9,
+        "targetMatches": 30,
+        "startingSun": 200,
+        "zombieSpawnIntervalSeconds": 7.0,
+        "plantTypes": [
+          "PEASHOOTER",
+          "WALL_NUT",
+          "PUFF_SHROOM",
+          "CABBAGE_PULT",
+          "SUNFLOWER"
+        ],
+        "zombieAliases": [
+          "ZombieTutorialDefault",
+          "ZombieTutorialArmor1Default"
+        ],
+        "upgrades": [
+          {
+            "from": "PEASHOOTER",
+            "to": "REPEATER",
+            "cost": 500
+          },
+          {
+            "from": "REPEATER",
+            "to": "THREEPEATER",
+            "cost": 1500
+          },
+          {
+            "from": "WALL_NUT",
+            "to": "TALL_NUT",
+            "cost": 500
+          },
+          {
+            "from": "PUFF_SHROOM",
+            "to": "FUME_SHROOM",
+            "cost": 250
+          },
+          {
+            "from": "CABBAGE_PULT",
+            "to": "MELON_PULT",
+            "cost": 1000
+          },
+          {
+            "from": "MELON_PULT",
+            "to": "WINTER_MELON",
+            "cost": 750
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "rows": 5,
+        "cols": 9,
+        "targetMatches": 45,
+        "startingSun": 175,
+        "zombieSpawnIntervalSeconds": 5.5,
+        "plantTypes": [
+          "PEASHOOTER",
+          "WALL_NUT",
+          "PUFF_SHROOM",
+          "CABBAGE_PULT",
+          "SUNFLOWER"
+        ],
+        "zombieAliases": [
+          "ZombieTutorialDefault",
+          "ZombieTutorialArmor1Default",
+          "ZombieMummyDefault",
+          "ZombieTutorialArmor2Default"
+        ],
+        "upgrades": [
+          {
+            "from": "PEASHOOTER",
+            "to": "REPEATER",
+            "cost": 500
+          },
+          {
+            "from": "REPEATER",
+            "to": "THREEPEATER",
+            "cost": 1500
+          },
+          {
+            "from": "WALL_NUT",
+            "to": "TALL_NUT",
+            "cost": 500
+          },
+          {
+            "from": "PUFF_SHROOM",
+            "to": "FUME_SHROOM",
+            "cost": 250
+          },
+          {
+            "from": "CABBAGE_PULT",
+            "to": "MELON_PULT",
+            "cost": 1000
+          },
+          {
+            "from": "MELON_PULT",
+            "to": "WINTER_MELON",
+            "cost": 750
+          },
+          {
+            "from": "REPEATER",
+            "to": "MEGA_GATLING_PEA",
+            "cost": 3000
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "rows": 5,
+        "cols": 9,
+        "targetMatches": 60,
+        "startingSun": 150,
+        "zombieSpawnIntervalSeconds": 4.5,
+        "plantTypes": [
+          "PEASHOOTER",
+          "WALL_NUT",
+          "PUFF_SHROOM",
+          "CABBAGE_PULT",
+          "SUNFLOWER"
+        ],
+        "zombieAliases": [
+          "ZombieTutorialDefault",
+          "ZombieTutorialArmor1Default",
+          "ZombieMummyDefault",
+          "ZombieIceageDefault",
+          "ZombieBeachDefault",
+          "ZombieTutorialArmor2Default"
+        ],
+        "upgrades": [
+          {
+            "from": "PEASHOOTER",
+            "to": "REPEATER",
+            "cost": 500
+          },
+          {
+            "from": "REPEATER",
+            "to": "THREEPEATER",
+            "cost": 1500
+          },
+          {
+            "from": "WALL_NUT",
+            "to": "TALL_NUT",
+            "cost": 500
+          },
+          {
+            "from": "PUFF_SHROOM",
+            "to": "FUME_SHROOM",
+            "cost": 250
+          },
+          {
+            "from": "CABBAGE_PULT",
+            "to": "MELON_PULT",
+            "cost": 1000
+          },
+          {
+            "from": "MELON_PULT",
+            "to": "WINTER_MELON",
+            "cost": 750
+          },
+          {
+            "from": "REPEATER",
+            "to": "MEGA_GATLING_PEA",
+            "cost": 3000
+          }
+        ]
+      }
+    ]
+  },
+  "zombotany": {
+    "levels": [
+      {
+        "id": 1,
+        "rows": 5,
+        "cols": 9,
+        "startingSun": 125,
+        "plantPool": [
+          "PEASHOOTER",
+          "SUNFLOWER",
+          "WALL_NUT",
+          "SNOW_PEA",
+          "CHERRY_BOMB"
+        ],
+        "waves": [
+          {
+            "startDelay": 8.0,
+            "entries": [
+              {
+                "zombie": "ZombieTutorialDefault",
+                "count": 4,
+                "spawnDelay": 2.5
+              }
+            ]
+          },
+          {
+            "startDelay": 18.0,
+            "entries": [
+              {
+                "zombie": "ZombieTutorialArmor1Default",
+                "count": 3,
+                "spawnDelay": 2.5
+              },
+              {
+                "zombie": "ZombotanyPeashooterDefault",
+                "count": 1,
+                "spawnDelay": 4.0
+              }
+            ]
+          },
+          {
+            "startDelay": 30.0,
+            "entries": [
+              {
+                "zombie": "ZombieTutorialDefault",
+                "count": 4,
+                "spawnDelay": 2.0
+              },
+              {
+                "zombie": "ZombotanyWallnutDefault",
+                "count": 1,
+                "spawnDelay": 5.0
+              }
+            ]
+          },
+          {
+            "startDelay": 42.0,
+            "entries": [
+              {
+                "zombie": "ZombieTutorialArmor1Default",
+                "count": 3,
+                "spawnDelay": 2.0
+              },
+              {
+                "zombie": "ZombotanyPeashooterDefault",
+                "count": 2,
+                "spawnDelay": 3.0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "rows": 5,
+        "cols": 9,
+        "startingSun": 125,
+        "plantPool": [
+          "PEASHOOTER",
+          "REPEATER",
+          "SUNFLOWER",
+          "WALL_NUT",
+          "SNOW_PEA",
+          "CHERRY_BOMB"
+        ],
+        "waves": [
+          {
+            "startDelay": 7.0,
+            "entries": [
+              {
+                "zombie": "ZombieTutorialDefault",
+                "count": 4,
+                "spawnDelay": 2.0
+              }
+            ]
+          },
+          {
+            "startDelay": 16.0,
+            "entries": [
+              {
+                "zombie": "ZombotanyPeashooterDefault",
+                "count": 2,
+                "spawnDelay": 2.5
+              },
+              {
+                "zombie": "ZombieTutorialArmor1Default",
+                "count": 3,
+                "spawnDelay": 2.5
+              }
+            ]
+          },
+          {
+            "startDelay": 26.0,
+            "entries": [
+              {
+                "zombie": "ZombotanySquashDefault",
+                "count": 2,
+                "spawnDelay": 2.0
+              },
+              {
+                "zombie": "ZombieMummyDefault",
+                "count": 3,
+                "spawnDelay": 2.5
+              }
+            ]
+          },
+          {
+            "startDelay": 36.0,
+            "entries": [
+              {
+                "zombie": "ZombotanyWallnutDefault",
+                "count": 2,
+                "spawnDelay": 3.0
+              },
+              {
+                "zombie": "ZombotanyPeashooterDefault",
+                "count": 2,
+                "spawnDelay": 2.5
+              }
+            ]
+          },
+          {
+            "startDelay": 48.0,
+            "entries": [
+              {
+                "zombie": "ZombieTutorialArmor2Default",
+                "count": 3,
+                "spawnDelay": 2.0
+              },
+              {
+                "zombie": "ZombotanySquashDefault",
+                "count": 2,
+                "spawnDelay": 2.0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "rows": 5,
+        "cols": 9,
+        "startingSun": 100,
+        "plantPool": [
+          "PEASHOOTER",
+          "REPEATER",
+          "SUNFLOWER",
+          "WALL_NUT",
+          "TALL_NUT",
+          "SNOW_PEA",
+          "CHERRY_BOMB"
+        ],
+        "waves": [
+          {
+            "startDelay": 6.0,
+            "entries": [
+              {
+                "zombie": "ZombieMummyDefault",
+                "count": 4,
+                "spawnDelay": 1.8
+              }
+            ]
+          },
+          {
+            "startDelay": 14.0,
+            "entries": [
+              {
+                "zombie": "ZombotanyPeashooterDefault",
+                "count": 3,
+                "spawnDelay": 2.0
+              },
+              {
+                "zombie": "ZombotanySquashDefault",
+                "count": 2,
+                "spawnDelay": 2.0
+              }
+            ]
+          },
+          {
+            "startDelay": 24.0,
+            "entries": [
+              {
+                "zombie": "ZombotanyWallnutDefault",
+                "count": 2,
+                "spawnDelay": 2.5
+              },
+              {
+                "zombie": "ZombieIceageDefault",
+                "count": 4,
+                "spawnDelay": 2.0
+              }
+            ]
+          },
+          {
+            "startDelay": 34.0,
+            "entries": [
+              {
+                "zombie": "ZombotanyJalapenoDefault",
+                "count": 1,
+                "spawnDelay": 4.0
+              },
+              {
+                "zombie": "ZombotanyPeashooterDefault",
+                "count": 3,
+                "spawnDelay": 2.0
+              }
+            ]
+          },
+          {
+            "startDelay": 44.0,
+            "entries": [
+              {
+                "zombie": "ZombotanySquashDefault",
+                "count": 3,
+                "spawnDelay": 1.8
+              },
+              {
+                "zombie": "ZombieBeachDefault",
+                "count": 4,
+                "spawnDelay": 2.0
+              }
+            ]
+          },
+          {
+            "startDelay": 56.0,
+            "entries": [
+              {
+                "zombie": "ZombotanyJalapenoDefault",
+                "count": 2,
+                "spawnDelay": 3.0
+              },
+              {
+                "zombie": "ZombotanyWallnutDefault",
+                "count": 2,
+                "spawnDelay": 2.5
+              },
+              {
+                "zombie": "ZombieTutorialArmor2Default",
+                "count": 4,
+                "spawnDelay": 1.8
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }

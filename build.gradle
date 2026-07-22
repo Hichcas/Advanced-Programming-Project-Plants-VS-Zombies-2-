@@ -67,3 +67,36 @@ subprojects {
 }
 
 eclipse.project.name = 'PVZ' + '-parent'
+
+// ---------------------------------------------------------------------
+// Checkstyle / PMD
+// Rule files live in <root>/config/checkstyle/checkstyle.xml and
+// <root>/config/pmd/pmd.xml (sibling to core/, desktop/, build.gradle).
+// Applied only to the `core` module, since that's where the real
+// PVZ source (java/com/PVZ/...) lives; desktop/android/lwjgl3 launchers
+// are just boilerplate and don't need linting.
+// ---------------------------------------------------------------------
+project(':core') {
+  apply plugin: 'checkstyle'
+  apply plugin: 'pmd'
+
+  checkstyle {
+    toolVersion = '10.17.0'
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    ignoreFailures = false
+    maxWarnings = 0
+  }
+
+  pmd {
+    toolVersion = '6.55.0'
+    ruleSetFiles = files(rootProject.file('config/pmd/pmd.xml'))
+    ruleSets = []
+    ignoreFailures = false
+  }
+
+  // Optional convenience task: run both linters together with one command
+  // e.g. ./gradlew :core:lint
+  tasks.register('lint') {
+    dependsOn 'checkstyleMain', 'pmdMain'
+  }
+}

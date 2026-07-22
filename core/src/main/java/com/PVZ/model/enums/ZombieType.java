@@ -7,6 +7,7 @@ import com.PVZ.model.entity.zombies.types.heavy_gargantuar.*;
 import com.PVZ.model.entity.zombies.types.special_movement.*;
 import com.PVZ.model.entity.zombies.types.ranged_caster.*;
 import com.PVZ.model.entity.zombies.types.zomboss.*;
+import com.PVZ.model.entity.zombies.types.zombotany.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -186,6 +187,18 @@ public enum ZombieType {
       },
       ZOMBOSS_DARK("ZombieZombossMechDark") {
             public Zombie create() { return new ZombieZombossMechDark(); }
+      },
+      ZOMBOTANY_PEASHOOTER("ZombotanyPeashooterDefault") {
+            public Zombie create() { return new ZombotanyPeashooter(); }
+      },
+      ZOMBOTANY_WALLNUT("ZombotanyWallnutDefault") {
+            public Zombie create() { return new ZombotanyWallnut(); }
+      },
+      ZOMBOTANY_JALAPENO("ZombotanyJalapenoDefault") {
+            public Zombie create() { return new ZombotanyJalapeno(); }
+      },
+      ZOMBOTANY_SQUASH("ZombotanySquashDefault") {
+            public Zombie create() { return new ZombotanySquash(); }
       };
 
       public final String alias;
