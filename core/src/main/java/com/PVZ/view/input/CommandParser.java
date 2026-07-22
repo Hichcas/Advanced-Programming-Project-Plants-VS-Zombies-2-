@@ -13,11 +13,12 @@ public class CommandParser {
 
     public static InputDTO getNext() {
         String command = console.pollCommand();
-        if (command == null)
+        if (command == null) {
             return null;
+        }
         command = command.trim();
-        MenuType MenuType = AppStatus.currentMenuType;
-        return MenuType.getCurrentMenu().parseNextCommand(command);
+        MenuType menuType = AppStatus.currentMenuType;
+        return menuType.getCurrentMenu().parseNextCommand(command);
     }
 
     public static void start() {

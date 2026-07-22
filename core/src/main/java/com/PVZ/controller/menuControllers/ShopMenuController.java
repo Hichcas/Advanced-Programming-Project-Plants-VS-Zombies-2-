@@ -1,4 +1,3 @@
-
 package com.PVZ.controller.menuControllers;
 
 import com.PVZ.model.enums.MenuType;
@@ -38,14 +37,14 @@ public class ShopMenuController {
         };
     }
 
-    private String unlockAllPlants () {
+    private String unlockAllPlants() {
         AppStatus.getCurrentUser().collectionState.setAllPlantsUnlocked();
         return "all plants are unlocked now, boro halesho bebar.";
     }
 
     private String showCoins() {
-        return "coins : " + AppStatus.getCurrentUser().userStats.getCoins() + " and diamonds :" + AppStatus
-                .getCurrentUser().userStats.getDiamonds();
+        return "coins : " + AppStatus.getCurrentUser().userStats.getCoins()
+            + " and diamonds :" + AppStatus.getCurrentUser().userStats.getDiamonds();
     }
 
     private String shopList() {
@@ -61,7 +60,6 @@ public class ShopMenuController {
         User user = AppStatus.currentUser;
         if (user == null) return "Not logged in.";
 
-        // اگر پیشنهاد امروز وجود ندارد یا تاریخ گذشته است، خودکار تولید کن
         if (user.shopDaily.needsNewOffer()) {
             if (user.collectionState.getUnlockedPlants().isEmpty()) {
                 return "No unlocked plants for a daily offer.";
@@ -71,15 +69,16 @@ public class ShopMenuController {
             user.shopDaily.generateOfferForToday(randomPlant);
         }
 
-        // حالا نمایش وضعیت
         if (!user.shopDaily.isForToday()) {
             return "No daily offer available (unexpected error).";
         }
         if (user.shopDaily.isPurchased()) {
-            return "Today's offer (10 seed packets for " + user.shopDaily.getOfferPlant().getDisplayName()
+            return "Today's offer (10 seed packets for "
+                + user.shopDaily.getOfferPlant().getDisplayName()
                 + " at 1600 coins) has already been purchased.";
         } else {
-            return "Today's offer: 10 seed packets for " + user.shopDaily.getOfferPlant().getDisplayName()
+            return "Today's offer: 10 seed packets for "
+                + user.shopDaily.getOfferPlant().getDisplayName()
                 + " at 1600 coins (20% off). Use 'shop buy -i daily -n 1' to purchase.";
         }
     }
@@ -97,140 +96,124 @@ public class ShopMenuController {
         log.append("");
 
         switch (itemId.toLowerCase()) {
-            case "pot" -> {
-                int cost = 2000 * count;
-                // 1. بررسی ظرفیت
-                if (user.greenhouseState.getNumberOfLockedPots() < count) {
-                    return new OutputDTO(false,
-                        "Not enough locked pots. Max 20 total. You have " +
-                            user.greenhouseState.getNumberOfLockedPots() + " locked pots.");
-                }
-                // 2. بررسی موجودی سکه
-                if (user.userStats.getCoins() < cost) {
-                    return new OutputDTO(false, "Not enough coins.");
-                }
-                // 3. انجام عملیات (کسر سکه + باز کردن گلدان)
-                user.userStats.spendCoins(cost);
-                user.greenhouseState.unlockPots(count);
-                UserRegistry.markDirty(user.profile.getUsername());
-                log.append("Bought ").append(count).append(" pot(s) for ").append(cost).append(" coins.");
-                return new OutputDTO(true, log.toString());
-            }
-
-            case "food" -> {
-//                int cost = 3 * count;
-//                // 1. بررسی ظرفیت غذای گیاه (حداکثر ۳)
-//                if (user.collectionState.getPlantFoodCount() + count > 3) {
-//                    return new OutputDTO(false, "Plant food storage full (max 3).");
-//                }
-//                // 2. بررسی موجودی الماس
-//                if (user.userStats.getDiamonds() < cost) {
-//                    return new OutputDTO(false, "Not enough diamonds.");
-//                }
-//                // 3. کسر الماس و افزودن غذا
-//                user.userStats.spendDiamonds(cost);
-//                user.collectionState.addPlantFood(count);
-//                log.append("Bought ").append(count).append(" plant food(s) for ").append(cost).append(" diamonds.");
-                return new OutputDTO(true, log.toString());
-            }
-
-            case "random-seed" -> {
-                // 1. بررسی وجود گیاه آنلاک‌شده
-                java.util.Set<PlantType> unlockedSet = user.collectionState.getUnlockedPlants();
-                if (unlockedSet.isEmpty()) {
-                    return new OutputDTO(false, "No unlocked plants to receive seed packets.");
-                }
-                int cost = 1000 * count;
-                // 2. بررسی موجودی سکه
-                if (user.userStats.getCoins() < cost) {
-                    return new OutputDTO(false, "Not enough coins.");
-                }
-                // 3. کسر سکه و توزیع بسته‌های تصادفی
-                user.userStats.spendCoins(cost);
-                PlantType[] unlocked = unlockedSet.toArray(new PlantType[0]);
-                Random rand = new Random();
-                log.append("Bought ").append(count).append(" random seed pack(s) for ").append(cost).append(
-                        " coins:\n");
-                for (int i = 0; i < count; i++) {
-                    PlantType randomPlant = unlocked[rand.nextInt(unlocked.length)];
-                    user.collectionState.addSeedPackets(randomPlant, 5);
-                    log.append(" - 5 seed packets for ").append(randomPlant.getDisplayName()).append("\n");
-                }
-                UserRegistry.markDirty(user.profile.getUsername());
-                return new OutputDTO(true, log.toString().trim());
-            }
-
-            case "selected-seed" -> {
-                // 1. بررسی الزامی بودن plantType
-                if (plantType == null) {
-                    return new OutputDTO(false, "Plant type is required (-t <plant_type>).");
-                }
-                PlantType selected;
-                try {
-                    selected = PlantType.valueof(plantType.toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    return new OutputDTO(false, "Invalid plant type: " + plantType);
-                }
-                // 2. بررسی آنلاک بودن گیاه
-                if (!user.collectionState.isPlantUnlocked(selected)) {
-                    return new OutputDTO(false, "Plant " + plantType + " is not unlocked yet.");
-                }
-                int cost = 5 * count;
-                // 3. بررسی موجودی الماس
-                if (user.userStats.getDiamonds() < cost) {
-                    return new OutputDTO(false, "Not enough diamonds.");
-                }
-                // 4. کسر الماس و افزودن بسته‌ها
-                user.userStats.spendDiamonds(cost);
-                int totalPackets = 10 * count;
-                user.collectionState.addSeedPackets(selected, totalPackets);
-                UserRegistry.markDirty(user.profile.getUsername());
-                log.append("Bought ").append(count).append(" selected seed pack(s) for ")
-                    .append(selected.getDisplayName()).append(" (").append(totalPackets)
-                    .append(" packets) for ").append(cost).append(" diamonds.");
-                return new OutputDTO(true, log.toString());
-            }
-
-            case "exchange" -> {
-                int diamondsCost = 5 * count;
-                // 1. بررسی موجودی الماس
-                if (user.userStats.getDiamonds() < diamondsCost) {
-                    return new OutputDTO(false, "Not enough diamonds.");
-                }
-                // 2. تبدیل
-                user.userStats.spendDiamonds(diamondsCost);
-                user.userStats.addCoins(500 * count);
-                UserRegistry.markDirty(user.profile.getUsername());
-                log.append("Exchanged ").append(diamondsCost).append(" diamonds for ")
-                    .append(500 * count).append(" coins.");
-                return new OutputDTO(true, log.toString());
-            }
-
-            case "daily" -> {
-                // 1. بررسی پیشنهاد روزانه (موجود بودن و خریداری‌نشده)
-                if (!user.shopDaily.isAvailableToday()) {
-                    return new OutputDTO(false, "No available daily offer to purchase.");
-                }
-                int cost = 1600;
-                // 2. بررسی موجودی سکه
-                if (user.userStats.getCoins() < cost) {
-                    return new OutputDTO(false, "Not enough coins.");
-                }
-                // 3. کسر سکه و اعمال خرید
-                user.userStats.spendCoins(cost);
-                user.collectionState.addSeedPackets(user.shopDaily.getOfferPlant(), 10);
-                user.shopDaily.markAsPurchased();
-                UserRegistry.markDirty(user.profile.getUsername());
-                log.append("Purchased daily offer: 10 seed packets for ")
-                    .append(user.shopDaily.getOfferPlant().name())
-                    .append(" for ").append(cost).append(" coins.");
-                return new OutputDTO(true, log.toString());
-            }
-
-            default -> {
+            case "pot":
+                return buyPot(user, count, log);
+            case "food":
+                return buyFood(user, count, log);
+            case "random-seed":
+                return buyRandomSeed(user, count, log);
+            case "selected-seed":
+                return buySelectedSeed(user, count, plantType, log);
+            case "exchange":
+                return buyExchange(user, count, log);
+            case "daily":
+                return buyDaily(user, log);
+            default:
                 return new OutputDTO(false, "Unknown shop item.");
-            }
         }
+    }
+
+    private OutputDTO buyPot(User user, int count, StringBuilder log) {
+        int cost = 2000 * count;
+        if (user.greenhouseState.getNumberOfLockedPots() < count) {
+            return new OutputDTO(false,
+                "Not enough locked pots. Max 20 total. You have "
+                    + user.greenhouseState.getNumberOfLockedPots() + " locked pots.");
+        }
+        if (user.userStats.getCoins() < cost) {
+            return new OutputDTO(false, "Not enough coins.");
+        }
+        user.userStats.spendCoins(cost);
+        user.greenhouseState.unlockPots(count);
+        UserRegistry.markDirty(user.profile.getUsername());
+        log.append("Bought ").append(count).append(" pot(s) for ").append(cost).append(" coins.");
+        return new OutputDTO(true, log.toString());
+    }
+
+    private OutputDTO buyFood(User user, int count, StringBuilder log) {
+        // (currently disabled in original code)
+        return new OutputDTO(true, log.toString());
+    }
+
+    private OutputDTO buyRandomSeed(User user, int count, StringBuilder log) {
+        java.util.Set<PlantType> unlockedSet = user.collectionState.getUnlockedPlants();
+        if (unlockedSet.isEmpty()) {
+            return new OutputDTO(false, "No unlocked plants to receive seed packets.");
+        }
+        int cost = 1000 * count;
+        if (user.userStats.getCoins() < cost) {
+            return new OutputDTO(false, "Not enough coins.");
+        }
+        user.userStats.spendCoins(cost);
+        PlantType[] unlocked = unlockedSet.toArray(new PlantType[0]);
+        Random rand = new Random();
+        log.append("Bought ").append(count).append(" random seed pack(s) for ")
+            .append(cost).append(" coins:\n");
+        for (int i = 0; i < count; i++) {
+            PlantType randomPlant = unlocked[rand.nextInt(unlocked.length)];
+            user.collectionState.addSeedPackets(randomPlant, 5);
+            log.append(" - 5 seed packets for ").append(randomPlant.getDisplayName()).append("\n");
+        }
+        UserRegistry.markDirty(user.profile.getUsername());
+        return new OutputDTO(true, log.toString().trim());
+    }
+
+    private OutputDTO buySelectedSeed(User user, int count, String plantType, StringBuilder log) {
+        if (plantType == null) {
+            return new OutputDTO(false, "Plant type is required (-t <plant_type>).");
+        }
+        PlantType selected;
+        try {
+            selected = PlantType.valueof(plantType.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return new OutputDTO(false, "Invalid plant type: " + plantType);
+        }
+        if (!user.collectionState.isPlantUnlocked(selected)) {
+            return new OutputDTO(false, "Plant " + plantType + " is not unlocked yet.");
+        }
+        int cost = 5 * count;
+        if (user.userStats.getDiamonds() < cost) {
+            return new OutputDTO(false, "Not enough diamonds.");
+        }
+        user.userStats.spendDiamonds(cost);
+        int totalPackets = 10 * count;
+        user.collectionState.addSeedPackets(selected, totalPackets);
+        UserRegistry.markDirty(user.profile.getUsername());
+        log.append("Bought ").append(count).append(" selected seed pack(s) for ")
+            .append(selected.getDisplayName()).append(" (").append(totalPackets)
+            .append(" packets) for ").append(cost).append(" diamonds.");
+        return new OutputDTO(true, log.toString());
+    }
+
+    private OutputDTO buyExchange(User user, int count, StringBuilder log) {
+        int diamondsCost = 5 * count;
+        if (user.userStats.getDiamonds() < diamondsCost) {
+            return new OutputDTO(false, "Not enough diamonds.");
+        }
+        user.userStats.spendDiamonds(diamondsCost);
+        user.userStats.addCoins(500 * count);
+        UserRegistry.markDirty(user.profile.getUsername());
+        log.append("Exchanged ").append(diamondsCost).append(" diamonds for ")
+            .append(500 * count).append(" coins.");
+        return new OutputDTO(true, log.toString());
+    }
+
+    private OutputDTO buyDaily(User user, StringBuilder log) {
+        if (!user.shopDaily.isAvailableToday()) {
+            return new OutputDTO(false, "No available daily offer to purchase.");
+        }
+        int cost = 1600;
+        if (user.userStats.getCoins() < cost) {
+            return new OutputDTO(false, "Not enough coins.");
+        }
+        user.userStats.spendCoins(cost);
+        user.collectionState.addSeedPackets(user.shopDaily.getOfferPlant(), 10);
+        user.shopDaily.markAsPurchased();
+        UserRegistry.markDirty(user.profile.getUsername());
+        log.append("Purchased daily offer: 10 seed packets for ")
+            .append(user.shopDaily.getOfferPlant().name())
+            .append(" for ").append(cost).append(" coins.");
+        return new OutputDTO(true, log.toString());
     }
 
     private OutputDTO exitToGreenhouse() {

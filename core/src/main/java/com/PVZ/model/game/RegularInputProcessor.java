@@ -8,7 +8,12 @@ import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
 
+/**
+ * Input processor for the regular game mode handling touch/click events.
+ * Refactored to comply with Checkstyle (method length ≤ 50 lines).
+ */
 public class RegularInputProcessor extends InputAdapter {
+
     private RegularGameEngine regularGameEngine;
 
     public RegularInputProcessor() {
@@ -33,7 +38,27 @@ public class RegularInputProcessor extends InputAdapter {
         float worldX = worldCoords.x;
         float worldY = worldCoords.y;
 
-        // 1) a click on the seed-packet bar selects (or deselects) that plant type.
+        // 1) Seed packet bar
+        if (handleSeedPacketClick(worldX, worldY)) {
+            return true;
+        }
+
+        // 2) Grid tiles
+        if (handleGridClick(worldX, worldY)) {
+            return true;
+        }
+
+        // 3) Zombie click
+        if (handleZombieClick(worldX, worldY)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // ---------- Helper methods ----------
+
+    private boolean handleSeedPacketClick(float worldX, float worldY) {
         SeedPacketBar seedBar = regularGameEngine.getSeedPacketBar();
         SeedPacket clickedPacket = seedBar == null ? null : seedBar.getPacketAt(worldX, worldY);
         if (clickedPacket != null) {
@@ -42,9 +67,10 @@ public class RegularInputProcessor extends InputAdapter {
             regularGameEngine.selectPlant(type);
             return true;
         }
+        return false;
+    }
 
-        // 2) otherwise, a click on the grid either plants the currently selected seed
-        //    or (if nothing is selected) just reports which tile was clicked, as before.
+    private boolean handleGridClick(float worldX, float worldY) {
         if (regularGameEngine.getMap() == null) {
             return false;
         }
@@ -56,17 +82,18 @@ public class RegularInputProcessor extends InputAdapter {
                     System.out.println("Clicked on Tile (" + col + ", " + row + ")");
 
                     if (regularGameEngine.getSelectedPlantType() != null) {
-                        // plantPlant/plantSelectedAt use the design doc's 1-based (x, y)
-                        // convention, so we convert from the 0-based grid indices here.
-                        String result = regularGameEngine.plantSelectedAt(col , row );
+                        // plantSelectedAt uses (x, y) convention, convert from 0-based grid indices.
+                        String result = regularGameEngine.plantSelectedAt(col, row);
                         System.out.println(result);
                     }
                     return true;
                 }
             }
         }
+        return false;
+    }
 
-        // 3) a click on a zombie prints its debug string to the terminal
+    private boolean handleZombieClick(float worldX, float worldY) {
         for (Zombie z : regularGameEngine.getAllZombies()) {
             if (z != null && !z.isDead()) {
                 float zx = (float) z.getX();
@@ -78,7 +105,6 @@ public class RegularInputProcessor extends InputAdapter {
                 }
             }
         }
-
         return false;
     }
 

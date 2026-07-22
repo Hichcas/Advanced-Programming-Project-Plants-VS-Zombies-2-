@@ -21,29 +21,51 @@ public final class PlantFactory {
     }
 
     private static void applyInnateSpecials(PlantDefinition definition, PlantStats stats) {
-        String key = definition.getPlantKey();
-        if (key == null) {
+        if (definition.getPlantKey() == null) {
+            return;
+        }
+        applyDamageSpec(definition, stats);
+        applyPlantTags(definition, stats);
+        applySpecialPlantKeys(definition, stats);
+    }
+
+    /**
+     * Applies damage-specific specials based on DamageSpec kind.
+     */
+    private static void applyDamageSpec(PlantDefinition definition, PlantStats stats) {
+        DamageSpec damageSpec = definition.getDamageSpec();
+        if (damageSpec == null) {
             return;
         }
 
-        DamageSpec damageSpec = definition.getDamageSpec();
-        if (damageSpec != null) {
-            if (damageSpec.getKindEnum() == DamageSpec.DamageKind.MULTI_PROJECTILE
-                    && damageSpec.getDamagePerProjectile() != null) {
-                stats.setDamage(damageSpec.getDamagePerProjectile());
-                if (damageSpec.getProjectiles() != null && damageSpec.getProjectiles() > 1) {
-                    switch (key) {
-                        case "rotobaga", "threepeater", "split_pea", "starfruit", "cat_tail", "bowling_bulb" -> {
-                        }
-                        default -> stats.putExtra("projectileCount", damageSpec.getProjectiles());
-                    }
+        if (damageSpec.getKindEnum() == DamageSpec.DamageKind.MULTI_PROJECTILE
+            && damageSpec.getDamagePerProjectile() != null) {
+            stats.setDamage(damageSpec.getDamagePerProjectile());
+            if (damageSpec.getProjectiles() != null && damageSpec.getProjectiles() > 1) {
+                String key = definition.getPlantKey();
+                // These plants have built-in multi-lane firing and do not need projectile count
+                if (!isMultiLanePlant(key)) {
+                    stats.putExtra("projectileCount", damageSpec.getProjectiles());
                 }
-            } else if (damageSpec.getKindEnum() == DamageSpec.DamageKind.TIERED
-                    && damageSpec.getTiers() != null && !damageSpec.getTiers().isEmpty()) {
-                stats.setDamage(damageSpec.getTiers().get(0));
             }
+        } else if (damageSpec.getKindEnum() == DamageSpec.DamageKind.TIERED
+            && damageSpec.getTiers() != null && !damageSpec.getTiers().isEmpty()) {
+            stats.setDamage(damageSpec.getTiers().get(0));
         }
+    }
 
+    /**
+     * Checks if the plant has built-in multi-lane firing logic.
+     */
+    private static boolean isMultiLanePlant(String key) {
+        return "rotobaga".equals(key) || "threepeater".equals(key) || "split_pea".equals(key)
+            || "starfruit".equals(key) || "cat_tail".equals(key) || "bowling_bulb".equals(key);
+    }
+
+    /**
+     * Applies special effects based on plant tags (FIRE, ICE, POISON, CHARGE).
+     */
+    private static void applyPlantTags(PlantDefinition definition, PlantStats stats) {
         if (definition.hasTag(PlantTag.FIRE)) {
             stats.putExtra("fireAttack", Boolean.TRUE);
             if (stats.getDoubleExtra("damageMultiplier", 1.0) <= 1.0) {
@@ -60,42 +82,50 @@ public final class PlantFactory {
         if (definition.hasTag(PlantTag.CHARGE) && stats.getChargeTimeSeconds() <= 0) {
             stats.setChargeTimeSeconds(2.0);
         }
+    }
 
+    /**
+     * Applies special case settings for specific plant keys.
+     */
+    private static void applySpecialPlantKeys(PlantDefinition definition, PlantStats stats) {
+        String key = definition.getPlantKey();
         switch (key) {
-            case "sun_bean" -> {
+            case "sun_bean":
                 if (stats.getSunDropAmount() <= 0) {
                     stats.setSunDropAmount(5);
                 }
-            }
-            case "endurian" -> {
+                break;
+            case "endurian":
                 if (stats.getReflectDamage() <= 0) {
                     stats.setReflectDamage(Math.max(20, stats.getDamage()));
                 }
-            }
-            case "explode_o_nut" -> {
+                break;
+            case "explode_o_nut":
                 stats.putExtra("explodeOnDeath", Boolean.TRUE);
-            }
-            case "potato_mine" -> {
+                break;
+            case "potato_mine":
                 if (stats.getArmTimeSeconds() <= 0) {
                     stats.setArmTimeSeconds(15.0);
                 }
-            }
-            case "primal_potato_mine" -> {
+                break;
+            case "primal_potato_mine":
                 if (stats.getArmTimeSeconds() <= 0) {
                     stats.setArmTimeSeconds(5.0);
                 }
-            }
-            case "cactus" -> {
+                break;
+            case "cactus":
                 if (stats.getPierce() <= 0) {
                     stats.setPierce(3);
                 }
-            }
-            case "fume_shroom" -> {
+                break;
+            case "fume_shroom":
                 if (stats.getPierce() <= 0) {
                     stats.setPierce(99);
                 }
-            }
-            default -> { }
+                break;
+            default:
+                // no special handling
+                break;
         }
     }
 
