@@ -15,6 +15,8 @@ import com.PVZ.screen.manager.BrightnessController;
 import com.PVZ.screen.manager.MusicManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
+import com.PVZ.model.enums.ChapterEnum;
+
 import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -95,6 +97,15 @@ public final class AppStatus {
     public static final Set<PlantFamily> currentStageExclusiveFamilies = new LinkedHashSet<>();
 
     public static boolean tileDebugEnabled = false;
+
+    public static ChapterEnum getCurrentChapterEnum() {
+        if (currentChapterName == null) return null;
+        try {
+            return ChapterEnum.valueOf(currentChapterName.toUpperCase().replace(" ", "_"));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
 
     public static User getCurrentUser() { return currentUser;}
 

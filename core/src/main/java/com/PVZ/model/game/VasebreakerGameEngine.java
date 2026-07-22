@@ -10,6 +10,9 @@ import com.PVZ.model.minigame.vasebreaker.DroppedSeedPacket;
 import com.PVZ.model.minigame.vasebreaker.Vase;
 import com.PVZ.model.minigame.vasebreaker.VasebreakerGame;
 import com.PVZ.model.minigame.vasebreaker.VasebreakerTexturePaths;
+import com.PVZ.model.enums.MinigameEnum;
+import com.PVZ.model.status.AppStatus;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Texture;
@@ -273,6 +276,12 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
     @Override
     public void onLevelWon() {
         levelWon = true;
+        if (AppStatus.currentUser != null) {
+            if (AppStatus.currentUser.progressState != null) {
+                AppStatus.currentUser.progressState.clearMinigameStage(MinigameEnum.VASEBREAKER);
+            }
+            UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
+        }
     }
 
     public boolean isLevelWon() { return levelWon; }

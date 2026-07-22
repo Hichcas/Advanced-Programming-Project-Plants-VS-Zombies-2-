@@ -8,11 +8,13 @@ import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.ChapterEnum;
 import com.PVZ.model.enums.PlantTag;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.chapter.sepecialLevel.SpecialLevel;
 import com.PVZ.model.status.AppStatus;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Color;
@@ -113,6 +115,13 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                         ? AppStatus.currentUser.userStats : null;
                     if (stats != null) {
                         stats.incrementStagesCompleted();
+                    }
+                    if (AppStatus.currentUser != null) {
+                        ChapterEnum chapter = AppStatus.getCurrentChapterEnum();
+                        if (chapter != null && AppStatus.currentUser.progressState != null) {
+                            AppStatus.currentUser.progressState.completeLevel(chapter, AppStatus.currentStageNumber);
+                        }
+                        UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
                     }
                     AppStatus.returnToTravelLog();
                 } else {

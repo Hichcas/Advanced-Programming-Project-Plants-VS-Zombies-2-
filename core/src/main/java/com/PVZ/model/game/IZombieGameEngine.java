@@ -10,6 +10,9 @@ import com.PVZ.model.enums.ZombieType;
 import com.PVZ.model.minigame.izombie.IZombieGame;
 import com.PVZ.model.minigame.izombie.IZombieTexturePaths;
 import com.PVZ.model.minigame.izombie.ZombieOption;
+import com.PVZ.model.enums.MinigameEnum;
+import com.PVZ.model.status.AppStatus;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Texture;
@@ -191,6 +194,12 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
                 game.eatBrain(row);
                 zombieEngine.kill(z);
                 if (!gameStatus.isGameOver() && game.isWon()) {
+                    if (AppStatus.currentUser != null) {
+                        if (AppStatus.currentUser.progressState != null) {
+                            AppStatus.currentUser.progressState.clearMinigameStage(MinigameEnum.I_ZOMBIE);
+                        }
+                        UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
+                    }
                     gameStatus.setGameOver(true);
                     com.PVZ.model.status.AppStatus.returnToTravelLog();
                 }
