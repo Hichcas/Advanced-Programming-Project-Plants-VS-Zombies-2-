@@ -214,6 +214,8 @@ public abstract class Zombie {
     }
 
     public void die(BattleController controller) {
+        hitpoints = 0;
+        armor = null;
         System.out.println("Zombie [" + alias + "] died at x=" + String.format("%.1f", x) + " row=" + (int)row);
         onDestroy();
         if (isGlowing) {
@@ -262,6 +264,29 @@ public abstract class Zombie {
     /** Submerged/special zombies can be immune to plant projectiles (e.g. Snorkel underwater). */
     public boolean isProjectileImmune() { return false; }
     public void onProjectileHit(Plant target) { }
+    public void applyDifficultyScaling(int level) {
+        if (level < 1) level = 1;
+        if (level > 5) level = 5;
+        double armorScale = 1.0;
+        for (ScaledProperty prop : scaledProps) {
+            double scale = prop.computeScale(level);
+            switch (prop.getKey()) {
+                case "Hitpoints" -> {
+                    hitpoints *= scale;
+                    maxHitpoints *= scale;
+                    armorScale = scale;
+                }
+                case "EatDPS" -> eatDPS *= scale;
+                case "Speed" -> { speed *= scale; currentSpeed *= scale; }
+                case "WavePointCost" -> wavePointCost = (int)(wavePointCost * scale);
+                default -> applyCustomScaledProperty(prop.getKey(), scale);
+            }
+        }
+        if (armor != null) armor.scaleHealth(armorScale);
+    }
+
+    protected void applyCustomScaledProperty(String key, double scale) {}
+
     public abstract void onSpawn();
     public void onUpdate(float delta, BattleController controller) { }
     public abstract void onDestroy();

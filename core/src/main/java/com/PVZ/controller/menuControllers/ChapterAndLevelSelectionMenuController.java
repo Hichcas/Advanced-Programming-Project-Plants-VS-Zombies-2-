@@ -41,12 +41,22 @@ public class ChapterAndLevelSelectionMenuController {
         if (chapterName == null || chapterName.isBlank()) {
             return new OutputDTO(false, "Invalid chapter.");
         }
-        ChapterConfig config = ChapterLibrary.getChapterConfig(chapterName.trim());
+        String name = chapterName.trim();
+        if (name.matches("\\d+")) {
+            int index = Integer.parseInt(name);
+            com.PVZ.model.enums.ChapterEnum[] chapters = com.PVZ.model.enums.ChapterEnum.values();
+            if (index < 1 || index > chapters.length) {
+                return new OutputDTO(false, "Invalid chapter number: " + index
+                    + ". Available: 1-" + chapters.length);
+            }
+            name = chapters[index - 1].name();
+        }
+        ChapterConfig config = ChapterLibrary.getChapterConfig(name);
         if (config == null) {
             return new OutputDTO(false, "Unknown chapter: " + chapterName);
         }
-        AppStatus.currentChapterName = chapterName.trim();
-        AppStatus.currentChapter = ChapterLibrary.getChapter(chapterName.trim());
+        AppStatus.currentChapterName = name;
+        AppStatus.currentChapter = ChapterLibrary.getChapter(name);
         AppStatus.currentStageNumber = (stage != null && stage > 0) ? stage : 1;
         AppStatus.selectedPlants.clear();
         AppStatus.boostedPlants.clear();

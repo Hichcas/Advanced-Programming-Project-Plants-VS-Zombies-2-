@@ -100,6 +100,11 @@ public class RegularZombieEngine implements ZombieEngine{
     public Zombie spawnZombie(String alias, int row, int col) {
         if (map == null || !map.isWithinBounds(row, col)) return null;
         Zombie zombie = ZombieType.fromAlias(alias).create();
+        if (com.PVZ.model.status.AppStatus.currentUser != null
+                && com.PVZ.model.status.AppStatus.currentUser.appStats != null) {
+            zombie.applyDifficultyScaling(
+                com.PVZ.model.status.AppStatus.currentUser.appStats.getDifficultyLevel());
+        }
         Tile tile = map.getTile(row, col);
         float y = tile.getY() + (tile.getHeight() - 70f) / 2f;
         float x = tile.getX() + tile.getWidth();
