@@ -1,6 +1,7 @@
 package com.PVZ.model.game;
 
 import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.Sun;
 import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
@@ -123,7 +124,23 @@ public class UpdateHandler {
         double landingX = tile.getX() + tile.getWidth() / 2.0;
         double groundY = tile.getY() + tile.getHeight() / 2.0;
         double startY = engine.map.getStartY() + engine.map.getTileHeight() * 2.0;
-        engine.sunManager.spawnFalling(landingX, startY, 25, groundY);
+
+        // Sky sun type roll per spec: 80% normal (25 sun), 5% special (100 sun),
+        // 15% radioactive (explodes if harvested mid-air; turns into a normal sun on landing).
+        Sun.SunType type;
+        int amount;
+        int roll = engine.random.nextInt(100);
+        if (roll < 80) {
+            type = Sun.SunType.NORMAL;
+            amount = 25;
+        } else if (roll < 85) {
+            type = Sun.SunType.SPECIAL;
+            amount = 100;
+        } else {
+            type = Sun.SunType.RADIOACTIVE;
+            amount = 25;
+        }
+        engine.sunManager.spawnFalling(landingX, startY, amount, groundY, type);
     }
 
     // ---------- Game Over ----------
