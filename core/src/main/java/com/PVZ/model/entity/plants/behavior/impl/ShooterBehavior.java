@@ -45,13 +45,15 @@ public class ShooterBehavior implements PlantBehavior {
         int damage = Math.max(0, plant.getStats().getDamage());
         double damageMultiplier = plant.getStats().getDoubleExtra("damageMultiplier", 1.0);
         if (plant.isPlantFoodActive()) {
-            damageMultiplier = Math.max(damageMultiplier, plant.getStats().getDoubleExtra("plantFoodDamageMultiplier", 2.0));
+            damageMultiplier = Math.max(damageMultiplier, plant.getStats().getDoubleExtra("plantFoodDamageMultiplier",
+                    2.0));
         }
         damage = (int) Math.round(damage * damageMultiplier);
 
         int projectileCount = Math.max(1, plant.getStats().getIntExtra("projectileCount", 1));
         if (plant.isPlantFoodActive()) {
-            projectileCount = Math.max(projectileCount, plant.getStats().getIntExtra("plantFoodProjectileCount", projectileCount));
+            projectileCount = Math.max(projectileCount, plant.getStats().getIntExtra("plantFoodProjectileCount",
+                    projectileCount));
         }
 
         for (int i = 0; i < projectileCount; i++) {

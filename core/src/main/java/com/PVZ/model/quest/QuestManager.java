@@ -121,7 +121,8 @@ public class QuestManager {
 
     public void updateChapterQuests() {
         ChapterEnum[] chapters = ChapterEnum.values();
-        boolean anyClaimed = activeQuests.stream().anyMatch(q -> q.getId().startsWith("story_chapter_hunt_") && q.isClaimed());
+        boolean anyClaimed = activeQuests.stream().anyMatch(q -> q.getId().startsWith("story_chapter_hunt_") && q
+                .isClaimed());
         String firstId = "story_chapter_hunt_" + chapters[0].name();
         boolean firstExists = activeQuests.stream().anyMatch(q -> q.getId().equals(firstId));
         if (!anyClaimed && !firstExists) {
@@ -166,7 +167,8 @@ public class QuestManager {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Enum<T>> T getParamAsEnum(java.util.Map<String, Object> params, String key, Class<T> enumClass, T fallback) {
+    private <T extends Enum<T>> T getParamAsEnum(java.util.Map<String, Object> params, String key, Class<T> enumClass,
+            T fallback) {
         Object obj = params.get(key);
         if (obj == null) return fallback;
         if (enumClass.isInstance(obj)) return (T) obj;
@@ -325,8 +327,10 @@ public class QuestManager {
             if (q.isCompleted() || q.isClaimed()) continue;
 
             switch (q.getConditionKey()) {
-                case "symmetry" -> { if (result.getFinalMap() != null && checkSymmetry(result.getFinalMap())) q.setCompleted(true); }
-                case "no_symmetry" -> { if (result.getFinalMap() != null && checkNoSymmetry(result.getFinalMap())) q.setCompleted(true); }
+                case "symmetry" -> { if (result.getFinalMap() != null && checkSymmetry(result.getFinalMap())) q
+                        .setCompleted(true); }
+                case "no_symmetry" -> { if (result.getFinalMap() != null && checkNoSymmetry(result.getFinalMap())) q
+                        .setCompleted(true); }
                 case "column_empty" -> {
                     if (result.getFinalMap() != null) {
                         int col = (int) q.getParameters().get("col");

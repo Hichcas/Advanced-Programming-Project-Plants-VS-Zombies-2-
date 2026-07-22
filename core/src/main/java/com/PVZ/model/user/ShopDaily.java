@@ -90,7 +90,8 @@ public class ShopDaily {
 
         Set<PlantType> unlocked = currentUser.collectionState.getUnlockedPlants();
         if (unlocked == null || unlocked.isEmpty()) {
-            System.err.println("Error in " + getClass().getName() + ".generateIfNeeded(): No unlocked plants available.");
+            System.err.println("Error in " + getClass().getName() +
+                    ".generateIfNeeded(): No unlocked plants available.");
             return false;
         }
 

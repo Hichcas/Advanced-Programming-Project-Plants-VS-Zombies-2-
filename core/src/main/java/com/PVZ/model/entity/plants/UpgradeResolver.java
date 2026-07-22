@@ -73,11 +73,14 @@ public final class UpgradeResolver {
             case COST -> stats.setCost(applyInt(stats.getCost(), operation, value));
             case HP -> stats.setMaxHp(applyInt(stats.getMaxHp(), operation, value));
             case DAMAGE -> stats.setDamage(applyInt(stats.getDamage(), operation, value));
-            case COOLDOWN, RECHARGE -> stats.setRechargeSeconds(applyDouble(stats.getRechargeSeconds(), operation, value));
-            case PRODUCTION_TIME -> stats.setProductionTimeSeconds(applyDouble(stats.getProductionTimeSeconds(), operation, value));
+            case COOLDOWN, RECHARGE -> stats.setRechargeSeconds(applyDouble(stats.getRechargeSeconds(), operation,
+                    value));
+            case PRODUCTION_TIME -> stats.setProductionTimeSeconds(applyDouble(stats.getProductionTimeSeconds(),
+                    operation, value));
             case GROW_TIME -> stats.setGrowthTimeSeconds(applyDouble(stats.getGrowthTimeSeconds(), operation, value));
             case CHARGE_TIME -> stats.setChargeTimeSeconds(applyDouble(stats.getChargeTimeSeconds(), operation, value));
-            case PLANT_FOOD_CHANCE -> stats.setPlantFoodChancePercent(applyDouble(stats.getPlantFoodChancePercent(), operation, value));
+            case PLANT_FOOD_CHANCE -> stats.setPlantFoodChancePercent(applyDouble(stats.getPlantFoodChancePercent(),
+                    operation, value));
             case FREEZE_TIME -> stats.setFreezeTimeSeconds(applyDouble(stats.getFreezeTimeSeconds(), operation, value));
             case CHILL_TIME -> stats.setChillTimeSeconds(applyDouble(stats.getChillTimeSeconds(), operation, value));
             case SUN_AMOUNT -> stats.setSunAmount(applyInt(stats.getSunAmount(), operation, value));

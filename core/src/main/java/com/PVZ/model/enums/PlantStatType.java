@@ -54,7 +54,8 @@ public enum PlantStatType {
             case "cost" -> COST;
             case "hp", "health" -> HP;
             case "dmg", "damage" -> DAMAGE;
-            case "dmg_tick", "dmgpertick", "damagepertick", "damage_per_tick", "damage_per_second", "dps" -> DAMAGE_PER_TICK;
+            case "dmg_tick", "dmgpertick", "damagepertick", "damage_per_tick", "damage_per_second",
+                    "dps" -> DAMAGE_PER_TICK;
             case "cooldown" -> COOLDOWN;
             case "recharge" -> RECHARGE;
             case "prodtime", "productiontime" -> PRODUCTION_TIME;

@@ -64,7 +64,8 @@ public abstract class AbstractZomboss extends Zombie {
             if (currentPhase == 2) threshold = phaseTransitionThreshold * 0.5;
             if (hpRatio <= threshold) {
                 currentPhase++;
-                System.out.println("[" + alias + "] advanced to PHASE " + currentPhase + " (HP ratio=" + String.format("%.2f", hpRatio) + ")");
+                System.out.println("[" + alias + "] advanced to PHASE " + currentPhase + " (HP ratio=" + String.format(
+                        "%.2f", hpRatio) + ")");
                 onPhaseTransition(ctrl);
                 abilityTimer = Math.max(abilityTimer, 1.0f);
             }

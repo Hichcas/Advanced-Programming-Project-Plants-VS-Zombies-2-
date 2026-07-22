@@ -99,16 +99,20 @@ public enum ZombieType {
             public Zombie create() { return new ZombieCamel(); }
       },
       GARGANTUAR_BASIC("ZombieGargantuarBasic") {
-            public Zombie create() { return new ZombieGargantuar("ZombieGargantuarBasic", ZombieGargantuar.Theme.BASIC); }
+            public Zombie create() { return new ZombieGargantuar("ZombieGargantuarBasic", ZombieGargantuar.Theme
+                    .BASIC); }
       },
       GARGANTUAR_EGYPT("ZombieEgyptGargantuar") {
-            public Zombie create() { return new ZombieGargantuar("ZombieEgyptGargantuar", ZombieGargantuar.Theme.EGYPT); }
+            public Zombie create() { return new ZombieGargantuar("ZombieEgyptGargantuar", ZombieGargantuar.Theme
+                    .EGYPT); }
       },
       GARGANTUAR_ICEAGE("ZombieIceAgeGargantuar") {
-            public Zombie create() { return new ZombieGargantuar("ZombieIceAgeGargantuar", ZombieGargantuar.Theme.ICEAGE); }
+            public Zombie create() { return new ZombieGargantuar("ZombieIceAgeGargantuar", ZombieGargantuar.Theme
+                    .ICEAGE); }
       },
       GARGANTUAR_BEACH("ZombieBeachGargantuar") {
-            public Zombie create() { return new ZombieGargantuar("ZombieBeachGargantuar", ZombieGargantuar.Theme.BEACH); }
+            public Zombie create() { return new ZombieGargantuar("ZombieBeachGargantuar", ZombieGargantuar.Theme
+                    .BEACH); }
       },
       GARGANTUAR_DARK("ZombieDarkGargantuar") {
             public Zombie create() { return new ZombieGargantuar("ZombieDarkGargantuar", ZombieGargantuar.Theme.DARK); }

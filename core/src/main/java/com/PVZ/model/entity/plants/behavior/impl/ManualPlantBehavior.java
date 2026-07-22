@@ -83,7 +83,8 @@ public class ManualPlantBehavior implements PlantBehavior {
     }
 
     private void handleInstantSun(PlantInstance plant, BehaviorContext context, int row, int col) {
-        boolean triggered = asBoolean(plant.getRuntimeState().getOrDefault("instantSunTriggered", Boolean.FALSE), false);
+        boolean triggered = asBoolean(plant.getRuntimeState().getOrDefault("instantSunTriggered", Boolean.FALSE),
+                false);
         if (triggered) {
             return;
         }
@@ -95,7 +96,8 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (amount <= 0) {
             amount = 375;
         }
-        System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col + ")");
+        System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col +
+                ")");
         context.spawnSunAt(row, col, amount);
         plant.putRuntimeState("instantSunTriggered", Boolean.TRUE);
         context.removePlant(row, col);
@@ -192,7 +194,8 @@ public class ManualPlantBehavior implements PlantBehavior {
         plant.putRuntimeState("meleeTimer", timer);
     }
 
-    private void handleSunBeanLike(PlantInstance plant, BehaviorContext context, int row, int col, int lane, double deltaTime) {
+    private void handleSunBeanLike(PlantInstance plant, BehaviorContext context, int row, int col, int lane,
+            double deltaTime) {
         List<Zombie> zombies = context.getZombiesInLane(lane);
         if (zombies.isEmpty()) {
             return;
@@ -205,7 +208,8 @@ public class ManualPlantBehavior implements PlantBehavior {
             if (amount <= 0) {
                 amount = 5;
             }
-            System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col + ")");
+            System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col +
+                    ")");
             context.spawnSunAt(row, col, amount);
             timer = 0.0;
         }

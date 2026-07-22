@@ -50,7 +50,8 @@ public class UtilityLaneBehavior implements PlantBehavior {
 
 
     @Override
-    public void onDamaged(PlantInstance plant, BehaviorContext context, Zombie attacker, int damageAmount, boolean destroyed) {
+    public void onDamaged(PlantInstance plant, BehaviorContext context, Zombie attacker, int damageAmount,
+            boolean destroyed) {
         if (plant == null || context == null || attacker == null) {
             return;
         }

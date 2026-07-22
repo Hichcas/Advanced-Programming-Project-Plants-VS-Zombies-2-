@@ -26,13 +26,15 @@ public enum GreenhouseCommand {
     COLLECT("^\\s*collect\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public GreenhouseInputDTO createDTO(Matcher matcher) {
-            return new GreenhouseInputDTO(this, Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y")), null);
+            return new GreenhouseInputDTO(this, Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group(
+                    "y")), null);
         }
     },
     GROW("^\\s*grow\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public GreenhouseInputDTO createDTO(Matcher matcher) {
-            return new GreenhouseInputDTO(this, Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y")), null);
+            return new GreenhouseInputDTO(this, Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group(
+                    "y")), null);
         }
     },
     ENTER_SHOP("^\\s*enter\\s+shop\\s*$") {

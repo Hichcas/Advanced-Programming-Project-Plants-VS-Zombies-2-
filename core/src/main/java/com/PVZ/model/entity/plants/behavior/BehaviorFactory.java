@@ -69,14 +69,17 @@ public final class BehaviorFactory {
         }
 
         return switch (normalize(behaviorId)) {
-            case "sun_producer", "sunproducer", "produce_sun", "sun", "sun_burst", "sun_production", "growing_sun" -> new SunProducerBehavior();
+            case "sun_producer", "sunproducer", "produce_sun", "sun", "sun_burst", "sun_production",
+                    "growing_sun" -> new SunProducerBehavior();
             case "instant_sun" -> new ManualPlantBehavior(definition, definition.getBaseAbility());
-            case "shooter", "pea_shooter", "peashooter", "direct_shot", "burst_shot", "fire_shot", "ice_shot", "poison_shot", "piercing_shot", "homing_shot", "target_lock" -> new ShooterBehavior();
+            case "shooter", "pea_shooter", "peashooter", "direct_shot", "burst_shot", "fire_shot", "ice_shot",
+                    "poison_shot", "piercing_shot", "homing_shot", "target_lock" -> new ShooterBehavior();
             case "lobber", "lobber_kernel", "lob", "bounce_shot", "pult" -> new LobberBehavior();
             case "explosive", "bomb", "mine", "aoe", "burst_explode", "lane_clear" -> new ExplosiveBehavior();
             case "wall", "wall_nut", "defense", "wall_defense" -> new WallBehavior();
             case "mint", "mint_family_buff", "family_buff" -> new MintBehavior();
-            case "modifier", "utility", "water_support", "copy_plant" -> new ManualPlantBehavior(definition, definition.getBaseAbility());
+            case "modifier", "utility", "water_support", "copy_plant" -> new ManualPlantBehavior(definition, definition
+                    .getBaseAbility());
             case "magnet_disarm" -> new UtilityLaneBehavior(UtilityLaneBehavior.Mode.MAGNET_DISARM);
             case "move_zombies" -> new UtilityLaneBehavior(UtilityLaneBehavior.Mode.MOVE_ZOMBIES);
             case "hypnotize" -> new UtilityLaneBehavior(UtilityLaneBehavior.Mode.HYPNOTIZE);
@@ -122,7 +125,8 @@ public final class BehaviorFactory {
             };
         }
 
-        if ("burst_shot".equals(normalized) || "multi_shot".equals(normalized) || "double_projectile".equals(normalized)) {
+        if ("burst_shot".equals(normalized) || "multi_shot".equals(normalized) || "double_projectile".equals(
+                normalized)) {
             return (plant, context) -> {
                 int duration = plantFood.getIntParam("durationSeconds", 5);
                 int projectiles = plantFood.getIntParam("projectiles", 5);

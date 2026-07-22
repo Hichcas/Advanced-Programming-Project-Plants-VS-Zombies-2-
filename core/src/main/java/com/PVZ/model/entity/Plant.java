@@ -163,7 +163,8 @@ public class Plant {
     private com.badlogic.gdx.graphics.Texture buildBodyTexture() {
         int w = 64;
         int h = 64;
-        com.badlogic.gdx.graphics.Pixmap pixmap = new com.badlogic.gdx.graphics.Pixmap(w, h, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+        com.badlogic.gdx.graphics.Pixmap pixmap = new com.badlogic.gdx.graphics.Pixmap(w, h, com.badlogic.gdx.graphics
+                .Pixmap.Format.RGBA8888);
         // simple deterministic color per plant type so different plants are visually distinct
         int hash = getType() != null ? getType().name().hashCode() : 0;
         float r = 0.3f + ((hash & 0xFF) / 255f) * 0.6f;

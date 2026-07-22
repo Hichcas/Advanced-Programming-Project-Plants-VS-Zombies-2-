@@ -66,7 +66,8 @@ public class InGameMenuController {
 
             case PLANT_PLANT -> engine == null
                     ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, colorizeIfLocked(engine.plantPlant(dto.getPlantType(), dto.getX(), dto.getY())));
+                    : new OutputDTO(true, colorizeIfLocked(engine.plantPlant(dto.getPlantType(), dto.getX(), dto.getY(
+                            ))));
 
             case PLUCK_PLANT -> engine == null
                     ? new OutputDTO(false, "Game engine is not ready.")

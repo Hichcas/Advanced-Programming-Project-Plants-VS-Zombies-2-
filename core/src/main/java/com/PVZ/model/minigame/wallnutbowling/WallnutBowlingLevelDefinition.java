@@ -45,10 +45,12 @@ public class WallnutBowlingLevelDefinition {
     public void setWaveIntervalSeconds(double waveIntervalSeconds) { this.waveIntervalSeconds = waveIntervalSeconds; }
 
     public double getMinWaveIntervalSeconds() { return minWaveIntervalSeconds; }
-    public void setMinWaveIntervalSeconds(double minWaveIntervalSeconds) { this.minWaveIntervalSeconds = minWaveIntervalSeconds; }
+    public void setMinWaveIntervalSeconds(double minWaveIntervalSeconds) { this
+            .minWaveIntervalSeconds = minWaveIntervalSeconds; }
 
     public double getWaveIntervalDecreasePerWave() { return waveIntervalDecreasePerWave; }
-    public void setWaveIntervalDecreasePerWave(double waveIntervalDecreasePerWave) { this.waveIntervalDecreasePerWave = waveIntervalDecreasePerWave; }
+    public void setWaveIntervalDecreasePerWave(double waveIntervalDecreasePerWave) { this
+            .waveIntervalDecreasePerWave = waveIntervalDecreasePerWave; }
 
     public double getNutSpeed() { return nutSpeed; }
     public void setNutSpeed(double nutSpeed) { this.nutSpeed = nutSpeed; }
@@ -60,5 +62,6 @@ public class WallnutBowlingLevelDefinition {
     public void setExplosionDamage(Double explosionDamage) { this.explosionDamage = explosionDamage; }
 
     public Double getLaunchCooldownSeconds() { return launchCooldownSeconds; }
-    public void setLaunchCooldownSeconds(Double launchCooldownSeconds) { this.launchCooldownSeconds = launchCooldownSeconds; }
+    public void setLaunchCooldownSeconds(Double launchCooldownSeconds) { this
+            .launchCooldownSeconds = launchCooldownSeconds; }
 }

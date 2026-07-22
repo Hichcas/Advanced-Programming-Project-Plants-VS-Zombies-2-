@@ -31,9 +31,11 @@ public class SunProducerBehavior implements PlantBehavior {
             if (timer >= 1.0) {
                 int amount = plant.getStats().getSunDropAmount();
                 if (amount <= 0) {
-                    amount = plant.getDefinition() != null && "Sun Bean".equalsIgnoreCase(plant.getDefinition().getName()) ? 5 : 5;
+                    amount = plant.getDefinition() != null && "Sun Bean".equalsIgnoreCase(plant.getDefinition().getName(
+                            )) ? 5 : 5;
                 }
-                System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col + ")");
+                System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " +
+                        col + ")");
                 context.spawnSunAt(row, col, amount);
                 timer = 0.0;
             }
@@ -48,11 +50,13 @@ public class SunProducerBehavior implements PlantBehavior {
             if (!sunAmounts.isEmpty()) {
                 double timer = asDouble(plant.getRuntimeState().getOrDefault("growthTimer", 0.0), 0.0);
                 int stage = asInt(plant.getRuntimeState().getOrDefault("growthStage", 0), 0);
-                boolean triggered = asBoolean(plant.getRuntimeState().getOrDefault("growthTriggered", Boolean.FALSE), false);
+                boolean triggered = asBoolean(plant.getRuntimeState().getOrDefault("growthTriggered", Boolean.FALSE),
+                        false);
 
                 if (!triggered && stage == 0) {
                     int amount = asInt(sunAmounts.get(0), plant.getStats().getSunAmount());
-                    System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col + ")");
+                    System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row +
+                            ", " + col + ")");
                     context.spawnSunAt(row, col, amount);
                     plant.putRuntimeState("growthTriggered", Boolean.TRUE);
                 }
@@ -64,8 +68,10 @@ public class SunProducerBehavior implements PlantBehavior {
                         break;
                     }
                     stage++;
-                    int amount = asInt(sunAmounts.get(Math.min(stage, sunAmounts.size() - 1)), plant.getStats().getSunAmount());
-                    System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col + ")");
+                    int amount = asInt(sunAmounts.get(Math.min(stage, sunAmounts.size() - 1)), plant.getStats()
+                            .getSunAmount());
+                    System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row +
+                            ", " + col + ")");
                     context.spawnSunAt(row, col, amount);
                 }
 
@@ -97,7 +103,8 @@ public class SunProducerBehavior implements PlantBehavior {
             if (plant.getStats().hasFlag(com.PVZ.model.enums.PlantFlag.DOUBLE_SUN_CHANCE) && Math.random() < 0.5) {
                 amount *= 2;
             }
-            System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col + ")");
+            System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col +
+                    ")");
             context.spawnSunAt(row, col, amount);
         }
 
@@ -106,7 +113,8 @@ public class SunProducerBehavior implements PlantBehavior {
 
 
     @Override
-    public void onDamaged(PlantInstance plant, BehaviorContext context, Zombie attacker, int damageAmount, boolean destroyed) {
+    public void onDamaged(PlantInstance plant, BehaviorContext context, Zombie attacker, int damageAmount,
+            boolean destroyed) {
         if (plant == null || context == null) {
             return;
         }
