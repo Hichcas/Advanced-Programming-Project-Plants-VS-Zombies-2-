@@ -24,6 +24,11 @@ public class ZombieArmor {
 
     public double getHealth() { return currentHealth; }
 
+    public void scaleHealth(double factor) {
+        baseHealth *= factor;
+        currentHealth *= factor;
+    }
+
     public void takeDamage(double amount) {
         currentHealth = Math.max(0, currentHealth - amount);
     }

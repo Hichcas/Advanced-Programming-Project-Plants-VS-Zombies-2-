@@ -28,6 +28,13 @@ public class ZombieDark extends AbstractBasicZombie {
         return list;
     }
 
+    @Override
+    protected void applyCustomScaledProperty(String key, double scale) {
+        if ("Hitpoints".equals(key) && secondaryArmor != null) {
+            secondaryArmor.scaleHealth(scale);
+        }
+    }
+
     public ZombieArmor getSecondaryArmor() { return secondaryArmor; }
 
     @Override
