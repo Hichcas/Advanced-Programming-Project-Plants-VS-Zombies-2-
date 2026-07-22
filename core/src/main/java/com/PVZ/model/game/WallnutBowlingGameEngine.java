@@ -8,6 +8,9 @@ import com.PVZ.model.minigame.wallnutbowling.BowlingNut;
 import com.PVZ.model.minigame.wallnutbowling.NutType;
 import com.PVZ.model.minigame.wallnutbowling.WallnutBowlingGame;
 import com.PVZ.model.minigame.wallnutbowling.WallnutBowlingTexturePaths;
+import com.PVZ.model.enums.MinigameEnum;
+import com.PVZ.model.status.AppStatus;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Texture;
@@ -260,6 +263,12 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
             if (z != null && !z.isDead()) return;
         }
         game.markWon();
+        if (AppStatus.currentUser != null) {
+            if (AppStatus.currentUser.progressState != null) {
+                AppStatus.currentUser.progressState.clearMinigameStage(MinigameEnum.WALLNUT_BOWLING);
+            }
+            UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
+        }
     }
 
     @Override
