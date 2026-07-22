@@ -72,7 +72,7 @@ public class CollectionMenuController {
         StringJoiner joiner = new StringJoiner("\n");
         if (all) {
             for (ZombieType type : ZombieType.values()) {
-                joiner.add(type.name());
+                joiner.add(type.alias);
             }
             return new OutputDTO(true, joiner.toString());
         }
@@ -80,7 +80,7 @@ public class CollectionMenuController {
             return new OutputDTO(true, "No seen zombies yet.");
         }
         for (ZombieType type : state.getSeenZombies()) {
-            joiner.add(type.name());
+            joiner.add(type.alias);
         }
         return new OutputDTO(true, joiner.toString());
     }

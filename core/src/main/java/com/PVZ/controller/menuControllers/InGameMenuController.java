@@ -2,6 +2,7 @@ package com.PVZ.controller.menuControllers;
 
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.TileType;
+import com.PVZ.model.enums.ZombieType;
 import com.PVZ.model.game.BattleController;
 import com.PVZ.model.game.GameEngine;
 import com.PVZ.model.game.RegularGameEngine;
@@ -11,6 +12,7 @@ import com.PVZ.view.input.DTO.InGameInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class InGameMenuController {
@@ -154,8 +156,21 @@ public class InGameMenuController {
             return new OutputDTO(false, "Invalid position: (" + x + ", " + row + "). Must be col 0-8, row 0-4.");
         }
 
-        rge.getZombieEngine().spawnZombie(alias, row, x);
-        return new OutputDTO(true, "Zombie spawned: " + alias + " at row " + row);
+        String resolvedAlias = alias;
+        try {
+            ZombieType.fromAlias(alias);
+        } catch (IllegalArgumentException e) {
+            resolvedAlias = Arrays.stream(ZombieType.values())
+                    .filter(z -> z.name().equalsIgnoreCase(alias))
+                    .findFirst()
+                    .map(z -> z.alias)
+                    .orElse(null);
+            if (resolvedAlias == null) {
+                return new OutputDTO(false, "Unknown zombie: " + alias);
+            }
+        }
+        rge.getZombieEngine().spawnZombie(resolvedAlias, row, x);
+        return new OutputDTO(true, "Zombie spawned: " + resolvedAlias + " at row " + row);
     }
 
     private OutputDTO setTileWater(InGameInputDTO dto) {
