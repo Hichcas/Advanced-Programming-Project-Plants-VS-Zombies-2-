@@ -62,31 +62,44 @@ public final class ZombieFactory {
         throw new IllegalArgumentException("Unknown zombie alias: " + alias);
     }
 
-    /**
-     * Handles basic tutorial zombies without armor or with simple armor.
-     */
+    // ---------- Basic zombies ----------
+
     private static Zombie createBasicZombie(String alias) {
         return switch (alias) {
-            case "ZombieTutorialDefault" -> new ZombieTutorial(alias, null);
-            case "ZombieTutorialFlagDefault" -> new ZombieTutorial(alias, null);
+            case "ZombieTutorialDefault", "ZombieTutorialFlagDefault" ->
+                new ZombieTutorial(alias, null);
             default -> null;
         };
     }
 
-    /**
-     * Handles zombies with armor (cone, bucket, brick, etc.) grouped by theme.
-     */
+    // ---------- Armored zombies (delegated to theme methods) ----------
+
     private static Zombie createArmoredZombie(String alias) {
+        Zombie z = createTutorialArmored(alias);
+        if (z != null) return z;
+        z = createMummyArmored(alias);
+        if (z != null) return z;
+        z = createIceageArmored(alias);
+        if (z != null) return z;
+        z = createBeachArmored(alias);
+        if (z != null) return z;
+        return createDarkArmored(alias);
+    }
+
+    private static Zombie createTutorialArmored(String alias) {
         return switch (alias) {
-            // Tutorial armored variants
             case "ZombieTutorialArmor1Default" ->
                 new ZombieTutorial(alias, createArmor(ZombieArmor.ArmorType.CONE, 370, true, false, true));
             case "ZombieTutorialArmor2Default" ->
                 new ZombieTutorial(alias, createArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true, true));
             case "ZombieTutorialArmor4Default" ->
                 new ZombieTutorial(alias, createArmor(ZombieArmor.ArmorType.BRICK, 2200, true, false, true));
+            default -> null;
+        };
+    }
 
-            // Mummy armored variants
+    private static Zombie createMummyArmored(String alias) {
+        return switch (alias) {
             case "ZombieMummyDefault" -> new ZombieMummy(alias, null);
             case "ZombieMummyArmor1Default" ->
                 new ZombieMummy(alias, createArmor(ZombieArmor.ArmorType.CONE, 370, true, false, true));
@@ -94,8 +107,12 @@ public final class ZombieFactory {
                 new ZombieMummy(alias, createArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true, true));
             case "ZombieMummyArmor4Default" ->
                 new ZombieMummy(alias, createArmor(ZombieArmor.ArmorType.BRICK, 2200, true, false, true));
+            default -> null;
+        };
+    }
 
-            // Iceage armored variants
+    private static Zombie createIceageArmored(String alias) {
+        return switch (alias) {
             case "ZombieIceageDefault" -> new ZombieIceage(alias, null);
             case "ZombieIceageArmor1Default" ->
                 new ZombieIceage(alias, createArmor(ZombieArmor.ArmorType.CONE, 370, true, false, true));
@@ -103,15 +120,23 @@ public final class ZombieFactory {
                 new ZombieIceage(alias, createArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true, true));
             case "ZombieIceageArmor3Default" ->
                 new ZombieIceage(alias, createArmor(ZombieArmor.ArmorType.ICE_BLOCK, 800, false, false, true));
+            default -> null;
+        };
+    }
 
-            // Beach armored variants
+    private static Zombie createBeachArmored(String alias) {
+        return switch (alias) {
             case "ZombieBeachDefault" -> new ZombieBeach(alias, null);
             case "ZombieBeachArmor1Default" ->
                 new ZombieBeach(alias, createArmor(ZombieArmor.ArmorType.CONE, 370, true, false, true));
             case "ZombieBeachArmor2Default" ->
                 new ZombieBeach(alias, createArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true, true));
+            default -> null;
+        };
+    }
 
-            // Dark armored variants
+    private static Zombie createDarkArmored(String alias) {
+        return switch (alias) {
             case "ZombieDarkDefault" -> new ZombieDark(alias, null);
             case "ZombieDarkArmor1Default" ->
                 new ZombieDark(alias, createArmor(ZombieArmor.ArmorType.CONE, 370, true, false, true));
@@ -123,14 +148,12 @@ public final class ZombieFactory {
                     createArmor(ZombieArmor.ArmorType.CROWN, 1600, true, true, true));
             case "ZombieDarkArmor4Default" ->
                 new ZombieDark(alias, createArmor(ZombieArmor.ArmorType.BRICK, 2200, true, false, true));
-
             default -> null;
         };
     }
 
-    /**
-     * Handles Gargantuar and Imp zombies.
-     */
+    // ---------- Gargantuar & Imp ----------
+
     private static Zombie createGargantuarAndImp(String alias) {
         return switch (alias) {
             case "ZombieGargantuarBasic" ->
@@ -157,9 +180,8 @@ public final class ZombieFactory {
         };
     }
 
-    /**
-     * Handles special movement zombies (Pharaoh, Camel, Troglobite, Dodo, Weasel, etc.)
-     */
+    // ---------- Special movement zombies ----------
+
     private static Zombie createSpecialMovementZombie(String alias) {
         return switch (alias) {
             case "ZombiePharaohDefault" -> new ZombiePharaoh();
@@ -175,9 +197,8 @@ public final class ZombieFactory {
         };
     }
 
-    /**
-     * Handles ranged/caster zombies (Ra, Explorer, TombRaiser, Hunter, Fisherman, Octopus, Wizard, Juggler, King)
-     */
+    // ---------- Ranged / caster zombies ----------
+
     private static Zombie createRangedCasterZombie(String alias) {
         return switch (alias) {
             case "ZombieRaDefault" -> new ZombieRa();
@@ -193,9 +214,8 @@ public final class ZombieFactory {
         };
     }
 
-    /**
-     * Handles Zomboss mechs and Zombotany plants.
-     */
+    // ---------- Zomboss and Zombotany ----------
+
     private static Zombie createZombossAndZombotany(String alias) {
         return switch (alias) {
             case "ZombieZombossMechEgypt" -> new ZombieZombossMechEgypt();
@@ -210,9 +230,8 @@ public final class ZombieFactory {
         };
     }
 
-    /**
-     * Helper to create ZombieArmor instances with consistent parameters.
-     */
+    // ---------- Helper for armor creation ----------
+
     private static ZombieArmor createArmor(ZombieArmor.ArmorType type, int health,
                                            boolean canBeHypnotized, boolean isMetal, boolean isRemovable) {
         return new ZombieArmor(type, health, canBeHypnotized, isMetal, isRemovable);

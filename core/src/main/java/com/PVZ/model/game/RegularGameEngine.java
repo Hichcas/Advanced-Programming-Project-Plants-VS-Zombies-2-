@@ -921,7 +921,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return plantPlant(type, x, y);
     }
 
-    // =================== REFACTORED plantPlant ===================
+    // =================== REFACTORED plantPlant (now under 50 lines) ===================
     public String plantPlant(PlantType type, int x, int y) {
         if (map == null) {
             return "Map is not ready.";
