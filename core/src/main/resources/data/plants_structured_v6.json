@@ -174,10 +174,10 @@
     }
    },
    "plantFoodEffect": {
-    "kind": "INSTANT_SUN",
+    "kind": "CUSTOM",
     "raw": "رشد آنی به سایز آخر و تولید ۲۲۵ خورشید.",
     "params": {
-     "sunAmount": 225
+     "manualMappingRequired": true
     }
    },
    "upgrades": [
@@ -228,7 +228,9 @@
    "baseAbility": {
     "kind": "SUN_PRODUCTION",
     "raw": "تولید خورشید بزرگ ۷۵ تایی از ابتدا.",
-    "params": {}
+    "params": {
+     "sunAmount": 75
+    }
    },
    "plantFoodEffect": {
     "kind": "INSTANT_SUN",
