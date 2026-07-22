@@ -28,7 +28,9 @@ public enum ProfileCommand {
         }
     },
 
-    CHANGE_PASSWORD("^\\s*menu\\s+profile\\s+change-password\\s+-p\\s+(?<newPassword>\\S+)\\s+-o\\s+(?<oldPassword>\\S+)\\s*$") {
+    CHANGE_PASSWORD(
+            "^\\s*menu\\s+profile\\s+change-password\\s+-p\\s+(?<newPassword>\\S+)\\s+-o\\s+(?<oldPassword>\\S+)\\s*$")
+            {
         @Override
         public ProfileInputDTO createDTO(Matcher matcher) {
             return new ProfileInputDTO(

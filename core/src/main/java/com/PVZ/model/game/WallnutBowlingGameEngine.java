@@ -154,7 +154,8 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
                 applyTurn(nut);
             }
 
-            if (nut.getX() < map.getStartX() - 60 || nut.getX() > map.getStartX() + map.getTileWidth() * game.getCols() + 80) {
+            if (nut.getX() < map.getStartX() - 60 || nut.getX() > map.getStartX() + map.getTileWidth() * game.getCols(
+                    ) + 80) {
                 it.remove();
                 continue;
             }

@@ -44,7 +44,8 @@ public class ShopMenuController {
     }
 
     private String showCoins() {
-        return "coins : " + AppStatus.getCurrentUser().userStats.getCoins() + " and diamonds :" + AppStatus.getCurrentUser().userStats.getDiamonds();
+        return "coins : " + AppStatus.getCurrentUser().userStats.getCoins() + " and diamonds :" + AppStatus
+                .getCurrentUser().userStats.getDiamonds();
     }
 
     private String shopList() {
@@ -148,7 +149,8 @@ public class ShopMenuController {
                 user.userStats.spendCoins(cost);
                 PlantType[] unlocked = unlockedSet.toArray(new PlantType[0]);
                 Random rand = new Random();
-                log.append("Bought ").append(count).append(" random seed pack(s) for ").append(cost).append(" coins:\n");
+                log.append("Bought ").append(count).append(" random seed pack(s) for ").append(cost).append(
+                        " coins:\n");
                 for (int i = 0; i < count; i++) {
                     PlantType randomPlant = unlocked[rand.nextInt(unlocked.length)];
                     user.collectionState.addSeedPackets(randomPlant, 5);

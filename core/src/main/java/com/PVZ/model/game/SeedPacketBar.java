@@ -141,7 +141,8 @@ public class SeedPacketBar {
                 batch.draw(packet.getIcon(), b.x, b.y, b.width, b.height);
             } else {
                 font.setColor(Color.WHITE);
-                font.draw(batch, packet.getPlantType().getDisplayName(), b.x + 4, b.y + b.height - 8, b.width - 8, -1, true);
+                font.draw(batch, packet.getPlantType().getDisplayName(), b.x + 4, b.y + b.height - 8, b.width - 8, -1,
+                        true);
             }
 
             if (engine == null) {

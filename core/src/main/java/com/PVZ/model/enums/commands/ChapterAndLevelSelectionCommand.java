@@ -7,7 +7,8 @@ import java.util.regex.Pattern;
 
 public enum ChapterAndLevelSelectionCommand {
 
-    ENTER_CHAPTER("^\\s*menu\\s+enter\\s+chapter\\s+-c\\s+(?<chapterName>[A-Za-z0-9_-]+)(\\s+-s\\s+(?<stage>\\d+))?\\s*$") {
+    ENTER_CHAPTER(
+            "^\\s*menu\\s+enter\\s+chapter\\s+-c\\s+(?<chapterName>[A-Za-z0-9_-]+)(\\s+-s\\s+(?<stage>\\d+))?\\s*$") {
         @Override
         public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {
             String stageStr = matcher.group("stage");

@@ -68,7 +68,8 @@ public class BeghouledMenuController {
         sb.append(" Grid: ").append(level.getRows()).append("x").append(level.getCols()).append("\n");
         sb.append(" Target matches: ").append(level.getTargetMatches()).append("\n");
         sb.append(" Starting sun: ").append(level.getStartingSun()).append("\n");
-        sb.append(" Zombie spawn every: ").append(String.format("%.1f", level.getZombieSpawnIntervalSeconds())).append("s\n");
+        sb.append(" Zombie spawn every: ").append(String.format("%.1f", level.getZombieSpawnIntervalSeconds())).append(
+                "s\n");
         sb.append(" Board plants: ");
         if (level.getPlantTypes() != null) {
             for (String name : level.getPlantTypes()) {

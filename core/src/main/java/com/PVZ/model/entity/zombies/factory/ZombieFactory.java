@@ -19,48 +19,69 @@ public class ZombieFactory {
         return switch (alias) {
             case "ZombieTutorialDefault"       -> new ZombieTutorial("ZombieTutorialDefault", null);
             case "ZombieTutorialArmor1Default"  -> new ZombieTutorial("ZombieTutorialArmor1Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.CONE, 370, true, false, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.CONE, 370, true, false,
+                                                            true));
             case "ZombieTutorialArmor2Default"  -> new ZombieTutorial("ZombieTutorialArmor2Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true,
+                                                            true));
             case "ZombieTutorialArmor4Default"  -> new ZombieTutorial("ZombieTutorialArmor4Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.BRICK, 2200, true, false, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.BRICK, 2200, true, false,
+                                                            true));
             case "ZombieTutorialFlagDefault"    -> new ZombieTutorial("ZombieTutorialFlagDefault", null);
             case "ZombieMummyDefault"           -> new ZombieMummy("ZombieMummyDefault", null);
             case "ZombieMummyArmor1Default"     -> new ZombieMummy("ZombieMummyArmor1Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.CONE, 370, true, false, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.CONE, 370, true, false,
+                                                            true));
             case "ZombieMummyArmor2Default"     -> new ZombieMummy("ZombieMummyArmor2Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true,
+                                                            true));
             case "ZombieMummyArmor4Default"     -> new ZombieMummy("ZombieMummyArmor4Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.BRICK, 2200, true, false, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.BRICK, 2200, true, false,
+                                                            true));
             case "ZombieIceageDefault"          -> new ZombieIceage("ZombieIceageDefault", null);
             case "ZombieIceageArmor1Default"    -> new ZombieIceage("ZombieIceageArmor1Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.CONE, 370, true, false, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.CONE, 370, true, false,
+                                                            true));
             case "ZombieIceageArmor2Default"    -> new ZombieIceage("ZombieIceageArmor2Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true,
+                                                            true));
             case "ZombieIceageArmor3Default"    -> new ZombieIceage("ZombieIceageArmor3Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.ICE_BLOCK, 800, false, false, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.ICE_BLOCK, 800, false, false,
+                                                            true));
             case "ZombieBeachDefault"           -> new ZombieBeach("ZombieBeachDefault", null);
             case "ZombieBeachArmor1Default"     -> new ZombieBeach("ZombieBeachArmor1Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.CONE, 370, true, false, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.CONE, 370, true, false,
+                                                            true));
             case "ZombieBeachArmor2Default"     -> new ZombieBeach("ZombieBeachArmor2Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true,
+                                                            true));
             case "ZombieDarkDefault"            -> new ZombieDark("ZombieDarkDefault", null);
             case "ZombieDarkArmor1Default"      -> new ZombieDark("ZombieDarkArmor1Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.CONE, 370, true, false, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.CONE, 370, true, false,
+                                                            true));
             case "ZombieDarkArmor2Default"      -> new ZombieDark("ZombieDarkArmor2Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true,
+                                                            true));
             case "ZombieDarkArmor3Default"      -> new ZombieDark("ZombieDarkArmor3Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.SHOULDER_ARMOR, 1600, false, false, false),
-                                                    new ZombieArmor(ZombieArmor.ArmorType.CROWN, 1600, true, true, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.SHOULDER_ARMOR, 1600, false,
+                                                            false, false),
+                                                    new ZombieArmor(ZombieArmor.ArmorType.CROWN, 1600, true, true,
+                                                            true));
             case "ZombieDarkArmor4Default"      -> new ZombieDark("ZombieDarkArmor4Default",
-                                                    new ZombieArmor(ZombieArmor.ArmorType.BRICK, 2200, true, false, true));
+                                                    new ZombieArmor(ZombieArmor.ArmorType.BRICK, 2200, true, false,
+                                                            true));
             case "ZombiePharaohDefault"         -> new ZombiePharaoh();
             case "ZombieCamelDefault"           -> new ZombieCamel();
-            case "ZombieGargantuarBasic"        -> new ZombieGargantuar("ZombieGargantuarBasic", ZombieGargantuar.Theme.BASIC);
-            case "ZombieEgyptGargantuar"        -> new ZombieGargantuar("ZombieEgyptGargantuar", ZombieGargantuar.Theme.EGYPT);
-            case "ZombieIceAgeGargantuar"       -> new ZombieGargantuar("ZombieIceAgeGargantuar", ZombieGargantuar.Theme.ICEAGE);
-            case "ZombieBeachGargantuar"        -> new ZombieGargantuar("ZombieBeachGargantuar", ZombieGargantuar.Theme.BEACH);
-            case "ZombieDarkGargantuar"         -> new ZombieGargantuar("ZombieDarkGargantuar", ZombieGargantuar.Theme.DARK);
+            case "ZombieGargantuarBasic"        -> new ZombieGargantuar("ZombieGargantuarBasic", ZombieGargantuar.Theme
+                    .BASIC);
+            case "ZombieEgyptGargantuar"        -> new ZombieGargantuar("ZombieEgyptGargantuar", ZombieGargantuar.Theme
+                    .EGYPT);
+            case "ZombieIceAgeGargantuar"       -> new ZombieGargantuar("ZombieIceAgeGargantuar", ZombieGargantuar
+                    .Theme.ICEAGE);
+            case "ZombieBeachGargantuar"        -> new ZombieGargantuar("ZombieBeachGargantuar", ZombieGargantuar.Theme
+                    .BEACH);
+            case "ZombieDarkGargantuar"         -> new ZombieGargantuar("ZombieDarkGargantuar", ZombieGargantuar.Theme
+                    .DARK);
             case "ZombieTutorialImpDefault"     -> new ZombieImp("ZombieTutorialImpDefault", ZombieImp.Theme.BASIC);
             case "ZombieEgyptImpDefault"        -> new ZombieImp("ZombieEgyptImpDefault", ZombieImp.Theme.EGYPT);
             case "ZombieIceageImpDefault"       -> new ZombieImp("ZombieIceageImpDefault", ZombieImp.Theme.ICEAGE);

@@ -55,7 +55,8 @@ public class LobberBehavior implements PlantBehavior {
         }
         double damageMultiplier = plant.getStats().getDoubleExtra("damageMultiplier", 1.0);
         if (plant.isPlantFoodActive()) {
-            damageMultiplier = Math.max(damageMultiplier, plant.getStats().getDoubleExtra("plantFoodDamageMultiplier", 2.0));
+            damageMultiplier = Math.max(damageMultiplier, plant.getStats().getDoubleExtra("plantFoodDamageMultiplier",
+                    2.0));
         }
         damage = (int) Math.round(damage * damageMultiplier);
 

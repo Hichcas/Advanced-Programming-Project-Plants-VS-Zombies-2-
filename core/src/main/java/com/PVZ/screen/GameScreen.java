@@ -192,7 +192,8 @@ public class GameScreen extends BaseScreen {
             gameBatch.begin();
             gameOverFont.setColor(1, 1, 1, gameOverAlpha);
             String message = isWin ? "LEVEL COMPLETE!" : "GAME OVER";
-            com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout(gameOverFont, message);
+            com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout(
+                    gameOverFont, message);
             float x = VIRTUAL_WIDTH / 2f - layout.width / 2f;
             float y = VIRTUAL_HEIGHT / 2f + layout.height / 2f;
             gameOverFont.draw(gameBatch, message, x, y);

@@ -87,7 +87,8 @@ public class LoginMenuController {
     }
 
     private OutputDTO handleAnswer(LoginInputDTO input) {
-        if (resetState != ResetState.WAITING_FOR_ANSWER || pendingResetUser == null || pendingResetUser.profile == null) {
+        if (resetState != ResetState.WAITING_FOR_ANSWER || pendingResetUser == null || pendingResetUser
+                .profile == null) {
             return new OutputDTO(false, "Please use forget password first.");
         }
 
@@ -114,7 +115,8 @@ public class LoginMenuController {
     }
 
     private OutputDTO handleNewPassword(LoginInputDTO input) {
-        if (resetState != ResetState.WAITING_FOR_NEW_PASSWORD || pendingResetUser == null || pendingResetUser.profile == null) {
+        if (resetState != ResetState.WAITING_FOR_NEW_PASSWORD || pendingResetUser == null || pendingResetUser
+                .profile == null) {
             return new OutputDTO(false, "Please use forget password first.");
         }
 

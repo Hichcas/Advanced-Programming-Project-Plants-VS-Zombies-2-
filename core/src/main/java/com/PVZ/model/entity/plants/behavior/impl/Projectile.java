@@ -47,7 +47,8 @@ public class Projectile {
         initWorldPosition(worldX, worldY, worldSpeedPxPerSec, 0.0f);
     }
 
-    public void initWorldPosition(float worldX, float worldY, float worldSpeedPxPerSec, float worldVerticalSpeedPxPerSec) {
+    public void initWorldPosition(float worldX, float worldY, float worldSpeedPxPerSec,
+            float worldVerticalSpeedPxPerSec) {
         this.positionX = worldX;
         this.positionY = worldY;
         this.speed = worldSpeedPxPerSec;

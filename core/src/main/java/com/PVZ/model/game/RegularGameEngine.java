@@ -1321,7 +1321,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     private com.badlogic.gdx.graphics.Texture iceOverlayTexture() {
         if (iceOverlayTex == null) {
-            com.badlogic.gdx.graphics.Pixmap pm = new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+            com.badlogic.gdx.graphics.Pixmap pm = new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics
+                    .Pixmap.Format.RGBA8888);
             pm.setColor(0.4f, 0.7f, 1f, 1f);
             pm.fill();
             iceOverlayTex = new com.badlogic.gdx.graphics.Texture(pm);

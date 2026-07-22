@@ -41,7 +41,8 @@ public class MeleeEatBehavior implements PlantBehavior {
         int damage = Math.max(0, plant.getStats().getDamage());
         double damageMultiplier = plant.getStats().getDoubleExtra("damageMultiplier", 1.0);
         if (plant.isPlantFoodActive()) {
-            damageMultiplier = Math.max(damageMultiplier, plant.getStats().getDoubleExtra("plantFoodDamageMultiplier", 2.0));
+            damageMultiplier = Math.max(damageMultiplier, plant.getStats().getDoubleExtra("plantFoodDamageMultiplier",
+                    2.0));
         }
         damage = (int) Math.min(Integer.MAX_VALUE, Math.round(damage * damageMultiplier));
 

@@ -42,8 +42,10 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
                 context.spawnSunAt(row, col, amount);
             }
             case "burst_attack", "burst_shot", "multi_shot", "double_projectile" -> {
-                plant.getStats().putExtra("plantFoodProjectileCount", abilitySpec == null ? 5 : abilitySpec.getIntParam("projectiles", 5));
-                plant.getStats().putExtra("plantFoodDamageMultiplier", abilitySpec == null ? 2.0 : abilitySpec.getDoubleParam("damageMultiplier", 2.0));
+                plant.getStats().putExtra("plantFoodProjectileCount", abilitySpec == null ? 5 : abilitySpec.getIntParam(
+                        "projectiles", 5));
+                plant.getStats().putExtra("plantFoodDamageMultiplier", abilitySpec == null ? 2.0 : abilitySpec
+                        .getDoubleParam("damageMultiplier", 2.0));
                 plant.getStats().putExtra("burstAttack", Boolean.TRUE);
             }
             case "freeze_burst" -> {
@@ -161,7 +163,8 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
         }
     }
 
-    private void handleGenericCustom(PlantInstance plant, BehaviorContext context, int lane, int row, int col, String behaviorId) {
+    private void handleGenericCustom(PlantInstance plant, BehaviorContext context, int lane, int row, int col,
+            String behaviorId) {
         if (behaviorId.contains("burst")) {
             plant.getStats().putExtra("plantFoodProjectileCount", 5);
             plant.getStats().putExtra("plantFoodDamageMultiplier", 2.0);

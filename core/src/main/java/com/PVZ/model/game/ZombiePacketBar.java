@@ -75,14 +75,16 @@ public class ZombiePacketBar {
         for (ZombiePacket packet : packets) {
             Rectangle b = packet.getBounds();
             boolean affordable = game.getSun() >= packet.getOption().getCost();
-            boolean selected = packet.getOption().getAlias().equalsIgnoreCase(selectedAlias == null ? "" : selectedAlias);
+            boolean selected = packet.getOption().getAlias().equalsIgnoreCase(
+                    selectedAlias == null ? "" : selectedAlias);
 
             if (packet.getIcon() != null) {
                 batch.setColor(Color.WHITE);
                 batch.draw(packet.getIcon(), b.x, b.y, b.width, b.height);
             } else {
                 smallFont.setColor(Color.WHITE);
-                smallFont.draw(batch, packet.getOption().getDisplayName(), b.x + 4, b.y + b.height - 8, b.width - 8, -1, true);
+                smallFont.draw(batch, packet.getOption().getDisplayName(), b.x + 4, b.y + b.height - 8, b.width - 8, -1,
+                        true);
             }
 
             if (!affordable) {

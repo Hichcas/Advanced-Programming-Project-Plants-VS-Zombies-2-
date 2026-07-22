@@ -32,7 +32,8 @@ public class LevelResult {
     public void setPlantsLost(int plantsLost) { this.plantsLost = plantsLost; }
 
     public int getZombiesKilledByLawnmower() { return zombiesKilledByLawnmower; }
-    public void setZombiesKilledByLawnmower(int zombiesKilledByLawnmower) { this.zombiesKilledByLawnmower = zombiesKilledByLawnmower; }
+    public void setZombiesKilledByLawnmower(int zombiesKilledByLawnmower) { this
+            .zombiesKilledByLawnmower = zombiesKilledByLawnmower; }
 
     public boolean isWon() { return won; }
     public void setWon(boolean won) { this.won = won; }

@@ -15,7 +15,8 @@ public class CompositeBehavior implements PlantBehavior {
 
 
     @Override
-    public void onDamaged(PlantInstance plant, BehaviorContext context, Zombie attacker, int damageAmount, boolean destroyed) {
+    public void onDamaged(PlantInstance plant, BehaviorContext context, Zombie attacker, int damageAmount,
+            boolean destroyed) {
         for (PlantBehavior delegate : delegates) {
             if (delegate != null) {
                 delegate.onDamaged(plant, context, attacker, damageAmount, destroyed);

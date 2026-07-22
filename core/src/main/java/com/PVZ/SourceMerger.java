@@ -31,7 +31,8 @@ public class SourceMerger {
                 .filter(path -> !path.getFileName().toString().equals("SourceMerger.java")) // نادیده گرفتن خود این کد
                 .filter(path -> !path.toString().contains(".git")) // نادیده گرفتن کش گیت
                 .filter(path -> !path.toString().contains(".idea")) // نادیده گرفتن تنظیمات آی‌دی‌ای
-                .filter(path -> !path.toString().contains("/build/") && !path.toString().contains("\\build\\")) // نادیده گرفتن فایل‌های کامپایل شده گریدل
+                // نادیده گرفتن فایل‌های کامپایل شده گریدل
+                .filter(path -> !path.toString().contains("/build/") && !path.toString().contains("\\build\\"))
                 .forEach(filePath -> appendFileContent(filePath, writer));
 
             System.out.println("عملیات با موفقیت تمام شد! فایل result.txt آماده است.");

@@ -31,7 +31,8 @@ public class WallBehavior implements PlantBehavior {
             Double sunTimer = asDouble(plant.getRuntimeState().getOrDefault("sunDropTimer", 0.0), 0.0);
             sunTimer += deltaTime;
             if (sunTimer >= 1.0) {
-                context.spawnSunAt(row, asInt(plant.getRuntimeState().getOrDefault("col", 0), 0), plant.getStats().getSunDropAmount());
+                context.spawnSunAt(row, asInt(plant.getRuntimeState().getOrDefault("col", 0), 0), plant.getStats()
+                        .getSunDropAmount());
                 sunTimer = 0.0;
             }
             plant.putRuntimeState("sunDropTimer", sunTimer);

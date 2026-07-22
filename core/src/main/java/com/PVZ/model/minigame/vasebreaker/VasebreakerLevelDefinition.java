@@ -38,7 +38,8 @@ public class VasebreakerLevelDefinition {
     public void setPlantPool(List<String> plantPool) { this.plantPool = plantPool; }
 
     public float getSeedPacketLifetimeSeconds() { return seedPacketLifetimeSeconds; }
-    public void setSeedPacketLifetimeSeconds(float seedPacketLifetimeSeconds) { this.seedPacketLifetimeSeconds = seedPacketLifetimeSeconds; }
+    public void setSeedPacketLifetimeSeconds(float seedPacketLifetimeSeconds) { this
+            .seedPacketLifetimeSeconds = seedPacketLifetimeSeconds; }
 
     public Boolean getRandom() { return random; }
     public void setRandom(Boolean random) { this.random = random; }
@@ -50,7 +51,8 @@ public class VasebreakerLevelDefinition {
     public void setPlantVaseChance(Double plantVaseChance) { this.plantVaseChance = plantVaseChance; }
 
     public Double getGargantuarVaseChance() { return gargantuarVaseChance; }
-    public void setGargantuarVaseChance(Double gargantuarVaseChance) { this.gargantuarVaseChance = gargantuarVaseChance; }
+    public void setGargantuarVaseChance(Double gargantuarVaseChance) { this
+            .gargantuarVaseChance = gargantuarVaseChance; }
 
     public Double getNormalEmptyChance() { return normalEmptyChance; }
     public void setNormalEmptyChance(Double normalEmptyChance) { this.normalEmptyChance = normalEmptyChance; }

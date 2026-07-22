@@ -19,7 +19,8 @@ public class FontManager {
     private BitmapFont persianTitleFont;
 
     // کاراکترهای فارسی برای نمایش صحیح (بسیار مهم)
-    private static final String PERSIAN_CHARS = FreeTypeFontGenerator.DEFAULT_CHARS + "ابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیيکآأإؤئ";
+    private static final String PERSIAN_CHARS = FreeTypeFontGenerator.DEFAULT_CHARS +
+            "ابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیيکآأإؤئ";
 
     private FontManager() {
         loadEnglishFonts();
