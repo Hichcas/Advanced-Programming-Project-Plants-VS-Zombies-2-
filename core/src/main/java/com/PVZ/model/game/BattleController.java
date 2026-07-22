@@ -17,6 +17,10 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Controls the battle logic between plants and zombies.
+ * Refactored to comply with Checkstyle and PMD (method length ≤ 50 lines).
+ */
 public class BattleController implements BehaviorContext {
 
     private final List<Zombie> zombies;
@@ -42,17 +46,37 @@ public class BattleController implements BehaviorContext {
         return map;
     }
 
+    /**
+     * Main update loop, broken into smaller methods.
+     */
     public void update(float delta) {
+        updateZombies(delta);
+        updateZombieProjectiles(delta);
+        updatePlantProjectiles(delta);
+        removeDeadPlants();
+    }
+
+    /**
+     * Updates all zombies.
+     */
+    private void updateZombies(float delta) {
         for (int i = zombies.size() - 1; i >= 0; i--) {
             zombies.get(i).update(delta, this);
         }
+    }
 
-        // zombie projectiles
-        java.util.Iterator<ZombieProjectile> zpIt = zombieProjectiles.iterator();
+    /**
+     * Updates zombie projectiles and checks collisions with plants.
+     */
+    private void updateZombieProjectiles(float delta) {
+        Iterator<ZombieProjectile> zpIt = zombieProjectiles.iterator();
         while (zpIt.hasNext()) {
             ZombieProjectile zp = zpIt.next();
             zp.update(delta);
-            if (zp.isDestroyed()) { zpIt.remove(); continue; }
+            if (zp.isDestroyed()) {
+                zpIt.remove();
+                continue;
+            }
 
             int zpCol = getTileColumn(zp.getX());
             Plant p = getPlantAt(zp.getRow(), zpCol);
@@ -63,79 +87,153 @@ public class BattleController implements BehaviorContext {
                 zpIt.remove();
             }
         }
+    }
 
-        // plant projectiles
+    /**
+     * Updates plant projectiles: handles collisions with tiles and zombies.
+     */
+    private void updatePlantProjectiles(float delta) {
         Iterator<Projectile> projIt = projectiles.iterator();
         while (projIt.hasNext()) {
             Projectile p = projIt.next();
 
-            // tombstone blocks straight projectiles (lobbed arc over)
-            if (map != null && p.getType() != ProjectileType.LOB) {
-                int pRow = map.worldToRow((float) p.getPositionY());
-                int pCol = map.worldToCol((float) p.getPositionX());
-                if (map.isWithinBounds(pRow, pCol)) {
-                    Tile tile = map.getTile(pRow, pCol);
-                    if (tile != null && (tile.getType() == TileType.TOMBSTONE || tile.getType() == TileType
-                            .NECROMANCY)) {
-                        int newHp = tile.getHp() - (int) p.getDamage();
-                        if (newHp <= 0) {
-                            tile.setType(TileType.NORMAL);
-                            tile.setHp(0);
-                        } else {
-                            tile.setHp(newHp);
-                        }
-                        projIt.remove();
-                        continue;
-                    }
-                }
+            // Check collision with tombstone tiles (block straight projectiles)
+            if (handleTileCollision(p)) {
+                projIt.remove();
+                continue;
             }
 
-            for (Zombie z : zombies) {
-                if (z.isDead()) continue;
-                if (p.getHitbox().overlaps(z.getHitbox())) {
-                    if (z.isProjectileImmune()) {
-                        break;
-                    }
-                    if (z instanceof ZombieDarkJuggler jj && jj.reflectProjectile()) {
-                        this.addZombieProjectile(new ZombieProjectile(
-                            (float) z.getX(), (float) z.getY() + 30, (int) p.getDamage(), 300f, (int) z.getRow(), jj));
-                        System.out.println(jj.getAlias() + " reflected a projectile");
-                        projIt.remove();
-                        break;
-                    }
-                    if (p.getType() == ProjectileType.FIRE_PEA && z.isFrozen()) {
-                        z.thaw();
-                    } else if (p.getType() == ProjectileType.ICE_PEA && z.isFrozen()) {
-                        z.setIceHp(z.getIceHp() - (int) p.getDamage());
-                        if (z.getIceHp() <= 0) {
-                            z.thaw();
-                        }
-                    } else {
-                        z.takeDamage((int) p.getDamage(), resolveDamageType(p));
-                    }
-                    boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit"))
-                        || (p.getExtra("plantType") instanceof com.PVZ.model.enums.PlantType pt
-                        && pt == com.PVZ.model.enums.PlantType.KERNEL_PULT);
-                    if (isButter) {
-                        z.freeze(1.5f);
-                    }
-                    projIt.remove();
-                    break;
-                }
+            // Check collision with zombies
+            if (handleZombieCollision(p)) {
+                projIt.remove();
             }
         }
+    }
 
+    /**
+     * Handles projectile collision with tombstone/necromancy tiles.
+     * Returns true if projectile should be removed.
+     */
+    private boolean handleTileCollision(Projectile p) {
+        if (p.getType() == ProjectileType.LOB || map == null) {
+            return false;
+        }
+
+        int pRow = map.worldToRow((float) p.getPositionY());
+        int pCol = map.worldToCol((float) p.getPositionX());
+        if (!map.isWithinBounds(pRow, pCol)) {
+            return false;
+        }
+
+        Tile tile = map.getTile(pRow, pCol);
+        if (tile == null) {
+            return false;
+        }
+
+        TileType type = tile.getType();
+        if (type != TileType.TOMBSTONE && type != TileType.NECROMANCY) {
+            return false;
+        }
+
+        int newHp = tile.getHp() - (int) p.getDamage();
+        if (newHp <= 0) {
+            tile.setType(TileType.NORMAL);
+            tile.setHp(0);
+        } else {
+            tile.setHp(newHp);
+        }
+        return true;
+    }
+
+    /**
+     * Handles projectile collision with zombies.
+     * Returns true if projectile should be removed.
+     */
+    private boolean handleZombieCollision(Projectile p) {
+        for (Zombie z : zombies) {
+            if (z.isDead()) {
+                continue;
+            }
+            if (!p.getHitbox().overlaps(z.getHitbox())) {
+                continue;
+            }
+            if (z.isProjectileImmune()) {
+                break;
+            }
+
+            // Check reflection by Dark Juggler
+            if (z instanceof ZombieDarkJuggler jj && jj.reflectProjectile()) {
+                reflectProjectile(p, jj);
+                return true;
+            }
+
+            // Apply damage and effects
+            applyProjectileEffect(p, z);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Reflects a projectile back via ZombieDarkJuggler.
+     */
+    private void reflectProjectile(Projectile p, ZombieDarkJuggler jj) {
+        ZombieProjectile reflected = new ZombieProjectile(
+            (float) jj.getX(), (float) jj.getY() + 30,
+            (int) p.getDamage(), 300f, (int) jj.getRow(), jj);
+        this.addZombieProjectile(reflected);
+        System.out.println(jj.getAlias() + " reflected a projectile");
+    }
+
+    /**
+     * Applies projectile damage and special effects to a zombie.
+     */
+    private void applyProjectileEffect(Projectile p, Zombie z) {
+        ProjectileType type = p.getType();
+        int damage = (int) p.getDamage();
+
+        // Fire vs Ice interactions
+        if (type == ProjectileType.FIRE_PEA && z.isFrozen()) {
+            z.thaw();
+        } else if (type == ProjectileType.ICE_PEA && z.isFrozen()) {
+            z.setIceHp(z.getIceHp() - damage);
+            if (z.getIceHp() <= 0) {
+                z.thaw();
+            }
+        } else {
+            z.takeDamage(damage, resolveDamageType(p));
+        }
+
+        // Stun effect (butter)
+        boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit"))
+            || (p.getExtra("plantType") instanceof com.PVZ.model.enums.PlantType pt
+            && pt == com.PVZ.model.enums.PlantType.KERNEL_PULT);
+        if (isButter) {
+            z.freeze(1.5f);
+        }
+    }
+
+    /**
+     * Removes dead plants from the list and map.
+     */
+    private void removeDeadPlants() {
         Iterator<Plant> pit = plants.iterator();
         while (pit.hasNext()) {
             Plant p = pit.next();
             if (p.isDead()) {
                 int r = asInt(p.getRuntimeState("row"), 0);
                 int c = asInt(p.getRuntimeState("col"), 0);
-                if (map != null) map.removePlant(r, c);
+                if (map != null) {
+                    map.removePlant(r, c);
+                }
                 pit.remove();
             }
         }
     }
+
+    // ------------------------------------------------------------------------
+    // BehaviorContext implementation (unchanged but split for readability)
+    // ------------------------------------------------------------------------
 
     @Override
     public List<Zombie> getZombiesInLane(int lane) {
@@ -173,8 +271,8 @@ public class BattleController implements BehaviorContext {
             map.removePlant(row, col);
         }
         plants.removeIf(p -> p != null && !p.isDead()
-                && asInt(p.getRuntimeState("row"), Integer.MIN_VALUE) == row
-                && asInt(p.getRuntimeState("col"), Integer.MIN_VALUE) == col);
+            && asInt(p.getRuntimeState("row"), Integer.MIN_VALUE) == row
+            && asInt(p.getRuntimeState("col"), Integer.MIN_VALUE) == col);
     }
 
     @Override
@@ -189,6 +287,7 @@ public class BattleController implements BehaviorContext {
         if (p == null || p.isWorldPositioned()) {
             return;
         }
+
         int row = p.getRow();
         float tileWidth = 177f;
         float tileHeight = 234f;
@@ -210,7 +309,6 @@ public class BattleController implements BehaviorContext {
         float worldX = startX + col * tileWidth + tileWidth * 0.5f;
         float worldY = startY - (row + 1) * tileHeight + tileHeight * 0.35f;
 
-        // ~1.5 tiles per second feels like the classic PVZ pea speed.
         float speedPxPerSec = tileWidth * 1.5f;
         if (p.getType() == ProjectileType.LOB) {
             speedPxPerSec = tileWidth * 0.9f;
@@ -256,12 +354,13 @@ public class BattleController implements BehaviorContext {
         }
     }
 
-    // ── zombie callback methods ──
+    // ------------------------------------------------------------------------
+    // Public methods for external use
+    // ------------------------------------------------------------------------
 
     public int getTileColumn(float worldX) {
         return map != null ? map.worldToCol(worldX) : 0;
     }
-
 
     public void triggerGameOver() {
         if (gameStatus == null || gameStatus.isGameOver()) {
@@ -277,17 +376,21 @@ public class BattleController implements BehaviorContext {
     }
 
     private DamageType resolveDamageType(Projectile p) {
-        if (p.getType() == ProjectileType.ICE_PEA) return DamageType.ICE;
+        if (p.getType() == ProjectileType.ICE_PEA) {
+            return DamageType.ICE;
+        }
         Object dt = p.getExtra("damageType");
-        if (dt instanceof DamageType) return (DamageType) dt;
-        if (p.getType() == ProjectileType.FIRE_PEA) return DamageType.NORMAL;
+        if (dt instanceof DamageType) {
+            return (DamageType) dt;
+        }
         return DamageType.NORMAL;
     }
 
     public Zombie findZombieAt(int col, int row) {
         for (Zombie z : zombies) {
-            if ((int)z.getRow() == row && getTileColumn((float)z.getX()) == col)
+            if ((int) z.getRow() == row && getTileColumn((float) z.getX()) == col) {
                 return z;
+            }
         }
         return null;
     }
@@ -317,12 +420,18 @@ public class BattleController implements BehaviorContext {
 
     public void setTileTypeAt(int row, int col, TileType type) {
         Tile tile = map.getTile(row, col);
-        if (tile != null) tile.setType(type);
+        if (tile != null) {
+            tile.setType(type);
+        }
     }
 
     public void dispose() {
         zombieProjectiles.clear();
     }
+
+    // ------------------------------------------------------------------------
+    // Utility methods
+    // ------------------------------------------------------------------------
 
     private static int asInt(Object value, int defaultValue) {
         if (value instanceof Number number) {
