@@ -17,6 +17,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Main game screen rendering and input handling.
+ * Refactored to comply with Checkstyle (method length ≤ 50 lines).
+ */
 public class GameScreen extends BaseScreen {
 
     private final SpriteBatch gameBatch;
@@ -112,7 +116,7 @@ public class GameScreen extends BaseScreen {
         if (regularGameEngine.isConveyorBeltMode()) {
             return new ArrayList<>(regularGameEngine.getConveyorBeltQueue());
         }
-        return new ArrayList<>(AppStatus.selectedPlants);
+        return new ArrayList<>(AppStatus.SELECTED_PLANTS);
     }
 
     @Override
@@ -123,12 +127,30 @@ public class GameScreen extends BaseScreen {
             activeEngine = gameEngine;
         }
 
-        boolean isGameOver = false;
-        boolean isWin = false;
+        // Update game over state
+        GameOverState overState = updateGameOverState(activeEngine);
+
+        // Draw background and engine content
+        drawBackgroundAndEngine(activeEngine, delta);
+
+        // Draw map borders
+        drawMapBorders(activeEngine);
+
+        // Draw seed packet bar
+        drawSeedPacketBar(activeEngine);
+
+        // Draw game over overlay
+        drawGameOverOverlay(overState);
+
+        // Draw tile debug info
+        drawTileDebug(activeEngine);
+    }
+
+    // ---------- Helper methods for renderScreen ----------
+
+    private GameOverState updateGameOverState(GameEngine activeEngine) {
         if (activeEngine instanceof RegularGameEngine regularGameEngine) {
-            isGameOver = regularGameEngine.isGameOverTriggered();
-            isWin = regularGameEngine.isGameOverWin();
-            if (isGameOver) {
+            if (regularGameEngine.isGameOverTriggered()) {
                 if (!gameOverShown) {
                     gameOverShown = true;
                     gameOverAlpha = 0f;
@@ -141,11 +163,27 @@ public class GameScreen extends BaseScreen {
                 } else {
                     gameOverAlpha = 1.0f;
                 }
+                return new GameOverState(true, regularGameEngine.isGameOverWin());
             } else {
                 gameOverShown = false;
                 gameOverAlpha = 0f;
+                return new GameOverState(false, false);
             }
         }
+        return new GameOverState(false, false);
+    }
+
+    private static class GameOverState {
+        final boolean isGameOver;
+        final boolean isWin;
+
+        GameOverState(boolean isGameOver, boolean isWin) {
+            this.isGameOver = isGameOver;
+            this.isWin = isWin;
+        }
+    }
+
+    private void drawBackgroundAndEngine(GameEngine activeEngine, float delta) {
         gameBatch.setProjectionMatrix(camera.combined);
         Texture activeBackground = activeEngine.getBackgroundOverride();
         if (activeBackground == null) {
@@ -156,7 +194,13 @@ public class GameScreen extends BaseScreen {
             gameBatch.draw(activeBackground, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
         }
         gameBatch.end();
-        activeEngine.render(Math.min(delta, 1 / 30f), gameBatch);
+
+        // Render engine (plants, zombies, projectiles, suns, etc.)
+        float renderDelta = Math.min(delta, 1 / 30f);
+        activeEngine.render(renderDelta, gameBatch);
+    }
+
+    private void drawMapBorders(GameEngine activeEngine) {
         Map activeMap = activeEngine.getMap();
         if (activeMap == null) {
             activeMap = gameMap;
@@ -165,62 +209,82 @@ public class GameScreen extends BaseScreen {
         shapeDebug.begin(ShapeRenderer.ShapeType.Line);
         activeMap.renderBorders(shapeDebug);
         shapeDebug.end();
+    }
 
-        if (activeEngine instanceof RegularGameEngine regularGameEngine) {
-            SeedPacketBar seedBar = regularGameEngine.getSeedPacketBar();
+    private void drawSeedPacketBar(GameEngine activeEngine) {
+        if (activeEngine instanceof RegularGameEngine regularEngine) {
+            drawSeedBar(regularEngine, regularEngine);
+        } else if (activeEngine instanceof com.PVZ.model.game.ZombotanyGameEngine zombotanyEngine) {
+            drawSeedBar(zombotanyEngine, zombotanyEngine);
+        }
+    }
 
-            shapeDebug.begin(ShapeRenderer.ShapeType.Filled);
-            seedBar.drawBackgrounds(shapeDebug, regularGameEngine, regularGameEngine.getSelectedPlantType());
-            shapeDebug.end();
-
-            gameBatch.begin();
-            seedBar.drawIconsAndLabels(gameBatch, hudFont, regularGameEngine);
-            gameBatch.end();
-        } else if (activeEngine instanceof com.PVZ.model.game.ZombotanyGameEngine zombotanyGameEngine) {
-            SeedPacketBar seedBar = zombotanyGameEngine.getSeedPacketBar();
-
-            shapeDebug.begin(ShapeRenderer.ShapeType.Filled);
-            seedBar.drawBackgrounds(shapeDebug, zombotanyGameEngine, zombotanyGameEngine.getSelectedPlantType());
-            shapeDebug.end();
-
-            gameBatch.begin();
-            seedBar.drawIconsAndLabels(gameBatch, hudFont, zombotanyGameEngine);
-            gameBatch.end();
+    private void drawSeedBar(com.PVZ.model.game.SeedBarEngine seedEngine,
+                             GameEngine engineWithSeedBar) {
+        SeedPacketBar seedBar = null;
+        PlantType selected = null;
+        if (engineWithSeedBar instanceof RegularGameEngine reg) {
+            seedBar = reg.getSeedPacketBar();
+            selected = reg.getSelectedPlantType();
+        } else if (engineWithSeedBar instanceof com.PVZ.model.game.ZombotanyGameEngine z) {
+            seedBar = z.getSeedPacketBar();
+            selected = z.getSelectedPlantType();
+        }
+        if (seedBar == null) {
+            return;
         }
 
-        if (isGameOver && gameOverAlpha > 0) {
-            gameBatch.begin();
-            gameOverFont.setColor(1, 1, 1, gameOverAlpha);
-            String message = isWin ? "LEVEL COMPLETE!" : "GAME OVER";
-            com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout(
-                    gameOverFont, message);
-            float x = VIRTUAL_WIDTH / 2f - layout.width / 2f;
-            float y = VIRTUAL_HEIGHT / 2f + layout.height / 2f;
-            gameOverFont.draw(gameBatch, message, x, y);
-            gameOverFont.setColor(1, 1, 1, 1);
-            gameBatch.end();
-        }
+        shapeDebug.begin(ShapeRenderer.ShapeType.Filled);
+        seedBar.drawBackgrounds(shapeDebug, seedEngine, selected);
+        shapeDebug.end();
 
-        if (com.PVZ.model.status.AppStatus.tileDebugEnabled && activeMap != null) {
-            gameBatch.begin();
-            for (int r = 0; r < activeMap.getRows(); r++) {
-                for (int c = 0; c < activeMap.getCols(); c++) {
-                    com.PVZ.model.entity.Tile tile = activeMap.getTile(r, c);
-                    if (tile == null || tile.getType() == com.PVZ.model.enums.TileType.NORMAL) {
-                        continue;
-                    }
-                    String label = tileDebugLabel(tile.getType());
-                    float cx = tile.getX() + tile.getWidth() * 0.5f;
-                    float cy = tile.getY() + tile.getHeight() * 0.5f;
-                    float x = cx - label.length() * 5f;
-                    float y = cy + hudFont.getCapHeight() * 0.5f;
-                    hudFont.setColor (0, 1, 0, 1) ;
-                    hudFont.draw(gameBatch, label, x, y);
+        gameBatch.begin();
+        seedBar.drawIconsAndLabels(gameBatch, hudFont, seedEngine);
+        gameBatch.end();
+    }
+
+    private void drawGameOverOverlay(GameOverState state) {
+        if (!state.isGameOver || gameOverAlpha <= 0) {
+            return;
+        }
+        gameBatch.begin();
+        gameOverFont.setColor(1, 1, 1, gameOverAlpha);
+        String message = state.isWin ? "LEVEL COMPLETE!" : "GAME OVER";
+        com.badlogic.gdx.graphics.g2d.GlyphLayout layout =
+            new com.badlogic.gdx.graphics.g2d.GlyphLayout(gameOverFont, message);
+        float x = VIRTUAL_WIDTH / 2f - layout.width / 2f;
+        float y = VIRTUAL_HEIGHT / 2f + layout.height / 2f;
+        gameOverFont.draw(gameBatch, message, x, y);
+        gameOverFont.setColor(1, 1, 1, 1);
+        gameBatch.end();
+    }
+
+    private void drawTileDebug(GameEngine activeEngine) {
+        Map activeMap = activeEngine.getMap();
+        if (activeMap == null) {
+            activeMap = gameMap;
+        }
+        if (!AppStatus.tileDebugEnabled || activeMap == null) {
+            return;
+        }
+        gameBatch.begin();
+        for (int r = 0; r < activeMap.getRows(); r++) {
+            for (int c = 0; c < activeMap.getCols(); c++) {
+                com.PVZ.model.entity.Tile tile = activeMap.getTile(r, c);
+                if (tile == null || tile.getType() == com.PVZ.model.enums.TileType.NORMAL) {
+                    continue;
                 }
+                String label = tileDebugLabel(tile.getType());
+                float cx = tile.getX() + tile.getWidth() * 0.5f;
+                float cy = tile.getY() + tile.getHeight() * 0.5f;
+                float x = cx - label.length() * 5f;
+                float y = cy + hudFont.getCapHeight() * 0.5f;
+                hudFont.setColor(0, 1, 0, 1);
+                hudFont.draw(gameBatch, label, x, y);
             }
-            hudFont.setColor(1, 1, 1, 1);
-            gameBatch.end();
         }
+        hudFont.setColor(1, 1, 1, 1);
+        gameBatch.end();
     }
 
     private static String tileDebugLabel(com.PVZ.model.enums.TileType type) {
@@ -259,5 +323,4 @@ public class GameScreen extends BaseScreen {
         }
         System.out.println("[GameScreen] PVZ resources disposed cleanly.");
     }
-
 }

@@ -74,7 +74,8 @@ public class QuestMenuController {
     private OutputDTO listQuests(QuestManager qm) {
         List<Quest> quests = qm.getActiveQuests();
         if (quests.isEmpty()) {
-            return new OutputDTO(true, "No active quests right now. Time until daily reset: " + qm.getTimeUntilReset());
+            return new OutputDTO(true, "No active quests right now. Time until daily reset: "
+                + qm.getTimeUntilReset());
         }
 
         quests.sort(Comparator.comparingInt(q -> switch (q.getPriority()) {
@@ -252,65 +253,79 @@ public class QuestMenuController {
     }
 
     private OutputDTO debugWin(QuestManager qm, String args) {
-        // Parse optional parameters from args string
-        int lawnmower = 0, col1kills = 0, sunProducers = 0, difficulty = 1;
+        WinSimulationParams params = parseWinSimulationArgs(args);
+        return simulateWin(qm, params, args);
+    }
+
+    private static class WinSimulationParams {
+        int lawnmower = 0;
+        int col1kills = 0;
+        int sunProducers = 0;
+        int difficulty = 1;
         boolean dayLevel = false;
         String mapType = null;
-        int mapCol = -1, mapRow = -1;
+        int mapCol = -1;
+        int mapRow = -1;
+    }
 
-        if (args != null && !args.isEmpty()) {
-            String[] tokens = args.split("\\s+");
-            for (int i = 0; i < tokens.length; i++) {
-                switch (tokens[i]) {
-                    case "--lawnmower":
-                        lawnmower = Integer.parseInt(tokens[++i]);
-                        break;
-                    case "--col1kills":
-                        col1kills = Integer.parseInt(tokens[++i]);
-                        break;
-                    case "--sunproducers":
-                        sunProducers = Integer.parseInt(tokens[++i]);
-                        break;
-                    case "--difficulty":
-                        difficulty = Integer.parseInt(tokens[++i]);
-                        break;
-                    case "--day":
-                        dayLevel = Boolean.parseBoolean(tokens[++i]);
-                        break;
-                    case "--map":
-                        mapType = tokens[++i];
-                        break;
-                    case "--col":
-                        mapCol = Integer.parseInt(tokens[++i]);
-                        break;
-                    case "--row":
-                        mapRow = Integer.parseInt(tokens[++i]);
-                        break;
-                }
+    private WinSimulationParams parseWinSimulationArgs(String args) {
+        WinSimulationParams p = new WinSimulationParams();
+        if (args == null || args.isEmpty()) {
+            return p;
+        }
+        String[] tokens = args.split("\\s+");
+        for (int i = 0; i < tokens.length; i++) {
+            switch (tokens[i]) {
+                case "--lawnmower":
+                    p.lawnmower = Integer.parseInt(tokens[++i]);
+                    break;
+                case "--col1kills":
+                    p.col1kills = Integer.parseInt(tokens[++i]);
+                    break;
+                case "--sunproducers":
+                    p.sunProducers = Integer.parseInt(tokens[++i]);
+                    break;
+                case "--difficulty":
+                    p.difficulty = Integer.parseInt(tokens[++i]);
+                    break;
+                case "--day":
+                    p.dayLevel = Boolean.parseBoolean(tokens[++i]);
+                    break;
+                case "--map":
+                    p.mapType = tokens[++i];
+                    break;
+                case "--col":
+                    p.mapCol = Integer.parseInt(tokens[++i]);
+                    break;
+                case "--row":
+                    p.mapRow = Integer.parseInt(tokens[++i]);
+                    break;
             }
         }
+        return p;
+    }
 
+    private OutputDTO simulateWin(QuestManager qm, WinSimulationParams p, String originalArgs) {
         LevelResult res = new LevelResult();
         res.setWon(true);
         res.setFinalSunCount(0);
         res.setPlantsLost(1);
-        res.setZombiesKilledByLawnmower(lawnmower);
-        res.setDifficultyLevel(difficulty);
-        res.setDayLevel(dayLevel);
+        res.setZombiesKilledByLawnmower(p.lawnmower);
+        res.setDifficultyLevel(p.difficulty);
+        res.setDayLevel(p.dayLevel);
         res.setPlantTypesUsed(List.of(PlantType.PUFF_SHROOM, PlantType.SUN_SHROOM));
         res.setPlantFamiliesUsed(Set.of(PlantFamily.MUSHROOM, PlantFamily.SUN_PRODUCER));
-        res.setLawnlessCol1Kills(col1kills);
+        res.setLawnlessCol1Kills(p.col1kills);
 
-        if (mapType != null || mapCol != -1 || mapRow != -1) {
-            res.setFinalMap(createMockMap(mapType, mapCol, mapRow, sunProducers));
+        if (p.mapType != null || p.mapCol != -1 || p.mapRow != -1) {
+            res.setFinalMap(createMockMap(p.mapType, p.mapCol, p.mapRow, p.sunProducers));
         }
 
         qm.evaluateEndLevelQuests(res);
-        return new OutputDTO(true, "Simulated win with parameters: " + args);
+        return new OutputDTO(true, "Simulated win with parameters: " + originalArgs);
     }
 
     private com.PVZ.model.game.Map createMockMap(String mapType, int col, int row, int sunProducers) {
-        // Simple 5x9 empty map
         com.PVZ.model.game.Map map = new com.PVZ.model.game.Map(0, 0, 900, 500, 5, 9);
         if ("symmetry".equals(mapType)) {
             map.setPlant(0, 0, PlantType.PEASHOOTER.create(1));

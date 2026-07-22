@@ -17,7 +17,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-
+/**
+ * Utility for launching game stages and managing plant selection constraints.
+ * Updated to use the new AppStatus constant names (UPPER_SNAKE_CASE).
+ */
 final class GameLauncher {
 
     private static final String STAGE_TYPE_CONVEYOR_BELT = "CONVEYOR_BELT";
@@ -110,11 +113,12 @@ final class GameLauncher {
 
         if (isLockedPlantsStage(stageConfig)) {
             Set<PlantType> locked = resolveLockedPlants(stageConfig);
-            AppStatus.selectedPlants.removeAll(locked);
+            // Use the renamed constant SELECTED_PLANTS
+            AppStatus.SELECTED_PLANTS.removeAll(locked);
 
             Set<PlantType> extraFamilyPicks = resolveExtraFamilyPicks(
-                    AppStatus.selectedPlants, AppStatus.currentStageExclusiveFamilies);
-            AppStatus.selectedPlants.removeAll(extraFamilyPicks);
+                AppStatus.SELECTED_PLANTS, AppStatus.CURRENT_STAGE_EXCLUSIVE_FAMILIES);
+            AppStatus.SELECTED_PLANTS.removeAll(extraFamilyPicks);
             locked.addAll(extraFamilyPicks);
 
             engine.enableLockedPlants(locked);
@@ -138,7 +142,7 @@ final class GameLauncher {
             if (we.getEntries() != null) {
                 for (StageConfig.ZombieSpawn zs : we.getEntries()) {
                     entries.add(new Wave.WaveEntry(zs.getZombie(), zs.getCount(),
-                            (float) zs.getSpawnDelay()));
+                        (float) zs.getSpawnDelay()));
                 }
             }
             waves.add(new Wave(entries, (float) we.getStartDelay()));

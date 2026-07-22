@@ -26,99 +26,69 @@ public class InGameMenuController {
         }
 
         RegularGameEngine engine = getEngine();
-
-        if (engine != null && engine.gameStatus != null && engine.gameStatus.isGameOver()) {
-            engine.gameStatus.setGameOver(false);
-            engine.resetGameOverState();
-            com.PVZ.model.status.AppStatus.returnToChapterAndLevelSelection("GAME OVER");
-            return new OutputDTO(true,
-                    "The zombie ate your brain; LOSER!!! Returning to level select.");
+        OutputDTO gameOverResult = handleGameOverIfNeeded(engine);
+        if (gameOverResult != null) {
+            return gameOverResult;
         }
 
+        return dispatchCommand(dto, engine);
+    }
+
+    private OutputDTO handleGameOverIfNeeded(RegularGameEngine engine) {
+        if (engine == null || engine.gameStatus == null || !engine.gameStatus.isGameOver()) {
+            return null;
+        }
+        engine.gameStatus.setGameOver(false);
+        engine.resetGameOverState();
+        com.PVZ.model.status.AppStatus.returnToChapterAndLevelSelection("GAME OVER");
+        return new OutputDTO(true,
+            "The zombie ate your brain; LOSER!!! Returning to level select.");
+    }
+
+    private OutputDTO dispatchCommand(InGameInputDTO dto, RegularGameEngine engine) {
         return switch (dto.getCommand()) {
-            case ADVANCE_TIME -> engine == null
-                    ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, engine.advanceTimeText(dto.getTickCount()));
-
-            case COLLECT_SUN -> engine == null
-                    ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, engine.collectSunAt(dto.getX(), dto.getY()));
-
+            case ADVANCE_TIME -> handleAdvanceTime(dto, engine);
+            case COLLECT_SUN -> handleCollectSun(dto, engine);
             case SHOW_SUN_AMOUNT -> showSunAmount(engine);
-
-            case CHEAT_ADD_SUNS -> engine == null
-                    ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, engine.addSunsCheat(dto.getAmount()));
-
-            case CHEAT_REMOVE_COOLDOWN -> engine == null
-                    ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, engine.removeCooldownCheat());
-
-            case CHEAT_ADD_PLANT_FOOD -> engine == null
-                    ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, engine.addPlantFoodCheat());
-
+            case CHEAT_ADD_SUNS -> handleCheatAddSuns(dto, engine);
+            case CHEAT_REMOVE_COOLDOWN -> handleCheatRemoveCooldown(engine);
+            case CHEAT_ADD_PLANT_FOOD -> handleCheatAddPlantFood(engine);
             case CHEAT_SPAWN_ZOMBIE -> cheatSpawnZombie(dto);
-
             case CHEAT_SET_WATER -> setTileWater(dto);
             case CHEAT_SET_DRY -> setTileDry(dto);
-            case CHEAT_RELEASE_NUKE -> new OutputDTO(true, "Nuke released.");
-
-            case PLANT_PLANT -> engine == null
-                    ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, colorizeIfLocked(engine.plantPlant(dto.getPlantType(), dto.getX(), dto.getY(
-                            ))));
-
-            case PLUCK_PLANT -> engine == null
-                    ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, engine.pluckPlant(dto.getX(), dto.getY()));
-
-            case FEED_PLANT -> engine == null
-                    ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, engine.feedPlant(dto.getX(), dto.getY()));
-
-            case START_ZOMBIE_WAVES -> {
-                if (engine == null) {
-                    yield new OutputDTO(false, "Game engine is not ready.");
-                }
-                if (engine instanceof RegularGameEngine rge) {
-                    rge.startWaves();
-                }
-                yield new OutputDTO(true, engine.startZombieWavesText());
-            }
-
-            case SHOW_MAP -> engine == null
-                    ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, engine.showMapText());
-
-            case SHOW_PLANTS_STATUS -> engine == null
-                    ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, engine.showPlantsStatusText());
-
-            case SHOW_TILE_STATUS -> engine == null
-                    ? new OutputDTO(false, "Game engine is not ready.")
-                    : new OutputDTO(true, engine.showTileStatusText(dto.getX(), dto.getY()));
-
+            case CHEAT_RELEASE_NUKE -> nukeAction();
+            case PLANT_PLANT -> handlePlantPlant(dto, engine);
+            case PLUCK_PLANT -> handlePluckPlant(dto, engine);
+            case FEED_PLANT -> handleFeedPlant(dto, engine);
+            case START_ZOMBIE_WAVES -> handleStartZombieWaves(dto, engine);
+            case SHOW_MAP -> handleShowMap(engine);
+            case SHOW_PLANTS_STATUS -> handleShowPlantsStatus(engine);
+            case SHOW_TILE_STATUS -> handleShowTileStatus(dto, engine);
             case ZOMBIES_INFO -> zombiesInfo();
-
-            case SHOW_TILE_DEBUG -> {
-                com.PVZ.model.status.AppStatus.tileDebugEnabled = true;
-                yield new OutputDTO(true, "Tile debug overlay ON.");
-            }
-            case HIDE_TILE_DEBUG -> {
-                com.PVZ.model.status.AppStatus.tileDebugEnabled = false;
-                yield new OutputDTO(true, "Tile debug overlay OFF.");
-            }
-
+            case SHOW_TILE_DEBUG -> enableTileDebug();
+            case HIDE_TILE_DEBUG -> disableTileDebug();
             case FREEZE_ZOMBIE -> zombieAction(dto, "freeze");
             case POISON_ZOMBIE -> zombieAction(dto, "poison");
             case HYPNOTIZE_ZOMBIE -> zombieAction(dto, "hypnotize");
             case KILL_ZOMBIE -> zombieAction(dto, "kill");
             case KILL_ALL_ZOMBIES -> killAllZombies();
-
             case EXIT -> exitToGameMenu();
-            case SHOW_CURRENT_MENU -> new OutputDTO(true, AppStatus.currentMenuType.name());
+            case SHOW_CURRENT_MENU -> showCurrentMenu();
         };
+    }
+
+    private OutputDTO handleAdvanceTime(InGameInputDTO dto, RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        return new OutputDTO(true, engine.advanceTimeText(dto.getTickCount()));
+    }
+
+    private OutputDTO handleCollectSun(InGameInputDTO dto, RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        return new OutputDTO(true, engine.collectSunAt(dto.getX(), dto.getY()));
     }
 
     private OutputDTO showSunAmount(RegularGameEngine engine) {
@@ -132,8 +102,96 @@ public class InGameMenuController {
         return new OutputDTO(true, engine.showSunAmountText());
     }
 
-    private OutputDTO showSunAmount() {
-        return showSunAmount(getEngine());
+    private OutputDTO handleCheatAddSuns(InGameInputDTO dto, RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        return new OutputDTO(true, engine.addSunsCheat(dto.getAmount()));
+    }
+
+    private OutputDTO handleCheatRemoveCooldown(RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        return new OutputDTO(true, engine.removeCooldownCheat());
+    }
+
+    private OutputDTO handleCheatAddPlantFood(RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        return new OutputDTO(true, engine.addPlantFoodCheat());
+    }
+
+    private OutputDTO nukeAction() {
+        return new OutputDTO(true, "Nuke released.");
+    }
+
+    private OutputDTO handlePlantPlant(InGameInputDTO dto, RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        String result = engine.plantPlant(dto.getPlantType(), dto.getX(), dto.getY());
+        return new OutputDTO(true, colorizeIfLocked(result));
+    }
+
+    private OutputDTO handlePluckPlant(InGameInputDTO dto, RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        return new OutputDTO(true, engine.pluckPlant(dto.getX(), dto.getY()));
+    }
+
+    private OutputDTO handleFeedPlant(InGameInputDTO dto, RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        return new OutputDTO(true, engine.feedPlant(dto.getX(), dto.getY()));
+    }
+
+    private OutputDTO handleStartZombieWaves(InGameInputDTO dto, RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        if (engine instanceof RegularGameEngine rge) {
+            rge.startWaves();
+        }
+        return new OutputDTO(true, engine.startZombieWavesText());
+    }
+
+    private OutputDTO handleShowMap(RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        return new OutputDTO(true, engine.showMapText());
+    }
+
+    private OutputDTO handleShowPlantsStatus(RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        return new OutputDTO(true, engine.showPlantsStatusText());
+    }
+
+    private OutputDTO handleShowTileStatus(InGameInputDTO dto, RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Game engine is not ready.");
+        }
+        return new OutputDTO(true, engine.showTileStatusText(dto.getX(), dto.getY()));
+    }
+
+    private OutputDTO enableTileDebug() {
+        com.PVZ.model.status.AppStatus.tileDebugEnabled = true;
+        return new OutputDTO(true, "Tile debug overlay ON.");
+    }
+
+    private OutputDTO disableTileDebug() {
+        com.PVZ.model.status.AppStatus.tileDebugEnabled = false;
+        return new OutputDTO(true, "Tile debug overlay OFF.");
+    }
+
+    private OutputDTO showCurrentMenu() {
+        return new OutputDTO(true, AppStatus.currentMenuType.name());
     }
 
     private RegularGameEngine getEngine() {
@@ -154,7 +212,8 @@ public class InGameMenuController {
         int x = dto.getX() != null ? dto.getX() : 8;
 
         if (row < 0 || row > 4 || x < 0 || x > 8) {
-            return new OutputDTO(false, "Invalid position: (" + x + ", " + row + "). Must be col 0-8, row 0-4.");
+            return new OutputDTO(false, "Invalid position: (" + x + ", " + row
+                + "). Must be col 0-8, row 0-4.");
         }
 
         String resolvedAlias = alias;
@@ -162,10 +221,10 @@ public class InGameMenuController {
             ZombieType.fromAlias(alias);
         } catch (IllegalArgumentException e) {
             resolvedAlias = Arrays.stream(ZombieType.values())
-                    .filter(z -> z.name().equalsIgnoreCase(alias))
-                    .findFirst()
-                    .map(z -> z.alias)
-                    .orElse(null);
+                .filter(z -> z.name().equalsIgnoreCase(alias))
+                .findFirst()
+                .map(z -> z.alias)
+                .orElse(null);
             if (resolvedAlias == null) {
                 return new OutputDTO(false, "Unknown zombie: " + alias);
             }
@@ -176,16 +235,22 @@ public class InGameMenuController {
 
     private OutputDTO setTileWater(InGameInputDTO dto) {
         RegularGameEngine rge = getEngine();
-        if (rge == null) return new OutputDTO(false, "Not in a regular game.");
-        int row = dto.getY(), col = dto.getX();
+        if (rge == null) {
+            return new OutputDTO(false, "Not in a regular game.");
+        }
+        int row = dto.getY();
+        int col = dto.getX();
         rge.getBattleController().setTileTypeAt(row, col, TileType.WATER);
         return new OutputDTO(true, "Tile (" + col + ", " + row + ") set to WATER.");
     }
 
     private OutputDTO setTileDry(InGameInputDTO dto) {
         RegularGameEngine rge = getEngine();
-        if (rge == null) return new OutputDTO(false, "Not in a regular game.");
-        int row = dto.getY(), col = dto.getX();
+        if (rge == null) {
+            return new OutputDTO(false, "Not in a regular game.");
+        }
+        int row = dto.getY();
+        int col = dto.getX();
         rge.getBattleController().setTileTypeAt(row, col, TileType.NORMAL);
         return new OutputDTO(true, "Tile (" + col + ", " + row + ") set to NORMAL.");
     }
@@ -225,25 +290,30 @@ public class InGameMenuController {
         BattleController bc = rge.getBattleController();
         Zombie z = bc.findZombieAt(dto.getX(), dto.getY());
         if (z == null) {
-            return new OutputDTO(false, "No zombie at (" + dto.getX() + ", " + dto.getY() + ").");
+            return new OutputDTO(false, "No zombie at (" + dto.getX() + ", " + dto.getY()
+                + ").");
         }
 
         return switch (action) {
             case "freeze" -> {
                 z.freeze(3.0f);
-                yield new OutputDTO(true, "Frozen zombie at (" + dto.getX() + ", " + dto.getY() + ").");
+                yield new OutputDTO(true, "Frozen zombie at (" + dto.getX() + ", " + dto.getY()
+                    + ").");
             }
             case "poison" -> {
                 z.poison(5.0f, 10.0f);
-                yield new OutputDTO(true, "Poisoned zombie at (" + dto.getX() + ", " + dto.getY() + ").");
+                yield new OutputDTO(true, "Poisoned zombie at (" + dto.getX() + ", " + dto.getY()
+                    + ").");
             }
             case "hypnotize" -> {
                 z.hypnotize(5.0f);
-                yield new OutputDTO(true, "Hypnotized zombie at (" + dto.getX() + ", " + dto.getY() + ").");
+                yield new OutputDTO(true, "Hypnotized zombie at (" + dto.getX() + ", " + dto.getY()
+                    + ").");
             }
             case "kill" -> {
                 z.die(bc);
-                yield new OutputDTO(true, "Killed zombie at (" + dto.getX() + ", " + dto.getY() + ").");
+                yield new OutputDTO(true, "Killed zombie at (" + dto.getX() + ", " + dto.getY()
+                    + ").");
             }
             default -> new OutputDTO(false, "Unknown action.");
         };
@@ -274,5 +344,4 @@ public class InGameMenuController {
         }
         return message;
     }
-
 }

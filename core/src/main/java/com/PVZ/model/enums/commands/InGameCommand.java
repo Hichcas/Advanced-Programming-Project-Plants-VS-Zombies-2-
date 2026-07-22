@@ -17,7 +17,7 @@ public enum InGameCommand {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer
-                    .parseInt(matcher.group("y")));
+                .parseInt(matcher.group("y")));
         }
     },
     SHOW_SUN_AMOUNT("^\\s*show\\s+sun\\s+amount\\s*$") {
@@ -45,25 +45,30 @@ public enum InGameCommand {
         }
     },
     CHEAT_SPAWN_ZOMBIE(
-            "^\\s*cheat\\s+spawn-zombie\\s+-t\\s+(?<zombieType>.+?)\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+        "^\\s*cheat\\s+spawn-zombie\\s+-t\\s+(?<zombieType>.+?)\\s+-l\\s*\\(" +
+            "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, matcher.group("zombieType"), Integer.parseInt(matcher
-                    .group("x")), Integer.parseInt(matcher.group("y")));
+                .group("x")), Integer.parseInt(matcher.group("y")));
         }
     },
-    CHEAT_SET_WATER("^\\s*cheat\\s+set-water\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+    CHEAT_SET_WATER(
+        "^\\s*cheat\\s+set-water\\s+-l\\s*\\(" +
+            "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer
-                    .parseInt(matcher.group("y")));
+                .parseInt(matcher.group("y")));
         }
     },
-    CHEAT_SET_DRY("^\\s*cheat\\s+set-dry\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+    CHEAT_SET_DRY(
+        "^\\s*cheat\\s+set-dry\\s+-l\\s*\\(" +
+            "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer
-                    .parseInt(matcher.group("y")));
+                .parseInt(matcher.group("y")));
         }
     },
     CHEAT_RELEASE_NUKE("^\\s*release\\s+the\\s+nuke\\s*$") {
@@ -73,27 +78,31 @@ public enum InGameCommand {
         }
     },
     PLANT_PLANT(
-            "^\\s*plant\\s+plant\\s+-t\\s+(?<plantType>.+?)\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$")
-            {
+        "^\\s*plant\\s+plant\\s+-t\\s+(?<plantType>.+?)\\s+-l\\s*\\(" +
+            "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
-            int x = Integer.parseInt(matcher.group("x")) ;
-            int y = Integer.parseInt(matcher.group("y")) ;
+            int x = Integer.parseInt(matcher.group("x"));
+            int y = Integer.parseInt(matcher.group("y"));
             return new InGameInputDTO(this, null, null, matcher.group("plantType"), null, x, y);
         }
     },
-    PLUCK_PLANT("^\\s*pluck\\s+plant\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+    PLUCK_PLANT(
+        "^\\s*pluck\\s+plant\\s+-l\\s*\\(" +
+            "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer
-                    .parseInt(matcher.group("y")));
+                .parseInt(matcher.group("y")));
         }
     },
-    FEED_PLANT("^\\s*feed\\s+plant\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+    FEED_PLANT(
+        "^\\s*feed\\s+plant\\s+-l\\s*\\(" +
+            "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer
-                    .parseInt(matcher.group("y")));
+                .parseInt(matcher.group("y")));
         }
     },
     START_ZOMBIE_WAVES("^\\s*start\\s+zombie\\s+waves\\s*$") {
@@ -114,11 +123,13 @@ public enum InGameCommand {
             return new InGameInputDTO(this, null, null, null, null, null, null);
         }
     },
-    SHOW_TILE_STATUS("^\\s*show\\s+tile\\s+status\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+    SHOW_TILE_STATUS(
+        "^\\s*show\\s+tile\\s+status\\s+-l\\s*\\(" +
+            "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer
-                    .parseInt(matcher.group("y")));
+                .parseInt(matcher.group("y")));
         }
     },
     ZOMBIES_INFO("^\\s*zombies\\s+info\\s*$") {
@@ -139,32 +150,40 @@ public enum InGameCommand {
             return new InGameInputDTO(this, null, null, null, null, null, null);
         }
     },
-    FREEZE_ZOMBIE("^\\s*freeze\\s+zombie\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+    FREEZE_ZOMBIE(
+        "^\\s*freeze\\s+zombie\\s+-l\\s*\\(" +
+            "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer
-                    .parseInt(matcher.group("y")));
+                .parseInt(matcher.group("y")));
         }
     },
-    POISON_ZOMBIE("^\\s*poison\\s+zombie\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+    POISON_ZOMBIE(
+        "^\\s*poison\\s+zombie\\s+-l\\s*\\(" +
+            "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer
-                    .parseInt(matcher.group("y")));
+                .parseInt(matcher.group("y")));
         }
     },
-    KILL_ZOMBIE("^\\s*kill\\s+zombie\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+    KILL_ZOMBIE(
+        "^\\s*kill\\s+zombie\\s+-l\\s*\\(" +
+            "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer
-                    .parseInt(matcher.group("y")));
+                .parseInt(matcher.group("y")));
         }
     },
-    HYPNOTIZE_ZOMBIE("^\\s*hypnotize\\s+zombie\\s+-l\\s*\\(\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
+    HYPNOTIZE_ZOMBIE(
+        "^\\s*hypnotize\\s+zombie\\s+-l\\s*\\(" +
+            "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, Integer.parseInt(matcher.group("x")), Integer
-                    .parseInt(matcher.group("y")));
+                .parseInt(matcher.group("y")));
         }
     },
     KILL_ALL_ZOMBIES("^\\s*kill\\-all\\s+zombies\\s*$") {
