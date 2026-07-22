@@ -1,0 +1,207 @@
+package com.PVZ.model.game;
+
+import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.Tile;
+import com.PVZ.model.entity.plants.behavior.impl.Projectile;
+import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.ChapterEnum;
+import com.PVZ.model.status.AppStatus;
+import com.PVZ.model.user.UserRegistry;
+
+public class UpdateHandler {
+
+    private static final double TICK_SECONDS = 0.1;
+
+    public static void update(RegularGameEngine engine, float delta) {
+        if (engine.gameOverTriggered) {
+            updateGameOverTimer(engine, delta);
+            return;
+        }
+        if (engine.gameStatus != null && engine.gameStatus.isGameOver()) return;
+        if (engine.waveManager != null) engine.waveManager.update(delta, engine.zombieEngine);
+        if (engine.battleController != null) engine.battleController.update(delta);
+
+        engine.tickAccumulator += delta;
+        while (engine.tickAccumulator >= TICK_SECONDS) {
+            engine.tickAccumulator -= TICK_SECONDS;
+            advanceOneTick(engine);
+        }
+
+        if (engine.gameStatus != null && !engine.gameStatus.isGameOver() && !engine.gameStatus.isWon()
+            && engine.waveManager != null && engine.waveManager.isFinished()) {
+            boolean anyAlive = false;
+            for (Zombie z : engine.getZombieList()) {
+                if (z != null && !z.isDead()) { anyAlive = true; break; }
+            }
+            if (!anyAlive) {
+                System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
+                triggerGameOver(engine, true);
+            }
+        }
+    }
+
+    private static void advanceOneTick(RegularGameEngine engine) {
+        if (engine.gameStatus != null && engine.gameStatus.isGameOver()) return;
+        updatePlants(engine);
+        updateProjectiles(engine, (float) TICK_SECONDS);
+        updateSunManager(engine, (float) TICK_SECONDS);
+        updateSkySun(engine, (float) TICK_SECONDS);
+        BoardHandler.updateLawnMowers(engine, (float) TICK_SECONDS);
+        WaveHandler.updateConveyorBelt(engine, (float) TICK_SECONDS);
+
+        for (Zombie z : engine.getZombieList()) {
+            if (z != null && !z.isDead()) z.updateEffects((float) TICK_SECONDS);
+        }
+
+        engine.rechargeRemaining.replaceAll((type, remaining) -> Math.max(0.0, remaining - TICK_SECONDS));
+
+        if (engine.gameStatus != null) {
+            engine.gameStatus.setRemainingZombieWaveInPercent(
+                engine.waveManager != null ? engine.waveManager.getProgressPercent() : 0);
+        }
+
+        if (AppStatus.currentChapter != null) {
+            AppStatus.currentChapter.update(engine.map, engine);
+        }
+
+        if (engine.specialLevel != null) {
+            engine.specialLevel.onTick(engine, engine.map);
+            if (engine.specialLevel.isLossConditionMet()) {
+                System.out.println("[SpecialLevel] Loss condition met: " + engine.specialLevel.getName());
+                triggerGameOver(engine, false);
+            }
+        }
+    }
+
+    private static void updatePlants(RegularGameEngine engine) {
+        if (engine.map == null) return;
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 9; col++) {
+                Plant plant = engine.map.getPlantAt(row, col);
+                if (plant == null) continue;
+                plant.putRuntimeState("row", row);
+                plant.putRuntimeState("col", col);
+                plant.putRuntimeState("lane", row);
+
+                Object freezeLv = plant.getRuntimeState("freezeLevel");
+                boolean isFrozen = freezeLv instanceof Number && ((Number) freezeLv).intValue() >= 3;
+                if (!isFrozen) plant.update(engine, TICK_SECONDS);
+
+                if (plant.isDead()) {
+                    if (plant.getStats().getBooleanExtra("explodeOnDeath", false)) {
+                        CombatHandler.damageArea(engine, row, row,
+                            Math.max(plant.getStats().getExplodeDamage(), plant.getStats().getDamage()));
+                    }
+                    engine.map.removePlant(row, col);
+                    if (engine.specialLevel != null) engine.specialLevel.onPlantDestroyed(row, col, engine);
+                }
+            }
+        }
+    }
+
+    private static void updateProjectiles(RegularGameEngine engine, float delta) {
+        if (engine.projectiles.isEmpty()) return;
+        for (var p : engine.projectiles) p.update(delta);
+        engine.projectiles.removeIf(Projectile::isDestroyed);
+    }
+
+    private static void updateSunManager(RegularGameEngine engine, float delta) {
+        engine.sunManager.update(delta);
+    }
+
+    private static void updateSkySun(RegularGameEngine engine, float delta) {
+        if (engine.map == null || !engine.zombieWavesStarted) return;
+        if (engine.gameStatus != null && engine.gameStatus.isNoSkySun()) return;
+        engine.skySunTimer += delta;
+        if (engine.skySunTimer < 10.0) return;
+        engine.skySunTimer = 0.0;
+
+        int row = engine.random.nextInt(5);
+        int col = engine.random.nextInt(9);
+        Tile tile = engine.map.getTile(row, col);
+        if (tile == null) return;
+        double landingX = tile.getX() + tile.getWidth() / 2.0;
+        double groundY = tile.getY() + tile.getHeight() / 2.0;
+        double startY = engine.map.getStartY() + engine.map.getTileHeight() * 2.0;
+        engine.sunManager.spawnFalling(landingX, startY, 25, groundY);
+    }
+
+    // ---------- Game Over ----------
+    public static void triggerGameOver(RegularGameEngine engine, boolean win) {
+        if (engine.gameOverTriggered) return;
+        engine.gameOverTriggered = true;
+        engine.gameOverTimer = 0f;
+        engine.gameOverWin = win;
+        if (engine.gameStatus != null) {
+            engine.gameStatus.setGameOver(true);
+            engine.gameStatus.setWon(win);
+        }
+    }
+
+    public static void resetGameOverState(RegularGameEngine engine) {
+        engine.gameOverTriggered = false;
+        engine.gameOverNavigated = false;
+        engine.gameOverTimer = 0f;
+        engine.gameOverWin = false;
+    }
+
+    public static void updateGameOverTimer(RegularGameEngine engine, float delta) {
+        if (!engine.gameOverTriggered || engine.gameOverNavigated) return;
+        engine.gameOverTimer += delta;
+        if (engine.gameOverTimer >= 3.0f) {
+            engine.gameOverNavigated = true;
+            if (engine.gameOverWin) {
+                var stats = AppStatus.currentUser != null ? AppStatus.currentUser.userStats : null;
+                if (stats != null) stats.incrementStagesCompleted();
+                if (AppStatus.currentUser != null) {
+                    ChapterEnum chapter = AppStatus.getCurrentChapterEnum();
+                    if (chapter != null && AppStatus.currentUser.progressState != null) {
+                        AppStatus.currentUser.progressState.completeLevel(chapter, AppStatus.currentStageNumber);
+                    }
+                    UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
+                }
+                AppStatus.returnToTravelLog();
+            } else {
+                AppStatus.returnToMainMenu();
+            }
+            resetBoardAfterGameOver(engine);
+        }
+    }
+
+    private static void resetBoardAfterGameOver(RegularGameEngine engine) {
+        engine.gameOverTriggered = false;
+        engine.gameOverNavigated = false;
+        engine.gameOverTimer = 0f;
+        engine.gameOverWin = false;
+        if (engine.gameStatus != null) {
+            engine.gameStatus.setGameOver(false);
+            engine.gameStatus.setWon(false);
+        }
+        if (engine.map != null) {
+            for (int row = 0; row < 5; row++) {
+                for (int col = 0; col < 9; col++) {
+                    engine.map.removePlant(row, col);
+                }
+            }
+        }
+        engine.projectiles.clear();
+        engine.zombies.clear();
+        if (engine.zombieEngine != null) engine.zombieEngine.getZombies().clear();
+        BoardHandler.initLawnMowers(engine, engine.map);
+        engine.zombieWavesStarted = false;
+        engine.tickAccumulator = 0f;
+        engine.selectedPlantType = null;
+        engine.rechargeRemaining.clear();
+        engine.conveyorBeltQueue.clear();
+        engine.sunManager.clear();
+        engine.plantFoodManager.reset();
+        if (engine.gameStatus != null) engine.gameStatus.setRemainingZombieWaveInPercent(0);
+    }
+
+    public static void advanceTicks(RegularGameEngine engine, int ticks) {
+        int safeTicks = Math.max(0, ticks);
+        for (int i = 0; i < safeTicks; i++) {
+            update(engine, (float) TICK_SECONDS);
+        }
+    }
+}
