@@ -13,6 +13,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Manual implementation of plant behavior.
+ * Refactored to comply with Checkstyle and PMD rules (method length ≤ 50 lines).
+ */
 public class ManualPlantBehavior implements PlantBehavior {
     private final PlantDefinition definition;
     private final AbilitySpec abilitySpec;
@@ -33,58 +37,96 @@ public class ManualPlantBehavior implements PlantBehavior {
         int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
         int lane = asInt(plant.getRuntimeState().getOrDefault("lane", row), row);
 
-
-        switch (plantKey) {
-            case "rotobaga" -> {
-                handleDiagonalShot(plant, context, lane, deltaTime);
-                return;
-            }
-            case "threepeater" -> {
-                handleTriLaneShot(plant, context, lane, deltaTime);
-                return;
-            }
-            case "split_pea" -> {
-                handleFrontBackShot(plant, context, lane, deltaTime);
-                return;
-            }
-            case "starfruit" -> {
-                handleStarShot(plant, context, lane, deltaTime);
-                return;
-            }
-            case "cat_tail", "cattail" -> {
-                handleHomingNearest(plant, context, lane, deltaTime);
-                return;
-            }
-            case "bowling_bulb" -> {
-                handleBounceMultiLane(plant, context, lane, deltaTime);
-                return;
-            }
-            default -> {
-            }
+        // Try specific plant-key handlers first
+        if (handleSpecificPlantKey(plantKey, plant, context, lane, deltaTime, row, col)) {
+            return;
         }
 
-        String behaviorId = normalize(resolveBehaviorId());
+        // Fallback to behavior-id based handlers
+        handleDefaultBehavior(plant, context, lane, deltaTime, row, col);
+    }
 
-        switch (behaviorId) {
-            case "instant_sun" -> handleInstantSun(plant, context, row, col);
-            case "move_zombies", "garlic" -> handleMoveZombies(plant, context, lane, deltaTime);
-            case "magnet_disarm", "magnet_pulse" -> handleMagnet(plant, context, lane, deltaTime);
-            case "hypnotize" -> handleHypnotize(plant, context, lane, deltaTime);
-            case "copy_plant" -> handleCopyPlant(plant);
-            case "water_support" -> handleWaterSupport(plant);
-            case "melee_eat" -> handleMelee(plant, context, lane, row, deltaTime);
-            case "sun_production" -> handleSunBeanLike(plant, context, row, col, lane, deltaTime);
-            default -> {
-                if (definition != null && definition.getCategoryEnum().name().equals("MELEE")) {
-                    handleMelee(plant, context, lane, row, deltaTime);
-                }
-            }
+    /**
+     * Handles behaviors that are tied to a specific plant key.
+     * Returns true if the key was recognized and handled.
+     */
+    private boolean handleSpecificPlantKey(String plantKey, PlantInstance plant, BehaviorContext context,
+                                           int lane, double deltaTime, int row, int col) {
+        switch (plantKey) {
+            case "rotobaga":
+                handleDiagonalShot(plant, context, lane, deltaTime);
+                return true;
+            case "threepeater":
+                handleTriLaneShot(plant, context, lane, deltaTime);
+                return true;
+            case "split_pea":
+                handleFrontBackShot(plant, context, lane, deltaTime);
+                return true;
+            case "starfruit":
+                handleStarShot(plant, context, lane, deltaTime);
+                return true;
+            case "cat_tail":
+            case "cattail":
+                handleHomingNearest(plant, context, lane, deltaTime);
+                return true;
+            case "bowling_bulb":
+                handleBounceMultiLane(plant, context, lane, deltaTime);
+                return true;
+            default:
+                return false; // not handled here
         }
     }
 
+    /**
+     * Handles behaviors based on the resolved behavior ID (or falls back to MELEE).
+     */
+    private void handleDefaultBehavior(PlantInstance plant, BehaviorContext context, int lane,
+                                       double deltaTime, int row, int col) {
+        String behaviorId = normalize(resolveBehaviorId());
+
+        switch (behaviorId) {
+            case "instant_sun":
+                handleInstantSun(plant, context, row, col);
+                break;
+            case "move_zombies":
+            case "garlic":
+                handleMoveZombies(plant, context, lane, deltaTime);
+                break;
+            case "magnet_disarm":
+            case "magnet_pulse":
+                handleMagnet(plant, context, lane, deltaTime);
+                break;
+            case "hypnotize":
+                handleHypnotize(plant, context, lane, deltaTime);
+                break;
+            case "copy_plant":
+                handleCopyPlant(plant);
+                break;
+            case "water_support":
+                handleWaterSupport(plant);
+                break;
+            case "melee_eat":
+                handleMelee(plant, context, lane, row, deltaTime);
+                break;
+            case "sun_production":
+                handleSunBeanLike(plant, context, row, col, lane, deltaTime);
+                break;
+            default:
+                // fallback: if definition category is MELEE
+                if (definition != null && definition.getCategoryEnum().name().equals("MELEE")) {
+                    handleMelee(plant, context, lane, row, deltaTime);
+                }
+                break;
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // Individual behavior handlers (all unchanged)
+    // ------------------------------------------------------------------------
+
     private void handleInstantSun(PlantInstance plant, BehaviorContext context, int row, int col) {
         boolean triggered = asBoolean(plant.getRuntimeState().getOrDefault("instantSunTriggered", Boolean.FALSE),
-                false);
+            false);
         if (triggered) {
             return;
         }
@@ -97,7 +139,7 @@ public class ManualPlantBehavior implements PlantBehavior {
             amount = 375;
         }
         System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col +
-                ")");
+            ")");
         context.spawnSunAt(row, col, amount);
         plant.putRuntimeState("instantSunTriggered", Boolean.TRUE);
         context.removePlant(row, col);
@@ -140,8 +182,8 @@ public class ManualPlantBehavior implements PlantBehavior {
         }
 
         String plantKey = definition == null || definition.getPlantKey() == null
-                ? ""
-                : normalize(definition.getPlantKey());
+            ? ""
+            : normalize(definition.getPlantKey());
 
         timer = 0.0;
         if ("caulipower".equals(plantKey)) {
@@ -195,7 +237,7 @@ public class ManualPlantBehavior implements PlantBehavior {
     }
 
     private void handleSunBeanLike(PlantInstance plant, BehaviorContext context, int row, int col, int lane,
-            double deltaTime) {
+                                   double deltaTime) {
         List<Zombie> zombies = context.getZombiesInLane(lane);
         if (zombies.isEmpty()) {
             return;
@@ -209,13 +251,12 @@ public class ManualPlantBehavior implements PlantBehavior {
                 amount = 5;
             }
             System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col +
-                    ")");
+                ")");
             context.spawnSunAt(row, col, amount);
             timer = 0.0;
         }
         plant.putRuntimeState("sunBeanTimer", timer);
     }
-
 
     private int computeDamage(PlantInstance plant) {
         int damage = Math.max(0, plant.getStats().getDamage());
@@ -250,14 +291,13 @@ public class ManualPlantBehavior implements PlantBehavior {
         fireInto(plant, context, lane + 1, true);
     }
 
-    /** Threepeater: "شلیک همزمان تیر در ۳ لاین موازی" - own lane + both neighbors. */
     private void handleTriLaneShot(PlantInstance plant, BehaviorContext context, int lane, double deltaTime) {
         if (!tickCooldown(plant, "triLaneTimer", deltaTime)) {
             return;
         }
         boolean anyTarget = !context.getZombiesInLane(lane).isEmpty()
-                || !context.getZombiesInLane(lane - 1).isEmpty()
-                || !context.getZombiesInLane(lane + 1).isEmpty();
+            || !context.getZombiesInLane(lane - 1).isEmpty()
+            || !context.getZombiesInLane(lane + 1).isEmpty();
         if (!anyTarget) {
             return;
         }
@@ -317,8 +357,8 @@ public class ManualPlantBehavior implements PlantBehavior {
 
     private void handleBounceMultiLane(PlantInstance plant, BehaviorContext context, int lane, double deltaTime) {
         java.util.List<Integer> tiers = plant.getDefinition() != null && plant.getDefinition().getDamageSpec() != null
-                ? plant.getDefinition().getDamageSpec().getTiers()
-                : java.util.List.of();
+            ? plant.getDefinition().getDamageSpec().getTiers()
+            : java.util.List.of();
         int cyanDamage = tiers.size() > 0 ? tiers.get(0) : computeDamage(plant);
         int blueDamage = tiers.size() > 1 ? tiers.get(1) : computeDamage(plant);
         int orangeDamage = tiers.size() > 2 ? tiers.get(2) : computeDamage(plant);
@@ -329,7 +369,7 @@ public class ManualPlantBehavior implements PlantBehavior {
     }
 
     private void launchBulbOnCycle(PlantInstance plant, BehaviorContext context, int lane, double deltaTime,
-                                    double periodSeconds, String timerKey, int damage) {
+                                   double periodSeconds, String timerKey, int damage) {
         double timer = asDouble(plant.getRuntimeState().getOrDefault(timerKey, 0.0), 0.0);
         timer += deltaTime;
         if (timer < periodSeconds) {

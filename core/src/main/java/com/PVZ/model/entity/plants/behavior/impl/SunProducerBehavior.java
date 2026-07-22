@@ -5,9 +5,15 @@ import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.PlantFlag;
 
 import java.util.List;
 
+/**
+ * Behavior for plants that produce sun over time, including growth-stage sun producers
+ * and special sun bean mechanics.
+ * Refactored to comply with Checkstyle (method length ≤ 50 lines).
+ */
 public class SunProducerBehavior implements PlantBehavior {
 
     @Override
@@ -19,68 +25,110 @@ public class SunProducerBehavior implements PlantBehavior {
         int row = asInt(plant.getRuntimeState().getOrDefault("row", 0), 0);
         int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
         int lane = asInt(plant.getRuntimeState().getOrDefault("lane", row), row);
-        AbilitySpec ability = plant.getDefinition() == null ? null : plant.getDefinition().getBaseAbility();
 
+        // Case 1: Sun Bean produces sun when zombies are present
         if (plant.getStats().getSunDropAmount() > 0) {
-            List<Zombie> zombies = context.getZombiesInLane(lane);
-            if (zombies.isEmpty()) {
-                return;
-            }
-            Double timer = asDouble(plant.getRuntimeState().getOrDefault("sunBeanTimer", 0.0), 0.0);
-            timer += deltaTime;
-            if (timer >= 1.0) {
-                int amount = plant.getStats().getSunDropAmount();
-                if (amount <= 0) {
-                    amount = plant.getDefinition() != null && "Sun Bean".equalsIgnoreCase(plant.getDefinition().getName(
-                            )) ? 5 : 5;
-                }
-                System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " +
-                        col + ")");
-                context.spawnSunAt(row, col, amount);
-                timer = 0.0;
-            }
-            plant.putRuntimeState("sunBeanTimer", timer);
+            handleSunBean(plant, context, deltaTime, row, col, lane);
             return;
         }
 
-        if (ability != null) {
-            List<?> sunAmounts = asList(ability.getParam("sunAmounts"));
-            List<?> stageTimes = asList(ability.getParam("growthStageTimes"));
-
-            if (!sunAmounts.isEmpty()) {
-                double timer = asDouble(plant.getRuntimeState().getOrDefault("growthTimer", 0.0), 0.0);
-                int stage = asInt(plant.getRuntimeState().getOrDefault("growthStage", 0), 0);
-                boolean triggered = asBoolean(plant.getRuntimeState().getOrDefault("growthTriggered", Boolean.FALSE),
-                        false);
-
-                if (!triggered && stage == 0) {
-                    int amount = asInt(sunAmounts.get(0), plant.getStats().getSunAmount());
-                    System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row +
-                            ", " + col + ")");
-                    context.spawnSunAt(row, col, amount);
-                    plant.putRuntimeState("growthTriggered", Boolean.TRUE);
-                }
-
-                timer += deltaTime;
-                while (stage + 1 < sunAmounts.size() && stage < stageTimes.size()) {
-                    double nextThreshold = asDouble(stageTimes.get(stage), 0.0);
-                    if (timer < nextThreshold) {
-                        break;
-                    }
-                    stage++;
-                    int amount = asInt(sunAmounts.get(Math.min(stage, sunAmounts.size() - 1)), plant.getStats()
-                            .getSunAmount());
-                    System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row +
-                            ", " + col + ")");
-                    context.spawnSunAt(row, col, amount);
-                }
-
-                plant.putRuntimeState("growthTimer", timer);
-                plant.putRuntimeState("growthStage", stage);
-                return;
-            }
+        // Case 2: Ability with growth stages (e.g., Sunflower with timed stages)
+        AbilitySpec ability = plant.getDefinition() == null ? null : plant.getDefinition().getBaseAbility();
+        if (ability != null && hasGrowthParams(ability)) {
+            handleGrowthAbility(plant, context, deltaTime, row, col, ability);
+            return;
         }
 
+        // Case 3: Standard periodic sun production
+        handleNormalProduction(plant, context, deltaTime, row, col);
+    }
+
+    @Override
+    public void onDamaged(PlantInstance plant, BehaviorContext context, Zombie attacker,
+                          int damageAmount, boolean destroyed) {
+        if (plant == null || context == null) {
+            return;
+        }
+        String plantKey = plant.getDefinition() == null || plant.getDefinition().getPlantKey() == null
+            ? ""
+            : plant.getDefinition().getPlantKey().toLowerCase();
+        if (!"sun_bean".equals(plantKey)) {
+            return;
+        }
+        int amount = plant.getStats() == null ? 5 : Math.max(5, plant.getStats().getSunDropAmount());
+        context.addSun(amount);
+    }
+
+    // ---------- Case 1: Sun Bean ----------
+
+    private void handleSunBean(PlantInstance plant, BehaviorContext context, double deltaTime,
+                               int row, int col, int lane) {
+        List<Zombie> zombies = context.getZombiesInLane(lane);
+        if (zombies.isEmpty()) {
+            return;
+        }
+
+        Double timer = asDouble(plant.getRuntimeState().getOrDefault("sunBeanTimer", 0.0), 0.0);
+        timer += deltaTime;
+
+        if (timer >= 1.0) {
+            int amount = plant.getStats().getSunDropAmount();
+            if (amount <= 0) {
+                amount = 5; // default
+            }
+            logSunProduction(plant, row, col);
+            context.spawnSunAt(row, col, amount);
+            timer = 0.0;
+        }
+        plant.putRuntimeState("sunBeanTimer", timer);
+    }
+
+    // ---------- Case 2: Growth stages ----------
+
+    private boolean hasGrowthParams(AbilitySpec ability) {
+        List<?> sunAmounts = asList(ability.getParam("sunAmounts"));
+        List<?> stageTimes = asList(ability.getParam("growthStageTimes"));
+        return !sunAmounts.isEmpty() && !stageTimes.isEmpty();
+    }
+
+    private void handleGrowthAbility(PlantInstance plant, BehaviorContext context, double deltaTime,
+                                     int row, int col, AbilitySpec ability) {
+        List<?> sunAmounts = asList(ability.getParam("sunAmounts"));
+        List<?> stageTimes = asList(ability.getParam("growthStageTimes"));
+
+        double timer = asDouble(plant.getRuntimeState().getOrDefault("growthTimer", 0.0), 0.0);
+        int stage = asInt(plant.getRuntimeState().getOrDefault("growthStage", 0), 0);
+        boolean triggered = asBoolean(plant.getRuntimeState().getOrDefault("growthTriggered", Boolean.FALSE), false);
+
+        // Initial sun at stage 0 if not triggered
+        if (!triggered && stage == 0) {
+            int amount = asInt(sunAmounts.get(0), plant.getStats().getSunAmount());
+            logSunProduction(plant, row, col);
+            context.spawnSunAt(row, col, amount);
+            plant.putRuntimeState("growthTriggered", Boolean.TRUE);
+        }
+
+        timer += deltaTime;
+        while (stage + 1 < sunAmounts.size() && stage < stageTimes.size()) {
+            double nextThreshold = asDouble(stageTimes.get(stage), 0.0);
+            if (timer < nextThreshold) {
+                break;
+            }
+            stage++;
+            int amount = asInt(sunAmounts.get(Math.min(stage, sunAmounts.size() - 1)),
+                plant.getStats().getSunAmount());
+            logSunProduction(plant, row, col);
+            context.spawnSunAt(row, col, amount);
+        }
+
+        plant.putRuntimeState("growthTimer", timer);
+        plant.putRuntimeState("growthStage", stage);
+    }
+
+    // ---------- Case 3: Normal periodic production ----------
+
+    private void handleNormalProduction(PlantInstance plant, BehaviorContext context,
+                                        double deltaTime, int row, int col) {
         Double timer = asDouble(plant.getRuntimeState().getOrDefault("sunTimer", 0.0), 0.0);
         timer += deltaTime;
 
@@ -88,7 +136,6 @@ public class SunProducerBehavior implements PlantBehavior {
         if (productionTime <= 0) {
             productionTime = plant.getStats().getActionIntervalSeconds();
         }
-
         if (productionTime <= 0) {
             plant.putRuntimeState("sunTimer", timer);
             return;
@@ -100,32 +147,22 @@ public class SunProducerBehavior implements PlantBehavior {
             if (amount <= 0) {
                 amount = 50;
             }
-            if (plant.getStats().hasFlag(com.PVZ.model.enums.PlantFlag.DOUBLE_SUN_CHANCE) && Math.random() < 0.5) {
+            // Double sun chance
+            if (plant.getStats().hasFlag(PlantFlag.DOUBLE_SUN_CHANCE) && Math.random() < 0.5) {
                 amount *= 2;
             }
-            System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col +
-                    ")");
+            logSunProduction(plant, row, col);
             context.spawnSunAt(row, col, amount);
         }
 
         plant.putRuntimeState("sunTimer", timer);
     }
 
+    // ---------- Utilities ----------
 
-    @Override
-    public void onDamaged(PlantInstance plant, BehaviorContext context, Zombie attacker, int damageAmount,
-            boolean destroyed) {
-        if (plant == null || context == null) {
-            return;
-        }
-        String plantKey = plant.getDefinition() == null || plant.getDefinition().getPlantKey() == null
-                ? ""
-                : plant.getDefinition().getPlantKey().toLowerCase();
-        if (!"sun_bean".equals(plantKey)) {
-            return;
-        }
-        int amount = plant.getStats() == null ? 5 : Math.max(5, plant.getStats().getSunDropAmount());
-        context.addSun(amount);
+    private void logSunProduction(PlantInstance plant, int row, int col) {
+        String name = plant.getDefinition() == null ? "Unknown" : plant.getDefinition().getName();
+        System.out.println("plant " + name + " produced a sun at (" + row + ", " + col + ")");
     }
 
     private static List<?> asList(Object value) {

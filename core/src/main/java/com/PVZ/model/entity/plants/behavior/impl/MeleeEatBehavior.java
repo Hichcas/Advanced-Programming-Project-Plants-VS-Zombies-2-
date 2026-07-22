@@ -8,6 +8,10 @@ import com.PVZ.model.enums.DamageType;
 
 import java.util.List;
 
+/**
+ * Behavior for melee eating plants (Chomper, Bonk Choy, etc.).
+ * Refactored to comply with Checkstyle and PMD (method length ≤ 50 lines).
+ */
 public class MeleeEatBehavior implements PlantBehavior {
 
     @Override
@@ -16,6 +20,20 @@ public class MeleeEatBehavior implements PlantBehavior {
             return;
         }
 
+        // Handle cooldown
+        if (!isCooldownReady(plant, deltaTime)) {
+            return;
+        }
+
+        // Perform attack
+        performMeleeAttack(plant, context);
+    }
+
+    /**
+     * Checks if the melee cooldown has elapsed and updates the timer.
+     * Returns true if ready to attack.
+     */
+    private boolean isCooldownReady(PlantInstance plant, double deltaTime) {
         double timer = asDouble(plant.getRuntimeState().getOrDefault("meleeTimer", 0.0), 0.0);
         timer += deltaTime;
 
@@ -26,28 +44,66 @@ public class MeleeEatBehavior implements PlantBehavior {
 
         if (timer < cooldown) {
             plant.putRuntimeState("meleeTimer", timer);
-            return;
+            return false;
         }
 
+        // Reset timer for next attack
+        plant.putRuntimeState("meleeTimer", 0.0);
+        return true;
+    }
+
+    /**
+     * Performs the melee attack: determines area or single target,
+     * calculates damage, applies to zombies in range.
+     */
+    private void performMeleeAttack(PlantInstance plant, BehaviorContext context) {
         int lane = asInt(plant.getRuntimeState().getOrDefault("lane", 0), 0);
-        boolean isAreaAttack = plant.getStats().getBooleanExtra("areaMelee", false)
-                || "phat_beet".equals(plant.getDefinition().getPlantKey())
-                || "kiwibeast".equals(plant.getDefinition().getPlantKey());
+        boolean isAreaAttack = isAreaMelee(plant);
 
         double tileWidth = asDouble(plant.getRuntimeState().getOrDefault("tileWidth", 177.0), 177.0);
         double plantX = asDouble(plant.getRuntimeState().getOrDefault("worldX", 0.0), 0.0);
         double range = isAreaAttack ? tileWidth * 1.6 : tileWidth * 1.2;
 
+        int damage = computeMeleeDamage(plant);
+        boolean hitAnything = applyDamageToZombies(plant, context, lane, isAreaAttack, plantX, range, damage);
+
+        if (hitAnything && plant.isPlantFoodActive()) {
+            context.consumePlantFood(plant);
+        }
+    }
+
+    /**
+     * Determines if this plant has area melee attack.
+     */
+    private boolean isAreaMelee(PlantInstance plant) {
+        return plant.getStats().getBooleanExtra("areaMelee", false)
+            || "phat_beet".equals(plant.getDefinition().getPlantKey())
+            || "kiwibeast".equals(plant.getDefinition().getPlantKey());
+    }
+
+    /**
+     * Computes the final damage including multipliers and plant food bonus.
+     */
+    private int computeMeleeDamage(PlantInstance plant) {
         int damage = Math.max(0, plant.getStats().getDamage());
         double damageMultiplier = plant.getStats().getDoubleExtra("damageMultiplier", 1.0);
         if (plant.isPlantFoodActive()) {
-            damageMultiplier = Math.max(damageMultiplier, plant.getStats().getDoubleExtra("plantFoodDamageMultiplier",
-                    2.0));
+            damageMultiplier = Math.max(damageMultiplier,
+                plant.getStats().getDoubleExtra("plantFoodDamageMultiplier", 2.0));
         }
-        damage = (int) Math.min(Integer.MAX_VALUE, Math.round(damage * damageMultiplier));
+        return (int) Math.min(Integer.MAX_VALUE, Math.round(damage * damageMultiplier));
+    }
 
-        boolean hitAnything = false;
+    /**
+     * Applies damage to zombies in the affected lanes.
+     * Returns true if at least one zombie was hit.
+     */
+    private boolean applyDamageToZombies(PlantInstance plant, BehaviorContext context,
+                                         int lane, boolean isAreaAttack,
+                                         double plantX, double range, int damage) {
         int[] lanes = isAreaAttack ? new int[]{lane - 1, lane, lane + 1} : new int[]{lane};
+        boolean hitAnything = false;
+
         for (int targetLane : lanes) {
             if (targetLane < 0) {
                 continue;
@@ -61,20 +117,18 @@ public class MeleeEatBehavior implements PlantBehavior {
                     z.takeDamage(damage, DamageType.NORMAL);
                     hitAnything = true;
                     if (!isAreaAttack) {
-                        // single-target melee plants (chomper/bonk_choy/wasabi_whip) only bite once per swing
+                        // single-target plants only hit once per swing
                         break;
                     }
                 }
             }
         }
-
-        if (hitAnything && plant.isPlantFoodActive()) {
-            context.consumePlantFood(plant);
-        }
-
-        timer = 0.0;
-        plant.putRuntimeState("meleeTimer", timer);
+        return hitAnything;
     }
+
+    // ------------------------------------------------------------------------
+    // Utility methods (unchanged)
+    // ------------------------------------------------------------------------
 
     private static int asInt(Object value, int defaultValue) {
         if (value instanceof Number number) {
@@ -98,3 +152,4 @@ public class MeleeEatBehavior implements PlantBehavior {
         }
     }
 }
+
