@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.StringJoiner;
 
-public class RegularGameEngine extends GameEngine implements ZombieEngine, BehaviorContext {
+public class RegularGameEngine extends GameEngine implements ZombieEngine, BehaviorContext, SeedBarEngine {
     private static final double TICK_SECONDS = 0.1;
     private static final int ROWS = 5;
     private static final int COLS = 9;

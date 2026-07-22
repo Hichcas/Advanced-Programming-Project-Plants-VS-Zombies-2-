@@ -36,6 +36,8 @@ public class TravelLogMenuController {
             case ENTER_VASEBREAKER -> enterVasebreaker();
             case ENTER_WALLNUT_BOWLING -> enterWallnutBowling();
             case ENTER_IZOMBIE -> enterIZombie();
+            case ENTER_BEGHOULED -> enterBeghouled();
+            case ENTER_ZOMBOTANY -> enterZombotany();
             case SHOW_CURRENT_MENU -> new OutputDTO(true, AppStatus.currentMenuType.name());
             case EXIT -> exitToGameMenu();
             case ENTER_QUEST -> {
@@ -57,6 +59,8 @@ public class TravelLogMenuController {
             case "vasebreaker" -> enterVasebreaker();
             case "wallnutbowling", "wallnut-bowling", "wallnut bowling" -> enterWallnutBowling();
             case "izombie", "i,zombie", "i zombie" -> enterIZombie();
+            case "beghouled" -> enterBeghouled();
+            case "zombotany" -> enterZombotany();
             default -> new OutputDTO(false, "Unknown travel log page: " + pageName);
         };
     }
@@ -190,6 +194,16 @@ public class TravelLogMenuController {
     private OutputDTO enterIZombie() {
         AppStatus.currentMenuType = MenuType.I_ZOMBIE;
         return new OutputDTO(true, "Entered I, Zombie menu. Use 'izombie start <id>' to begin a level.");
+    }
+
+    private OutputDTO enterBeghouled() {
+        AppStatus.currentMenuType = MenuType.BEGHOULED;
+        return new OutputDTO(true, "Entered Beghouled menu. Use 'beghouled start <id>' to begin a level.");
+    }
+
+    private OutputDTO enterZombotany() {
+        AppStatus.currentMenuType = MenuType.ZOMBOTANY;
+        return new OutputDTO(true, "Entered Zombotany menu. Use 'zombotany start <id>' to begin a level.");
     }
 
     private OutputDTO exitToGameMenu() {

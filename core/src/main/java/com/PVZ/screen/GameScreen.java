@@ -174,7 +174,17 @@ public class GameScreen extends BaseScreen {
             shapeDebug.end();
 
             gameBatch.begin();
-            seedBar.drawIconsAndLabels(gameBatch, hudFont);
+            seedBar.drawIconsAndLabels(gameBatch, hudFont, regularGameEngine);
+            gameBatch.end();
+        } else if (activeEngine instanceof com.PVZ.model.game.ZombotanyGameEngine zombotanyGameEngine) {
+            SeedPacketBar seedBar = zombotanyGameEngine.getSeedPacketBar();
+
+            shapeDebug.begin(ShapeRenderer.ShapeType.Filled);
+            seedBar.drawBackgrounds(shapeDebug, zombotanyGameEngine, zombotanyGameEngine.getSelectedPlantType());
+            shapeDebug.end();
+
+            gameBatch.begin();
+            seedBar.drawIconsAndLabels(gameBatch, hudFont, zombotanyGameEngine);
             gameBatch.end();
         }
 

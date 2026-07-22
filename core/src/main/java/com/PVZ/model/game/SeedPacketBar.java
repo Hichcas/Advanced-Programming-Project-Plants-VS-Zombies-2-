@@ -104,7 +104,7 @@ public class SeedPacketBar {
         return packets;
     }
 
-    public void drawBackgrounds(ShapeRenderer sr, RegularGameEngine engine, PlantType selected) {
+    public void drawBackgrounds(ShapeRenderer sr, SeedBarEngine engine, PlantType selected) {
         for (SeedPacket packet : packets) {
             Rectangle b = packet.getBounds();
             boolean affordable = engine == null
@@ -134,7 +134,7 @@ public class SeedPacketBar {
     }
 
 
-    public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font, RegularGameEngine engine) {
+    public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font, SeedBarEngine engine) {
         for (SeedPacket packet : packets) {
             Rectangle b = packet.getBounds();
             if (packet.getIcon() != null) {

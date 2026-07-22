@@ -11,6 +11,7 @@ import com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechCowboy;
 import com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark;
 import com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt;
 import com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechPirate;
+import com.PVZ.model.entity.zombies.types.zombotany.*;
 
 public class ZombieFactory {
 
@@ -85,6 +86,10 @@ public class ZombieFactory {
             case "ZombieZombossMechPirate"      -> new ZombieZombossMechPirate();
             case "ZombieZombossMechCowboy"      -> new ZombieZombossMechCowboy();
             case "ZombieZombossMechDark"        -> new ZombieZombossMechDark();
+            case "ZombotanyPeashooterDefault"   -> new ZombotanyPeashooter();
+            case "ZombotanyWallnutDefault"      -> new ZombotanyWallnut();
+            case "ZombotanyJalapenoDefault"     -> new ZombotanyJalapeno();
+            case "ZombotanySquashDefault"       -> new ZombotanySquash();
             default -> throw new IllegalArgumentException("Unknown zombie alias: " + alias);
         };
     }

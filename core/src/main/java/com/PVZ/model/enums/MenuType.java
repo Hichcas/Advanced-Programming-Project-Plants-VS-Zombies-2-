@@ -22,7 +22,9 @@ public enum MenuType {
     IN_GAME(new InGameMenu()),
     QUEST(new QuestMenu()),
     WALLNUT_BOWLING(new WallnutBowlingMenu()),
-    I_ZOMBIE(new IZombieMenu());
+    I_ZOMBIE(new IZombieMenu()),
+    BEGHOULED(new BeghouledMenu()),
+    ZOMBOTANY(new ZombotanyMenu());
 
 
     private final Menu currentMenu;

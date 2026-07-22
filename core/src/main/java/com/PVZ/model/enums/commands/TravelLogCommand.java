@@ -49,6 +49,18 @@ public enum TravelLogCommand {
             return new TravelLogInputDTO(this, null);
         }
     },
+    ENTER_BEGHOULED("^\\s*travel\\s+log\\s+enter\\s+beghouled\\s*$") {
+        @Override
+        public TravelLogInputDTO createDTO(Matcher matcher) {
+            return new TravelLogInputDTO(this, null);
+        }
+    },
+    ENTER_ZOMBOTANY("^\\s*travel\\s+log\\s+enter\\s+zombotany\\s*$") {
+        @Override
+        public TravelLogInputDTO createDTO(Matcher matcher) {
+            return new TravelLogInputDTO(this, null);
+        }
+    },
     SHOW_CURRENT_MENU("^menu\\s+show\\s+current$|^show\\s+current\\s+menu$") {
         @Override
         public TravelLogInputDTO createDTO(Matcher matcher) {
