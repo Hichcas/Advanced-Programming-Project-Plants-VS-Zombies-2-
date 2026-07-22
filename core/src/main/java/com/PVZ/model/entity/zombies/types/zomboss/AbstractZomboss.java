@@ -57,6 +57,12 @@ public abstract class AbstractZomboss extends Zombie {
 
     @Override
     public void update(float delta, BattleController ctrl) {
+        if (hypnotized) {
+            updateHypnotized(delta, ctrl);
+            hitbox.setPosition((float) x, (float) y);
+            onUpdate(delta, ctrl);
+            return;
+        }
         super.update(delta, ctrl);
         double hpRatio = hitpoints / maxHitpoints;
         if (totalPhases == 3 && currentPhase < totalPhases) {

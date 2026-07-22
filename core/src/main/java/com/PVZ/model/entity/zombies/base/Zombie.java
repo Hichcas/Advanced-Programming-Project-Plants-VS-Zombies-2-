@@ -77,6 +77,12 @@ public abstract class Zombie {
             onUpdate(delta, controller);
             return;
         }
+        if (hypnotized) {
+            updateHypnotized(delta, controller);
+            hitbox.setPosition((float) x, (float) y);
+            onUpdate(delta, controller);
+            return;
+        }
         int tileCol = controller.getTileColumn((float) x);
         col = tileCol;
         Plant plant = controller.getPlantAt((int) row, tileCol);
@@ -123,6 +129,71 @@ public abstract class Zombie {
             }
             attackCooldownTimer = 0;
         }
+    }
+
+    public boolean isHypnotized() {
+        return hypnotized;
+    }
+
+    /**
+     * Allied (hypnotized) zombie behavior, per Hypno-shroom spec: the turned zombie fights for
+     * the player. It walks back toward the spawn edge (to the right), attacks any enemy
+     * (non-hypnotized) zombie it runs into, ignores plants (they are now its allies), and leaves
+     * the field once it walks off the right edge so it does not block the win condition.
+     */
+    protected void updateHypnotized(float delta, BattleController controller) {
+        if (isFrozen()) {
+            return;
+        }
+        Zombie target = findEnemyZombieTarget(controller);
+        if (target != null) {
+            moving = false;
+            attackZombie(target, delta);
+            return;
+        }
+        moving = true;
+        x += currentSpeed * delta * 100;
+        if (controller.getMap() != null) {
+            float rightEdge = controller.getMap().getStartX() + controller.getMap().getTotalWidth();
+            if (x > rightEdge + 120) {
+                controller.removeZombie(this);
+            }
+        }
+    }
+
+    /** A hypnotized zombie bites enemy zombies using its own eat damage. */
+    protected void attackZombie(Zombie target, float delta) {
+        if (isFrozen() || target == null || target.isDead()) {
+            return;
+        }
+        attackCooldownTimer += delta;
+        if (attackCooldownTimer >= 1.0f) {
+            target.takeDamage((int) eatDPS, DamageType.NORMAL);
+            attackCooldownTimer = 0;
+        }
+    }
+
+    /** Nearest living enemy (non-hypnotized) zombie in the same lane, in front of us (to the right). */
+    private Zombie findEnemyZombieTarget(BattleController controller) {
+        Zombie best = null;
+        double bestDx = Double.MAX_VALUE;
+        for (Zombie other : controller.getAllZombies()) {
+            if (other == null || other == this || other.isDead() || other.isHypnotized()) {
+                continue;
+            }
+            if ((int) other.getRow() != (int) this.row) {
+                continue;
+            }
+            double dx = other.getX() - this.x;
+            if (dx < -20) {
+                continue; // behind us; we face right
+            }
+            if (Math.abs(dx) <= 70 && Math.abs(other.getY() - this.y) <= 50 && dx < bestDx) {
+                bestDx = dx;
+                best = other;
+            }
+        }
+        return best;
     }
 
     public void applyEffect(StatusEffect e) {
