@@ -15,10 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * Represents the seed packet bar UI for selecting and viewing plant seeds.
+ * Refactored to comply with Checkstyle (constant naming convention).
+ */
 public class SeedPacketBar {
-    static private final float Xoffset = 600f;
 
+    private static final float X_OFFSET = 600f;
     private static final float SLOT_SIZE = 110f;
     private static final float GAP = 12f;
     private static final float VERTICAL_SLOT_SIZE = 120f;
@@ -28,13 +31,13 @@ public class SeedPacketBar {
     private final Map<PlantType, Texture> iconCache = new HashMap<>();
     private final Map<PlantType, Boolean> missingLogged = new HashMap<>();
 
-
     public void layout(List<PlantType> unlockedPlants, float startX, float startY) {
         layout(unlockedPlants, startX, startY, true);
     }
+
     public void layout(List<PlantType> unlockedPlants, float startX, float startY, boolean applyDefaultOffset) {
         packets.clear();
-        float x = applyDefaultOffset ? startX + Xoffset : startX;
+        float x = applyDefaultOffset ? startX + X_OFFSET : startX;
         for (PlantType type : unlockedPlants) {
             Rectangle bounds = new Rectangle(x, startY, SLOT_SIZE, SLOT_SIZE);
             SeedPacket packet = new SeedPacket(type, bounds);
@@ -64,7 +67,6 @@ public class SeedPacketBar {
             }
         }
     }
-
 
     private Texture getOrLoadIcon(PlantType type) {
         if (type == null) {
@@ -133,7 +135,6 @@ public class SeedPacketBar {
         drawIconsAndLabels(batch, font, null);
     }
 
-
     public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font, SeedBarEngine engine) {
         for (SeedPacket packet : packets) {
             Rectangle b = packet.getBounds();
@@ -142,7 +143,7 @@ public class SeedPacketBar {
             } else {
                 font.setColor(Color.WHITE);
                 font.draw(batch, packet.getPlantType().getDisplayName(), b.x + 4, b.y + b.height - 8, b.width - 8, -1,
-                        true);
+                    true);
             }
 
             if (engine == null) {
@@ -168,7 +169,7 @@ public class SeedPacketBar {
     private com.badlogic.gdx.graphics.Texture darkOverlayPixel() {
         if (darkOverlayTexture == null) {
             com.badlogic.gdx.graphics.Pixmap pixmap =
-                    new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+                new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
             pixmap.setColor(1f, 1f, 1f, 1f);
             pixmap.fill();
             darkOverlayTexture = new com.badlogic.gdx.graphics.Texture(pixmap);
