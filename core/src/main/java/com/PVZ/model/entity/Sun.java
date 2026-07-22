@@ -26,6 +26,11 @@ public class Sun {
     private double groundY = 0.0;
     private final Rectangle hitbox = new Rectangle();
 
+    /** The three kinds of sky sun defined by the game spec. */
+    public enum SunType { NORMAL, SPECIAL, RADIOACTIVE }
+
+    private SunType type = SunType.NORMAL;
+
     public Sun(double x, double y, int amount) {
         this.x = x;
         this.y = y;
@@ -55,6 +60,11 @@ public class Sun {
             if (y <= groundY) {
                 y = groundY;
                 reachedGround = true;
+                if (type == SunType.RADIOACTIVE) {
+                    // A radioactive sun that reaches the ground safely turns into a normal sun (25).
+                    type = SunType.NORMAL;
+                    amount = 25;
+                }
             }
             updateHitbox();
         }
@@ -120,6 +130,14 @@ public class Sun {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public SunType getType() {
+        return type;
+    }
+
+    public void setType(SunType type) {
+        this.type = type;
     }
 
     public boolean isCollected() {
