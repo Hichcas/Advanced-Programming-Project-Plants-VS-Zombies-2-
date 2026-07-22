@@ -14,6 +14,10 @@ import com.PVZ.view.input.DTO.ChapterAndLevelSelectionInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
 
+/**
+ * Controller for the chapter & level selection menu.
+ * Updated to use the new AppStatus constant names (UPPER_SNAKE_CASE).
+ */
 public class ChapterAndLevelSelectionMenuController {
 
     public OutputDTO handle(InputDTO input) {
@@ -58,23 +62,25 @@ public class ChapterAndLevelSelectionMenuController {
         AppStatus.currentChapterName = name;
         AppStatus.currentChapter = ChapterLibrary.getChapter(name);
         AppStatus.currentStageNumber = (stage != null && stage > 0) ? stage : 1;
-        AppStatus.selectedPlants.clear();
-        AppStatus.boostedPlants.clear();
-        AppStatus.currentStageLockedPlants.clear();
-        AppStatus.currentStageExclusiveFamilies.clear();
+
+        // Clear selection state using the renamed constants
+        AppStatus.SELECTED_PLANTS.clear();
+        AppStatus.BOOSTED_PLANTS.clear();
+        AppStatus.CURRENT_STAGE_LOCKED_PLANTS.clear();
+        AppStatus.CURRENT_STAGE_EXCLUSIVE_FAMILIES.clear();
 
         StageConfig stageConfig = ChapterLibrary.getStageConfig(
-                AppStatus.currentChapterName, AppStatus.currentStageNumber);
+            AppStatus.currentChapterName, AppStatus.currentStageNumber);
 
         if (GameLauncher.isConveyorBeltStage(stageConfig)) {
             GameLauncher.launch(stageConfig);
             return new OutputDTO(true, "Entered stage directly: " + AppStatus.currentChapterName
-                    + " Stage " + AppStatus.currentStageNumber + " (Conveyor Belt).");
+                + " Stage " + AppStatus.currentStageNumber + " (Conveyor Belt).");
         }
 
         if (GameLauncher.isLockedPlantsStage(stageConfig)) {
-            AppStatus.currentStageLockedPlants.addAll(GameLauncher.resolveLockedPlants(stageConfig));
-            AppStatus.currentStageExclusiveFamilies.addAll(GameLauncher.resolveExclusiveFamilies(stageConfig));
+            AppStatus.CURRENT_STAGE_LOCKED_PLANTS.addAll(GameLauncher.resolveLockedPlants(stageConfig));
+            AppStatus.CURRENT_STAGE_EXCLUSIVE_FAMILIES.addAll(GameLauncher.resolveExclusiveFamilies(stageConfig));
         }
 
         AppStatus.currentMenuType = MenuType.PLANT_SELECTION;
@@ -128,7 +134,9 @@ public class ChapterAndLevelSelectionMenuController {
         switch (currency.toLowerCase()) {
             case "coin" -> currentUser.userStats.addCoins(amount);
             case "diamond" -> currentUser.userStats.addDiamonds(amount);
-            default -> { return new OutputDTO(false, "Invalid cheat currency."); }
+            default -> {
+                return new OutputDTO(false, "Invalid cheat currency.");
+            }
         }
         UserRegistry.markDirty(currentUser.profile.getUsername());
         return new OutputDTO(true, "Cheat applied successfully.");

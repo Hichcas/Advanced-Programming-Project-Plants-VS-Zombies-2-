@@ -28,6 +28,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.StringJoiner;
 
+/**
+ * Main game engine for regular levels.
+ * Updated to use the new AppStatus constant names (UPPER_SNAKE_CASE).
+ */
 public class RegularGameEngine extends GameEngine implements ZombieEngine, BehaviorContext, SeedBarEngine {
     private static final double TICK_SECONDS = 0.1;
     private static final int ROWS = 5;
@@ -984,7 +988,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             return type.getDisplayName() + " is still recharging.";
         }
 
-        if (!conveyorBeltMode && !AppStatus.selectedPlants.isEmpty() && !AppStatus.selectedPlants.contains(type)) {
+        // Use renamed constant SELECTED_PLANTS
+        if (!conveyorBeltMode && !AppStatus.SELECTED_PLANTS.isEmpty() && !AppStatus.SELECTED_PLANTS.contains(type)) {
             return "Plant was not selected for this level: " + type.getDisplayName();
         }
 
@@ -1024,7 +1029,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 rechargeRemaining.put(type, recharge);
             }
         }
-        if (AppStatus.boostedPlants.contains(type)) {
+        // Use renamed constant BOOSTED_PLANTS
+        if (AppStatus.BOOSTED_PLANTS.contains(type)) {
             plant.applyPlantFood(this);
         }
     }

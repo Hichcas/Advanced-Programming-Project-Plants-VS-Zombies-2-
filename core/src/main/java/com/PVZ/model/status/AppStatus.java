@@ -19,27 +19,53 @@ import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.util.Set;
 
+/**
+ * Global application state holder.
+ * Refactored to comply with Checkstyle constant naming (static final fields in UPPER_SNAKE_CASE).
+ */
 public final class AppStatus {
+
     private static GameEngine gameEngine;
     private PVZ pvzGame;
-    public static GraphicsQuality Quality = GraphicsQuality.Ultra_High;
+
+    // Non-final static field → camelCase
+    public static GraphicsQuality quality = GraphicsQuality.Ultra_High;
+
     public static OrthographicCamera camera;
 
+    // Static final constants → UPPER_SNAKE_CASE
+    public static final Scanner SCANNER = new Scanner(System.in);
+    public static final Set<PlantType> SELECTED_PLANTS = new LinkedHashSet<>();
+    public static final Set<PlantType> BOOSTED_PLANTS = new LinkedHashSet<>();
+    public static final Set<PlantType> CURRENT_STAGE_LOCKED_PLANTS = new LinkedHashSet<>();
+    public static final Set<PlantFamily> CURRENT_STAGE_EXCLUSIVE_FAMILIES = new LinkedHashSet<>();
+
+    // Other static fields (non-final) remain camelCase
+    public static PVZ PVZ;  // Keeping as is (class name style)
+    public static MenuType currentMenuType = MenuType.REGISTER;
+    public static User currentUser = null;
+    public static String currentChapterName = null;
+    public static com.PVZ.model.game.chapter.Chapter currentChapter = null;
+    public static int currentStageNumber = 1;
+    public static boolean tileDebugEnabled = false;
+
+    // ---------- Getters / Setters ----------
+
     public static GraphicsQuality getQuality() {
-        return Quality;
+        return quality;
     }
 
-    public static void setQuality(GraphicsQuality quality) {
-        Quality = quality;
-        PVZ.updateGraphics(quality);
+    public static void setQuality(GraphicsQuality q) {
+        quality = q;
+        PVZ.updateGraphics(q);
     }
 
     public static GameEngine getGameEngine() {
         return gameEngine;
     }
 
-    public static void setGameEngine(GameEngine gameEngine) {
-        AppStatus.gameEngine = gameEngine;
+    public static void setGameEngine(GameEngine engine) {
+        gameEngine = engine;
     }
 
     public PVZ getPvzGame() {
@@ -74,45 +100,28 @@ public final class AppStatus {
         BrightnessController.getInstance().setBrightness((value / 50f) - 1f);
     }
 
-    public static PVZ PVZ;
-
-    public static MenuType currentMenuType = MenuType.REGISTER;
-    public static User currentUser = null;
-    // Constants renamed to follow uppercase with underscores pattern
-    public static final Scanner SCANNER = new Scanner(System.in);
-    public static String currentChapterName = null;
-    public static com.PVZ.model.game.chapter.Chapter currentChapter = null;
-    public static int currentStageNumber = 1;
-    public static final Set<PlantType> SELECTED_PLANTS = new LinkedHashSet<>();
-    public static final Set<PlantType> BOOSTED_PLANTS = new LinkedHashSet<>();
-    public static final Set<PlantType> CURRENT_STAGE_LOCKED_PLANTS = new LinkedHashSet<>();
-    /**
-     * Families that are "pick-one" for the current stage (Type-1 rule from the doc):
-     * the player may freely choose ANY member of the family, but as soon as one member
-     * is selected, the rest of that family becomes locked for the remainder of selection.
-     * This is dynamic (depends on what the player has already picked), unlike
-     * {@link #CURRENT_STAGE_LOCKED_PLANTS} which is a fixed, static lock list.
-     */
-    public static final Set<PlantFamily> CURRENT_STAGE_EXCLUSIVE_FAMILIES = new LinkedHashSet<>();
-
-    public static boolean tileDebugEnabled = false;
-
-    public static User getCurrentUser() { return currentUser;}
-
     public static PVZ getPVZ() {
         return PVZ;
     }
 
-    public static void setPVZ(PVZ PVZ) {
-        AppStatus.PVZ = PVZ;
+    public static void setPVZ(PVZ pvz) {
+        PVZ = pvz;
     }
 
     public static OrthographicCamera getCamera() {
         return camera;
     }
-    public static void setCamera(OrthographicCamera camera) {
-        AppStatus.camera = camera;
+
+    public static void setCamera(OrthographicCamera cam) {
+        camera = cam;
     }
+
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    // ---------- Navigation helpers ----------
+
     public static void returnToMainMenu() {
         returnToMainMenu(null);
     }
@@ -121,7 +130,8 @@ public final class AppStatus {
         currentMenuType = MenuType.MAIN;
         setGameEngine(null);
         ScreenManager.getInstance().performTransition(() ->
-                new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())),
+                new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3",
+                    new RegularGameEngine(new GameStatus())),
             message);
     }
 
@@ -129,22 +139,19 @@ public final class AppStatus {
         currentMenuType = MenuType.TRAVEL_LOG;
         setGameEngine(null);
         ScreenManager.getInstance().performTransition(() ->
-            new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())));
+            new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3",
+                new RegularGameEngine(new GameStatus())));
     }
 
     /**
-     * Leaves an in-progress level (via "menu exit" or a loss) and goes back to level select.
-     * Unlike just flipping currentMenuType, this also drops the old GameEngine reference and
-     * asks the ScreenManager to dispose the current GameScreen and swap in a fresh one — without
-     * this, the old screen (and its engine) kept rendering/ticking in the background: leftover
-     * planted plants stayed on the field and sun kept falling even after "exiting" the level.
+     * Leaves an in‑progress level (via "menu exit" or a loss) and goes back to level select.
      */
     public static void returnToChapterAndLevelSelection(String message) {
         currentMenuType = MenuType.CHAPTER_AND_LEVEL_SELECTION;
         setGameEngine(null);
         ScreenManager.getInstance().performTransition(() ->
-                new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())),
+                new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3",
+                    new RegularGameEngine(new GameStatus())),
             message);
     }
-
 }
