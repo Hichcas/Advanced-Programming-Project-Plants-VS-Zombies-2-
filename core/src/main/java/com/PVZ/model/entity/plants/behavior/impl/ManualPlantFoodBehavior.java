@@ -134,6 +134,7 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
             case "explode_o_nut" -> handleExplodeONut(plant);
             case "sun_bean" -> handleSunBean(plant, context, row, col);
             case "hypno_shroom" -> handleHypnoShroom(context, lane);
+            case "sun_shroom" -> handleSunShroom(plant, context, row, col);
             default -> handleGenericCustom(plant, context, lane, row, col, plantKey);
         }
     }
@@ -232,6 +233,14 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
         int fortifyAmount = Math.max(plant.getStats().getMaxHp() / 2, 500);
         context.fortifyPlantAt(row, col, fortifyAmount);
         plant.getStats().putExtra("fortified", Boolean.TRUE);
+    }
+
+    private void handleSunShroom(PlantInstance plant, BehaviorContext context, int row, int col) {
+        // Per spec: "رشد آنی به سایز آخر و تولید ۲۲۵ خورشید"
+        // Advance to max growth stage (stage 2 = size 3rd = 75 sun per cycle).
+        plant.putRuntimeState("growthStage", 2);
+        plant.putRuntimeState("growthTriggered", Boolean.TRUE);
+        context.spawnSunAt(row, col, 225);
     }
 
     private void handleHypnoShroom(BehaviorContext context, int lane) {
