@@ -283,7 +283,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
         if (gameStatus != null) {
             gameStatus.setRemainingZombieWaveInPercent(
-                zombieWavesStarted ? Math.min(100, gameStatus.getRemainingZombieWaveInPercent() + 1) : 0);
+                waveManager != null ? waveManager.getProgressPercent() : 0);
         }
 
         if (AppStatus.currentChapter != null) {

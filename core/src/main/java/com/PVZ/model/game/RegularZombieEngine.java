@@ -5,6 +5,8 @@ import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.ZombieType;
+import com.PVZ.model.status.AppStatus;
+import com.PVZ.model.user.UserRegistry;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
@@ -100,12 +102,22 @@ public class RegularZombieEngine implements ZombieEngine{
     public Zombie spawnZombie(String alias, int row, int col) {
         if (map == null || !map.isWithinBounds(row, col)) return null;
         Zombie zombie = ZombieType.fromAlias(alias).create();
+        if (com.PVZ.model.status.AppStatus.currentUser != null
+                && com.PVZ.model.status.AppStatus.currentUser.appStats != null) {
+            zombie.applyDifficultyScaling(
+                com.PVZ.model.status.AppStatus.currentUser.appStats.getDifficultyLevel());
+        }
         Tile tile = map.getTile(row, col);
         float y = tile.getY() + (tile.getHeight() - 70f) / 2f;
         float x = tile.getX() + tile.getWidth();
         zombie.initPosition(x, y, row);
         zombie.onSpawn();
         zombies.add(zombie);
+        if (AppStatus.currentUser != null && AppStatus.currentUser.collectionState != null) {
+            ZombieType type = ZombieType.fromAlias(alias);
+            AppStatus.currentUser.collectionState.seeZombie(type);
+            UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
+        }
         return zombie;
     }
 

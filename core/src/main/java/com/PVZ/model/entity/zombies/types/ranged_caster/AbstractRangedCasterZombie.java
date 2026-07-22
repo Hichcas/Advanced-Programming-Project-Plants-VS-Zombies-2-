@@ -26,6 +26,11 @@ public abstract class AbstractRangedCasterZombie extends Zombie {
     }
 
     @Override
+    protected void applyCustomScaledProperty(String key, double scale) {
+        if ("ProjectileDamage".equals(key)) projectileDamage *= scale;
+    }
+
+    @Override
     public void onSpawn() {}
 
     @Override

@@ -28,6 +28,11 @@ public abstract class AbstractGargantuar extends Zombie {
     }
 
     @Override
+    protected void applyCustomScaledProperty(String key, double scale) {
+        if ("SmashDamage".equals(key)) smashDamage *= scale;
+    }
+
+    @Override
     public void onSpawn() {}
 
     @Override

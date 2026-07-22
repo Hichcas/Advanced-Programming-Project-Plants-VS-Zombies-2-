@@ -25,9 +25,16 @@ public class WaveManager {
     private float hpWaitTimer = 0;
 
     private boolean started = false;
+    private int totalZombieCount = 0;
+    private final List<Zombie> allSpawnedWaveZombies = new ArrayList<>();
 
     public WaveManager(List<Wave> waves) {
         this.waves = waves;
+        for (Wave w : waves) {
+            for (Wave.WaveEntry e : w.getEntries()) {
+                totalZombieCount += e.getCount();
+            }
+        }
     }
 
     public void start() { started = true; }
@@ -52,6 +59,7 @@ public class WaveManager {
                 Zombie z = engine.spawnZombie(currentEntry.getZombieAlias(), randomRow(), 8);
                 if (z != null) {
                     waveZombies.add(z);
+                    allSpawnedWaveZombies.add(z);
                 } else {
                     System.out.println("[WaveManager] WARNING: failed to spawn " + currentEntry.getZombieAlias());
                 }
@@ -139,4 +147,13 @@ public class WaveManager {
     public int getCurrentWave() { return currentWave; }
     public int getTotalWaves() { return waves.size(); }
     public boolean isFinished() { return currentWave >= waves.size(); }
+
+    public int getProgressPercent() {
+        if (totalZombieCount == 0) return 0;
+        int killed = 0;
+        for (Zombie z : allSpawnedWaveZombies) {
+            if (z.isDead()) killed++;
+        }
+        return Math.min(100, killed * 100 / totalZombieCount);
+    }
 }
