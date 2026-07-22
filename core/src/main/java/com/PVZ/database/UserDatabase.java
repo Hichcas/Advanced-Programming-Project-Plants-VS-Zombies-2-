@@ -25,10 +25,11 @@ public class UserDatabase {
         }
         throw new RuntimeException("Cannot find project root (settings.gradle)");
     }
+
     private static final Path USERS_DIR = DATA_DIR.resolve("users");
     private static final Path INDEX_FILE = DATA_DIR.resolve("users_index.json");
 
-    private static final ObjectMapper mapper = new ObjectMapper()
+    private static final ObjectMapper MAPPER = new ObjectMapper()
         .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .registerModule(new JavaTimeModule())
@@ -44,19 +45,19 @@ public class UserDatabase {
     public static List<String> loadIndex() throws Exception {
         if (!Files.exists(INDEX_FILE)) return new ArrayList<>();
         String json = Files.readString(INDEX_FILE);
-        return mapper.readValue(json, new TypeReference<List<String>>() {});
+        return MAPPER.readValue(json, new TypeReference<List<String>>() {});
     }
 
     public static void addToIndex(String username) throws Exception {
         List<String> list = loadIndex();
         if (!list.contains(username)) {
             list.add(username);
-            Files.writeString(INDEX_FILE, mapper.writerWithDefaultPrettyPrinter().writeValueAsString(list));
+            Files.writeString(INDEX_FILE, MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(list));
         }
     }
 
     public static void save(String username, User user) throws Exception {
-        String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user);
+        String json = MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(user);
         Files.writeString(USERS_DIR.resolve(username + ".dat"), json);
     }
 
@@ -64,7 +65,7 @@ public class UserDatabase {
         Path file = USERS_DIR.resolve(username + ".dat");
         if (!Files.exists(file)) return null;
         String json = Files.readString(file);
-        return mapper.readValue(json, User.class);
+        return MAPPER.readValue(json, User.class);
     }
 
     public static boolean exists(String username) throws Exception {
@@ -75,6 +76,6 @@ public class UserDatabase {
         Files.deleteIfExists(USERS_DIR.resolve(username + ".dat"));
         List<String> list = loadIndex();
         list.remove(username);
-        Files.writeString(INDEX_FILE, mapper.writerWithDefaultPrettyPrinter().writeValueAsString(list));
+        Files.writeString(INDEX_FILE, MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(list));
     }
 }
