@@ -43,6 +43,12 @@ public abstract class AbstractRangedCasterZombie extends Zombie {
             die(ctrl);
             return;
         }
+        if (hypnotized) {
+            updateHypnotized(delta, ctrl);
+            hitbox.setPosition((float) x, (float) y);
+            onUpdate(delta, ctrl);
+            return;
+        }
         int tileCol = ctrl.getTileColumn((float) x);
         col = tileCol;
 
