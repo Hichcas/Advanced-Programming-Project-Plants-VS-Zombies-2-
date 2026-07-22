@@ -46,7 +46,9 @@ public final class BehaviorFactory {
         String plantKeyForWallCheck = definition.getPlantKey() == null
             ? "" : normalize(definition.getPlantKey());
         if (definition.getCategoryEnum() == com.PVZ.model.enums.PlantCategory.WALL
-            && !"garlic".equals(plantKeyForWallCheck)) {
+            && !"garlic".equals(plantKeyForWallCheck)
+            && !"sun_bean".equals(plantKeyForWallCheck)
+            && !"reinforce_mint".equals(plantKeyForWallCheck)) {
             return new WallBehavior();
         }
 

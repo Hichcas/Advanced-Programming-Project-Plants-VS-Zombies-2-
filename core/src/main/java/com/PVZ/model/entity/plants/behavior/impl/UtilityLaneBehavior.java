@@ -38,7 +38,17 @@ public class UtilityLaneBehavior implements PlantBehavior {
         int lane = asInt(plant.getRuntimeState().getOrDefault("lane", 0), 0);
         switch (mode) {
             case MAGNET_DISARM -> context.disarmZombiesInLane(lane);
-            case HYPNOTIZE -> context.hypnotizeZombiesInLane(lane, 999.0);
+            case HYPNOTIZE -> {
+                String plantKey = plant.getDefinition() == null
+                        || plant.getDefinition().getPlantKey() == null
+                        ? "" : plant.getDefinition().getPlantKey().toLowerCase();
+                // Hypno-shroom only hypnotizes the zombie that eats it (handled in onDamaged);
+                // it must NOT periodically hypnotize the whole lane. Other HYPNOTIZE plants
+                // (e.g. Caulipower) keep the lane-hypnotize behavior.
+                if (!"hypno_shroom".equals(plantKey)) {
+                    context.hypnotizeZombiesInLane(lane, 999.0);
+                }
+            }
             case MOVE_ZOMBIES -> {
                 context.moveZombiesFromLane(lane, lane + 1);
                 context.moveZombiesFromLane(lane, lane - 1);
@@ -64,7 +74,7 @@ public class UtilityLaneBehavior implements PlantBehavior {
         if (!"hypno_shroom".equals(plantKey)) {
             return;
         }
-        attacker.hypnotize(6.0f);
+        attacker.hypnotize(999.0f);
     }
 
     private static int asInt(Object value, int defaultValue) {

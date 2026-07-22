@@ -4,6 +4,7 @@ import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.PlantCategory;
 import com.PVZ.model.enums.PlantTag;
 
 import java.util.List;
@@ -105,7 +106,10 @@ public class ShooterBehavior implements PlantBehavior {
             if (plant.getStats().getBooleanExtra("iceAttack", false)) {
                 projectile.setType(ProjectileType.ICE_PEA);
             }
-            if (plant.getStats().getBooleanExtra("passThrough", false)) {
+            boolean shouldPierce = plant.getStats().getBooleanExtra("passThrough", false)
+                    || (plant.getDefinition() != null
+                        && plant.getDefinition().getCategoryEnum() == PlantCategory.THROUGH_STRIKE);
+            if (shouldPierce) {
                 int pierceBoost = plant.getStats().getIntExtra("pierceBoost", 3);
                 projectile.setPierce(Math.max(projectile.getPierce(), pierceBoost));
             }
