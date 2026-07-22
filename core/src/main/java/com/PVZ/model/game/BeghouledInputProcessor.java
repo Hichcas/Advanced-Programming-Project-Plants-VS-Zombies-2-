@@ -16,6 +16,8 @@ public class BeghouledInputProcessor extends InputAdapter {
     private int selectedRow = -1;
     private int selectedCol = -1;
 
+    // ---------- Public API ----------
+
     public void setEngine(BeghouledGameEngine engine) {
         this.engine = engine;
     }
@@ -28,56 +30,87 @@ public class BeghouledInputProcessor extends InputAdapter {
         return selectedCol;
     }
 
-    private void clearSelection() {
-        selectedRow = -1;
-        selectedCol = -1;
-    }
+    // ---------- Touch handling ----------
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (engine == null || engine.getGame() == null) {
+        if (!validateEngineAndCamera()) {
             return false;
         }
 
-        OrthographicCamera camera = AppStatus.getCamera();
-        if (camera == null) {
+        Vector3 world = unproject(screenX, screenY);
+        if (world == null) {
             return false;
         }
 
-        Vector3 world = camera.unproject(new Vector3(screenX, screenY, 0));
-
-        // Check for upgrade button click
+        // Upgrade button click
         if (handleUpgradeClick(world.x, world.y)) {
             return true;
         }
 
-        // Check map bounds and get row/col
+        // Tile click
+        TilePos pos = getTilePosition(world.x, world.y);
+        if (pos == null) {
+            return false;
+        }
+
+        boolean clickedPlant = engine.getGame().isPlant(pos.row, pos.col);
+        return handleTileClick(pos.row, pos.col, clickedPlant);
+    }
+
+    // ---------- Helper methods ----------
+
+    private boolean validateEngineAndCamera() {
+        if (engine == null || engine.getGame() == null) {
+            return false;
+        }
+        return AppStatus.getCamera() != null;
+    }
+
+    private Vector3 unproject(int screenX, int screenY) {
+        OrthographicCamera camera = AppStatus.getCamera();
+        if (camera == null) {
+            return null;
+        }
+        return camera.unproject(new Vector3(screenX, screenY, 0));
+    }
+
+    /**
+     * Returns the tile position (row, col) from world coordinates,
+     * or null if out of bounds or map is not set.
+     */
+    private TilePos getTilePosition(float worldX, float worldY) {
         if (engine.getMap() == null) {
-            return false;
+            return null;
         }
-
         Map map = engine.getMap();
-        int row = map.worldToRow(world.y);
-        int col = map.worldToCol(world.x);
+        int row = map.worldToRow(worldY);
+        int col = map.worldToCol(worldX);
         if (!map.isWithinBounds(row, col)) {
-            return false;
+            return null;
         }
+        return new TilePos(row, col);
+    }
 
-        boolean clickedPlant = engine.getGame().isPlant(row, col);
-
-        // No selection yet
+    /**
+     * Handles the selection / swapping logic when a tile is clicked.
+     */
+    private boolean handleTileClick(int row, int col, boolean clickedPlant) {
+        // No plant selected yet
         if (selectedRow < 0 || selectedCol < 0) {
-            handleNoSelection(row, col, clickedPlant);
+            if (clickedPlant) {
+                selectPlant(row, col);
+            }
             return true;
         }
 
-        // Click on same tile -> deselect
+        // Clicked the same tile → deselect
         if (selectedRow == row && selectedCol == col) {
             clearSelection();
             return true;
         }
 
-        // Attempt swap if adjacent and both have plants
+        // Adjacent and both have plants → try swap
         if (isAdjacent(selectedRow, selectedCol, row, col) && clickedPlant) {
             String result = engine.trySwap(selectedRow, selectedCol, row, col);
             System.out.println("[Beghouled] " + result);
@@ -85,18 +118,29 @@ public class BeghouledInputProcessor extends InputAdapter {
             return true;
         }
 
-        // Click on another plant -> move selection, or clear if empty
+        // Click on another plant → move selection, otherwise clear
         if (clickedPlant) {
-            selectedRow = row;
-            selectedCol = col;
-            System.out.println("[Beghouled] selected (" + row + ", " + col + ")");
+            selectPlant(row, col);
         } else {
             clearSelection();
         }
         return true;
     }
 
-    // ---------- Helper methods ----------
+    private void selectPlant(int row, int col) {
+        selectedRow = row;
+        selectedCol = col;
+        System.out.println("[Beghouled] selected (" + row + ", " + col + ")");
+    }
+
+    private void clearSelection() {
+        selectedRow = -1;
+        selectedCol = -1;
+    }
+
+    private boolean isAdjacent(int r1, int c1, int r2, int c2) {
+        return Math.abs(r1 - r2) + Math.abs(c1 - c2) == 1;
+    }
 
     private boolean handleUpgradeClick(float worldX, float worldY) {
         BeghouledUpgrade upgrade = engine.getUpgradeAt(worldX, worldY);
@@ -108,15 +152,15 @@ public class BeghouledInputProcessor extends InputAdapter {
         return false;
     }
 
-    private void handleNoSelection(int row, int col, boolean clickedPlant) {
-        if (clickedPlant) {
-            selectedRow = row;
-            selectedCol = col;
-            System.out.println("[Beghouled] selected (" + row + ", " + col + ")");
-        }
-    }
+    // ---------- Simple holder for tile position ----------
 
-    private boolean isAdjacent(int r1, int c1, int r2, int c2) {
-        return Math.abs(r1 - r2) + Math.abs(c1 - c2) == 1;
+    private static class TilePos {
+        final int row;
+        final int col;
+
+        TilePos(int row, int col) {
+            this.row = row;
+            this.col = col;
+        }
     }
 }

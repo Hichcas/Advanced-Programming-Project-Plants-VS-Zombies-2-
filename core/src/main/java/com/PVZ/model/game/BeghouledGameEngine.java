@@ -52,6 +52,8 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
 
     private final List<Rectangle> upgradeButtons = new ArrayList<>();
 
+    // ---------- Constructor & setup ----------
+
     public BeghouledGameEngine() {
         super(new GameStatus(), new BeghouledInputProcessor());
         ((BeghouledInputProcessor) inputProcessor).setEngine(this);
@@ -59,7 +61,6 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
     }
 
     public BeghouledGame getGame() { return game; }
-
     public void setGame(BeghouledGame game) { this.game = game; }
 
     @Override
@@ -95,111 +96,7 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         }
     }
 
-    private void updateLawnMowers(float delta) {
-        if (game == null) return;
-        for (LawnMower mower : lawnMowers) {
-            if (mower == null) continue;
-
-            if (!mower.isTriggered() && !mower.isUsed()) {
-                for (Zombie z : getZombiesInLane(mower.getRow())) {
-                    if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
-                        mower.trigger();
-                        zombieEngine.kill(z);
-                        break;
-                    }
-                }
-            }
-
-            if (mower.isTriggered() && !mower.isUsed()) {
-                mower.advance(delta);
-                for (Zombie z : getZombiesInLane(mower.getRow())) {
-                    if (z != null && !z.isDead() && mower.getHitbox().overlaps(z.getHitbox())) {
-                        zombieEngine.kill(z);
-                    }
-                }
-            }
-
-            if (mower.isUsed() && gameStatus != null && !gameStatus.isGameOver()) {
-                for (Zombie z : getZombiesInLane(mower.getRow())) {
-                    if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
-                        loseGame();
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-    private void detectEatenAndMakeCraters() {
-        if (game == null || map == null) return;
-        boolean changed = false;
-        for (int r = 0; r < game.getRows(); r++) {
-            for (int c = 0; c < game.getCols(); c++) {
-                if (game.getPlantTypeAt(r, c) == null) continue;
-                Plant p = map.getPlantAt(r, c);
-                if (p == null || p.isDead()) {
-                    game.makeCrater(r, c);
-                    changed = true;
-                }
-            }
-        }
-        if (changed) syncBoardToMap();
-    }
-
-    private void syncBoardToMap() {
-        if (game == null || map == null) return;
-        for (int r = 0; r < game.getRows(); r++) {
-            for (int c = 0; c < game.getCols(); c++) {
-                PlantType gridType = game.getPlantTypeAt(r, c);
-                Plant existing = map.getPlantAt(r, c);
-
-                if (gridType != null) {
-                    if (existing == null || existing.isDead() || existing.getType() != gridType) {
-                        if (existing != null) {
-                            plants.remove(existing);
-                            map.removePlant(r, c);
-                        }
-                        Plant created = PlantFactory.createPlant(gridType, 1);
-                        if (created != null) {
-                            map.setPlant(r, c, created);
-                            plants.add(created);
-                        }
-                    }
-                } else {
-                    if (existing != null) {
-                        plants.remove(existing);
-                        map.removePlant(r, c);
-                    }
-                }
-            }
-        }
-    }
-
-    public String trySwap(int r1, int c1, int r2, int c2) {
-        if (game == null || map == null) return "No active Beghouled game.";
-        String result = game.swap(r1, c1, r2, c2);
-        syncBoardToMap();
-        checkWin();
-        return result;
-    }
-
-    public String applyUpgrade(BeghouledUpgrade upgrade) {
-        if (game == null || map == null) return "No active Beghouled game.";
-        String result = game.tryUpgrade(upgrade);
-        syncBoardToMap();
-        return result;
-    }
-
-    public BeghouledUpgrade getUpgradeAt(float worldX, float worldY) {
-        if (game == null) return null;
-        List<BeghouledUpgrade> ups = game.getUpgrades();
-        for (int i = 0; i < upgradeButtons.size() && i < ups.size(); i++) {
-            if (upgradeButtons.get(i).contains(worldX, worldY)) {
-                return ups.get(i);
-            }
-        }
-        return null;
-    }
+    // ---------- Game logic ----------
 
     @Override
     public void update(float delta) {
@@ -253,7 +150,6 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
                 plant.update(battleController, TICK_SECONDS);
             }
         }
-
         plants.removeIf(p -> {
             if (p != null && p.isDead()) {
                 int r = intState(p, "row");
@@ -287,19 +183,120 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         }
     }
 
+    private void detectEatenAndMakeCraters() {
+        if (game == null || map == null) return;
+        boolean changed = false;
+        for (int r = 0; r < game.getRows(); r++) {
+            for (int c = 0; c < game.getCols(); c++) {
+                if (game.getPlantTypeAt(r, c) == null) continue;
+                Plant p = map.getPlantAt(r, c);
+                if (p == null || p.isDead()) {
+                    game.makeCrater(r, c);
+                    changed = true;
+                }
+            }
+        }
+        if (changed) syncBoardToMap();
+    }
+
+    private void syncBoardToMap() {
+        if (game == null || map == null) return;
+        for (int r = 0; r < game.getRows(); r++) {
+            for (int c = 0; c < game.getCols(); c++) {
+                PlantType gridType = game.getPlantTypeAt(r, c);
+                Plant existing = map.getPlantAt(r, c);
+                if (gridType != null) {
+                    if (existing == null || existing.isDead() || existing.getType() != gridType) {
+                        if (existing != null) {
+                            plants.remove(existing);
+                            map.removePlant(r, c);
+                        }
+                        Plant created = PlantFactory.createPlant(gridType, 1);
+                        if (created != null) {
+                            map.setPlant(r, c, created);
+                            plants.add(created);
+                        }
+                    }
+                } else {
+                    if (existing != null) {
+                        plants.remove(existing);
+                        map.removePlant(r, c);
+                    }
+                }
+            }
+        }
+    }
+
+    // ---------- Swap & upgrade ----------
+
+    public String trySwap(int r1, int c1, int r2, int c2) {
+        if (game == null || map == null) return "No active Beghouled game.";
+        String result = game.swap(r1, c1, r2, c2);
+        syncBoardToMap();
+        checkWin();
+        return result;
+    }
+
+    public String applyUpgrade(BeghouledUpgrade upgrade) {
+        if (game == null || map == null) return "No active Beghouled game.";
+        String result = game.tryUpgrade(upgrade);
+        syncBoardToMap();
+        return result;
+    }
+
+    public BeghouledUpgrade getUpgradeAt(float worldX, float worldY) {
+        if (game == null) return null;
+        List<BeghouledUpgrade> ups = game.getUpgrades();
+        for (int i = 0; i < upgradeButtons.size() && i < ups.size(); i++) {
+            if (upgradeButtons.get(i).contains(worldX, worldY)) {
+                return ups.get(i);
+            }
+        }
+        return null;
+    }
+
+    private void updateLawnMowers(float delta) {
+        if (game == null) return;
+        for (LawnMower mower : lawnMowers) {
+            if (mower == null) continue;
+            if (!mower.isTriggered() && !mower.isUsed()) {
+                for (Zombie z : getZombiesInLane(mower.getRow())) {
+                    if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
+                        mower.trigger();
+                        zombieEngine.kill(z);
+                        break;
+                    }
+                }
+            }
+            if (mower.isTriggered() && !mower.isUsed()) {
+                mower.advance(delta);
+                for (Zombie z : getZombiesInLane(mower.getRow())) {
+                    if (z != null && !z.isDead() && mower.getHitbox().overlaps(z.getHitbox())) {
+                        zombieEngine.kill(z);
+                    }
+                }
+            }
+            if (mower.isUsed() && gameStatus != null && !gameStatus.isGameOver()) {
+                for (Zombie z : getZombiesInLane(mower.getRow())) {
+                    if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
+                        loseGame();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     private void checkWin() {
         if (game == null || game.isFinished() || gameStatus.isGameOver() || gameOverTriggered) return;
         if (game.getMatchesMade() < game.getTargetMatches()) return;
-
         for (Zombie z : new ArrayList<>(zombieEngine.getZombies())) {
             zombieEngine.kill(z);
         }
         triggerGameOver(true);
     }
 
-    private void loseGame() {
-        triggerGameOver(false);
-    }
+    private void loseGame() { triggerGameOver(false); }
 
     private void triggerGameOver(boolean win) {
         if (gameOverTriggered) return;
@@ -307,11 +304,8 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         gameOverTimer = 0f;
         gameOverWin = win;
         if (game != null) {
-            if (win) {
-                game.markWon();
-            } else {
-                game.markLost();
-            }
+            if (win) game.markWon();
+            else game.markLost();
         }
         gameStatus.setWon(win);
         gameStatus.setGameOver(true);
@@ -330,6 +324,8 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         }
     }
 
+    // ---------- Drawing ----------
+
     @Override
     public void draw(SpriteBatch batch) {
         if (game == null || map == null) return;
@@ -338,35 +334,46 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         zombieEngine.draw(batch);
 
         batch.begin();
-        for (Zombie z : zombieEngine.getZombies()) {
-            if (z == null || z.isDead()) continue;
-            HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
-                    (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
-        }
-        for (Plant p : plants) {
-            if (p == null || p.isDead()) continue;
-            p.draw(batch);
-            Rectangle box = p.getHitbox();
-            HealthBarRenderer.draw(batch, box.x, box.y + box.height + 2, box.width,
-                    (float) p.getCurrentHp() / Math.max(1, p.getMaxHp()), true);
-        }
-        for (Projectile p : projectiles) {
-            if (p != null) p.draw(batch);
-        }
-        for (LawnMower mower : lawnMowers) {
-            if (mower != null) mower.draw(batch);
-        }
+        drawZombiesHealth(batch);
+        drawPlantsAndProjectiles(batch);
+        drawLawnMowers(batch);
         drawCratersAndSelection(batch);
         batch.end();
 
         drawHud(batch);
     }
 
+    private void drawZombiesHealth(SpriteBatch batch) {
+        for (Zombie z : zombieEngine.getZombies()) {
+            if (z == null || z.isDead()) continue;
+            HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
+                (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
+        }
+    }
+
+    private void drawPlantsAndProjectiles(SpriteBatch batch) {
+        for (Plant p : plants) {
+            if (p == null || p.isDead()) continue;
+            p.draw(batch);
+            Rectangle box = p.getHitbox();
+            HealthBarRenderer.draw(batch, box.x, box.y + box.height + 2, box.width,
+                (float) p.getCurrentHp() / Math.max(1, p.getMaxHp()), true);
+        }
+        for (Projectile p : projectiles) {
+            if (p != null) p.draw(batch);
+        }
+    }
+
+    private void drawLawnMowers(SpriteBatch batch) {
+        for (LawnMower mower : lawnMowers) {
+            if (mower != null) mower.draw(batch);
+        }
+    }
+
     private void drawCratersAndSelection(SpriteBatch batch) {
         if (pixel == null) return;
         float tw = map.getTileWidth();
         float th = map.getTileHeight();
-
         batch.setColor(0.15f, 0.1f, 0.05f, 0.65f);
         for (int r = 0; r < game.getRows(); r++) {
             for (int c = 0; c < game.getCols(); c++) {
@@ -376,7 +383,6 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
                 batch.draw(pixel, x + 6, y + 6, tw - 12, th - 12);
             }
         }
-
         BeghouledInputProcessor input = (BeghouledInputProcessor) inputProcessor;
         int sr = input.getSelectedRow();
         int sc = input.getSelectedCol();
@@ -392,17 +398,20 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
     private void drawHud(SpriteBatch batch) {
         ensureTexturesLoaded();
         batch.begin();
-
         float left = map.getStartX() + 20f;
         float top = map.getStartY() + 40f;
-
         int made = game.getMatchesMade();
         int target = game.getTargetMatches();
         int remaining = Math.max(0, target - made);
         String label = String.format("Sun: %d   |   Matches: %d/%d   |   %d more match%s to win",
-                game.getSun(), made, target, remaining, remaining == 1 ? "" : "es");
+            game.getSun(), made, target, remaining, remaining == 1 ? "" : "es");
         font.draw(batch, label, left, top);
+        drawUpgradeButtons(batch);
+        batch.end();
+        drawGameOverOverlay(batch);
+    }
 
+    private void drawUpgradeButtons(SpriteBatch batch) {
         upgradeButtons.clear();
         List<BeghouledUpgrade> ups = game.getUpgrades();
         float btnW = 360f;
@@ -415,30 +424,21 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
             float y = by - i * (btnH + gap);
             Rectangle rect = new Rectangle(bx, y - btnH, btnW, btnH);
             upgradeButtons.add(rect);
-
             boolean afford = game.getSun() >= up.getCost();
             batch.setColor(afford ? new Color(0.2f, 0.5f, 0.2f, 0.8f) : new Color(0.4f, 0.2f, 0.2f, 0.8f));
             if (pixel != null) batch.draw(pixel, rect.x, rect.y, rect.width, rect.height);
             batch.setColor(Color.WHITE);
             tinyFont.draw(batch, up.describe(), rect.x + 8f, rect.y + btnH - 12f);
         }
-
-        batch.end();
-
-        drawGameOverOverlay(batch);
     }
 
     private void drawGameOverOverlay(SpriteBatch batch) {
         if (!gameOverTriggered) return;
         ensureTexturesLoaded();
         float alpha;
-        if (gameOverTimer < 1.0f) {
-            alpha = Math.max(0f, gameOverTimer);
-        } else if (gameOverTimer > 2.5f) {
-            alpha = Math.max(0f, 1.0f - (gameOverTimer - 2.5f) / 0.5f);
-        } else {
-            alpha = 1.0f;
-        }
+        if (gameOverTimer < 1.0f) alpha = Math.max(0f, gameOverTimer);
+        else if (gameOverTimer > 2.5f) alpha = Math.max(0f, 1.0f - (gameOverTimer - 2.5f) / 0.5f);
+        else alpha = 1.0f;
         batch.begin();
         String message = gameOverWin ? "YOU WIN!" : "GAME OVER";
         com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout(font, message);
@@ -449,6 +449,8 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         font.setColor(1f, 1f, 1f, 1f);
         batch.end();
     }
+
+    // ---------- Texture loading ----------
 
     private void ensureTexturesLoaded() {
         if (font != null) return;
@@ -468,6 +470,8 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         return background;
     }
 
+    // ---------- Engine overrides ----------
+
     @Override
     public void dispose() {
         zombieEngine.dispose();
@@ -476,37 +480,14 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         if (pixel != null) pixel.dispose();
     }
 
-    @Override
-    public void kill(Object entity) { zombieEngine.kill(entity); }
-
-    @Override
-    public void takeDamage(Object entity, double amount) { zombieEngine.takeDamage(entity, amount); }
-
-    @Override
-    public Plant getPlantAt(int row, int col) { return map != null ? map.getPlantAt(row, col) : null; }
-
-    @Override
-    public List<Zombie> getZombiesInLane(int lane) { return zombieEngine.getZombiesInLane(lane); }
-
-    @Override
-    public int getSunCount() { return game != null ? game.getSun() : 0; }
-
-    @Override
-    public void addSun(int amount) { if (game != null) game.addSun(amount); }
-
-    @Override
-    public void spawnProjectile(Projectile p) { projectiles.add(p); }
-
-    @Override
-    public Zombie spawnZombie(String alias, int row, int col) { return zombieEngine.spawnZombie(alias, row, col); }
-
-    @Override
-    public void removePlant(int row, int col) {
-        if (map != null) map.removePlant(row, col);
-    }
-
-    @Override
-    public int getTileColumn(float worldX) { return map != null ? map.worldToCol(worldX) : 0; }
-
-    public boolean isGameOver() { return gameStatus.isGameOver(); }
+    @Override public void kill(Object entity) { zombieEngine.kill(entity); }
+    @Override public void takeDamage(Object entity, double amount) { zombieEngine.takeDamage(entity, amount); }
+    @Override public Plant getPlantAt(int row, int col) { return map != null ? map.getPlantAt(row, col) : null; }
+    @Override public List<Zombie> getZombiesInLane(int lane) { return zombieEngine.getZombiesInLane(lane); }
+    @Override public int getSunCount() { return game != null ? game.getSun() : 0; }
+    @Override public void addSun(int amount) { if (game != null) game.addSun(amount); }
+    @Override public void spawnProjectile(Projectile p) { projectiles.add(p); }
+    @Override public Zombie spawnZombie(String alias, int row, int col) { return zombieEngine.spawnZombie(alias, row, col); }
+    @Override public void removePlant(int row, int col) { if (map != null) map.removePlant(row, col); }
+    @Override public int getTileColumn(float worldX) { return map != null ? map.worldToCol(worldX) : 0; }
 }
