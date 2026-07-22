@@ -1,6 +1,9 @@
 package com.PVZ.model.game;
 
+import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.Sun;
 import com.PVZ.model.entity.Tile;
+import com.PVZ.model.entity.zombies.base.Zombie;
 import com.badlogic.gdx.math.Rectangle;
 
 public class SunHandler {
@@ -26,6 +29,7 @@ public class SunHandler {
         Rectangle pointer = new Rectangle(worldX - 8f, worldY - 8f, 16f, 16f);
         int collected = engine.sunManager.collectAt(pointer);
         if (collected > 0) engine.addSun(collected);
+        applyRadioactiveExplosions(engine);
         return collected;
     }
 
@@ -42,6 +46,50 @@ public class SunHandler {
         }
         int collected = engine.sunManager.collectAt(worldX, worldY);
         engine.addSun(collected);
+        int explosions = applyRadioactiveExplosions(engine);
+        if (explosions > 0) {
+            return "A radioactive sun exploded!";
+        }
         return collected > 0 ? "Collected " + collected + " sun." : "No sun at selected location.";
+    }
+
+    /**
+     * Detonates any radioactive suns that were harvested while still falling this frame.
+     * Per spec the blast deals 150 damage to zombies in a 5x5 area and 80 damage to plants
+     * in a 3x3 area around the sun's tile.
+     */
+    public static int applyRadioactiveExplosions(RegularGameEngine engine) {
+        java.util.List<Sun> exploded = engine.sunManager.drainExplodedSuns();
+        for (Sun sun : exploded) {
+            detonateRadioactiveSun(engine, sun);
+        }
+        return exploded.size();
+    }
+
+    private static void detonateRadioactiveSun(RegularGameEngine engine, Sun sun) {
+        if (engine.map == null) {
+            return;
+        }
+        int centerRow = engine.map.worldToRow((float) sun.getY());
+        int centerCol = engine.map.worldToCol((float) sun.getX());
+        System.out.println("A radioactive sun exploded at (" + centerCol + ", " + centerRow + ")!");
+        for (Zombie z : engine.getZombieList()) {
+            if (z == null || z.isDead()) {
+                continue;
+            }
+            int zRow = (int) z.getRow();
+            int zCol = engine.map.worldToCol((float) z.getX());
+            if (Math.abs(zRow - centerRow) <= 2 && Math.abs(zCol - centerCol) <= 2) {
+                z.takeDamage(150);
+            }
+        }
+        for (int r = centerRow - 1; r <= centerRow + 1; r++) {
+            for (int c = centerCol - 1; c <= centerCol + 1; c++) {
+                Plant plant = engine.map.getPlantAt(r, c);
+                if (plant != null && !plant.isDead()) {
+                    plant.takeDamage(80);
+                }
+            }
+        }
     }
 }
