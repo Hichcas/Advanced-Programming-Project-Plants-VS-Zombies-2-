@@ -240,7 +240,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         }
 
         if (gameStatus != null && !gameStatus.isGameOver() && !gameStatus.isWon()
-                && waveManager != null && waveManager.isFinished()) {
+            && waveManager != null && waveManager.isFinished()) {
             boolean anyAlive = false;
             for (Zombie z : getZombieList()) {
                 if (z != null && !z.isDead()) {
@@ -493,63 +493,80 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         }
     }
 
+    // =================== REFACTORED DRAW METHOD ===================
     @Override
     public void draw(SpriteBatch batch) {
         if (zombieEngine != null) {
             zombieEngine.draw(batch);
         }
         batch.begin();
+        drawBattleProjectiles(batch);
+        drawSuns(batch);
+        drawLawnMowers(batch);
+        drawPlantsWithLabels(batch);
+        drawZombiesWithHealthBars(batch);
+        batch.end();
+    }
+
+    private void drawBattleProjectiles(SpriteBatch batch) {
         if (battleController != null) {
             battleController.drawProjectiles(batch);
         }
-
         for (Projectile projectile : projectiles) {
             projectile.draw(batch);
         }
+    }
 
+    private void drawSuns(SpriteBatch batch) {
         for (com.PVZ.model.entity.Sun sun : sunManager.getSuns()) {
             sun.draw(batch);
         }
+    }
 
+    private void drawLawnMowers(SpriteBatch batch) {
         for (com.PVZ.model.entity.LawnMower mower : lawnMowers) {
             if (mower != null) {
                 mower.draw(batch);
             }
         }
+    }
+
+    private void drawPlantsWithLabels(SpriteBatch batch) {
+        if (map == null) return;
         BitmapFont plantFont = FontManager.getInstance().getEnglishTinyFont();
         plantFont.setColor(Color.WHITE);
-        if (map != null) {
-            for (int row = 0; row < ROWS; row++) {
-                for (int col = 0; col < COLS; col++) {
-                    Plant plant = map.getPlantAt(row, col);
-                    if (plant == null || plant.isDead()) {
-                        continue;
-                    }
-                    plant.draw(batch);
-                    Rectangle box = plant.getHitbox();
-                    HealthBarRenderer.draw(batch, box.x, box.y + box.height + 2, box.width,
-                        (float) plant.getCurrentHp() / Math.max(1, plant.getMaxHp()), true);
-                    String label = plant.getType() + " (" + plant.getCurrentHp() + "hp)";
-                    plantFont.draw(batch, label, box.x, box.y + box.height + 4);
-
-                    Object pFreezeLv = plant.getRuntimeState("freezeLevel");
-                    if (pFreezeLv instanceof Number && ((Number) pFreezeLv).intValue() >= 3) {
-                        Color c = batch.getColor();
-                        batch.setColor(0.3f, 0.6f, 1f, 0.45f);
-                        batch.draw(iceOverlayTexture(), box.x, box.y, box.width, box.height);
-                        batch.setColor(c);
-                    }
-                }
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                Plant plant = map.getPlantAt(row, col);
+                if (plant == null || plant.isDead()) continue;
+                plant.draw(batch);
+                Rectangle box = plant.getHitbox();
+                HealthBarRenderer.draw(batch, box.x, box.y + box.height + 2, box.width,
+                    (float) plant.getCurrentHp() / Math.max(1, plant.getMaxHp()), true);
+                String label = plant.getType() + " (" + plant.getCurrentHp() + "hp)";
+                plantFont.draw(batch, label, box.x, box.y + box.height + 4);
+                drawPlantFreezeOverlay(batch, plant, box);
             }
         }
+    }
 
+    private void drawPlantFreezeOverlay(SpriteBatch batch, Plant plant, Rectangle box) {
+        Object pFreezeLv = plant.getRuntimeState("freezeLevel");
+        if (pFreezeLv instanceof Number && ((Number) pFreezeLv).intValue() >= 3) {
+            Color c = batch.getColor();
+            batch.setColor(0.3f, 0.6f, 1f, 0.45f);
+            batch.draw(iceOverlayTexture(), box.x, box.y, box.width, box.height);
+            batch.setColor(c);
+        }
+    }
+
+    private void drawZombiesWithHealthBars(SpriteBatch batch) {
         BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
         font.setColor(Color.BLACK);
         for (Zombie z : getZombieList()) {
             if (z != null && !z.isDead()) {
                 HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
                     (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
-
                 if (z.isFrozen()) {
                     Color c = batch.getColor();
                     batch.setColor(0.3f, 0.6f, 1f, 0.45f);
@@ -559,9 +576,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             }
         }
         font.setColor(Color.WHITE);
-
-        batch.end();
     }
+    // =================== END REFACTORED DRAW ===================
 
     @Override
     public void dispose() {
@@ -873,7 +889,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             String internalPath = backgroundTexturePath;
             if (com.badlogic.gdx.Gdx.files.internal(internalPath).exists()) {
                 backgroundOverrideTexture = new com.badlogic.gdx.graphics.Texture(
-                        com.badlogic.gdx.Gdx.files.internal(internalPath));
+                    com.badlogic.gdx.Gdx.files.internal(internalPath));
             } else {
                 System.out.println("RegularGameEngine: background not found: " + internalPath);
                 return null;
@@ -892,6 +908,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return plantPlant(type, x, y);
     }
 
+    // =================== REFACTORED plantPlant ===================
     public String plantPlant(PlantType type, int x, int y) {
         if (map == null) {
             return "Map is not ready.";
@@ -908,6 +925,57 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (map.getPlantAt(row, col) != null) {
             return "Tile is occupied.";
         }
+
+        // Check availability (conveyor belt / cooldown / selection / locked plants)
+        String availabilityError = checkPlantAvailability(type);
+        if (availabilityError != null) {
+            return availabilityError;
+        }
+
+        // Create plant instance
+        Plant plant = createPlantInstance(type);
+        if (plant == null) {
+            return "Cannot create plant.";
+        }
+
+        // Check tile suitability for aquatic plants
+        TileType targetTileType = map.getTile(row, col).getType();
+        boolean plantIsAquatic = plant.getDefinition() != null
+            && plant.getDefinition().hasTag(PlantTag.WATER);
+        if ((targetTileType == TileType.WATER || targetTileType == TileType.TIDE) && !plantIsAquatic) {
+            return "Non-aquatic plants cannot be planted on water tiles.";
+        }
+        if (plantIsAquatic && targetTileType != TileType.WATER && targetTileType != TileType.TIDE) {
+            return "Aquatic plants must be planted on water tiles.";
+        }
+
+        // Deduct cost (if not conveyor)
+        if (!conveyorBeltMode) {
+            int cost = plant.getStats().getCost();
+            if (getSunCount() < cost) {
+                return "Not enough sun.";
+            }
+            addSun(-cost);
+        }
+
+        // Place the plant
+        plant.setPlanted(true);
+        plant.putRuntimeState("row", row);
+        plant.putRuntimeState("col", col);
+        plant.putRuntimeState("lane", row);
+        map.setPlant(row, col, plant);
+
+        // Handle post-planting effects (conveyor removal, cooldown, plant food)
+        handlePostPlanting(type, plant);
+
+        return "Planted " + type.getDisplayName() + " at (" + col + ", " + row + ").";
+    }
+
+    /**
+     * Checks if the plant can be planted based on current mode (conveyor belt, cooldown, locked plants).
+     * Returns an error message or null if allowed.
+     */
+    private String checkPlantAvailability(PlantType type) {
         if (conveyorBeltMode) {
             if (!conveyorBeltQueue.contains(type)) {
                 return "No " + type.getDisplayName() + " seed packet is available on the belt.";
@@ -924,44 +992,30 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             return "Plant is locked for this level: " + type.getDisplayName();
         }
 
-        int userLevel = 1;
         if (AppStatus.currentUser != null && AppStatus.currentUser.collectionState != null) {
             var collection = AppStatus.currentUser.collectionState;
             if (!collection.isPlantUnlocked(type)) {
                 return "Plant is locked: " + type.getDisplayName();
             }
-            userLevel = collection.getPlantLevel(type) + 1;
         }
+        return null;
+    }
 
-        Plant plant = PlantFactory.createPlant(type, userLevel);
-        if (plant == null) {
-            return "Cannot create plant.";
+    /**
+     * Creates a plant instance using the user's level.
+     */
+    private Plant createPlantInstance(PlantType type) {
+        int userLevel = 1;
+        if (AppStatus.currentUser != null && AppStatus.currentUser.collectionState != null) {
+            userLevel = AppStatus.currentUser.collectionState.getPlantLevel(type) + 1;
         }
+        return PlantFactory.createPlant(type, userLevel);
+    }
 
-        TileType targetTileType = map.getTile(row, col).getType();
-        boolean plantIsAquatic = plant.getDefinition() != null
-                && plant.getDefinition().hasTag(PlantTag.WATER);
-        if ((targetTileType == TileType.WATER || targetTileType == TileType.TIDE) && !plantIsAquatic) {
-            return "Non-aquatic plants cannot be planted on water tiles.";
-        }
-        if (plantIsAquatic && targetTileType != TileType.WATER && targetTileType != TileType.TIDE) {
-            return "Aquatic plants must be planted on water tiles.";
-        }
-
-        if (!conveyorBeltMode) {
-            int cost = plant.getStats().getCost();
-            if (getSunCount() < cost) {
-                return "Not enough sun.";
-            }
-            addSun(-cost);
-        }
-
-        plant.setPlanted(true);
-        plant.putRuntimeState("row", row);
-        plant.putRuntimeState("col", col);
-        plant.putRuntimeState("lane", row);
-        map.setPlant(row, col, plant);
-
+    /**
+     * Handles actions after planting: remove from conveyor, set cooldown, apply plant food.
+     */
+    private void handlePostPlanting(PlantType type, Plant plant) {
         if (conveyorBeltMode) {
             conveyorBeltQueue.remove(type);
         } else {
@@ -970,13 +1024,11 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 rechargeRemaining.put(type, recharge);
             }
         }
-
         if (AppStatus.boostedPlants.contains(type)) {
             plant.applyPlantFood(this);
         }
-
-        return "Planted " + type.getDisplayName() + " at (" + col+ ", " + row + ").";
     }
+    // =================== END REFACTORED plantPlant ===================
 
     public boolean isOnCooldown(PlantType type) {
         return rechargeRemaining.getOrDefault(type, 0.0) > 0.0;
@@ -1040,7 +1092,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
             return "No plant food available.";
         }
         plant.applyPlantFood(this);
-        return 	"Plant fed at (" + col + ", " + row + ")";
+        return "Plant fed at (" + col + ", " + row + ")";
     }
 
     public int collectSunAtWorldPoint(float worldX, float worldY) {
@@ -1103,7 +1155,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 }
                 any = true;
                 builder.append("  (").append(col).append(", ").append(row).append(") = ")
-                        .append(tile.getType().name());
+                    .append(tile.getType().name());
                 if (tile.getType() == TileType.TOMBSTONE) {
                     builder.append(" hp=").append(tile.getHp());
                 }
@@ -1116,6 +1168,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return builder.toString();
     }
 
+    // =================== REFACTORED showMapText ===================
     public String showMapText() {
         StringBuilder builder = new StringBuilder();
         builder.append("Sun: ").append(getSunCount())
@@ -1126,6 +1179,34 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 .append('\n');
         }
 
+        appendMapGrid(builder);
+        builder.append("Tile debug:\n");
+        builder.append(tileDebugList(map));
+        return builder.toString().trim();
+    }
+
+    /**
+     * Appends the visual grid of the map including plants and zombies.
+     */
+    private void appendMapGrid(StringBuilder builder) {
+        boolean[][] zombieAt = buildZombieGrid();
+        builder.append("Map:\n");
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                char cell = getMapCellChar(row, col, zombieAt);
+                builder.append(cell);
+                if (col + 1 < COLS) {
+                    builder.append(' ');
+                }
+            }
+            builder.append('\n');
+        }
+    }
+
+    /**
+     * Builds a grid indicating which cells have zombies.
+     */
+    private boolean[][] buildZombieGrid() {
         boolean[][] zombieAt = new boolean[ROWS][COLS];
         for (Zombie z : getZombieList()) {
             if (z == null || z.isDead()) {
@@ -1137,36 +1218,28 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
                 zombieAt[row][col] = true;
             }
         }
-
-        builder.append("Map:\n");
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLS; col++) {
-                Plant plant = map == null ? null : map.getPlantAt(row, col);
-                char cell;
-                if (zombieAt[row][col] && plant != null) {
-                    cell = '#';
-                } else if (zombieAt[row][col]) {
-                    cell = 'Z';
-                } else if (plant != null) {
-                    cell = plant.getType().name().charAt(0);
-                } else if (map != null) {
-                    Tile tile = map.getTile(row, col);
-                    cell = tile == null ? '.' : tileDebugLabel(tile.getType()).charAt(0);
-                } else {
-                    cell = '.';
-                }
-                builder.append(cell);
-                if (col + 1 < COLS) {
-                    builder.append(' ');
-                }
-            }
-            builder.append('\n');
-        }
-
-        builder.append("Tile debug:\n");
-        builder.append(tileDebugList(map));
-        return builder.toString().trim();
+        return zombieAt;
     }
+
+    /**
+     * Returns a single character representing the cell state at (row,col).
+     */
+    private char getMapCellChar(int row, int col, boolean[][] zombieAt) {
+        Plant plant = map == null ? null : map.getPlantAt(row, col);
+        if (zombieAt[row][col] && plant != null) {
+            return '#';
+        } else if (zombieAt[row][col]) {
+            return 'Z';
+        } else if (plant != null) {
+            return plant.getType().name().charAt(0);
+        } else if (map != null) {
+            Tile tile = map.getTile(row, col);
+            return tile == null ? '.' : tileDebugLabel(tile.getType()).charAt(0);
+        } else {
+            return '.';
+        }
+    }
+    // =================== END REFACTORED showMapText ===================
 
     private String formatBeltQueue() {
         StringJoiner joiner = new StringJoiner(", ");
@@ -1322,7 +1395,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     private com.badlogic.gdx.graphics.Texture iceOverlayTexture() {
         if (iceOverlayTex == null) {
             com.badlogic.gdx.graphics.Pixmap pm = new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics
-                    .Pixmap.Format.RGBA8888);
+                .Pixmap.Format.RGBA8888);
             pm.setColor(0.4f, 0.7f, 1f, 1f);
             pm.fill();
             iceOverlayTex = new com.badlogic.gdx.graphics.Texture(pm);
@@ -1330,5 +1403,4 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         }
         return iceOverlayTex;
     }
-
 }

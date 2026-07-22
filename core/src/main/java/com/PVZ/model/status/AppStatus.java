@@ -78,21 +78,22 @@ public final class AppStatus {
 
     public static MenuType currentMenuType = MenuType.REGISTER;
     public static User currentUser = null;
-    public static final Scanner scanner = new Scanner(System.in);
+    // Constants renamed to follow uppercase with underscores pattern
+    public static final Scanner SCANNER = new Scanner(System.in);
     public static String currentChapterName = null;
     public static com.PVZ.model.game.chapter.Chapter currentChapter = null;
     public static int currentStageNumber = 1;
-    public static final Set<PlantType> selectedPlants = new LinkedHashSet<>();
-    public static final Set<PlantType> boostedPlants = new LinkedHashSet<>();
-    public static final Set<PlantType> currentStageLockedPlants = new LinkedHashSet<>();
+    public static final Set<PlantType> SELECTED_PLANTS = new LinkedHashSet<>();
+    public static final Set<PlantType> BOOSTED_PLANTS = new LinkedHashSet<>();
+    public static final Set<PlantType> CURRENT_STAGE_LOCKED_PLANTS = new LinkedHashSet<>();
     /**
      * Families that are "pick-one" for the current stage (Type-1 rule from the doc):
      * the player may freely choose ANY member of the family, but as soon as one member
      * is selected, the rest of that family becomes locked for the remainder of selection.
      * This is dynamic (depends on what the player has already picked), unlike
-     * {@link #currentStageLockedPlants} which is a fixed, static lock list.
+     * {@link #CURRENT_STAGE_LOCKED_PLANTS} which is a fixed, static lock list.
      */
-    public static final Set<PlantFamily> currentStageExclusiveFamilies = new LinkedHashSet<>();
+    public static final Set<PlantFamily> CURRENT_STAGE_EXCLUSIVE_FAMILIES = new LinkedHashSet<>();
 
     public static boolean tileDebugEnabled = false;
 
@@ -120,7 +121,7 @@ public final class AppStatus {
         currentMenuType = MenuType.MAIN;
         setGameEngine(null);
         ScreenManager.getInstance().performTransition(() ->
-            new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())),
+                new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())),
             message);
     }
 
@@ -142,7 +143,7 @@ public final class AppStatus {
         currentMenuType = MenuType.CHAPTER_AND_LEVEL_SELECTION;
         setGameEngine(null);
         ScreenManager.getInstance().performTransition(() ->
-            new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())),
+                new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3", new RegularGameEngine(new GameStatus())),
             message);
     }
 

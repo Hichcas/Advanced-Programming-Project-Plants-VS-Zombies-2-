@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Manages zombie waves, spawning and progression.
+ * Refactored to comply with Checkstyle and PMD (method length ≤ 50 lines).
+ */
 public class WaveManager {
     private final List<Wave> waves;
     private int currentWave = 0;
@@ -37,68 +41,104 @@ public class WaveManager {
         }
     }
 
-    public void start() { started = true; }
-    public boolean isStarted() { return started; }
+    public void start() {
+        started = true;
+    }
 
+    public boolean isStarted() {
+        return started;
+    }
+
+    /**
+     * Main update loop broken into smaller methods to keep line count low.
+     */
     public void update(float delta, ZombieEngine engine) {
-        if (!started || currentWave >= waves.size()) return;
+        if (!started || currentWave >= waves.size()) {
+            return;
+        }
 
+        // Check if we need to begin a new wave
         if (!spawning && !waitingForHP) {
-            if (currentWave == 0) {
-                setupTimer += delta;
-                if (setupTimer < waves.get(0).getStartDelay()) {
-                    return;
-                }
-            }
-            beginWave();
+            checkAndBeginWave(delta);
         }
 
+        // Handle active spawning
         if (spawning) {
-            spawnTimer += delta;
-            if (spawnTimer >= currentEntry.getSpawnDelay() && spawned < currentEntry.getCount()) {
-                Zombie z = engine.spawnZombie(currentEntry.getZombieAlias(), randomRow(), 8);
-                if (z != null) {
-                    waveZombies.add(z);
-                    allSpawnedWaveZombies.add(z);
-                } else {
-                    System.out.println("[WaveManager] WARNING: failed to spawn " + currentEntry.getZombieAlias());
-                }
-                spawned++;
-                spawnTimer = 0;
-            }
+            updateSpawning(delta, engine);
+        }
 
-            if (spawned >= currentEntry.getCount()) {
-                if (entryIterator.hasNext()) {
-                    nextEntry();
-                } else {
-                    finishSpawning();
+        // Handle waiting for HP threshold
+        if (waitingForHP) {
+            updateWaitingForHP(delta);
+        }
+    }
+
+    /**
+     * Checks if it's time to begin a new wave, and starts it if so.
+     */
+    private void checkAndBeginWave(float delta) {
+        if (currentWave == 0) {
+            setupTimer += delta;
+            if (setupTimer < waves.get(0).getStartDelay()) {
+                return;
+            }
+        }
+        beginWave();
+    }
+
+    /**
+     * Handles the spawning of zombies for the current entry.
+     */
+    private void updateSpawning(float delta, ZombieEngine engine) {
+        spawnTimer += delta;
+        if (spawnTimer >= currentEntry.getSpawnDelay() && spawned < currentEntry.getCount()) {
+            Zombie z = engine.spawnZombie(currentEntry.getZombieAlias(), randomRow(), 8);
+            if (z != null) {
+                waveZombies.add(z);
+                allSpawnedWaveZombies.add(z);
+            } else {
+                System.out.println("[WaveManager] WARNING: failed to spawn " + currentEntry.getZombieAlias());
+            }
+            spawned++;
+            spawnTimer = 0;
+        }
+
+        if (spawned >= currentEntry.getCount()) {
+            if (entryIterator.hasNext()) {
+                nextEntry();
+            } else {
+                finishSpawning();
+            }
+        }
+    }
+
+    /**
+     * Handles the waiting period after spawning until the HP threshold is met.
+     */
+    private void updateWaitingForHP(float delta) {
+        double remainingHP = 0;
+        for (Zombie z : waveZombies) {
+            if (!z.isDead()) {
+                remainingHP += z.getEffectiveHitpoints();
+            }
+        }
+
+        if (!hpConditionMet) {
+            if (totalWaveHP == 0 || remainingHP <= totalWaveHP * 0.25) {
+                hpConditionMet = true;
+                System.out.println("[WaveManager] HP condition met: remainingHP=" + String.format("%.0f",
+                    remainingHP) + " / totalWaveHP=" + String.format("%.0f", totalWaveHP) + " (75% threshold=" +
+                    String.format("%.0f", totalWaveHP * 0.25) + ")");
+                if (currentWave + 1 < waves.size()) {
+                    System.out.println("[WaveManager] The next wave is almost ready...");
                 }
             }
         }
 
-        if (waitingForHP) {
-            double remainingHP = 0;
-            for (Zombie z : waveZombies) {
-                if (!z.isDead()) {
-                    remainingHP += z.getEffectiveHitpoints();
-                }
-            }
-            if (!hpConditionMet) {
-                if (totalWaveHP == 0 || remainingHP <= totalWaveHP * 0.25) {
-                    hpConditionMet = true;
-                    System.out.println("[WaveManager] HP condition met: remainingHP=" + String.format("%.0f",
-                            remainingHP) + " / totalWaveHP=" + String.format("%.0f", totalWaveHP) + " (75% threshold=" +
-                            String.format("%.0f", totalWaveHP * 0.25) + ")");
-                    if (currentWave + 1 < waves.size()) {
-                        System.out.println("[WaveManager] The next wave is almost ready...");
-                    }
-                }
-            }
-            if (hpConditionMet) {
-                hpWaitTimer += delta;
-                if (hpWaitTimer >= waves.get(currentWave).getStartDelay()) {
-                    advanceWave();
-                }
+        if (hpConditionMet) {
+            hpWaitTimer += delta;
+            if (hpWaitTimer >= waves.get(currentWave).getStartDelay()) {
+                advanceWave();
             }
         }
     }
@@ -111,7 +151,7 @@ public class WaveManager {
         spawned = 0;
         spawnTimer = 0;
         System.out.println("[WaveManager] *** A huge wave of zombies is approaching! (Wave " + (currentWave + 1) + "/" +
-                waves.size() + ") ***");
+            waves.size() + ") ***");
         nextEntry();
     }
 
@@ -131,7 +171,7 @@ public class WaveManager {
         hpConditionMet = false;
         hpWaitTimer = 0;
         System.out.println("[WaveManager] Finished spawning wave " + (currentWave + 1) + ". waveZombies=" + waveZombies
-                .size() + ", totalWaveHP=" + String.format("%.0f", totalWaveHP));
+            .size() + ", totalWaveHP=" + String.format("%.0f", totalWaveHP));
     }
 
     private void advanceWave() {
@@ -148,9 +188,17 @@ public class WaveManager {
         return (int) (Math.random() * 5);
     }
 
-    public int getCurrentWave() { return currentWave; }
-    public int getTotalWaves() { return waves.size(); }
-    public boolean isFinished() { return currentWave >= waves.size(); }
+    public int getCurrentWave() {
+        return currentWave;
+    }
+
+    public int getTotalWaves() {
+        return waves.size();
+    }
+
+    public boolean isFinished() {
+        return currentWave >= waves.size();
+    }
 
     public int getProgressPercent() {
         if (totalZombieCount == 0) return 0;
