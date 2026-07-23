@@ -5,6 +5,10 @@ import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 import com.PVZ.model.entity.zombies.base.Zombie;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 
 public class UtilityLaneBehavior implements PlantBehavior {
 
@@ -43,9 +47,12 @@ public class UtilityLaneBehavior implements PlantBehavior {
                         || plant.getDefinition().getPlantKey() == null
                         ? "" : plant.getDefinition().getPlantKey().toLowerCase();
                 // Hypno-shroom only hypnotizes the zombie that eats it (handled in onDamaged);
-                // it must NOT periodically hypnotize the whole lane. Other HYPNOTIZE plants
-                // (e.g. Caulipower) keep the lane-hypnotize behavior.
-                if (!"hypno_shroom".equals(plantKey)) {
+                // it must NOT periodically hypnotize the whole lane.
+                // Caulipower fires a magic bolt at a random zombie (random direction,
+                // passes obstacles, hypnotizes the target) rather than the whole lane.
+                if ("caulipower".equals(plantKey)) {
+                    hypnotizeRandomZombie(context);
+                } else if (!"hypno_shroom".equals(plantKey)) {
                     context.hypnotizeZombiesInLane(lane, 999.0);
                 }
             }
@@ -56,6 +63,20 @@ public class UtilityLaneBehavior implements PlantBehavior {
         }
 
         plant.putRuntimeState("utilityTimer", 0.0);
+    }
+
+    /**
+     * Caulipower magic bolt: hypnotize a single random living zombie (random direction,
+     * passes obstacles) instead of hypnotizing the whole lane.
+     */
+    private void hypnotizeRandomZombie(BehaviorContext context) {
+        List<Zombie> zombies = new ArrayList<>(context.getAllZombies());
+        zombies.removeIf(z -> z == null || z.isDead());
+        if (zombies.isEmpty()) {
+            return;
+        }
+        Collections.shuffle(zombies);
+        zombies.get(0).hypnotize(999.0f);
     }
 
 

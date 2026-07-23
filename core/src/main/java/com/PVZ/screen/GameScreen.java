@@ -17,10 +17,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Main game screen rendering and input handling.
- * Refactored to comply with Checkstyle (method length ≤ 50 lines).
- */
+
 public class GameScreen extends BaseScreen {
 
     private final SpriteBatch gameBatch;
@@ -127,26 +124,13 @@ public class GameScreen extends BaseScreen {
             activeEngine = gameEngine;
         }
 
-        // Update game over state
         GameOverState overState = updateGameOverState(activeEngine);
-
-        // Draw background and engine content
         drawBackgroundAndEngine(activeEngine, delta);
-
-        // Draw map borders
         drawMapBorders(activeEngine);
-
-        // Draw seed packet bar
         drawSeedPacketBar(activeEngine);
-
-        // Draw game over overlay
         drawGameOverOverlay(overState);
-
-        // Draw tile debug info
         drawTileDebug(activeEngine);
     }
-
-    // ---------- Helper methods for renderScreen ----------
 
     private GameOverState updateGameOverState(GameEngine activeEngine) {
         if (activeEngine instanceof RegularGameEngine regularGameEngine) {
@@ -195,7 +179,6 @@ public class GameScreen extends BaseScreen {
         }
         gameBatch.end();
 
-        // Render engine (plants, zombies, projectiles, suns, etc.)
         float renderDelta = Math.min(delta, 1 / 30f);
         activeEngine.render(renderDelta, gameBatch);
     }

@@ -44,7 +44,6 @@ public class ScreenManager {
     }
 
     public void startWithFadeIn(BaseScreen firstScreen) {
-        // برای شروع اولیه بازی نیازی به تأخیر نیست و مستقیم ست می‌شود
         this.game.setScreen(firstScreen);
         this.currentDuration = 3.0f;
         this.state = TransitionState.FADE_IN;
@@ -77,11 +76,10 @@ public class ScreenManager {
                     currentScreen.dispose();
                 }
 
-                // 🌟 جادوی اصلی اینجاست: صفحه ۱۰۰٪ تاریک شده، حالا اسکرین را می‌سازیم!
                 if (pendingScreenSupplier != null) {
                     BaseScreen nextScreen = pendingScreenSupplier.get();
                     game.setScreen(nextScreen);
-                    pendingScreenSupplier = null; // پاک کردن رفرنس برای مدیریت حافظه
+                    pendingScreenSupplier = null;
                 }
 
                 state = TransitionState.FADE_IN;

@@ -12,7 +12,7 @@ import java.util.Set;
 public class ExplosiveBehavior implements PlantBehavior {
 
     private static final Set<String> CONTACT_TRIGGERED = Set.of(
-            "potato_mine", "primal_potato_mine", "tangle_kelp", "iceberg_lettuce");
+            "potato_mine", "primal_potato_mine", "tangle_kelp", "iceberg_lettuce", "squash");
 
     @Override
     public void onUpdate(PlantInstance plant, BehaviorContext context, double deltaTime) {
@@ -53,6 +53,38 @@ public class ExplosiveBehavior implements PlantBehavior {
                 ? plant.getStats().getExplodeDamage()
                 : Math.max(plant.getStats().getDamage(), plant.getStats().getAoeDamage());
 
+        // --- Jalapeno: lane-clear (damages entire lane, melts ice) ---
+        if ("jalapeno".equals(key)) {
+            context.damageLane(lane, damage);
+            if (plant.getStats().getBooleanExtra("meltsIce", false)) {
+                context.meltIceInLane(lane);
+            }
+            plant.takeDamage(plant.getCurrentHp());
+            return;
+        }
+
+        // --- Squash: single-target crush (jumps to nearest zombie) ---
+        if ("squash".equals(key)) {
+            List<Zombie> targets = context.getZombiesInLane(lane);
+            if (!targets.isEmpty()) {
+                Zombie nearest = targets.get(0);
+                context.damageSingleTarget(nearest, damage);
+            }
+            plant.takeDamage(plant.getCurrentHp());
+            return;
+        }
+
+        // --- Grapeshot: 3x3 explosion + bouncing grapes ---
+        if ("grapshot".equals(key) || "grapeshot".equals(key)) {
+            context.damageArea(lane, row, damage);
+            int grapeCount = plant.getStats().getIntExtra("grapeCount", 8);
+            double grapeLifespan = plant.getStats().getDoubleExtra("grapeLifespanSeconds", 5.0);
+            context.spawnBouncingProjectiles(lane, row, grapeCount, damage / 4, grapeLifespan);
+            plant.takeDamage(plant.getCurrentHp());
+            return;
+        }
+
+        // --- Default: area explosion (Cherry Bomb, Potato Mine, etc.) ---
         context.damageArea(lane, row, damage);
         plant.takeDamage(plant.getCurrentHp());
     }

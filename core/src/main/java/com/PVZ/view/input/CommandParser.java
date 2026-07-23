@@ -3,10 +3,7 @@ package com.PVZ.view.input;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.status.AppStatus;
 
-/**
- * this file will be deleted after graphic
- * input command parser package will all be deleted after graphic
- */
+
 
 public class CommandParser {
     private static ConsoleInputHandler console;

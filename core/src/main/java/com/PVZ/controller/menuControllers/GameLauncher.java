@@ -17,10 +17,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Utility for launching game stages and managing plant selection constraints.
- * Updated to use the new AppStatus constant names (UPPER_SNAKE_CASE).
- */
+
 final class GameLauncher {
 
     private static final String STAGE_TYPE_CONVEYOR_BELT = "CONVEYOR_BELT";
@@ -113,7 +110,6 @@ final class GameLauncher {
 
         if (isLockedPlantsStage(stageConfig)) {
             Set<PlantType> locked = resolveLockedPlants(stageConfig);
-            // Use the renamed constant SELECTED_PLANTS
             AppStatus.SELECTED_PLANTS.removeAll(locked);
 
             Set<PlantType> extraFamilyPicks = resolveExtraFamilyPicks(

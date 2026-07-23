@@ -7,13 +7,12 @@ import java.util.Base64;
 
 public class EncryptionEngine {
     private static byte[] dataKey = "DefaultDataKey16".getBytes();
-    private static final byte[] AUTH_KEY = "0123456789ABCDEF".getBytes(); // 16 byte
+    private static final byte[] AUTH_KEY = "0123456789ABCDEF".getBytes();
 
     public static void initDataKey(String masterKey) throws Exception {
         dataKey = hash(masterKey).substring(0, 16).getBytes();
     }
 
-    // === استفاده از کلید dataKey  ===
     public static String encrypt(String data) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(dataKey, "AES"));
@@ -27,7 +26,6 @@ public class EncryptionEngine {
         return new String(cipher.doFinal(decoded));
     }
 
-    // ==استفاده از کلید ثابت برای Auth ==
     public static String encryptAuth(String data) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(AUTH_KEY, "AES"));
@@ -49,7 +47,6 @@ public class EncryptionEngine {
         return hex.toString();
     }
 
-    // ===== جدید: AES با key دلخواه — برای UserDatabase =====
     public static String encryptWithKey(String data, byte[] key) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"));

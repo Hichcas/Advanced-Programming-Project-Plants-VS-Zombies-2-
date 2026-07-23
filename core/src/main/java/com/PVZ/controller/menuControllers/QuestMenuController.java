@@ -170,7 +170,6 @@ public class QuestMenuController {
         };
     }
 
-    // -------------------- Debug متدهای جدید --------------------
     private OutputDTO debugSun(QuestManager qm, String amountStr) {
         try {
             int amount = Integer.parseInt(amountStr);

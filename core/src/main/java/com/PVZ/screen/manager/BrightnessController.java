@@ -10,7 +10,6 @@ public class BrightnessController extends Actor {
     private static BrightnessController instance;
     private Texture overlayTexture;
 
-    // مقدار بین 1.0- تا 1.0+
     private float brightnessValue = 0f;
 
     private BrightnessController() {
@@ -28,7 +27,6 @@ public class BrightnessController extends Actor {
     }
 
     public void setBrightness(float value) {
-        // محدود کردن بین 1- تا 1
         this.brightnessValue = Math.max(-1f, Math.min(value, 1f));
     }
 
@@ -41,9 +39,7 @@ public class BrightnessController extends Actor {
         if (brightnessValue == 0)
             return;
 
-        // اگر مثبت باشد سفید، اگر منفی باشد سیاه
         Color color = (brightnessValue > 0) ? Color.WHITE : Color.BLACK;
-        // آلفا معادل 0.5 در حالت بیشینه (قدر مطلقِ مقدار)
         float alpha = Math.abs(brightnessValue) * 0.5f;
 
         batch.setColor(color.r, color.g, color.b, alpha);
