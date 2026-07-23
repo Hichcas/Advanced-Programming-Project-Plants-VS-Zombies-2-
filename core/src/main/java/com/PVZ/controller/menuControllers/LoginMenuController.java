@@ -47,14 +47,12 @@ public class LoginMenuController {
             return new OutputDTO(false, "Invalid username or password.");
         }
 
-        // load user from database file
         User user = UserRegistry.loginUser(username);
 
         if (user == null) {
             return new OutputDTO(false, "Invalid username or password.");
         }
 
-        // verify password hash
         try {
             if (!user.profile.getPasswordHash().equals(EncryptionEngine.hash(password))) {
                 return new OutputDTO(false, "Invalid username or password.");

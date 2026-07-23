@@ -14,10 +14,7 @@ import com.PVZ.view.output.OutputDTO;
 
 import java.util.StringJoiner;
 
-/**
- * Controller for the plant selection menu.
- * Updated to use the new AppStatus constant names (UPPER_SNAKE_CASE).
- */
+
 public class PlantSelectionMenuController {
 
     public OutputDTO handle(InputDTO input) {
@@ -83,11 +80,9 @@ public class PlantSelectionMenuController {
 
     private boolean isFamilyLockedByOtherPick(PlantType type) {
         PlantFamily family = PlantFamilyMapper.getFamily(type);
-        // Use renamed constant CURRENT_STAGE_EXCLUSIVE_FAMILIES
         if (!AppStatus.CURRENT_STAGE_EXCLUSIVE_FAMILIES.contains(family)) {
             return false;
         }
-        // Use renamed constant SELECTED_PLANTS
         for (PlantType selected : AppStatus.SELECTED_PLANTS) {
             if (selected != type && PlantFamilyMapper.getFamily(selected) == family) {
                 return true;
@@ -111,7 +106,6 @@ public class PlantSelectionMenuController {
         if (user == null || user.collectionState == null) {
             return new OutputDTO(false, "You must be logged in.");
         }
-        // Use renamed constant SELECTED_PLANTS
         if (AppStatus.SELECTED_PLANTS.size() >= 8) {
             return new OutputDTO(false, "Plant slots are full.");
         }
@@ -120,7 +114,6 @@ public class PlantSelectionMenuController {
             if (!user.collectionState.isPlantUnlocked(type)) {
                 return new OutputDTO(false, "\u001B[90mPlant is locked.\u001B[0m");
             }
-            // Use renamed constant CURRENT_STAGE_LOCKED_PLANTS
             if (AppStatus.CURRENT_STAGE_LOCKED_PLANTS.contains(type)) {
                 return new OutputDTO(false, "\u001B[33mPlant is locked for this level: "
                     + type.getDisplayName() + "\u001B[0m");
@@ -130,7 +123,6 @@ public class PlantSelectionMenuController {
                     + PlantFamilyMapper.getFamily(type) + " family for this level: "
                     + type.getDisplayName() + "\u001B[0m");
             }
-            // Use renamed constant SELECTED_PLANTS
             if (!AppStatus.SELECTED_PLANTS.add(type)) {
                 return new OutputDTO(false, "Plant already selected.");
             }
@@ -143,11 +135,9 @@ public class PlantSelectionMenuController {
     private OutputDTO removePlant(String plantType) {
         try {
             PlantType type = PlantType.fromName(plantType);
-            // Use renamed constant SELECTED_PLANTS
             if (!AppStatus.SELECTED_PLANTS.remove(type)) {
                 return new OutputDTO(false, "Plant is not selected.");
             }
-            // Use renamed constant BOOSTED_PLANTS
             AppStatus.BOOSTED_PLANTS.remove(type);
             return new OutputDTO(true, "Plant removed.");
         } catch (Exception e) {
@@ -165,14 +155,12 @@ public class PlantSelectionMenuController {
         }
         try {
             PlantType type = PlantType.fromName(plantType);
-            // Use renamed constant SELECTED_PLANTS
             if (!AppStatus.SELECTED_PLANTS.contains(type)) {
                 return new OutputDTO(false, "Plant is not selected.");
             }
             if (!user.userStats.spendDiamonds(2)) {
                 return new OutputDTO(false, "Not enough diamonds.");
             }
-            // Use renamed constant BOOSTED_PLANTS
             AppStatus.BOOSTED_PLANTS.add(type);
             return new OutputDTO(true, "Plant boosted.");
         } catch (Exception e) {
@@ -191,7 +179,6 @@ public class PlantSelectionMenuController {
             return new OutputDTO(false, "Invalid stage.");
         }
 
-        // Use renamed constant SELECTED_PLANTS
         if (stageConfig.getPlantLimit() > 0 && AppStatus.SELECTED_PLANTS.size() > stageConfig.getPlantLimit()) {
             return new OutputDTO(false, "Too many plants selected for this stage.");
         }

@@ -38,7 +38,6 @@ public class GreenhouseMenuController {
         return AppStatus.currentUser;
     }
 
-    // ---------- نمایش گلخانه ----------
     private OutputDTO showGreenhouse() {
         User user = currentUser();
         if (user == null || user.greenhouseState == null)
@@ -81,7 +80,6 @@ public class GreenhouseMenuController {
         return new OutputDTO(true, out);
     }
 
-    // ---------- کاشت گیاه ----------
     private OutputDTO plantPot(int x, int y) {
         User user = currentUser();
         if (user == null || user.greenhouseState == null || user.collectionState == null)
@@ -95,7 +93,6 @@ public class GreenhouseMenuController {
             long now = System.currentTimeMillis();
             Set<PlantType> unlocked = user.collectionState.getUnlockedPlants();
 
-            // 50% marigold, یا اگر گیاه آنلاک‌شده‌ای وجود ندارد، قطعاً marigold
             if (unlocked.isEmpty() || random.nextDouble() < 0.5) {
                 user.greenhouseState.plantMarigold(x, y, now);
                 UserRegistry.markDirty(user.profile.getUsername());
@@ -112,7 +109,6 @@ public class GreenhouseMenuController {
         }
     }
 
-    // ---------- برداشت ----------
     private OutputDTO collect(int x, int y) {
         User user = currentUser();
         if (user == null || user.greenhouseState == null || user.collectionState == null)
@@ -127,14 +123,13 @@ public class GreenhouseMenuController {
                 return new OutputDTO(false, "Plant is not ready yet. Use 'grow' to accelerate.");
 
             boolean isMarigold = user.greenhouseState.isMarigold(x, y);
-            PlantType harvested = user.greenhouseState.collectFromPot(x, y);   // marigold → null
+            PlantType harvested = user.greenhouseState.collectFromPot(x, y);
 
             if (isMarigold) {
                 user.userStats.addCoins(500);
                 UserRegistry.markDirty(user.profile.getUsername());
                 return new OutputDTO(true, "Collected Marigold. +500 coins.");
             } else {
-                // harvested حتماً یک گیاه آنلاک‌شده است
                 if (user.collectionState.hasGreenhouseBoost(harvested)) {
                     UserRegistry.markDirty(user.profile.getUsername());
                     return new OutputDTO(true, String.format(
@@ -152,7 +147,6 @@ public class GreenhouseMenuController {
         }
     }
 
-    // ---------- تسریع ----------
     private OutputDTO grow(int x, int y) {
         User user = currentUser();
         if (user == null || user.greenhouseState == null || user.userStats == null)

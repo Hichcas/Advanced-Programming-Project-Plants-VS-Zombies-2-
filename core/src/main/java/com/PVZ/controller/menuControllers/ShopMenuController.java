@@ -131,7 +131,6 @@ public class ShopMenuController {
     }
 
     private OutputDTO buyFood(User user, int count, StringBuilder log) {
-        // (currently disabled in original code)
         return new OutputDTO(true, log.toString());
     }
 

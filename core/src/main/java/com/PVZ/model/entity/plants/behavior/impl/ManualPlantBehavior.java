@@ -285,10 +285,14 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (!tickCooldown(plant, "diagonalTimer", deltaTime)) {
             return;
         }
-        fireInto(plant, context, lane - 1, false);
-        fireInto(plant, context, lane + 1, false);
-        fireInto(plant, context, lane - 1, true);
-        fireInto(plant, context, lane + 1, true);
+        // Plant food: burst volley in all 4 diagonal directions (Rotobaga)
+        int volleys = plant.isPlantFoodActive() ? 2 : 1;
+        for (int v = 0; v < volleys; v++) {
+            fireInto(plant, context, lane - 1, false);
+            fireInto(plant, context, lane + 1, false);
+            fireInto(plant, context, lane - 1, true);
+            fireInto(plant, context, lane + 1, true);
+        }
     }
 
     private void handleTriLaneShot(PlantInstance plant, BehaviorContext context, int lane, double deltaTime) {
@@ -301,9 +305,13 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (!anyTarget) {
             return;
         }
-        fireInto(plant, context, lane, false);
-        fireInto(plant, context, lane - 1, false);
-        fireInto(plant, context, lane + 1, false);
+        // Plant food: fan burst volley across the lanes (Threepeater)
+        int volleys = plant.isPlantFoodActive() ? 2 : 1;
+        for (int v = 0; v < volleys; v++) {
+            fireInto(plant, context, lane, false);
+            fireInto(plant, context, lane - 1, false);
+            fireInto(plant, context, lane + 1, false);
+        }
     }
 
     private void handleFrontBackShot(PlantInstance plant, BehaviorContext context, int lane, double deltaTime) {
@@ -313,20 +321,28 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (context.getZombiesInLane(lane).isEmpty()) {
             return;
         }
-        fireInto(plant, context, lane, false);
-        fireInto(plant, context, lane, true);
-        fireInto(plant, context, lane, true);
+        // Plant food: simultaneous burst volley from front and back (Split Pea)
+        int volleys = plant.isPlantFoodActive() ? 2 : 1;
+        for (int v = 0; v < volleys; v++) {
+            fireInto(plant, context, lane, false);
+            fireInto(plant, context, lane, true);
+            fireInto(plant, context, lane, true);
+        }
     }
 
     private void handleStarShot(PlantInstance plant, BehaviorContext context, int lane, double deltaTime) {
         if (!tickCooldown(plant, "starTimer", deltaTime)) {
             return;
         }
-        fireInto(plant, context, lane, false);
-        fireInto(plant, context, lane - 1, false);
-        fireInto(plant, context, lane + 1, false);
-        fireInto(plant, context, lane - 1, true);
-        fireInto(plant, context, lane + 1, true);
+        // Plant food: star burst volley in all 5 directions (Starfruit)
+        int volleys = plant.isPlantFoodActive() ? 2 : 1;
+        for (int v = 0; v < volleys; v++) {
+            fireInto(plant, context, lane, false);
+            fireInto(plant, context, lane - 1, false);
+            fireInto(plant, context, lane + 1, false);
+            fireInto(plant, context, lane - 1, true);
+            fireInto(plant, context, lane + 1, true);
+        }
     }
 
     private void handleHomingNearest(PlantInstance plant, BehaviorContext context, int lane, double deltaTime) {

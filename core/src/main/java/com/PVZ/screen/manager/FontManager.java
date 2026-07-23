@@ -9,16 +9,12 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 public class FontManager {
     private static FontManager instance;
 
-    // فونت‌های انگلیسی
     private BitmapFont englishMenuFont;
     private BitmapFont englishTitleFont;
     private BitmapFont englishTinyFont;
-
-    // فونت‌های فارسی
     private BitmapFont persianMenuFont;
     private BitmapFont persianTitleFont;
 
-    // کاراکترهای فارسی برای نمایش صحیح (بسیار مهم)
     private static final String PERSIAN_CHARS = FreeTypeFontGenerator.DEFAULT_CHARS +
             "ابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیيکآأإؤئ";
 
