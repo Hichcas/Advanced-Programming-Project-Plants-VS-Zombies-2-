@@ -39,14 +39,86 @@ public final class UpgradeResolver {
         stats.setActionIntervalSeconds(definition.getActionIntervalSeconds());
         stats.setRechargeSeconds(definition.getRechargeSeconds());
 
-        if (definition.getBaseAbility() != null) {
-            stats.putExtra("baseAbilityId", definition.getBaseAbility().getResolvedBehaviorId());
+        AbilitySpec baseAbility = definition.getBaseAbility();
+        if (baseAbility != null) {
+            stats.putExtra("baseAbilityId", baseAbility.getResolvedBehaviorId());
+            applyBaseAbilityParams(stats, baseAbility);
         }
         if (definition.getPlantFoodEffect() != null) {
             stats.putExtra("plantFoodAbilityId", definition.getPlantFoodEffect().getResolvedBehaviorId());
         }
 
         return stats;
+    }
+
+    /**
+     * Populates base production stats (sun amount and production interval) directly from the
+     * plant's base-ability params. Without this, data-driven sun producers fall back to the
+     * generic default of 50 sun: Twin Sunflower must produce 100, Primal Sunflower 75 and
+     * Gold Bloom 375. Sun-shroom is unaffected because it stores a {@code sunAmounts} list
+     * (handled by the growth-stage path) rather than a scalar {@code sunAmount}.
+     */
+    private static void applyBaseAbilityParams(PlantStats stats, AbilitySpec baseAbility) {
+        int sunAmount = baseAbility.getIntParam("sunAmount", 0);
+        if (sunAmount > 0) {
+            stats.setSunAmount(sunAmount);
+        }
+        double intervalSeconds = baseAbility.getDoubleParam("intervalSeconds", 0.0);
+        if (intervalSeconds > 0) {
+            stats.setProductionTimeSeconds(intervalSeconds);
+        }
+
+        // --- Explosive / Mine params ---
+        double armTime = baseAbility.getDoubleParam("armTimeSeconds", -1.0);
+        if (armTime >= 0.0) {
+            stats.setArmTimeSeconds(armTime);
+        }
+        int explodeDamage = baseAbility.getIntParam("explodeDamage", 0);
+        if (explodeDamage > 0) {
+            stats.setExplodeDamage(explodeDamage);
+        }
+
+        // --- AoE / Splash params ---
+        int aoeDamage = baseAbility.getIntParam("aoeDamage", 0);
+        if (aoeDamage > 0) {
+            stats.setAoeDamage(aoeDamage);
+        }
+
+        // --- Elemental attack flags (stored as extras for behavior classes) ---
+        if (baseAbility.getBooleanParam("freezeAttack", false)) {
+            stats.putExtra("freezeAttack", true);
+            double slowPct = baseAbility.getDoubleParam("slowPercent", 0.0);
+            if (slowPct > 0) {
+                stats.putExtra("slowPercent", slowPct);
+            }
+            double slowDur = baseAbility.getDoubleParam("slowDurationSeconds", 0.0);
+            if (slowDur > 0) {
+                stats.putExtra("slowDurationSeconds", slowDur);
+            }
+        }
+        if (baseAbility.getBooleanParam("fireAttack", false)) {
+            stats.putExtra("fireAttack", true);
+        }
+        int warmthRadius = baseAbility.getIntParam("warmthRadius", 0);
+        if (warmthRadius > 0) {
+            stats.setWarmthRadius(warmthRadius);
+        }
+
+        // --- Kernel-pult butter mechanic ---
+        int butterChance = baseAbility.getIntParam("butterChancePercent", 0);
+        if (butterChance > 0) {
+            stats.setButter(butterChance);
+        }
+
+        // --- Contact-triggered flag ---
+        if (baseAbility.getBooleanParam("contactTriggered", false)) {
+            stats.putExtra("contactTriggered", true);
+        }
+
+        // --- Lane-clear flag (Jalapeno) ---
+        if (baseAbility.getBooleanParam("meltsIce", false)) {
+            stats.putExtra("meltsIce", true);
+        }
     }
 
     public static void applyUpgrade(PlantStats stats, UpgradeRule rule) {
