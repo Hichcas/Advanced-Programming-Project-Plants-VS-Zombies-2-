@@ -22,17 +22,12 @@ public class Chapter {
     private final Random random = new Random();
 
     private int lastIceWindWave = -1;
-    private int tideFrontier = 6;
     private int lastTideWave = -1;
     private int lastGraveWave = -1;
     private int lastNecroWave = -1;
     private int maxTideColumn = 8;
     private boolean tideInitialized = false;
-    private int tideTick = 0;
-    private boolean tideRising = true;
-
-    private static final int TIDE_RISE_TICKS = 30;
-    private static final int TIDE_FALL_TICKS = 30;
+    private int tideFloodedColumn = 9;
 
     public Chapter(ChapterConfig config) {
         this.config = config;
@@ -163,11 +158,9 @@ public class Chapter {
             initializeTideBoundary(map);
             int currentWave = wm.getCurrentWave();
             if (currentWave > lastTideWave) {
-                tideFrontier = Math.min(tideFrontier, maxTideColumn - 1);
                 lastTideWave = currentWave;
+                advanceTide(map);
             }
-
-            applyTide(map);
         });
     }
 
@@ -316,47 +309,27 @@ public class Chapter {
                 break;
             }
         }
+        tideFloodedColumn = maxTideColumn;
         tideInitialized = true;
     }
 
-    private void applyTide(com.PVZ.model.game.Map map) {
-        tideTick++;
-        int phaseLen = tideRising ? TIDE_RISE_TICKS : TIDE_FALL_TICKS;
-        if (tideTick >= phaseLen) {
-            tideTick = 0;
-            tideRising = !tideRising;
+    private void advanceTide(com.PVZ.model.game.Map map) {
+        if (tideFloodedColumn <= 0) {
+            return;
         }
-
-        int activeCols;
-        if (tideRising) {
-            activeCols = maxTideColumn - (int) Math.round(
-                (1.0 * tideTick / TIDE_RISE_TICKS) * (maxTideColumn - 1));
-        } else {
-            activeCols = 1 + (int) Math.round(
-                (1.0 * tideTick / TIDE_FALL_TICKS) * (maxTideColumn - 1));
-        }
-        activeCols = Math.max(1, Math.min(maxTideColumn, activeCols));
-
+        tideFloodedColumn--;
         for (int r = 0; r < 5; r++) {
-            for (int c = 0; c < 9; c++) {
-                Tile tile = map.getTile(r, c);
-                if (tile == null) continue;
-                if (c >= maxTideColumn || tile.getType() == TileType.WATER) {
-                    continue;
-                }
-                boolean inTide = c >= maxTideColumn - activeCols;
-                if (inTide && tile.getType() == TileType.NORMAL) {
-                    Plant plant = map.getPlantAt(r, c);
-                    boolean aquatic = plant != null && plant.getDefinition() != null
-                        && plant.getDefinition().hasTag(PlantTag.WATER);
-                    if (!aquatic) {
-                        map.removePlant(r, c);
-                    }
-                    tile.setType(TileType.TIDE);
-                } else if (!inTide && tile.getType() == TileType.TIDE) {
-                    tile.setType(TileType.NORMAL);
-                }
+            Tile tile = map.getTile(r, tideFloodedColumn);
+            if (tile == null || tile.getType() == TileType.WATER || tile.getType() == TileType.LOW_COAST) {
+                continue;
             }
+            Plant plant = map.getPlantAt(r, tideFloodedColumn);
+            boolean aquatic = plant != null && plant.getDefinition() != null
+                && plant.getDefinition().hasTag(PlantTag.WATER);
+            if (!aquatic) {
+                map.removePlant(r, tideFloodedColumn);
+            }
+            tile.setType(TileType.TIDE);
         }
     }
 
@@ -393,7 +366,7 @@ public class Chapter {
             return;
         }
         Tile waterTile = map.getTile(row, col);
-        if (waterTile == null || waterTile.getType() != TileType.WATER) {
+        if (waterTile == null || (waterTile.getType() != TileType.WATER && waterTile.getType() != TileType.TIDE)) {
             return;
         }
         boolean nearLowCoast = false;
