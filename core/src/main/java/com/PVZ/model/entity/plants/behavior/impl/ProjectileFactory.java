@@ -27,6 +27,11 @@ public final class ProjectileFactory {
             projectile.putExtra("originCol", asInt(plant.getRuntimeState().get("col"), 0));
             projectile.putExtra("plantType", plant.getType());
             projectile.putExtra("behaviorId", plant.getMainBehaviorId());
+            if (projectile.getType() == ProjectileType.ICE_PEA) {
+                double chillSeconds = plant.getStats().getChillTimeSeconds();
+                if (chillSeconds <= 0) chillSeconds = 3.0;
+                projectile.putExtra("chillDuration", chillSeconds);
+            }
             boolean poisonAttack = (plant.getDefinition() != null && plant.getDefinition().hasTag(PlantTag.POISON))
                     || plant.getStats().hasFlag(PlantFlag.POISON_ON_HIT)
                     || plant.getStats().getBooleanExtra("poisonAttack", false);

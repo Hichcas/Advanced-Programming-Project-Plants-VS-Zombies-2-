@@ -72,6 +72,9 @@ public class ManualPlantBehavior implements PlantBehavior {
             case "bowling_bulb":
                 handleBounceMultiLane(plant, context, lane, deltaTime);
                 return true;
+            case "pea_pod":
+                handleStackShot(plant, context, lane, deltaTime);
+                return true;
             default:
                 return false; // not handled here
         }
@@ -203,9 +206,58 @@ public class ManualPlantBehavior implements PlantBehavior {
     }
 
     private void handleCopyPlant(PlantInstance plant) {
+        // Already transformed? skip.
+        if (Boolean.TRUE.equals(plant.getRuntimeState().getOrDefault("copyDone", Boolean.FALSE))) {
+            return;
+        }
         Object copied = plant.getStats().getExtra("copiedPlantType");
-        if (copied != null) {
-            plant.putRuntimeState("copiedPlantType", String.valueOf(copied));
+        if (copied == null) {
+            copied = plant.getRuntimeState().get("copiedPlantType");
+        }
+        if (copied == null) {
+            return;
+        }
+        String copiedKey = String.valueOf(copied).trim().toLowerCase();
+        if (copiedKey.isEmpty()) {
+            return;
+        }
+        // Remove old runtime state markers so they don't interfere
+        plant.getRuntimeState().clear();
+        // Try to find the referenced plant definition and rebuild this plant instance
+        // as a clone of the target plant at the same position.
+        com.PVZ.model.entity.plants.PlantDefinition def =
+            com.PVZ.model.entity.plants.PlantLibrary.findByName(copiedKey)
+                .orElse(null);
+        if (def == null) {
+            // Fallback: try by plant key or id
+            for (com.PVZ.model.entity.plants.PlantDefinition d
+                    : com.PVZ.model.entity.plants.PlantLibrary.all()) {
+                if (d.getPlantKey() != null
+                    && d.getPlantKey().equalsIgnoreCase(copiedKey)) {
+                    def = d;
+                    break;
+                }
+            }
+        }
+        if (def != null) {
+            // Replace this plant's instance with one of the copied plant
+            int level = plant.getLevel();
+            com.PVZ.model.entity.plants.PlantInstance newInstance =
+                com.PVZ.model.entity.plants.PlantFactory.create(def, level);
+            // Copy over runtime position state
+            for (java.util.Map.Entry<String, Object> e
+                    : plant.getRuntimeState().entrySet()) {
+                newInstance.putRuntimeState(e.getKey(), e.getValue());
+            }
+            newInstance.putRuntimeState("copyDone", Boolean.TRUE);
+            // The plant object itself cannot be replaced; instead we copy over
+            // the relevant instance fields so the engine treats it as the copied plant.
+            // For clarity, store the new definition on the original instance.
+            // In this engine, PlantInstance holds def+stats; the Plant wraps it.
+            // We mutate the plant's runtime state to trigger the correct behavior
+            // when the engine re-evaluates the behavior on the next tick.
+            plant.putRuntimeState("copiedPlantKey", def.getPlantKey());
+            plant.putRuntimeState("copyDone", Boolean.TRUE);
         }
     }
 
@@ -281,6 +333,51 @@ public class ManualPlantBehavior implements PlantBehavior {
         context.spawnProjectile(projectile);
     }
 
+    /**
+     * Fires a pea that travels straight horizontally INSIDE {@code targetLane} (no vertical
+     * drift). Used by multi-lane shooters (Threepeater) and stacked shooters (Pea Pod) so the
+     * peas stay parallel instead of curving toward the centre lane.
+     */
+    private Projectile fireParallel(PlantInstance plant, BehaviorContext context, int targetLane, boolean backward) {
+        if (targetLane < 0) {
+            return null;
+        }
+        int damage = computeDamage(plant);
+        Projectile projectile = ProjectileFactory.createProjectile(plant, damage);
+        projectile.setRow(targetLane);
+        projectile.setLane(targetLane);
+        if (backward) {
+            projectile.setSpeed(-Math.abs(projectile.getSpeed()));
+        }
+        context.spawnProjectile(projectile);
+        return projectile;
+    }
+
+    /**
+     * Fires a homing projectile (Cat-tail) that steers toward {@code target} every tick. The
+     * projectile is placed directly in world space (so the engine's repositioning is skipped)
+     * and flagged homing; BattleController.steerHoming re-aims it at the nearest zombie.
+     */
+    private void fireHoming(PlantInstance plant, BehaviorContext context, Zombie target) {
+        int damage = computeDamage(plant);
+        Projectile projectile = ProjectileFactory.createProjectile(plant, damage);
+        double px = asDouble(plant.getRuntimeState().getOrDefault("worldX", 0.0), 0.0);
+        double py = asDouble(plant.getRuntimeState().getOrDefault("worldY", 0.0), 0.0);
+        double tw = asDouble(plant.getRuntimeState().getOrDefault("tileWidth", 177.0), 177.0);
+        double th = asDouble(plant.getRuntimeState().getOrDefault("tileHeight", 234.0), 234.0);
+        float startX = (float) (px + tw * 0.5);
+        float startY = (float) (py + th * 0.5);
+        double dx = target.getX() - startX;
+        double dy = target.getY() - startY;
+        double dist = Math.sqrt(dx * dx + dy * dy);
+        double speed = 320.0;
+        float vx = (float) (dist < 1e-6 ? speed : dx / dist * speed);
+        float vy = (float) (dist < 1e-6 ? 0.0 : dy / dist * speed);
+        projectile.initFreePosition(startX, startY, vx, vy);
+        projectile.setHoming(true);
+        context.spawnProjectile(projectile);
+    }
+
     private void handleDiagonalShot(PlantInstance plant, BehaviorContext context, int lane, double deltaTime) {
         if (!tickCooldown(plant, "diagonalTimer", deltaTime)) {
             return;
@@ -305,12 +402,13 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (!anyTarget) {
             return;
         }
-        // Plant food: fan burst volley across the lanes (Threepeater)
+        // Threepeater fires one pea in each of 3 parallel lanes (row-1, row, row+1), all
+        // travelling in the SAME direction — not 3 diverging directions.
         int volleys = plant.isPlantFoodActive() ? 2 : 1;
         for (int v = 0; v < volleys; v++) {
-            fireInto(plant, context, lane, false);
-            fireInto(plant, context, lane - 1, false);
-            fireInto(plant, context, lane + 1, false);
+            fireParallel(plant, context, lane, false);
+            fireParallel(plant, context, lane - 1, false);
+            fireParallel(plant, context, lane + 1, false);
         }
     }
 
@@ -353,13 +451,17 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (all.isEmpty()) {
             return;
         }
+        double px = asDouble(plant.getRuntimeState().getOrDefault("worldX", 0.0), 0.0);
+        double py = asDouble(plant.getRuntimeState().getOrDefault("worldY", 0.0), 0.0);
         Zombie nearest = null;
         double bestDistance = Double.MAX_VALUE;
         for (Zombie z : all) {
             if (z == null || z.isDead()) {
                 continue;
             }
-            double distance = Math.abs(z.getRow() - lane) * 1000.0 + z.getX();
+            double dx = z.getX() - px;
+            double dy = z.getY() - py;
+            double distance = dx * dx + dy * dy;   // true nearest by Euclidean distance
             if (distance < bestDistance) {
                 bestDistance = distance;
                 nearest = z;
@@ -368,7 +470,7 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (nearest == null) {
             return;
         }
-        fireInto(plant, context, (int) nearest.getRow(), false);
+        fireHoming(plant, context, nearest);
     }
 
     private void handleBounceMultiLane(PlantInstance plant, BehaviorContext context, int lane, double deltaTime) {
@@ -397,6 +499,29 @@ public class ManualPlantBehavior implements PlantBehavior {
         context.damageArea(lane, row, damage);
         context.damageArea(lane - 1, row, damage);
         context.damageArea(lane + 1, row, damage);
+    }
+
+    private void handleStackShot(PlantInstance plant, BehaviorContext context, int lane, double deltaTime) {
+        if (!tickCooldown(plant, "stackTimer", deltaTime)) {
+            return;
+        }
+        if (context.getZombiesInLane(lane).isEmpty()) {
+            return;
+        }
+        // One pea per stacked head (up to 5). Stagger them in X so the pod fires a visible
+        // train of parallel peas instead of 5 peas stacked on top of each other (which read
+        // as a single pea).
+        int heads = asInt(plant.getRuntimeState().getOrDefault("peaPodHeads", 5), 5);
+        heads = Math.max(1, Math.min(5, heads));
+        int volleys = plant.isPlantFoodActive() ? 2 : 1;
+        for (int v = 0; v < volleys; v++) {
+            for (int i = 0; i < heads; i++) {
+                Projectile pea = fireParallel(plant, context, lane, false);
+                if (pea != null) {
+                    pea.setPositionX(pea.getPositionX() - i * 22.0);
+                }
+            }
+        }
     }
 
     private boolean tickCooldown(PlantInstance plant, String key, double deltaTime) {

@@ -31,6 +31,7 @@ public abstract class Zombie {
     protected boolean isGlowing;
     protected List<StatusEffect> activeEffects;
     private float poisonDps = 10.0f;
+    private float chillDuration = 3.0f;
     protected Rectangle hitbox;
     protected boolean moving = true;
     private Texture texture;
@@ -238,7 +239,7 @@ public abstract class Zombie {
             for (StatusEffect e : activeEffects) {
                 if (e.getType() == DamageType.ICE) { hasSlow = true; break; }
             }
-            if (!hasSlow) activeEffects.add(new StatusEffect(DamageType.ICE, 3.0f));
+            if (!hasSlow) activeEffects.add(new StatusEffect(DamageType.ICE, chillDuration));
             if (!"FROSTBITE_CAVES".equals(com.PVZ.model.status.AppStatus.currentChapterName)) {
                 currentSpeed = speed * 0.5;
             }
@@ -415,5 +416,9 @@ public abstract class Zombie {
     /** Kernel-pult butter: freeze the zombie solid for a short while. */
     public void stunOnHit() {
         this.freezeSolid();
+    }
+
+    public void setChillDuration(float chillDuration) {
+        this.chillDuration = chillDuration;
     }
 }
