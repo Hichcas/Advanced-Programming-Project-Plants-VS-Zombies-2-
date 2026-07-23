@@ -23,14 +23,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.PVZ.util.GameInitialization;
 import java.io.IOException;
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class PVZ extends Game {
     private SpriteBatch batch;
     private Texture image;
 
     @Override
     public void create() {
-//          // here is what we used to have in previous Main.java file
         try {
             GameInitialization.initialize();
         } catch (IOException e) {
@@ -49,9 +47,6 @@ public class PVZ extends Game {
 
         ChapterLibrary.load();
 
-        // Pick the starting menu from any persisted "stay logged in" session:
-        // already logged in -> Main Menu, otherwise -> Register Menu.
-        // Do NOT jump straight into a running game (IN_GAME) on launch.
         UserRegistry.loadAllFromDatabase();
         User autoUser = null;
         for (User u : UserRegistry.allUsers()) {
