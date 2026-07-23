@@ -91,7 +91,7 @@ public final class BehaviorFactory {
                  "fire_shot", "ice_shot", "poison_shot", "piercing_shot", "homing_shot",
                  "target_lock" -> new ShooterBehavior();
             case "lobber", "lobber_kernel", "lob", "bounce_shot", "pult" -> new LobberBehavior();
-            case "explosive", "bomb", "mine", "aoe", "burst_explode", "lane_clear" ->
+            case "explosive", "explosion", "bomb", "mine", "aoe", "burst_explode", "lane_clear" ->
                 new ExplosiveBehavior();
             case "wall", "wall_nut", "defense", "wall_defense" -> new WallBehavior();
             case "mint", "mint_family_buff", "family_buff" -> new MintBehavior();
@@ -139,7 +139,7 @@ public final class BehaviorFactory {
             return createBurstSunFoodBehavior(plantFood);
         }
         if ("burst_shot".equals(normalized) || "multi_shot".equals(normalized)
-            || "double_projectile".equals(normalized)) {
+            || "double_projectile".equals(normalized) || "burst_attack".equals(normalized)) {
             return createBurstShotFoodBehavior(plantFood, plantKey);
         }
         if ("freeze_burst".equals(normalized)) {
@@ -241,6 +241,8 @@ public final class BehaviorFactory {
             plant.setPlantFoodTicksRemaining(3);
             context.freezeAllZombies(3.0);
             plant.getStats().putExtra("iceAttack", Boolean.TRUE);
+            // Icy burst fire (Snow Pea): fire more projectiles while plant food is active
+            plant.getStats().putExtra("plantFoodProjectileCount", 5);
         };
     }
 
