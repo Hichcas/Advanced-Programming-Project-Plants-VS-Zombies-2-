@@ -12,7 +12,7 @@ import java.util.List;
 
 public class UtilityLaneBehavior implements PlantBehavior {
 
-    public enum Mode { MAGNET_DISARM, MOVE_ZOMBIES, HYPNOTIZE }
+    public enum Mode { MAGNET_DISARM, MOVE_ZOMBIES, HYPNOTIZE, PULL }
 
     private final Mode mode;
 
@@ -57,8 +57,33 @@ public class UtilityLaneBehavior implements PlantBehavior {
                 }
             }
             case MOVE_ZOMBIES -> {
-                context.moveZombiesFromLane(lane, lane + 1);
-                context.moveZombiesFromLane(lane, lane - 1);
+                // Garlic must fully shove the zombie into a REAL adjacent lane. Calling
+                // moveZombiesFromLane(lane, lane+1) followed by (lane, lane-1) was buggy:
+                // the first call already emptied the source lane, so the second call was a
+                // no-op — and on the bottom row (lane+1 out of bounds) the target got clamped
+                // back to the same lane, so the zombie visibly never moved at all. Pick a
+                // single valid target lane (random direction when both exist) and move
+                // everyone there in one shot instead.
+                final int maxLane = 4; // 5-row board (rows 0..4)
+                boolean canGoDown = lane + 1 <= maxLane;
+                boolean canGoUp = lane - 1 >= 0;
+                int targetLane;
+                if (canGoDown && canGoUp) {
+                    targetLane = java.util.concurrent.ThreadLocalRandom.current().nextBoolean()
+                        ? lane + 1 : lane - 1;
+                } else if (canGoDown) {
+                    targetLane = lane + 1;
+                } else if (canGoUp) {
+                    targetLane = lane - 1;
+                } else {
+                    targetLane = lane;
+                }
+                if (targetLane != lane) {
+                    context.moveZombiesFromLane(lane, targetLane);
+                }
+            }
+            case PULL -> {
+                context.pullAdjacentZombiesToLane(lane);
             }
         }
 

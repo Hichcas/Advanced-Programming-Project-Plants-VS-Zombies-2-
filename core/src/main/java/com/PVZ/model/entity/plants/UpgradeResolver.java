@@ -211,6 +211,7 @@ public final class UpgradeResolver {
             case WARMTH_RADIUS_UP -> stats.putExtra("warmthRadiusBoost", Boolean.TRUE);
             case SUMMON_ALLY -> stats.putExtra("summonAlly", Boolean.TRUE);
             case TRANSFORM_TARGET -> stats.putExtra("transformTarget", Boolean.TRUE);
+            case CAN_CRUSH_2X -> stats.putExtra("canCrush2x", Boolean.TRUE);
             case UNKNOWN -> stats.putExtra("special:" + rule.getRaw(), rule.getParams());
         }
     }

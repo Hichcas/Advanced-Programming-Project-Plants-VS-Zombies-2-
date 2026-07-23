@@ -1217,10 +1217,12 @@
         "damagePerProjectile": 20
       },
       "baseAbility": {
-        "kind": "WALL_DEFENSE",
+        "kind": "DIRECT_SHOT",
         "raw": "شلیک تیر مستقیم (نادیده گرفتن زره + آسیب مستمر).",
         "params": {
-          "role": "WALL"
+          "projectileType": "GOO",
+          "poisonAttack": true,
+          "armorIgnore": true
         }
       },
       "plantFoodEffect": {

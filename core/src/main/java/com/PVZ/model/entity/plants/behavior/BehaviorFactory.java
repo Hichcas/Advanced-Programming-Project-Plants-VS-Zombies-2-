@@ -63,8 +63,16 @@ public final class BehaviorFactory {
 
     private static PlantBehavior handlePlantKeySpecificCases(PlantDefinition definition, String plantKey) {
         switch (plantKey) {
-            case "rotobaga", "threepeater", "split_pea", "starfruit", "cat_tail", "bowling_bulb" -> {
+            case "rotobaga", "threepeater", "split_pea", "starfruit", "cat_tail", "bowling_bulb", "pea_pod" -> {
                 return new ManualPlantBehavior(definition, definition.getBaseAbility());
+            }
+            case "sweet_potato" -> {
+                return new CompositeBehavior(
+                    new com.PVZ.model.entity.plants.behavior.impl.WallBehavior(),
+                    new UtilityLaneBehavior(UtilityLaneBehavior.Mode.PULL));
+            }
+            case "cabbage_pult" -> {
+                return new LobberBehavior();
             }
             case "garlic" -> {
                 return new CompositeBehavior(new WallBehavior(),

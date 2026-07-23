@@ -54,6 +54,37 @@ public class BattleController implements BehaviorContext {
         updateZombieProjectiles(delta);
         updatePlantProjectiles(delta);
         removeDeadPlants();
+        removeExpiredGrapes();
+    }
+
+    /**
+     * Removes grapes whose fuse has expired after bouncing. The grape's isFuseExploded()
+     * flag is set by Projectile.updateFreeMotion when the countdown reaches zero.
+     * At that point the grape detonates with a small area-of-effect at its current
+     * position before being removed.
+     */
+    private void removeExpiredGrapes() {
+        java.util.Iterator<Projectile> it = projectiles.iterator();
+        while (it.hasNext()) {
+            Projectile p = it.next();
+            if (p.isFuseExploded()) {
+                // Small detonation at the grape's final position
+                if (map != null) {
+                    int gRow = map.worldToRow((float) p.getPositionY());
+                    int gCol = map.worldToCol((float) p.getPositionX());
+                    if (gRow >= 0 && gCol >= 0) {
+                        for (Zombie z : getZombiesInLane(gRow)) {
+                            double colDist = Math.abs(z.getX() - p.getPositionX());
+                            if (colDist < map.getTileWidth() * 1.2) {
+                                z.takeDamage(p.getDamage());
+                            }
+                        }
+                    }
+                }
+                p.consumeFuseExplosion(); // marks destroyed + removes from list
+                it.remove();
+            }
+        }
     }
 
     /**
@@ -96,6 +127,11 @@ public class BattleController implements BehaviorContext {
         Iterator<Projectile> projIt = projectiles.iterator();
         while (projIt.hasNext()) {
             Projectile p = projIt.next();
+
+            // Homing projectiles (Cat-tail) re-aim toward the nearest zombie every tick.
+            if (p.isHoming() && p.isFreeMotion()) {
+                steerHoming(p);
+            }
 
             // Check collision with tombstone tiles (block straight projectiles)
             if (handleTileCollision(p)) {
@@ -160,6 +196,11 @@ public class BattleController implements BehaviorContext {
             if (z.isProjectileImmune()) {
                 break;
             }
+            // A piercing projectile (Cactus spike, Fume-shroom smoke) must not damage the
+            // same zombie on every overlapping tick — skip ones it already hit.
+            if (hasHitZombie(p, z)) {
+                continue;
+            }
 
             // Check reflection by Dark Juggler
             if (z instanceof ZombieDarkJuggler jj && jj.reflectProjectile()) {
@@ -169,9 +210,71 @@ public class BattleController implements BehaviorContext {
 
             // Apply damage and effects
             applyProjectileEffect(p, z);
+            markHitZombie(p, z);
+
+            // Pierce: while pierce remains, the projectile passes through and keeps flying
+            // (Cactus pierces 3 zombies, Fume-shroom smoke passes through the whole lane).
+            if (p.getPierce() > 1) {
+                p.setPierce(p.getPierce() - 1);
+                continue;
+            }
             return true;
         }
         return false;
+    }
+
+    /**
+     * Re-aims a homing projectile (Cat-tail) at the nearest living zombie, keeping its speed
+     * constant so it visibly curves toward and lands on the closest target.
+     */
+    private void steerHoming(Projectile p) {
+        Zombie nearest = null;
+        double best = Double.MAX_VALUE;
+        for (Zombie z : zombies) {
+            if (z == null || z.isDead()) {
+                continue;
+            }
+            double dx = z.getX() - p.getPositionX();
+            double dy = z.getY() - p.getPositionY();
+            double d2 = dx * dx + dy * dy;
+            if (d2 < best) {
+                best = d2;
+                nearest = z;
+            }
+        }
+        if (nearest == null) {
+            return;
+        }
+        double dx = nearest.getX() - p.getPositionX();
+        double dy = nearest.getY() - p.getPositionY();
+        double dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 1e-6) {
+            return;
+        }
+        double speed = Math.sqrt(p.getVelX() * p.getVelX() + p.getVelY() * p.getVelY());
+        if (speed < 1e-6) {
+            speed = 320.0;
+        }
+        p.setVelocity(dx / dist * speed, dy / dist * speed);
+    }
+
+    @SuppressWarnings("unchecked")
+    private java.util.Set<Integer> hitSet(Projectile p) {
+        Object obj = p.getExtra("hitZombies");
+        if (obj instanceof java.util.Set) {
+            return (java.util.Set<Integer>) obj;
+        }
+        java.util.Set<Integer> set = new java.util.HashSet<>();
+        p.putExtra("hitZombies", set);
+        return set;
+    }
+
+    private boolean hasHitZombie(Projectile p, Zombie z) {
+        return hitSet(p).contains(System.identityHashCode(z));
+    }
+
+    private void markHitZombie(Projectile p, Zombie z) {
+        hitSet(p).add(System.identityHashCode(z));
     }
 
     /**
@@ -201,6 +304,12 @@ public class BattleController implements BehaviorContext {
                 z.thaw();
             }
         } else {
+            if (type == ProjectileType.ICE_PEA) {
+                Object cd = p.getExtra("chillDuration");
+                if (cd instanceof Number) {
+                    z.setChillDuration(((Number) cd).floatValue());
+                }
+            }
             z.takeDamage(damage, resolveDamageType(p));
         }
 
@@ -326,7 +435,13 @@ public class BattleController implements BehaviorContext {
             }
         }
 
-        p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
+        if (p.getType() == com.PVZ.model.entity.plants.behavior.impl.ProjectileType.LOB) {
+            // Lobbed shots (Cabbage-pult, Kernel-pult, Melon-pult, ...) arc up and over
+            // obstacles: a parabola in screen space (rise then land) instead of a flat line.
+            p.initArcPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec));
+        } else {
+            p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
+        }
     }
 
     @Override
@@ -347,10 +462,58 @@ public class BattleController implements BehaviorContext {
         if (damage <= 0) {
             return;
         }
-        for (Zombie zombie : getZombiesInLane(lane)) {
-            if (zombie != null) {
-                zombie.takeDamage(damage);
+        // 3x3 explosion: lanes row-1, row, row+1; column check ~1.5 tiles
+        int[] lanes = {row - 1, row, row + 1};
+        for (int r : lanes) {
+            if (r < 0) continue;
+            Tile tile0 = map != null ? map.getTile(r, 0) : null;
+            float centreX = tile0 != null ? tile0.getX() + lane * tile0.getWidth() : 0;
+            float tileW = tile0 != null ? tile0.getWidth() : 177f;
+            for (Zombie zombie : getZombiesInLane(r)) {
+                if (zombie != null) {
+                    double colDist = Math.abs(zombie.getX() - centreX);
+                    if (colDist < tileW * 1.6) {
+                        zombie.takeDamage(damage);
+                    }
+                }
             }
+        }
+    }
+
+    @Override
+    public void damageSingleTarget(Object target, int damage) {
+        if (target instanceof Zombie z && z != null && !z.isDead()) {
+            z.takeDamage(damage);
+        }
+    }
+
+    @Override
+    public void spawnBouncingProjectiles(int lane, int row, int count,
+                                          int damagePerGrape, double lifespanSeconds) {
+        if (map == null) return;
+        float tileW = map.getTileWidth();
+        float tileH = map.getTileHeight();
+        float centreX = map.getStartX() + lane * tileW + tileW * 0.5f;
+        float centreY = map.getStartY() - (row + 1) * tileH + tileH * 0.5f;
+        float minX = map.getStartX();
+        float maxX = minX + map.getCols() * tileW;
+        float minY = map.getStartY() - map.getRows() * tileH;
+        float maxY = map.getStartY();
+        double fuseSec = Math.max(lifespanSeconds, 4.0);
+        double speed = tileW * 0.28; // slowed down further per feedback so grapes drift gently
+        for (int i = 0; i < Math.max(1, Math.min(count, 20)); i++) {
+            double angle = 2 * Math.PI * i / count + (java.util.concurrent.ThreadLocalRandom.current().nextDouble() - 0.5) * 0.4;
+            float vx = (float) (Math.cos(angle) * speed);
+            float vy = (float) (Math.sin(angle) * speed * 0.6);
+            Projectile grape = new Projectile();
+            grape.setType(ProjectileType.GRAPE);
+            grape.setDamage(Math.max(1, damagePerGrape));
+            grape.setPierce(0);
+            grape.initFreePosition(centreX, centreY, vx, vy);
+            grape.setBouncing(true);
+            grape.setFuse(fuseSec);
+            grape.setBounds(minX, maxX, minY, maxY);
+            projectiles.add(grape);
         }
     }
 
