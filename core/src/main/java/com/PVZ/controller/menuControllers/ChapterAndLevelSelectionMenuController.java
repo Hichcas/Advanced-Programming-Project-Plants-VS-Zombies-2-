@@ -14,10 +14,6 @@ import com.PVZ.view.input.DTO.ChapterAndLevelSelectionInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
 
-/**
- * Controller for the chapter & level selection menu.
- * Updated to use the new AppStatus constant names (UPPER_SNAKE_CASE).
- */
 public class ChapterAndLevelSelectionMenuController {
 
     public OutputDTO handle(InputDTO input) {
