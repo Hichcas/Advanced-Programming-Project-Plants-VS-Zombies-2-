@@ -1,4 +1,4 @@
-
+package com.PVZ;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -12,7 +12,6 @@ public class SourceMerger {
         Path currentDir = Paths.get(".");
         Path outputFile = Paths.get("result.txt");
 
-        // حذف فایل نتیجه قبلی در صورت وجود، برای جلوگیری از اضافه شدن مجدد به خودش
         try {
             Files.deleteIfExists(outputFile);
         } catch (IOException e) {
@@ -24,14 +23,12 @@ public class SourceMerger {
         try (BufferedWriter writer = Files.newBufferedWriter(outputFile, StandardCharsets.UTF_8,
             StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
 
-            // پیمایش تمام فایل‌ها به صورت ریکرسیو
             Files.walk(currentDir)
                 .filter(Files::isRegularFile)
-                .filter(path -> !path.getFileName().toString().equals("result.txt")) // نادیده گرفتن فایل خروجی
-                .filter(path -> !path.getFileName().toString().equals("SourceMerger.java")) // نادیده گرفتن خود این کد
-                .filter(path -> !path.toString().contains(".git")) // نادیده گرفتن کش گیت
-                .filter(path -> !path.toString().contains(".idea")) // نادیده گرفتن تنظیمات آی‌دی‌ای
-                // نادیده گرفتن فایل‌های کامپایل شده گریدل
+                .filter(path -> !path.getFileName().toString().equals("result.txt"))
+                .filter(path -> !path.getFileName().toString().equals("SourceMerger.java"))
+                .filter(path -> !path.toString().contains(".git"))
+                .filter(path -> !path.toString().contains(".idea"))
                 .filter(path -> !path.toString().contains("/build/") && !path.toString().contains("\\build\\"))
                 .forEach(filePath -> appendFileContent(filePath, writer));
 
@@ -44,23 +41,20 @@ public class SourceMerger {
 
     private static void appendFileContent(Path filePath, BufferedWriter writer) {
         try {
-            // نوشتن هدر برای مشخص شدن اینکه این کد مربوط به کدام فایل است
             writer.write("\n=================================================================\n");
             writer.write("FILE: " + filePath.toString() + "\n");
             writer.write("=================================================================\n\n");
 
-            // خواندن خط به خط و نوشتن در فایل مقصد
             List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
             for (String line : lines) {
                 writer.write(line);
                 writer.newLine();
             }
-            writer.newLine(); // یک خط خالی اضافه برای فاصله بین فایل‌ها
+            writer.newLine();
 
             System.out.println("اضافه شد: " + filePath);
 
         } catch (IOException e) {
-            // بعضی فایل‌ها مثل عکس‌ها یا فایل‌های باینری متنی نیستند و خطا می‌دهند که عادی است
             System.err.println("فایل متنی نبود یا خوانده نشد (نادیده گرفته شد): " + filePath.getFileName());
         }
     }

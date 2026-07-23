@@ -18,34 +18,30 @@ public class ConsoleInputHandler {
         inputThread = new Thread(() -> {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
                 while (running) {
-                    // این خوندن بلاک کننده است، اما چون توی یه thread جدا است، بازی قفل نمیشه
                     String line = reader.readLine();
-                    if (line == null) { // اگر stream بسته بشه (مثل Ctrl+D)
+                    if (line == null) {
                         break;
                     }
-                    commandQueue.offer(line.trim()); // خط کامل رو توی صف میذاریم
+                    commandQueue.offer(line.trim());
                 }
             } catch (IOException e) {
                 Gdx.app.error("Console", "خطا در خواندن ورودی", e);
             }
         }, "ConsoleInputThread");
-        inputThread.setDaemon(true); // با بسته شدن برنامه تموم بشه
+        inputThread.setDaemon(true);
         inputThread.start();
     }
 
     public void stop() {
         running = false;
         if (inputThread != null) {
-            inputThread.interrupt(); // برای خروج از readLine موقع بستن برنامه
+            inputThread.interrupt();
         }
     }
 
-    /**
-     * توی رندر loop صداش بزن.
-     * فقط فرمان‌های کامل و آماده رو برمی‌گردونه، در غیر این صورت null.
-     */
+
     public String pollCommand() {
-        return commandQueue.poll(); // اگه خالی باشه null برمیگرده -> بازی ادامه میده
+        return commandQueue.poll();
     }
 
     public boolean hasCommand() {
