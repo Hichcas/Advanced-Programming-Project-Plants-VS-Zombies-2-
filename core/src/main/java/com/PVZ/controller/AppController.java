@@ -12,20 +12,12 @@ public class AppController {
     }
 
     public static void render() {
-
-
             InputDTO input = GetInput.get();
-
             if (input == null)
                 return;
-
             OutputDTO output =
                     AppStatus.currentMenuType.getCurrentMenu()
                             .handleInput(input);
-
             ShowOutput.show(output);
-
-
     }
-
 }
