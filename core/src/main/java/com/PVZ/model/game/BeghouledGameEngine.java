@@ -487,7 +487,8 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
     @Override public int getSunCount() { return game != null ? game.getSun() : 0; }
     @Override public void addSun(int amount) { if (game != null) game.addSun(amount); }
     @Override public void spawnProjectile(Projectile p) { projectiles.add(p); }
-    @Override public Zombie spawnZombie(String alias, int row, int col) { return zombieEngine.spawnZombie(alias, row, col); }
+    @Override public Zombie spawnZombie(String alias,
+              int row, int col) { return zombieEngine.spawnZombie(alias, row, col); }
     @Override public void removePlant(int row, int col) { if (map != null) map.removePlant(row, col); }
     @Override public int getTileColumn(float worldX) { return map != null ? map.worldToCol(worldX) : 0; }
 }

@@ -57,7 +57,8 @@ public class DrawHandler {
         }
     }
 
-    private static void drawPlantFreezeOverlay(RegularGameEngine engine, SpriteBatch batch, Plant plant, Rectangle box) {
+    private static void drawPlantFreezeOverlay(RegularGameEngine engine,
+                        SpriteBatch batch, Plant plant, Rectangle box) {
         Object freezeLv = plant.getRuntimeState("freezeLevel");
         if (freezeLv instanceof Number && ((Number) freezeLv).intValue() >= 3) {
             Color c = batch.getColor();
