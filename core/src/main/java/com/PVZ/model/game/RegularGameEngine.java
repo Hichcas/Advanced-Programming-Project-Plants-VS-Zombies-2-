@@ -374,13 +374,15 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     public String removeCooldownCheat() { return PlantHandler.removeCooldownCheat(this); }
     public String startZombieWavesText() { return WaveHandler.startZombieWavesText(this); }
     public String zombiesInfoText() { return CombatHandler.zombiesInfoText(this); }
-    public String currentMenuText() { return AppStatus.currentMenuType == null ? "" : AppStatus.currentMenuType.name(); }
+    public String currentMenuText() {
+        return AppStatus.currentMenuType == null ? "" : AppStatus.currentMenuType.name(); }
     public String advanceTimeText(int ticks) { advanceTicks(ticks); return "Advanced time by " + ticks + " ticks."; }
 
     // ---------- Getters ----------
     public SpecialLevel getSpecialLevel() { return specialLevel; }
     public void setSpecialLevel(SpecialLevel specialLevel) { this.specialLevel = specialLevel; }
-    public SeedPacketBar getSeedPacketBar() { return seedPacketBar; }
+    public SeedPacketBar getSeedPacketBar() {
+        return seedPacketBar; }
     public java.util.Set<PlantType> getLockedPlantsForStage() { return Collections.unmodifiableSet(lockedPlantsForStage); }
     public List<PlantType> getConveyorBeltQueue() { return Collections.unmodifiableList(conveyorBeltQueue); }
     public RegularZombieEngine getZombieEngine() { return zombieEngine; }
