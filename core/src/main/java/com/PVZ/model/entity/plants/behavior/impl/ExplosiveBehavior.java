@@ -115,6 +115,20 @@ public class ExplosiveBehavior implements PlantBehavior {
             return;
         }
 
+        // --- Iceberg Lettuce: freezes the zombie(s) that stepped on it ---
+        if ("iceberg_lettuce".equals(key)) {
+            context.freezeZombiesInLane(lane, Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
+            plant.takeDamage(plant.getCurrentHp());
+            return;
+        }
+
+        // --- Tangle Kelp: drags the first zombie in its lane underwater (insta-kill) ---
+        if ("tangle_kelp".equals(key)) {
+            context.killClosestZombieInLane(lane);
+            plant.takeDamage(plant.getCurrentHp());
+            return;
+        }
+
         // --- Grapeshot: 3x3 explosion + bouncing grapes ---
         if ("grapshot".equals(key) || "grapeshot".equals(key)) {
             context.damageArea(lane, row, damage);
