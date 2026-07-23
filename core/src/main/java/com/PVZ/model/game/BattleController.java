@@ -388,8 +388,11 @@ public class BattleController implements BehaviorContext {
 
     public Zombie findZombieAt(int col, int row) {
         for (Zombie z : zombies) {
-            if ((int) z.getRow() == row && getTileColumn((float) z.getX()) == col) {
-                return z;
+            if ((int) z.getRow() == row) {
+                int zCol = getTileColumn((float) z.getX());
+                if (zCol == col || zCol == col + 1) {
+                    return z;
+                }
             }
         }
         return null;
