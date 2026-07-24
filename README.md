@@ -87,6 +87,3 @@ This project was developed by:
 - The current implementation focuses on structured gameplay systems, menu workflows, and a maintainable architecture.
 - Future releases can expand balancing, content, polish, and presentation layers.
 
-## License
-
-No explicit license has been provided in the current project state.
