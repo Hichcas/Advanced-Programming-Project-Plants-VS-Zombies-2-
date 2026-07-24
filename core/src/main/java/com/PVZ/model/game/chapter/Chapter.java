@@ -309,30 +309,33 @@ public class Chapter {
     // ---------- Tide helpers ----------
 
     private void advanceTide(com.PVZ.model.game.Map map) {
-        if (tideFloodedColumn <= 0) {
-            return;
-        }
-        tideFloodedColumn--;
-        for (int r = 0; r < 5; r++) {
-            Tile tile = map.getTile(r, tideFloodedColumn);
-            if (tile == null) {
-                continue;
+        for (int step = 0; step < 2; step++) {
+            if (tideFloodedColumn <= 0) {
+                break;
             }
-            Plant topPlant = map.getPlantAt(r, tideFloodedColumn);
-            Plant basePlant = map.getBasePlantAt(r, tideFloodedColumn);
-            boolean protectedByLilyPad = basePlant != null && basePlant.getDefinition() != null
-                && basePlant.getDefinition().hasTag(PlantTag.WATER);
-            if (topPlant != null && !protectedByLilyPad) {
-                boolean aquatic = topPlant.getDefinition() != null
-                    && topPlant.getDefinition().hasTag(PlantTag.WATER);
-                if (!aquatic) {
-                    map.removePlant(r, tideFloodedColumn);
+            tideFloodedColumn--;
+            for (int r = 0; r < 5; r++) {
+                Tile tile = map.getTile(r, tideFloodedColumn);
+                if (tile == null) {
+                    continue;
                 }
+                Plant topPlant = map.getPlantAt(r, tideFloodedColumn);
+                Plant basePlant = map.getBasePlantAt(r, tideFloodedColumn);
+                boolean protectedByLilyPad = basePlant != null && basePlant.getDefinition() != null
+                    && basePlant.getDefinition().hasTag(PlantTag.WATER);
+                if (topPlant != null && !protectedByLilyPad) {
+                    boolean aquatic = topPlant.getDefinition() != null
+                        && topPlant.getDefinition().hasTag(PlantTag.WATER);
+                    if (!aquatic) {
+                        map.removePlant(r, tideFloodedColumn);
+                    }
+                }
+                if (basePlant != null && basePlant.getDefinition() != null
+                    && !basePlant.getDefinition().hasTag(PlantTag.WATER)) {
+                    map.removeBasePlant(r, tideFloodedColumn);
+                }
+                tile.setType(TileType.TIDE);
             }
-            if (basePlant != null && !basePlant.getDefinition().hasTag(PlantTag.WATER)) {
-                map.removeBasePlant(r, tideFloodedColumn);
-            }
-            tile.setType(TileType.TIDE);
         }
     }
 
