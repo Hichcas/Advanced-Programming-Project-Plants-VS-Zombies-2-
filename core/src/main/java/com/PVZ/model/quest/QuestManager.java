@@ -350,8 +350,18 @@ public class QuestManager {
     }
 
     private PlantFamily randomMintFamily() {
-        PlantFamily[] f = PlantFamily.MINT_FAMILIES;
-        return f[new Random().nextInt(f.length)];
+        PlantFamily[] usableMints = {
+            PlantFamily.ENLIGHTEN_MINT,
+            PlantFamily.APPEASE_MINT,
+            PlantFamily.ARMA_MINT,
+            PlantFamily.BOMBARD_MINT,
+            PlantFamily.ENFORCE_MINT,
+            PlantFamily.REINFORCE_MINT,
+            PlantFamily.ENCHANT_MINT,
+            PlantFamily.PIERCE_MINT,
+            PlantFamily.CAT_TAIL_MINT
+        };
+        return usableMints[new Random().nextInt(usableMints.length)];
     }
 
     private PlantType randomAttackingPlant() {
