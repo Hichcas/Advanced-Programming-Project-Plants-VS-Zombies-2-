@@ -24,7 +24,6 @@ public class ShopMenuController {
         if (AppStatus.getCurrentUser().shopDaily == null) {
             AppStatus.getCurrentUser().shopDaily = new ShopDaily();
         }
-        // todo line above must be earased later.
         AppStatus.getCurrentUser().shopDaily.generateIfNeeded();
         return switch (dto.getCommand()) {
             case LIST -> new OutputDTO(true, shopList());

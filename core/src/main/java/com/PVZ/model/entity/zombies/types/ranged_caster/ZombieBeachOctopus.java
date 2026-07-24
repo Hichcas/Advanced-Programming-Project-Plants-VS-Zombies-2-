@@ -3,7 +3,6 @@ package com.PVZ.model.entity.zombies.types.ranged_caster;
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
-import com.PVZ.model.entity.zombies.base.ZombieProjectile;
 import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ public class ZombieBeachOctopus extends AbstractRangedCasterZombie {
 
     public ZombieBeachOctopus() {
         super("ZombieBeachOctopus", 600, 100, 0.185, 800, 4000, defaultScaledProps(),
-              80, 150, 2.5, 3);
+            80, 150, 2.5, 3);
         this.tentaclesAttached = true;
     }
 
@@ -39,7 +38,8 @@ public class ZombieBeachOctopus extends AbstractRangedCasterZombie {
             if (tile != null && tile.getOctopusHp() <= 0) {
                 tile.setOctopusHp(200);
                 target.disableForTicks(Integer.MAX_VALUE);
-                System.out.println(alias + " stuck an octopus on plant at (" + col + ", " + row + ") — shoot it to free it!");
+                System.out.println(alias +
+                    " stuck an octopus on plant at (" + col + ", " + row + ") — shoot it to free it!");
             }
             detachTentacles();
         }
@@ -54,6 +54,11 @@ public class ZombieBeachOctopus extends AbstractRangedCasterZombie {
         return super.getDebugString() + (hasTentacles() ? "\nTENT" : "\nNOTENT");
     }
 
-    public boolean hasTentacles() { return tentaclesAttached; }
-    public void detachTentacles() { tentaclesAttached = false; }
+    public boolean hasTentacles() {
+        return tentaclesAttached;
+    }
+
+    public void detachTentacles() {
+        tentaclesAttached = false;
+    }
 }

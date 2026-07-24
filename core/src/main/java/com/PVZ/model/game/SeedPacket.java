@@ -4,11 +4,6 @@ import com.PVZ.model.enums.PlantType;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
-/**
- * A single clickable seed-packet slot in the {@link SeedPacketBar}. Holds the plant it
- * represents plus its on-screen hitbox. {@link #icon} is optional so the bar still works
- * (as a colored placeholder box) before real artwork is dropped in.
- */
 public class SeedPacket {
 
     private final PlantType plantType;

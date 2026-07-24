@@ -14,7 +14,7 @@ public class VasebreakerLevelLoader {
             for (JsonNode levelNode : levels) {
                 if (levelNode.path("id").asInt(-1) == levelId) {
                     return MinigamesDataLoader.mapper()
-                            .convertValue(levelNode, VasebreakerLevelDefinition.class);
+                        .convertValue(levelNode, VasebreakerLevelDefinition.class);
                 }
             }
         }
@@ -23,10 +23,7 @@ public class VasebreakerLevelLoader {
     }
 
     private VasebreakerLevelDefinition fallbackLevel() {
-        // Safety net only: should never be hit once all 3 vasebreaker levels are
-        // defined in minigames.json. Mirrors level 1's random/full-pool behaviour
-        // instead of a tiny fixed layout, so a missing entry doesn't silently
-        // degrade the game (fewer plant types, no gargantuar variety, etc).
+
         VasebreakerLevelDefinition def = new VasebreakerLevelDefinition();
         def.setId(1);
         def.setRows(5);

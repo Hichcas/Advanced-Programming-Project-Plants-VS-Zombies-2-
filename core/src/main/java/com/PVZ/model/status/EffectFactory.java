@@ -86,7 +86,6 @@ public final class EffectFactory {
         private ConfiguredTimedEffect(ConfiguredTimedEffect other) {
             super(other);
             getParams().forEach((key, value) -> {
-                // no-op: params are copied in the parent through the protected copy constructor
             });
         }
 

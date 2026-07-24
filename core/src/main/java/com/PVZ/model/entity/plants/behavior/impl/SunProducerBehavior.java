@@ -9,11 +9,7 @@ import com.PVZ.model.enums.PlantFlag;
 
 import java.util.List;
 
-/**
- * Behavior for plants that produce sun over time, including growth-stage sun producers
- * and special sun bean mechanics.
- * Refactored to comply with Checkstyle (method length ≤ 50 lines).
- */
+
 public class SunProducerBehavior implements PlantBehavior {
 
     @Override
@@ -26,20 +22,17 @@ public class SunProducerBehavior implements PlantBehavior {
         int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
         int lane = asInt(plant.getRuntimeState().getOrDefault("lane", row), row);
 
-        // Case 1: Sun Bean produces sun when zombies are present
         if (plant.getStats().getSunDropAmount() > 0) {
             handleSunBean(plant, context, deltaTime, row, col, lane);
             return;
         }
 
-        // Case 2: Ability with growth stages (e.g., Sunflower with timed stages)
         AbilitySpec ability = plant.getDefinition() == null ? null : plant.getDefinition().getBaseAbility();
         if (ability != null && hasGrowthParams(ability)) {
             handleGrowthAbility(plant, context, deltaTime, row, col, ability);
             return;
         }
 
-        // Case 3: Standard periodic sun production
         handleNormalProduction(plant, context, deltaTime, row, col);
     }
 
@@ -59,8 +52,6 @@ public class SunProducerBehavior implements PlantBehavior {
         context.addSun(amount);
     }
 
-    // ---------- Case 1: Sun Bean ----------
-
     private void handleSunBean(PlantInstance plant, BehaviorContext context, double deltaTime,
                                int row, int col, int lane) {
         List<Zombie> zombies = context.getZombiesInLane(lane);
@@ -68,13 +59,14 @@ public class SunProducerBehavior implements PlantBehavior {
             return;
         }
 
-        Double timer = asDouble(plant.getRuntimeState().getOrDefault("sunBeanTimer", 0.0), 0.0);
+        Double timer = asDouble(plant.getRuntimeState().getOrDefault("sunBeanTimer", 0.0),
+            0.0);
         timer += deltaTime;
 
         if (timer >= 1.0) {
             int amount = plant.getStats().getSunDropAmount();
             if (amount <= 0) {
-                amount = 5; // default
+                amount = 5;
             }
             logSunProduction(plant, row, col);
             context.spawnSunAt(row, col, amount);
@@ -82,8 +74,6 @@ public class SunProducerBehavior implements PlantBehavior {
         }
         plant.putRuntimeState("sunBeanTimer", timer);
     }
-
-    // ---------- Case 2: Growth stages ----------
 
     private boolean hasGrowthParams(AbilitySpec ability) {
         List<?> sunAmounts = asList(ability.getParam("sunAmounts"));
@@ -96,11 +86,14 @@ public class SunProducerBehavior implements PlantBehavior {
         List<?> sunAmounts = asList(ability.getParam("sunAmounts"));
         List<?> stageTimes = asList(ability.getParam("growthStageTimes"));
 
-        double timer = asDouble(plant.getRuntimeState().getOrDefault("growthTimer", 0.0), 0.0);
-        int stage = asInt(plant.getRuntimeState().getOrDefault("growthStage", 0), 0);
-        boolean triggered = asBoolean(plant.getRuntimeState().getOrDefault("growthTriggered", Boolean.FALSE), false);
+        double timer = asDouble(plant.getRuntimeState().getOrDefault("growthTimer", 0.0),
+            0.0);
+        int stage = asInt(plant.getRuntimeState().getOrDefault("growthStage", 0),
+            0);
+        boolean triggered = asBoolean(plant.getRuntimeState().getOrDefault("growthTriggered",
+            Boolean.FALSE), false);
 
-        // Initial sun at stage 0 if not triggered
+
         if (!triggered && stage == 0) {
             int amount = asInt(sunAmounts.get(0), plant.getStats().getSunAmount());
             logSunProduction(plant, row, col);
@@ -125,11 +118,11 @@ public class SunProducerBehavior implements PlantBehavior {
         plant.putRuntimeState("growthStage", stage);
     }
 
-    // ---------- Case 3: Normal periodic production ----------
 
     private void handleNormalProduction(PlantInstance plant, BehaviorContext context,
                                         double deltaTime, int row, int col) {
-        Double timer = asDouble(plant.getRuntimeState().getOrDefault("sunTimer", 0.0), 0.0);
+        Double timer = asDouble(plant.getRuntimeState().getOrDefault("sunTimer", 0.0),
+            0.0);
         timer += deltaTime;
 
         double productionTime = plant.getStats().getProductionTimeSeconds();
@@ -147,7 +140,6 @@ public class SunProducerBehavior implements PlantBehavior {
             if (amount <= 0) {
                 amount = 50;
             }
-            // Double sun chance
             if (plant.getStats().hasFlag(PlantFlag.DOUBLE_SUN_CHANCE) && Math.random() < 0.5) {
                 amount *= 2;
             }
@@ -158,7 +150,6 @@ public class SunProducerBehavior implements PlantBehavior {
         plant.putRuntimeState("sunTimer", timer);
     }
 
-    // ---------- Utilities ----------
 
     private void logSunProduction(PlantInstance plant, int row, int col) {
         String name = plant.getDefinition() == null ? "Unknown" : plant.getDefinition().getName();

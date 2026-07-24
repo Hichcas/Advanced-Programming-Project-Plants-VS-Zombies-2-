@@ -10,7 +10,6 @@ import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.chapter.sepecialLevel.SpecialLevel;
 import com.PVZ.model.status.AppStatus;
-import com.PVZ.model.user.UserRegistry;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
@@ -18,21 +17,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Main game engine for regular levels.
- * Delegates specific responsibilities to handler classes.
- */
+
 public class RegularGameEngine extends GameEngine implements ZombieEngine, BehaviorContext, SeedBarEngine {
 
-    // ---------- Constants ----------
     private static final double TICK_SECONDS = 0.1;
     private static final int ROWS = 5;
     private static final int COLS = 9;
     private static final float GAME_OVER_DISPLAY_DURATION = 3.0f;
     private static final double DEFAULT_CONVEYOR_INTERVAL_SECONDS = 12.0;
     private static final double SKY_SUN_INTERVAL_SECONDS = 10.0;
-
-    // ---------- Fields (used by handlers) ----------
     final List<Projectile> projectiles = new ArrayList<>();
     final List<Zombie> zombies = new ArrayList<>();
     final SunManager sunManager = new SunManager();
@@ -69,14 +62,12 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     final com.PVZ.model.entity.LawnMower[] lawnMowers = new com.PVZ.model.entity.LawnMower[ROWS];
     com.badlogic.gdx.graphics.Texture iceOverlayTex;
 
-    // ---------- Quest tracking ----------
     public int questPlantsLost = 0;
     public int questLawnmowerKills = 0;
     public int questLawnlessCol1Kills = 0;
     public final java.util.List<PlantType> questPlantTypesUsed = new java.util.ArrayList<>();
     public final java.util.Set<PlantFamily> questPlantFamiliesUsed = new java.util.HashSet<>();
 
-    // ---------- Constructor ----------
     public RegularGameEngine(GameStatus gameStatus) {
         this(gameStatus, createDefaultWaves());
     }
@@ -102,7 +93,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return waves;
     }
 
-    // ---------- Overrides ----------
     @Override
     public void setMap(Map map) {
         super.setMap(map);
@@ -135,7 +125,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (zombieEngine != null) zombieEngine.dispose();
     }
 
-    // ---------- Interface: ZombieEngine ----------
     @Override
     public List<Zombie> getZombiesInLane(int lane) {
         return CombatHandler.getZombiesInLane(this, lane);
@@ -148,12 +137,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     @Override
     public void kill(Object entity) {
-        // delegated in CombatHandler if needed
     }
 
     @Override
     public void takeDamage(Object entity, double amount) {
-        // delegated
     }
 
     @Override
@@ -161,7 +148,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return CombatHandler.spawnZombie(this, alias, row, x);
     }
 
-    // ---------- Interface: BehaviorContext ----------
     @Override
     public Plant getPlantAt(int row, int col) {
         return map == null ? null : map.getPlantAt(row, col);
@@ -197,9 +183,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     @Override
     public void spawnBouncingProjectiles(int lane, int row, int count,
-                                          int damagePerGrape, double lifespanSeconds) {
+                                         int damagePerGrape, double lifespanSeconds) {
         CombatHandler.spawnBouncingProjectiles(this, lane, row, count,
-                                                damagePerGrape, lifespanSeconds);
+            damagePerGrape, lifespanSeconds);
     }
 
     @Override
@@ -298,9 +284,10 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return map != null ? map.worldToCol(worldX) : 0;
     }
 
-    // ---------- Interface: SeedBarEngine ----------
     @Override
-    public boolean isConveyorBeltMode() { return conveyorBeltMode; }
+    public boolean isConveyorBeltMode() {
+        return conveyorBeltMode;
+    }
 
     @Override
     public boolean isOnCooldown(PlantType type) {
@@ -312,23 +299,49 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return rechargeRemaining.getOrDefault(type, 0.0);
     }
 
-    // ---------- Public methods (delegated) ----------
-    public void triggerGameOver(boolean win) { UpdateHandler.triggerGameOver(this, win); }
-    public boolean isGameOverTriggered() { return gameOverTriggered; }
-    public float getGameOverTimer() { return gameOverTimer; }
-    public boolean isGameOverWin() { return gameOverWin; }
-    public void resetGameOverState() { UpdateHandler.resetGameOverState(this); }
-    public void updateGameOverTimer(float delta) { UpdateHandler.updateGameOverTimer(this, delta); }
+    public void triggerGameOver(boolean win) {
+        UpdateHandler.triggerGameOver(this, win);
+    }
 
-    public void advanceTicks(int ticks) { UpdateHandler.advanceTicks(this, ticks); }
-    public void enableConveyorBelt(double intervalSeconds) { WaveHandler.enableConveyorBelt(this, intervalSeconds); }
+    public boolean isGameOverTriggered() {
+        return gameOverTriggered;
+    }
+
+    public float getGameOverTimer() {
+        return gameOverTimer;
+    }
+
+    public boolean isGameOverWin() {
+        return gameOverWin;
+    }
+
+    public void resetGameOverState() {
+        UpdateHandler.resetGameOverState(this);
+    }
+
+    public void updateGameOverTimer(float delta) {
+        UpdateHandler.updateGameOverTimer(this, delta);
+    }
+
+    public void advanceTicks(int ticks) {
+        UpdateHandler.advanceTicks(this, ticks);
+    }
+
+    public void enableConveyorBelt(double intervalSeconds) {
+        WaveHandler.enableConveyorBelt(this, intervalSeconds);
+    }
+
     public void enableLockedPlants(java.util.Collection<PlantType> locked) {
         WaveHandler.enableLockedPlants(this, locked);
     }
 
     public String plantPlant(String plantType, int x, int y) {
         PlantType type;
-        try { type = PlantType.fromName(plantType); } catch (Exception e) { return "Unknown plant type: " + plantType; }
+        try {
+            type = PlantType.fromName(plantType);
+        } catch (Exception e) {
+            return "Unknown plant type: " + plantType;
+        }
         return PlantHandler.plantPlant(this, type, x, y);
     }
 
@@ -339,8 +352,14 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     public void selectPlant(PlantType type) {
         this.selectedPlantType = (selectedPlantType == type) ? null : type;
     }
-    public PlantType getSelectedPlantType() { return selectedPlantType; }
-    public void clearSelection() { this.selectedPlantType = null; }
+
+    public PlantType getSelectedPlantType() {
+        return selectedPlantType;
+    }
+
+    public void clearSelection() {
+        this.selectedPlantType = null;
+    }
 
     public String plantSelectedAt(int x, int y) {
         if (selectedPlantType == null) return "No seed selected.";
@@ -378,47 +397,110 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return SunHandler.collectSunAt(this, x, y);
     }
 
-    public String showSunAmountText() { return "Sun amount: " + getSunCount(); }
+    public String showSunAmountText() {
+        return "Sun amount: " + getSunCount();
+    }
 
-    public String showMapText() { return MapHandler.showMapText(this); }
-    public String showPlantsStatusText() { return MapHandler.showPlantsStatusText(this); }
-    public String showTileStatusText(int x, int y) { return MapHandler.showTileStatusText(this, x, y); }
+    public String showMapText() {
+        return MapHandler.showMapText(this);
+    }
 
-    public String addSunsCheat(int amount) { addSun(amount); return "Added " + amount + " suns."; }
-    public String addPlantFoodCheat() { plantFoodManager.addPlantFood(1); return "Added one plant food."; }
-    public String removeCooldownCheat() { return PlantHandler.removeCooldownCheat(this); }
-    public String startZombieWavesText() { return WaveHandler.startZombieWavesText(this); }
-    public String zombiesInfoText() { return CombatHandler.zombiesInfoText(this); }
+    public String showPlantsStatusText() {
+        return MapHandler.showPlantsStatusText(this);
+    }
+
+    public String showTileStatusText(int x, int y) {
+        return MapHandler.showTileStatusText(this, x, y);
+    }
+
+    public String addSunsCheat(int amount) {
+        addSun(amount);
+        return "Added " + amount + " suns.";
+    }
+
+    public String addPlantFoodCheat() {
+        plantFoodManager.addPlantFood(1);
+        return "Added one plant food.";
+    }
+
+    public String removeCooldownCheat() {
+        return PlantHandler.removeCooldownCheat(this);
+    }
+
+    public String startZombieWavesText() {
+        return WaveHandler.startZombieWavesText(this);
+    }
+
+    public String zombiesInfoText() {
+        return CombatHandler.zombiesInfoText(this);
+    }
+
     public String currentMenuText() {
-        return AppStatus.currentMenuType == null ? "" : AppStatus.currentMenuType.name(); }
-    public String advanceTimeText(int ticks) { advanceTicks(ticks); return "Advanced time by " + ticks + " ticks."; }
+        return AppStatus.currentMenuType == null ? "" : AppStatus.currentMenuType.name();
+    }
 
-    // ---------- Getters ----------
-    public SpecialLevel getSpecialLevel() { return specialLevel; }
-    public void setSpecialLevel(SpecialLevel specialLevel) { this.specialLevel = specialLevel; }
+    public String advanceTimeText(int ticks) {
+        advanceTicks(ticks);
+        return "Advanced time by " + ticks + " ticks.";
+    }
+
+    public SpecialLevel getSpecialLevel() {
+        return specialLevel;
+    }
+
+    public void setSpecialLevel(SpecialLevel specialLevel) {
+        this.specialLevel = specialLevel;
+    }
+
     public SeedPacketBar getSeedPacketBar() {
-        return seedPacketBar; }
-    public java.util.Set<PlantType> getLockedPlantsForStage() { return Collections.unmodifiableSet(lockedPlantsForStage); }
-    public List<PlantType> getConveyorBeltQueue() { return Collections.unmodifiableList(conveyorBeltQueue); }
-    public RegularZombieEngine getZombieEngine() { return zombieEngine; }
-    public SunManager getSunManager() { return sunManager; }
+        return seedPacketBar;
+    }
 
-    public LootManager getLootManager() { return lootManager; }
+    public java.util.Set<PlantType> getLockedPlantsForStage() {
+        return Collections.unmodifiableSet(lockedPlantsForStage);
+    }
+
+    public List<PlantType> getConveyorBeltQueue() {
+        return Collections.unmodifiableList(conveyorBeltQueue);
+    }
+
+    public RegularZombieEngine getZombieEngine() {
+        return zombieEngine;
+    }
+
+    public SunManager getSunManager() {
+        return sunManager;
+    }
+
+    public LootManager getLootManager() {
+        return lootManager;
+    }
 
     public String collectLootAtWorldPoint(float worldX, float worldY) {
         com.PVZ.model.entity.LootDrop drop = lootManager.collectAt(worldX, worldY);
         return battleController.applyLootReward(drop);
     }
-    public BattleController getBattleController() { return battleController; }
-    public WaveManager getWaveManager() { return waveManager; }
-    public void startWaves() { WaveHandler.startWaves(this); }
 
-    // ---------- ADDED: getter for lockedPlantsMode ----------
+    public BattleController getBattleController() {
+        return battleController;
+    }
+
+    public WaveManager getWaveManager() {
+        return waveManager;
+    }
+
+    public void startWaves() {
+        WaveHandler.startWaves(this);
+    }
+
     public boolean isLockedPlantsMode() {
         return lockedPlantsMode;
     }
 
-    public void setBackgroundTexturePath(String path) { this.backgroundTexturePath = path; }
+    public void setBackgroundTexturePath(String path) {
+        this.backgroundTexturePath = path;
+    }
+
     @Override
     public com.badlogic.gdx.graphics.Texture getBackgroundOverride() {
         if (backgroundTexturePath == null || backgroundTexturePath.isEmpty()) return null;
@@ -435,13 +517,14 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return backgroundOverrideTexture;
     }
 
-    // ---------- Package-private helpers ----------
     List<Zombie> getZombieList() {
         if (zombieEngine != null && zombieEngine.getZombies() != null) return zombieEngine.getZombies();
         return zombies;
     }
 
-    int normalizeIndex(int value) { return value; }
+    int normalizeIndex(int value) {
+        return value;
+    }
 
     com.badlogic.gdx.graphics.Texture iceOverlayTexture() {
         if (iceOverlayTex == null) {
@@ -455,7 +538,11 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return iceOverlayTex;
     }
 
-    // ---------- Static utilities (moved from original) ----------
-    public static String tileDebugLabel(TileType type) { return MapHandler.tileDebugLabel(type); }
-    public static String tileDebugList(Map map) { return MapHandler.tileDebugList(map); }
+    public static String tileDebugLabel(TileType type) {
+        return MapHandler.tileDebugLabel(type);
+    }
+
+    public static String tileDebugList(Map map) {
+        return MapHandler.tileDebugList(map);
+    }
 }

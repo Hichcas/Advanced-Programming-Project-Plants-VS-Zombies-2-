@@ -8,13 +8,8 @@ import com.PVZ.model.enums.TileType;
 
 import java.util.StringJoiner;
 
-/**
- * Handler for map-related display and debug operations.
- * Used by RegularGameEngine for showMapText, showPlantsStatusText, etc.
- */
 public class MapHandler {
 
-    // ---------- Map display ----------
     public static String showMapText(RegularGameEngine engine) {
         StringBuilder builder = new StringBuilder();
         builder.append("Sun: ").append(engine.getSunCount())
@@ -82,7 +77,6 @@ public class MapHandler {
         return joiner.toString();
     }
 
-    // ---------- Plant and tile status ----------
     public static String showPlantsStatusText(RegularGameEngine engine) {
         if (engine.map == null) return "Map is not ready.";
         StringBuilder builder = new StringBuilder();
@@ -132,13 +126,13 @@ public class MapHandler {
         Plant base = tile.getBasePlant();
         if (base != null) {
             sb.append(" | Base: ").append(base.getType().getDisplayName())
-              .append(" hp=").append(base.getCurrentHp());
+                .append(" hp=").append(base.getCurrentHp());
         }
 
         Plant top = tile.getPlant();
         if (top != null) {
             sb.append(" | Plant: ").append(top.getType().getDisplayName())
-              .append(" hp=").append(top.getCurrentHp());
+                .append(" hp=").append(top.getCurrentHp());
             if (top.isPlantFoodActive()) sb.append(" [plant food]");
             Object fl = top.getRuntimeState("freezeLevel");
             if (fl instanceof Number && ((Number) fl).intValue() >= 3) {
@@ -156,7 +150,6 @@ public class MapHandler {
         return sb.toString();
     }
 
-    // ---------- Tile debug utilities ----------
     public static String tileDebugLabel(TileType type) {
         if (type == null) return ".";
         return switch (type) {

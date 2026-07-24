@@ -6,17 +6,12 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 
-/**
- * Input processor for the Beghouled minigame handling touch/click events.
- * Refactored to comply with Checkstyle (method length ≤ 50 lines).
- */
+
 public class BeghouledInputProcessor extends InputAdapter {
 
     private BeghouledGameEngine engine;
     private int selectedRow = -1;
     private int selectedCol = -1;
-
-    // ---------- Public API ----------
 
     public void setEngine(BeghouledGameEngine engine) {
         this.engine = engine;
@@ -30,8 +25,6 @@ public class BeghouledInputProcessor extends InputAdapter {
         return selectedCol;
     }
 
-    // ---------- Touch handling ----------
-
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (!validateEngineAndCamera()) {
@@ -43,12 +36,10 @@ public class BeghouledInputProcessor extends InputAdapter {
             return false;
         }
 
-        // Upgrade button click
         if (handleUpgradeClick(world.x, world.y)) {
             return true;
         }
 
-        // Tile click
         TilePos pos = getTilePosition(world.x, world.y);
         if (pos == null) {
             return false;
@@ -57,8 +48,6 @@ public class BeghouledInputProcessor extends InputAdapter {
         boolean clickedPlant = engine.getGame().isPlant(pos.row, pos.col);
         return handleTileClick(pos.row, pos.col, clickedPlant);
     }
-
-    // ---------- Helper methods ----------
 
     private boolean validateEngineAndCamera() {
         if (engine == null || engine.getGame() == null) {
@@ -75,10 +64,6 @@ public class BeghouledInputProcessor extends InputAdapter {
         return camera.unproject(new Vector3(screenX, screenY, 0));
     }
 
-    /**
-     * Returns the tile position (row, col) from world coordinates,
-     * or null if out of bounds or map is not set.
-     */
     private TilePos getTilePosition(float worldX, float worldY) {
         if (engine.getMap() == null) {
             return null;
@@ -92,11 +77,7 @@ public class BeghouledInputProcessor extends InputAdapter {
         return new TilePos(row, col);
     }
 
-    /**
-     * Handles the selection / swapping logic when a tile is clicked.
-     */
     private boolean handleTileClick(int row, int col, boolean clickedPlant) {
-        // No plant selected yet
         if (selectedRow < 0 || selectedCol < 0) {
             if (clickedPlant) {
                 selectPlant(row, col);
@@ -104,13 +85,11 @@ public class BeghouledInputProcessor extends InputAdapter {
             return true;
         }
 
-        // Clicked the same tile → deselect
         if (selectedRow == row && selectedCol == col) {
             clearSelection();
             return true;
         }
 
-        // Adjacent and both have plants → try swap
         if (isAdjacent(selectedRow, selectedCol, row, col) && clickedPlant) {
             String result = engine.trySwap(selectedRow, selectedCol, row, col);
             System.out.println("[Beghouled] " + result);
@@ -118,7 +97,6 @@ public class BeghouledInputProcessor extends InputAdapter {
             return true;
         }
 
-        // Click on another plant → move selection, otherwise clear
         if (clickedPlant) {
             selectPlant(row, col);
         } else {
@@ -151,8 +129,6 @@ public class BeghouledInputProcessor extends InputAdapter {
         }
         return false;
     }
-
-    // ---------- Simple holder for tile position ----------
 
     private static class TilePos {
         final int row;

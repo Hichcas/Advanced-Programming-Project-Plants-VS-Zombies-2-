@@ -3,12 +3,7 @@ package com.PVZ.model.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Maps each PlantType to the PNG asset that should represent it on screen,
- * mirroring the ZombieTexturePaths convention used on the zombie side.
- * Put the matching image files under assets/Plants/ (same root the zombie
- * textures load from, e.g. assets/Zombies/Zombie.png -> assets/Plants/Peashooter.png).
- */
+
 public final class PlantTexturePaths {
     private static final Map<String, String> PATHS = new HashMap<>();
     private static final String BASE = "Plants/";

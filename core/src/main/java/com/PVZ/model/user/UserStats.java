@@ -1,13 +1,12 @@
 package com.PVZ.model.user;
 
 public class UserStats {
-        // ---------- اطلاعات آماری ----------
-    private int gamesPlayed; // تعداد بازی‌های انجام‌شده
-    private int coins; // سکه‌های فعلی
-    private int diamonds; // الماس‌های فعلی
-    private int stagesCompleted; // تعداد کل مراحل گذرانده‌شده (همهٔ فصل‌ها)
-    private int highestScore; // بیشترین میوپوینت در بازی امتیازی
-    // private int difficultyLevel; // سطح سختی فعلی (۱ تا ۵، پیش‌فرض ۳)
+
+    private int gamesPlayed;
+    private int coins;
+    private int diamonds;
+    private int stagesCompleted;
+    private int highestScore;
     private int dailyQuestsCompleted;
     private int nonDailyQuestsCompleted;
 
@@ -51,25 +50,38 @@ public class UserStats {
         this.highestScore = highestScore;
     }
 
-    public int getDailyQuestsCompleted() { return dailyQuestsCompleted; }
-    public void setDailyQuestsCompleted(int n) { this.dailyQuestsCompleted = n; }
-    public int getNonDailyQuestsCompleted() { return nonDailyQuestsCompleted; }
-    public void setNonDailyQuestsCompleted(int n) { this.nonDailyQuestsCompleted = n; }
-    public void incrementDailyQuestsCompleted() { this.dailyQuestsCompleted++; }
-    public void incrementNonDailyQuestsCompleted() { this.nonDailyQuestsCompleted++; }
+    public int getDailyQuestsCompleted() {
+        return dailyQuestsCompleted;
+    }
 
-    // ---------- متدهای کمکی ----------
-    /** افزایش تعداد بازی‌های انجام‌شده */
+    public void setDailyQuestsCompleted(int n) {
+        this.dailyQuestsCompleted = n;
+    }
+
+    public int getNonDailyQuestsCompleted() {
+        return nonDailyQuestsCompleted;
+    }
+
+    public void setNonDailyQuestsCompleted(int n) {
+        this.nonDailyQuestsCompleted = n;
+    }
+
+    public void incrementDailyQuestsCompleted() {
+        this.dailyQuestsCompleted++;
+    }
+
+    public void incrementNonDailyQuestsCompleted() {
+        this.nonDailyQuestsCompleted++;
+    }
+
     public void incrementGamesPlayed() {
         this.gamesPlayed++;
     }
 
-    /** اضافه کردن سکه */
     public void addCoins(int amount) {
         this.coins += amount;
     }
 
-    /** کسر سکه (در صورت کافی بودن موجودی true برمی‌گرداند) */
     public boolean spendCoins(int amount) {
         if (this.coins >= amount) {
             this.coins -= amount;
@@ -78,12 +90,10 @@ public class UserStats {
         return false;
     }
 
-    /** اضافه کردن الماس */
     public void addDiamonds(int amount) {
         this.diamonds += amount;
     }
 
-    /** کسر الماس (در صورت کافی بودن موجودی true برمی‌گرداند) */
     public boolean spendDiamonds(int amount) {
         if (this.diamonds >= amount) {
             this.diamonds -= amount;
@@ -92,14 +102,12 @@ public class UserStats {
         return false;
     }
 
-    /** به‌روزرسانی بیشترین امتیاز اگر امتیاز جدید بیشتر باشد */
     public void updateHighestScore(int newScore) {
         if (newScore > this.highestScore) {
             this.highestScore = newScore;
         }
     }
 
-    /** افزایش تعداد مراحل کامل‌شده */
     public void incrementStagesCompleted() {
         this.stagesCompleted++;
     }

@@ -4,7 +4,6 @@ import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.status.AppStatus;
 
 
-
 public class CommandParser {
     private static ConsoleInputHandler console;
 

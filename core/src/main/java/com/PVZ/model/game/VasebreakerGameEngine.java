@@ -5,12 +5,12 @@ import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.plants.PlantFactory;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.MinigameEnum;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.minigame.vasebreaker.DroppedSeedPacket;
 import com.PVZ.model.minigame.vasebreaker.Vase;
 import com.PVZ.model.minigame.vasebreaker.VasebreakerGame;
 import com.PVZ.model.minigame.vasebreaker.VasebreakerTexturePaths;
-import com.PVZ.model.enums.MinigameEnum;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.UserRegistry;
 import com.PVZ.screen.manager.FontManager;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, com.PVZ.model.minigame.vasebreaker
-        .VasebreakerEngineCallback {
+    .VasebreakerEngineCallback {
 
     private static final double TICK_SECONDS = 0.1;
     private static final float GAME_OVER_DISPLAY_DURATION = 3.0f;
@@ -55,16 +55,10 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
         this.battleController = new BattleController(zombieEngine.getZombies(), plants, projectiles, gameStatus);
     }
 
-    /** Exposes the running game model to the input processor and screen. */
     public VasebreakerGame getGame() {
         return game;
     }
 
-    /**
-     * Links this engine to the {@link VasebreakerGame} model it is running.
-     * Required so the engine can advance the ground seed-packet timers each
-     * frame and render the vase grid (vases are otherwise invisible/unbreakable).
-     */
     public void setGame(VasebreakerGame game) {
         this.game = game;
     }
@@ -240,7 +234,7 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
                 };
                 float margin = tile.getWidth() * 0.08f;
                 batch.draw(texture, tile.getX() + margin, tile.getY() + margin,
-                        tile.getWidth() - margin * 2, tile.getHeight() - margin * 2);
+                    tile.getWidth() - margin * 2, tile.getHeight() - margin * 2);
             }
         }
 
@@ -250,7 +244,7 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
             float w = tile.getWidth() * 0.5f;
             float h = tile.getHeight() * 0.5f;
             batch.draw(seedPacketGround, tile.getX() + (tile.getWidth() - w) / 2f,
-                    tile.getY() + (tile.getHeight() - h) / 2f, w, h);
+                tile.getY() + (tile.getHeight() - h) / 2f, w, h);
         }
 
         batch.end();
@@ -306,8 +300,6 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
         if (background != null) background.dispose();
     }
 
-    // ── VasebreakerEngineCallback ──
-
     @Override
     public void releaseZombieFromVase(String alias, int row, int col) {
         zombieEngine.spawnZombie(alias, row, col);
@@ -333,33 +325,48 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
         triggerGameOver(true);
     }
 
-    public boolean isLevelWon() { return levelWon; }
-
-    // ── ZombieEngine ──
-
-    @Override
-    public void kill(Object entity) { zombieEngine.kill(entity); }
+    public boolean isLevelWon() {
+        return levelWon;
+    }
 
     @Override
-    public void takeDamage(Object entity, double amount) { zombieEngine.takeDamage(entity, amount); }
+    public void kill(Object entity) {
+        zombieEngine.kill(entity);
+    }
 
     @Override
-    public Plant getPlantAt(int row, int col) { return map != null ? map.getPlantAt(row, col) : null; }
+    public void takeDamage(Object entity, double amount) {
+        zombieEngine.takeDamage(entity, amount);
+    }
 
     @Override
-    public List<Zombie> getZombiesInLane(int lane) { return zombieEngine.getZombiesInLane(lane); }
+    public Plant getPlantAt(int row, int col) {
+        return map != null ? map.getPlantAt(row, col) : null;
+    }
 
     @Override
-    public int getSunCount() { return 0; }
+    public List<Zombie> getZombiesInLane(int lane) {
+        return zombieEngine.getZombiesInLane(lane);
+    }
 
     @Override
-    public void addSun(int amount) { }
+    public int getSunCount() {
+        return 0;
+    }
 
     @Override
-    public void spawnProjectile(Projectile p) { projectiles.add(p); }
+    public void addSun(int amount) {
+    }
 
     @Override
-    public Zombie spawnZombie(String alias, int row, int col) { return zombieEngine.spawnZombie(alias, row, col); }
+    public void spawnProjectile(Projectile p) {
+        projectiles.add(p);
+    }
+
+    @Override
+    public Zombie spawnZombie(String alias, int row, int col) {
+        return zombieEngine.spawnZombie(alias, row, col);
+    }
 
     @Override
     public void removePlant(int row, int col) {
@@ -367,9 +374,13 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
     }
 
     @Override
-    public int getTileColumn(float worldX) { return map != null ? map.worldToCol(worldX) : 0; }
+    public int getTileColumn(float worldX) {
+        return map != null ? map.worldToCol(worldX) : 0;
+    }
 
-    public boolean isGameOver() { return gameStatus.isGameOver(); }
+    public boolean isGameOver() {
+        return gameStatus.isGameOver();
+    }
 
     private static int asInt(Object value) {
         return value instanceof Number number ? number.intValue() : 0;

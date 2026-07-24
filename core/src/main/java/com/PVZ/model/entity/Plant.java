@@ -4,13 +4,13 @@ import com.PVZ.model.entity.plants.PlantDefinition;
 import com.PVZ.model.entity.plants.PlantFactory;
 import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.PlantStats;
-import com.PVZ.model.entity.zombies.base.Zombie;
-import com.PVZ.model.game.BattleController;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.BehaviorFactory;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 import com.PVZ.model.entity.plants.behavior.PlantFoodBehavior;
+import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantType;
+import com.PVZ.model.game.BattleController;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -147,8 +147,10 @@ public class Plant {
                 String path = PlantTexturePaths.getPath(key);
                 try {
                     if (com.badlogic.gdx.Gdx.files.internal(path).exists()) {
-                        com.badlogic.gdx.graphics.Texture tex = new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(path));
-                        tex.setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear, com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
+                        com.badlogic.gdx.graphics.Texture tex =
+                            new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(path));
+                        tex.setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear,
+                            com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
                         return tex;
                     }
                     System.out.println("[Plant] no icon found for " + key + " at assets/" + path
@@ -165,9 +167,8 @@ public class Plant {
     private com.badlogic.gdx.graphics.Texture buildBodyTexture() {
         int w = 64;
         int h = 64;
-        com.badlogic.gdx.graphics.Pixmap pixmap = new com.badlogic.gdx.graphics.Pixmap(w, h, com.badlogic.gdx.graphics
-                .Pixmap.Format.RGBA8888);
-        // simple deterministic color per plant type so different plants are visually distinct
+        com.badlogic.gdx.graphics.Pixmap pixmap =
+            new com.badlogic.gdx.graphics.Pixmap(w, h, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
         int hash = getType() != null ? getType().name().hashCode() : 0;
         float r = 0.3f + ((hash & 0xFF) / 255f) * 0.6f;
         float g = 0.5f + (((hash >> 8) & 0xFF) / 255f) * 0.5f;
@@ -177,7 +178,8 @@ public class Plant {
         pixmap.setColor(0f, 0f, 0f, 0.6f);
         pixmap.drawCircle(w / 2, h / 2, w / 2 - 2);
         com.badlogic.gdx.graphics.Texture tex = new com.badlogic.gdx.graphics.Texture(pixmap);
-        tex.setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear, com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
+        tex.setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear,
+            com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
         pixmap.dispose();
         return tex;
     }
@@ -202,7 +204,6 @@ public class Plant {
         instance.tickPlantFood();
     }
 
-    /** Freeze (temporary) or turn-to-sheep (very long) the plant so its behavior pauses. */
     public void disableForTicks(int ticks) {
         Object disabled = getRuntimeState("disabledTicks");
         int cur = disabled instanceof Number ? ((Number) disabled).intValue() : 0;
@@ -233,7 +234,6 @@ public class Plant {
             float y = ((Number) wy).floatValue() + (th instanceof Number ? ((Number) th).floatValue() * 0.15f : 0f);
             return new Rectangle(x, y, width, height);
         }
-        // fallback (plant not yet placed on a Map, e.g. in unit tests)
         int row = asInt(getRuntimeState("row"), 0);
         int col = asInt(getRuntimeState("col"), 0);
         return new Rectangle(col * 100f, row * 100f, 80, 80);

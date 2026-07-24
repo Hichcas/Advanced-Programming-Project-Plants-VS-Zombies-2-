@@ -27,8 +27,8 @@ public class BeghouledMenuController {
 
         if (currentGame != null && currentGame.isFinished()) {
             String message = currentGame.isWon()
-                    ? "Target matches reached! Level complete! Returning to Travel Log."
-                    : "A zombie reached your house. GAME OVER! Returning to Travel Log.";
+                ? "Target matches reached! Level complete! Returning to Travel Log."
+                : "A zombie reached your house. GAME OVER! Returning to Travel Log.";
             currentGame = null;
             currentEngine = null;
             AppStatus.returnToTravelLog();
@@ -56,10 +56,10 @@ public class BeghouledMenuController {
 
         AppStatus.setGameEngine(currentEngine);
         return new OutputDTO(true, "Beghouled level " + levelId + " started. Grid: "
-                + currentGame.getRows() + "x" + currentGame.getCols()
-                + ". Target matches: " + currentGame.getTargetMatches()
-                + ". Starting sun: " + currentGame.getSun()
-                + ". Swap adjacent plants to make matches; spend sun on upgrades. Zombies never stop!");
+            + currentGame.getRows() + "x" + currentGame.getCols()
+            + ". Target matches: " + currentGame.getTargetMatches()
+            + ". Starting sun: " + currentGame.getSun()
+            + ". Swap adjacent plants to make matches; spend sun on upgrades. Zombies never stop!");
     }
 
     private OutputDTO selectLevel(int levelId) {
@@ -69,7 +69,7 @@ public class BeghouledMenuController {
         sb.append(" Target matches: ").append(level.getTargetMatches()).append("\n");
         sb.append(" Starting sun: ").append(level.getStartingSun()).append("\n");
         sb.append(" Zombie spawn every: ").append(String.format("%.1f", level.getZombieSpawnIntervalSeconds())).append(
-                "s\n");
+            "s\n");
         sb.append(" Board plants: ");
         if (level.getPlantTypes() != null) {
             for (String name : level.getPlantTypes()) {
@@ -100,7 +100,7 @@ public class BeghouledMenuController {
         JsonNode levels = section.get("levels");
         if (levels == null || !levels.isArray() || levels.isEmpty()) {
             return new OutputDTO(true, "No Beghouled levels configured yet. "
-                    + "Use 'beghouled start 1' to play the fallback level.");
+                + "Use 'beghouled start 1' to play the fallback level.");
         }
         StringBuilder sb = new StringBuilder("Beghouled levels:\n");
         for (JsonNode levelNode : levels) {
@@ -118,9 +118,9 @@ public class BeghouledMenuController {
         }
         StringBuilder sb = new StringBuilder();
         sb.append("Sun: ").append(currentGame.getSun())
-          .append("  Matches: ").append(currentGame.getMatchesMade())
-          .append("/").append(currentGame.getTargetMatches())
-          .append("  (XX = crater, .. = empty)\n");
+            .append("  Matches: ").append(currentGame.getMatchesMade())
+            .append("/").append(currentGame.getTargetMatches())
+            .append("  (XX = crater, .. = empty)\n");
         for (int r = 0; r < currentGame.getRows(); r++) {
             for (int c = 0; c < currentGame.getCols(); c++) {
                 sb.append("[").append(currentGame.cellTag(r, c)).append("]");

@@ -1,30 +1,19 @@
 package com.PVZ.model.user;
 
-/**
- * کلاس پروفایل کاربر شامل اطلاعات هویتی، امنیتی و آماری.
- * این کلاس به‌عنوان رکورد اصلی کاربر در دیتابیس استفاده می‌شود.
- */
+
 public class Profile {
-    // ---------- اطلاعات هویتی ----------
     private String username;
     private String nickname;
     private String email;
     private String gender;
-    
-    // ---------- اطلاعات امنیتی ----------
-    private String passwordHash;          // هش رمز عبور (SHA-256)
-    private String securityQuestion;      // متن سوال امنیتی
-    private String securityAnswerHash;    // هش پاسخ سوال امنیتی (برای ذخیره‌سازی امن)
-    
-    // ---------- سازنده‌ها ----------
+    private String passwordHash;
+    private String securityQuestion;
+    private String securityAnswerHash;
+
     public Profile() {
-        // سازندهٔ پیش‌فرض (برای Gson یا استفاده‌های دیگر)
+
     }
 
-    /**
-     * سازندهٔ اصلی برای ساخت یک پروفایل جدید.
-     * آمار با مقادیر پیش‌فرض صفر و سختی روی ۳ تنظیم می‌شود.
-     */
     public Profile(String username, String passwordHash, String nickname,
                    String email, String gender, String securityQuestion, String securityAnswerHash) {
         this.username = username;
@@ -36,7 +25,6 @@ public class Profile {
         this.securityAnswerHash = securityAnswerHash;
     }
 
-    // ---------- Getter و Setter ----------
     public String getUsername() {
         return username;
     }

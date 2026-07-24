@@ -95,35 +95,26 @@ final class GameLauncher {
         GameStatus gameStatus = new GameStatus();
         gameStatus.setSunflower(initialSun);
         gameStatus.setNoSkySun(stageConfig.isDisableFallingSun());
-
         RegularGameEngine engine = new RegularGameEngine(gameStatus, waves);
         engine.setBackgroundTexturePath(stageConfig.getMapTexture());
-
         GameEngine oldEngine = AppStatus.getGameEngine();
         if (oldEngine != null && oldEngine.getMap() != null) {
             engine.setMap(oldEngine.getMap());
         }
-
         AppStatus.currentChapter.applySetup(engine.getMap(), stageConfig);
-
         if (isConveyorBeltStage(stageConfig)) {
             engine.enableConveyorBelt(stageConfig.getConveyorInterval());
         }
-
         if (isLockedPlantsStage(stageConfig)) {
             Set<PlantType> locked = resolveLockedPlants(stageConfig);
             AppStatus.SELECTED_PLANTS.removeAll(locked);
-
             Set<PlantType> extraFamilyPicks = resolveExtraFamilyPicks(
                 AppStatus.SELECTED_PLANTS, AppStatus.CURRENT_STAGE_EXCLUSIVE_FAMILIES);
             AppStatus.SELECTED_PLANTS.removeAll(extraFamilyPicks);
             locked.addAll(extraFamilyPicks);
-
             engine.enableLockedPlants(locked);
         }
-
         SpecialLevelLauncher.launch(engine, stageConfig);
-
         if (AppStatus.currentUser != null && AppStatus.currentUser.questState != null) {
             QuestManager qm = AppStatus.currentUser.questState.getQuestManager();
             ChapterEnum chapter = AppStatus.getCurrentChapterEnum();
@@ -139,7 +130,6 @@ final class GameLauncher {
                 engine.getBattleController().clearQuestNotifiedZombies();
             }
         }
-
         AppStatus.setGameEngine(engine);
         AppStatus.currentMenuType = MenuType.IN_GAME;
         engine.startWaves();

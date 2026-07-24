@@ -26,8 +26,7 @@ public class Sun {
     private double groundY = 0.0;
     private final Rectangle hitbox = new Rectangle();
 
-    /** The three kinds of sky sun defined by the game spec. */
-    public enum SunType { NORMAL, SPECIAL, RADIOACTIVE }
+    public enum SunType {NORMAL, SPECIAL, RADIOACTIVE}
 
     private SunType type = SunType.NORMAL;
 
@@ -61,7 +60,6 @@ public class Sun {
                 y = groundY;
                 reachedGround = true;
                 if (type == SunType.RADIOACTIVE) {
-                    // A radioactive sun that reaches the ground safely turns into a normal sun (25).
                     type = SunType.NORMAL;
                     amount = 25;
                 }
@@ -78,11 +76,6 @@ public class Sun {
         batch.draw(texture, (float) x, (float) y, hitbox.width, hitbox.height);
     }
 
-    /**
-     * One shared texture for every sun on screen (they all look the same), lazily loaded from
-     * assets/Sun/Sun.png. Falls back to a generated gold circle if the file isn't there yet, so
-     * the game still runs before the art asset is dropped in.
-     */
     private static Texture getOrLoadTexture() {
         if (sharedTexture != null) {
             return sharedTexture;

@@ -10,11 +10,7 @@ import com.PVZ.model.entity.zombies.base.Zombie;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Implementation of PlantFoodBehavior that handles plant food effects manually
- * via a large switch over behavior IDs and plant types.
- * Refactored to comply with Checkstyle (method length ≤ 50 lines) and PMD rules.
- */
+
 public class ManualPlantFoodBehavior implements PlantFoodBehavior {
 
     private final PlantDefinition definition;
@@ -42,14 +38,11 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
         applyBehavior(plant, context, lane, row, col, behaviorId);
     }
 
-    // ---------- Behavior dispatcher ----------
-
     private void applyBehavior(PlantInstance plant, BehaviorContext context,
                                int lane, int row, int col, String behaviorId) {
         switch (behaviorId) {
             case "instant_sun" -> handleInstantSun(plant, context, row, col);
-            case "burst_attack", "burst_shot", "multi_shot", "double_projectile" ->
-                handleBurstAttack(plant, context);
+            case "burst_attack", "burst_shot", "multi_shot", "double_projectile" -> handleBurstAttack(plant, context);
             case "freeze_burst" -> handleFreezeBurst(plant, context);
             case "plasma_burst" -> handlePlasmaBurst(plant, context, lane, row);
             case "hypnotize" -> handleHypnotize(context, lane);
@@ -62,8 +55,6 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
             default -> handleGenericCustom(plant, context, lane, row, col, behaviorId);
         }
     }
-
-    // ---------- Specific handlers for onPlantFood cases ----------
 
     private void handleInstantSun(PlantInstance plant, BehaviorContext context, int row, int col) {
         int amount = abilitySpec == null ? 0 : abilitySpec.getIntParam("sunAmount", 150);
@@ -114,8 +105,6 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
         context.disarmZombiesInLane(lane);
     }
 
-    // ---------- Custom plant-specific handlers ----------
-
     private void handleCustom(PlantInstance plant, BehaviorContext context,
                               int lane, int row, int col) {
         String plantKey = definition == null ? "" : normalize(definition.getName());
@@ -123,8 +112,7 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
             case "electric_blueberry" -> handleElectricBlueberry(context);
             case "cactus" -> handleCactus(plant);
             case "fume_shroom" -> handleFumeShroom(plant, context, lane, row, col);
-            case "cabbage_pult", "melon_pult", "winter_melon", "pepper_pult" ->
-                handlePultFamily(plant, plantKey);
+            case "cabbage_pult", "melon_pult", "winter_melon", "pepper_pult" -> handlePultFamily(plant, plantKey);
             case "iceberg_lettuce" -> handleIcebergLettuce(context);
             case "phat_beet" -> handlePhatBeet(plant, context, lane, row);
             case "chomper" -> handleChomper(context, lane);
@@ -236,8 +224,6 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
     }
 
     private void handleSunShroom(PlantInstance plant, BehaviorContext context, int row, int col) {
-        // Per spec: "رشد آنی به سایز آخر و تولید ۲۲۵ خورشید"
-        // Advance to max growth stage (stage 2 = size 3rd = 75 sun per cycle).
         plant.putRuntimeState("growthStage", 2);
         plant.putRuntimeState("growthTriggered", Boolean.TRUE);
         context.spawnSunAt(row, col, 225);
@@ -247,7 +233,6 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
         context.hypnotizeZombiesInLane(lane, 6.0);
     }
 
-    // ---------- Generic fallback ----------
 
     private void handleGenericCustom(PlantInstance plant, BehaviorContext context,
                                      int lane, int row, int col, String behaviorId) {
@@ -265,9 +250,7 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
             plant.getStats().putExtra("iceAttack", Boolean.TRUE);
         }
     }
-
-    // ---------- Utility methods ----------
-
+    
     private String resolveBehaviorId() {
         if (abilitySpec != null) {
             if (abilitySpec.getBehaviorId() != null && !abilitySpec.getBehaviorId().isBlank()) {

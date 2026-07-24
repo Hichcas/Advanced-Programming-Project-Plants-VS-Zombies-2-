@@ -52,16 +52,19 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
 
     private final List<Rectangle> upgradeButtons = new ArrayList<>();
 
-    // ---------- Constructor & setup ----------
-
     public BeghouledGameEngine() {
         super(new GameStatus(), new BeghouledInputProcessor());
         ((BeghouledInputProcessor) inputProcessor).setEngine(this);
         this.battleController = new BattleController(zombieEngine.getZombies(), plants, projectiles, gameStatus);
     }
 
-    public BeghouledGame getGame() { return game; }
-    public void setGame(BeghouledGame game) { this.game = game; }
+    public BeghouledGame getGame() {
+        return game;
+    }
+
+    public void setGame(BeghouledGame game) {
+        this.game = game;
+    }
 
     @Override
     public void setMap(Map map) {
@@ -95,8 +98,6 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
             lawnMowers[row] = mower;
         }
     }
-
-    // ---------- Game logic ----------
 
     @Override
     public void update(float delta) {
@@ -227,8 +228,6 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         }
     }
 
-    // ---------- Swap & upgrade ----------
-
     public String trySwap(int r1, int c1, int r2, int c2) {
         if (game == null || map == null) return "No active Beghouled game.";
         String result = game.swap(r1, c1, r2, c2);
@@ -296,7 +295,9 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         triggerGameOver(true);
     }
 
-    private void loseGame() { triggerGameOver(false); }
+    private void loseGame() {
+        triggerGameOver(false);
+    }
 
     private void triggerGameOver(boolean win) {
         if (gameOverTriggered) return;
@@ -319,8 +320,6 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
             com.PVZ.model.status.AppStatus.returnToTravelLog();
         }
     }
-
-    // ---------- Drawing ----------
 
     @Override
     public void draw(SpriteBatch batch) {
@@ -446,8 +445,6 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         batch.end();
     }
 
-    // ---------- Texture loading ----------
-
     private void ensureTexturesLoaded() {
         if (font != null) return;
         background = new Texture(BeghouledTexturePaths.BACKGROUND);
@@ -466,8 +463,6 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         return background;
     }
 
-    // ---------- Engine overrides ----------
-
     @Override
     public void dispose() {
         zombieEngine.dispose();
@@ -476,15 +471,54 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         if (pixel != null) pixel.dispose();
     }
 
-    @Override public void kill(Object entity) { zombieEngine.kill(entity); }
-    @Override public void takeDamage(Object entity, double amount) { zombieEngine.takeDamage(entity, amount); }
-    @Override public Plant getPlantAt(int row, int col) { return map != null ? map.getPlantAt(row, col) : null; }
-    @Override public List<Zombie> getZombiesInLane(int lane) { return zombieEngine.getZombiesInLane(lane); }
-    @Override public int getSunCount() { return game != null ? game.getSun() : 0; }
-    @Override public void addSun(int amount) { if (game != null) game.addSun(amount); }
-    @Override public void spawnProjectile(Projectile p) { projectiles.add(p); }
-    @Override public Zombie spawnZombie(String alias,
-              int row, int col) { return zombieEngine.spawnZombie(alias, row, col); }
-    @Override public void removePlant(int row, int col) { if (map != null) map.removePlant(row, col); }
-    @Override public int getTileColumn(float worldX) { return map != null ? map.worldToCol(worldX) : 0; }
+    @Override
+    public void kill(Object entity) {
+        zombieEngine.kill(entity);
+    }
+
+    @Override
+    public void takeDamage(Object entity, double amount) {
+        zombieEngine.takeDamage(entity, amount);
+    }
+
+    @Override
+    public Plant getPlantAt(int row, int col) {
+        return map != null ? map.getPlantAt(row, col) : null;
+    }
+
+    @Override
+    public List<Zombie> getZombiesInLane(int lane) {
+        return zombieEngine.getZombiesInLane(lane);
+    }
+
+    @Override
+    public int getSunCount() {
+        return game != null ? game.getSun() : 0;
+    }
+
+    @Override
+    public void addSun(int amount) {
+        if (game != null) game.addSun(amount);
+    }
+
+    @Override
+    public void spawnProjectile(Projectile p) {
+        projectiles.add(p);
+    }
+
+    @Override
+    public Zombie spawnZombie(String alias,
+                              int row, int col) {
+        return zombieEngine.spawnZombie(alias, row, col);
+    }
+
+    @Override
+    public void removePlant(int row, int col) {
+        if (map != null) map.removePlant(row, col);
+    }
+
+    @Override
+    public int getTileColumn(float worldX) {
+        return map != null ? map.worldToCol(worldX) : 0;
+    }
 }

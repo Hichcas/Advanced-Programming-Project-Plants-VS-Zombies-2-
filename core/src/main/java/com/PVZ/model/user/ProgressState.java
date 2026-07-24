@@ -6,17 +6,10 @@ import com.PVZ.model.enums.MinigameEnum;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * پیشرفت کاربر در مراحل اصلی (فصل‌ها) و مینی‌گیم‌ها.
- */
 public class ProgressState {
-    // بالاترین مرحلهٔ گذرانده‌شده در هر فصل (مقادیر ۰ تا ۴)
     private Map<ChapterEnum, Integer> completedLevels;
-
-    // تعداد مراحل کامل‌شده در هر مینی‌گیم (۰ تا ۳)
     private Map<MinigameEnum, Integer> minigameClearedCounts;
 
-    // ---------- سازنده ----------
     public ProgressState() {
         completedLevels = new HashMap<>();
         minigameClearedCounts = new HashMap<>();
@@ -30,7 +23,6 @@ public class ProgressState {
         }
     }
 
-    // ---------- Getter / Setter (برای سریالایز) ----------
     public Map<ChapterEnum, Integer> getCompletedLevels() {
         return completedLevels;
     }
@@ -46,8 +38,6 @@ public class ProgressState {
     public void setMinigameClearedCounts(Map<MinigameEnum, Integer> minigameClearedCounts) {
         this.minigameClearedCounts = minigameClearedCounts;
     }
-
-    // ---------- متدهای کمکی ----------
 
     public int getCompletedLevel(ChapterEnum chapter) {
         return completedLevels.getOrDefault(chapter, -1);
@@ -82,12 +72,10 @@ public class ProgressState {
         }
     }
 
-    /** دریافت تعداد مراحل کامل‌شده در یک مینی‌گیم */
     public int getClearedMinigameStages(MinigameEnum minigame) {
         return minigameClearedCounts.getOrDefault(minigame, 0);
     }
 
-    /** افزودن یک مرحلهٔ کامل‌شده به مینی‌گیم (در صورت کمتر از ۳ بودن) */
     public void clearMinigameStage(MinigameEnum minigame) {
         int current = getClearedMinigameStages(minigame);
         if (current < 3) {
@@ -95,9 +83,7 @@ public class ProgressState {
         }
     }
 
-    /** آیا مرحلهٔ خاصی از یک مینی‌گیم باز است؟ */
     public boolean isMinigameStageUnlocked(MinigameEnum minigame, int stage) {
-        // stage از ۱ شروع می‌شود؛ مرحلهٔ قبل باید کامل شده باشد
         return getClearedMinigameStages(minigame) >= stage - 1;
     }
 }

@@ -12,10 +12,6 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.function.BiConsumer;
 
-/**
- * Represents a chapter with special mechanics and actions that can be applied
- * during gameplay. Refactored to comply with Checkstyle (method length ≤ 50 lines).
- */
 public class Chapter {
     private final ChapterConfig config;
     private final HashMap<String, BiConsumer<com.PVZ.model.game.Map, RegularGameEngine>> actions = new HashMap<>();
@@ -32,8 +28,6 @@ public class Chapter {
         this.config = config;
         registerActions();
     }
-
-    // ---------- Action registration ----------
 
     private void registerActions() {
         registerUpdateTombstones();
@@ -232,8 +226,6 @@ public class Chapter {
         });
     }
 
-    // ---------- Ice Wind helpers ----------
-
     private void applyIceWindToPlants(com.PVZ.model.game.Map map, boolean waveChanged) {
         for (int r = 0; r < 5; r++) {
             for (int c = 0; c < 9; c++) {
@@ -306,8 +298,6 @@ public class Chapter {
         }
     }
 
-    // ---------- Tide helpers ----------
-
     private void advanceTide(com.PVZ.model.game.Map map) {
         for (int step = 0; step < 2; step++) {
             if (tideFloodedColumn <= 0) {
@@ -339,8 +329,6 @@ public class Chapter {
         }
     }
 
-    // ---------- Magical Graves helpers ----------
-
     private void spawnMagicalGraves(com.PVZ.model.game.Map map, RegularGameEngine engine) {
         int toSpawn = 2 + random.nextInt(2);
         int placed = 0;
@@ -363,8 +351,6 @@ public class Chapter {
         }
     }
 
-    // ---------- Necromancy Spawn helpers ----------
-
     private void spawnFromNecromancyTiles(com.PVZ.model.game.Map map, RegularGameEngine engine) {
         for (int r = 0; r < 5; r++) {
             for (int c = 0; c < 9; c++) {
@@ -380,8 +366,6 @@ public class Chapter {
             }
         }
     }
-
-    // ---------- Public API ----------
 
     public void applySetup(com.PVZ.model.game.Map map, StageConfig stage) {
         if (map == null || stage == null) {
@@ -424,8 +408,6 @@ public class Chapter {
     public ChapterConfig getConfig() {
         return config;
     }
-
-    // ---------- Utilities ----------
 
     private static int asInt(Object value, int defaultValue) {
         if (value instanceof Number number) {

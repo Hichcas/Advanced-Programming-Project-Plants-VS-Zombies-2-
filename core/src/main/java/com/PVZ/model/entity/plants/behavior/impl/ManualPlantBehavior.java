@@ -1,6 +1,5 @@
 package com.PVZ.model.entity.plants.behavior.impl;
 
-import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.plants.AbilitySpec;
 import com.PVZ.model.entity.plants.PlantDefinition;
 import com.PVZ.model.entity.plants.PlantInstance;
@@ -13,10 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Manual implementation of plant behavior.
- * Refactored to comply with Checkstyle and PMD rules (method length ≤ 50 lines).
- */
+
 public class ManualPlantBehavior implements PlantBehavior {
     private final PlantDefinition definition;
     private final AbilitySpec abilitySpec;
@@ -37,19 +33,13 @@ public class ManualPlantBehavior implements PlantBehavior {
         int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
         int lane = asInt(plant.getRuntimeState().getOrDefault("lane", row), row);
 
-        // Try specific plant-key handlers first
         if (handleSpecificPlantKey(plantKey, plant, context, lane, deltaTime, row, col)) {
             return;
         }
 
-        // Fallback to behavior-id based handlers
         handleDefaultBehavior(plant, context, lane, deltaTime, row, col);
     }
 
-    /**
-     * Handles behaviors that are tied to a specific plant key.
-     * Returns true if the key was recognized and handled.
-     */
     private boolean handleSpecificPlantKey(String plantKey, PlantInstance plant, BehaviorContext context,
                                            int lane, double deltaTime, int row, int col) {
         switch (plantKey) {
@@ -76,13 +66,11 @@ public class ManualPlantBehavior implements PlantBehavior {
                 handleStackShot(plant, context, lane, deltaTime);
                 return true;
             default:
-                return false; // not handled here
+                return false;
         }
     }
 
-    /**
-     * Handles behaviors based on the resolved behavior ID (or falls back to MELEE).
-     */
+
     private void handleDefaultBehavior(PlantInstance plant, BehaviorContext context, int lane,
                                        double deltaTime, int row, int col) {
         String behaviorId = normalize(resolveBehaviorId());
@@ -115,17 +103,12 @@ public class ManualPlantBehavior implements PlantBehavior {
                 handleSunBeanLike(plant, context, row, col, lane, deltaTime);
                 break;
             default:
-                // fallback: if definition category is MELEE
                 if (definition != null && definition.getCategoryEnum().name().equals("MELEE")) {
                     handleMelee(plant, context, lane, row, deltaTime);
                 }
                 break;
         }
     }
-
-    // ------------------------------------------------------------------------
-    // Individual behavior handlers (all unchanged)
-    // ------------------------------------------------------------------------
 
     private void handleInstantSun(PlantInstance plant, BehaviorContext context, int row, int col) {
         boolean triggered = asBoolean(plant.getRuntimeState().getOrDefault("instantSunTriggered", Boolean.FALSE),
@@ -206,7 +189,6 @@ public class ManualPlantBehavior implements PlantBehavior {
     }
 
     private void handleCopyPlant(PlantInstance plant) {
-        // Already transformed? skip.
         if (Boolean.TRUE.equals(plant.getRuntimeState().getOrDefault("copyDone", Boolean.FALSE))) {
             return;
         }
@@ -221,17 +203,13 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (copiedKey.isEmpty()) {
             return;
         }
-        // Remove old runtime state markers so they don't interfere
         plant.getRuntimeState().clear();
-        // Try to find the referenced plant definition and rebuild this plant instance
-        // as a clone of the target plant at the same position.
         com.PVZ.model.entity.plants.PlantDefinition def =
             com.PVZ.model.entity.plants.PlantLibrary.findByName(copiedKey)
                 .orElse(null);
         if (def == null) {
-            // Fallback: try by plant key or id
             for (com.PVZ.model.entity.plants.PlantDefinition d
-                    : com.PVZ.model.entity.plants.PlantLibrary.all()) {
+                : com.PVZ.model.entity.plants.PlantLibrary.all()) {
                 if (d.getPlantKey() != null
                     && d.getPlantKey().equalsIgnoreCase(copiedKey)) {
                     def = d;
@@ -240,22 +218,14 @@ public class ManualPlantBehavior implements PlantBehavior {
             }
         }
         if (def != null) {
-            // Replace this plant's instance with one of the copied plant
             int level = plant.getLevel();
             com.PVZ.model.entity.plants.PlantInstance newInstance =
                 com.PVZ.model.entity.plants.PlantFactory.create(def, level);
-            // Copy over runtime position state
             for (java.util.Map.Entry<String, Object> e
-                    : plant.getRuntimeState().entrySet()) {
+                : plant.getRuntimeState().entrySet()) {
                 newInstance.putRuntimeState(e.getKey(), e.getValue());
             }
             newInstance.putRuntimeState("copyDone", Boolean.TRUE);
-            // The plant object itself cannot be replaced; instead we copy over
-            // the relevant instance fields so the engine treats it as the copied plant.
-            // For clarity, store the new definition on the original instance.
-            // In this engine, PlantInstance holds def+stats; the Plant wraps it.
-            // We mutate the plant's runtime state to trigger the correct behavior
-            // when the engine re-evaluates the behavior on the next tick.
             plant.putRuntimeState("copiedPlantKey", def.getPlantKey());
             plant.putRuntimeState("copyDone", Boolean.TRUE);
         }
@@ -333,11 +303,6 @@ public class ManualPlantBehavior implements PlantBehavior {
         context.spawnProjectile(projectile);
     }
 
-    /**
-     * Fires a pea that travels straight horizontally INSIDE {@code targetLane} (no vertical
-     * drift). Used by multi-lane shooters (Threepeater) and stacked shooters (Pea Pod) so the
-     * peas stay parallel instead of curving toward the centre lane.
-     */
     private Projectile fireParallel(PlantInstance plant, BehaviorContext context, int targetLane, boolean backward) {
         if (targetLane < 0) {
             return null;
@@ -353,11 +318,6 @@ public class ManualPlantBehavior implements PlantBehavior {
         return projectile;
     }
 
-    /**
-     * Fires a homing projectile (Cat-tail) that steers toward {@code target} every tick. The
-     * projectile is placed directly in world space (so the engine's repositioning is skipped)
-     * and flagged homing; BattleController.steerHoming re-aims it at the nearest zombie.
-     */
     private void fireHoming(PlantInstance plant, BehaviorContext context, Zombie target) {
         int damage = computeDamage(plant);
         Projectile projectile = ProjectileFactory.createProjectile(plant, damage);
@@ -382,7 +342,6 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (!tickCooldown(plant, "diagonalTimer", deltaTime)) {
             return;
         }
-        // Plant food: burst volley in all 4 diagonal directions (Rotobaga)
         int volleys = plant.isPlantFoodActive() ? 2 : 1;
         for (int v = 0; v < volleys; v++) {
             fireInto(plant, context, lane - 1, false);
@@ -402,8 +361,7 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (!anyTarget) {
             return;
         }
-        // Threepeater fires one pea in each of 3 parallel lanes (row-1, row, row+1), all
-        // travelling in the SAME direction — not 3 diverging directions.
+
         int volleys = plant.isPlantFoodActive() ? 2 : 1;
         for (int v = 0; v < volleys; v++) {
             fireParallel(plant, context, lane, false);
@@ -419,7 +377,6 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (context.getZombiesInLane(lane).isEmpty()) {
             return;
         }
-        // Plant food: simultaneous burst volley from front and back (Split Pea)
         int volleys = plant.isPlantFoodActive() ? 2 : 1;
         for (int v = 0; v < volleys; v++) {
             fireInto(plant, context, lane, false);
@@ -432,7 +389,6 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (!tickCooldown(plant, "starTimer", deltaTime)) {
             return;
         }
-        // Plant food: star burst volley in all 5 directions (Starfruit)
         int volleys = plant.isPlantFoodActive() ? 2 : 1;
         for (int v = 0; v < volleys; v++) {
             fireInto(plant, context, lane, false);
@@ -461,7 +417,7 @@ public class ManualPlantBehavior implements PlantBehavior {
             }
             double dx = z.getX() - px;
             double dy = z.getY() - py;
-            double distance = dx * dx + dy * dy;   // true nearest by Euclidean distance
+            double distance = dx * dx + dy * dy;
             if (distance < bestDistance) {
                 bestDistance = distance;
                 nearest = z;
@@ -508,9 +464,7 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (context.getZombiesInLane(lane).isEmpty()) {
             return;
         }
-        // One pea per stacked head (up to 5). Stagger them in X so the pod fires a visible
-        // train of parallel peas instead of 5 peas stacked on top of each other (which read
-        // as a single pea).
+  
         int heads = asInt(plant.getRuntimeState().getOrDefault("peaPodHeads", 5), 5);
         heads = Math.max(1, Math.min(5, heads));
         int volleys = plant.isPlantFoodActive() ? 2 : 1;

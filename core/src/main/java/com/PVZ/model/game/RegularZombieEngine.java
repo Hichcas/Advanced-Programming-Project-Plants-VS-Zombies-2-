@@ -20,7 +20,6 @@ public class RegularZombieEngine implements ZombieEngine {
     public void bindMap(Map map) {
         this.map = map;
 
-        // تست مرحله اول
         // if (zombies.isEmpty()) {
         // spawnZombie("ZombieTutorialDefault", 2, 2000);
         // }
@@ -49,8 +48,6 @@ public class RegularZombieEngine implements ZombieEngine {
     public List<Zombie> getZombies() {
         return zombies;
     }
-
-    // ── ZombieEngine ──
 
     @Override
     public void kill(Object entity) {
@@ -108,9 +105,9 @@ public class RegularZombieEngine implements ZombieEngine {
             return null;
         Zombie zombie = ZombieType.fromAlias(alias).create();
         if (com.PVZ.model.status.AppStatus.currentUser != null
-                && com.PVZ.model.status.AppStatus.currentUser.appStats != null) {
+            && com.PVZ.model.status.AppStatus.currentUser.appStats != null) {
             zombie.applyDifficultyScaling(
-                    com.PVZ.model.status.AppStatus.currentUser.appStats.getDifficultyLevel());
+                com.PVZ.model.status.AppStatus.currentUser.appStats.getDifficultyLevel());
         }
         Tile tile = map.getTile(row, col);
         float y = tile.getY() + (tile.getHeight() - 70f) / 2f;

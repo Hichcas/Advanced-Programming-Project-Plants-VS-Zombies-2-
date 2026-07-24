@@ -15,10 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Represents the seed packet bar UI for selecting and viewing plant seeds.
- * Refactored to comply with Checkstyle (constant naming convention).
- */
 public class SeedPacketBar {
 
     private static final float X_OFFSET = 600f;

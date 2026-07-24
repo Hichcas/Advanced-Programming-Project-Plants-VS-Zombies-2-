@@ -3,8 +3,6 @@ package com.PVZ.model.entity.plants.behavior.impl;
 import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.Projectile;
-import com.PVZ.model.entity.plants.behavior.impl.ProjectileType;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantFlag;
 
@@ -20,10 +18,9 @@ public class ElectricBlueberryBehavior implements PlantBehavior {
         if (plant == null || context == null) {
             return;
         }
-
-        double timer = asDouble(plant.getRuntimeState().getOrDefault("lightningTimer", 0.0), 0.0);
+        double timer = asDouble(plant.getRuntimeState().getOrDefault("lightningTimer", 0.0),
+            0.0);
         timer += deltaTime;
-
         double cooldown = plant.getStats().getActionIntervalSeconds();
         if (cooldown <= 0) {
             cooldown = 5.0;
@@ -45,8 +42,6 @@ public class ElectricBlueberryBehavior implements PlantBehavior {
             return;
         }
 
-        // Pick the target zombie FIRST (random living zombie, or closest in lane when the
-        // Target Priority upgrade is active) so the visible bolt lands on the zombie it kills.
         Zombie target;
         if (plant.getStats().hasFlag(PlantFlag.TARGET_PRIORITY_UP)) {
             int lane = asInt(plant.getRuntimeState().getOrDefault("lane", 0), 0);
@@ -64,15 +59,11 @@ public class ElectricBlueberryBehavior implements PlantBehavior {
         }
 
         spawnLightning(context, target);
-        target.takeDamage(Double.MAX_VALUE);   // completely destroy the chosen zombie
+        target.takeDamage(Double.MAX_VALUE);
         plant.putRuntimeState("lightningTimer", 0.0);
     }
 
-    /**
-     * Spawns a short-lived, visible lightning bolt on {@code target}. The bolt is a free-motion
-     * projectile with zero velocity and a tiny fuse, so it flashes in place and then fades
-     * (the engine removes projectiles whose fuse has expired).
-     */
+
     private void spawnLightning(BehaviorContext context, Zombie target) {
         Projectile bolt = new Projectile();
         bolt.setType(ProjectileType.LIGHTNING);
@@ -82,6 +73,7 @@ public class ElectricBlueberryBehavior implements PlantBehavior {
         bolt.setFuse(0.35);
         context.spawnProjectile(bolt);
     }
+
     private static int asInt(Object value, int defaultValue) {
         if (value instanceof Number number) {
             return number.intValue();

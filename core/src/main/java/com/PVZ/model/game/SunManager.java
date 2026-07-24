@@ -29,10 +29,6 @@ public class SunManager {
         return sun;
     }
 
-    /**
-     * Spawns a sky sun of a specific type. Per spec the dropping sun is announced so the player
-     * can tell whether it is normal, special or radioactive.
-     */
     public Sun spawnFalling(double x, double y, int amount, double groundY, Sun.SunType type) {
         Sun sun = spawn(x, y, amount);
         sun.setType(type);
@@ -44,9 +40,12 @@ public class SunManager {
 
     private static String describeType(Sun.SunType type) {
         switch (type) {
-            case SPECIAL: return "special";
-            case RADIOACTIVE: return "radioactive";
-            default: return "normal";
+            case SPECIAL:
+                return "special";
+            case RADIOACTIVE:
+                return "radioactive";
+            default:
+                return "normal";
         }
     }
 
@@ -78,8 +77,6 @@ public class SunManager {
         for (Sun sun : suns) {
             if (!sun.isCollected() && area.overlaps(sun.getHitbox())) {
                 if (sun.getType() == Sun.SunType.RADIOACTIVE && sun.isFalling() && !sun.hasReachedGround()) {
-                    // Harvested while still falling: it explodes instead of granting sun.
-                    // The engine reads drainExplodedSuns() and applies the blast damage.
                     sun.collect();
                     explodedSuns.add(sun);
                 } else {
@@ -91,7 +88,6 @@ public class SunManager {
         return collectedAmount;
     }
 
-    /** Radioactive suns that were harvested mid-air this frame; the engine applies their explosion. */
     public List<Sun> drainExplodedSuns() {
         if (explodedSuns.isEmpty()) {
             return Collections.emptyList();

@@ -15,7 +15,6 @@ public final class UserRegistry {
     private UserRegistry() {
     }
 
-    // ===== REGISTER =====
     public static boolean register(User user) {
         if (user == null || user.profile == null || user.profile.getUsername() == null)
             return false;
@@ -36,7 +35,6 @@ public final class UserRegistry {
         }
     }
 
-    // ===== LOGIN =====
     public static User loginUser(String username) {
         try {
             if (!UserDatabase.exists(username)) return null;
@@ -49,14 +47,16 @@ public final class UserRegistry {
         }
     }
 
-    // ===== GET / CHECK =====
     public static boolean containsUsername(String username) {
         return username != null && (USERS.containsKey(username) || checkIndex(username));
     }
 
     private static boolean checkIndex(String username) {
-        try { return UserDatabase.exists(username); }
-        catch (Exception e) { return false; }
+        try {
+            return UserDatabase.exists(username);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public static User getUser(String username) {
@@ -66,7 +66,8 @@ public final class UserRegistry {
             try {
                 user = UserDatabase.load(username);
                 if (user != null) USERS.put(username, user);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
         return user;
     }
@@ -79,7 +80,6 @@ public final class UserRegistry {
         return USERS.values();
     }
 
-    // ===== CHANGE USERNAME =====
     public static synchronized boolean changeUsername(User user, String newUsername) {
         if (user == null || user.profile == null || newUsername == null)
             return false;
@@ -106,7 +106,6 @@ public final class UserRegistry {
         }
     }
 
-    // ===== DIRTY FLAG =====
     public static void markDirty(String username) {
         if (username != null) DIRTY_USERS.add(username);
     }
@@ -132,10 +131,10 @@ public final class UserRegistry {
         if (user == null) return;
         try {
             UserDatabase.save(username, user);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
-    // ===== LOGOUT =====
     public static void clearUserCache(String username) {
         saveUserToDatabase(username);
         DIRTY_USERS.remove(username);
@@ -148,7 +147,6 @@ public final class UserRegistry {
         DIRTY_USERS.clear();
     }
 
-    // ===== LOAD ALL =====
     public static void loadAllFromDatabase() {
         try {
             for (String username : UserDatabase.loadIndex()) {
@@ -157,6 +155,7 @@ public final class UserRegistry {
                     if (user != null) USERS.put(username, user);
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 }

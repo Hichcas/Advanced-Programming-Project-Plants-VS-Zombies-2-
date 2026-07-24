@@ -10,14 +10,9 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.EnumMap;
 import java.util.Map;
 
-/**
- * A world-space drop (coin, diamond, or greenhouse pot) left behind by a dead zombie
- * (doc page 28: 10% chance per zombie). Modeled after {@link Sun}: it sits on the lawn for a
- * while and must be clicked/hovered to collect, at which point the reward is applied.
- */
+
 public class LootDrop {
 
-    /** Reward given once this drop is collected. */
     public enum LootType {
         COIN(50, "Loot/Coin.png"),
         DIAMOND(1, "Loot/Diamond.png"),

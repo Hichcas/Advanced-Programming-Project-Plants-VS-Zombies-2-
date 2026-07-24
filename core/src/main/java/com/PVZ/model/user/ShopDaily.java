@@ -7,18 +7,17 @@ import java.time.LocalDate;
 import java.util.Set;
 
 public class ShopDaily {
-    private PlantType offerPlant;   // null یعنی هنوز پیشنهادی ساخته نشده
-    private LocalDate offerDate;    // تاریخی که پیشنهاد تولید شده (null = هیچ پیشنهادی)
-    private boolean purchased;      // وضعیت خرید
+    private PlantType offerPlant;
+    private LocalDate offerDate;
+    private boolean purchased;
 
     public ShopDaily() {
-        // مقدار اولیه: خالی
+
         this.offerPlant = null;
         this.offerDate = null;
         this.purchased = false;
     }
 
-    // ---------- Getter & Setter ----------
     public PlantType getOfferPlant() {
         return offerPlant;
     }
@@ -43,24 +42,18 @@ public class ShopDaily {
         this.purchased = purchased;
     }
 
-    // ---------- منطق خودکار (بدون نیاز به پارامتر تاریخ) ----------
-
-    /** آیا پیشنهاد ذخیره‌شده متعلق به امروز است؟ */
     public boolean isForToday() {
         return offerDate != null && offerDate.equals(LocalDate.now()) && offerPlant != null;
     }
 
-    /** آیا امروز می‌توان خرید کرد؟ (تاریخ امروز باشد و هنوز خریده نشده باشد) */
     public boolean isAvailableToday() {
         return isForToday() && !purchased;
     }
 
-    /** آیا نیاز به تولید پیشنهاد جدید داریم؟ (تاریخ امروز نباشد یا اصلاً پیشنهادی ساخته نشده) */
     public boolean needsNewOffer() {
         return offerDate == null || !offerDate.equals(LocalDate.now()) || offerPlant == null;
     }
 
-    /** ثبت خرید (فقط در صورت معتبر بودن) */
     public boolean markAsPurchased() {
         if (isAvailableToday()) {
             purchased = true;
@@ -69,7 +62,6 @@ public class ShopDaily {
         return false;
     }
 
-    /** تولید یک پیشنهاد جدید برای امروز (مهم نیست قبلاً چه بوده، تاریخ امروز می‌گیرد) */
     public void generateOfferForToday(PlantType plant) {
         this.offerPlant = plant;
         this.offerDate = LocalDate.now();
@@ -78,10 +70,9 @@ public class ShopDaily {
 
     public boolean generateIfNeeded() {
         if (!needsNewOffer()) {
-            return false;   // امروز پیشنهاد معتبری داریم، تولید دوباره لازم نیست
+            return false;
         }
 
-        // دسترسی به کاربر فعلی و گیاهان آنلاک‌شده
         User currentUser = AppStatus.getCurrentUser();
         if (currentUser == null || currentUser.collectionState == null) {
             System.err.println("Error in " + getClass().getName() + ".generateIfNeeded(): No user logged in.");
@@ -91,15 +82,13 @@ public class ShopDaily {
         Set<PlantType> unlocked = currentUser.collectionState.getUnlockedPlants();
         if (unlocked == null || unlocked.isEmpty()) {
             System.err.println("Error in " + getClass().getName() +
-                    ".generateIfNeeded(): No unlocked plants available.");
+                ".generateIfNeeded(): No unlocked plants available.");
             return false;
         }
 
-        // انتخاب تصادفی یک گیاه از مجموعه
         PlantType[] unlockedArray = unlocked.toArray(new PlantType[0]);
         PlantType randomPlant = unlockedArray[new java.util.Random().nextInt(unlockedArray.length)];
 
-        // تولید پیشنهاد جدید برای امروز
         generateOfferForToday(randomPlant);
         return true;
     }
