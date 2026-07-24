@@ -10,9 +10,9 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 279790100,
+    "coins" : 274798000,
     "diamonds" : 0,
-    "stagesCompleted" : 2,
+    "stagesCompleted" : 3,
     "highestScore" : 0,
     "dailyQuestsCompleted" : 0,
     "nonDailyQuestsCompleted" : 0
@@ -20,21 +20,21 @@
   "progressState" : {
     "completedLevels" : {
       "ANCIENT_EGYPT" : 1,
-      "BIG_WAVE_BEACH" : 0,
+      "BIG_WAVE_BEACH" : 1,
       "DARK_AGES" : 0,
-      "FROSTBITE_CAVES" : 1
+      "FROSTBITE_CAVES" : 0
     },
     "minigameClearedCounts" : {
-      "WALLNUT_BOWLING" : 1,
-      "VASEBREAKER" : 2,
+      "WALLNUT_BOWLING" : 0,
+      "VASEBREAKER" : 0,
       "BEGHOULED" : 0,
       "ZOMBOTANY" : 0,
       "I_ZOMBIE" : 0
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "IMITATER", "TORCHWOOD", "PEPPER_PULT", "PRIMAL_SUNFLOWER", "CHERRY_BOMB", "FUME_SHROOM", "TWIN_SUNFLOWER", "REPEATER", "SUN_BEAN", "ENDURIAN", "FIRE_PEASHOOTER", "SUNFLOWER", "MEGA_GATLING_PEA", "GRAVE_BUSTER", "ARMA_MINT", "PUMPKIN", "KERNEL_PULT", "REINFORCE_MINT", "APPEASE_MINT", "BOMBARD_MINT", "SWEET_POTATO", "PRIMAL_POTATO_MINE", "ICEBERG_LETTUCE", "ROTOBAGA", "HYPNO_SHROOM", "TALL_NUT", "WINTER_MELON", "STARFRUIT", "SPLIT_PEA", "PHAT_BEET", "GOO_PEASHOOTER", "PIERCE_MINT", "CAT_TAIL_MINT", "PEA_POD", "ENCHANT_MINT", "CABBAGE_PULT", "KIWIBEAST", "GRAPESHOT", "LILY_PAD", "SNOW_PEA", "CACTUS", "BONK_CHOY", "PEASHOOTER", "GOLD_BLOOM", "BOWLING_BULB", "ENLIGHTEN_MINT", "PUFF_SHROOM", "TANGLE_KELP", "SEA_SHROOM", "CAULIPOWER", "ENFORCE_MINT", "WASABI_WHIP", "JALAPENO", "ELECTRIC_BLUEBERRY", "MAGNET_SHROOM", "THREEPEATER", "GARLIC", "CITRON", "SQUASH", "MELON_PULT", "ICE_SHROOM", "POTATO_MINE", "CAT_TAIL", "EXPLODE_O_NUT", "WALL_NUT", "SUN_SHROOM", "HOT_POTATO", "DOOM_SHROOM", "CHOMPER" ],
-    "seenZombies" : [ "ICEAGE_HUNTER", "TUTORIAL_ARMOR2", "ZOMBOSS_DARK", "TUTORIAL_ARMOR1", "ICEAGE_ARMOR3", "DARK_ARMOR3", "BEACH_ARMOR2", "TUTORIAL_ARMOR4", "RA", "IMP_TUTORIAL", "MUMMY_ARMOR4", "MUMMY_ARMOR2", "GARGANTUAR_ICEAGE", "TUTORIAL_FLAG", "BEACH_OCTOPUS", "ZOMBOSS_EGYPT", "GARGANTUAR_DARK", "IMP_EGYPT", "BEACH_DEFAULT", "WEASEL_HOARDER", "GARGANTUAR_EGYPT", "GARGANTUAR_BASIC", "ZOMBOTANY_PEASHOOTER", "DARK_ARMOR2", "BEACH_FISHERMAN", "IMP_DARK", "IMP_ICEAGE", "EXPLORER", "DARK_KING", "MUMMY_ARMOR1", "TUTORIAL_DEFAULT", "BEACH_ARMOR1", "ICEAGE_DEFAULT", "IMP_BEACH", "TOMB_RAISER", "MUMMY_DEFAULT", "WIZARD", "ICEAGE_ARMOR2" ],
+    "unlockedPlants" : [ "ICEBERG_LETTUCE", "MAGNET_SHROOM", "PRIMAL_SUNFLOWER", "GRAVE_BUSTER", "TORCHWOOD", "CABBAGE_PULT", "DOOM_SHROOM", "STARFRUIT", "PIERCE_MINT", "GOLD_BLOOM", "JALAPENO", "WALL_NUT", "PHAT_BEET", "CHERRY_BOMB", "CAT_TAIL_MINT", "ENFORCE_MINT", "SQUASH", "POTATO_MINE", "REINFORCE_MINT", "ENDURIAN", "CAULIPOWER", "CITRON", "ENLIGHTEN_MINT", "ROTOBAGA", "THREEPEATER", "SNOW_PEA", "CHOMPER", "PEPPER_PULT", "TANGLE_KELP", "KIWIBEAST", "MEGA_GATLING_PEA", "MELON_PULT", "GOO_PEASHOOTER", "FIRE_PEASHOOTER", "SEA_SHROOM", "TWIN_SUNFLOWER", "PRIMAL_POTATO_MINE", "LILY_PAD", "CAT_TAIL", "PUMPKIN", "EXPLODE_O_NUT", "PUFF_SHROOM", "BOMBARD_MINT", "HYPNO_SHROOM", "SUN_BEAN", "SUN_SHROOM", "KERNEL_PULT", "IMITATER", "ELECTRIC_BLUEBERRY", "CACTUS", "APPEASE_MINT", "SPLIT_PEA", "SWEET_POTATO", "PEA_POD", "FUME_SHROOM", "GARLIC", "PEASHOOTER", "WINTER_MELON", "HOT_POTATO", "REPEATER", "BONK_CHOY", "GRAPESHOT", "WASABI_WHIP", "ARMA_MINT", "ENCHANT_MINT", "BOWLING_BULB", "TALL_NUT", "SUNFLOWER", "ICE_SHROOM" ],
+    "seenZombies" : [ "BEACH_SNORKEL", "TOMB_RAISER", "MUMMY_ARMOR2", "GARGANTUAR_BEACH", "IMP_ICEAGE", "ICEAGE_DEFAULT", "EXPLORER", "TUTORIAL_ARMOR1", "IMP_BEACH", "RA", "TUTORIAL_ARMOR2", "BEACH_DEFAULT", "BEACH_FAST_SWIMMER", "ZOMBOSS_DARK", "MUMMY_ARMOR4", "ICEAGE_HUNTER", "BEACH_FISHERMAN", "MUMMY_DEFAULT", "BEACH_SURFER", "MUMMY_ARMOR1", "BEACH_OCTOPUS", "GARGANTUAR_ICEAGE", "TUTORIAL_DEFAULT" ],
     "seedPackets" : { },
     "plantLevels" : { },
     "greenhouseBoosts" : [ ]
@@ -76,12 +76,12 @@
       "empty" : true,
       "readyForPlanting" : true
     } ], [ {
-      "unlocked" : true,
+      "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : true
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
@@ -181,8 +181,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 14,
-    "numberOfUnlockedPots" : 6
+    "numberOfLockedPots" : 15,
+    "numberOfUnlockedPots" : 5
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -195,8 +195,8 @@
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "forToday" : false,
-    "availableToday" : false
+    "availableToday" : false,
+    "forToday" : false
   },
   "stayLoggedIn" : true,
   "questState" : null

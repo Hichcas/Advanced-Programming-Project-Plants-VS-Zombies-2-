@@ -60,6 +60,30 @@ public class Map {
         return tiles[row][col].getPlant();
     }
 
+    public Plant getBasePlantAt(int row, int col) {
+        if (!isWithinBounds(row, col)) return null;
+        return tiles[row][col].getBasePlant();
+    }
+
+    public void setBasePlant(int row, int col, Plant basePlant) {
+        if (!isWithinBounds(row, col)) return;
+        tiles[row][col].setBasePlant(basePlant);
+        if (basePlant != null) {
+            basePlant.setPlanted(true);
+            basePlant.putRuntimeState("row", row);
+            basePlant.putRuntimeState("col", col);
+            basePlant.putRuntimeState("lane", row);
+            float tileWidth = getTileWidth();
+            float tileHeight = getTileHeight();
+            float worldX = startX + col * tileWidth;
+            float worldY = startY - (row + 1) * tileHeight;
+            basePlant.putRuntimeState("worldX", worldX);
+            basePlant.putRuntimeState("worldY", worldY);
+            basePlant.putRuntimeState("tileWidth", tileWidth);
+            basePlant.putRuntimeState("tileHeight", tileHeight);
+        }
+    }
+
     public void setPlant(int row, int col, Plant plant) {
         if (!isWithinBounds(row, col)) return;
         tiles[row][col].setPlant(plant);
@@ -86,11 +110,22 @@ public class Map {
 
     public void removePlant(int row, int col) {
         if (!isWithinBounds(row, col)) return;
-        Plant plant = tiles[row][col].getPlant();
+        Tile tile = tiles[row][col];
+        Plant plant = tile.getPlant();
         if (plant != null) {
             plant.setPlanted(false);
         }
-        tiles[row][col].setPlant(null);
+        tile.setPlant(null);
+    }
+
+    public void removeBasePlant(int row, int col) {
+        if (!isWithinBounds(row, col)) return;
+        Tile tile = tiles[row][col];
+        Plant base = tile.getBasePlant();
+        if (base != null) {
+            base.setPlanted(false);
+        }
+        tile.setBasePlant(null);
     }
 
     public Tile getTile(int row, int col) {

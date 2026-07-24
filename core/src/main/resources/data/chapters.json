@@ -263,7 +263,7 @@
       "setup": [],
       "update": [
         { "action": "risingTide", "description": "Water level rises each wave, flooding the next non-water column and drowning non-aquatic plants" },
-        { "action": "lowCoastLaunch", "description": "Zombies on water beneath a low coast tile are launched back and stunned" }
+        { "action": "spawnFromLowCoast", "description": "Each wave, zombies emerge from LOW_COAST tiles submerged in water" }
       ],
       "stages": [
         {
@@ -293,10 +293,12 @@
             { "startDelay": 0, "entries": [
               { "zombie": "ZombieBeachDefault", "count": 3, "spawnDelay": 0.8 },
               { "zombie": "ZombieBeachSnorkel", "count": 2, "spawnDelay": 2.0 },
-              { "zombie": "ZombieBeachImpDefault", "count": 3, "spawnDelay": 1.5 }
+              { "zombie": "ZombieBeachImpDefault", "count": 3, "spawnDelay": 1.5 },
+              { "zombie": "ZombieBeachFisherman", "count": 1, "spawnDelay": 3.0 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
               { "zombie": "ZombieBeachDefault", "count": 1, "spawnDelay": 0.6 },
+              { "zombie": "ZombieBeachFastSwimmer", "count": 2, "spawnDelay": 1.0 },
               { "zombie": "ZombieBeachSurfer", "count": 1, "spawnDelay": 2.0 },
               { "zombie": "ZombieBeachOctopus", "count": 1, "spawnDelay": 1.5 },
               { "zombie": "ZombieBeachGargantuar", "count": 1, "spawnDelay": 3.0 }
@@ -332,13 +334,16 @@
             { "startDelay": 0, "entries": [
               { "zombie": "ZombieBeachDefault", "count": 5, "spawnDelay": 1.0 },
               { "zombie": "ZombieBeachSnorkel", "count": 3, "spawnDelay": 2.0 },
-              { "zombie": "ZombieBeachImpDefault", "count": 4, "spawnDelay": 1.2 }
+              { "zombie": "ZombieBeachImpDefault", "count": 4, "spawnDelay": 1.2 },
+              { "zombie": "ZombieBeachFisherman", "count": 2, "spawnDelay": 3.0 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
               { "zombie": "ZombieBeachDefault", "count": 8, "spawnDelay": 0.8 },
+              { "zombie": "ZombieBeachFastSwimmer", "count": 3, "spawnDelay": 1.0 },
               { "zombie": "ZombieBeachSnorkel", "count": 4, "spawnDelay": 1.5 },
               { "zombie": "ZombieBeachSurfer", "count": 2, "spawnDelay": 2.0 },
               { "zombie": "ZombieBeachOctopus", "count": 2, "spawnDelay": 1.5 },
+              { "zombie": "ZombieBeachFisherman", "count": 1, "spawnDelay": 2.5 },
               { "zombie": "ZombieBeachGargantuar", "count": 1, "spawnDelay": 3.0 }
             ]}
           ]
@@ -372,13 +377,16 @@
             { "startDelay": 0, "entries": [
               { "zombie": "ZombieBeachDefault", "count": 6, "spawnDelay": 1.0 },
               { "zombie": "ZombieBeachSnorkel", "count": 3, "spawnDelay": 1.8 },
-              { "zombie": "ZombieBeachImpDefault", "count": 4, "spawnDelay": 1.2 }
+              { "zombie": "ZombieBeachImpDefault", "count": 4, "spawnDelay": 1.2 },
+              { "zombie": "ZombieBeachFisherman", "count": 2, "spawnDelay": 2.5 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
               { "zombie": "ZombieBeachDefault", "count": 10, "spawnDelay": 0.7 },
+              { "zombie": "ZombieBeachFastSwimmer", "count": 3, "spawnDelay": 1.0 },
               { "zombie": "ZombieBeachSnorkel", "count": 4, "spawnDelay": 1.5 },
               { "zombie": "ZombieBeachSurfer", "count": 2, "spawnDelay": 2.0 },
               { "zombie": "ZombieBeachOctopus", "count": 3, "spawnDelay": 1.5 },
+              { "zombie": "ZombieBeachFisherman", "count": 2, "spawnDelay": 2.5 },
               { "zombie": "ZombieBeachGargantuar", "count": 2, "spawnDelay": 2.5 }
             ]}
           ]

@@ -1,6 +1,7 @@
 package com.PVZ.model.entity.zombies.types.ranged_caster;
 
 import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
 import com.PVZ.model.entity.zombies.base.ZombieProjectile;
 import com.PVZ.model.game.BattleController;
@@ -30,18 +31,22 @@ public class ZombieBeachOctopus extends AbstractRangedCasterZombie {
     @Override
     public void shoot(BattleController controller, Plant target) {
         if (hasTentacles()) {
-            controller.addZombieProjectile(new ZombieProjectile(
-                (float) x, (float) y, (int) projectileDamage, (float) projectileSpeed, (int) row, this));
+            Object r = target.getRuntimeState("row");
+            Object c = target.getRuntimeState("col");
+            int row = r instanceof Number ? ((Number) r).intValue() : (int) this.row;
+            int col = c instanceof Number ? ((Number) c).intValue() : (int) this.col;
+            Tile tile = controller.getMap().getTile(row, col);
+            if (tile != null && tile.getOctopusHp() <= 0) {
+                tile.setOctopusHp(200);
+                target.disableForTicks(Integer.MAX_VALUE);
+                System.out.println(alias + " stuck an octopus on plant at (" + col + ", " + row + ") — shoot it to free it!");
+            }
             detachTentacles();
         }
     }
 
     @Override
     public void onHit(Plant target) {
-        if (target != null && !target.isDead()) {
-            target.disableForTicks(30);
-            System.out.println(alias + " froze a plant");
-        }
     }
 
     @Override
