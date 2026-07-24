@@ -40,7 +40,6 @@ public class PlantSelectionMenuController {
         User user = AppStatus.currentUser;
         StringJoiner joiner = new StringJoiner("\n");
         for (PlantType type : PlantType.values()) {
-            // Use renamed constant CURRENT_STAGE_LOCKED_PLANTS
             boolean lockedForStage = AppStatus.CURRENT_STAGE_LOCKED_PLANTS.contains(type);
             boolean ownedGlobally = user != null && user.collectionState != null
                 && user.collectionState.isPlantUnlocked(type);
@@ -69,7 +68,6 @@ public class PlantSelectionMenuController {
         }
         StringJoiner joiner = new StringJoiner("\n");
         user.collectionState.getUnlockedPlants().forEach(p -> {
-            // Use renamed constant CURRENT_STAGE_LOCKED_PLANTS
             boolean lockedForStage = AppStatus.CURRENT_STAGE_LOCKED_PLANTS.contains(p);
             String tag = lockedForStage ? lockedTag()
                 : (isFamilyLockedByOtherPick(p) ? familyLockedTag() : "");
@@ -94,9 +92,11 @@ public class PlantSelectionMenuController {
     private String lockedTag() {
         return " \u001B[33m(LOCKED - this level)\u001B[0m";
     }
+
     private String familyLockedTag() {
         return " \u001B[33m(LOCKED - already picked this family)\u001B[0m";
     }
+
     private String notOwnedTag() {
         return " \u001B[90m(NOT OWNED)\u001B[0m";
     }

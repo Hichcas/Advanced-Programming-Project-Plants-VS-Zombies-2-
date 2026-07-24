@@ -6,13 +6,11 @@ import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.TileType;
-import com.PVZ.model.status.AppStatus;
 
 import java.util.StringJoiner;
 
 public class BoardHandler {
 
-    // ---------- Lawn mowers ----------
     public static void initLawnMowers(RegularGameEngine engine, Map map) {
         if (map == null) return;
         float tileWidth = map.getTileWidth();
@@ -65,7 +63,6 @@ public class BoardHandler {
         }
     }
 
-    // ---------- Map display ----------
     public static String showMapText(RegularGameEngine engine) {
         StringBuilder builder = new StringBuilder();
         builder.append("Sun: ").append(engine.getSunCount())
@@ -158,7 +155,6 @@ public class BoardHandler {
             + (plant.isPlantFoodActive() ? " [plant food]" : "");
     }
 
-    // ---------- Tile debug utilities ----------
     public static String tileDebugLabel(TileType type) {
         if (type == null) return ".";
         return switch (type) {

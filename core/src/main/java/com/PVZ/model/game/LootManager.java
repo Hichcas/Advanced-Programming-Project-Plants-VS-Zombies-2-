@@ -8,10 +8,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Tracks coin/diamond/pot drops sitting on the lawn (doc page 28), the same way
- * {@link SunManager} tracks suns: spawned at a world position, drawn until collected or expired.
- */
+
 public class LootManager {
     private final List<LootDrop> drops = new ArrayList<>();
 
@@ -37,7 +34,6 @@ public class LootManager {
         }
     }
 
-    /** Returns the drop under the given point (world coordinates), or null if none. */
     public LootDrop collectAt(double x, double y) {
         Rectangle point = new Rectangle((float) x - 8f, (float) y - 8f, 16f, 16f);
         for (LootDrop drop : drops) {

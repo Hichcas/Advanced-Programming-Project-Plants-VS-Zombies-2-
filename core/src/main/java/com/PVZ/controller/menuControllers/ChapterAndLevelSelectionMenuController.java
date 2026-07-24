@@ -1,10 +1,7 @@
 package com.PVZ.controller.menuControllers;
 
 import com.PVZ.model.enums.ChapterEnum;
-import com.PVZ.model.enums.commands.ChapterAndLevelSelectionCommand;
 import com.PVZ.model.enums.MenuType;
-import com.PVZ.model.enums.PlantType;
-import com.PVZ.model.game.chapter.Chapter;
 import com.PVZ.model.game.chapter.ChapterConfig;
 import com.PVZ.model.game.chapter.ChapterLibrary;
 import com.PVZ.model.game.chapter.StageConfig;
@@ -74,7 +71,6 @@ public class ChapterAndLevelSelectionMenuController {
             }
         }
 
-        // Clear selection state using the renamed constants
         AppStatus.SELECTED_PLANTS.clear();
         AppStatus.BOOSTED_PLANTS.clear();
         AppStatus.CURRENT_STAGE_LOCKED_PLANTS.clear();
@@ -88,12 +84,10 @@ public class ChapterAndLevelSelectionMenuController {
             return new OutputDTO(true, "Entered stage directly: " + AppStatus.currentChapterName
                 + " Stage " + AppStatus.currentStageNumber + " (Conveyor Belt).");
         }
-
         if (GameLauncher.isLockedPlantsStage(stageConfig)) {
             AppStatus.CURRENT_STAGE_LOCKED_PLANTS.addAll(GameLauncher.resolveLockedPlants(stageConfig));
             AppStatus.CURRENT_STAGE_EXCLUSIVE_FAMILIES.addAll(GameLauncher.resolveExclusiveFamilies(stageConfig));
         }
-
         AppStatus.currentMenuType = MenuType.PLANT_SELECTION;
         return new OutputDTO(true, "Entered Plant Selection Menu.");
     }
@@ -169,7 +163,7 @@ public class ChapterAndLevelSelectionMenuController {
                 int stageNum = stage.getStageNumber();
                 boolean stageUnlocked = user.progressState.isLevelUnlocked(chapterEnum, stageNum);
                 sb.append("  Stage ").append(stageNum).append(" [")
-                  .append(stageUnlocked ? "UNLOCKED" : "LOCKED").append("]\n");
+                    .append(stageUnlocked ? "UNLOCKED" : "LOCKED").append("]\n");
             }
         }
         return new OutputDTO(true, sb.toString().stripTrailing());

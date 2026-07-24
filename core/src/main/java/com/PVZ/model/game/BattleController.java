@@ -12,15 +12,10 @@ import com.PVZ.model.enums.DamageType;
 import com.PVZ.model.enums.TileType;
 import com.PVZ.model.status.AppStatus;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Controls the battle logic between plants and zombies.
- * Refactored to comply with Checkstyle and PMD (method length ≤ 50 lines).
- */
 public class BattleController implements BehaviorContext {
 
     private final List<Zombie> zombies;
@@ -62,10 +57,6 @@ public class BattleController implements BehaviorContext {
         }
     }
 
-    /**
-     * Reward for a glowing zombie's death: grants one plant food (doc page 27),
-     * capped at 3 stored plant foods.
-     */
     public void grantPlantFoodDrop() {
         if (plantFoodManager == null) {
             return;
@@ -75,12 +66,6 @@ public class BattleController implements BehaviorContext {
             + plantFoodManager.getPlantFoodCount() + " plant foods now.");
     }
 
-    /**
-     * Every zombie has a 10% chance on death to leave a coin, diamond, or greenhouse pot on the
-     * lawn (doc page 28), split evenly among the three outcomes. Unlike the instant plant-food
-     * grant, this spawns a clickable {@link com.PVZ.model.entity.LootDrop} the player has to
-     * hover/click to collect, mirroring how the {@link SunManager} handles falling suns.
-     */
     public void rollLootDrop(double x, double y) {
         if (lootManager == null || lootRandom.nextDouble() >= 0.10) {
             return;
@@ -90,10 +75,6 @@ public class BattleController implements BehaviorContext {
         lootManager.spawn(x, y, type);
     }
 
-    /**
-     * Applies the reward for a loot drop the player just collected (called from the input
-     * processor once the click/hover hitbox test passes). Returns a status message.
-     */
     public String applyLootReward(com.PVZ.model.entity.LootDrop drop) {
         if (drop == null || AppStatus.currentUser == null || AppStatus.currentUser.userStats == null) {
             return "";
@@ -135,9 +116,6 @@ public class BattleController implements BehaviorContext {
         return map;
     }
 
-    /**
-     * Main update loop, broken into smaller methods.
-     */
     public void update(float delta) {
         updateZombies(delta);
         updateZombieProjectiles(delta);
@@ -146,18 +124,11 @@ public class BattleController implements BehaviorContext {
         removeExpiredGrapes();
     }
 
-    /**
-     * Removes grapes whose fuse has expired after bouncing. The grape's isFuseExploded()
-     * flag is set by Projectile.updateFreeMotion when the countdown reaches zero.
-     * At that point the grape detonates with a small area-of-effect at its current
-     * position before being removed.
-     */
     private void removeExpiredGrapes() {
         java.util.Iterator<Projectile> it = projectiles.iterator();
         while (it.hasNext()) {
             Projectile p = it.next();
             if (p.isFuseExploded()) {
-                // Small detonation at the grape's final position
                 if (map != null) {
                     int gRow = map.worldToRow((float) p.getPositionY());
                     int gCol = map.worldToCol((float) p.getPositionX());
@@ -170,24 +141,18 @@ public class BattleController implements BehaviorContext {
                         }
                     }
                 }
-                p.consumeFuseExplosion(); // marks destroyed + removes from list
+                p.consumeFuseExplosion();
                 it.remove();
             }
         }
     }
 
-    /**
-     * Updates all zombies.
-     */
     private void updateZombies(float delta) {
         for (int i = zombies.size() - 1; i >= 0; i--) {
             zombies.get(i).update(delta, this);
         }
     }
 
-    /**
-     * Updates zombie projectiles and checks collisions with plants.
-     */
     private void updateZombieProjectiles(float delta) {
         Iterator<ZombieProjectile> zpIt = zombieProjectiles.iterator();
         while (zpIt.hasNext()) {
@@ -209,36 +174,26 @@ public class BattleController implements BehaviorContext {
         }
     }
 
-    /**
-     * Updates plant projectiles: handles collisions with tiles and zombies.
-     */
     private void updatePlantProjectiles(float delta) {
         Iterator<Projectile> projIt = projectiles.iterator();
         while (projIt.hasNext()) {
             Projectile p = projIt.next();
 
-            // Homing projectiles (Cat-tail) re-aim toward the nearest zombie every tick.
             if (p.isHoming() && p.isFreeMotion()) {
                 steerHoming(p);
             }
 
-            // Check collision with tombstone tiles (block straight projectiles)
             if (handleTileCollision(p)) {
                 projIt.remove();
                 continue;
             }
 
-            // Check collision with zombies
             if (handleZombieCollision(p)) {
                 projIt.remove();
             }
         }
     }
 
-    /**
-     * Handles projectile collision with tombstone/necromancy tiles and octopus.
-     * Returns true if projectile should be removed.
-     */
     private boolean handleTileCollision(Projectile p) {
         if (p.getType() == ProjectileType.LOB || map == null) {
             return false;
@@ -286,10 +241,6 @@ public class BattleController implements BehaviorContext {
         return true;
     }
 
-    /**
-     * Handles projectile collision with zombies.
-     * Returns true if projectile should be removed.
-     */
     private boolean handleZombieCollision(Projectile p) {
         for (Zombie z : zombies) {
             if (z.isDead()) {
@@ -301,24 +252,19 @@ public class BattleController implements BehaviorContext {
             if (z.isProjectileImmune() && p.getType() != ProjectileType.LOB) {
                 break;
             }
-            // A piercing projectile (Cactus spike, Fume-shroom smoke) must not damage the
-            // same zombie on every overlapping tick — skip ones it already hit.
+
             if (hasHitZombie(p, z)) {
                 continue;
             }
 
-            // Check reflection by Dark Juggler
             if (z instanceof ZombieDarkJuggler jj && jj.reflectProjectile()) {
                 reflectProjectile(p, jj);
                 return true;
             }
 
-            // Apply damage and effects
             applyProjectileEffect(p, z);
             markHitZombie(p, z);
 
-            // Pierce: while pierce remains, the projectile passes through and keeps flying
-            // (Cactus pierces 3 zombies, Fume-shroom smoke passes through the whole lane).
             if (p.getPierce() > 1) {
                 p.setPierce(p.getPierce() - 1);
                 continue;
@@ -328,10 +274,6 @@ public class BattleController implements BehaviorContext {
         return false;
     }
 
-    /**
-     * Re-aims a homing projectile (Cat-tail) at the nearest living zombie, keeping its speed
-     * constant so it visibly curves toward and lands on the closest target.
-     */
     private void steerHoming(Projectile p) {
         Zombie nearest = null;
         double best = Double.MAX_VALUE;
@@ -363,7 +305,6 @@ public class BattleController implements BehaviorContext {
         p.setVelocity(dx / dist * speed, dy / dist * speed);
     }
 
-    @SuppressWarnings("unchecked")
     private java.util.Set<Integer> hitSet(Projectile p) {
         Object obj = p.getExtra("hitZombies");
         if (obj instanceof java.util.Set) {
@@ -382,9 +323,6 @@ public class BattleController implements BehaviorContext {
         hitSet(p).add(System.identityHashCode(z));
     }
 
-    /**
-     * Reflects a projectile back via ZombieDarkJuggler.
-     */
     private void reflectProjectile(Projectile p, ZombieDarkJuggler jj) {
         ZombieProjectile reflected = new ZombieProjectile(
             (float) jj.getX(), (float) jj.getY() + 30,
@@ -393,14 +331,10 @@ public class BattleController implements BehaviorContext {
         System.out.println(jj.getAlias() + " reflected a projectile");
     }
 
-    /**
-     * Applies projectile damage and special effects to a zombie.
-     */
     private void applyProjectileEffect(Projectile p, Zombie z) {
         ProjectileType type = p.getType();
         int damage = (int) p.getDamage();
 
-        // Fire vs Ice interactions
         if (type == ProjectileType.FIRE_PEA && z.isFrozen()) {
             z.thaw();
         } else if (type == ProjectileType.ICE_PEA && z.isFrozen()) {
@@ -427,7 +361,6 @@ public class BattleController implements BehaviorContext {
             notifyZombieKilled(z, killer);
         }
 
-        // Stun effect (butter)
         boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit"))
             || (p.getExtra("plantType") instanceof com.PVZ.model.enums.PlantType pt
             && pt == com.PVZ.model.enums.PlantType.KERNEL_PULT);
@@ -436,9 +369,6 @@ public class BattleController implements BehaviorContext {
         }
     }
 
-    /**
-     * Removes dead plants from the list and map.
-     */
     private void removeDeadPlants() {
         Iterator<Plant> pit = plants.iterator();
         while (pit.hasNext()) {
@@ -453,10 +383,6 @@ public class BattleController implements BehaviorContext {
             }
         }
     }
-
-    // ------------------------------------------------------------------------
-    // BehaviorContext implementation (unchanged but split for readability)
-    // ------------------------------------------------------------------------
 
     @Override
     public List<Zombie> getZombiesInLane(int lane) {
@@ -550,8 +476,6 @@ public class BattleController implements BehaviorContext {
         }
 
         if (p.getType() == com.PVZ.model.entity.plants.behavior.impl.ProjectileType.LOB) {
-            // Lobbed shots (Cabbage-pult, Kernel-pult, Melon-pult, ...) arc up and over
-            // obstacles: a parabola in screen space (rise then land) instead of a flat line.
             p.initArcPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec));
         } else {
             p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
@@ -576,7 +500,7 @@ public class BattleController implements BehaviorContext {
         if (damage <= 0) {
             return;
         }
-        // 3x3 explosion: lanes row-1, row, row+1; column check ~1.5 tiles
+
         int[] lanes = {row - 1, row, row + 1};
         for (int r : lanes) {
             if (r < 0) continue;
@@ -603,7 +527,7 @@ public class BattleController implements BehaviorContext {
 
     @Override
     public void spawnBouncingProjectiles(int lane, int row, int count,
-                                          int damagePerGrape, double lifespanSeconds) {
+                                         int damagePerGrape, double lifespanSeconds) {
         if (map == null) return;
         float tileW = map.getTileWidth();
         float tileH = map.getTileHeight();
@@ -614,9 +538,10 @@ public class BattleController implements BehaviorContext {
         float minY = map.getStartY() - map.getRows() * tileH;
         float maxY = map.getStartY();
         double fuseSec = Math.max(lifespanSeconds, 4.0);
-        double speed = tileW * 0.28; // slowed down further per feedback so grapes drift gently
+        double speed = tileW * 0.28;
         for (int i = 0; i < Math.max(1, Math.min(count, 20)); i++) {
-            double angle = 2 * Math.PI * i / count + (java.util.concurrent.ThreadLocalRandom.current().nextDouble() - 0.5) * 0.4;
+            double angle = 2 * Math.PI * i / count +
+                (java.util.concurrent.ThreadLocalRandom.current().nextDouble() - 0.5) * 0.4;
             float vx = (float) (Math.cos(angle) * speed);
             float vy = (float) (Math.sin(angle) * speed * 0.6);
             Projectile grape = new Projectile();
@@ -631,9 +556,6 @@ public class BattleController implements BehaviorContext {
         }
     }
 
-    // ------------------------------------------------------------------------
-    // Public methods for external use
-    // ------------------------------------------------------------------------
 
     public int getTileColumn(float worldX) {
         return map != null ? map.worldToCol(worldX) : 0;
@@ -708,10 +630,6 @@ public class BattleController implements BehaviorContext {
     public void dispose() {
         zombieProjectiles.clear();
     }
-
-    // ------------------------------------------------------------------------
-    // Utility methods
-    // ------------------------------------------------------------------------
 
     private static int asInt(Object value, int defaultValue) {
         if (value instanceof Number number) {

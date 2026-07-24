@@ -4,11 +4,11 @@ import com.PVZ.model.entity.LawnMower;
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.MinigameEnum;
 import com.PVZ.model.minigame.wallnutbowling.BowlingNut;
 import com.PVZ.model.minigame.wallnutbowling.NutType;
 import com.PVZ.model.minigame.wallnutbowling.WallnutBowlingGame;
 import com.PVZ.model.minigame.wallnutbowling.WallnutBowlingTexturePaths;
-import com.PVZ.model.enums.MinigameEnum;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.UserRegistry;
 import com.PVZ.screen.manager.FontManager;
@@ -29,7 +29,6 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     private static final double TICK_SECONDS = 0.1;
     private static final float NUT_HIT_RADIUS = 34f;
     private static final float GAME_OVER_DISPLAY_DURATION = 3.0f;
-//mishe avazesh kard vali bara in phase ino gozashtam va ok has das nazanim ham.
     private final List<Plant> plants = new ArrayList<>();
     private final List<Projectile> projectiles = new ArrayList<>();
     private final RegularZombieEngine zombieEngine = new RegularZombieEngine();
@@ -161,14 +160,14 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
                     continue;
                 }
                 double clampedY = row < 0
-                        ? map.getStartY() - map.getTileHeight() * 0.05
-                        : map.getStartY() - map.getTileHeight() * (game.getRows() - 0.05);
+                    ? map.getStartY() - map.getTileHeight() * 0.05
+                    : map.getStartY() - map.getTileHeight() * (game.getRows() - 0.05);
                 nut.setY(clampedY);
                 applyTurn(nut);
             }
 
             if (nut.getX() < map.getStartX() - 60 || nut.getX() > map.getStartX() + map.getTileWidth() * game.getCols(
-                    ) + 80) {
+            ) + 80) {
                 it.remove();
                 continue;
             }
@@ -185,7 +184,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
 
     private Zombie findCollidingZombie(BowlingNut nut) {
         Rectangle nutRect = new Rectangle((float) nut.getX() - NUT_HIT_RADIUS / 2f,
-                (float) nut.getY() - NUT_HIT_RADIUS / 2f, NUT_HIT_RADIUS, NUT_HIT_RADIUS);
+            (float) nut.getY() - NUT_HIT_RADIUS / 2f, NUT_HIT_RADIUS, NUT_HIT_RADIUS);
         for (Zombie z : zombieEngine.getZombies()) {
             if (z == null || z.isDead()) continue;
             if (nutRect.overlaps(z.getHitbox())) return z;
@@ -309,7 +308,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
         for (Zombie z : zombieEngine.getZombies()) {
             if (z == null || z.isDead()) continue;
             HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
-                    (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
+                (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
         }
         batch.end();
         if (lawnMowers != null) {
@@ -340,10 +339,10 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
         if (!gameOverTriggered) {
             NutType held = game.getHeldNut();
             String cooldown = game.getCooldownRemaining() > 0
-                    ? String.format(" | reload: %.1fs", game.getCooldownRemaining())
-                    : "";
+                ? String.format(" | reload: %.1fs", game.getCooldownRemaining())
+                : "";
             String label = "Next nut: " + (held != null ? held.name() : "-")
-                    + "  (" + game.getZombiesSpawned() + "/" + game.getTotalZombies() + " zombies)" + cooldown;
+                + "  (" + game.getZombiesSpawned() + "/" + game.getTotalZombies() + " zombies)" + cooldown;
             font.draw(batch, label, map.getStartX() + 20f, map.getStartY() + 40f);
         }
         batch.end();
@@ -399,28 +398,43 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
 
 
     @Override
-    public void kill(Object entity) { zombieEngine.kill(entity); }
+    public void kill(Object entity) {
+        zombieEngine.kill(entity);
+    }
 
     @Override
-    public void takeDamage(Object entity, double amount) { zombieEngine.takeDamage(entity, amount); }
+    public void takeDamage(Object entity, double amount) {
+        zombieEngine.takeDamage(entity, amount);
+    }
 
     @Override
-    public Plant getPlantAt(int row, int col) { return map != null ? map.getPlantAt(row, col) : null; }
+    public Plant getPlantAt(int row, int col) {
+        return map != null ? map.getPlantAt(row, col) : null;
+    }
 
     @Override
-    public List<Zombie> getZombiesInLane(int lane) { return zombieEngine.getZombiesInLane(lane); }
+    public List<Zombie> getZombiesInLane(int lane) {
+        return zombieEngine.getZombiesInLane(lane);
+    }
 
     @Override
-    public int getSunCount() { return 0; }
+    public int getSunCount() {
+        return 0;
+    }
 
     @Override
-    public void addSun(int amount) { }
+    public void addSun(int amount) {
+    }
 
     @Override
-    public void spawnProjectile(Projectile p) { projectiles.add(p); }
+    public void spawnProjectile(Projectile p) {
+        projectiles.add(p);
+    }
 
     @Override
-    public Zombie spawnZombie(String alias, int row, int col) { return zombieEngine.spawnZombie(alias, row, col); }
+    public Zombie spawnZombie(String alias, int row, int col) {
+        return zombieEngine.spawnZombie(alias, row, col);
+    }
 
     @Override
     public void removePlant(int row, int col) {
@@ -428,7 +442,11 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     }
 
     @Override
-    public int getTileColumn(float worldX) { return map != null ? map.worldToCol(worldX) : 0; }
+    public int getTileColumn(float worldX) {
+        return map != null ? map.worldToCol(worldX) : 0;
+    }
 
-    public boolean isGameOver() { return gameStatus.isGameOver(); }
+    public boolean isGameOver() {
+        return gameStatus.isGameOver();
+    }
 }

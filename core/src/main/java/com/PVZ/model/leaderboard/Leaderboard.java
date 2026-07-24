@@ -2,14 +2,15 @@ package com.PVZ.model.leaderboard;
 
 import com.PVZ.database.UserDatabase;
 import com.PVZ.model.enums.ChapterEnum;
-import com.PVZ.model.enums.MinigameEnum;
 import com.PVZ.model.user.User;
-import java.util.*;
-import java.util.stream.Collectors;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 public class Leaderboard {
 
-    // متود اصلی — فراخوانی از LeaderboardMenuController.showLeaderboard()
     public static List<LeaderboardEntry> getEntries(LeaderboardSortField sort, boolean ascending) {
         List<LeaderboardEntry> entries = new ArrayList<>();
         try {
@@ -42,7 +43,6 @@ public class Leaderboard {
         return entries;
     }
 
-    // ساخت یک ردیف — فراخوانی از getEntries()
     private static LeaderboardEntry buildEntry(User user) {
         String username = user.profile != null ? user.profile.getUsername() : "Unknown";
         String lastStageInfo = resolveLastStageInfo(user);
@@ -56,10 +56,9 @@ public class Leaderboard {
             highestScore = user.userStats.getHighestScore();
         }
         return new LeaderboardEntry(username, lastStageInfo, minigamesCompleted,
-                dailyQuests, nonDailyQuests, highestScore);
+            dailyQuests, nonDailyQuests, highestScore);
     }
 
-    // گرفتن آخرین مرحله و فصل — فراخوانی از buildEntry()
     private static String resolveLastStageInfo(User user) {
         if (user.progressState == null || user.progressState.getCompletedLevels() == null) {
             return "No progress";
@@ -78,7 +77,6 @@ public class Leaderboard {
         return "Stage " + maxStage + ", " + bestChapter.getDisplayName();
     }
 
-    // مجموع مینی‌گیم‌ها — فراخوانی از buildEntry()
     private static int resolveTotalMinigames(User user) {
         if (user.progressState == null || user.progressState.getMinigameClearedCounts() == null) {
             return 0;

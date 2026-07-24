@@ -7,10 +7,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Manages zombie waves, spawning and progression.
- * Refactored to comply with Checkstyle and PMD (method length ≤ 50 lines).
- */
 public class WaveManager {
     private final List<Wave> waves;
     private int currentWave = 0;
@@ -53,33 +49,25 @@ public class WaveManager {
         return started;
     }
 
-    /**
-     * Main update loop broken into smaller methods to keep line count low.
-     */
+
     public void update(float delta, ZombieEngine engine) {
         if (!started || currentWave >= waves.size()) {
             return;
         }
 
-        // Check if we need to begin a new wave
         if (!spawning && !waitingForHP) {
             checkAndBeginWave(delta);
         }
 
-        // Handle active spawning
         if (spawning) {
             updateSpawning(delta, engine);
         }
 
-        // Handle waiting for HP threshold
         if (waitingForHP) {
             updateWaitingForHP(delta);
         }
     }
 
-    /**
-     * Checks if it's time to begin a new wave, and starts it if so.
-     */
     private void checkAndBeginWave(float delta) {
         if (currentWave == 0) {
             setupTimer += delta;
@@ -90,9 +78,6 @@ public class WaveManager {
         beginWave();
     }
 
-    /**
-     * Handles the spawning of zombies for the current entry.
-     */
     private void updateSpawning(float delta, ZombieEngine engine) {
         spawnTimer += delta;
         if (spawnTimer >= currentEntry.getSpawnDelay() && spawned < currentEntry.getCount()) {
@@ -116,9 +101,6 @@ public class WaveManager {
         }
     }
 
-    /**
-     * Handles the waiting period after spawning until the HP threshold is met.
-     */
     private void updateWaitingForHP(float delta) {
         double remainingHP = 0;
         for (Zombie z : waveZombies) {

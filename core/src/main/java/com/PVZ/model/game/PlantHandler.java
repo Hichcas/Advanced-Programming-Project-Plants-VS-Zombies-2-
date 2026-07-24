@@ -3,7 +3,6 @@ package com.PVZ.model.game;
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.plants.PlantFactory;
 import com.PVZ.model.entity.plants.PlantLibrary;
-import com.PVZ.model.enums.PlantFamily;
 import com.PVZ.model.enums.PlantTag;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.TileType;
@@ -17,71 +16,41 @@ public class PlantHandler {
     public static String plantPlant(RegularGameEngine engine, PlantType type, int x, int y) {
         if (engine.map == null) return "Map is not ready.";
         if (type == null) return "Unknown plant type.";
-
         int row = engine.normalizeIndex(y);
         int col = engine.normalizeIndex(x);
         if (!engine.map.isWithinBounds(row, col)) return "Invalid tile.";
-
         TileType targetTileType = engine.map.getTile(row, col).getType();
         boolean isWater = targetTileType == TileType.WATER || targetTileType == TileType.TIDE;
-
         Plant existingTop = engine.map.getPlantAt(row, col);
         Plant existingBase = engine.map.getBasePlantAt(row, col);
-
         boolean isLilyPad = type == PlantType.LILY_PAD;
-        boolean isAquatic = PlantLibrary.findByType(type)
-            .map(def -> def.hasTag(PlantTag.WATER))
-            .orElse(false);
-
-        if (isAquatic && !isWater) {
-            return "Aquatic plants must be planted on water tiles.";
-        }
-
-        if (isWater && !isAquatic && !isLilyPad && existingBase == null) {
+        boolean isAquatic = PlantLibrary.findByType(type).map(def -> def.hasTag(PlantTag.WATER)).orElse(false);
+        if (isAquatic && !isWater) return "Aquatic plants must be planted on water tiles.";
+        if (isWater && !isAquatic && !isLilyPad && existingBase == null)
             return "Non-aquatic plants need a Lily Pad on water tiles.";
-        }
-
-        if (isLilyPad && !isWater) {
-            return "Lily Pad must be planted on water tiles.";
-        }
-
-        if (isLilyPad && existingBase != null) {
-            return "This tile already has a Lily Pad.";
-        }
-
-        if (isWater && !isAquatic && !isLilyPad && existingTop != null) {
-            return "Tile is occupied.";
-        }
-
-        if (!isWater && existingTop != null) {
-            return "Tile is occupied.";
-        }
-
+        if (isLilyPad && !isWater) return "Lily Pad must be planted on water tiles.";
+        if (isLilyPad && existingBase != null) return "This tile already has a Lily Pad.";
+        if (isWater && !isAquatic && !isLilyPad && existingTop != null) return "Tile is occupied.";
+        if (!isWater && existingTop != null) return "Tile is occupied.";
         String availabilityError = checkPlantAvailability(engine, type);
         if (availabilityError != null) return availabilityError;
-
         Plant plant = createPlantInstance(engine, type);
         if (plant == null) return "Cannot create plant.";
-
         if (!engine.conveyorBeltMode) {
             int cost = plant.getStats().getCost();
             if (engine.getSunCount() < cost) return "Not enough sun.";
             engine.addSun(-cost);
         }
-
-        if (isLilyPad) {
+        if (isLilyPad)
             engine.map.setBasePlant(row, col, plant);
-        } else if (isWater && !isAquatic) {
+        else if (isWater && !isAquatic)
             engine.map.setPlant(row, col, plant);
-        } else {
+        else
             engine.map.setPlant(row, col, plant);
-        }
-
         plant.setPlanted(true);
         plant.putRuntimeState("row", row);
         plant.putRuntimeState("col", col);
         plant.putRuntimeState("lane", row);
-
         handlePostPlanting(engine, type, plant);
         if (AppStatus.currentUser != null && AppStatus.currentUser.questState != null) {
             AppStatus.currentUser.questState.getQuestManager().onPlantPlaced(type);

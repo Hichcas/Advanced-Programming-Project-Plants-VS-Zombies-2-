@@ -1,8 +1,9 @@
 package com.PVZ.model.quest;
 
+import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.QuestPriority;
 import com.PVZ.model.enums.QuestType;
-import com.PVZ.model.enums.PlantType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +13,6 @@ public class Quest {
     private String descriptionTemplate;
     private QuestType type;
     private QuestPriority priority;
-
     private String conditionKey;
     private int targetCount;
     private int currentCount;
@@ -44,44 +44,102 @@ public class Quest {
         this.runtimeState = new HashMap<>();
     }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getId() {
+        return id;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getDescriptionTemplate() { return descriptionTemplate; }
-    public void setDescriptionTemplate(String descriptionTemplate) { this.descriptionTemplate = descriptionTemplate; }
+    public String getTitle() {
+        return title;
+    }
 
-    public QuestType getType() { return type; }
-    public void setType(QuestType type) { this.type = type; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public QuestPriority getPriority() { return priority; }
-    public void setPriority(QuestPriority priority) { this.priority = priority; }
+    public String getDescriptionTemplate() {
+        return descriptionTemplate;
+    }
 
-    public String getConditionKey() { return conditionKey; }
-    public void setConditionKey(String conditionKey) { this.conditionKey = conditionKey; }
+    public void setDescriptionTemplate(String descriptionTemplate) {
+        this.descriptionTemplate = descriptionTemplate;
+    }
 
-    public int getTargetCount() { return targetCount; }
-    public void setTargetCount(int targetCount) { this.targetCount = targetCount; }
+    public QuestType getType() {
+        return type;
+    }
 
-    public int getCurrentCount() { return currentCount; }
+    public void setType(QuestType type) {
+        this.type = type;
+    }
+
+    public QuestPriority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(QuestPriority priority) {
+        this.priority = priority;
+    }
+
+    public String getConditionKey() {
+        return conditionKey;
+    }
+
+    public void setConditionKey(String conditionKey) {
+        this.conditionKey = conditionKey;
+    }
+
+    public int getTargetCount() {
+        return targetCount;
+    }
+
+    public void setTargetCount(int targetCount) {
+        this.targetCount = targetCount;
+    }
+
+    public int getCurrentCount() {
+        return currentCount;
+    }
+
     public void setCurrentCount(int currentCount) {
         this.currentCount = Math.min(currentCount, targetCount);
         this.completed = (this.currentCount >= targetCount);
     }
 
-    public boolean isCompleted() { return completed; }
-    public void setCompleted(boolean completed) { this.completed = completed; }
+    public boolean isCompleted() {
+        return completed;
+    }
 
-    public boolean isClaimed() { return claimed; }
-    public void setClaimed(boolean claimed) { this.claimed = claimed; }
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 
-    public Reward getReward() { return reward; }
-    public void setReward(Reward reward) { this.reward = reward; }
+    public boolean isClaimed() {
+        return claimed;
+    }
 
-    public Map<String, Object> getParameters() { return parameters; }
-    public void setParameters(Map<String, Object> parameters) { this.parameters = parameters; }
+    public void setClaimed(boolean claimed) {
+        this.claimed = claimed;
+    }
+
+    public Reward getReward() {
+        return reward;
+    }
+
+    public void setReward(Reward reward) {
+        this.reward = reward;
+    }
+
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map<String, Object> parameters) {
+        this.parameters = parameters;
+    }
 
     public Map<String, Object> getRuntimeState() {
         if (runtimeState == null) runtimeState = new HashMap<>();
@@ -143,24 +201,43 @@ public class Quest {
     }
 
     public static class Reward {
-        public enum RewardType { COINS, DIAMONDS, UNLOCK_PLANT, SEED_PACKETS }
+        public enum RewardType {COINS, DIAMONDS, UNLOCK_PLANT, SEED_PACKETS}
 
         private RewardType type;
         private int amount;
         private PlantType targetPlant;
 
-        public Reward() {}
-        public Reward(RewardType type, int amount, PlantType targetPlant) {
-            this.type = type; this.amount = amount; this.targetPlant = targetPlant;
+        public Reward() {
         }
 
-        public RewardType getType() { return type; }
-        public void setType(RewardType type) { this.type = type; }
+        public Reward(RewardType type, int amount, PlantType targetPlant) {
+            this.type = type;
+            this.amount = amount;
+            this.targetPlant = targetPlant;
+        }
 
-        public int getAmount() { return amount; }
-        public void setAmount(int amount) { this.amount = amount; }
+        public RewardType getType() {
+            return type;
+        }
 
-        public PlantType getTargetPlant() { return targetPlant; }
-        public void setTargetPlant(PlantType targetPlant) { this.targetPlant = targetPlant; }
+        public void setType(RewardType type) {
+            this.type = type;
+        }
+
+        public int getAmount() {
+            return amount;
+        }
+
+        public void setAmount(int amount) {
+            this.amount = amount;
+        }
+
+        public PlantType getTargetPlant() {
+            return targetPlant;
+        }
+
+        public void setTargetPlant(PlantType targetPlant) {
+            this.targetPlant = targetPlant;
+        }
     }
 }

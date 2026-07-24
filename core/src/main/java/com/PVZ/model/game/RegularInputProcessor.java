@@ -1,17 +1,14 @@
 package com.PVZ.model.game;
 
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
 import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
 
-/**
- * Input processor for the regular game mode handling touch/click events.
- * Refactored to comply with Checkstyle (method length ≤ 50 lines).
- */
+
 public class RegularInputProcessor extends InputAdapter {
 
     private RegularGameEngine regularGameEngine;
@@ -38,17 +35,14 @@ public class RegularInputProcessor extends InputAdapter {
         float worldX = worldCoords.x;
         float worldY = worldCoords.y;
 
-        // 1) Seed packet bar
         if (handleSeedPacketClick(worldX, worldY)) {
             return true;
         }
 
-        // 2) Grid tiles
         if (handleGridClick(worldX, worldY)) {
             return true;
         }
 
-        // 3) Zombie click
         if (handleZombieClick(worldX, worldY)) {
             return true;
         }
@@ -56,7 +50,6 @@ public class RegularInputProcessor extends InputAdapter {
         return false;
     }
 
-    // ---------- Helper methods ----------
 
     private boolean handleSeedPacketClick(float worldX, float worldY) {
         SeedPacketBar seedBar = regularGameEngine.getSeedPacketBar();
@@ -82,7 +75,6 @@ public class RegularInputProcessor extends InputAdapter {
                     System.out.println("Clicked on Tile (" + col + ", " + row + ")");
 
                     if (regularGameEngine.getSelectedPlantType() != null) {
-                        // plantSelectedAt uses (x, y) convention, convert from 0-based grid indices.
                         String result = regularGameEngine.plantSelectedAt(col, row);
                         System.out.println(result);
                     }

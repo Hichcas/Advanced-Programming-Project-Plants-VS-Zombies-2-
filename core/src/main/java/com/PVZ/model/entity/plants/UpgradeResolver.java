@@ -6,16 +6,12 @@ import com.PVZ.model.enums.PlantFlag;
 import com.PVZ.model.enums.PlantStatType;
 import com.PVZ.model.enums.SpecialUpgradeType;
 
-/**
- * Resolves plant stats and upgrades based on definition and level.
- * Refactored to comply with Checkstyle (method length ≤ 50 lines).
- */
+
 public final class UpgradeResolver {
 
     private UpgradeResolver() {
     }
 
-    // ---------- Main resolution ----------
 
     public static PlantStats resolveStats(PlantDefinition definition, int targetLevel) {
         if (definition == null) {
@@ -58,7 +54,6 @@ public final class UpgradeResolver {
         return stats;
     }
 
-    // ---------- applyBaseAbilityParams (decomposed) ----------
 
     private static void applyBaseAbilityParams(PlantStats stats, AbilitySpec baseAbility) {
         applySunAndInterval(stats, baseAbility);
@@ -131,8 +126,6 @@ public final class UpgradeResolver {
         }
     }
 
-    // ---------- Upgrade application ----------
-
     public static void applyUpgrade(PlantStats stats, UpgradeRule rule) {
         if (stats == null || rule == null) {
             return;
@@ -159,19 +152,27 @@ public final class UpgradeResolver {
             case COST -> stats.setCost(applyInt(stats.getCost(), operation, value));
             case HP -> stats.setMaxHp(applyInt(stats.getMaxHp(), operation, value));
             case DAMAGE -> stats.setDamage(applyInt(stats.getDamage(), operation, value));
-            case COOLDOWN, RECHARGE -> stats.setRechargeSeconds(applyDouble(stats.getRechargeSeconds(), operation, value));
-            case PRODUCTION_TIME -> stats.setProductionTimeSeconds(applyDouble(stats.getProductionTimeSeconds(), operation, value));
-            case GROW_TIME -> stats.setGrowthTimeSeconds(applyDouble(stats.getGrowthTimeSeconds(), operation, value));
-            case CHARGE_TIME -> stats.setChargeTimeSeconds(applyDouble(stats.getChargeTimeSeconds(), operation, value));
-            case PLANT_FOOD_CHANCE -> stats.setPlantFoodChancePercent(applyDouble(stats.getPlantFoodChancePercent(), operation, value));
-            case FREEZE_TIME -> stats.setFreezeTimeSeconds(applyDouble(stats.getFreezeTimeSeconds(), operation, value));
-            case CHILL_TIME -> stats.setChillTimeSeconds(applyDouble(stats.getChillTimeSeconds(), operation, value));
+            case COOLDOWN, RECHARGE -> stats.setRechargeSeconds(applyDouble(stats.getRechargeSeconds(),
+                operation, value));
+            case PRODUCTION_TIME -> stats.setProductionTimeSeconds(applyDouble(stats.getProductionTimeSeconds(),
+                operation, value));
+            case GROW_TIME -> stats.setGrowthTimeSeconds(applyDouble(stats.getGrowthTimeSeconds(), operation,
+                value));
+            case CHARGE_TIME -> stats.setChargeTimeSeconds(applyDouble(stats.getChargeTimeSeconds(), operation,
+                value));
+            case PLANT_FOOD_CHANCE -> stats.setPlantFoodChancePercent(applyDouble(stats.getPlantFoodChancePercent(),
+                operation, value));
+            case FREEZE_TIME -> stats.setFreezeTimeSeconds(applyDouble(stats.getFreezeTimeSeconds(),
+                operation, value));
+            case CHILL_TIME -> stats.setChillTimeSeconds(applyDouble(stats.getChillTimeSeconds(),
+                operation, value));
             case SUN_AMOUNT -> stats.setSunAmount(applyInt(stats.getSunAmount(), operation, value));
             case DURATION -> stats.setDurationSeconds(applyDouble(stats.getDurationSeconds(), operation, value));
             case ARM_TIME -> stats.setArmTimeSeconds(applyDouble(stats.getArmTimeSeconds(), operation, value));
             case BOUNCES -> stats.setBounces(applyInt(stats.getBounces(), operation, value));
             case BUTTER -> stats.setButter(applyInt(stats.getButter(), operation, value));
-            case DIGEST_TIME -> stats.setDigestTimeSeconds(applyDouble(stats.getDigestTimeSeconds(), operation, value));
+            case DIGEST_TIME -> stats.setDigestTimeSeconds(applyDouble(stats.getDigestTimeSeconds(),
+                operation, value));
             case EAT_TIME -> stats.setEatTimeSeconds(applyDouble(stats.getEatTimeSeconds(), operation, value));
             case EXPLODE_DAMAGE -> stats.setExplodeDamage(applyInt(stats.getExplodeDamage(), operation, value));
             case LIFESPAN -> stats.setLifespanSeconds(applyDouble(stats.getLifespanSeconds(), operation, value));
@@ -189,8 +190,6 @@ public final class UpgradeResolver {
         }
     }
 
-    // ---------- Flag upgrade ----------
-
     private static void applyFlagUpgrade(PlantStats stats, UpgradeRule rule) {
         PlantFlag flag = rule.getFlagEnum();
         if (flag != PlantFlag.UNKNOWN) {
@@ -199,8 +198,6 @@ public final class UpgradeResolver {
             stats.putExtra("flag:" + rule.getRaw(), Boolean.TRUE);
         }
     }
-
-    // ---------- Special upgrade ----------
 
     private static void applySpecialUpgrade(PlantStats stats, UpgradeRule rule) {
         SpecialUpgradeType special = rule.getSpecialEnum();
@@ -231,8 +228,6 @@ public final class UpgradeResolver {
         }
     }
 
-    // ---------- Behavior upgrade ----------
-
     private static void applyBehaviorUpgrade(PlantStats stats, UpgradeRule rule) {
         if (rule.getBehaviorId() != null && !rule.getBehaviorId().isEmpty()) {
             stats.putExtra("behaviorOverride", rule.getBehaviorId());
@@ -244,8 +239,6 @@ public final class UpgradeResolver {
             stats.putExtra("behavior:" + rule.getRaw(), rule.getParams());
         }
     }
-
-    // ---------- Arithmetic helpers ----------
 
     private static int applyInt(int current, UpgradeOperation operation, double value) {
         return switch (operation) {

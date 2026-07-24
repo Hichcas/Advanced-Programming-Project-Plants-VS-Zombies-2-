@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public enum ChapterAndLevelSelectionCommand {
 
     ENTER_CHAPTER(
-            "^\\s*menu\\s+enter\\s+chapter\\s+-c\\s+(?<chapterName>[A-Za-z0-9_-]+)(\\s+-s\\s+(?<stage>\\d+))?\\s*$") {
+        "^\\s*menu\\s+enter\\s+chapter\\s+-c\\s+(?<chapterName>[A-Za-z0-9_-]+)(\\s+-s\\s+(?<stage>\\d+))?\\s*$") {
         @Override
         public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {
             String stageStr = matcher.group("stage");
@@ -63,11 +63,11 @@ public enum ChapterAndLevelSelectionCommand {
         @Override
         public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {
             return new ChapterAndLevelSelectionInputDTO(
-                    this,
-                    null,
-                    Integer.parseInt(matcher.group("amount")),
-                    matcher.group("currency"),
-                    null);
+                this,
+                null,
+                Integer.parseInt(matcher.group("amount")),
+                matcher.group("currency"),
+                null);
         }
     },
 
@@ -99,7 +99,9 @@ public enum ChapterAndLevelSelectionCommand {
         }
     },
 
-    CHEAT_COMPLETE_STAGE("^\\s*menu\\s+cheat\\s+complete-stage\\s+-c\\s+(?<chapterName>[A-Za-z0-9_-]+)\\s+-s\\s+(?<stage>\\d+)\\s*$") {
+    CHEAT_COMPLETE_STAGE(
+        "^\\s*menu\\s+cheat\\s+complete-stage\\s+-c\\s+(?<chapterName>[A-Za-z0-9_-]+)\\s+-s\\s+(?<stage>\\d+)\\s*$"
+    ) {
         @Override
         public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {
             return new ChapterAndLevelSelectionInputDTO(
@@ -122,7 +124,9 @@ public enum ChapterAndLevelSelectionCommand {
         }
     },
 
-    CHEAT_LOCK_STAGE("^\\s*menu\\s+cheat\\s+lock-stage\\s+-c\\s+(?<chapterName>[A-Za-z0-9_-]+)\\s+-s\\s+(?<stage>\\d+)\\s*$") {
+    CHEAT_LOCK_STAGE(
+        "^\\s*menu\\s+cheat\\s+lock-stage\\s+-c\\s+(?<chapterName>[A-Za-z0-9_-]+)\\s+-s\\s+(?<stage>\\d+)\\s*$"
+    ) {
         @Override
         public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {
             return new ChapterAndLevelSelectionInputDTO(

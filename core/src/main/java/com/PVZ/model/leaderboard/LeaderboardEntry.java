@@ -2,8 +2,8 @@ package com.PVZ.model.leaderboard;
 
 public class LeaderboardEntry {
     private String username;
-    private String lastStageInfo;       // "Stage 3, Ancient Egypt"
-    private int minigamesCompleted;     // مجموع همه مینی‌گیم‌ها
+    private String lastStageInfo;
+    private int minigamesCompleted;
     private int dailyQuestsCompleted;
     private int nonDailyQuestsCompleted;
     private int highestScore;
@@ -19,10 +19,27 @@ public class LeaderboardEntry {
         this.highestScore = highestScore;
     }
 
-    public String getUsername() { return username; }
-    public String getLastStageInfo() { return lastStageInfo; }
-    public int getMinigamesCompleted() { return minigamesCompleted; }
-    public int getDailyQuestsCompleted() { return dailyQuestsCompleted; }
-    public int getNonDailyQuestsCompleted() { return nonDailyQuestsCompleted; }
-    public int getHighestScore() { return highestScore; }
+    public String getUsername() {
+        return username;
+    }
+
+    public String getLastStageInfo() {
+        return lastStageInfo;
+    }
+
+    public int getMinigamesCompleted() {
+        return minigamesCompleted;
+    }
+
+    public int getDailyQuestsCompleted() {
+        return dailyQuestsCompleted;
+    }
+
+    public int getNonDailyQuestsCompleted() {
+        return nonDailyQuestsCompleted;
+    }
+
+    public int getHighestScore() {
+        return highestScore;
+    }
 }

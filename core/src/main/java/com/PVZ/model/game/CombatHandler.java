@@ -11,7 +11,6 @@ import java.util.List;
 
 public class CombatHandler {
 
-    // ---------- ZombieEngine methods ----------
     public static List<Zombie> getZombiesInLane(RegularGameEngine engine, int lane) {
         if (lane < 0) return List.of();
         List<Zombie> result = new ArrayList<>();
@@ -28,7 +27,6 @@ public class CombatHandler {
         return null;
     }
 
-    // ---------- Projectile ----------
     public static void spawnProjectile(RegularGameEngine engine, Object projectile) {
         if (projectile instanceof Projectile p) {
             placeProjectileOnMap(engine, p);
@@ -76,23 +74,19 @@ public class CombatHandler {
             }
         }
         if (p.getType() == com.PVZ.model.entity.plants.behavior.impl.ProjectileType.LOB) {
-            // Lobbed shots (Cabbage-pult, Kernel-pult, Melon-pult, ...) arc up and over
-            // obstacles: a parabola in screen space (rise then land) instead of a flat line.
+
             p.initArcPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec));
         } else {
             p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
         }
     }
 
-    // ---------- BehaviorContext damage methods ----------
     public static void damageArea(RegularGameEngine engine, int lane, int row, int damage) {
         if (damage <= 0) return;
-        // 3x3 explosion: lanes row-1, row, row+1
         int[] lanes = {row - 1, row, row + 1};
         for (int r : lanes) {
             if (r < 0) continue;
             for (Zombie zombie : getZombiesInLane(engine, r)) {
-                // Column-range check: only zombies within ~1.5 tiles of the explosion centre
                 if (zombie != null) {
                     double colDist = Math.abs(zombie.getX() - (engine.map != null
                         ? engine.map.getStartX() + lane * engine.map.getTileWidth() : 0));
@@ -148,7 +142,7 @@ public class CombatHandler {
     }
 
     public static void spawnBouncingProjectiles(RegularGameEngine engine, int lane, int row,
-                                                    int count, int damagePerGrape, double lifespanSeconds) {
+                                                int count, int damagePerGrape, double lifespanSeconds) {
         if (engine.map == null) return;
         float tileW = engine.map.getTileWidth();
         float tileH = engine.map.getTileHeight();
@@ -159,7 +153,7 @@ public class CombatHandler {
         float minY = engine.map.getStartY() - 5 * tileH;
         float maxY = engine.map.getStartY();
         double fuseSec = Math.max(lifespanSeconds, 4.0);
-        double speed = tileW * 0.28;  // ~50 px/s — slowed down further per feedback so grapes drift gently instead of rocketing around before their 5s fuse
+        double speed = tileW * 0.28;
         for (int i = 0; i < Math.max(1, Math.min(count, 20)); i++) {
             double angle = 2 * Math.PI * i / count + (engine.random.nextDouble() - 0.5) * 0.4;
             float vx = (float) (Math.cos(angle) * speed);
@@ -172,7 +166,7 @@ public class CombatHandler {
             grape.setBouncing(true);
             grape.setFuse(fuseSec);
             grape.setBounds(minX, maxX, minY, maxY);
-            grape.setSpeed(0);  // freeMotion uses velX/velY, not speed
+            grape.setSpeed(0);
             engine.projectiles.add(grape);
         }
     }

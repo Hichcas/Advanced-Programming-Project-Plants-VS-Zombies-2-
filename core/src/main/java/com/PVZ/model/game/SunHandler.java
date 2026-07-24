@@ -53,11 +53,6 @@ public class SunHandler {
         return collected > 0 ? "Collected " + collected + " sun." : "No sun at selected location.";
     }
 
-    /**
-     * Detonates any radioactive suns that were harvested while still falling this frame.
-     * Per spec the blast deals 150 damage to zombies in a 5x5 area and 80 damage to plants
-     * in a 3x3 area around the sun's tile.
-     */
     public static int applyRadioactiveExplosions(RegularGameEngine engine) {
         java.util.List<Sun> exploded = engine.sunManager.drainExplodedSuns();
         for (Sun sun : exploded) {

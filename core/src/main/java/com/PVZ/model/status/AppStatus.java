@@ -1,48 +1,38 @@
 package com.PVZ.model.status;
 
 import com.PVZ.PVZ;
+import com.PVZ.model.enums.ChapterEnum;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantFamily;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.game.GameEngine;
-import com.PVZ.model.graphics.GraphicsQuality;
-import com.PVZ.model.user.User;
 import com.PVZ.model.game.GameStatus;
 import com.PVZ.model.game.RegularGameEngine;
+import com.PVZ.model.graphics.GraphicsQuality;
+import com.PVZ.model.user.User;
 import com.PVZ.screen.GameScreen;
-import com.PVZ.screen.manager.ScreenManager;
 import com.PVZ.screen.manager.BrightnessController;
 import com.PVZ.screen.manager.MusicManager;
+import com.PVZ.screen.manager.ScreenManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.PVZ.model.enums.ChapterEnum;
 
 import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-/**
- * Global application state holder.
- * Refactored to comply with Checkstyle constant naming (static final fields in UPPER_SNAKE_CASE).
- */
+
 public final class AppStatus {
 
     private static GameEngine gameEngine;
     private PVZ pvzGame;
-
-    // Non-final static field → camelCase
     public static GraphicsQuality quality = GraphicsQuality.Ultra_High;
-
     public static OrthographicCamera camera;
-
-    // Static final constants → UPPER_SNAKE_CASE
     public static final Scanner SCANNER = new Scanner(System.in);
     public static final Set<PlantType> SELECTED_PLANTS = new LinkedHashSet<>();
     public static final Set<PlantType> BOOSTED_PLANTS = new LinkedHashSet<>();
     public static final Set<PlantType> CURRENT_STAGE_LOCKED_PLANTS = new LinkedHashSet<>();
     public static final Set<PlantFamily> CURRENT_STAGE_EXCLUSIVE_FAMILIES = new LinkedHashSet<>();
-
-    // Other static fields (non-final) remain camelCase
-    public static PVZ PVZ;  // Keeping as is (class name style)
+    public static PVZ PVZ;
     public static MenuType currentMenuType = MenuType.REGISTER;
     public static User currentUser = null;
     public static String currentChapterName = null;
@@ -50,8 +40,6 @@ public final class AppStatus {
     public static int currentStageNumber = 1;
     public static boolean tileDebugEnabled = false;
     public static boolean lastGameResultWin = false;
-
-    // ---------- Getters / Setters ----------
 
     public static GraphicsQuality getQuality() {
         return quality;
@@ -122,10 +110,6 @@ public final class AppStatus {
         return currentUser;
     }
 
-    /**
-     * Returns the ChapterEnum corresponding to the current chapter name.
-     * Added from branch mahdi.
-     */
     public static ChapterEnum getCurrentChapterEnum() {
         if (currentChapterName == null) return null;
         try {
@@ -134,8 +118,6 @@ public final class AppStatus {
             return null;
         }
     }
-
-    // ---------- Navigation helpers ----------
 
     public static void returnToMainMenu() {
         returnToMainMenu(null);
@@ -158,9 +140,6 @@ public final class AppStatus {
                 new RegularGameEngine(new GameStatus())));
     }
 
-    /**
-     * Leaves an in‑progress level (via "menu exit" or a loss) and goes back to level select.
-     */
     public static void returnToChapterAndLevelSelection(String message) {
         currentMenuType = MenuType.CHAPTER_AND_LEVEL_SELECTION;
         setGameEngine(null);

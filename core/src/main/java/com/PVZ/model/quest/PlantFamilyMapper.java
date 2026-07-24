@@ -1,7 +1,10 @@
 package com.PVZ.model.quest;
 
-import com.PVZ.model.enums.*;
 import com.PVZ.model.entity.plants.PlantDefinition;
+import com.PVZ.model.enums.PlantCategory;
+import com.PVZ.model.enums.PlantFamily;
+import com.PVZ.model.enums.PlantTag;
+import com.PVZ.model.enums.PlantType;
 
 import java.util.Map;
 
@@ -22,7 +25,6 @@ public class PlantFamilyMapper {
         PlantCategory category = def.getCategoryEnum();
         boolean isShroom = def.getTagEnums().contains(PlantTag.SHROOM);
 
-        // قارچ‌ها اولویت دارند – حتی اگر تولیدکننده هم باشند
         if (isShroom) return PlantFamily.MUSHROOM;
 
         if (category == PlantCategory.EXPLOSIVE) return PlantFamily.EXPLOSIVE;
@@ -40,15 +42,15 @@ public class PlantFamilyMapper {
     private static PlantFamily getMintFamily(PlantType plantType) {
         return switch (plantType) {
             case ENLIGHTEN_MINT -> PlantFamily.ENLIGHTEN_MINT;
-            case APPEASE_MINT   -> PlantFamily.APPEASE_MINT;
-            case ARMA_MINT      -> PlantFamily.ARMA_MINT;
-            case BOMBARD_MINT   -> PlantFamily.BOMBARD_MINT;
-            case ENFORCE_MINT   -> PlantFamily.ENFORCE_MINT;
+            case APPEASE_MINT -> PlantFamily.APPEASE_MINT;
+            case ARMA_MINT -> PlantFamily.ARMA_MINT;
+            case BOMBARD_MINT -> PlantFamily.BOMBARD_MINT;
+            case ENFORCE_MINT -> PlantFamily.ENFORCE_MINT;
             case REINFORCE_MINT -> PlantFamily.REINFORCE_MINT;
-            case ENCHANT_MINT   -> PlantFamily.ENCHANT_MINT;
-            case PIERCE_MINT    -> PlantFamily.PIERCE_MINT;
-            case CAT_TAIL_MINT  -> PlantFamily.CAT_TAIL_MINT;
-            default             -> null;
+            case ENCHANT_MINT -> PlantFamily.ENCHANT_MINT;
+            case PIERCE_MINT -> PlantFamily.PIERCE_MINT;
+            case CAT_TAIL_MINT -> PlantFamily.CAT_TAIL_MINT;
+            default -> null;
         };
     }
 }
