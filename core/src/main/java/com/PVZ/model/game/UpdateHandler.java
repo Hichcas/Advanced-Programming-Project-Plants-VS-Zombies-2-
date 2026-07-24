@@ -157,6 +157,10 @@ public class UpdateHandler {
             engine.gameStatus.setGameOver(true);
             engine.gameStatus.setWon(win);
         }
+        if (win && AppStatus.currentUser != null && AppStatus.currentUser.userStats != null) {
+            int score = engine.getSunCount() * 10;
+            AppStatus.currentUser.userStats.updateHighestScore(score);
+        }
     }
 
     public static void resetGameOverState(RegularGameEngine engine) {
@@ -173,7 +177,14 @@ public class UpdateHandler {
             engine.gameOverNavigated = true;
             if (engine.gameOverWin) {
                 var stats = AppStatus.currentUser != null ? AppStatus.currentUser.userStats : null;
-                if (stats != null) stats.incrementStagesCompleted();
+                if (stats != null) {
+                    stats.incrementStagesCompleted();
+                    stats.addCoins(100);
+                    int diff = AppStatus.currentUser.appStats != null
+                        ? AppStatus.currentUser.appStats.getDifficultyLevel() : 1;
+                    if (diff >= 4) stats.addCoins(50);
+                    if (diff == 5) stats.addDiamonds(5);
+                }
                 if (AppStatus.currentUser != null) {
                     ChapterEnum chapter = AppStatus.getCurrentChapterEnum();
                     if (chapter != null && AppStatus.currentUser.progressState != null) {
