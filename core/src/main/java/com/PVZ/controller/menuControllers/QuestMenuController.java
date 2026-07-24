@@ -52,11 +52,13 @@ public class QuestMenuController {
         return output;
     }
 
-    private static final String RED = "\u001B[31m";
+    // … (بخش‌های رنگی و sort همان‌طور که بودند) …
+
+    private static final String RED    = "\u001B[31m";
     private static final String YELLOW = "\u001B[33m";
     private static final String PURPLE = "\u001B[35m";
-    private static final String GREEN = "\u001B[32m";
-    private static final String RESET = "\u001B[0m";
+    private static final String GREEN  = "\u001B[32m";
+    private static final String RESET  = "\u001B[0m";
 
     private int statusGroup(Quest q) {
         if (q.isCompleted() && !q.isClaimed()) return 0;
@@ -118,6 +120,8 @@ public class QuestMenuController {
         return new OutputDTO(true, sb.toString().trim());
     }
 
+    // … (claimQuest و applyReward بدون تغییر) …
+
     private OutputDTO claimQuest(QuestManager qm, String questId) {
         if (questId == null || questId.isBlank())
             return new OutputDTO(false, "Quest ID is required. Usage: quest claim -i <id>");
@@ -170,6 +174,8 @@ public class QuestMenuController {
         };
     }
 
+    // -------------------- Debug Commands (adapted to new API) --------------------
+
     private OutputDTO debugSun(QuestManager qm, String amountStr) {
         try {
             int amount = Integer.parseInt(amountStr);
@@ -183,6 +189,7 @@ public class QuestMenuController {
     private OutputDTO debugKill(QuestManager qm, String countStr) {
         try {
             int count = Integer.parseInt(countStr);
+            // Find the chapter required by any active Chapter Hunter quest
             ChapterEnum chapter = ChapterEnum.ANCIENT_EGYPT;
             for (Quest q : qm.getActiveQuests()) {
                 if ("chapter_zombie_kill".equals(q.getConditionKey()) && !q.isCompleted()) {
@@ -192,7 +199,11 @@ public class QuestMenuController {
                     break;
                 }
             }
-            qm.onZombieKilled(ZombieType.MUMMY_DEFAULT, chapter, count);
+            // Set chapter context so onZombieKilled counts them
+            qm.onLevelStart(chapter, 1, true);   // difficulty=1, day=true (not important)
+            for (int i = 0; i < count; i++) {
+                qm.onZombieKilled(null);   // chapter kill doesn't need a plant
+            }
             return new OutputDTO(true, "Simulated " + count + " zombie kills in " + chapter.getDisplayName());
         } catch (NumberFormatException e) {
             return new OutputDTO(false, "Invalid count.");
@@ -215,7 +226,9 @@ public class QuestMenuController {
         try {
             PlantType plant = PlantType.fromName(parts[0]);
             int count = Integer.parseInt(parts[1]);
-            for (int i = 0; i < count; i++) qm.onZombieKilledByPlant(plant);
+            for (int i = 0; i < count; i++) {
+                qm.onZombieKilled(plant);
+            }
             return new OutputDTO(true, "Simulated " + count + " kills by " + plant.getDisplayName());
         } catch (Exception e) {
             return new OutputDTO(false, e.getMessage());
@@ -226,8 +239,10 @@ public class QuestMenuController {
         try {
             int count = Integer.parseInt(countStr);
             qm.onFirstWaveStarted();
-            long now = System.currentTimeMillis();
-            for (int i = 0; i < count; i++) qm.onZombieKilledInTimeWindow(now);
+            // onZombieKilled will automatically count speed kills within the window
+            for (int i = 0; i < count; i++) {
+                qm.onZombieKilled(null);
+            }
             return new OutputDTO(true, "Simulated " + count + " speed kills.");
         } catch (NumberFormatException e) {
             return new OutputDTO(false, "Invalid count.");
@@ -244,7 +259,10 @@ public class QuestMenuController {
             res.setDayLevel(false);
             res.setPlantTypesUsed(List.of());
             res.setPlantFamiliesUsed(Set.of());
-            qm.evaluateEndLevelQuests(res);
+
+            // Provide a neutral context so streak isn't accidentally advanced
+            qm.onLevelStart(ChapterEnum.ANCIENT_EGYPT, 1, false);
+            qm.onLevelEnd(res);
             return new OutputDTO(true, "Simulated " + count + " lawnmower kills at end of level.");
         } catch (NumberFormatException e) {
             return new OutputDTO(false, "Invalid count.");
@@ -255,6 +273,8 @@ public class QuestMenuController {
         WinSimulationParams params = parseWinSimulationArgs(args);
         return simulateWin(qm, params, args);
     }
+
+    // … (کلاس WinSimulationParams و parseArgs بدون تغییر) …
 
     private static class WinSimulationParams {
         int lawnmower = 0;
@@ -269,36 +289,18 @@ public class QuestMenuController {
 
     private WinSimulationParams parseWinSimulationArgs(String args) {
         WinSimulationParams p = new WinSimulationParams();
-        if (args == null || args.isEmpty()) {
-            return p;
-        }
+        if (args == null || args.isEmpty()) return p;
         String[] tokens = args.split("\\s+");
         for (int i = 0; i < tokens.length; i++) {
             switch (tokens[i]) {
-                case "--lawnmower":
-                    p.lawnmower = Integer.parseInt(tokens[++i]);
-                    break;
-                case "--col1kills":
-                    p.col1kills = Integer.parseInt(tokens[++i]);
-                    break;
-                case "--sunproducers":
-                    p.sunProducers = Integer.parseInt(tokens[++i]);
-                    break;
-                case "--difficulty":
-                    p.difficulty = Integer.parseInt(tokens[++i]);
-                    break;
-                case "--day":
-                    p.dayLevel = Boolean.parseBoolean(tokens[++i]);
-                    break;
-                case "--map":
-                    p.mapType = tokens[++i];
-                    break;
-                case "--col":
-                    p.mapCol = Integer.parseInt(tokens[++i]);
-                    break;
-                case "--row":
-                    p.mapRow = Integer.parseInt(tokens[++i]);
-                    break;
+                case "--lawnmower":   p.lawnmower   = Integer.parseInt(tokens[++i]); break;
+                case "--col1kills":   p.col1kills   = Integer.parseInt(tokens[++i]); break;
+                case "--sunproducers":p.sunProducers= Integer.parseInt(tokens[++i]); break;
+                case "--difficulty":  p.difficulty  = Integer.parseInt(tokens[++i]); break;
+                case "--day":         p.dayLevel    = Boolean.parseBoolean(tokens[++i]); break;
+                case "--map":         p.mapType     = tokens[++i]; break;
+                case "--col":         p.mapCol      = Integer.parseInt(tokens[++i]); break;
+                case "--row":         p.mapRow      = Integer.parseInt(tokens[++i]); break;
             }
         }
         return p;
@@ -307,8 +309,8 @@ public class QuestMenuController {
     private OutputDTO simulateWin(QuestManager qm, WinSimulationParams p, String originalArgs) {
         LevelResult res = new LevelResult();
         res.setWon(true);
-        res.setFinalSunCount(0);
-        res.setPlantsLost(1);
+        res.setFinalSunCount(0);            // for Master of Defense
+        res.setPlantsLost(1);               // for Economic Herbivore
         res.setZombiesKilledByLawnmower(p.lawnmower);
         res.setDifficultyLevel(p.difficulty);
         res.setDayLevel(p.dayLevel);
@@ -320,7 +322,9 @@ public class QuestMenuController {
             res.setFinalMap(createMockMap(p.mapType, p.mapCol, p.mapRow, p.sunProducers));
         }
 
-        qm.evaluateEndLevelQuests(res);
+        // Set the context used by the manager (difficulty, day, chapter)
+        qm.onLevelStart(ChapterEnum.ANCIENT_EGYPT, p.difficulty, p.dayLevel);
+        qm.onLevelEnd(res);
         return new OutputDTO(true, "Simulated win with parameters: " + originalArgs);
     }
 

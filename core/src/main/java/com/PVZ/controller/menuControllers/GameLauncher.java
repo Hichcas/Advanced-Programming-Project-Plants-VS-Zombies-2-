@@ -1,5 +1,6 @@
 package com.PVZ.controller.menuControllers;
 
+import com.PVZ.model.enums.ChapterEnum;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantFamily;
 import com.PVZ.model.enums.PlantType;
@@ -10,6 +11,7 @@ import com.PVZ.model.game.Wave;
 import com.PVZ.model.game.chapter.StageConfig;
 import com.PVZ.model.game.chapter.sepecialLevel.SpecialLevelLauncher;
 import com.PVZ.model.quest.PlantFamilyMapper;
+import com.PVZ.model.quest.QuestManager;
 import com.PVZ.model.status.AppStatus;
 
 import java.util.ArrayList;
@@ -121,6 +123,22 @@ final class GameLauncher {
         }
 
         SpecialLevelLauncher.launch(engine, stageConfig);
+
+        if (AppStatus.currentUser != null && AppStatus.currentUser.questState != null) {
+            QuestManager qm = AppStatus.currentUser.questState.getQuestManager();
+            ChapterEnum chapter = AppStatus.getCurrentChapterEnum();
+            int difficulty = AppStatus.currentUser.appStats.getDifficultyLevel();
+            boolean isDay = !stageConfig.isDisableFallingSun();
+            qm.onLevelStart(chapter, difficulty, isDay);
+            engine.questPlantsLost = 0;
+            engine.questLawnmowerKills = 0;
+            engine.questLawnlessCol1Kills = 0;
+            engine.questPlantTypesUsed.clear();
+            engine.questPlantFamiliesUsed.clear();
+            if (engine.getBattleController() != null) {
+                engine.getBattleController().clearQuestNotifiedZombies();
+            }
+        }
 
         AppStatus.setGameEngine(engine);
         AppStatus.currentMenuType = MenuType.IN_GAME;

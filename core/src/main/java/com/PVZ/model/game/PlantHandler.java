@@ -3,9 +3,11 @@ package com.PVZ.model.game;
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.plants.PlantFactory;
 import com.PVZ.model.entity.plants.PlantLibrary;
+import com.PVZ.model.enums.PlantFamily;
 import com.PVZ.model.enums.PlantTag;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.TileType;
+import com.PVZ.model.quest.PlantFamilyMapper;
 import com.PVZ.model.status.AppStatus;
 
 import java.util.ArrayList;
@@ -81,6 +83,11 @@ public class PlantHandler {
         plant.putRuntimeState("lane", row);
 
         handlePostPlanting(engine, type, plant);
+        if (AppStatus.currentUser != null && AppStatus.currentUser.questState != null) {
+            AppStatus.currentUser.questState.getQuestManager().onPlantPlaced(type);
+        }
+        engine.questPlantTypesUsed.add(type);
+        engine.questPlantFamiliesUsed.add(PlantFamilyMapper.getFamily(type));
         return "Planted " + type.getDisplayName() + " at (" + col + ", " + row + ").";
     }
 
