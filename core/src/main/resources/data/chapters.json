@@ -263,7 +263,7 @@
       "setup": [],
       "update": [
         { "action": "risingTide", "description": "Water level rises each wave, flooding the next non-water column and drowning non-aquatic plants" },
-        { "action": "lowCoastLaunch", "description": "Zombies on water beneath a low coast tile are launched back and stunned" }
+        { "action": "spawnFromLowCoast", "description": "Each wave, zombies emerge from LOW_COAST tiles submerged in water" }
       ],
       "stages": [
         {
