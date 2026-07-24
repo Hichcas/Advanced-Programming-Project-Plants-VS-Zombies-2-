@@ -7,10 +7,11 @@ import com.badlogic.gdx.graphics.Color;
 public class Tile {
     private TileType type;
     private Plant plant;
+    private Plant basePlant;
+    private int octopusHp;
     private int hp;
-    private int gridRow, gridCol;   // موقعیت در شبکه (برای منطق)
+    private int gridRow, gridCol;
 
-    // موقعیت و اندازه در دنیای بازی
     private float worldX, worldY;
     private float width, height;
 
@@ -18,6 +19,8 @@ public class Tile {
                 float worldX, float worldY, float width, float height) {
         this.type = type;
         this.plant = plant;
+        this.basePlant = null;
+        this.octopusHp = 0;
         this.gridRow = gridRow;
         this.gridCol = gridCol;
         this.worldX = worldX;
@@ -54,6 +57,10 @@ public class Tile {
     public void setType(TileType type) { this.type = type; }
     public Plant getPlant() { return plant; }
     public void setPlant(Plant plant) { this.plant = plant; }
+    public Plant getBasePlant() { return basePlant; }
+    public void setBasePlant(Plant basePlant) { this.basePlant = basePlant; }
+    public int getOctopusHp() { return octopusHp; }
+    public void setOctopusHp(int octopusHp) { this.octopusHp = octopusHp; }
     public int getGridRow() { return gridRow; }
     public int getGridCol() { return gridCol; }
 

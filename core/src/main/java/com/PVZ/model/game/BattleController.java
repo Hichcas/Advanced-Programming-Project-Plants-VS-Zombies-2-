@@ -223,7 +223,7 @@ public class BattleController implements BehaviorContext {
     }
 
     /**
-     * Handles projectile collision with tombstone/necromancy tiles.
+     * Handles projectile collision with tombstone/necromancy tiles and octopus.
      * Returns true if projectile should be removed.
      */
     private boolean handleTileCollision(Projectile p) {
@@ -240,6 +240,22 @@ public class BattleController implements BehaviorContext {
         Tile tile = map.getTile(pRow, pCol);
         if (tile == null) {
             return false;
+        }
+
+        if (tile.getOctopusHp() > 0) {
+            int dmg = Math.max(1, (int) p.getDamage());
+            int newHp = tile.getOctopusHp() - dmg;
+            if (newHp <= 0) {
+                tile.setOctopusHp(0);
+                Plant octoPlant = tile.getPlant();
+                if (octoPlant != null) {
+                    octoPlant.putRuntimeState("disabledTicks", 0);
+                }
+                System.out.println("Octopus destroyed on tile (" + pRow + "," + pCol + ") — plant freed!");
+            } else {
+                tile.setOctopusHp(newHp);
+            }
+            return true;
         }
 
         TileType type = tile.getType();
@@ -269,7 +285,7 @@ public class BattleController implements BehaviorContext {
             if (!p.getHitbox().overlaps(z.getHitbox())) {
                 continue;
             }
-            if (z.isProjectileImmune()) {
+            if (z.isProjectileImmune() && p.getType() != ProjectileType.LOB) {
                 break;
             }
             // A piercing projectile (Cactus spike, Fume-shroom smoke) must not damage the
@@ -627,8 +643,11 @@ public class BattleController implements BehaviorContext {
 
     public Zombie findZombieAt(int col, int row) {
         for (Zombie z : zombies) {
-            if ((int) z.getRow() == row && getTileColumn((float) z.getX()) == col) {
-                return z;
+            if ((int) z.getRow() == row) {
+                int zCol = getTileColumn((float) z.getX());
+                if (zCol == col || zCol == col + 1) {
+                    return z;
+                }
             }
         }
         return null;

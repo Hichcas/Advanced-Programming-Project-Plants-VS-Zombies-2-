@@ -31,8 +31,10 @@ public class ZombieBeachSurfer extends AbstractSpecialMovementZombie {
         if (targetCol >= 0) {
             Plant p = ctrl.getPlantAt((int)row, targetCol);
             if (p != null && !p.isDead()) {
+                p.takeDamage(9999);
+                ctrl.removePlant((int)row, targetCol);
+                System.out.println(alias + " crushed a plant while surfing!");
                 loseSurfboard();
-                System.out.println(alias + " lost surfboard to a plant!");
             }
         }
     }

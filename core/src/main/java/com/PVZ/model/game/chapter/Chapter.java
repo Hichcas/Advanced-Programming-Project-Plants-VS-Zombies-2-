@@ -22,17 +22,11 @@ public class Chapter {
     private final Random random = new Random();
 
     private int lastIceWindWave = -1;
-    private int tideFrontier = 6;
     private int lastTideWave = -1;
     private int lastGraveWave = -1;
     private int lastNecroWave = -1;
-    private int maxTideColumn = 8;
-    private boolean tideInitialized = false;
-    private int tideTick = 0;
-    private boolean tideRising = true;
-
-    private static final int TIDE_RISE_TICKS = 30;
-    private static final int TIDE_FALL_TICKS = 30;
+    private int lastLowCoastWave = -1;
+    private int tideFloodedColumn = 9;
 
     public Chapter(ChapterConfig config) {
         this.config = config;
@@ -50,7 +44,7 @@ public class Chapter {
         registerMeltIceNearFire();
         registerRisingTide();
         registerMagicalGraves();
-        registerLowCoastLaunch();
+        registerSpawnFromLowCoast();
         registerNecromancySpawn();
     }
 
@@ -160,14 +154,11 @@ public class Chapter {
                 return;
             }
 
-            initializeTideBoundary(map);
             int currentWave = wm.getCurrentWave();
             if (currentWave > lastTideWave) {
-                tideFrontier = Math.min(tideFrontier, maxTideColumn - 1);
                 lastTideWave = currentWave;
+                advanceTide(map);
             }
-
-            applyTide(map);
         });
     }
 
@@ -190,16 +181,35 @@ public class Chapter {
         });
     }
 
-    private void registerLowCoastLaunch() {
-        actions.put("lowCoastLaunch", (map, engine) -> {
+    private void registerSpawnFromLowCoast() {
+        actions.put("spawnFromLowCoast", (map, engine) -> {
             if (map == null || engine == null) {
                 return;
             }
-            for (Zombie z : engine.getAllZombies()) {
-                if (z == null || z.isDead()) {
-                    continue;
+            WaveManager wm = engine.getWaveManager();
+            if (wm == null || !wm.isStarted()) {
+                return;
+            }
+            int currentWave = wm.getCurrentWave();
+            if (currentWave <= lastLowCoastWave) {
+                return;
+            }
+            lastLowCoastWave = currentWave;
+            for (int r = 0; r < 5; r++) {
+                for (int c = 0; c < 9; c++) {
+                    Tile tile = map.getTile(r, c);
+                    if (tile == null || tile.getType() != TileType.LOW_COAST) {
+                        continue;
+                    }
+                    if (random.nextDouble() < 0.35) {
+                        String[] beachZombies = {
+                            "ZombieBeachDefault", "ZombieBeachSnorkel",
+                            "ZombieBeachFastSwimmer"
+                        };
+                        String alias = beachZombies[random.nextInt(beachZombies.length)];
+                        engine.spawnZombie(alias, r, c);
+                    }
                 }
-                handleLowCoastLaunch(z, map);
             }
         });
     }
@@ -298,64 +308,33 @@ public class Chapter {
 
     // ---------- Tide helpers ----------
 
-    private void initializeTideBoundary(com.PVZ.model.game.Map map) {
-        if (tideInitialized) {
-            return;
-        }
-        for (int c = 0; c < 9; c++) {
-            boolean water = false;
-            for (int r = 0; r < 5; r++) {
-                Tile t = map.getTile(r, c);
-                if (t != null && (t.getType() == TileType.WATER || t.getType() == TileType.TIDE)) {
-                    water = true;
-                    break;
-                }
-            }
-            if (water) {
-                maxTideColumn = c;
+    private void advanceTide(com.PVZ.model.game.Map map) {
+        for (int step = 0; step < 2; step++) {
+            if (tideFloodedColumn <= 0) {
                 break;
             }
-        }
-        tideInitialized = true;
-    }
-
-    private void applyTide(com.PVZ.model.game.Map map) {
-        tideTick++;
-        int phaseLen = tideRising ? TIDE_RISE_TICKS : TIDE_FALL_TICKS;
-        if (tideTick >= phaseLen) {
-            tideTick = 0;
-            tideRising = !tideRising;
-        }
-
-        int activeCols;
-        if (tideRising) {
-            activeCols = maxTideColumn - (int) Math.round(
-                (1.0 * tideTick / TIDE_RISE_TICKS) * (maxTideColumn - 1));
-        } else {
-            activeCols = 1 + (int) Math.round(
-                (1.0 * tideTick / TIDE_FALL_TICKS) * (maxTideColumn - 1));
-        }
-        activeCols = Math.max(1, Math.min(maxTideColumn, activeCols));
-
-        for (int r = 0; r < 5; r++) {
-            for (int c = 0; c < 9; c++) {
-                Tile tile = map.getTile(r, c);
-                if (tile == null) continue;
-                if (c >= maxTideColumn || tile.getType() == TileType.WATER) {
+            tideFloodedColumn--;
+            for (int r = 0; r < 5; r++) {
+                Tile tile = map.getTile(r, tideFloodedColumn);
+                if (tile == null) {
                     continue;
                 }
-                boolean inTide = c >= maxTideColumn - activeCols;
-                if (inTide && tile.getType() == TileType.NORMAL) {
-                    Plant plant = map.getPlantAt(r, c);
-                    boolean aquatic = plant != null && plant.getDefinition() != null
-                        && plant.getDefinition().hasTag(PlantTag.WATER);
+                Plant topPlant = map.getPlantAt(r, tideFloodedColumn);
+                Plant basePlant = map.getBasePlantAt(r, tideFloodedColumn);
+                boolean protectedByLilyPad = basePlant != null && basePlant.getDefinition() != null
+                    && basePlant.getDefinition().hasTag(PlantTag.WATER);
+                if (topPlant != null && !protectedByLilyPad) {
+                    boolean aquatic = topPlant.getDefinition() != null
+                        && topPlant.getDefinition().hasTag(PlantTag.WATER);
                     if (!aquatic) {
-                        map.removePlant(r, c);
+                        map.removePlant(r, tideFloodedColumn);
                     }
-                    tile.setType(TileType.TIDE);
-                } else if (!inTide && tile.getType() == TileType.TIDE) {
-                    tile.setType(TileType.NORMAL);
                 }
+                if (basePlant != null && basePlant.getDefinition() != null
+                    && !basePlant.getDefinition().hasTag(PlantTag.WATER)) {
+                    map.removeBasePlant(r, tideFloodedColumn);
+                }
+                tile.setType(TileType.TIDE);
             }
         }
     }
@@ -380,36 +359,6 @@ public class Chapter {
             placed++;
             if (random.nextDouble() < 0.3) {
                 engine.addSun(50);
-            }
-        }
-    }
-
-    // ---------- Low Coast Launch helpers ----------
-
-    private void handleLowCoastLaunch(Zombie z, com.PVZ.model.game.Map map) {
-        int col = map.worldToCol((float) z.getX());
-        int row = (int) Math.round(z.getRow());
-        if (col < 0 || col >= 9 || row < 0 || row >= 5) {
-            return;
-        }
-        Tile waterTile = map.getTile(row, col);
-        if (waterTile == null || waterTile.getType() != TileType.WATER) {
-            return;
-        }
-        boolean nearLowCoast = false;
-        for (int dc = -1; dc <= 1; dc++) {
-            int nc = col + dc;
-            if (nc < 0 || nc >= 9) continue;
-            Tile nt = map.getTile(row, nc);
-            if (nt != null && nt.getType() == TileType.LOW_COAST) {
-                nearLowCoast = true;
-                break;
-            }
-        }
-        if (nearLowCoast) {
-            z.setX(z.getX() + 120);
-            if (!z.isFrozen()) {
-                z.stunOnHit();
             }
         }
     }
