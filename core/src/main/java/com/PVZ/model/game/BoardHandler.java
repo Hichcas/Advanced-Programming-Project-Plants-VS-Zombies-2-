@@ -35,7 +35,7 @@ public class BoardHandler {
                     if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
                         mower.trigger();
                         engine.questLawnmowerKills++;
-                        engine.getBattleController().notifyZombieKilled(z, null);
+                        engine.getBattleController().notifyZombieKilled(engine, z, null);
                         engine.zombieEngine.kill(z);
                         break;
                     }
@@ -46,7 +46,7 @@ public class BoardHandler {
                 for (Zombie z : engine.getZombiesInLane(mower.getRow())) {
                     if (z != null && !z.isDead() && mower.getHitbox().overlaps(z.getHitbox())) {
                         engine.questLawnmowerKills++;
-                        engine.getBattleController().notifyZombieKilled(z, null);
+                        engine.getBattleController().notifyZombieKilled(engine, z, null);
                         engine.zombieEngine.kill(z);
                     }
                 }

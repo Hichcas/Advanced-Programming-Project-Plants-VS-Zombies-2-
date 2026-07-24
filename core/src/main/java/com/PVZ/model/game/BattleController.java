@@ -1,5 +1,6 @@
 package com.PVZ.model.game;
 
+import com.PVZ.model.entity.LawnMower;
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
@@ -49,9 +50,19 @@ public class BattleController implements BehaviorContext {
         questNotifiedZombies.clear();
     }
 
-    public void notifyZombieKilled(Zombie z, com.PVZ.model.enums.PlantType killerPlant) {
+    public void notifyZombieKilled(RegularGameEngine engine, Zombie z, com.PVZ.model.enums.PlantType killerPlant) {
         if (questNotifiedZombies.contains(z)) return;
         questNotifiedZombies.add(z);
+
+        if (engine != null && engine.map != null) {
+            int col = engine.map.worldToCol((float) z.getX());
+            int row = (int) z.getRow();
+            if (col == 0 && row >= 0 && row < engine.lawnMowers.length
+                && engine.lawnMowers[row] != null && engine.lawnMowers[row].isUsed()) {
+                engine.questLawnlessCol1Kills++;
+            }
+        }
+
         if (AppStatus.currentUser != null && AppStatus.currentUser.questState != null) {
             AppStatus.currentUser.questState.getQuestManager().onZombieKilled(killerPlant);
         }
@@ -358,7 +369,8 @@ public class BattleController implements BehaviorContext {
             if (obj instanceof com.PVZ.model.enums.PlantType pt) {
                 killer = pt;
             }
-            notifyZombieKilled(z, killer);
+            RegularGameEngine regEngine = AppStatus.getGameEngine() instanceof RegularGameEngine re ? re : null;
+            notifyZombieKilled(regEngine, z, killer);
         }
 
         boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit"))
