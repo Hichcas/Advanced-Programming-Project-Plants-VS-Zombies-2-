@@ -32,8 +32,23 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
             Object c = target.getRuntimeState("col");
             int row = r instanceof Number ? ((Number) r).intValue() : (int) this.row;
             int col = c instanceof Number ? ((Number) c).intValue() : (int) this.col;
-            controller.removePlant(row, col);
-            System.out.println(alias + " hooked away a plant at (" + col + ", " + row + ")");
+            int fisherCol = (int) this.col;
+            int dist = fisherCol - col;
+            if (dist <= 1) {
+                controller.removePlant(row, col);
+                System.out.println(alias + " yanked and destroyed a plant at (" + col + ", " + row + ")!");
+            } else {
+                int newCol = col + 1;
+                if (controller.getPlantAt(row, newCol) == null) {
+                    target.putRuntimeState("col", newCol);
+                    controller.getMap().setPlant(row, newCol, target);
+                    controller.getMap().removePlant(row, col);
+                    System.out.println(alias + " hooked plant from col " + col + " to col " + newCol);
+                } else {
+                    controller.removePlant(row, col);
+                    System.out.println(alias + " hooked plant, but landing was occupied — destroyed!");
+                }
+            }
             useHook();
         }
     }

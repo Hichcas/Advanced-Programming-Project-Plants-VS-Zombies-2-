@@ -24,6 +24,8 @@ public class MapHandler {
             builder.append("Belt: ").append(engine.conveyorBeltQueue.isEmpty() ? "(empty)" : formatBeltQueue(engine))
                 .append('\n');
         }
+        String tideInfo = formatTideInfo(engine);
+        if (!tideInfo.isEmpty()) builder.append(tideInfo).append('\n');
         appendMapGrid(engine, builder);
         builder.append("Tile debug:\n");
         builder.append(tileDebugList(engine.map));
@@ -55,14 +57,23 @@ public class MapHandler {
     }
 
     private static char getMapCellChar(RegularGameEngine engine, int row, int col, boolean[][] zombieAt) {
-        Plant plant = engine.map == null ? null : engine.map.getPlantAt(row, col);
-        if (zombieAt[row][col] && plant != null) return '#';
-        else if (zombieAt[row][col]) return 'Z';
-        else if (plant != null) return plant.getType().name().charAt(0);
-        else if (engine.map != null) {
-            Tile tile = engine.map.getTile(row, col);
-            return tile == null ? '.' : tileDebugLabel(tile.getType()).charAt(0);
-        } else return '.';
+        if (engine.map == null) return '.';
+        Tile tile = engine.map.getTile(row, col);
+        if (tile == null) return '.';
+        Plant topPlant = tile.getPlant();
+        Plant basePlant = tile.getBasePlant();
+        boolean hasOctopus = tile.getOctopusHp() > 0;
+        if (hasOctopus && zombieAt[row][col]) return '@';
+        if (hasOctopus) return 'O';
+        if (zombieAt[row][col] && topPlant != null) return '#';
+        if (zombieAt[row][col]) return 'Z';
+        if (topPlant != null && basePlant != null) return 'S';
+        if (topPlant != null) {
+            char c = topPlant.getType().name().charAt(0);
+            return c;
+        }
+        if (basePlant != null) return 'B';
+        return tileDebugLabel(tile.getType()).charAt(0);
     }
 
     private static String formatBeltQueue(RegularGameEngine engine) {
@@ -101,11 +112,41 @@ public class MapHandler {
         int col = engine.normalizeIndex(x);
         if (!engine.map.isWithinBounds(row, col)) return "Invalid tile.";
         Tile tile = engine.map.getTile(row, col);
-        Plant plant = tile == null ? null : tile.getPlant();
-        if (plant == null) return "Tile (" + col + ", " + row + ") is empty.";
-        return "Tile (" + col + ", " + row + ") contains " + plant.getType().getDisplayName()
-            + " hp=" + plant.getCurrentHp()
-            + (plant.isPlantFoodActive() ? " [plant food]" : "");
+        if (tile == null) return "Invalid tile.";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Tile (").append(col).append(", ").append(row).append("): ");
+        sb.append("type=").append(tile.getType().name());
+
+        if (tile.getType() == TileType.WATER) sb.append(" [Water]");
+        else if (tile.getType() == TileType.TIDE) sb.append(" [Tide]");
+        else if (tile.getType() == TileType.LOW_COAST) sb.append(" [Low Coast]");
+
+        Plant base = tile.getBasePlant();
+        if (base != null) {
+            sb.append(" | Base: ").append(base.getType().getDisplayName())
+              .append(" hp=").append(base.getCurrentHp());
+        }
+
+        Plant top = tile.getPlant();
+        if (top != null) {
+            sb.append(" | Plant: ").append(top.getType().getDisplayName())
+              .append(" hp=").append(top.getCurrentHp());
+            if (top.isPlantFoodActive()) sb.append(" [plant food]");
+            Object fl = top.getRuntimeState("freezeLevel");
+            if (fl instanceof Number && ((Number) fl).intValue() >= 3) {
+                sb.append(" [FROZEN]");
+            }
+        } else if (base == null) {
+            sb.append(" | Empty");
+        }
+
+        int octoHp = tile.getOctopusHp();
+        if (octoHp > 0) {
+            sb.append(" | Octopus hp=").append(octoHp).append(" (shoot to free plant!)");
+        }
+
+        return sb.toString();
     }
 
     // ---------- Tile debug utilities ----------
@@ -123,6 +164,23 @@ public class MapHandler {
             case CRATER -> "C";
             default -> ".";
         };
+    }
+
+    public static String formatTideInfo(RegularGameEngine engine) {
+        if (engine.map == null) return "";
+        StringBuilder sb = new StringBuilder("Tide: ");
+        for (int c = 0; c < 9; c++) {
+            boolean isWater = false;
+            for (int r = 0; r < 5; r++) {
+                Tile t = engine.map.getTile(r, c);
+                if (t != null && (t.getType() == TileType.WATER || t.getType() == TileType.TIDE)) {
+                    isWater = true;
+                    break;
+                }
+            }
+            sb.append(isWater ? '~' : '.');
+        }
+        return sb.toString();
     }
 
     public static String tileDebugList(Map map) {
