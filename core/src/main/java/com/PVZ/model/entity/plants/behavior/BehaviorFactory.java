@@ -2,23 +2,7 @@ package com.PVZ.model.entity.plants.behavior;
 
 import com.PVZ.model.entity.plants.AbilitySpec;
 import com.PVZ.model.entity.plants.PlantDefinition;
-import com.PVZ.model.entity.plants.PlantStats;
-import com.PVZ.model.entity.plants.behavior.impl.CompositeBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.DefaultPlantFoodBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.ElectricBlueberryBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.EmptyBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.ExplosiveBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.LobberBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.ManualPlantBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.ManualPlantFoodBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.MeleeEatBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.MintBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.ModifierBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.ShooterBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.SunProducerBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.TorchwoodBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.UtilityLaneBehavior;
-import com.PVZ.model.entity.plants.behavior.impl.WallBehavior;
+import com.PVZ.model.entity.plants.behavior.impl.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -105,14 +89,10 @@ public final class BehaviorFactory {
             case "mint", "mint_family_buff", "family_buff" -> new MintBehavior();
             case "modifier", "utility", "water_support", "copy_plant" ->
                 new ManualPlantBehavior(definition, definition.getBaseAbility());
-            case "magnet_disarm" ->
-                new UtilityLaneBehavior(UtilityLaneBehavior.Mode.MAGNET_DISARM);
-            case "move_zombies" ->
-                new UtilityLaneBehavior(UtilityLaneBehavior.Mode.MOVE_ZOMBIES);
-            case "hypnotize" ->
-                new UtilityLaneBehavior(UtilityLaneBehavior.Mode.HYPNOTIZE);
-            case "magnet_pulse" ->
-                new ManualPlantBehavior(definition, definition.getBaseAbility());
+            case "magnet_disarm" -> new UtilityLaneBehavior(UtilityLaneBehavior.Mode.MAGNET_DISARM);
+            case "move_zombies" -> new UtilityLaneBehavior(UtilityLaneBehavior.Mode.MOVE_ZOMBIES);
+            case "hypnotize" -> new UtilityLaneBehavior(UtilityLaneBehavior.Mode.HYPNOTIZE);
+            case "magnet_pulse" -> new ManualPlantBehavior(definition, definition.getBaseAbility());
             case "melee_eat", "melee", "attack_melee" -> new MeleeEatBehavior();
             default -> fallbackByCategory(definition);
         };
@@ -140,7 +120,8 @@ public final class BehaviorFactory {
             return new ManualPlantFoodBehavior(definition, plantFood);
         }
         if ("none".equals(normalized)) {
-            return (plant, context) -> {};
+            return (plant, context) -> {
+            };
         }
         if ("burst_sun".equals(normalized) || "instant_sun".equals(normalized)
             || "sun_burst".equals(normalized)) {
@@ -194,8 +175,6 @@ public final class BehaviorFactory {
             int duration = plantFood.getIntParam("durationSeconds", 5);
             int projectiles = plantFood.getIntParam("projectiles", 5);
             double damageMultiplier = plantFood.getDoubleParam("damageMultiplier", 2.0);
-
-            // Adjust per plant key
             ProjectileParams params = adjustProjectileParams(plantKey, projectiles, damageMultiplier);
             projectiles = params.projectiles;
             damageMultiplier = params.damageMultiplier;
@@ -249,7 +228,6 @@ public final class BehaviorFactory {
             plant.setPlantFoodTicksRemaining(3);
             context.freezeAllZombies(3.0);
             plant.getStats().putExtra("iceAttack", Boolean.TRUE);
-            // Icy burst fire (Snow Pea): fire more projectiles while plant food is active
             plant.getStats().putExtra("plantFoodProjectileCount", 5);
         };
     }

@@ -24,7 +24,8 @@ public class ZombieIceAgeDodo extends AbstractSpecialMovementZombie {
     }
 
     @Override
-    public void onMove(BattleController ctrl) {}
+    public void onMove(BattleController ctrl) {
+    }
 
     @Override
     public void update(float delta, BattleController ctrl) {
@@ -41,8 +42,6 @@ public class ZombieIceAgeDodo extends AbstractSpecialMovementZombie {
         }
         int tileCol = ctrl.getTileColumn((float) x);
         col = tileCol;
-
-        // Dodo flies over plants — never stops for them
         moving = true;
         move(delta, ctrl);
         hitbox.setPosition((float) x, (float) y);
@@ -54,6 +53,11 @@ public class ZombieIceAgeDodo extends AbstractSpecialMovementZombie {
         return super.getDebugString() + (isFlying ? "\nFLYING" : "");
     }
 
-    public boolean isFlying() { return isFlying; }
-    public void setFlying(boolean flying) { isFlying = flying; }
+    public boolean isFlying() {
+        return isFlying;
+    }
+
+    public void setFlying(boolean flying) {
+        isFlying = flying;
+    }
 }

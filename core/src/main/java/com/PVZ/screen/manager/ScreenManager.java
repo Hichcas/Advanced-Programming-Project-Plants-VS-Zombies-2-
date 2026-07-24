@@ -1,5 +1,7 @@
 package com.PVZ.screen.manager;
 
+import com.PVZ.PVZ;
+import com.PVZ.screen.BaseScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -8,9 +10,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.PVZ.PVZ;
-import com.PVZ.screen.BaseScreen;
-import java.util.function.Supplier; // 🌟 اضافه شدن ابزار ساخت تأخیری
+
+import java.util.function.Supplier;
 
 public class ScreenManager {
     private static ScreenManager instance;
@@ -18,7 +19,9 @@ public class ScreenManager {
     private Supplier<BaseScreen> pendingScreenSupplier;
     private final SpriteBatch batch;
     private final Texture blackOverlay;
-    private enum TransitionState { NONE, FADE_OUT, FADE_IN }
+
+    private enum TransitionState {NONE, FADE_OUT, FADE_IN}
+
     private TransitionState state = TransitionState.NONE;
     private float blackScreenAlpha = 0f;
     private float currentDuration = 2.5f;
@@ -53,6 +56,7 @@ public class ScreenManager {
     public void performTransition(Supplier<BaseScreen> screenSupplier) {
         performTransition(screenSupplier, null);
     }
+
     public void performTransition(Supplier<BaseScreen> screenSupplier, String message) {
         if (state != TransitionState.NONE) return;
 

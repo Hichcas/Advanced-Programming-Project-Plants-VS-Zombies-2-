@@ -5,7 +5,7 @@ public enum MinigameEnum {
     WALLNUT_BOWLING("Wallnut Bowling"),
     I_ZOMBIE("I, Zombie"),
     BEGHOULED("Beghouled"),
-    ZOMBOTANY("Zombotany");   // بخش امتیازی
+    ZOMBOTANY("Zombotany");
 
     private final String displayName;
 

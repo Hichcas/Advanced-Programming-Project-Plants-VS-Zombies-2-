@@ -24,7 +24,7 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
 
     public ZombieTombRaiser() {
         super("ZombieTombRaiser", 320, 100, 0.185, 700, 3500, defaultScaledProps(),
-               50, 100, 5.0, 5);
+            50, 100, 5.0, 5);
         this.maxTombs = 3;
         this.tombsRaised = 0;
         this.throwTickCounter = 0;
@@ -42,13 +42,11 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
 
     @Override
     public void shoot(BattleController controller, Plant target) {
-        // Bone throwing is handled by the timed onUpdate() so it works even with no plants.
     }
 
     @Override
     public void onUpdate(float delta, BattleController controller) {
         this.map = controller != null ? controller.getMap() : this.map;
-        // Resolve any bones that have landed / been destroyed: turn their tile into a tombstone.
         if (map != null) {
             for (int i = bones.size() - 1; i >= 0; i--) {
                 ZombieProjectile bone = bones.get(i);
@@ -57,7 +55,7 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
                 if (bone.isDestroyed() || reached) {
                     Tile tile = map.getTile((int) row, bone.getTargetCol());
                     if (tile != null && tile.getType() == TileType.NORMAL && tile.getPlant() == null
-                            && canRaiseTomb()) {
+                        && canRaiseTomb()) {
                         tile.setType(TileType.TOMBSTONE);
                         tile.setHp(700);
                         raiseTomb();
@@ -98,7 +96,7 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
         for (int i = 0; i < n; i++) {
             int targetCol = candidates.get(i);
             ZombieProjectile bone = new ZombieProjectile(
-                    (float) x, (float) y, 0, (float) projectileSpeed, (int) row, this, targetCol, true);
+                (float) x, (float) y, 0, (float) projectileSpeed, (int) row, this, targetCol, true);
             bones.add(bone);
             if (controller != null) {
                 controller.addZombieProjectile(bone);
@@ -107,7 +105,8 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
     }
 
     @Override
-    public void onHit(Plant target) { }
+    public void onHit(Plant target) {
+    }
 
     @Override
     public void maybeSpawnGraves(Map map, Random random) {
@@ -119,6 +118,11 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
         return super.getDebugString() + "\nTOMBS:" + tombsRaised + "/" + maxTombs;
     }
 
-    public boolean canRaiseTomb() { return tombsRaised < maxTombs; }
-    public void raiseTomb() { if (canRaiseTomb()) tombsRaised++; }
+    public boolean canRaiseTomb() {
+        return tombsRaised < maxTombs;
+    }
+
+    public void raiseTomb() {
+        if (canRaiseTomb()) tombsRaised++;
+    }
 }

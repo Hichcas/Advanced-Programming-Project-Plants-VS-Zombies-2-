@@ -11,16 +11,15 @@ import com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechCowboy;
 import com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark;
 import com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt;
 import com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechPirate;
-import com.PVZ.model.entity.zombies.types.zombotany.*;
+import com.PVZ.model.entity.zombies.types.zombotany.ZombotanyJalapeno;
+import com.PVZ.model.entity.zombies.types.zombotany.ZombotanyPeashooter;
+import com.PVZ.model.entity.zombies.types.zombotany.ZombotanySquash;
+import com.PVZ.model.entity.zombies.types.zombotany.ZombotanyWallnut;
 
-/**
- * Factory for creating Zombie instances based on string aliases.
- * Refactored to comply with Checkstyle and PMD (method length ≤ 50 lines).
- */
+
 public final class ZombieFactory {
 
     private ZombieFactory() {
-        // Private constructor to prevent instantiation
     }
 
     public static Zombie createZombie(String alias) {
@@ -28,7 +27,6 @@ public final class ZombieFactory {
             throw new IllegalArgumentException("Zombie alias cannot be null");
         }
 
-        // Delegate to specific handler methods
         Zombie zombie = createBasicZombie(alias);
         if (zombie != null) {
             return zombie;
@@ -62,17 +60,13 @@ public final class ZombieFactory {
         throw new IllegalArgumentException("Unknown zombie alias: " + alias);
     }
 
-    // ---------- Basic zombies ----------
 
     private static Zombie createBasicZombie(String alias) {
         return switch (alias) {
-            case "ZombieTutorialDefault", "ZombieTutorialFlagDefault" ->
-                new ZombieTutorial(alias, null);
+            case "ZombieTutorialDefault", "ZombieTutorialFlagDefault" -> new ZombieTutorial(alias, null);
             default -> null;
         };
     }
-
-    // ---------- Armored zombies (delegated to theme methods) ----------
 
     private static Zombie createArmoredZombie(String alias) {
         Zombie z = createTutorialArmored(alias);
@@ -142,45 +136,30 @@ public final class ZombieFactory {
                 new ZombieDark(alias, createArmor(ZombieArmor.ArmorType.CONE, 370, true, false, true));
             case "ZombieDarkArmor2Default" ->
                 new ZombieDark(alias, createArmor(ZombieArmor.ArmorType.BUCKET, 1100, true, true, true));
-            case "ZombieDarkArmor3Default" ->
-                new ZombieDark(alias,
-                    createArmor(ZombieArmor.ArmorType.SHOULDER_ARMOR, 1600, false, false, false),
-                    createArmor(ZombieArmor.ArmorType.CROWN, 1600, true, true, true));
+            case "ZombieDarkArmor3Default" -> new ZombieDark(alias,
+                createArmor(ZombieArmor.ArmorType.SHOULDER_ARMOR, 1600, false, false, false),
+                createArmor(ZombieArmor.ArmorType.CROWN, 1600, true, true, true));
             case "ZombieDarkArmor4Default" ->
                 new ZombieDark(alias, createArmor(ZombieArmor.ArmorType.BRICK, 2200, true, false, true));
             default -> null;
         };
     }
 
-    // ---------- Gargantuar & Imp ----------
-
     private static Zombie createGargantuarAndImp(String alias) {
         return switch (alias) {
-            case "ZombieGargantuarBasic" ->
-                new ZombieGargantuar(alias, ZombieGargantuar.Theme.BASIC);
-            case "ZombieEgyptGargantuar" ->
-                new ZombieGargantuar(alias, ZombieGargantuar.Theme.EGYPT);
-            case "ZombieIceAgeGargantuar" ->
-                new ZombieGargantuar(alias, ZombieGargantuar.Theme.ICEAGE);
-            case "ZombieBeachGargantuar" ->
-                new ZombieGargantuar(alias, ZombieGargantuar.Theme.BEACH);
-            case "ZombieDarkGargantuar" ->
-                new ZombieGargantuar(alias, ZombieGargantuar.Theme.DARK);
-            case "ZombieTutorialImpDefault" ->
-                new ZombieImp(alias, ZombieImp.Theme.BASIC);
-            case "ZombieEgyptImpDefault" ->
-                new ZombieImp(alias, ZombieImp.Theme.EGYPT);
-            case "ZombieIceageImpDefault" ->
-                new ZombieImp(alias, ZombieImp.Theme.ICEAGE);
-            case "ZombieBeachImpDefault" ->
-                new ZombieImp(alias, ZombieImp.Theme.BEACH);
-            case "ZombieDarkImpDefault" ->
-                new ZombieImp(alias, ZombieImp.Theme.DARK);
+            case "ZombieGargantuarBasic" -> new ZombieGargantuar(alias, ZombieGargantuar.Theme.BASIC);
+            case "ZombieEgyptGargantuar" -> new ZombieGargantuar(alias, ZombieGargantuar.Theme.EGYPT);
+            case "ZombieIceAgeGargantuar" -> new ZombieGargantuar(alias, ZombieGargantuar.Theme.ICEAGE);
+            case "ZombieBeachGargantuar" -> new ZombieGargantuar(alias, ZombieGargantuar.Theme.BEACH);
+            case "ZombieDarkGargantuar" -> new ZombieGargantuar(alias, ZombieGargantuar.Theme.DARK);
+            case "ZombieTutorialImpDefault" -> new ZombieImp(alias, ZombieImp.Theme.BASIC);
+            case "ZombieEgyptImpDefault" -> new ZombieImp(alias, ZombieImp.Theme.EGYPT);
+            case "ZombieIceageImpDefault" -> new ZombieImp(alias, ZombieImp.Theme.ICEAGE);
+            case "ZombieBeachImpDefault" -> new ZombieImp(alias, ZombieImp.Theme.BEACH);
+            case "ZombieDarkImpDefault" -> new ZombieImp(alias, ZombieImp.Theme.DARK);
             default -> null;
         };
     }
-
-    // ---------- Special movement zombies ----------
 
     private static Zombie createSpecialMovementZombie(String alias) {
         return switch (alias) {
@@ -197,8 +176,6 @@ public final class ZombieFactory {
         };
     }
 
-    // ---------- Ranged / caster zombies ----------
-
     private static Zombie createRangedCasterZombie(String alias) {
         return switch (alias) {
             case "ZombieRaDefault" -> new ZombieRa();
@@ -214,8 +191,6 @@ public final class ZombieFactory {
         };
     }
 
-    // ---------- Zomboss and Zombotany ----------
-
     private static Zombie createZombossAndZombotany(String alias) {
         return switch (alias) {
             case "ZombieZombossMechEgypt" -> new ZombieZombossMechEgypt();
@@ -229,8 +204,6 @@ public final class ZombieFactory {
             default -> null;
         };
     }
-
-    // ---------- Helper for armor creation ----------
 
     private static ZombieArmor createArmor(ZombieArmor.ArmorType type, int health,
                                            boolean canBeHypnotized, boolean isMetal, boolean isRemovable) {

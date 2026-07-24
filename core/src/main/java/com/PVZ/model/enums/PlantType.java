@@ -86,8 +86,6 @@ public enum PlantType {
     ENCHANT_MINT(67, "Enchant-mint"),
     PIERCE_MINT(68, "Pierce-mint"),
     CAT_TAIL_MINT(69, "catTail-mint"),
-
-    // Wallnut Bowling minigame exclusives
     WALLNUT_BOWLING(70, "Bowling Wallnut"),
     GIANT_WALLNUT(71, "Giant Wallnut");
 
@@ -126,8 +124,8 @@ public enum PlantType {
 
     public PlantDefinition getDefinition() {
         return PlantLibrary.findByType(this)
-                .or(() -> PlantLibrary.findByName(displayName))
-                .orElse(null);
+            .or(() -> PlantLibrary.findByName(displayName))
+            .orElse(null);
     }
 
     public Plant create(int userLevel) {
@@ -157,7 +155,7 @@ public enum PlantType {
         return value.trim().toLowerCase(Locale.ROOT);
     }
 
-    public static PlantType valueof (String name) {
+    public static PlantType valueof(String name) {
         for (PlantType plantType : PlantType.values())
             if (name.toLowerCase().equals(plantType.displayName.toLowerCase()))
                 return plantType;

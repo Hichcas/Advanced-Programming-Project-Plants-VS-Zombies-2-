@@ -7,7 +7,7 @@ public class QuestInputDTO implements InputDTO {
 
     private final QuestCommand command;
     private final String questId;
-    private final String parameter;   // برای استفاده‌های بعدی (فیلتر و ...)
+    private final String parameter;
 
     public QuestInputDTO(QuestCommand command, String questId, String parameter) {
         this.command = command;
