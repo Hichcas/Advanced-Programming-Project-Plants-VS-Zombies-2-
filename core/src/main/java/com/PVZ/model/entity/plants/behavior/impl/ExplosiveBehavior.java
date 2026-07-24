@@ -26,17 +26,15 @@ public class ExplosiveBehavior implements PlantBehavior {
                 armTimer = 0.0;
             }
             plant.putRuntimeState("armTimer", armTimer);
-            if (!Boolean.TRUE.equals(plant.getRuntimeState().getOrDefault("armed", Boolean.FALSE)))
-                return;
+            if (!Boolean.TRUE.equals(plant.getRuntimeState().getOrDefault("armed", Boolean.FALSE))) return;
         }
         Integer lane = (Integer) plant.getRuntimeState().getOrDefault("lane", 0);
         Integer row = (Integer) plant.getRuntimeState().getOrDefault("row", 0);
         String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
         boolean requiresContact = key != null && CONTACT_TRIGGERED.contains(key);
         List<Zombie> zombies = context.getZombiesInLane(lane);
-        if (requiresContact && zombies.isEmpty()) {
+        if (requiresContact && zombies.isEmpty())
             return;
-        }
         if ("ice_shroom".equals(key)) {
             context.freezeAllZombies(Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
             plant.takeDamage(plant.getCurrentHp());
@@ -46,9 +44,8 @@ public class ExplosiveBehavior implements PlantBehavior {
             : Math.max(plant.getStats().getDamage(), plant.getStats().getAoeDamage());
         if ("jalapeno".equals(key)) {
             context.damageLane(lane, damage);
-            if (plant.getStats().getBooleanExtra("meltsIce", false)) {
+            if (plant.getStats().getBooleanExtra("meltsIce", false))
                 context.meltIceInLane(lane);
-            }
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
@@ -63,18 +60,15 @@ public class ExplosiveBehavior implements PlantBehavior {
                     int zCol = mapColOf(context, z);
                     return java.lang.Math.abs(zCol - col) > 1;
                 });
-                if (candidates.isEmpty())
-                    return;
+                if (candidates.isEmpty()) return;
                 plant.putRuntimeState("squashState", "leaping");
                 plant.putRuntimeState("squashTimer", 0.0);
                 return;
             }
-            double jumpTimer = asDouble(plant.getRuntimeState().getOrDefault("squashTimer",
-                0.0), 0.0);
+            double jumpTimer = asDouble(plant.getRuntimeState().getOrDefault("squashTimer", 0.0), 0.0);
             jumpTimer += deltaTime;
             plant.putRuntimeState("squashTimer", jumpTimer);
-            if (jumpTimer < 0.4)
-                return;
+            if (jumpTimer < 0.4) return;
             List<Zombie> targets = context.getZombiesInLane(lane);
             if (!targets.isEmpty()) {
                 Zombie nearest = targets.get(0);
