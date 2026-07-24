@@ -20,8 +20,6 @@ public enum PlantCategory {
             return UNKNOWN;
         }
 
-        // Normalize hyphens/spaces/underscores to a single separator so raw JSON values like
-        // "SUN_PRODUCER" or "WALL_NUT" match the same way "sun producer" / "wall-nut" would.
         String value = raw.trim().toLowerCase(Locale.ROOT).replace('-', '_').replace(' ', '_');
 
         return switch (value) {

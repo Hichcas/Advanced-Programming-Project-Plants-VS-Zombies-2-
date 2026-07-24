@@ -1,16 +1,12 @@
 package com.PVZ.model.entity.plants;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.PVZ.model.enums.PlantCategory;
 import com.PVZ.model.enums.PlantTag;
 import com.PVZ.model.enums.PlantType;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PlantDefinition {
@@ -46,9 +42,9 @@ public class PlantDefinition {
 
     public static Builder builder(PlantType type) {
         return new Builder()
-                .legacyId(type.getLegacyId())
-                .plantKey(type.getDisplayName())
-                .name(type.getDisplayName());
+            .legacyId(type.getLegacyId())
+            .plantKey(type.getDisplayName())
+            .name(type.getDisplayName());
     }
 
     public static Builder builder(int legacyId, String name) {
@@ -60,7 +56,6 @@ public class PlantDefinition {
             try {
                 return PlantType.fromName(plantKey);
             } catch (IllegalArgumentException ignored) {
-                // fallback below
             }
         }
 
@@ -68,7 +63,6 @@ public class PlantDefinition {
             try {
                 return PlantType.fromName(name);
             } catch (IllegalArgumentException ignored) {
-                // fallback below
             }
         }
 
@@ -119,9 +113,9 @@ public class PlantDefinition {
         }
 
         String normalized = category.trim()
-                .replace('-', '_')
-                .replace(' ', '_')
-                .toUpperCase(Locale.ROOT);
+            .replace('-', '_')
+            .replace(' ', '_')
+            .toUpperCase(Locale.ROOT);
 
         try {
             return PlantCategory.valueOf(normalized);
@@ -389,10 +383,10 @@ public class PlantDefinition {
     @Override
     public String toString() {
         return "PlantDefinition{"
-                + "legacyId=" + legacyId
-                + ", plantKey='" + plantKey + '\''
-                + ", name='" + name + '\''
-                + ", category='" + category + '\''
-                + '}';
+            + "legacyId=" + legacyId
+            + ", plantKey='" + plantKey + '\''
+            + ", name='" + name + '\''
+            + ", category='" + category + '\''
+            + '}';
     }
 }

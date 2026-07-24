@@ -141,8 +141,6 @@ public final class UpgradeResolver {
         }
     }
 
-    // ---------- Stat upgrade ----------
-
     private static void applyStatUpgrade(PlantStats stats, UpgradeRule rule) {
         PlantStatType statType = rule.getStatEnum();
         UpgradeOperation operation = rule.getOperationEnum();

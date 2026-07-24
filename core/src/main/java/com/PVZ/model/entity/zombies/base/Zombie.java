@@ -1,11 +1,10 @@
 package com.PVZ.model.entity.zombies.base;
 
 import com.PVZ.model.entity.Plant;
-import com.PVZ.model.entity.Sun;
 import com.PVZ.model.enums.DamageType;
 import com.PVZ.model.enums.TileType;
-import com.PVZ.model.game.Map;
 import com.PVZ.model.game.BattleController;
+import com.PVZ.model.game.Map;
 import com.PVZ.model.game.SunManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -64,7 +63,7 @@ public abstract class Zombie {
         this.row = row;
         this.col = 8;
         hitbox.set((float) x, (float) y, 40, 60);
-        System.out.println("Zombie spawned: alias=" + alias + " x=" + String.format("%.1f", x) + " row=" + (int)row);
+        System.out.println("Zombie spawned: alias=" + alias + " x=" + String.format("%.1f", x) + " row=" + (int) row);
     }
 
     public void update(float delta, BattleController controller) {
@@ -99,7 +98,7 @@ public abstract class Zombie {
     }
 
     protected void move(float delta, BattleController controller) {
-        if(isFrozen()) return;
+        if (isFrozen()) return;
         if (hypnotized) {
             x += currentSpeed * delta * 100;
         } else {
@@ -120,13 +119,12 @@ public abstract class Zombie {
     }
 
     protected void attack(Plant targetPlant, float delta, BattleController controller) {
-        if(isFrozen()) return;
+        if (isFrozen()) return;
         if (hypnotized) return;
         attackCooldownTimer += delta;
         if (attackCooldownTimer >= 1.0f) {
             targetPlant.takeDamage((int) eatDPS, this, controller);
             if (targetPlant.isDead()) {
-                // controller will clean up dead plants
             }
             attackCooldownTimer = 0;
         }
@@ -136,12 +134,6 @@ public abstract class Zombie {
         return hypnotized;
     }
 
-    /**
-     * Allied (hypnotized) zombie behavior, per Hypno-shroom spec: the turned zombie fights for
-     * the player. It walks back toward the spawn edge (to the right), attacks any enemy
-     * (non-hypnotized) zombie it runs into, ignores plants (they are now its allies), and leaves
-     * the field once it walks off the right edge so it does not block the win condition.
-     */
     protected void updateHypnotized(float delta, BattleController controller) {
         if (isFrozen()) {
             return;
@@ -162,7 +154,6 @@ public abstract class Zombie {
         }
     }
 
-    /** A hypnotized zombie bites enemy zombies using its own eat damage. */
     protected void attackZombie(Zombie target, float delta) {
         if (isFrozen() || target == null || target.isDead()) {
             return;
@@ -174,7 +165,6 @@ public abstract class Zombie {
         }
     }
 
-    /** Nearest living enemy (non-hypnotized) zombie in the same lane, in front of us (to the right). */
     private Zombie findEnemyZombieTarget(BattleController controller) {
         Zombie best = null;
         double bestDx = Double.MAX_VALUE;
@@ -187,7 +177,7 @@ public abstract class Zombie {
             }
             double dx = other.getX() - this.x;
             if (dx < -20) {
-                continue; // behind us; we face right
+                continue;
             }
             if (Math.abs(dx) <= 70 && Math.abs(other.getY() - this.y) <= 50 && dx < bestDx) {
                 bestDx = dx;
@@ -226,7 +216,7 @@ public abstract class Zombie {
             : "";
         String eatStr = moving ? "" : " EATING";
         return String.format("<%s> x=%.1f row=%d col=%d HP=%.1f%s speed=%.3f%s",
-            alias, x, (int)row, (int)col, hitpoints, armorStr, currentSpeed, eatStr);
+            alias, x, (int) row, (int) col, hitpoints, armorStr, currentSpeed, eatStr);
     }
 
     public void takeDamage(int amount, DamageType type) {
@@ -237,7 +227,10 @@ public abstract class Zombie {
         if (type == DamageType.ICE) {
             boolean hasSlow = false;
             for (StatusEffect e : activeEffects) {
-                if (e.getType() == DamageType.ICE) { hasSlow = true; break; }
+                if (e.getType() == DamageType.ICE) {
+                    hasSlow = true;
+                    break;
+                }
             }
             if (!hasSlow) activeEffects.add(new StatusEffect(DamageType.ICE, chillDuration));
             if (!"FROSTBITE_CAVES".equals(com.PVZ.model.status.AppStatus.currentChapterName)) {
@@ -278,7 +271,7 @@ public abstract class Zombie {
             }
         }
         if (isFrozen()) {
-            iceHp -= (int)(delta * 60);
+            iceHp -= (int) (delta * 60);
             if (iceHp <= 0) {
                 thaw();
             }
@@ -288,7 +281,7 @@ public abstract class Zombie {
     public void die(BattleController controller) {
         hitpoints = 0;
         armor = null;
-        System.out.println("Zombie [" + alias + "] died at x=" + String.format("%.1f", x) + " row=" + (int)row);
+        System.out.println("Zombie [" + alias + "] died at x=" + String.format("%.1f", x) + " row=" + (int) row);
         onDestroy();
         if (isGlowing) {
             controller.grantPlantFoodDrop();
@@ -305,7 +298,7 @@ public abstract class Zombie {
         this.isGlowing = glowing;
     }
 
-    public void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch) {
         if (texture == null) {
             String path = ZombieTexturePaths.getPath(alias);
             texture = new Texture(path);
@@ -323,9 +316,9 @@ public abstract class Zombie {
 
     public String getDebugString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("HP:").append((int)hitpoints);
-        sb.append(" (").append((int)x).append(",").append((int)y).append(")");
-        sb.append(" R:").append((int)row).append(" C:").append((int)col);
+        sb.append("HP:").append((int) hitpoints);
+        sb.append(" (").append((int) x).append(",").append((int) y).append(")");
+        sb.append(" R:").append((int) row).append(" C:").append((int) col);
         sb.append("\n");
         sb.append("SPD:").append(String.format("%.2f", currentSpeed));
         if (isFrozen()) {
@@ -337,14 +330,25 @@ public abstract class Zombie {
         return sb.toString();
     }
 
-    public void stopMoving() { this.moving = false; }
-    public void startMoving() { this.moving = true; }
+    public void stopMoving() {
+        this.moving = false;
+    }
 
-    public boolean isDead() { return hitpoints <= 0 && (armor == null || armor.isDestroyed()); }
+    public void startMoving() {
+        this.moving = true;
+    }
 
-    /** Submerged/special zombies can be immune to plant projectiles (e.g. Snorkel underwater). */
-    public boolean isProjectileImmune() { return false; }
-    public void onProjectileHit(Plant target) { }
+    public boolean isDead() {
+        return hitpoints <= 0 && (armor == null || armor.isDestroyed());
+    }
+
+    public boolean isProjectileImmune() {
+        return false;
+    }
+
+    public void onProjectileHit(Plant target) {
+    }
+
     public void applyDifficultyScaling(int level) {
         if (level < 1) level = 1;
         if (level > 5) level = 5;
@@ -358,71 +362,152 @@ public abstract class Zombie {
                     armorScale = scale;
                 }
                 case "EatDPS" -> eatDPS *= scale;
-                case "Speed" -> { speed *= scale; currentSpeed *= scale; }
-                case "WavePointCost" -> wavePointCost = (int)(wavePointCost * scale);
+                case "Speed" -> {
+                    speed *= scale;
+                    currentSpeed *= scale;
+                }
+                case "WavePointCost" -> wavePointCost = (int) (wavePointCost * scale);
                 default -> applyCustomScaledProperty(prop.getKey(), scale);
             }
         }
         if (armor != null) armor.scaleHealth(armorScale);
     }
 
-    protected void applyCustomScaledProperty(String key, double scale) {}
+    protected void applyCustomScaledProperty(String key, double scale) {
+    }
 
     public abstract void onSpawn();
-    public void onUpdate(float delta, BattleController controller) { }
+
+    public void onUpdate(float delta, BattleController controller) {
+    }
+
     public abstract void onDestroy();
 
     public void setArmor(ZombieArmor armor) {
         this.armor = armor;
     }
+
     public ZombieArmor getArmor() {
         return armor;
     }
 
-    public String getAlias() { return alias; }
-    public double getHitpoints() { return hitpoints; }
-    public void setHitpoints(double hp) { this.hitpoints = hp; }
-    public double getMaxHitpoints() { return maxHitpoints; }
-    public double getEatDPS() { return eatDPS; }
-    public double getSpeed() { return speed; }
-    public double getCurrentSpeed() { return currentSpeed; }
-    public void setCurrentSpeed(double currentSpeed) { this.currentSpeed = currentSpeed; }
-    public int getWavePointCost() { return wavePointCost; }
-    public int getWeight() { return weight; }
-    public Rectangle getHitbox() { return hitbox; }
+    public String getAlias() {
+        return alias;
+    }
 
-    public double getX() { return x; }
-    public double getY() { return y; }
-    public double getRow() { return row; }
-    public double getCol() { return col; }
+    public double getHitpoints() {
+        return hitpoints;
+    }
 
-    public void setX(double x) { this.x = x; }
-    public void setY(double y) { this.y = y; }
-    public void setRow(double row) { this.row = row; }
-    public void setCol(double col) { this.col = col; }
+    public void setHitpoints(double hp) {
+        this.hitpoints = hp;
+    }
 
-    // Chapter behavior hooks — default no-ops, overridden by specific zombie types
-    public void stealNearbySun(SunManager sunManager) { }
-    public void burnPlantsAhead(Map map, BattleController controller) { }
-    public void maybeSpawnGraves(Map map, Random random) { }
+    public double getMaxHitpoints() {
+        return maxHitpoints;
+    }
 
-    public int getIcingLevel() { return icingLevel; }
-    public void setIcingLevel(int l) { this.icingLevel = l; }
-    public int getIceHp() { return iceHp; }
-    public void setIceHp(int hp) { this.iceHp = hp; }
-    public boolean isFrozen() { return icingLevel >= 3; }
+    public double getEatDPS() {
+        return eatDPS;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public double getCurrentSpeed() {
+        return currentSpeed;
+    }
+
+    public void setCurrentSpeed(double currentSpeed) {
+        this.currentSpeed = currentSpeed;
+    }
+
+    public int getWavePointCost() {
+        return wavePointCost;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public Rectangle getHitbox() {
+        return hitbox;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getRow() {
+        return row;
+    }
+
+    public double getCol() {
+        return col;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public void setRow(double row) {
+        this.row = row;
+    }
+
+    public void setCol(double col) {
+        this.col = col;
+    }
+
+    public void stealNearbySun(SunManager sunManager) {
+    }
+
+    public void burnPlantsAhead(Map map, BattleController controller) {
+    }
+
+    public void maybeSpawnGraves(Map map, Random random) {
+    }
+
+    public int getIcingLevel() {
+        return icingLevel;
+    }
+
+    public void setIcingLevel(int l) {
+        this.icingLevel = l;
+    }
+
+    public int getIceHp() {
+        return iceHp;
+    }
+
+    public void setIceHp(int hp) {
+        this.iceHp = hp;
+    }
+
+    public boolean isFrozen() {
+        return icingLevel >= 3;
+    }
+
     public void freezeSolid() {
         this.icingLevel = 3;
         this.iceHp = 600;
         this.stopMoving();
     }
+
     public void thaw() {
         this.icingLevel = 0;
         this.iceHp = 0;
         this.startMoving();
     }
 
-    /** Kernel-pult butter: freeze the zombie solid for a short while. */
     public void stunOnHit() {
         this.freezeSolid();
     }

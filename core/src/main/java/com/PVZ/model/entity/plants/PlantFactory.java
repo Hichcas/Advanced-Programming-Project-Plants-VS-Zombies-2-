@@ -29,9 +29,6 @@ public final class PlantFactory {
         applySpecialPlantKeys(definition, stats);
     }
 
-    /**
-     * Applies damage-specific specials based on DamageSpec kind.
-     */
     private static void applyDamageSpec(PlantDefinition definition, PlantStats stats) {
         DamageSpec damageSpec = definition.getDamageSpec();
         if (damageSpec == null) {
@@ -62,17 +59,11 @@ public final class PlantFactory {
         }
     }
 
-    /**
-     * Checks if the plant has built-in multi-lane firing logic.
-     */
     private static boolean isMultiLanePlant(String key) {
         return "rotobaga".equals(key) || "threepeater".equals(key) || "split_pea".equals(key)
             || "starfruit".equals(key) || "cat_tail".equals(key) || "bowling_bulb".equals(key);
     }
 
-    /**
-     * Applies special effects based on plant tags (FIRE, ICE, POISON, CHARGE).
-     */
     private static void applyPlantTags(PlantDefinition definition, PlantStats stats) {
         if (definition.hasTag(PlantTag.FIRE)) {
             stats.putExtra("fireAttack", Boolean.TRUE);
@@ -92,9 +83,6 @@ public final class PlantFactory {
         }
     }
 
-    /**
-     * Applies special case settings for specific plant keys.
-     */
     private static void applySpecialPlantKeys(PlantDefinition definition, PlantStats stats) {
         String key = definition.getPlantKey();
         switch (key) {
@@ -132,7 +120,6 @@ public final class PlantFactory {
                 }
                 break;
             default:
-                // no special handling
                 break;
         }
     }

@@ -14,9 +14,6 @@ public class ZombieProjectile {
     private Rectangle hitbox;
     private Texture texture;
     private Zombie owner;
-
-    // Bone-projectile support: when this projectile reaches its target column it
-    // turns that tile into a TOMBSTONE (used by the TombRaiser zombie).
     private boolean landsToTomb = false;
     private int targetCol = -1;
 
@@ -53,8 +50,13 @@ public class ZombieProjectile {
         pixmap.dispose();
     }
 
-    public boolean isLandsToTomb() { return landsToTomb; }
-    public int getTargetCol() { return targetCol; }
+    public boolean isLandsToTomb() {
+        return landsToTomb;
+    }
+
+    public int getTargetCol() {
+        return targetCol;
+    }
 
     public void update(float delta) {
         x -= speed * delta;
@@ -66,11 +68,31 @@ public class ZombieProjectile {
         batch.draw(texture, x, y, 24, 24);
     }
 
-    public Rectangle getHitbox() { return hitbox; }
-    public boolean isDestroyed() { return destroyed; }
-    public void destroy() { destroyed = true; }
-    public int getDamage() { return damage; }
-    public int getRow() { return row; }
-    public float getX() { return x; }
-    public Zombie getOwner() { return owner; }
+    public Rectangle getHitbox() {
+        return hitbox;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    public void destroy() {
+        destroyed = true;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public Zombie getOwner() {
+        return owner;
+    }
 }

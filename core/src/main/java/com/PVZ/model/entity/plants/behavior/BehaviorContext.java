@@ -71,34 +71,17 @@ public interface BehaviorContext {
     default void consumePlantFood(PlantInstance plant) {
     }
 
-
-    /**
-     * Damages all zombies in the specified lane (used by Jalapeno lane-clear).
-     */
     default void damageLane(int lane, int damage) {
-        // Default: delegate to area damage at each column
         damageArea(lane, 0, damage);
     }
 
-    /**
-     * Melts all ice/freeze effects in the specified lane (Jalapeno melts ice).
-     */
     default void meltIceInLane(int lane) {
-        // Default no-op; game engine overrides to remove ice tiles / freeze states
     }
 
-    /**
-     * Deals damage to a single zombie target (used by Squash single-target crush).
-     */
     default void damageSingleTarget(Object target, int damage) {
-        // Default: no-op; game engine overrides with actual zombie damage logic
     }
 
-    /**
-     * Spawns bouncing grape projectiles after Grapeshot explosion.
-     */
     default void spawnBouncingProjectiles(int lane, int row, int count, int damagePerGrape, double lifespanSeconds) {
-        // Default: no-op; game engine overrides to create bouncing projectile entities
     }
 
 }

@@ -122,8 +122,6 @@ public class CombatHandler {
         for (Zombie zombie : getZombiesInLane(engine, sourceLane)) {
             if (zombie != null) {
                 zombie.setRow(clampedTarget);
-                // Use the map's actual tile height to compute the correct world Y-coordinate
-                // (previously hardcoded target*100.0, which was wrong for the 234px tile grid).
                 if (engine.map != null) {
                     float tileHeight = engine.map.getTileHeight();
                     float startY = engine.map.getStartY();
