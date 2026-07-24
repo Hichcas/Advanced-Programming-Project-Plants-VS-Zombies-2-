@@ -156,7 +156,8 @@ public class QuestManager {
             template.getTargetCount(), rewardCopy, template.getParameters());
     }
     @SuppressWarnings("unchecked")
-    private <T extends Enum<T>> T getParamAsEnum(java.util.Map<String, Object> params, String key, Class<T> enumClass, T fallback) {
+    private <T extends Enum<T>> T getParamAsEnum(
+        java.util.Map<String, Object> params, String key, Class<T> enumClass, T fallback) {
         Object obj = params.get(key);
         if (obj == null) return fallback;
         if (enumClass.isInstance(obj)) return (T) obj;

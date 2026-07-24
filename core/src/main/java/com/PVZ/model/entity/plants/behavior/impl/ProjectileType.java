@@ -9,5 +9,9 @@ public enum ProjectileType {
     BOMB,
     BEAM,
     SUN,
+    FUME,
+    LIGHTNING,
+    GRAPE,
+    WHIP,
     UNKNOWN
 }

@@ -6,9 +6,16 @@ import com.PVZ.model.enums.PlantFlag;
 import com.PVZ.model.enums.PlantStatType;
 import com.PVZ.model.enums.SpecialUpgradeType;
 
+/**
+ * Resolves plant stats and upgrades based on definition and level.
+ * Refactored to comply with Checkstyle (method length ≤ 50 lines).
+ */
 public final class UpgradeResolver {
+
     private UpgradeResolver() {
     }
+
+    // ---------- Main resolution ----------
 
     public static PlantStats resolveStats(PlantDefinition definition, int targetLevel) {
         if (definition == null) {
@@ -51,14 +58,17 @@ public final class UpgradeResolver {
         return stats;
     }
 
-    /**
-     * Populates base production stats (sun amount and production interval) directly from the
-     * plant's base-ability params. Without this, data-driven sun producers fall back to the
-     * generic default of 50 sun: Twin Sunflower must produce 100, Primal Sunflower 75 and
-     * Gold Bloom 375. Sun-shroom is unaffected because it stores a {@code sunAmounts} list
-     * (handled by the growth-stage path) rather than a scalar {@code sunAmount}.
-     */
+    // ---------- applyBaseAbilityParams (decomposed) ----------
+
     private static void applyBaseAbilityParams(PlantStats stats, AbilitySpec baseAbility) {
+        applySunAndInterval(stats, baseAbility);
+        applyExplosiveParams(stats, baseAbility);
+        applyAoeParams(stats, baseAbility);
+        applyElementalParams(stats, baseAbility);
+        applyButterAndContact(stats, baseAbility);
+    }
+
+    private static void applySunAndInterval(PlantStats stats, AbilitySpec baseAbility) {
         int sunAmount = baseAbility.getIntParam("sunAmount", 0);
         if (sunAmount > 0) {
             stats.setSunAmount(sunAmount);
@@ -67,8 +77,9 @@ public final class UpgradeResolver {
         if (intervalSeconds > 0) {
             stats.setProductionTimeSeconds(intervalSeconds);
         }
+    }
 
-        // --- Explosive / Mine params ---
+    private static void applyExplosiveParams(PlantStats stats, AbilitySpec baseAbility) {
         double armTime = baseAbility.getDoubleParam("armTimeSeconds", -1.0);
         if (armTime >= 0.0) {
             stats.setArmTimeSeconds(armTime);
@@ -77,14 +88,16 @@ public final class UpgradeResolver {
         if (explodeDamage > 0) {
             stats.setExplodeDamage(explodeDamage);
         }
+    }
 
-        // --- AoE / Splash params ---
+    private static void applyAoeParams(PlantStats stats, AbilitySpec baseAbility) {
         int aoeDamage = baseAbility.getIntParam("aoeDamage", 0);
         if (aoeDamage > 0) {
             stats.setAoeDamage(aoeDamage);
         }
+    }
 
-        // --- Elemental attack flags (stored as extras for behavior classes) ---
+    private static void applyElementalParams(PlantStats stats, AbilitySpec baseAbility) {
         if (baseAbility.getBooleanParam("freezeAttack", false)) {
             stats.putExtra("freezeAttack", true);
             double slowPct = baseAbility.getDoubleParam("slowPercent", 0.0);
@@ -103,23 +116,22 @@ public final class UpgradeResolver {
         if (warmthRadius > 0) {
             stats.setWarmthRadius(warmthRadius);
         }
+    }
 
-        // --- Kernel-pult butter mechanic ---
+    private static void applyButterAndContact(PlantStats stats, AbilitySpec baseAbility) {
         int butterChance = baseAbility.getIntParam("butterChancePercent", 0);
         if (butterChance > 0) {
             stats.setButter(butterChance);
         }
-
-        // --- Contact-triggered flag ---
         if (baseAbility.getBooleanParam("contactTriggered", false)) {
             stats.putExtra("contactTriggered", true);
         }
-
-        // --- Lane-clear flag (Jalapeno) ---
         if (baseAbility.getBooleanParam("meltsIce", false)) {
             stats.putExtra("meltsIce", true);
         }
     }
+
+    // ---------- Upgrade application ----------
 
     public static void applyUpgrade(PlantStats stats, UpgradeRule rule) {
         if (stats == null || rule == null) {
@@ -136,6 +148,8 @@ public final class UpgradeResolver {
         }
     }
 
+    // ---------- Stat upgrade ----------
+
     private static void applyStatUpgrade(PlantStats stats, UpgradeRule rule) {
         PlantStatType statType = rule.getStatEnum();
         UpgradeOperation operation = rule.getOperationEnum();
@@ -145,14 +159,11 @@ public final class UpgradeResolver {
             case COST -> stats.setCost(applyInt(stats.getCost(), operation, value));
             case HP -> stats.setMaxHp(applyInt(stats.getMaxHp(), operation, value));
             case DAMAGE -> stats.setDamage(applyInt(stats.getDamage(), operation, value));
-            case COOLDOWN, RECHARGE -> stats.setRechargeSeconds(applyDouble(stats.getRechargeSeconds(), operation,
-                    value));
-            case PRODUCTION_TIME -> stats.setProductionTimeSeconds(applyDouble(stats.getProductionTimeSeconds(),
-                    operation, value));
+            case COOLDOWN, RECHARGE -> stats.setRechargeSeconds(applyDouble(stats.getRechargeSeconds(), operation, value));
+            case PRODUCTION_TIME -> stats.setProductionTimeSeconds(applyDouble(stats.getProductionTimeSeconds(), operation, value));
             case GROW_TIME -> stats.setGrowthTimeSeconds(applyDouble(stats.getGrowthTimeSeconds(), operation, value));
             case CHARGE_TIME -> stats.setChargeTimeSeconds(applyDouble(stats.getChargeTimeSeconds(), operation, value));
-            case PLANT_FOOD_CHANCE -> stats.setPlantFoodChancePercent(applyDouble(stats.getPlantFoodChancePercent(),
-                    operation, value));
+            case PLANT_FOOD_CHANCE -> stats.setPlantFoodChancePercent(applyDouble(stats.getPlantFoodChancePercent(), operation, value));
             case FREEZE_TIME -> stats.setFreezeTimeSeconds(applyDouble(stats.getFreezeTimeSeconds(), operation, value));
             case CHILL_TIME -> stats.setChillTimeSeconds(applyDouble(stats.getChillTimeSeconds(), operation, value));
             case SUN_AMOUNT -> stats.setSunAmount(applyInt(stats.getSunAmount(), operation, value));
@@ -178,6 +189,8 @@ public final class UpgradeResolver {
         }
     }
 
+    // ---------- Flag upgrade ----------
+
     private static void applyFlagUpgrade(PlantStats stats, UpgradeRule rule) {
         PlantFlag flag = rule.getFlagEnum();
         if (flag != PlantFlag.UNKNOWN) {
@@ -186,6 +199,8 @@ public final class UpgradeResolver {
             stats.putExtra("flag:" + rule.getRaw(), Boolean.TRUE);
         }
     }
+
+    // ---------- Special upgrade ----------
 
     private static void applySpecialUpgrade(PlantStats stats, UpgradeRule rule) {
         SpecialUpgradeType special = rule.getSpecialEnum();
@@ -211,9 +226,12 @@ public final class UpgradeResolver {
             case WARMTH_RADIUS_UP -> stats.putExtra("warmthRadiusBoost", Boolean.TRUE);
             case SUMMON_ALLY -> stats.putExtra("summonAlly", Boolean.TRUE);
             case TRANSFORM_TARGET -> stats.putExtra("transformTarget", Boolean.TRUE);
+            case CAN_CRUSH_2X -> stats.putExtra("canCrush2x", Boolean.TRUE);
             case UNKNOWN -> stats.putExtra("special:" + rule.getRaw(), rule.getParams());
         }
     }
+
+    // ---------- Behavior upgrade ----------
 
     private static void applyBehaviorUpgrade(PlantStats stats, UpgradeRule rule) {
         if (rule.getBehaviorId() != null && !rule.getBehaviorId().isEmpty()) {
@@ -226,6 +244,8 @@ public final class UpgradeResolver {
             stats.putExtra("behavior:" + rule.getRaw(), rule.getParams());
         }
     }
+
+    // ---------- Arithmetic helpers ----------
 
     private static int applyInt(int current, UpgradeOperation operation, double value) {
         return switch (operation) {
