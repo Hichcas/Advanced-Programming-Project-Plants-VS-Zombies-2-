@@ -5,6 +5,7 @@ import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.PlantFamily;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.chapter.sepecialLevel.SpecialLevel;
@@ -67,6 +68,13 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     double skySunTimer = 0.0;
     final com.PVZ.model.entity.LawnMower[] lawnMowers = new com.PVZ.model.entity.LawnMower[ROWS];
     com.badlogic.gdx.graphics.Texture iceOverlayTex;
+
+    // ---------- Quest tracking ----------
+    public int questPlantsLost = 0;
+    public int questLawnmowerKills = 0;
+    public int questLawnlessCol1Kills = 0;
+    public final java.util.List<PlantType> questPlantTypesUsed = new java.util.ArrayList<>();
+    public final java.util.Set<PlantFamily> questPlantFamiliesUsed = new java.util.HashSet<>();
 
     // ---------- Constructor ----------
     public RegularGameEngine(GameStatus gameStatus) {
@@ -275,6 +283,9 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (gameStatus == null || amount == 0) return;
         int next = gameStatus.getSunflower() + amount;
         gameStatus.setSunflower(Math.max(0, next));
+        if (amount > 0 && AppStatus.currentUser != null && AppStatus.currentUser.questState != null) {
+            AppStatus.currentUser.questState.getQuestManager().onSunCollected(amount);
+        }
     }
 
     @Override
