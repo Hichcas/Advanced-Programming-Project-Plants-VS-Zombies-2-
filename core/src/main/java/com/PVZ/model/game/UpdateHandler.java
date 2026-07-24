@@ -194,12 +194,9 @@ public class UpdateHandler {
                     }
                     UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
                 }
-                AppStatus.returnToChapterAndLevelSelection(null);
-            } else {
-                AppStatus.returnToChapterAndLevelSelection("GAME OVER");
-            }
             AppStatus.lastGameResultWin = engine.gameOverWin;
             AppStatus.currentMenuType = MenuType.END_OF_GAME;
+            }
         }
     }
 
