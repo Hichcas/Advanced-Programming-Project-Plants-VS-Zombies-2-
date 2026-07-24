@@ -168,6 +168,3 @@ This project was developed by:
 - It combines a command-line layer with a graphical runtime to cover both management and gameplay flows.
 - The current codebase is structured for future expansion, balancing, and content growth.
 
-## License
-
-No explicit license has been provided in the current project state.
