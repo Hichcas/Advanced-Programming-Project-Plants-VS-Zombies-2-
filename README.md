@@ -1,4 +1,4 @@
-# PVZ — Advanced Programming Project
+# PVZ-2 — Advanced Programming Project
 
 A hybrid **command-line + graphical** implementation of a Plants vs. Zombies inspired game for the Advanced Programming course.  
 The project combines menu-driven workflows, persistent user data, and a real-time LibGDX game screen in a single codebase.
