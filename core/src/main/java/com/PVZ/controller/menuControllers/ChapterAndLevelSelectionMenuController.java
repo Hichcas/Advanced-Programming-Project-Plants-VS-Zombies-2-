@@ -49,15 +49,9 @@ public class ChapterAndLevelSelectionMenuController {
         if (chapterName == null || chapterName.isBlank()) {
             return new OutputDTO(false, "Invalid chapter.");
         }
-        String name = chapterName.trim();
-        if (name.matches("\\d+")) {
-            int index = Integer.parseInt(name);
-            com.PVZ.model.enums.ChapterEnum[] chapters = com.PVZ.model.enums.ChapterEnum.values();
-            if (index < 1 || index > chapters.length) {
-                return new OutputDTO(false, "Invalid chapter number: " + index
-                    + ". Available: 1-" + chapters.length);
-            }
-            name = chapters[index - 1].name();
+        String name = resolveChapterName(chapterName.trim());
+        if (name == null) {
+            return new OutputDTO(false, "Invalid chapter number. Available: 1-4");
         }
         ChapterConfig config = ChapterLibrary.getChapterConfig(name);
         if (config == null) {
@@ -72,19 +66,6 @@ public class ChapterAndLevelSelectionMenuController {
         if (user != null && user.progressState != null) {
             try {
                 ChapterEnum chapterEnum = ChapterEnum.valueOf(name.toUpperCase());
-                ChapterEnum[] chapters = ChapterEnum.values();
-                int chapterIndex = -1;
-                for (int i = 0; i < chapters.length; i++) {
-                    if (chapters[i] == chapterEnum) { chapterIndex = i; break; }
-                }
-                if (chapterIndex > 0) {
-                    ChapterEnum prevChapter = chapters[chapterIndex - 1];
-                    ChapterConfig prevConfig = ChapterLibrary.getChapterConfig(prevChapter.name());
-                    int prevMaxStage = prevConfig != null ? prevConfig.getStages().size() : 1;
-                    if (user.progressState.getCompletedLevel(prevChapter) < prevMaxStage) {
-                        return new OutputDTO(false, "Complete " + prevChapter.getDisplayName() + " first.");
-                    }
-                }
                 if (!user.progressState.isLevelUnlocked(chapterEnum, stageNum)) {
                     return new OutputDTO(false, "Stage " + stageNum + " is locked. Complete the previous stage first.");
                 }
@@ -183,21 +164,10 @@ public class ChapterAndLevelSelectionMenuController {
             ChapterEnum chapterEnum = chapters[i];
             ChapterConfig config = ChapterLibrary.getChapterConfig(chapterEnum.name());
             if (config == null) continue;
-            boolean chapterUnlocked;
-            if (i == 0) {
-                chapterUnlocked = true;
-            } else {
-                ChapterEnum prevChapter = chapters[i - 1];
-                ChapterConfig prevConfig = ChapterLibrary.getChapterConfig(prevChapter.name());
-                int prevMaxStage = prevConfig != null ? prevConfig.getStages().size() : 1;
-                chapterUnlocked = user.progressState.getCompletedLevel(prevChapter) >= prevMaxStage;
-            }
-            sb.append(config.getDisplayName());
-            if (!chapterUnlocked) sb.append(" [LOCKED]");
-            sb.append(":\n");
+            sb.append(i + 1).append(". ").append(chapterEnum.name()).append(":\n");
             for (StageConfig stage : config.getStages()) {
                 int stageNum = stage.getStageNumber();
-                boolean stageUnlocked = chapterUnlocked && user.progressState.isLevelUnlocked(chapterEnum, stageNum);
+                boolean stageUnlocked = user.progressState.isLevelUnlocked(chapterEnum, stageNum);
                 sb.append("  Stage ").append(stageNum).append(" [")
                   .append(stageUnlocked ? "UNLOCKED" : "LOCKED").append("]\n");
             }
@@ -225,15 +195,17 @@ public class ChapterAndLevelSelectionMenuController {
         if (chapterName == null || chapterName.isBlank()) {
             return new OutputDTO(false, "Invalid chapter name.");
         }
-        String name = chapterName.trim().toUpperCase();
+        String name = resolveChapterName(chapterName.trim());
+        if (name == null) {
+            return new OutputDTO(false, "Invalid chapter. Available: 1-4");
+        }
         try {
             ChapterEnum chapterEnum = ChapterEnum.valueOf(name);
             ChapterConfig config = ChapterLibrary.getChapterConfig(name);
             if (config == null) {
                 return new OutputDTO(false, "Unknown chapter: " + chapterName);
             }
-            int maxStage = config.getStages().size();
-            user.progressState.completeLevel(chapterEnum, maxStage);
+            user.progressState.completeLevel(chapterEnum, config.getStages().size());
             UserRegistry.markDirty(user.profile.getUsername());
             return new OutputDTO(true, "All stages of " + chapterEnum.getDisplayName() + " completed.");
         } catch (IllegalArgumentException e) {
@@ -249,7 +221,10 @@ public class ChapterAndLevelSelectionMenuController {
         if (chapterName == null || chapterName.isBlank() || stage == null || stage <= 0) {
             return new OutputDTO(false, "Invalid command. Usage: menu cheat complete-stage -c CHAPTER -s STAGE");
         }
-        String name = chapterName.trim().toUpperCase();
+        String name = resolveChapterName(chapterName.trim());
+        if (name == null) {
+            return new OutputDTO(false, "Invalid chapter. Available: 1-4");
+        }
         try {
             ChapterEnum chapterEnum = ChapterEnum.valueOf(name);
             user.progressState.completeLevel(chapterEnum, stage);
@@ -278,7 +253,10 @@ public class ChapterAndLevelSelectionMenuController {
         if (chapterName == null || chapterName.isBlank()) {
             return new OutputDTO(false, "Invalid chapter name.");
         }
-        String name = chapterName.trim().toUpperCase();
+        String name = resolveChapterName(chapterName.trim());
+        if (name == null) {
+            return new OutputDTO(false, "Invalid chapter. Available: 1-4");
+        }
         try {
             ChapterEnum chapterEnum = ChapterEnum.valueOf(name);
             user.progressState.resetChapter(chapterEnum);
@@ -297,7 +275,10 @@ public class ChapterAndLevelSelectionMenuController {
         if (chapterName == null || chapterName.isBlank() || stage == null || stage <= 0) {
             return new OutputDTO(false, "Invalid command. Usage: menu cheat lock-stage -c CHAPTER -s STAGE");
         }
-        String name = chapterName.trim().toUpperCase();
+        String name = resolveChapterName(chapterName.trim());
+        if (name == null) {
+            return new OutputDTO(false, "Invalid chapter. Available: 1-4");
+        }
         try {
             ChapterEnum chapterEnum = ChapterEnum.valueOf(name);
             user.progressState.lockLevel(chapterEnum, stage);
@@ -305,6 +286,26 @@ public class ChapterAndLevelSelectionMenuController {
             return new OutputDTO(true, "Stage " + stage + " of " + chapterEnum.getDisplayName() + " locked.");
         } catch (IllegalArgumentException e) {
             return new OutputDTO(false, "Unknown chapter: " + chapterName);
+        }
+    }
+
+    private String resolveChapterName(String input) {
+        if (input == null) return null;
+        String trimmed = input.trim();
+        if (trimmed.matches("\\d+")) {
+            int index = Integer.parseInt(trimmed);
+            ChapterEnum[] chapters = ChapterEnum.values();
+            if (index >= 1 && index <= chapters.length) {
+                return chapters[index - 1].name();
+            }
+            return null;
+        }
+        String upper = trimmed.toUpperCase();
+        try {
+            ChapterEnum.valueOf(upper);
+            return upper;
+        } catch (IllegalArgumentException e) {
+            return null;
         }
     }
 

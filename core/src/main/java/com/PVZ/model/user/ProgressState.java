@@ -21,10 +21,10 @@ public class ProgressState {
         completedLevels = new HashMap<>();
         minigameClearedCounts = new HashMap<>();
 
-        // مقداردهی اولیه (همه صفر) – اختیاری، getCompletedLevel/Stage به‌طور پیش‌فرض صفر برمی‌گرداند
         for (ChapterEnum ch : ChapterEnum.values()) {
-            completedLevels.put(ch, 0);
+            completedLevels.put(ch, -1);
         }
+        completedLevels.put(ChapterEnum.ANCIENT_EGYPT, 1);
         for (MinigameEnum mg : MinigameEnum.values()) {
             minigameClearedCounts.put(mg, 0);
         }
@@ -49,12 +49,10 @@ public class ProgressState {
 
     // ---------- متدهای کمکی ----------
 
-    /** دریافت بالاترین مرحلهٔ گذرانده‌شده در یک فصل (۰ یعنی هیچ‌کدام) */
     public int getCompletedLevel(ChapterEnum chapter) {
-        return completedLevels.getOrDefault(chapter, 0);
+        return completedLevels.getOrDefault(chapter, -1);
     }
 
-    /** ثبت گذراندن یک مرحله در فصل (فقط در صورتی که از مقدار فعلی بزرگ‌تر باشد ذخیره می‌شود) */
     public void completeLevel(ChapterEnum chapter, int stage) {
         int current = getCompletedLevel(chapter);
         if (stage > current) {
@@ -62,29 +60,25 @@ public class ProgressState {
         }
     }
 
-    /** آیا مرحله‌ای خاص در یک فصل باز شده است؟ (باز شدن مراحل به‌صورت ترتیبی) */
     public boolean isLevelUnlocked(ChapterEnum chapter, int stage) {
-        return getCompletedLevel(chapter) >= stage - 1;
+        return getCompletedLevel(chapter) >= stage;
     }
 
-    /** قفل کردن یک مرحله (تنها در صورتی که از مقدار فعلی کوچک‌تر باشد ذخیره می‌شود) */
     public void lockLevel(ChapterEnum chapter, int stage) {
         int current = getCompletedLevel(chapter);
-        int newVal = Math.max(0, stage - 1);
+        int newVal = stage - 2;
         if (newVal < current) {
             completedLevels.put(chapter, newVal);
         }
     }
 
-    /** بازنشانی یک فصل به حالت اولیه (هیچ مرحله‌ای کامل نشده) */
     public void resetChapter(ChapterEnum chapter) {
-        completedLevels.put(chapter, 0);
+        completedLevels.put(chapter, chapter == ChapterEnum.ANCIENT_EGYPT ? 1 : -1);
     }
 
-    /** بازنشانی همه فصل‌ها به حالت اولیه */
     public void resetAll() {
         for (ChapterEnum ch : ChapterEnum.values()) {
-            completedLevels.put(ch, 0);
+            completedLevels.put(ch, ch == ChapterEnum.ANCIENT_EGYPT ? 1 : -1);
         }
     }
 
