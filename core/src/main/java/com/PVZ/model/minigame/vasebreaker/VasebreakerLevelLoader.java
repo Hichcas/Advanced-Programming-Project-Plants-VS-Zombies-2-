@@ -23,16 +23,23 @@ public class VasebreakerLevelLoader {
     }
 
     private VasebreakerLevelDefinition fallbackLevel() {
+        // Safety net only: should never be hit once all 3 vasebreaker levels are
+        // defined in minigames.json. Mirrors level 1's random/full-pool behaviour
+        // instead of a tiny fixed layout, so a missing entry doesn't silently
+        // degrade the game (fewer plant types, no gargantuar variety, etc).
         VasebreakerLevelDefinition def = new VasebreakerLevelDefinition();
         def.setId(1);
         def.setRows(5);
         def.setCols(9);
-        def.setVases(List.of(
-                "0,0,GARGANTUAR",
-                "2,4,PLANT"
-        ));
-        def.setZombiePool(List.of("ZombieTutorialDefault"));
-        def.setPlantPool(List.of("PEASHOOTER", "SUNFLOWER"));
+        def.setRandom(true);
+        def.setVaseCount(45);
+        def.setPlantVaseChance(0.22);
+        def.setGargantuarVaseChance(0.08);
+        def.setNormalEmptyChance(0.12);
+        def.setNormalZombieChance(0.6);
+        def.setNormalSeedChance(0.28);
+        def.setZombiePool(List.of());
+        def.setPlantPool(List.of());
         def.setSeedPacketLifetimeSeconds(8f);
         return def;
     }
