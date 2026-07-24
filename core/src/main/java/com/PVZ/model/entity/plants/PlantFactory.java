@@ -40,17 +40,25 @@ public final class PlantFactory {
 
         if (damageSpec.getKindEnum() == DamageSpec.DamageKind.MULTI_PROJECTILE
             && damageSpec.getDamagePerProjectile() != null) {
-            stats.setDamage(damageSpec.getDamagePerProjectile());
-            if (damageSpec.getProjectiles() != null && damageSpec.getProjectiles() > 1) {
+            int current = stats.getDamage();
+            int basePerProj = damageSpec.getDamagePerProjectile();
+            int baseTotal = damageSpec.getTotalDamage() != null ? damageSpec.getTotalDamage() : basePerProj;
+            int upgradeDelta = Math.max(0, current - baseTotal);
+            int projCount = Math.max(1, damageSpec.getProjectiles() != null ? damageSpec.getProjectiles() : 1);
+            int perProjDmg = basePerProj + (projCount > 0 ? upgradeDelta / projCount : 0);
+            stats.setDamage(perProjDmg);
+            if (projCount > 1) {
                 String key = definition.getPlantKey();
-                // These plants have built-in multi-lane firing and do not need projectile count
                 if (!isMultiLanePlant(key)) {
-                    stats.putExtra("projectileCount", damageSpec.getProjectiles());
+                    stats.putExtra("projectileCount", projCount);
                 }
             }
         } else if (damageSpec.getKindEnum() == DamageSpec.DamageKind.TIERED
             && damageSpec.getTiers() != null && !damageSpec.getTiers().isEmpty()) {
-            stats.setDamage(damageSpec.getTiers().get(0));
+            int current = stats.getDamage();
+            int tier0 = damageSpec.getTiers().get(0);
+            int upgradeDelta = Math.max(0, current - tier0);
+            stats.setDamage(tier0 + upgradeDelta);
         }
     }
 

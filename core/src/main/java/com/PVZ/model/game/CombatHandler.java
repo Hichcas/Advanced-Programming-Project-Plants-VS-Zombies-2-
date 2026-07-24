@@ -1,6 +1,7 @@
 package com.PVZ.model.game;
 
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
+import com.PVZ.model.entity.plants.behavior.impl.ProjectileType;
 import com.PVZ.model.entity.zombies.base.Zombie;
 
 import java.util.ArrayList;
@@ -74,14 +75,33 @@ public class CombatHandler {
                 verticalSpeed = Math.signum(targetLane - row) * speedPxPerSec;
             }
         }
-        p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
+        if (p.getType() == com.PVZ.model.entity.plants.behavior.impl.ProjectileType.LOB) {
+            // Lobbed shots (Cabbage-pult, Kernel-pult, Melon-pult, ...) arc up and over
+            // obstacles: a parabola in screen space (rise then land) instead of a flat line.
+            p.initArcPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec));
+        } else {
+            p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
+        }
     }
 
     // ---------- BehaviorContext damage methods ----------
     public static void damageArea(RegularGameEngine engine, int lane, int row, int damage) {
         if (damage <= 0) return;
-        for (Zombie zombie : getZombiesInLane(engine, lane)) {
-            if (zombie != null) zombie.takeDamage(damage);
+        // 3x3 explosion: lanes row-1, row, row+1
+        int[] lanes = {row - 1, row, row + 1};
+        for (int r : lanes) {
+            if (r < 0) continue;
+            for (Zombie zombie : getZombiesInLane(engine, r)) {
+                // Column-range check: only zombies within ~1.5 tiles of the explosion centre
+                if (zombie != null) {
+                    double colDist = Math.abs(zombie.getX() - (engine.map != null
+                        ? engine.map.getStartX() + lane * engine.map.getTileWidth() : 0));
+                    if (colDist < (engine.map != null
+                        ? engine.map.getTileWidth() * 1.6 : 280.0)) {
+                        zombie.takeDamage(damage);
+                    }
+                }
+            }
         }
     }
 
@@ -104,11 +124,20 @@ public class CombatHandler {
     }
 
     public static void moveZombiesFromLane(RegularGameEngine engine, int sourceLane, int targetLane) {
-        int clampedTarget = Math.max(0, Math.min(5 - 1, targetLane));
+        int clampedTarget = Math.max(0, Math.min(engine.map != null ? engine.map.getRows() - 1 : 4, targetLane));
         for (Zombie zombie : getZombiesInLane(engine, sourceLane)) {
             if (zombie != null) {
                 zombie.setRow(clampedTarget);
-                zombie.setY(clampedTarget * 100.0);
+                // Use the map's actual tile height to compute the correct world Y-coordinate
+                // (previously hardcoded target*100.0, which was wrong for the 234px tile grid).
+                if (engine.map != null) {
+                    float tileHeight = engine.map.getTileHeight();
+                    float startY = engine.map.getStartY();
+                    double newY = startY - (clampedTarget + 1) * tileHeight + tileHeight * 0.35;
+                    zombie.setY(newY);
+                } else {
+                    zombie.setY(clampedTarget * 100.0);
+                }
             }
         }
     }
@@ -116,6 +145,36 @@ public class CombatHandler {
     public static void pullAdjacentZombiesToLane(RegularGameEngine engine, int lane) {
         moveZombiesFromLane(engine, lane - 1, lane);
         moveZombiesFromLane(engine, lane + 1, lane);
+    }
+
+    public static void spawnBouncingProjectiles(RegularGameEngine engine, int lane, int row,
+                                                    int count, int damagePerGrape, double lifespanSeconds) {
+        if (engine.map == null) return;
+        float tileW = engine.map.getTileWidth();
+        float tileH = engine.map.getTileHeight();
+        float centreX = engine.map.getStartX() + lane * tileW + tileW * 0.5f;
+        float centreY = engine.map.getStartY() - (row + 1) * tileH + tileH * 0.5f;
+        float minX = engine.map.getStartX();
+        float maxX = minX + 9 * tileW;
+        float minY = engine.map.getStartY() - 5 * tileH;
+        float maxY = engine.map.getStartY();
+        double fuseSec = Math.max(lifespanSeconds, 4.0);
+        double speed = tileW * 0.28;  // ~50 px/s — slowed down further per feedback so grapes drift gently instead of rocketing around before their 5s fuse
+        for (int i = 0; i < Math.max(1, Math.min(count, 20)); i++) {
+            double angle = 2 * Math.PI * i / count + (engine.random.nextDouble() - 0.5) * 0.4;
+            float vx = (float) (Math.cos(angle) * speed);
+            float vy = (float) (Math.sin(angle) * speed * 0.6);
+            Projectile grape = new Projectile();
+            grape.setType(ProjectileType.GRAPE);
+            grape.setDamage(Math.max(1, damagePerGrape));
+            grape.setPierce(0);
+            grape.initFreePosition(centreX, centreY, vx, vy);
+            grape.setBouncing(true);
+            grape.setFuse(fuseSec);
+            grape.setBounds(minX, maxX, minY, maxY);
+            grape.setSpeed(0);  // freeMotion uses velX/velY, not speed
+            engine.projectiles.add(grape);
+        }
     }
 
     public static void killRandomZombies(RegularGameEngine engine, int count) {
@@ -134,6 +193,12 @@ public class CombatHandler {
         if (laneZombies.isEmpty()) return;
         laneZombies.sort(Comparator.comparingDouble(Zombie::getX));
         laneZombies.get(0).takeDamage(Double.MAX_VALUE);
+    }
+
+    public static void damageSingleTarget(RegularGameEngine engine, Object target, int damage) {
+        if (target instanceof Zombie z && z != null && !z.isDead()) {
+            z.takeDamage(damage);
+        }
     }
 
     public static void hypnotizeZombiesInLane(RegularGameEngine engine, int lane, double seconds) {

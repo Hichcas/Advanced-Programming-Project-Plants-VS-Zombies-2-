@@ -63,13 +63,68 @@ public class ExplosiveBehavior implements PlantBehavior {
             return;
         }
 
-        // --- Squash: single-target crush (jumps to nearest zombie) ---
+        // --- Squash: leap onto adjacent zombie then crush ---
         if ("squash".equals(key)) {
+            // State machine: LEAPING phase (set by handler or first tick after zombie adjacent)
+            String squashState = (String) plant.getRuntimeState().getOrDefault("squashState", "idle");
+            if ("idle".equals(squashState)) {
+                // Wait until a zombie is on or adjacent to the squash's tile column
+                int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+                List<Zombie> candidates = new java.util.ArrayList<>(context.getZombiesInLane(lane));
+                candidates.removeIf(z -> z == null || z.isDead());
+                // Only trigger on a zombie within ~1 column of the squash
+                candidates.removeIf(z -> {
+                    int zCol = mapColOf(context, z);
+                    return java.lang.Math.abs(zCol - col) > 1;
+                });
+                if (candidates.isEmpty()) {
+                    return; // no adjacent zombie — stay alive and wait
+                }
+                // Begin the leap: mark state so we animate a short hold before crush
+                plant.putRuntimeState("squashState", "leaping");
+                plant.putRuntimeState("squashTimer", 0.0);
+                // The visual leap is handled by checking squashState in DrawHandler
+                // (renders the plant at an offset Y when leaping).
+                return;
+            }
+            // Leaping phase — after a short delay the squash lands on the chosen zombie
+            double jumpTimer = asDouble(plant.getRuntimeState().getOrDefault("squashTimer", 0.0), 0.0);
+            jumpTimer += deltaTime;
+            plant.putRuntimeState("squashTimer", jumpTimer);
+            if (jumpTimer < 0.4) {
+                return; // still in the air
+            }
+            // Land and crush
             List<Zombie> targets = context.getZombiesInLane(lane);
             if (!targets.isEmpty()) {
                 Zombie nearest = targets.get(0);
                 context.damageSingleTarget(nearest, damage);
             }
+
+            boolean canCrushTwice = plant.getStats().getBooleanExtra("canCrush2x", false);
+            int crushesDone = asInt(plant.getRuntimeState().getOrDefault("squashCrushes", 0), 0) + 1;
+            if (canCrushTwice && crushesDone < 2) {
+                // Level-4 Squash ("Can crush 2x"): survive the first crush, reset to idle
+                // and wait for the next adjacent zombie instead of dying immediately.
+                plant.putRuntimeState("squashCrushes", crushesDone);
+                plant.putRuntimeState("squashState", "idle");
+                plant.putRuntimeState("squashTimer", 0.0);
+                return;
+            }
+            plant.takeDamage(plant.getCurrentHp());
+            return;
+        }
+
+        // --- Iceberg Lettuce: freezes the zombie(s) that stepped on it ---
+        if ("iceberg_lettuce".equals(key)) {
+            context.freezeZombiesInLane(lane, Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
+            plant.takeDamage(plant.getCurrentHp());
+            return;
+        }
+
+        // --- Tangle Kelp: drags the first zombie in its lane underwater (insta-kill) ---
+        if ("tangle_kelp".equals(key)) {
+            context.killClosestZombieInLane(lane);
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
@@ -87,5 +142,35 @@ public class ExplosiveBehavior implements PlantBehavior {
         // --- Default: area explosion (Cherry Bomb, Potato Mine, etc.) ---
         context.damageArea(lane, row, damage);
         plant.takeDamage(plant.getCurrentHp());
+    }
+    private static int asInt(Object value, int defaultValue) {
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        try {
+            return value == null ? defaultValue : Integer.parseInt(String.valueOf(value));
+        } catch (NumberFormatException ex) {
+            return defaultValue;
+        }
+    }
+    private static double asDouble(Object value, double defaultValue) {
+        if (value instanceof Number number) {
+            return number.doubleValue();
+        }
+        try {
+            return value == null ? defaultValue : Double.parseDouble(String.valueOf(value));
+        } catch (NumberFormatException ex) {
+            return defaultValue;
+        }
+    }
+
+    private static int mapColOf(BehaviorContext context, com.PVZ.model.entity.zombies.base.Zombie z) {
+        if (context instanceof com.PVZ.model.game.BattleController bc) {
+            return bc.getTileColumn((float) z.getX());
+        }
+        if (context instanceof com.PVZ.model.game.RegularGameEngine rge) {
+            return rge.getTileColumn((float) z.getX());
+        }
+        return 0;
     }
 }

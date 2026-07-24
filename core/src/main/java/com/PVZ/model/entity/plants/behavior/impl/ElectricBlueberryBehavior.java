@@ -3,6 +3,14 @@ package com.PVZ.model.entity.plants.behavior.impl;
 import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
+import com.PVZ.model.entity.plants.behavior.impl.Projectile;
+import com.PVZ.model.entity.plants.behavior.impl.ProjectileType;
+import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.PlantFlag;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class ElectricBlueberryBehavior implements PlantBehavior {
@@ -26,8 +34,63 @@ public class ElectricBlueberryBehavior implements PlantBehavior {
             return;
         }
 
-        context.killRandomZombies(1);
+        List<Zombie> living = new ArrayList<>();
+        for (Zombie z : context.getAllZombies()) {
+            if (z != null && !z.isDead()) {
+                living.add(z);
+            }
+        }
+        if (living.isEmpty()) {
+            plant.putRuntimeState("lightningTimer", 0.0);
+            return;
+        }
+
+        // Pick the target zombie FIRST (random living zombie, or closest in lane when the
+        // Target Priority upgrade is active) so the visible bolt lands on the zombie it kills.
+        Zombie target;
+        if (plant.getStats().hasFlag(PlantFlag.TARGET_PRIORITY_UP)) {
+            int lane = asInt(plant.getRuntimeState().getOrDefault("lane", 0), 0);
+            Zombie closest = null;
+            double bestX = Double.MAX_VALUE;
+            for (Zombie z : living) {
+                if ((int) z.getRow() == lane && z.getX() < bestX) {
+                    bestX = z.getX();
+                    closest = z;
+                }
+            }
+            target = closest != null ? closest : living.get(0);
+        } else {
+            target = living.get(ThreadLocalRandom.current().nextInt(living.size()));
+        }
+
+        spawnLightning(context, target);
+        target.takeDamage(Double.MAX_VALUE);   // completely destroy the chosen zombie
         plant.putRuntimeState("lightningTimer", 0.0);
+    }
+
+    /**
+     * Spawns a short-lived, visible lightning bolt on {@code target}. The bolt is a free-motion
+     * projectile with zero velocity and a tiny fuse, so it flashes in place and then fades
+     * (the engine removes projectiles whose fuse has expired).
+     */
+    private void spawnLightning(BehaviorContext context, Zombie target) {
+        Projectile bolt = new Projectile();
+        bolt.setType(ProjectileType.LIGHTNING);
+        bolt.setDamage(0);
+        bolt.setPierce(0);
+        bolt.initFreePosition((float) target.getX(), (float) target.getY(), 0f, 0f);
+        bolt.setFuse(0.35);
+        context.spawnProjectile(bolt);
+    }
+    private static int asInt(Object value, int defaultValue) {
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        try {
+            return value == null ? defaultValue : Integer.parseInt(String.valueOf(value));
+        } catch (NumberFormatException ex) {
+            return defaultValue;
+        }
     }
 
     private static double asDouble(Object value, double defaultValue) {

@@ -15,11 +15,17 @@ import java.util.List;
  */
 public class ShooterBehavior implements PlantBehavior {
 
+    /** Seconds between consecutive peas of a burst (Repeater fires 2, Mega Gatling Pea fires 4). */
+    private static final double BURST_GAP_SECONDS = 0.12;
+
     @Override
     public void onUpdate(PlantInstance plant, BehaviorContext context, double deltaTime) {
         if (plant == null || context == null) {
             return;
         }
+
+        // Drain any in-progress burst first, so consecutive peas keep firing between cooldowns.
+        drainBurst(plant, context, deltaTime);
 
         Double attackTimer = asDouble(plant.getRuntimeState().getOrDefault("attackTimer", 0.0), 0.0);
         attackTimer += deltaTime;
@@ -42,7 +48,7 @@ public class ShooterBehavior implements PlantBehavior {
 
         int damage = calculateDamage(plant);
         int projectileCount = calculateProjectileCount(plant);
-        spawnProjectiles(plant, context, damage, projectileCount);
+        startBurst(plant, damage, projectileCount);
 
         plant.putRuntimeState("attackTimer", attackTimer);
     }
@@ -93,29 +99,64 @@ public class ShooterBehavior implements PlantBehavior {
     }
 
     /**
-     * Creates and spawns the projectiles with appropriate attributes.
+     * Begins a burst of {@code projectileCount} consecutive shots. Spawning them all in the
+     * same tick made Repeater's 2 peas and Mega Gatling Pea's 4 peas overlap into what looked
+     * like a single pea; instead the burst is drained one pea at a time by {@link #drainBurst}.
      */
-    private void spawnProjectiles(PlantInstance plant, BehaviorContext context,
-                                  int damage, int projectileCount) {
-        for (int i = 0; i < projectileCount; i++) {
-            Projectile projectile = ProjectileFactory.createProjectile(plant, damage);
+    private void startBurst(PlantInstance plant, int damage, int projectileCount) {
+        plant.putRuntimeState("burstRemaining", Math.max(1, projectileCount));
+        plant.putRuntimeState("burstDamage", damage);
+        // large value so the very first pea fires on the next drainBurst() call
+        plant.putRuntimeState("burstTimer", 999.0);
+    }
 
-            if (plant.getStats().getBooleanExtra("fireAttack", false)) {
-                projectile.setType(ProjectileType.FIRE_PEA);
-            }
-            if (plant.getStats().getBooleanExtra("iceAttack", false)) {
-                projectile.setType(ProjectileType.ICE_PEA);
-            }
-            boolean shouldPierce = plant.getStats().getBooleanExtra("passThrough", false)
-                    || (plant.getDefinition() != null
-                        && plant.getDefinition().getCategoryEnum() == PlantCategory.THROUGH_STRIKE);
-            if (shouldPierce) {
-                int pierceBoost = plant.getStats().getIntExtra("pierceBoost", 3);
-                projectile.setPierce(Math.max(projectile.getPierce(), pierceBoost));
-            }
-
-            context.spawnProjectile(projectile);
+    /**
+     * Fires the next pea of an in-progress burst once the inter-shot gap has elapsed.
+     */
+    private void drainBurst(PlantInstance plant, BehaviorContext context, double deltaTime) {
+        int remaining = asInt(plant.getRuntimeState().getOrDefault("burstRemaining", 0), 0);
+        if (remaining <= 0) {
+            return;
         }
+        double timer = asDouble(plant.getRuntimeState().getOrDefault("burstTimer", 0.0), 0.0);
+        timer += deltaTime;
+        if (timer < BURST_GAP_SECONDS) {
+            plant.putRuntimeState("burstTimer", timer);
+            return;
+        }
+        int damage = asInt(plant.getRuntimeState().getOrDefault("burstDamage", 0), 0);
+        spawnOne(plant, context, damage);
+        plant.putRuntimeState("burstRemaining", remaining - 1);
+        plant.putRuntimeState("burstTimer", 0.0);
+    }
+
+    /**
+     * Creates and spawns a single projectile with the appropriate type and pierce attributes.
+     */
+    private void spawnOne(PlantInstance plant, BehaviorContext context, int damage) {
+        Projectile projectile = ProjectileFactory.createProjectile(plant, damage);
+
+        if (plant.getStats().getBooleanExtra("fireAttack", false)) {
+            projectile.setType(ProjectileType.FIRE_PEA);
+        }
+        if (plant.getStats().getBooleanExtra("iceAttack", false)) {
+            projectile.setType(ProjectileType.ICE_PEA);
+        }
+        // Fume-shroom breathes a smoke cloud (drawn in code) that passes through zombies,
+        // not a solid pea bullet.
+        String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+        if ("fume_shroom".equals(key)) {
+            projectile.setType(ProjectileType.FUME);
+        }
+        boolean shouldPierce = plant.getStats().getBooleanExtra("passThrough", false)
+                || (plant.getDefinition() != null
+                    && plant.getDefinition().getCategoryEnum() == PlantCategory.THROUGH_STRIKE);
+        if (shouldPierce) {
+            int pierceBoost = plant.getStats().getIntExtra("pierceBoost", 3);
+            projectile.setPierce(Math.max(projectile.getPierce(), pierceBoost));
+        }
+
+        context.spawnProjectile(projectile);
     }
 
     // ---------- Utility methods ----------

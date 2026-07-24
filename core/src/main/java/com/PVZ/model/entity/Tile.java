@@ -36,7 +36,9 @@ public class Tile {
             case SLIPPERY_UP -> sr.setColor(new Color(0.3f, 0.5f, 1f, 1f));
             case SLIPPERY_DOWN -> sr.setColor(new Color(0.3f, 0.5f, 1f, 1f));
             case TOMBSTONE -> sr.setColor(new Color(0.5f, 0.35f, 0.2f, 1f));
-            default -> sr.setColor(Color.BLUE);
+            // NORMAL tiles: draw a very faint border so the map grid is still
+            // subtly visible without dominating the view or looking like a "blue bug".
+            default -> sr.setColor(new Color(0.95f, 0.95f, 0.95f, 0.15f));
         }
         sr.rect(worldX, worldY, width, height);
     }
