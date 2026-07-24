@@ -78,6 +78,59 @@ public enum ChapterAndLevelSelectionCommand {
         }
     },
 
+    SHOW_CHAPTERS("^\\s*show\\s+chapters\\s*$") {
+        @Override
+        public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {
+            return new ChapterAndLevelSelectionInputDTO(this, null, null, null, null);
+        }
+    },
+
+    CHEAT_UNLOCK_ALL("^\\s*menu\\s+cheat\\s+unlock-all\\s*$") {
+        @Override
+        public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {
+            return new ChapterAndLevelSelectionInputDTO(this, null, null, null, null);
+        }
+    },
+
+    CHEAT_COMPLETE_CHAPTER("^\\s*menu\\s+cheat\\s+complete-chapter\\s+-c\\s+(?<chapterName>[A-Za-z0-9_-]+)\\s*$") {
+        @Override
+        public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {
+            return new ChapterAndLevelSelectionInputDTO(this, matcher.group("chapterName"), null, null, null);
+        }
+    },
+
+    CHEAT_COMPLETE_STAGE("^\\s*menu\\s+cheat\\s+complete-stage\\s+-c\\s+(?<chapterName>[A-Za-z0-9_-]+)\\s+-s\\s+(?<stage>\\d+)\\s*$") {
+        @Override
+        public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {
+            return new ChapterAndLevelSelectionInputDTO(
+                this, matcher.group("chapterName"), null, null,
+                Integer.parseInt(matcher.group("stage")));
+        }
+    },
+
+    CHEAT_LOCK_ALL("^\\s*menu\\s+cheat\\s+lock-all\\s*$") {
+        @Override
+        public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {
+            return new ChapterAndLevelSelectionInputDTO(this, null, null, null, null);
+        }
+    },
+
+    CHEAT_LOCK_CHAPTER("^\\s*menu\\s+cheat\\s+lock-chapter\\s+-c\\s+(?<chapterName>[A-Za-z0-9_-]+)\\s*$") {
+        @Override
+        public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {
+            return new ChapterAndLevelSelectionInputDTO(this, matcher.group("chapterName"), null, null, null);
+        }
+    },
+
+    CHEAT_LOCK_STAGE("^\\s*menu\\s+cheat\\s+lock-stage\\s+-c\\s+(?<chapterName>[A-Za-z0-9_-]+)\\s+-s\\s+(?<stage>\\d+)\\s*$") {
+        @Override
+        public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {
+            return new ChapterAndLevelSelectionInputDTO(
+                this, matcher.group("chapterName"), null, null,
+                Integer.parseInt(matcher.group("stage")));
+        }
+    },
+
     EXIT("^\\s*menu\\s+exit\\s*$") {
         @Override
         public ChapterAndLevelSelectionInputDTO createDTO(Matcher matcher) {

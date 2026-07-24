@@ -24,7 +24,8 @@ public enum MenuType {
     WALLNUT_BOWLING(new WallnutBowlingMenu()),
     I_ZOMBIE(new IZombieMenu()),
     BEGHOULED(new BeghouledMenu()),
-    ZOMBOTANY(new ZombotanyMenu());
+    ZOMBOTANY(new ZombotanyMenu()),
+    END_OF_GAME(new EndOfGameMenu());
 
 
     private final Menu currentMenu;

@@ -6,6 +6,9 @@ import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.ChapterEnum;
+import com.PVZ.model.enums.MenuType;
+import com.PVZ.model.game.chapter.ChapterConfig;
+import com.PVZ.model.game.chapter.ChapterLibrary;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.UserRegistry;
 
@@ -165,7 +168,7 @@ public class UpdateHandler {
     public static void updateGameOverTimer(RegularGameEngine engine, float delta) {
         if (!engine.gameOverTriggered || engine.gameOverNavigated) return;
         engine.gameOverTimer += delta;
-        if (engine.gameOverTimer >= 3.0f) {
+        if (engine.gameOverTimer >= 1.5f) {
             engine.gameOverNavigated = true;
             if (engine.gameOverWin) {
                 var stats = AppStatus.currentUser != null ? AppStatus.currentUser.userStats : null;
@@ -174,18 +177,29 @@ public class UpdateHandler {
                     ChapterEnum chapter = AppStatus.getCurrentChapterEnum();
                     if (chapter != null && AppStatus.currentUser.progressState != null) {
                         AppStatus.currentUser.progressState.completeLevel(chapter, AppStatus.currentStageNumber);
+                        ChapterConfig config = ChapterLibrary.getChapterConfig(AppStatus.currentChapterName);
+                        if (config != null) {
+                            int maxStage = config.getStages().size();
+                            if (AppStatus.currentStageNumber >= maxStage) {
+                                ChapterEnum[] chapters = ChapterEnum.values();
+                                for (int i = 0; i < chapters.length; i++) {
+                                    if (chapters[i] == chapter && i + 1 < chapters.length) {
+                                        AppStatus.currentUser.progressState.completeLevel(chapters[i + 1], 1);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
                     UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
                 }
-                AppStatus.returnToTravelLog();
-            } else {
-                AppStatus.returnToMainMenu();
             }
-            resetBoardAfterGameOver(engine);
+            AppStatus.lastGameResultWin = engine.gameOverWin;
+            AppStatus.currentMenuType = MenuType.END_OF_GAME;
         }
     }
 
-    private static void resetBoardAfterGameOver(RegularGameEngine engine) {
+    public static void resetBoardAfterGameOver(RegularGameEngine engine) {
         engine.gameOverTriggered = false;
         engine.gameOverNavigated = false;
         engine.gameOverTimer = 0f;
