@@ -256,11 +256,7 @@ public class ZombotanyGameEngine extends GameEngine implements ZombieEngine, See
         gameOverTimer += delta;
         if (gameOverTimer >= GAME_OVER_DISPLAY_DURATION) {
             gameOverNavigated = true;
-            if (gameOverWin) {
-                AppStatus.returnToTravelLog();
-            } else {
-                AppStatus.returnToMainMenu("GAME OVER");
-            }
+            AppStatus.returnToTravelLog();
         }
     }
 
@@ -393,7 +389,7 @@ public class ZombotanyGameEngine extends GameEngine implements ZombieEngine, See
             alpha = 1.0f;
         }
         batch.begin();
-        String message = gameOverWin ? "YOU WIN!" : "GAME OVER";
+        String message = gameOverWin ? "YOU WIN!" : "YOU LOSE!";
         com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout(font, message);
         float x = 1280f - layout.width / 2f;
         float y = 720f + layout.height / 2f;

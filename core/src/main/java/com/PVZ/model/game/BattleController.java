@@ -29,6 +29,9 @@ public class BattleController implements BehaviorContext {
     private final List<ZombieProjectile> zombieProjectiles = new java.util.ArrayList<>();
     private final GameStatus gameStatus;
     private Map map;
+    private PlantFoodManager plantFoodManager;
+    private LootManager lootManager;
+    private final java.util.Random lootRandom = new java.util.Random();
 
     public BattleController(List<Zombie> zombies, List<Plant> plants,
                             List<Projectile> projectiles, GameStatus gameStatus) {
@@ -36,6 +39,79 @@ public class BattleController implements BehaviorContext {
         this.plants = plants;
         this.projectiles = projectiles;
         this.gameStatus = gameStatus;
+    }
+
+    public void setPlantFoodManager(PlantFoodManager plantFoodManager) {
+        this.plantFoodManager = plantFoodManager;
+    }
+
+    public void setLootManager(LootManager lootManager) {
+        this.lootManager = lootManager;
+    }
+
+    /**
+     * Reward for a glowing zombie's death: grants one plant food (doc page 27),
+     * capped at 3 stored plant foods.
+     */
+    public void grantPlantFoodDrop() {
+        if (plantFoodManager == null) {
+            return;
+        }
+        plantFoodManager.addPlantFood(1);
+        System.out.println("The glowing zombie dropped a plant food; you have "
+            + plantFoodManager.getPlantFoodCount() + " plant foods now.");
+    }
+
+    /**
+     * Every zombie has a 10% chance on death to leave a coin, diamond, or greenhouse pot on the
+     * lawn (doc page 28), split evenly among the three outcomes. Unlike the instant plant-food
+     * grant, this spawns a clickable {@link com.PVZ.model.entity.LootDrop} the player has to
+     * hover/click to collect, mirroring how the {@link SunManager} handles falling suns.
+     */
+    public void rollLootDrop(double x, double y) {
+        if (lootManager == null || lootRandom.nextDouble() >= 0.10) {
+            return;
+        }
+        com.PVZ.model.entity.LootDrop.LootType[] types = com.PVZ.model.entity.LootDrop.LootType.values();
+        com.PVZ.model.entity.LootDrop.LootType type = types[lootRandom.nextInt(types.length)];
+        lootManager.spawn(x, y, type);
+    }
+
+    /**
+     * Applies the reward for a loot drop the player just collected (called from the input
+     * processor once the click/hover hitbox test passes). Returns a status message.
+     */
+    public String applyLootReward(com.PVZ.model.entity.LootDrop drop) {
+        if (drop == null || AppStatus.currentUser == null || AppStatus.currentUser.userStats == null) {
+            return "";
+        }
+        switch (drop.getType()) {
+            case DIAMOND -> {
+                AppStatus.currentUser.userStats.addDiamonds(drop.getType().getAmount());
+                String msg = "A zombie dropped a diamond; you have "
+                    + AppStatus.currentUser.userStats.getDiamonds() + " diamonds now.";
+                System.out.println(msg);
+                return msg;
+            }
+            case COIN -> {
+                AppStatus.currentUser.userStats.addCoins(drop.getType().getAmount());
+                String msg = "A zombie dropped a coin; you have "
+                    + AppStatus.currentUser.userStats.getCoins() + " coins now.";
+                System.out.println(msg);
+                return msg;
+            }
+            case POT -> {
+                if (AppStatus.currentUser.greenhouseState != null) {
+                    AppStatus.currentUser.greenhouseState.unlockPots(drop.getType().getAmount());
+                }
+                String msg = "A zombie dropped a pot; you have a new greenhouse slot now.";
+                System.out.println(msg);
+                return msg;
+            }
+            default -> {
+                return "";
+            }
+        }
     }
 
     public void setMap(Map map) {

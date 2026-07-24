@@ -29,6 +29,12 @@ import java.util.Random;
 public class IZombieGameEngine extends GameEngine implements ZombieEngine {
 
     private static final double TICK_SECONDS = 0.1;
+    private static final float GAME_OVER_DISPLAY_DURATION = 3.0f;
+
+    private boolean gameOverTriggered = false;
+    private boolean gameOverNavigated = false;
+    private boolean gameOverWin = false;
+    private float gameOverTimer = 0f;
 
     private final List<Plant> plants = new ArrayList<>();
     private final List<Projectile> projectiles = new ArrayList<>();
@@ -120,6 +126,10 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
 
     @Override
     public void update(float delta) {
+        if (gameOverTriggered) {
+            updateGameOverTimer(delta);
+            return;
+        }
         if (gameStatus.isGameOver() || (game != null && game.isFinished())) return;
         battleController.update(delta);
         tickAccumulator += delta;
@@ -193,22 +203,21 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
             if (z.getX() <= brainLineX) {
                 game.eatBrain(row);
                 zombieEngine.kill(z);
-                if (!gameStatus.isGameOver() && game.isWon()) {
+                if (!gameOverTriggered && !gameStatus.isGameOver() && game.isWon()) {
                     if (AppStatus.currentUser != null) {
                         if (AppStatus.currentUser.progressState != null) {
                             AppStatus.currentUser.progressState.clearMinigameStage(MinigameEnum.I_ZOMBIE);
                         }
                         UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
                     }
-                    gameStatus.setGameOver(true);
-                    com.PVZ.model.status.AppStatus.returnToTravelLog();
+                    triggerGameOver(true);
                 }
             }
         }
     }
 
     private void checkLoss() {
-        if (game == null || game.isFinished()) return;
+        if (game == null || game.isFinished() || gameOverTriggered) return;
         boolean anyZombieAlive = false;
         for (Zombie z : zombieEngine.getZombies()) {
             if (z != null && !z.isDead()) { anyZombieAlive = true; break; }
@@ -220,8 +229,28 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
             if (game.getSun() >= option.getCost()) { canAffordAnything = true; break; }
         }
         if (!canAffordAnything) {
-            game.markLost();
-            gameStatus.setGameOver(true);
+            triggerGameOver(false);
+        }
+    }
+
+    private void triggerGameOver(boolean win) {
+        if (gameOverTriggered) return;
+        gameOverTriggered = true;
+        gameOverTimer = 0f;
+        gameOverWin = win;
+        if (game != null) {
+            if (win) game.markWon();
+            else game.markLost();
+        }
+        gameStatus.setWon(win);
+        gameStatus.setGameOver(true);
+    }
+
+    private void updateGameOverTimer(float delta) {
+        if (!gameOverTriggered || gameOverNavigated) return;
+        gameOverTimer += delta;
+        if (gameOverTimer >= GAME_OVER_DISPLAY_DURATION) {
+            gameOverNavigated = true;
             com.PVZ.model.status.AppStatus.returnToTravelLog();
         }
     }
@@ -255,15 +284,34 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         batch.begin();
         String selectedAlias = ((IZombieInputProcessor) inputProcessor).getSelectedAlias();
         zombiePacketBar.draw(batch, font, tinyFont, game, selectedAlias);
-        if (game.isWon()) {
-            font.draw(batch, "LEVEL COMPLETE! All brains eaten!", map.getStartX() + 40f, map.getStartY() + 60f);
-        } else if (game.isLost()) {
-            font.draw(batch, "GAME OVER! Out of sun and zombies.", map.getStartX() + 40f, map.getStartY() + 60f);
-        } else {
+        if (!gameOverTriggered) {
             String label = String.format("Sun: %d | Brains left: %d/%d | Sun rate: %.1f",
                     game.getSun(), game.getBrainsRemaining(), game.getRows(), game.getCurrentSunRate());
             font.draw(batch, label, map.getStartX() + 20f, map.getStartY() + 40f);
         }
+        batch.end();
+        drawGameOverOverlay(batch);
+    }
+
+    private void drawGameOverOverlay(SpriteBatch batch) {
+        if (!gameOverTriggered) return;
+        ensureTexturesLoaded();
+        float alpha;
+        if (gameOverTimer < 1.0f) {
+            alpha = Math.max(0f, gameOverTimer);
+        } else if (gameOverTimer > 2.5f) {
+            alpha = Math.max(0f, 1.0f - (gameOverTimer - 2.5f) / 0.5f);
+        } else {
+            alpha = 1.0f;
+        }
+        batch.begin();
+        String message = gameOverWin ? "YOU WIN!" : "YOU LOSE!";
+        com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout(font, message);
+        float x = 1280f - layout.width / 2f;
+        float y = 720f + layout.height / 2f;
+        font.setColor(1f, 1f, 1f, alpha);
+        font.draw(batch, message, x, y);
+        font.setColor(1f, 1f, 1f, 1f);
         batch.end();
     }
 

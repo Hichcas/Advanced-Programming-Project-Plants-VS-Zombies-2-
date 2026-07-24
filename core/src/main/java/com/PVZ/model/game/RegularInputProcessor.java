@@ -116,6 +116,7 @@ public class RegularInputProcessor extends InputAdapter {
         }
         Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
         regularGameEngine.collectSunAtWorldPoint(worldCoords.x, worldCoords.y);
+        regularGameEngine.collectLootAtWorldPoint(worldCoords.x, worldCoords.y);
         return false;
     }
 }

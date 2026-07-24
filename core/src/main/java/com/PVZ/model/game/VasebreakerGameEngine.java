@@ -26,6 +26,7 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
         .VasebreakerEngineCallback {
 
     private static final double TICK_SECONDS = 0.1;
+    private static final float GAME_OVER_DISPLAY_DURATION = 3.0f;
 
     private final List<Projectile> projectiles = new ArrayList<>();
     private final List<Plant> plants = new ArrayList<>();
@@ -34,6 +35,11 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
     private LawnMower[] lawnMowers;
     private float tickAccumulator = 0f;
     private boolean levelWon = false;
+
+    private boolean gameOverTriggered = false;
+    private boolean gameOverNavigated = false;
+    private boolean gameOverWin = false;
+    private float gameOverTimer = 0f;
 
     private VasebreakerGame game;
     private Texture vaseNormal;
@@ -91,6 +97,10 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
 
     @Override
     public void update(float delta) {
+        if (gameOverTriggered) {
+            updateGameOverTimer(delta);
+            return;
+        }
         if (gameStatus.isGameOver()) return;
         if (game != null) game.update(delta);
         battleController.update(delta);
@@ -155,11 +165,29 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
             if (mower.isUsed() && !gameStatus.isGameOver()) {
                 for (Zombie z : getZombiesInLane(mower.getRow())) {
                     if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
-                        battleController.triggerGameOver();
+                        triggerGameOver(false);
                         return;
                     }
                 }
             }
+        }
+    }
+
+    private void triggerGameOver(boolean win) {
+        if (gameOverTriggered) return;
+        gameOverTriggered = true;
+        gameOverTimer = 0f;
+        gameOverWin = win;
+        gameStatus.setWon(win);
+        gameStatus.setGameOver(true);
+    }
+
+    private void updateGameOverTimer(float delta) {
+        if (!gameOverTriggered || gameOverNavigated) return;
+        gameOverTimer += delta;
+        if (gameOverTimer >= GAME_OVER_DISPLAY_DURATION) {
+            gameOverNavigated = true;
+            AppStatus.returnToTravelLog();
         }
     }
 
@@ -225,9 +253,29 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
                     tile.getY() + (tile.getHeight() - h) / 2f, w, h);
         }
 
-        if (game.isFinished()) {
-            font.draw(batch, "LEVEL COMPLETE!", map.getStartX() + 40f, map.getStartY() + 60f);
+        batch.end();
+        drawGameOverOverlay(batch);
+    }
+
+    private void drawGameOverOverlay(SpriteBatch batch) {
+        if (!gameOverTriggered) return;
+        ensureVaseTexturesLoaded();
+        float alpha;
+        if (gameOverTimer < 1.0f) {
+            alpha = Math.max(0f, gameOverTimer);
+        } else if (gameOverTimer > 2.5f) {
+            alpha = Math.max(0f, 1.0f - (gameOverTimer - 2.5f) / 0.5f);
+        } else {
+            alpha = 1.0f;
         }
+        batch.begin();
+        String message = gameOverWin ? "YOU WIN!" : "YOU LOSE!";
+        com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout(font, message);
+        float x = 1280f - layout.width / 2f;
+        float y = 720f + layout.height / 2f;
+        font.setColor(1f, 1f, 1f, alpha);
+        font.draw(batch, message, x, y);
+        font.setColor(1f, 1f, 1f, 1f);
         batch.end();
     }
 
@@ -282,6 +330,7 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
             }
             UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
         }
+        triggerGameOver(true);
     }
 
     public boolean isLevelWon() { return levelWon; }
