@@ -147,7 +147,9 @@ public class Plant {
                 String path = PlantTexturePaths.getPath(key);
                 try {
                     if (com.badlogic.gdx.Gdx.files.internal(path).exists()) {
-                        return new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(path));
+                        com.badlogic.gdx.graphics.Texture tex = new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(path));
+                        tex.setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear, com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
+                        return tex;
                     }
                     System.out.println("[Plant] no icon found for " + key + " at assets/" + path
                         + " -> falling back to placeholder circle");
@@ -175,6 +177,7 @@ public class Plant {
         pixmap.setColor(0f, 0f, 0f, 0.6f);
         pixmap.drawCircle(w / 2, h / 2, w / 2 - 2);
         com.badlogic.gdx.graphics.Texture tex = new com.badlogic.gdx.graphics.Texture(pixmap);
+        tex.setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear, com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
         pixmap.dispose();
         return tex;
     }
