@@ -1,6 +1,7 @@
 package com.PVZ.model.game;
 
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.status.AppStatus;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,6 +44,9 @@ public class WaveManager {
 
     public void start() {
         started = true;
+        if (AppStatus.currentUser != null && AppStatus.currentUser.questState != null) {
+            AppStatus.currentUser.questState.getQuestManager().onFirstWaveStarted();
+        }
     }
 
     public boolean isStarted() {

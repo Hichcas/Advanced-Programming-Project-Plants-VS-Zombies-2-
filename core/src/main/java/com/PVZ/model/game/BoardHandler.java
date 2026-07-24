@@ -6,6 +6,7 @@ import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.TileType;
+import com.PVZ.model.status.AppStatus;
 
 import java.util.StringJoiner;
 
@@ -35,6 +36,8 @@ public class BoardHandler {
                 for (Zombie z : engine.getZombiesInLane(mower.getRow())) {
                     if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
                         mower.trigger();
+                        engine.questLawnmowerKills++;
+                        engine.getBattleController().notifyZombieKilled(z, null);
                         engine.zombieEngine.kill(z);
                         break;
                     }
@@ -44,6 +47,8 @@ public class BoardHandler {
                 mower.advance(delta);
                 for (Zombie z : engine.getZombiesInLane(mower.getRow())) {
                     if (z != null && !z.isDead() && mower.getHitbox().overlaps(z.getHitbox())) {
+                        engine.questLawnmowerKills++;
+                        engine.getBattleController().notifyZombieKilled(z, null);
                         engine.zombieEngine.kill(z);
                     }
                 }

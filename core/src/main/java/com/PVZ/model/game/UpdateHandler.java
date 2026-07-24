@@ -9,6 +9,7 @@ import com.PVZ.model.enums.ChapterEnum;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.game.chapter.ChapterConfig;
 import com.PVZ.model.game.chapter.ChapterLibrary;
+import com.PVZ.model.quest.LevelResult;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.UserRegistry;
 
@@ -97,6 +98,7 @@ public class UpdateHandler {
                             Math.max(plant.getStats().getExplodeDamage(), plant.getStats().getDamage()));
                     }
                     engine.map.removePlant(row, col);
+                    engine.questPlantsLost++;
                     if (engine.specialLevel != null) engine.specialLevel.onPlantDestroyed(row, col, engine);
                 }
             }
@@ -150,6 +152,22 @@ public class UpdateHandler {
     // ---------- Game Over ----------
     public static void triggerGameOver(RegularGameEngine engine, boolean win) {
         if (engine.gameOverTriggered) return;
+
+        if (win && AppStatus.currentUser != null && AppStatus.currentUser.questState != null) {
+            LevelResult res = new LevelResult();
+            res.setWon(true);
+            res.setFinalSunCount(engine.getSunCount());
+            res.setPlantsLost(engine.questPlantsLost);
+            res.setZombiesKilledByLawnmower(engine.questLawnmowerKills);
+            res.setLawnlessCol1Kills(engine.questLawnlessCol1Kills);
+            res.setDifficultyLevel(AppStatus.currentUser.appStats.getDifficultyLevel());
+            res.setDayLevel(!engine.gameStatus.isNoSkySun());
+            res.setFinalMap(engine.map);
+            res.setPlantTypesUsed(new java.util.ArrayList<>(engine.questPlantTypesUsed));
+            res.setPlantFamiliesUsed(new java.util.HashSet<>(engine.questPlantFamiliesUsed));
+            AppStatus.currentUser.questState.getQuestManager().onLevelEnd(res);
+        }
+
         engine.gameOverTriggered = true;
         engine.gameOverTimer = 0f;
         engine.gameOverWin = win;
