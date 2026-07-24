@@ -1,0 +1,77 @@
+Chapter 3 — Test Commands Guide
+1. Enter Big Wave Beach
+enter chapter -c 3 -s 1
+Expected: Enters chapter selection for Big Wave Beach.
+Expected: Starts Big Wave Beach Stage 1 (or plant selection).
+
+2. Water Tiles & Tide Display
+show map
+Expected: Right columns show ~ (WATER) and L (LOW_COAST). Tide line at bottom shows which columns are flooded.
+Tide advance: Wait for a wave to end. The ~ symbols should spread left by 1 column each wave.
+
+3. Lily Pad Stacking
+plant lily_pad 7 0
+Expected: "Planted Lily Pad at (7, 0)." — Lily Pad goes on WATER tile.
+plant peashooter 7 0
+Expected: "Planted Peashooter at (7, 0)." — Peashooter stacks on top of Lily Pad.
+plant peashooter 8 0
+Expected: "Non-aquatic plants need a Lily Pad on water tiles." — Rejected because no Lily Pad.
+plant lily_pad 3 0
+Expected: "Lily Pad must be planted on water tiles." — Rejected on land.
+show tile status 7 0
+Expected: Shows type=WATER [Water] | Base: Lily Pad hp=... | Plant: Peashooter hp=...
+show map
+Expected: Tile (7,0) shows S (Stacked plant on Lily Pad).
+
+4. Rising Tide — Lily Pad Protection
+Let the tide advance by completing a wave. Plants on Lily Pad should survive. Non-aquatic plants without Lily Pad should be destroyed.
+show tile status 7 0
+Expected: After tide advance, if there's a Lily Pad base, the top plant survives. Without Lily Pad, the plant is destroyed.
+
+5. LOW_COAST Spawning
+Each time a new wave starts, LOW_COAST tiles should spawn beach zombies.
+show map
+Expected: After wave advance, zombies (Z) appear on LOW_COAST tiles (L).
+
+6. Snorkel Immunity
+plant peashooter 5 0
+peashooter should shoot at snorkel zombies...
+Expected: Snorkel zombie submerged in water (~) takes no damage from Peashooter (direct shot).
+plant cabbage_pult 5 0
+Expected: Cabbage-pult (Lobber) can hit submerged Snorkel zombies even on water tiles.
+
+7. Surfer Crush
+plant wall_nut 5 0
+When a Surfer zombie passes through: Expected: "[Surfer] crushed a plant while surfing!" — Wall-nut is destroyed immediately, Surfer keeps moving.
+After losing surfboard: Surfer becomes normal speed and stops to eat.
+
+8. Fisherman Hook
+plant peashooter 3 0
+Fisherman hooks from right: Expected: "[Fisherman] hooked plant from col 0 to col 1" — Plant moves 1 tile right each hook.
+When plant reaches column next to Fisherman: "[Fisherman] yanked and destroyed a plant!"
+
+9. Octopus Immobilize
+plant peashooter 5 0
+Octopus throws: Expected: "[Octopus] stuck an octopus on plant at (0, 3) — shoot it to free it!"
+show tile status 5 0
+Expected: Shows Octopus hp=200 (shoot to free plant!)
+show map
+Expected: Octopus tile shows O.
+Shoot with another Peashooter: Each hit reduces octopus HP. When it reaches 0:
+Expected: "Octopus destroyed on tile — plant freed!"
+The freed plant resumes shooting.
+
+10. Fast Swimmer
+On WATER tiles: moves at speed 0.35.
+On NORMAL tiles: slows to speed 0.185.
+show map
+Check zombie positions — Fast Swimmers on water tiles move faster.
+
+11. Complete Verification Commands
+show map
+Renders:
+- ~ WATER, ^ TIDE, L LOW_COAST
+- B Lily Pad base, S Stacked plant on Lily Pad
+- O Octopus on plant, Z Zombie
+show tile status x y
+Shows: tile type, base plant, top plant, octopus HP

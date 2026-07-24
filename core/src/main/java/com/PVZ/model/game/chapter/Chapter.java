@@ -26,8 +26,6 @@ public class Chapter {
     private int lastGraveWave = -1;
     private int lastNecroWave = -1;
     private int lastLowCoastWave = -1;
-    private int maxTideColumn = 8;
-    private boolean tideInitialized = false;
     private int tideFloodedColumn = 9;
 
     public Chapter(ChapterConfig config) {
@@ -156,7 +154,6 @@ public class Chapter {
                 return;
             }
 
-            initializeTideBoundary(map);
             int currentWave = wm.getCurrentWave();
             if (currentWave > lastTideWave) {
                 lastTideWave = currentWave;
@@ -311,28 +308,6 @@ public class Chapter {
 
     // ---------- Tide helpers ----------
 
-    private void initializeTideBoundary(com.PVZ.model.game.Map map) {
-        if (tideInitialized) {
-            return;
-        }
-        for (int c = 0; c < 9; c++) {
-            boolean water = false;
-            for (int r = 0; r < 5; r++) {
-                Tile t = map.getTile(r, c);
-                if (t != null && (t.getType() == TileType.WATER || t.getType() == TileType.TIDE)) {
-                    water = true;
-                    break;
-                }
-            }
-            if (water) {
-                maxTideColumn = c;
-                break;
-            }
-        }
-        tideFloodedColumn = maxTideColumn;
-        tideInitialized = true;
-    }
-
     private void advanceTide(com.PVZ.model.game.Map map) {
         if (tideFloodedColumn <= 0) {
             return;
@@ -340,7 +315,7 @@ public class Chapter {
         tideFloodedColumn--;
         for (int r = 0; r < 5; r++) {
             Tile tile = map.getTile(r, tideFloodedColumn);
-            if (tile == null || tile.getType() == TileType.WATER || tile.getType() == TileType.LOW_COAST) {
+            if (tile == null) {
                 continue;
             }
             Plant topPlant = map.getPlantAt(r, tideFloodedColumn);
