@@ -64,7 +64,28 @@ public class ProgressState {
 
     /** آیا مرحله‌ای خاص در یک فصل باز شده است؟ (باز شدن مراحل به‌صورت ترتیبی) */
     public boolean isLevelUnlocked(ChapterEnum chapter, int stage) {
-        return getCompletedLevel(chapter) >= stage - 1;  // مرحلهٔ قبل باید کامل شده باشد
+        return getCompletedLevel(chapter) >= stage - 1;
+    }
+
+    /** قفل کردن یک مرحله (تنها در صورتی که از مقدار فعلی کوچک‌تر باشد ذخیره می‌شود) */
+    public void lockLevel(ChapterEnum chapter, int stage) {
+        int current = getCompletedLevel(chapter);
+        int newVal = Math.max(0, stage - 1);
+        if (newVal < current) {
+            completedLevels.put(chapter, newVal);
+        }
+    }
+
+    /** بازنشانی یک فصل به حالت اولیه (هیچ مرحله‌ای کامل نشده) */
+    public void resetChapter(ChapterEnum chapter) {
+        completedLevels.put(chapter, 0);
+    }
+
+    /** بازنشانی همه فصل‌ها به حالت اولیه */
+    public void resetAll() {
+        for (ChapterEnum ch : ChapterEnum.values()) {
+            completedLevels.put(ch, 0);
+        }
     }
 
     /** دریافت تعداد مراحل کامل‌شده در یک مینی‌گیم */

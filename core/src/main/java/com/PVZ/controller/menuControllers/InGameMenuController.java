@@ -38,11 +38,7 @@ public class InGameMenuController {
         if (engine == null || engine.gameStatus == null || !engine.gameStatus.isGameOver()) {
             return null;
         }
-        engine.gameStatus.setGameOver(false);
-        engine.resetGameOverState();
-        com.PVZ.model.status.AppStatus.returnToChapterAndLevelSelection("GAME OVER");
-        return new OutputDTO(true,
-            "The zombie ate your brain; LOSER!!! Returning to level select.");
+        return new OutputDTO(true, "Game over. Type 'show stats' or 'menu exit' once the result screen appears.");
     }
 
     private OutputDTO dispatchCommand(InGameInputDTO dto, RegularGameEngine engine) {

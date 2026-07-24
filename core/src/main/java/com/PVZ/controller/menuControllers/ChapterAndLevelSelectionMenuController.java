@@ -1,5 +1,6 @@
 package com.PVZ.controller.menuControllers;
 
+import com.PVZ.model.enums.ChapterEnum;
 import com.PVZ.model.enums.commands.ChapterAndLevelSelectionCommand;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
@@ -32,6 +33,13 @@ public class ChapterAndLevelSelectionMenuController {
             case SHOW_COIN_WALLET -> showCoins();
             case SHOW_GEM_WALLET -> showDiamonds();
             case CHEAT_ADD -> cheatAdd(dto.getAmount(), dto.getCurrency());
+            case SHOW_CHAPTERS -> showChapters();
+            case CHEAT_UNLOCK_ALL -> cheatUnlockAll();
+            case CHEAT_COMPLETE_CHAPTER -> cheatCompleteChapter(dto.getChapterName());
+            case CHEAT_COMPLETE_STAGE -> cheatCompleteStage(dto.getChapterName(), dto.getStage());
+            case CHEAT_LOCK_ALL -> cheatLockAll();
+            case CHEAT_LOCK_CHAPTER -> cheatLockChapter(dto.getChapterName());
+            case CHEAT_LOCK_STAGE -> cheatLockStage(dto.getChapterName(), dto.getStage());
             case SHOW_CURRENT_MENU -> new OutputDTO(true, AppStatus.currentMenuType.name());
             case EXIT -> exitToMain();
         };
@@ -57,7 +65,33 @@ public class ChapterAndLevelSelectionMenuController {
         }
         AppStatus.currentChapterName = name;
         AppStatus.currentChapter = ChapterLibrary.getChapter(name);
-        AppStatus.currentStageNumber = (stage != null && stage > 0) ? stage : 1;
+        int stageNum = (stage != null && stage > 0) ? stage : 1;
+        AppStatus.currentStageNumber = stageNum;
+
+        User user = AppStatus.currentUser;
+        if (user != null && user.progressState != null) {
+            try {
+                ChapterEnum chapterEnum = ChapterEnum.valueOf(name.toUpperCase());
+                ChapterEnum[] chapters = ChapterEnum.values();
+                int chapterIndex = -1;
+                for (int i = 0; i < chapters.length; i++) {
+                    if (chapters[i] == chapterEnum) { chapterIndex = i; break; }
+                }
+                if (chapterIndex > 0) {
+                    ChapterEnum prevChapter = chapters[chapterIndex - 1];
+                    ChapterConfig prevConfig = ChapterLibrary.getChapterConfig(prevChapter.name());
+                    int prevMaxStage = prevConfig != null ? prevConfig.getStages().size() : 1;
+                    if (user.progressState.getCompletedLevel(prevChapter) < prevMaxStage) {
+                        return new OutputDTO(false, "Complete " + prevChapter.getDisplayName() + " first.");
+                    }
+                }
+                if (!user.progressState.isLevelUnlocked(chapterEnum, stageNum)) {
+                    return new OutputDTO(false, "Stage " + stageNum + " is locked. Complete the previous stage first.");
+                }
+            } catch (IllegalArgumentException e) {
+                return new OutputDTO(false, "Unknown chapter: " + name);
+            }
+        }
 
         // Clear selection state using the renamed constants
         AppStatus.SELECTED_PLANTS.clear();
@@ -136,6 +170,142 @@ public class ChapterAndLevelSelectionMenuController {
         }
         UserRegistry.markDirty(currentUser.profile.getUsername());
         return new OutputDTO(true, "Cheat applied successfully.");
+    }
+
+    private OutputDTO showChapters() {
+        User user = AppStatus.currentUser;
+        if (user == null || user.progressState == null) {
+            return new OutputDTO(false, "You must be logged in.");
+        }
+        StringBuilder sb = new StringBuilder();
+        ChapterEnum[] chapters = ChapterEnum.values();
+        for (int i = 0; i < chapters.length; i++) {
+            ChapterEnum chapterEnum = chapters[i];
+            ChapterConfig config = ChapterLibrary.getChapterConfig(chapterEnum.name());
+            if (config == null) continue;
+            boolean chapterUnlocked;
+            if (i == 0) {
+                chapterUnlocked = true;
+            } else {
+                ChapterEnum prevChapter = chapters[i - 1];
+                ChapterConfig prevConfig = ChapterLibrary.getChapterConfig(prevChapter.name());
+                int prevMaxStage = prevConfig != null ? prevConfig.getStages().size() : 1;
+                chapterUnlocked = user.progressState.getCompletedLevel(prevChapter) >= prevMaxStage;
+            }
+            sb.append(config.getDisplayName());
+            if (!chapterUnlocked) sb.append(" [LOCKED]");
+            sb.append(":\n");
+            for (StageConfig stage : config.getStages()) {
+                int stageNum = stage.getStageNumber();
+                boolean stageUnlocked = chapterUnlocked && user.progressState.isLevelUnlocked(chapterEnum, stageNum);
+                sb.append("  Stage ").append(stageNum).append(" [")
+                  .append(stageUnlocked ? "UNLOCKED" : "LOCKED").append("]\n");
+            }
+        }
+        return new OutputDTO(true, sb.toString().stripTrailing());
+    }
+
+    private OutputDTO cheatUnlockAll() {
+        User user = AppStatus.currentUser;
+        if (user == null || user.progressState == null) {
+            return new OutputDTO(false, "You must be logged in.");
+        }
+        for (ChapterEnum chapter : ChapterEnum.values()) {
+            user.progressState.completeLevel(chapter, 99);
+        }
+        UserRegistry.markDirty(user.profile.getUsername());
+        return new OutputDTO(true, "All chapters and stages unlocked.");
+    }
+
+    private OutputDTO cheatCompleteChapter(String chapterName) {
+        User user = AppStatus.currentUser;
+        if (user == null || user.progressState == null) {
+            return new OutputDTO(false, "You must be logged in.");
+        }
+        if (chapterName == null || chapterName.isBlank()) {
+            return new OutputDTO(false, "Invalid chapter name.");
+        }
+        String name = chapterName.trim().toUpperCase();
+        try {
+            ChapterEnum chapterEnum = ChapterEnum.valueOf(name);
+            ChapterConfig config = ChapterLibrary.getChapterConfig(name);
+            if (config == null) {
+                return new OutputDTO(false, "Unknown chapter: " + chapterName);
+            }
+            int maxStage = config.getStages().size();
+            user.progressState.completeLevel(chapterEnum, maxStage);
+            UserRegistry.markDirty(user.profile.getUsername());
+            return new OutputDTO(true, "All stages of " + chapterEnum.getDisplayName() + " completed.");
+        } catch (IllegalArgumentException e) {
+            return new OutputDTO(false, "Unknown chapter: " + chapterName);
+        }
+    }
+
+    private OutputDTO cheatCompleteStage(String chapterName, Integer stage) {
+        User user = AppStatus.currentUser;
+        if (user == null || user.progressState == null) {
+            return new OutputDTO(false, "You must be logged in.");
+        }
+        if (chapterName == null || chapterName.isBlank() || stage == null || stage <= 0) {
+            return new OutputDTO(false, "Invalid command. Usage: menu cheat complete-stage -c CHAPTER -s STAGE");
+        }
+        String name = chapterName.trim().toUpperCase();
+        try {
+            ChapterEnum chapterEnum = ChapterEnum.valueOf(name);
+            user.progressState.completeLevel(chapterEnum, stage);
+            UserRegistry.markDirty(user.profile.getUsername());
+            return new OutputDTO(true, "Stage " + stage + " of " + chapterEnum.getDisplayName() + " completed.");
+        } catch (IllegalArgumentException e) {
+            return new OutputDTO(false, "Unknown chapter: " + chapterName);
+        }
+    }
+
+    private OutputDTO cheatLockAll() {
+        User user = AppStatus.currentUser;
+        if (user == null || user.progressState == null) {
+            return new OutputDTO(false, "You must be logged in.");
+        }
+        user.progressState.resetAll();
+        UserRegistry.markDirty(user.profile.getUsername());
+        return new OutputDTO(true, "All chapters and stages locked.");
+    }
+
+    private OutputDTO cheatLockChapter(String chapterName) {
+        User user = AppStatus.currentUser;
+        if (user == null || user.progressState == null) {
+            return new OutputDTO(false, "You must be logged in.");
+        }
+        if (chapterName == null || chapterName.isBlank()) {
+            return new OutputDTO(false, "Invalid chapter name.");
+        }
+        String name = chapterName.trim().toUpperCase();
+        try {
+            ChapterEnum chapterEnum = ChapterEnum.valueOf(name);
+            user.progressState.resetChapter(chapterEnum);
+            UserRegistry.markDirty(user.profile.getUsername());
+            return new OutputDTO(true, chapterEnum.getDisplayName() + " locked.");
+        } catch (IllegalArgumentException e) {
+            return new OutputDTO(false, "Unknown chapter: " + chapterName);
+        }
+    }
+
+    private OutputDTO cheatLockStage(String chapterName, Integer stage) {
+        User user = AppStatus.currentUser;
+        if (user == null || user.progressState == null) {
+            return new OutputDTO(false, "You must be logged in.");
+        }
+        if (chapterName == null || chapterName.isBlank() || stage == null || stage <= 0) {
+            return new OutputDTO(false, "Invalid command. Usage: menu cheat lock-stage -c CHAPTER -s STAGE");
+        }
+        String name = chapterName.trim().toUpperCase();
+        try {
+            ChapterEnum chapterEnum = ChapterEnum.valueOf(name);
+            user.progressState.lockLevel(chapterEnum, stage);
+            UserRegistry.markDirty(user.profile.getUsername());
+            return new OutputDTO(true, "Stage " + stage + " of " + chapterEnum.getDisplayName() + " locked.");
+        } catch (IllegalArgumentException e) {
+            return new OutputDTO(false, "Unknown chapter: " + chapterName);
+        }
     }
 
     private OutputDTO exitToMain() {

@@ -1,5 +1,6 @@
 package com.PVZ.screen;
 
+import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.game.GameEngine;
 import com.PVZ.model.game.GameHud;
@@ -139,31 +140,32 @@ public class GameScreen extends BaseScreen {
                     gameOverShown = true;
                     gameOverAlpha = 0f;
                 }
+                boolean inEndOfGame = AppStatus.currentMenuType == MenuType.END_OF_GAME;
                 float displayTime = regularGameEngine.getGameOverTimer();
                 if (displayTime < 1.0f) {
                     gameOverAlpha = Math.min(1.0f, displayTime);
-                } else if (displayTime > 2.5f) {
-                    gameOverAlpha = Math.max(0.0f, 1.0f - (displayTime - 2.5f) / 0.5f);
                 } else {
                     gameOverAlpha = 1.0f;
                 }
-                return new GameOverState(true, regularGameEngine.isGameOverWin());
+                return new GameOverState(true, regularGameEngine.isGameOverWin(), inEndOfGame);
             } else {
                 gameOverShown = false;
                 gameOverAlpha = 0f;
-                return new GameOverState(false, false);
+                return new GameOverState(false, false, false);
             }
         }
-        return new GameOverState(false, false);
+        return new GameOverState(false, false, false);
     }
 
     private static class GameOverState {
         final boolean isGameOver;
         final boolean isWin;
+        final boolean isEndOfGame;
 
-        GameOverState(boolean isGameOver, boolean isWin) {
+        GameOverState(boolean isGameOver, boolean isWin, boolean isEndOfGame) {
             this.isGameOver = isGameOver;
             this.isWin = isWin;
+            this.isEndOfGame = isEndOfGame;
         }
     }
 
@@ -238,6 +240,15 @@ public class GameScreen extends BaseScreen {
         float x = VIRTUAL_WIDTH / 2f - layout.width / 2f;
         float y = VIRTUAL_HEIGHT / 2f + layout.height / 2f;
         gameOverFont.draw(gameBatch, message, x, y);
+        if (state.isEndOfGame) {
+            String hint = "Type 'show stats' or 'menu exit'";
+            gameOverFont.setColor(1, 1, 0, gameOverAlpha);
+            com.badlogic.gdx.graphics.g2d.GlyphLayout hintLayout =
+                new com.badlogic.gdx.graphics.g2d.GlyphLayout(gameOverFont, hint);
+            float hintX = VIRTUAL_WIDTH / 2f - hintLayout.width / 2f;
+            float hintY = y - 60f;
+            gameOverFont.draw(gameBatch, hint, hintX, hintY);
+        }
         gameOverFont.setColor(1, 1, 1, 1);
         gameBatch.end();
     }
