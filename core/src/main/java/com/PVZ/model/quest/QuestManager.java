@@ -411,8 +411,14 @@ public class QuestManager {
                 }
             }
             case "max_sun_producers" -> { if (res.getFinalMap()!=null && countSunProducers(res.getFinalMap())<=q.getTargetCount()) q.setCompleted(true); }
-            case "speed_kill","use_explosive" -> { if (!q.isCompleted()) q.resetProgress(); }
-        }
+
+            case "speed_kill", "use_explosive" -> {
+                if (q.getCurrentCount() >= q.getTargetCount()) {
+                    q.setCompleted(true);
+                } else {
+                    q.resetProgress();
+                }
+            }                }
     }
 
     private boolean checkSymmetry(Map map) {
