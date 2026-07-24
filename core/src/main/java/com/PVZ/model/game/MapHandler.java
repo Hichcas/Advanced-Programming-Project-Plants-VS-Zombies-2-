@@ -72,7 +72,7 @@ public class MapHandler {
             char c = topPlant.getType().name().charAt(0);
             return c;
         }
-        if (basePlant != null) return 'B';
+        if (basePlant != null) return basePlant.getType().name().charAt(0);
         return tileDebugLabel(tile.getType()).charAt(0);
     }
 
@@ -88,6 +88,13 @@ public class MapHandler {
         StringBuilder builder = new StringBuilder();
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 9; col++) {
+                Plant basePlant = engine.map.getBasePlantAt(row, col);
+                if (basePlant != null) {
+                    builder.append("[BASE] ").append(basePlant.getType().getDisplayName())
+                        .append(" at (").append(col).append(", ").append(row).append(") hp=")
+                        .append(basePlant.getCurrentHp())
+                        .append("\n");
+                }
                 Plant plant = engine.map.getPlantAt(row, col);
                 if (plant != null) {
                     builder.append(plant.getType().getDisplayName())
