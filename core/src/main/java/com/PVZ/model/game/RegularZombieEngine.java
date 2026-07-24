@@ -111,6 +111,7 @@ public class RegularZombieEngine implements ZombieEngine{
         float y = tile.getY() + (tile.getHeight() - 70f) / 2f;
         float x = tile.getX() + tile.getWidth();
         zombie.initPosition(x, y, row);
+        zombie.setGlowing(Math.random() < 0.05);
         zombie.onSpawn();
         zombies.add(zombie);
         if (AppStatus.currentUser != null && AppStatus.currentUser.collectionState != null) {

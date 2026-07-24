@@ -291,9 +291,18 @@ public abstract class Zombie {
         System.out.println("Zombie [" + alias + "] died at x=" + String.format("%.1f", x) + " row=" + (int)row);
         onDestroy();
         if (isGlowing) {
-            controller.addSun(50);
+            controller.grantPlantFoodDrop();
         }
+        controller.rollLootDrop(x, y);
         controller.removeZombie(this);
+    }
+
+    public boolean isGlowing() {
+        return isGlowing;
+    }
+
+    public void setGlowing(boolean glowing) {
+        this.isGlowing = glowing;
     }
 
     public void draw(SpriteBatch batch){

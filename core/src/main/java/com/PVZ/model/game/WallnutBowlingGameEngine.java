@@ -28,6 +28,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
 
     private static final double TICK_SECONDS = 0.1;
     private static final float NUT_HIT_RADIUS = 34f;
+    private static final float GAME_OVER_DISPLAY_DURATION = 3.0f;
 //mishe avazesh kard vali bara in phase ino gozashtam va ok has das nazanim ham.
     private final List<Plant> plants = new ArrayList<>();
     private final List<Projectile> projectiles = new ArrayList<>();
@@ -43,6 +44,11 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     private Texture nutGiantTex;
     private Texture background;
     private BitmapFont font;
+
+    private boolean gameOverTriggered = false;
+    private boolean gameOverNavigated = false;
+    private boolean gameOverWin = false;
+    private float gameOverTimer = 0f;
 
     public WallnutBowlingGameEngine() {
         super(new GameStatus(), new WallnutBowlingInputProcessor());
@@ -101,6 +107,10 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
 
     @Override
     public void update(float delta) {
+        if (gameOverTriggered) {
+            updateGameOverTimer(delta);
+            return;
+        }
         if (gameStatus.isGameOver()) return;
         battleController.update(delta);
         tickAccumulator += delta;
@@ -246,8 +256,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
             if (mower.isUsed() && !gameStatus.isGameOver()) {
                 for (Zombie z : getZombiesInLane(mower.getRow())) {
                     if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
-                        battleController.triggerGameOver();
-                        if (game != null) game.markLost();
+                        triggerGameOver(false);
                         return;
                     }
                 }
@@ -256,18 +265,40 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     }
 
     private void checkWinLoss() {
-        if (game == null || game.isFinished()) return;
+        if (game == null || game.isFinished() || gameOverTriggered) return;
         if (!game.allZombiesSpawned()) return;
         if (!game.getNuts().isEmpty()) return;
         for (Zombie z : zombieEngine.getZombies()) {
             if (z != null && !z.isDead()) return;
         }
-        game.markWon();
         if (AppStatus.currentUser != null) {
             if (AppStatus.currentUser.progressState != null) {
                 AppStatus.currentUser.progressState.clearMinigameStage(MinigameEnum.WALLNUT_BOWLING);
             }
             UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
+        }
+        triggerGameOver(true);
+    }
+
+    private void triggerGameOver(boolean win) {
+        if (gameOverTriggered) return;
+        gameOverTriggered = true;
+        gameOverTimer = 0f;
+        gameOverWin = win;
+        if (game != null) {
+            if (win) game.markWon();
+            else game.markLost();
+        }
+        gameStatus.setWon(win);
+        gameStatus.setGameOver(true);
+    }
+
+    private void updateGameOverTimer(float delta) {
+        if (!gameOverTriggered || gameOverNavigated) return;
+        gameOverTimer += delta;
+        if (gameOverTimer >= GAME_OVER_DISPLAY_DURATION) {
+            gameOverNavigated = true;
+            AppStatus.returnToTravelLog();
         }
     }
 
@@ -306,11 +337,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
             batch.draw(texture, (float) nut.getX() - size / 2f, (float) nut.getY() - size / 2f, size, size);
         }
 
-        if (game.isWon()) {
-            font.draw(batch, "LEVEL COMPLETE!", map.getStartX() + 40f, map.getStartY() + 60f);
-        } else if (game.isLost()) {
-            font.draw(batch, "GAME OVER!", map.getStartX() + 40f, map.getStartY() + 60f);
-        } else {
+        if (!gameOverTriggered) {
             NutType held = game.getHeldNut();
             String cooldown = game.getCooldownRemaining() > 0
                     ? String.format(" | reload: %.1fs", game.getCooldownRemaining())
@@ -319,6 +346,29 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
                     + "  (" + game.getZombiesSpawned() + "/" + game.getTotalZombies() + " zombies)" + cooldown;
             font.draw(batch, label, map.getStartX() + 20f, map.getStartY() + 40f);
         }
+        batch.end();
+        drawGameOverOverlay(batch);
+    }
+
+    private void drawGameOverOverlay(SpriteBatch batch) {
+        if (!gameOverTriggered) return;
+        ensureTexturesLoaded();
+        float alpha;
+        if (gameOverTimer < 1.0f) {
+            alpha = Math.max(0f, gameOverTimer);
+        } else if (gameOverTimer > 2.5f) {
+            alpha = Math.max(0f, 1.0f - (gameOverTimer - 2.5f) / 0.5f);
+        } else {
+            alpha = 1.0f;
+        }
+        batch.begin();
+        String message = gameOverWin ? "YOU WIN!" : "YOU LOSE!";
+        com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout(font, message);
+        float x = 1280f - layout.width / 2f;
+        float y = 720f + layout.height / 2f;
+        font.setColor(1f, 1f, 1f, alpha);
+        font.draw(batch, message, x, y);
+        font.setColor(1f, 1f, 1f, 1f);
         batch.end();
     }
 
