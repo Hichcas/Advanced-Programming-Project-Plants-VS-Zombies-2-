@@ -15,6 +15,36 @@
         "zombiePool": [],
         "plantPool": [],
         "seedPacketLifetimeSeconds": 8
+      },
+      {
+        "id": 2,
+        "rows": 5,
+        "cols": 9,
+        "random": true,
+        "vaseCount": 45,
+        "plantVaseChance": 0.18,
+        "gargantuarVaseChance": 0.12,
+        "normalEmptyChance": 0.08,
+        "normalZombieChance": 0.68,
+        "normalSeedChance": 0.24,
+        "zombiePool": [],
+        "plantPool": [],
+        "seedPacketLifetimeSeconds": 6.5
+      },
+      {
+        "id": 3,
+        "rows": 5,
+        "cols": 9,
+        "random": true,
+        "vaseCount": 45,
+        "plantVaseChance": 0.14,
+        "gargantuarVaseChance": 0.16,
+        "normalEmptyChance": 0.05,
+        "normalZombieChance": 0.75,
+        "normalSeedChance": 0.2,
+        "zombiePool": [],
+        "plantPool": [],
+        "seedPacketLifetimeSeconds": 5
       }
     ]
   },

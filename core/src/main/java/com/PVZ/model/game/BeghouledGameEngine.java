@@ -316,11 +316,7 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         gameOverTimer += delta;
         if (gameOverTimer >= GAME_OVER_DISPLAY_DURATION) {
             gameOverNavigated = true;
-            if (gameOverWin) {
-                com.PVZ.model.status.AppStatus.returnToTravelLog();
-            } else {
-                com.PVZ.model.status.AppStatus.returnToMainMenu("GAME OVER");
-            }
+            com.PVZ.model.status.AppStatus.returnToTravelLog();
         }
     }
 
@@ -440,7 +436,7 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         else if (gameOverTimer > 2.5f) alpha = Math.max(0f, 1.0f - (gameOverTimer - 2.5f) / 0.5f);
         else alpha = 1.0f;
         batch.begin();
-        String message = gameOverWin ? "YOU WIN!" : "GAME OVER";
+        String message = gameOverWin ? "YOU WIN!" : "YOU LOSE!";
         com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout(font, message);
         float x = 1280f - layout.width / 2f;
         float y = 720f + layout.height / 2f;
