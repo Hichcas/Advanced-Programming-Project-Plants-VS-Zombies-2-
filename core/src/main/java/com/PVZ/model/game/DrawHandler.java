@@ -5,16 +5,34 @@ import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
+import com.PVZ.model.entity.Tile;
+import com.PVZ.model.enums.TileType;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 public class DrawHandler {
 
+    private static Texture whiteTexture;
+
+    private static Texture whiteTexture() {
+        if (whiteTexture == null) {
+            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+            pixmap.setColor(1f, 1f, 1f, 1f);
+            pixmap.fill();
+            whiteTexture = new Texture(pixmap);
+            pixmap.dispose();
+        }
+        return whiteTexture;
+    }
+
     public static void draw(RegularGameEngine engine, SpriteBatch batch) {
         if (engine.zombieEngine != null) engine.zombieEngine.draw(batch);
         batch.begin();
+        drawTileOverlays(engine, batch);
         drawBattleProjectiles(engine, batch);
         drawSuns(engine, batch);
         drawLawnMowers(engine, batch);
@@ -38,14 +56,48 @@ public class DrawHandler {
         }
     }
 
+    private static void drawTileOverlays(RegularGameEngine engine, SpriteBatch batch) {
+        if (engine.map == null) return;
+        Color orig = batch.getColor();
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 9; col++) {
+                Tile tile = engine.map.getTile(row, col);
+                if (tile == null) continue;
+                TileType type = tile.getType();
+                if (type == TileType.WATER) {
+                    batch.setColor(0f, 0.3f, 0.8f, 0.35f);
+                    batch.draw(whiteTexture(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight());
+                } else if (type == TileType.TIDE) {
+                    batch.setColor(0f, 0.5f, 1f, 0.5f);
+                    batch.draw(whiteTexture(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight());
+                }
+            }
+        }
+        batch.setColor(orig);
+    }
+
     private static void drawPlantsWithLabels(RegularGameEngine engine, SpriteBatch batch) {
         if (engine.map == null) return;
         BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
         font.setColor(Color.WHITE);
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 9; col++) {
+                Plant base = engine.map.getBasePlantAt(row, col);
+                if (base != null && !base.isDead()) {
+                    base.draw(batch);
+                }
                 Plant plant = engine.map.getPlantAt(row, col);
-                if (plant == null || plant.isDead()) continue;
+                if (plant == null || plant.isDead()) {
+                    if (base != null && !base.isDead()) {
+                        Rectangle box = base.getHitbox();
+                        HealthBarRenderer.draw(batch, box.x, box.y + box.height + 2, box.width,
+                            (float) base.getCurrentHp() / Math.max(1, base.getMaxHp()), true);
+                        String label = base.getType() + " (" + base.getCurrentHp() + "hp)";
+                        font.draw(batch, label, box.x, box.y + box.height + 4);
+                        drawPlantFreezeOverlay(engine, batch, base, box);
+                    }
+                    continue;
+                }
                 plant.draw(batch);
                 Rectangle box = plant.getHitbox();
                 HealthBarRenderer.draw(batch, box.x, box.y + box.height + 2, box.width,

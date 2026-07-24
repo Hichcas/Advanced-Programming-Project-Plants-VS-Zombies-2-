@@ -79,6 +79,8 @@ public class Map {
             float worldY = startY - (row + 1) * tileHeight;
             basePlant.putRuntimeState("worldX", worldX);
             basePlant.putRuntimeState("worldY", worldY);
+            basePlant.putRuntimeState("tileWidth", tileWidth);
+            basePlant.putRuntimeState("tileHeight", tileHeight);
         }
     }
 

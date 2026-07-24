@@ -72,7 +72,7 @@ public class MapHandler {
             char c = topPlant.getType().name().charAt(0);
             return c;
         }
-        if (basePlant != null) return 'B';
+        if (basePlant != null) return basePlant.getType().name().charAt(0);
         return tileDebugLabel(tile.getType()).charAt(0);
     }
 
@@ -88,6 +88,13 @@ public class MapHandler {
         StringBuilder builder = new StringBuilder();
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 9; col++) {
+                Plant basePlant = engine.map.getBasePlantAt(row, col);
+                if (basePlant != null) {
+                    builder.append("[BASE] ").append(basePlant.getType().getDisplayName())
+                        .append(" at (").append(col).append(", ").append(row).append(") hp=")
+                        .append(basePlant.getCurrentHp())
+                        .append("\n");
+                }
                 Plant plant = engine.map.getPlantAt(row, col);
                 if (plant != null) {
                     builder.append(plant.getType().getDisplayName())
@@ -170,15 +177,17 @@ public class MapHandler {
         if (engine.map == null) return "";
         StringBuilder sb = new StringBuilder("Tide: ");
         for (int c = 0; c < 9; c++) {
-            boolean isWater = false;
+            boolean hasTide = false;
+            boolean hasWater = false;
             for (int r = 0; r < 5; r++) {
                 Tile t = engine.map.getTile(r, c);
-                if (t != null && (t.getType() == TileType.WATER || t.getType() == TileType.TIDE)) {
-                    isWater = true;
-                    break;
-                }
+                if (t == null) continue;
+                if (t.getType() == TileType.TIDE) hasTide = true;
+                if (t.getType() == TileType.WATER) hasWater = true;
             }
-            sb.append(isWater ? '~' : '.');
+            if (hasTide) sb.append('^');
+            else if (hasWater) sb.append('~');
+            else sb.append('.');
         }
         return sb.toString();
     }
