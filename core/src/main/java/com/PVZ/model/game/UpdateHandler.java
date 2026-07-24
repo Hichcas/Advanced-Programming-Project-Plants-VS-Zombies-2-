@@ -111,6 +111,7 @@ public class UpdateHandler {
 
     private static void updateSunManager(RegularGameEngine engine, float delta) {
         engine.sunManager.update(delta);
+        engine.lootManager.update(delta);
     }
 
     private static void updateSkySun(RegularGameEngine engine, float delta) {
@@ -193,6 +194,9 @@ public class UpdateHandler {
                     }
                     UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
                 }
+                AppStatus.returnToChapterAndLevelSelection(null);
+            } else {
+                AppStatus.returnToChapterAndLevelSelection("GAME OVER");
             }
             AppStatus.lastGameResultWin = engine.gameOverWin;
             AppStatus.currentMenuType = MenuType.END_OF_GAME;
@@ -225,6 +229,7 @@ public class UpdateHandler {
         engine.rechargeRemaining.clear();
         engine.conveyorBeltQueue.clear();
         engine.sunManager.clear();
+        engine.lootManager.clear();
         engine.plantFoodManager.reset();
         if (engine.gameStatus != null) engine.gameStatus.setRemainingZombieWaveInPercent(0);
     }

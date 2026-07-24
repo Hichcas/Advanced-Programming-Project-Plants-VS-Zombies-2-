@@ -35,6 +35,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     final List<Projectile> projectiles = new ArrayList<>();
     final List<Zombie> zombies = new ArrayList<>();
     final SunManager sunManager = new SunManager();
+    final LootManager lootManager = new LootManager();
     final PlantFoodManager plantFoodManager = new PlantFoodManager();
     final Random random = new Random();
     float tickAccumulator = 0f;
@@ -80,6 +81,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         }
         this.zombieEngine = new RegularZombieEngine();
         this.battleController = new BattleController(zombieEngine.getZombies(), plants, projectiles, gameStatus);
+        this.battleController.setPlantFoodManager(plantFoodManager);
+        this.battleController.setLootManager(lootManager);
         this.waveManager = new WaveManager(waves);
     }
 
@@ -115,6 +118,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         projectiles.clear();
         zombies.clear();
         sunManager.clear();
+        lootManager.clear();
         plantFoodManager.reset();
         if (backgroundOverrideTexture != null) {
             backgroundOverrideTexture.dispose();
@@ -387,6 +391,13 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     public List<PlantType> getConveyorBeltQueue() { return Collections.unmodifiableList(conveyorBeltQueue); }
     public RegularZombieEngine getZombieEngine() { return zombieEngine; }
     public SunManager getSunManager() { return sunManager; }
+
+    public LootManager getLootManager() { return lootManager; }
+
+    public String collectLootAtWorldPoint(float worldX, float worldY) {
+        com.PVZ.model.entity.LootDrop drop = lootManager.collectAt(worldX, worldY);
+        return battleController.applyLootReward(drop);
+    }
     public BattleController getBattleController() { return battleController; }
     public WaveManager getWaveManager() { return waveManager; }
     public void startWaves() { WaveHandler.startWaves(this); }

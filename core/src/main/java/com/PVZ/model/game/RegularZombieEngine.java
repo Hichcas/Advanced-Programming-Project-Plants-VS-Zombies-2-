@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegularZombieEngine implements ZombieEngine{
+public class RegularZombieEngine implements ZombieEngine {
 
     private final List<Zombie> zombies = new ArrayList<>();
     private Map map;
@@ -21,9 +21,9 @@ public class RegularZombieEngine implements ZombieEngine{
         this.map = map;
 
         // تست مرحله اول
-//        if (zombies.isEmpty()) {
-//            spawnZombie("ZombieTutorialDefault", 2, 2000);
-//        }
+        // if (zombies.isEmpty()) {
+        // spawnZombie("ZombieTutorialDefault", 2, 2000);
+        // }
     }
 
     public void update(float delta) {
@@ -90,27 +90,33 @@ public class RegularZombieEngine implements ZombieEngine{
     }
 
     @Override
-    public int getSunCount() { return 0; }
+    public int getSunCount() {
+        return 0;
+    }
 
     @Override
-    public void addSun(int amount) { }
+    public void addSun(int amount) {
+    }
 
     @Override
-    public void spawnProjectile(Projectile p) { }
+    public void spawnProjectile(Projectile p) {
+    }
 
     @Override
     public Zombie spawnZombie(String alias, int row, int col) {
-        if (map == null || !map.isWithinBounds(row, col)) return null;
+        if (map == null || !map.isWithinBounds(row, col))
+            return null;
         Zombie zombie = ZombieType.fromAlias(alias).create();
         if (com.PVZ.model.status.AppStatus.currentUser != null
                 && com.PVZ.model.status.AppStatus.currentUser.appStats != null) {
             zombie.applyDifficultyScaling(
-                com.PVZ.model.status.AppStatus.currentUser.appStats.getDifficultyLevel());
+                    com.PVZ.model.status.AppStatus.currentUser.appStats.getDifficultyLevel());
         }
         Tile tile = map.getTile(row, col);
         float y = tile.getY() + (tile.getHeight() - 70f) / 2f;
         float x = tile.getX() + tile.getWidth() / 2f;
         zombie.initPosition(x, y, row);
+        zombie.setGlowing(Math.random() < 0.05);
         zombie.setCol(col);
         zombie.onSpawn();
         zombies.add(zombie);
@@ -129,7 +135,7 @@ public class RegularZombieEngine implements ZombieEngine{
         }
     }
 
-    public void spawnZombieInLane(String alias, int row){
+    public void spawnZombieInLane(String alias, int row) {
 
     }
 

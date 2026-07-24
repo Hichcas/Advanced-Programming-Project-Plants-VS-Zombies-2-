@@ -35,6 +35,7 @@ public class DrawHandler {
         drawTileOverlays(engine, batch);
         drawBattleProjectiles(engine, batch);
         drawSuns(engine, batch);
+        drawLootDrops(engine, batch);
         drawLawnMowers(engine, batch);
         drawPlantsWithLabels(engine, batch);
         drawZombiesWithHealthBars(engine, batch);
@@ -48,6 +49,10 @@ public class DrawHandler {
 
     private static void drawSuns(RegularGameEngine engine, SpriteBatch batch) {
         for (com.PVZ.model.entity.Sun sun : engine.sunManager.getSuns()) sun.draw(batch);
+    }
+
+    private static void drawLootDrops(RegularGameEngine engine, SpriteBatch batch) {
+        for (com.PVZ.model.entity.LootDrop drop : engine.lootManager.getDrops()) drop.draw(batch);
     }
 
     private static void drawLawnMowers(RegularGameEngine engine, SpriteBatch batch) {
