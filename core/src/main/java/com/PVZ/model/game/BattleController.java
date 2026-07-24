@@ -32,6 +32,7 @@ public class BattleController implements BehaviorContext {
     private PlantFoodManager plantFoodManager;
     private LootManager lootManager;
     private final java.util.Random lootRandom = new java.util.Random();
+    public final java.util.Set<Zombie> questNotifiedZombies = new java.util.HashSet<>();
 
     public BattleController(List<Zombie> zombies, List<Plant> plants,
                             List<Projectile> projectiles, GameStatus gameStatus) {
@@ -47,6 +48,18 @@ public class BattleController implements BehaviorContext {
 
     public void setLootManager(LootManager lootManager) {
         this.lootManager = lootManager;
+    }
+
+    public void clearQuestNotifiedZombies() {
+        questNotifiedZombies.clear();
+    }
+
+    public void notifyZombieKilled(Zombie z, com.PVZ.model.enums.PlantType killerPlant) {
+        if (questNotifiedZombies.contains(z)) return;
+        questNotifiedZombies.add(z);
+        if (AppStatus.currentUser != null && AppStatus.currentUser.questState != null) {
+            AppStatus.currentUser.questState.getQuestManager().onZombieKilled(killerPlant);
+        }
     }
 
     /**
@@ -403,6 +416,15 @@ public class BattleController implements BehaviorContext {
                 }
             }
             z.takeDamage(damage, resolveDamageType(p));
+        }
+
+        if (z.isDead()) {
+            com.PVZ.model.enums.PlantType killer = null;
+            Object obj = p.getExtra("plantType");
+            if (obj instanceof com.PVZ.model.enums.PlantType pt) {
+                killer = pt;
+            }
+            notifyZombieKilled(z, killer);
         }
 
         // Stun effect (butter)
