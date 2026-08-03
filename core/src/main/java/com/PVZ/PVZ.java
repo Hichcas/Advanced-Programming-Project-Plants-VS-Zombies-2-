@@ -11,10 +11,8 @@ import com.PVZ.model.game.chapter.ChapterLibrary;
 import com.PVZ.model.user.UserRegistry;
 import com.PVZ.model.user.User;
 import com.PVZ.screen.GameScreen;
-import com.PVZ.screen.manager.BrightnessController;
-import com.PVZ.screen.manager.FontManager;
-import com.PVZ.screen.manager.MusicManager;
-import com.PVZ.screen.manager.ScreenManager;
+import com.PVZ.screen.MainMenuScreen;
+import com.PVZ.screen.manager.*;
 import com.PVZ.view.input.CommandParser;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -29,6 +27,7 @@ public class PVZ extends Game {
 
     @Override
     public void create() {
+        CursorManager.getInstance();
         try {
             GameInitialization.initialize();
         } catch (IOException e) {
@@ -61,9 +60,11 @@ public class PVZ extends Game {
         } else {
             AppStatus.currentMenuType = MenuType.REGISTER;
         }
+//
+//        ScreenManager.getInstance().startWithFadeIn(new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3",
+//                new RegularGameEngine(new GameStatus())));
 
-        ScreenManager.getInstance().startWithFadeIn(new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3",
-                new RegularGameEngine(new GameStatus())));
+        ScreenManager.getInstance().startWithFadeIn(new MainMenuScreen());
     }
     @Override
     public void render() {
@@ -77,6 +78,7 @@ public class PVZ extends Game {
 
     @Override
     public void dispose() {
+        CursorManager.getInstance().dispose();
         UserRegistry.clear();
         MusicManager.getInstance().dispose();
         FontManager.getInstance().dispose();
