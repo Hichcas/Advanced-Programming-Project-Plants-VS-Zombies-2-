@@ -1,5 +1,6 @@
 package com.PVZ.screen.panels;
 
+import com.PVZ.screen.manager.PanelManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Align;
@@ -53,8 +54,8 @@ public class MainMenuPanel extends BasePanel {
     }
 
     private void onSettings() {
-        // com.PVZ.view.CommandSender.send(new ChangeMenuInputDTO(MenuType.SETTINGS));
-//        AppStatus.ChangeMenuAndPanel(MenuType.SETTINGS);
+        AppStatus.setCurrentMenuType(MenuType.SETTINGS);
+        PanelManager.getInstance().performPanelTransition(new SettingsPanel());
     }
 
     private void onGuide() {

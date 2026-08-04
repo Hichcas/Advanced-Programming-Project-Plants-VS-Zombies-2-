@@ -20,7 +20,6 @@ import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-
 public final class AppStatus {
 
     private static GameEngine gameEngine;
@@ -41,6 +40,18 @@ public final class AppStatus {
     public static boolean tileDebugEnabled = false;
     public static boolean lastGameResultWin = false;
 
+    // ====================== تنظیمات جدید ======================
+    public enum Difficulty {
+        EASY, NORMAL, HARD
+    }
+
+    private static Difficulty difficulty = Difficulty.NORMAL;
+    private static int gameSpeed = 1;               // مقدار ۱ تا ۳
+    private static boolean debugMode = false;       // حالت دیباگ (افزایش سکه، خورشید و ...)
+    private static float sfxVolume = 1.0f;          // حجم صدای افکت‌ها (۰ تا ۱)
+    private static boolean sfxMuted = false;
+
+    // ====================== متدهای قبلی ======================
     public static GraphicsQuality getQuality() {
         return quality;
     }
@@ -140,6 +151,10 @@ public final class AppStatus {
                 new RegularGameEngine(new GameStatus())));
     }
 
+    public static void setCurrentMenuType (MenuType menuType) {
+        currentMenuType = menuType;
+    }
+
     public static void returnToChapterAndLevelSelection(String message) {
         currentMenuType = MenuType.CHAPTER_AND_LEVEL_SELECTION;
         setGameEngine(null);
@@ -147,5 +162,51 @@ public final class AppStatus {
                 new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3",
                     new RegularGameEngine(new GameStatus())),
             message);
+    }
+
+    // ====================== getter/setter های جدید ======================
+    public static Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public static void setDifficulty(Difficulty d) {
+        difficulty = d;
+    }
+
+    public static int getGameSpeed() {
+        return gameSpeed;
+    }
+
+    public static void setGameSpeed(int speed) {
+        if (speed >= 1 && speed <= 3) {
+            gameSpeed = speed;
+        }
+    }
+
+    public static boolean isDebugMode() {
+        return debugMode;
+    }
+
+    public static void setDebugMode(boolean debug) {
+        debugMode = debug;
+    }
+
+    public static int getSFXVolume() {
+        return (int) (sfxVolume * 100);
+    }
+
+    public static void setSFXVolume(int amount) {
+        sfxVolume = Math.max(0, Math.min(1, amount / 100f));
+        // اگر در آینده SoundManager برای افکت‌ها داشتید، اینجا صدا بزنید:
+        // SoundManager.getInstance().setVolume(sfxVolume);
+    }
+
+    public static boolean getMuteSFX() {
+        return sfxMuted;
+    }
+
+    public static void setMutedSFX(boolean muted) {
+        sfxMuted = muted;
+        // SoundManager.getInstance().setMuted(muted);
     }
 }

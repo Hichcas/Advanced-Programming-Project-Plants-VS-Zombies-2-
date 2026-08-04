@@ -73,6 +73,7 @@ public class SoundManager {
     public void setVolume(float volume) {
         // محدود کردن مقدار ورودی بین 0.0 و 1.0 برای امنیت بیشتر
         this.masterVolume = Math.max(0f, Math.min(volume, 1f));
+        if (this.masterVolume > 0) isMuted = false;
     }
 
     public float getVolume() {
