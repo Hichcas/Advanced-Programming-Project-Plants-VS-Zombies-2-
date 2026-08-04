@@ -26,6 +26,8 @@ public class MenuButton extends Actor {
     private final float FADE_SPEED = 5f;
     private final float PADDING = 25f;
 
+    private boolean disabled = false;   // جدید: وضعیت غیرفعال بودن
+
     private static Texture defaultMarker;
     private static Sound hoverSound;
     private static Sound clickSound;
@@ -47,25 +49,25 @@ public class MenuButton extends Actor {
         addListener(new ClickListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if (disabled) return;   // در صورت غیرفعال بودن هیچ واکنشی نشان نده
                 if (pointer == -1 && !isHovered) {
                     // getHoverSound().play();
                     // 🌟 افکت هاور با رعایت وضعیت سیستم میوت از طریق متد playSound پخش می‌شود
                     SoundManager.getInstance().playSound(getHoverSound());
                 }
                 isHovered = true;
-
                 CursorManager.getInstance().setPointerMode(true);
             }
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 isHovered = false;
-
                 CursorManager.getInstance().setPointerMode(false);
             }
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                if (disabled) return;   // اگر غیرفعال است کلیک اجرا نشود
                 // getClickSound().play();
                 // 🌟 افکت کلیک با رعایت وضعیت سیستم میوت از طریق متد playSound پخش می‌شود
                 SoundManager.getInstance().playSound(getClickSound());
@@ -116,6 +118,11 @@ public class MenuButton extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
+        if (disabled) {
+            // در حالت غیرفعال شفافیت را ثابت و کم‌رنگ نگه دار
+            currentAlpha = 0.5f;
+            return;
+        }
         float targetAlpha = isHovered ? TARGET_HOVER_ALPHA : 0.5f;
         currentAlpha += (targetAlpha - currentAlpha) * FADE_SPEED * delta;
     }
@@ -138,19 +145,19 @@ public class MenuButton extends Actor {
             float markerY = getY() + (getHeight() - markerHeight) / 2f;
 
             batch.draw(markerTexture,
-                    textX - dynamicPadding - markerWidth,
-                    markerY,
-                    markerWidth,
-                    markerHeight);
+                textX - dynamicPadding - markerWidth,
+                markerY,
+                markerWidth,
+                markerHeight);
 
             batch.draw(markerTexture,
-                    textX + textLayout.width + dynamicPadding,
-                    markerY,
-                    markerWidth,
-                    markerHeight,
-                    0, 0,
-                    markerTexture.getWidth(), markerTexture.getHeight(),
-                    true, false);
+                textX + textLayout.width + dynamicPadding,
+                markerY,
+                markerWidth,
+                markerHeight,
+                0, 0,
+                markerTexture.getWidth(), markerTexture.getHeight(),
+                true, false);
 
             batch.setColor(Color.WHITE);
         }
@@ -164,4 +171,16 @@ public class MenuButton extends Actor {
         setSize(dynamicWidth, getHeight());
     }
 
+    // ----- جدید: متدهای مدیریت حالت غیرفعال -----
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+        if (disabled) {
+            // اگر غیرفعال می‌شود، حالت هاور را غیرفعال کن
+            isHovered = false;
+        }
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
 }

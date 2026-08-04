@@ -107,6 +107,7 @@ public class MusicManager {
 
     public void setVolume(float volume) {
         this.masterVolume = Math.max(0f, Math.min(volume, 1f));
+        if (this.masterVolume > 0) isMuted = false;
         if (fadeState == FadeState.NONE && currentMusic != null) {
             currentMusic.setVolume(isMuted ? 0f : masterVolume);
         }
