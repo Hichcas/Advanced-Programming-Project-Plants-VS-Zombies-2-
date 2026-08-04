@@ -4,5 +4,8 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
+  <component name="LibGDXSkins">
+    <file url="file://$PROJECT_DIR$/commits_core.txt" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" project-jdk-name="ms-25" project-jdk-type="JavaSDK" />
 </project>
