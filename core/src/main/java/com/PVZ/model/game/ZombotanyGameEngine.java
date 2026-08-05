@@ -10,7 +10,7 @@ import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.minigame.zombotany.ZombotanyGame;
 import com.PVZ.model.minigame.zombotany.ZombotanyTexturePaths;
 import com.PVZ.model.status.AppStatus;
-import com.PVZ.screen.manager.FontManager;
+import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

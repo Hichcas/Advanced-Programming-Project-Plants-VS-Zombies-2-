@@ -3,7 +3,7 @@ package com.PVZ.model.game;
 import com.PVZ.model.entity.PlantTexturePaths;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
-import com.PVZ.screen.manager.FontManager;
+import com.PVZ.view.screen.manager.FontManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
