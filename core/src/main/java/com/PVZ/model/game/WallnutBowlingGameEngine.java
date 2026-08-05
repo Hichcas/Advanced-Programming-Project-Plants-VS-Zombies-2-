@@ -11,7 +11,7 @@ import com.PVZ.model.minigame.wallnutbowling.WallnutBowlingGame;
 import com.PVZ.model.minigame.wallnutbowling.WallnutBowlingTexturePaths;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.UserRegistry;
-import com.PVZ.screen.manager.FontManager;
+import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

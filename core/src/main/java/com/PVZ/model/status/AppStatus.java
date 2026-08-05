@@ -10,10 +10,10 @@ import com.PVZ.model.game.GameStatus;
 import com.PVZ.model.game.RegularGameEngine;
 import com.PVZ.model.graphics.GraphicsQuality;
 import com.PVZ.model.user.User;
-import com.PVZ.screen.GameScreen;
-import com.PVZ.screen.manager.BrightnessController;
-import com.PVZ.screen.manager.MusicManager;
-import com.PVZ.screen.manager.ScreenManager;
+import com.PVZ.view.screen.GameScreen;
+import com.PVZ.view.screen.manager.BrightnessController;
+import com.PVZ.view.screen.manager.MusicManager;
+import com.PVZ.view.screen.manager.ScreenManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import java.util.LinkedHashSet;

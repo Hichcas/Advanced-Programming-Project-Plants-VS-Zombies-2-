@@ -4,67 +4,37 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ZombieTexturePaths {
-    private static final Map<String, String> PATHS = new HashMap<>();
+    private static final Map<String, String> PAM_PATHS = new HashMap<>();
 
     static {
-        PATHS.put("ZombieTutorialDefault", "Zombies/Zombie.png");
-        PATHS.put("ZombieTutorialArmor1Default", "Zombies/ConeheadZombie.png");
-        PATHS.put("ZombieTutorialArmor2Default", "Zombies/Buckethead.png");
-        PATHS.put("ZombieTutorialArmor4Default", "Zombies/BrickHead.png");
-        PATHS.put("ZombieTutorialFlagDefault", "Zombies/FlagZombie.png");
-        PATHS.put("ZombieMummyDefault", "Zombies/Mummy.png");
-        PATHS.put("ZombieMummyArmor1Default", "Zombies/ConeheadZombie.png");
-        PATHS.put("ZombieMummyArmor2Default", "Zombies/Buckethead.png");
-        PATHS.put("ZombieMummyArmor4Default", "Zombies/BrickHead.png");
-        PATHS.put("ZombieIceageDefault", "Zombies/Zombie.png");
-        PATHS.put("ZombieIceageArmor1Default", "Zombies/ConeheadZombie.png");
-        PATHS.put("ZombieIceageArmor2Default", "Zombies/Buckethead.png");
-        PATHS.put("ZombieIceageArmor3Default", "Zombies/Turquoise.png");
-        PATHS.put("ZombieBeachDefault", "Zombies/Beach.png");
-        PATHS.put("ZombieBeachArmor1Default", "Zombies/ConeheadZombie.png");
-        PATHS.put("ZombieBeachArmor2Default", "Zombies/Buckethead.png");
-        PATHS.put("ZombieDarkDefault", "Zombies/Zombie.png");
-        PATHS.put("ZombieDarkArmor1Default", "Zombies/ConeheadZombie.png");
-        PATHS.put("ZombieDarkArmor2Default", "Zombies/Buckethead.png");
-        PATHS.put("ZombieDarkArmor3Default", "Zombies/Knight.png");
-        PATHS.put("ZombieDarkArmor4Default", "Zombies/BrickHead.png");
-        PATHS.put("ZombiePharaohDefault", "Zombies/Pharaoh.png");
-        PATHS.put("ZombieCamelDefault", "Zombies/Camel.png");
-
-        for (String a : new String[]{"ZombieGargantuarBasic", "ZombieEgyptGargantuar",
-            "ZombieIceAgeGargantuar", "ZombieBeachGargantuar", "ZombieDarkGargantuar"})
-            PATHS.put(a, "Zombies/Gargantuar.png");
-
-        PATHS.put("ZombieTutorialImpDefault", "Zombies/Imp.png");
-        PATHS.put("ZombieEgyptImpDefault", "Zombies/Imp.png");
-        PATHS.put("ZombieIceageImpDefault", "Zombies/ImpDragon.png");
-        PATHS.put("ZombieBeachImpDefault", "Zombies/Imp.png");
-        PATHS.put("ZombieDarkImpDefault", "Zombies/ImpDragon.png");
-        PATHS.put("ZombieIceAgeTroglobite", "Zombies/Troglobite.png");
-        PATHS.put("ZombieIceAgeDodo", "Zombies/Dodo.png");
-        PATHS.put("ZombieIceAgeHunter", "Zombies/Hunter.png");
-        PATHS.put("ZombieBeachSnorkel", "Zombies/Snorkel.png");
-        PATHS.put("ZombieBeachFisherman", "Zombies/Fisherman.png");
-        PATHS.put("ZombieBeachOctopus", "Zombies/Octopus.png");
-        PATHS.put("ZombieBeachSurfer", "Zombies/Surfer.png");
-        PATHS.put("ZombieBeachFastSwimmer", "Zombies/FastSwimmer.png");
-        PATHS.put("ZombieWeaselHoarderDefault", "Zombies/WeaselHoarder.png");
-        PATHS.put("ZombieWeaselDefault", "Zombies/Weasel.png");
-        PATHS.put("ZombieRaDefault", "Zombies/Ra.png");
-        PATHS.put("ZombieExplorerDefault", "Zombies/Explorer.png");
-        PATHS.put("ZombieTombRaiserDefault", "Zombies/TombRaiser.png");
-        PATHS.put("ZombieWizardDefault", "Zombies/Wizard.png");
-        PATHS.put("ZombieDarkJugglerDefault", "Zombies/Juggler.png");
-        PATHS.put("ZombieDarkKing", "Zombies/King.png");
-
-        for (String a : new String[]{"ZombieZombossMechEgypt", "ZombieZombossMechPirate",
-            "ZombieZombossMechCowboy", "ZombieZombossMechDark"})
-            PATHS.put(a, "Zombies/Zomboss.png");
-
-        PATHS.put("DEFAULT", "Zombies/Zombie.png");
+        // PAM Animation File Mappings with resolution prefix
+        PAM_PATHS.put("ZombieTutorialDefault", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM");
+        PAM_PATHS.put("ZombieTutorialArmor1Default", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
+        PAM_PATHS.put("ZombieTutorialArmor2Default", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
+        PAM_PATHS.put("ZombieTutorialArmor4Default", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
+        PAM_PATHS.put("ZombieTutorialFlagDefault", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_FLAG/ZOMBIE_TUTORIAL_FLAG.PAM");
+        PAM_PATHS.put("ZombieMummyDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
+        PAM_PATHS.put("ZombieMummyArmor1Default", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
+        PAM_PATHS.put("ZombieMummyArmor2Default", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
+        PAM_PATHS.put("ZombieMummyArmor4Default", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
+        PAM_PATHS.put("ZombieCamelDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_CAMEL/ZOMBIE_EGYPT_CAMEL.PAM");
+        PAM_PATHS.put("ZombieRaDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_RA/ZOMBIE_EGYPT_RA.PAM");
+        PAM_PATHS.put("ZombiePharaohDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_SARCOPHAGUS/ZOMBIE_EGYPT_SARCOPHAGUS.PAM");
+        PAM_PATHS.put("ZombieExplorerDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EXPLORER/ZOMBIE_EXPLORER.PAM");
+        PAM_PATHS.put("ZombieTombRaiserDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_TOMBRAISER/ZOMBIE_EGYPT_TOMBRAISER.PAM");
+        PAM_PATHS.put("ZombieEgyptGargantuar", "768/INITIAL/ZOMBIE/EGYPT_GARGANTUAR/EGYPT_GARGANTUAR.PAM");
+        PAM_PATHS.put("ZombieGargantuarBasic", "768/INITIAL/ZOMBIE/TUTORIAL_GARGANTUAR/TUTORIAL_GARGANTUAR.PAM");
+        PAM_PATHS.put("ZombieEgyptImpDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_IMP/ZOMBIE_EGYPT_IMP.PAM");
+        PAM_PATHS.put("ZombieTutorialImpDefault", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_IMP/ZOMBIE_TUTORIAL_IMP.PAM");
+        PAM_PATHS.put("ZombieZombossMechEgypt", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_ZOMBOSS/ZOMBIE_EGYPT_ZOMBOSS.PAM");
+        PAM_PATHS.put("DEFAULT", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
     }
 
     public static String getPath(String alias) {
-        return PATHS.getOrDefault(alias, PATHS.get("DEFAULT"));
+        return getPamPath(alias);
+    }
+
+    public static String getPamPath(String alias) {
+        return PAM_PATHS.getOrDefault(alias, PAM_PATHS.get("DEFAULT"));
     }
 }

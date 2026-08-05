@@ -3,7 +3,8 @@ package com.PVZ.model.game;
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
-import com.PVZ.screen.manager.FontManager;
+import com.PVZ.view.renderer.EntityRenderer;
+import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.PVZ.model.entity.Tile;
 import com.PVZ.model.enums.TileType;
@@ -30,6 +31,7 @@ public class DrawHandler {
     }
 
     public static void draw(RegularGameEngine engine, SpriteBatch batch) {
+        EntityRenderer.getInstance().update();
         if (engine.zombieEngine != null) engine.zombieEngine.draw(batch);
         batch.begin();
         drawTileOverlays(engine, batch);

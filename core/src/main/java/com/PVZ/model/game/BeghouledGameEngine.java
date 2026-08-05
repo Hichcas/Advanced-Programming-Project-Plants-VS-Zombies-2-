@@ -9,7 +9,7 @@ import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.minigame.beghouled.BeghouledGame;
 import com.PVZ.model.minigame.beghouled.BeghouledTexturePaths;
 import com.PVZ.model.minigame.beghouled.BeghouledUpgrade;
-import com.PVZ.screen.manager.FontManager;
+import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;

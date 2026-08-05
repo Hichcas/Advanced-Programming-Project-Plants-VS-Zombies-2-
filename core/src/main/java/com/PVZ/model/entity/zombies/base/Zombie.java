@@ -6,6 +6,7 @@ import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.BattleController;
 import com.PVZ.model.game.Map;
 import com.PVZ.model.game.SunManager;
+import com.PVZ.view.renderer.EntityRenderer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -299,11 +300,8 @@ public abstract class Zombie {
     }
 
     public void draw(SpriteBatch batch) {
-        if (texture == null) {
-            String path = ZombieTexturePaths.getPath(alias);
-            texture = new Texture(path);
-        }
-        batch.draw(texture, (float) x, (float) y, 100, 120);
+        float delta = com.badlogic.gdx.Gdx.graphics.getDeltaTime();
+        EntityRenderer.getInstance().renderZombie(batch, this, delta);
     }
 
     public double getEffectiveHitpoints() {

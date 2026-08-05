@@ -3,22 +3,18 @@ package com.PVZ;
 import com.PVZ.controller.AppController;
 import com.PVZ.database.UserDatabase;
 import com.PVZ.model.enums.MenuType;
-import com.PVZ.model.game.GameStatus;
-import com.PVZ.model.game.RegularGameEngine;
 import com.PVZ.model.graphics.GraphicsQuality;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.game.chapter.ChapterLibrary;
 import com.PVZ.model.user.UserRegistry;
 import com.PVZ.model.user.User;
-import com.PVZ.screen.GameScreen;
-import com.PVZ.screen.MainMenuScreen;
-import com.PVZ.screen.manager.*;
+import com.PVZ.view.screen.MainMenuScreen;
 import com.PVZ.view.input.CommandParser;
+import com.PVZ.view.screen.manager.*;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.PVZ.util.GameInitialization;
 import java.io.IOException;
 public class PVZ extends Game {
@@ -33,7 +29,7 @@ public class PVZ extends Game {
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load plant data JSON", e);
         }
-        com.PVZ.screen.manager.ScreenManager.getInstance().init(this);
+        ScreenManager.getInstance().init(this);
         AppStatus.setPVZ(this);
         CommandParser.start();
         AppStatus.setQuality(GraphicsQuality.Ultra_High);
@@ -68,9 +64,9 @@ public class PVZ extends Game {
     }
     @Override
     public void render() {
-        com.PVZ.screen.manager.MusicManager.getInstance().update(Gdx.graphics.getDeltaTime());
+        MusicManager.getInstance().update(Gdx.graphics.getDeltaTime());
         super.render();
-        com.PVZ.screen.manager.ScreenManager.getInstance().updateAndRender(Gdx.graphics.getDeltaTime());
+        ScreenManager.getInstance().updateAndRender(Gdx.graphics.getDeltaTime());
 
         AppController.render();
         UserRegistry.saveAllDirtyUsers();

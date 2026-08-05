@@ -1,19 +1,17 @@
 package com.PVZ.model.game;
 
 import com.PVZ.model.entity.Plant;
-import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.plants.PlantFactory;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantType;
-import com.PVZ.model.enums.ZombieType;
 import com.PVZ.model.minigame.izombie.IZombieGame;
 import com.PVZ.model.minigame.izombie.IZombieTexturePaths;
 import com.PVZ.model.minigame.izombie.ZombieOption;
 import com.PVZ.model.enums.MinigameEnum;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.UserRegistry;
-import com.PVZ.screen.manager.FontManager;
+import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

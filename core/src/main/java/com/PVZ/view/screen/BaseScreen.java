@@ -1,0 +1,113 @@
+package com.PVZ.view.screen;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.PVZ.PVZ;
+import com.PVZ.model.status.AppStatus;
+import com.PVZ.view.screen.manager.BrightnessController;
+
+public abstract class BaseScreen implements Screen {
+    protected final PVZ game;
+    protected OrthographicCamera camera;
+    protected FillViewport viewport;
+
+    protected Stage stage;
+    protected InputMultiplexer multiplexer;
+
+    protected static final float VIRTUAL_WIDTH = 2560;
+    protected static final float VIRTUAL_HEIGHT = 1440;
+
+    private boolean disposed = false;
+
+    protected boolean isDisposed() {
+        return disposed;
+    }
+
+    public BaseScreen() {
+        this.game = AppStatus.getPVZ();
+
+        camera = new OrthographicCamera();
+        viewport = new FillViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+        camera.position.set(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 0);
+
+        AppStatus.setCamera(camera);
+
+        stage = new Stage(viewport);
+        stage.addActor(BrightnessController.getInstance());
+        multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(stage);
+    }
+
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(multiplexer);
+    }
+
+    @Override
+    public void render(float delta) {
+        int currentWidth = Gdx.graphics.getWidth();
+        int currentHeight = Gdx.graphics.getHeight();
+
+        Gdx.gl.glViewport(0, 0, currentWidth, currentHeight);
+        Gdx.gl.glClearColor(0.08f, 0.08f, 0.1f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if (viewport.getScreenWidth() != currentWidth || viewport.getScreenHeight() != currentHeight) {
+            viewport.update(currentWidth, currentHeight, true);
+        }
+
+        viewport.apply(true);
+        camera.update();
+
+        renderScreen(delta);
+
+        if (stage != null) {
+            stage.act(Math.min(delta, 1 / 30f));
+            BrightnessController.getInstance().toFront();
+            stage.draw();
+        }
+    }
+
+    protected abstract void renderScreen(float delta);
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+    }
+
+    @Override
+    public void hide() {
+        dispose();
+        Gdx.input.setInputProcessor(null);
+    }
+
+    @Override
+    public void dispose() {
+        if (disposed) {
+            return;
+        }
+        disposed = true;
+        if (stage != null) {
+            if (Gdx.input.getInputProcessor() == multiplexer || Gdx.input.getInputProcessor() == stage) {
+                Gdx.input.setInputProcessor(null);
+            }
+
+            stage.dispose();
+            stage = null;
+            System.out.println("[BaseScreen] Stage disposed safely.");
+        }
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+}
