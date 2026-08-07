@@ -27,11 +27,11 @@ public class MainMenuScreen extends BaseScreen {
 
         Gdx.input.setInputProcessor(stage);
 
-        backgroundTexture = new Texture(Gdx.files.internal("MainMenu/MainMenu_BackGround.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("MainMenu/MainMenu_BackGround2.png"));
 
         createBlurryParticleTexture();
 
-        MusicManager.getInstance().playMusic("MainMenu/MainMenu_BackGround.ogg");
+        MusicManager.getInstance().playMusic("music/Title Screen.mp3");
 
         particles = new ArrayList<>();
         for (int i = 0; i < PARTICLE_COUNT; i++) {
