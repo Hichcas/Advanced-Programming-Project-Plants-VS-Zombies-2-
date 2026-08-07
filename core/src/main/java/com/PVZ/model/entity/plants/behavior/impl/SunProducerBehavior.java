@@ -70,6 +70,7 @@ public class SunProducerBehavior implements PlantBehavior {
             }
             logSunProduction(plant, row, col);
             context.spawnSunAt(row, col, amount);
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "producing", 0.6);
             timer = 0.0;
         }
         plant.putRuntimeState("sunBeanTimer", timer);
@@ -98,6 +99,7 @@ public class SunProducerBehavior implements PlantBehavior {
             int amount = asInt(sunAmounts.get(0), plant.getStats().getSunAmount());
             logSunProduction(plant, row, col);
             context.spawnSunAt(row, col, amount);
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "producing", 0.6);
             plant.putRuntimeState("growthTriggered", Boolean.TRUE);
         }
 
@@ -112,6 +114,7 @@ public class SunProducerBehavior implements PlantBehavior {
                 plant.getStats().getSunAmount());
             logSunProduction(plant, row, col);
             context.spawnSunAt(row, col, amount);
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "producing", 0.6);
         }
 
         plant.putRuntimeState("growthTimer", timer);
@@ -145,6 +148,7 @@ public class SunProducerBehavior implements PlantBehavior {
             }
             logSunProduction(plant, row, col);
             context.spawnSunAt(row, col, amount);
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "producing", 0.6);
         }
 
         plant.putRuntimeState("sunTimer", timer);
