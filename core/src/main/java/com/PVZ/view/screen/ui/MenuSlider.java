@@ -8,78 +8,189 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.PVZ.view.screen.manager.CursorManager;
 import com.PVZ.view.screen.manager.SoundManager;
 
 public class MenuSlider extends Actor {
+
+    // ----- منابع بصری (انعطاف‌پذیر) -----
     private final Texture trackTexture;
+    private final TextureRegion trackRegion;
+    private final Drawable trackDrawable;
+
     private final Texture fillTexture;
+    private final TextureRegion fillRegion;
+    private final Drawable fillDrawable;
+
     private final Texture knobTexture;
+    private final TextureRegion knobRegion;
+    private final Drawable knobDrawable;
+
+    // مارکر تزئینی
     private final Texture markerTexture;
 
-    // متغیرهای مربوط به آیکون تنظیم وضعیت
+    // آیکون قطع/وصل صدا
     private final boolean hasIcon;
     private final Texture iconOnTexture;
     private final Texture iconOffTexture;
-    private final Rectangle iconBounds;
+    private final Rectangle iconBounds = new Rectangle();   // حالا درجا ساخته می‌شود
     private final float iconSize = 72f;
     private final ToggleBinding toggleBinding;
     private int preMuteValue = 50;
 
+    // مقدار فعلی
     private int value;
     private String valueText = "";
     private final BitmapFont font;
-    private final GlyphLayout textLayout;
+    private final GlyphLayout textLayout = new GlyphLayout();
+    private final GlyphLayout labelLayout = new GlyphLayout();
 
+    // برچسب
     private final String labelText;
-    private final GlyphLayout labelLayout;
 
+    // حالت هاور
     private boolean isHovered = false;
     private float hoverAlpha = 0.5f;
     private static final float TARGET_HOVER_ALPHA = 1.0f;
     private static final float FADE_SPEED = 5f;
 
+    // صداها
     private static Sound hoverSound;
     private static Sound clickSound;
 
-    private final float trackHeight = 20f;
-    private final float knobWidth = 30f;
-    private final float knobHeight = 40f;
+    // ابعاد فیزیکی
+    private float trackHeight = 20f;
+    private float knobWidth = 30f;
+    private float knobHeight = 40f;
     private final float padding = 15f;
 
     private final SliderBinding binding;
 
+    // -------------------- سازنده‌ها --------------------
+
+    /** سازندهٔ اصلی با Texture (سازگاری با گذشته) */
     public MenuSlider(String label, BitmapFont font,
                       Texture trackTexture, Texture fillTexture,
                       Texture knobTexture, Texture markerTexture,
-                      boolean hasIcon, Texture iconOnTexture, Texture iconOffTexture, // 🌟 اضافه شدن آیکون‌ها و بولین
-                      SliderBinding binding, ToggleBinding toggleBinding) { // 🌟 اضافه شدن بایندینگ میوت
+                      boolean hasIcon, Texture iconOnTexture, Texture iconOffTexture,
+                      SliderBinding binding, ToggleBinding toggleBinding) {
         this.labelText = label;
         this.font = font;
         this.trackTexture = trackTexture;
         this.fillTexture = fillTexture;
         this.knobTexture = knobTexture;
         this.markerTexture = markerTexture;
-
         this.hasIcon = hasIcon;
         this.iconOnTexture = iconOnTexture;
         this.iconOffTexture = iconOffTexture;
         this.binding = binding;
         this.toggleBinding = toggleBinding;
 
-        this.iconBounds = new Rectangle();
-        this.textLayout = new GlyphLayout();
-        this.labelLayout = new GlyphLayout();
+        // این فیلدها در این سازنده استفاده نمی‌شوند
+        this.trackRegion = null;
+        this.fillRegion = null;
+        this.knobRegion = null;
+        this.trackDrawable = null;
+        this.fillDrawable = null;
+        this.knobDrawable = null;
+
+        initCommon();
+    }
+
+    /** سازنده با Drawable (برای PvzSkin) */
+    public MenuSlider(String label, BitmapFont font,
+                      Drawable track, Drawable fill, Drawable knob,
+                      Texture markerTexture,
+                      boolean hasIcon, Texture iconOnTexture, Texture iconOffTexture,
+                      SliderBinding binding, ToggleBinding toggleBinding) {
+        this.labelText = label;
+        this.font = font;
+        this.trackDrawable = track;
+        this.fillDrawable = fill;
+        this.knobDrawable = knob;
+        this.markerTexture = markerTexture;
+        this.hasIcon = hasIcon;
+        this.iconOnTexture = iconOnTexture;
+        this.iconOffTexture = iconOffTexture;
+        this.binding = binding;
+        this.toggleBinding = toggleBinding;
+
+        this.trackTexture = null;
+        this.fillTexture = null;
+        this.knobTexture = null;
+        this.trackRegion = null;
+        this.fillRegion = null;
+        this.knobRegion = null;
+
+        initCommon();
+    }
+
+    /** سازنده با TextureRegion (برای TextureBank) */
+    public MenuSlider(String label, BitmapFont font,
+                      TextureRegion track, TextureRegion fill, TextureRegion knob,
+                      Texture markerTexture,
+                      boolean hasIcon, Texture iconOnTexture, Texture iconOffTexture,
+                      SliderBinding binding, ToggleBinding toggleBinding) {
+        this.labelText = label;
+        this.font = font;
+        this.trackRegion = track;
+        this.fillRegion = fill;
+        this.knobRegion = knob;
+        this.markerTexture = markerTexture;
+        this.hasIcon = hasIcon;
+        this.iconOnTexture = iconOnTexture;
+        this.iconOffTexture = iconOffTexture;
+        this.binding = binding;
+        this.toggleBinding = toggleBinding;
+
+        this.trackTexture = null;
+        this.fillTexture = null;
+        this.knobTexture = null;
+        this.trackDrawable = null;
+        this.fillDrawable = null;
+        this.knobDrawable = null;
+
+        initCommon();
+    }
+
+    private void initCommon() {
+        // تنظیم اندازهٔ اولیه بر اساس بزرگترین المان
+        float maxTrackH = 20f, maxKnobW = 30f, maxKnobH = 40f;
+        if (trackDrawable != null) {
+            maxTrackH = Math.max(maxTrackH, trackDrawable.getMinHeight());
+        } else if (trackRegion != null) {
+            maxTrackH = Math.max(maxTrackH, trackRegion.getRegionHeight());
+        } else if (trackTexture != null) {
+            maxTrackH = Math.max(maxTrackH, trackTexture.getHeight());
+        }
+        if (knobDrawable != null) {
+            maxKnobW = Math.max(maxKnobW, knobDrawable.getMinWidth());
+            maxKnobH = Math.max(maxKnobH, knobDrawable.getMinHeight());
+        } else if (knobRegion != null) {
+            maxKnobW = Math.max(maxKnobW, knobRegion.getRegionWidth());
+            maxKnobH = Math.max(maxKnobH, knobRegion.getRegionHeight());
+        } else if (knobTexture != null) {
+            maxKnobW = Math.max(maxKnobW, knobTexture.getWidth());
+            maxKnobH = Math.max(maxKnobH, knobTexture.getHeight());
+        }
+        this.trackHeight = maxTrackH;
+        this.knobWidth = maxKnobW;
+        this.knobHeight = maxKnobH;
+
+        // ارتفاع کلی = ارتفاع آیکون یا knob + فضای برچسب
+        float totalHeight = Math.max(hasIcon ? iconSize : 0, knobHeight) + 30f;
+        setSize(450, totalHeight);
+
         if (labelText != null && !labelText.isEmpty()) {
             labelLayout.setText(font, labelText);
         }
-
-        this.setSize(450, 110f);
 
         if (binding != null) {
             setValue(binding.get());
@@ -106,17 +217,14 @@ public class MenuSlider extends Actor {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (button == 0) {
                     SoundManager.getInstance().playSound(getClickSound());
-
-                    // بررسی کلیک روی آیکون
                     if (hasIcon && iconBounds.contains(x, y)) {
-                        if (MenuSlider.this.toggleBinding != null) {
-                            boolean currentState = MenuSlider.this.toggleBinding.get();
-                            MenuSlider.this.toggleBinding.set(!currentState);
-
-                            if (!currentState) { // اگر میوت شد
+                        if (toggleBinding != null) {
+                            boolean currentState = toggleBinding.get();
+                            toggleBinding.set(!currentState);
+                            if (!currentState) {
                                 if (value > 0) preMuteValue = value;
                                 setValue(0);
-                            } else { // اگر از میوت درآمد
+                            } else {
                                 setValue(preMuteValue > 0 ? preMuteValue : 50);
                             }
                         }
@@ -130,7 +238,6 @@ public class MenuSlider extends Actor {
 
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
-                // هنگام درگ کردن، اگر روی آیکون نبودیم اسلایدر آپدیت شود
                 if (!(hasIcon && iconBounds.contains(x, y))) {
                     updateValueFromMouse(x);
                 }
@@ -139,21 +246,16 @@ public class MenuSlider extends Actor {
     }
 
     private void updateValueFromMouse(float mouseX) {
-        // محاسبه فضای اشغال شده توسط آیکون در صورت وجود
         float sliderLeftOffset = hasIcon ? (iconSize + 15f) : 0f;
         float usableWidth = getWidth() - padding * 2f - sliderLeftOffset;
         float knobSpace = knobWidth / 2f;
-
         float minX = padding + sliderLeftOffset + knobSpace;
         float maxX = padding + sliderLeftOffset + usableWidth - knobSpace;
-
         float clampedX = MathUtils.clamp(mouseX, minX, maxX);
         float percent = (clampedX - minX) / (maxX - minX);
         int newValue = MathUtils.round(percent * 100f);
-
         setValue(newValue);
 
-        // آپدیت خودکار سیستم میوت اگر اسلایدر دستی روی صفر یا بیشتر از صفر رفت
         if (hasIcon && toggleBinding != null) {
             if (newValue == 0) {
                 toggleBinding.set(true);
@@ -170,7 +272,6 @@ public class MenuSlider extends Actor {
         if (textLayout != null && font != null) {
             textLayout.setText(font, valueText);
         }
-
         if (binding != null) {
             binding.set(value);
         }
@@ -192,7 +293,7 @@ public class MenuSlider extends Actor {
         float trackCenterY = getY() + 40f;
         float sliderLeftOffset = hasIcon ? (iconSize + 15f) : 0f;
 
-        // رسم برچسب (label) در بالای اسلایدر
+        // برچسب
         if (labelText != null && !labelText.isEmpty() && labelLayout != null) {
             font.setColor(1f, 1f, 1f, hoverAlpha);
             float labelX = getX() + (getWidth() - labelLayout.width) / 2f;
@@ -200,73 +301,66 @@ public class MenuSlider extends Actor {
             font.draw(batch, labelText, labelX, labelY);
         }
 
-        // رسم آیکون سمت چپ (در صورت فعال بودن بولین)
+        // آیکون قطع/وصل
         if (hasIcon) {
-            // آپدیت محدوده کلیک آیکون (نسبت به خود اکتور)
             iconBounds.set(padding, 40f - iconSize / 2f, iconSize, iconSize);
-
             boolean isMuted = toggleBinding != null ? toggleBinding.get() : (value == 0);
             Texture currentIcon = isMuted ? iconOffTexture : iconOnTexture;
-
             if (currentIcon != null) {
                 batch.setColor(1f, 1f, 1f, hoverAlpha);
-                batch.draw(currentIcon, getX() + iconBounds.x, getY() + iconBounds.y, iconBounds.width, iconBounds.height);
+                batch.draw(currentIcon, getX() + iconBounds.x, getY() + iconBounds.y,
+                    iconBounds.width, iconBounds.height);
             }
         }
 
-        // محاسبه مختصات شروع بدنه اسلایدر
         float startX = getX() + padding + sliderLeftOffset;
         float trackW = getWidth() - padding * 2f - sliderLeftOffset;
+        float fillWidth = trackW * (value / 100f);
 
         // رسم track
-        if (trackTexture != null) {
-            batch.setColor(1f, 1f, 1f, hoverAlpha);
-            batch.draw(trackTexture, startX, trackCenterY - trackHeight / 2f, trackW, trackHeight);
-        } else {
-            batch.setColor(0.3f, 0.3f, 0.3f, hoverAlpha);
-            drawDummy(batch, startX, trackCenterY - trackHeight / 2f, trackW, trackHeight);
-        }
-
+        drawElement(batch, trackDrawable, trackRegion, trackTexture,
+            startX, trackCenterY - trackHeight / 2f, trackW, trackHeight, hoverAlpha);
         // رسم fill
-        float fillWidth = trackW * (value / 100f);
-        if (fillTexture != null) {
-            batch.setColor(1f, 1f, 1f, hoverAlpha);
-            batch.draw(fillTexture, startX, trackCenterY - trackHeight / 2f, fillWidth, trackHeight);
-        } else {
-            batch.setColor(0.8f, 0.8f, 0.8f, hoverAlpha);
-            drawDummy(batch, startX, trackCenterY - trackHeight / 2f, fillWidth, trackHeight);
-        }
+        drawElement(batch, fillDrawable, fillRegion, fillTexture,
+            startX, trackCenterY - trackHeight / 2f, fillWidth, trackHeight, hoverAlpha);
 
         // رسم knob
         float knobX = startX + fillWidth - knobWidth / 2f;
         float knobY = trackCenterY - knobHeight / 2f;
-        if (knobTexture != null) {
-            batch.setColor(1f, 1f, 1f, hoverAlpha);
-            batch.draw(knobTexture, knobX, knobY, knobWidth, knobHeight);
-        } else {
-            batch.setColor(0.9f, 0.9f, 0.9f, hoverAlpha);
-            drawDummy(batch, knobX, knobY, knobWidth, knobHeight);
-        }
+        drawElement(batch, knobDrawable, knobRegion, knobTexture,
+            knobX, knobY, knobWidth, knobHeight, hoverAlpha);
 
-        // رسم عدد
+        // عدد مقدار
         font.setColor(1f, 1f, 1f, hoverAlpha);
-        // 🌟 انتقال عدد به ۱۵ پیکسل راست‌تر (مقدار 10f به 25f تغییر کرد)
         float textX = getX() + getWidth() + 25f;
         float textY = trackCenterY + textLayout.height / 2f;
         font.draw(batch, valueText, textX, textY);
 
-        // مارکرها هنگام هاور
+        // مارکرهای هاور
         if (isHovered && markerTexture != null) {
             batch.setColor(1f, 1f, 1f, hoverAlpha);
-            float markerW = 40f;
-            float markerH = 30f;
+            float markerW = 40f, markerH = 30f;
             float markerY = trackCenterY - markerH / 2f;
             batch.draw(markerTexture, getX() - markerW - 5f, markerY, markerW, markerH);
             batch.draw(markerTexture, textX + textLayout.width + 10f, markerY, markerW, markerH,
-                    0, 0, markerTexture.getWidth(), markerTexture.getHeight(), true, false);
+                0, 0, markerTexture.getWidth(), markerTexture.getHeight(), true, false);
         }
-
         batch.setColor(Color.WHITE);
+    }
+
+    /** رسم یک المان با اولویت Drawable > TextureRegion > Texture */
+    private void drawElement(Batch batch, Drawable d, TextureRegion r, Texture t,
+                             float x, float y, float w, float h, float alpha) {
+        batch.setColor(1f, 1f, 1f, alpha);
+        if (d != null) {
+            d.draw(batch, x, y, w, h);
+        } else if (r != null) {
+            batch.draw(r, x, y, w, h);
+        } else if (t != null) {
+            batch.draw(t, x, y, w, h);
+        } else {
+            drawDummy(batch, x, y, w, h);
+        }
     }
 
     private static Texture dummyTexture;
