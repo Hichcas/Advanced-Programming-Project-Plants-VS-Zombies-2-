@@ -80,6 +80,7 @@ public class LobberBehavior implements PlantBehavior {
     }
 
     private void spawnProjectiles(PlantInstance plant, BehaviorContext context, LobShotParams params) {
+        com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.5);
         for (int i = 0; i < params.projectileCount; i++) {
             Projectile projectile = ProjectileFactory.createLobProjectile(plant, params.damage);
             if (params.freezeAttack) {

@@ -11,6 +11,9 @@ import java.util.List;
 
 public class ShooterBehavior implements PlantBehavior {
     private static final double BURST_GAP_SECONDS = 0.12;
+    // How long the "shooting" PAM clip stays selected after a shot is fired.
+    // Tune this to roughly match the real length of each plant's shooting animation.
+    private static final double SHOOT_ANIM_SECONDS = 0.5;
 
     @Override
     public void onUpdate(PlantInstance plant, BehaviorContext context, double deltaTime) {
@@ -106,6 +109,12 @@ public class ShooterBehavior implements PlantBehavior {
 
     private void spawnOne(PlantInstance plant, BehaviorContext context, int damage) {
         Projectile projectile = ProjectileFactory.createProjectile(plant, damage);
+
+        // Mark that a "shooting" animation should play for a short window.
+        // Plant.draw() reads this to pick the "shooting" PAM clip instead of "idle".
+        // Duration comes from the real PAM clip length when known (see PamAnimationCatalog),
+        // falling back to a generic guess otherwise.
+        com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", SHOOT_ANIM_SECONDS);
 
         if (plant.getStats().getBooleanExtra("fireAttack", false)) {
             projectile.setType(ProjectileType.FIRE_PEA);

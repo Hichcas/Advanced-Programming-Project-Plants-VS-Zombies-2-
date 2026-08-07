@@ -81,10 +81,102 @@ public final class PlantTexturePaths {
         PATHS.put("CAT_TAIL_MINT", BASE + "CattailMint.png");
     }
 
+    private static final Map<String, String> PAM_PATHS = new HashMap<>();
+    private static final String PAM_INITIAL = "768/INITIAL/PLANT/";
+    private static final String PAM_FULL = "768/FULL/PLANT/";
+
+    private static void pamInitial(String plantType, String folder) {
+        PAM_PATHS.put(plantType, PAM_INITIAL + folder + "/" + folder + ".PAM");
+    }
+
+    private static void pamFull(String plantType, String folder) {
+        PAM_PATHS.put(plantType, PAM_FULL + folder + "/" + folder + ".PAM");
+    }
+
+    static {
+        pamInitial("SUNFLOWER", "SUNFLOWER");
+        pamInitial("TWIN_SUNFLOWER", "SUNFLOWER_TWIN");
+        pamInitial("GOLD_BLOOM", "GOLDBLOOM");
+        pamInitial("PEASHOOTER", "PEASHOOTER");
+        pamInitial("REPEATER", "REPEATER");
+        pamInitial("THREEPEATER", "THREEPEATER");
+        pamInitial("SNOW_PEA", "SNOWPEA");
+        pamInitial("CAULIPOWER", "CAULIPOWER");
+        pamInitial("ELECTRIC_BLUEBERRY", "ELECTRICBLUEBERRY");
+        pamInitial("CACTUS", "CACTUS");
+        pamInitial("FIRE_PEASHOOTER", "FIREPEASHOOTER");
+        pamInitial("STARFRUIT", "STARFRUIT");
+        pamInitial("GOO_PEASHOOTER", "GOOPEASHOOTER");
+        pamInitial("MEGA_GATLING_PEA", "MEGAGATLING");
+        pamInitial("PUFF_SHROOM", "PUFFSHROOM");
+        pamInitial("FUME_SHROOM", "FUMESHROOM");
+        pamInitial("CABBAGE_PULT", "CABBAGEPULT");
+        pamInitial("KERNEL_PULT", "KERNALPULT"); // note: game's own folder is spelled "KERNAL"
+        pamInitial("MELON_PULT", "MELONPULT");
+        pamInitial("POTATO_MINE", "POTATOMINE");
+        pamInitial("SQUASH", "SQUASH");
+        pamInitial("GRAPESHOT", "GRAPESHOT");
+        pamInitial("JALAPENO", "JALAPENO");
+        pamInitial("ICEBERG_LETTUCE", "ICEBURG"); // folder is "ICEBURG"
+        pamInitial("CHOMPER", "CHOMPER");
+        pamInitial("WASABI_WHIP", "WASABIWHIP");
+        pamInitial("KIWIBEAST", "KIWIBEAST");
+        pamInitial("WALL_NUT", "WALLNUT");
+        pamInitial("SWEET_POTATO", "SWEETPOTATO");
+        pamInitial("EXPLODE_O_NUT", "EXPLODEONUT");
+        pamInitial("PUMPKIN", "PUMPKIN");
+        pamInitial("TORCHWOOD", "TORCHWOOD");
+        pamInitial("HYPNO_SHROOM", "HYPNOSHROOM");
+        pamInitial("IMITATER", "IMITATER");
+        pamInitial("GRAVE_BUSTER", "GRAVEBUSTER");
+        pamInitial("BONK_CHOY", "BONKCHOY");
+        pamFull("SUN_SHROOM", "SUNSHROOM");
+        pamFull("PRIMAL_SUNFLOWER", "PRIMAL_SUNFLOWER");
+        pamFull("ROTOBAGA", "ROTORUTABAGA");
+        pamFull("PEA_POD", "PEAPOD");
+        pamFull("SPLIT_PEA", "SPLITPEA");
+        pamFull("CITRON", "CITRON");
+        pamFull("BOWLING_BULB", "BOWLINGBULB");
+        pamFull("SEA_SHROOM", "SEASHROOM");
+        pamFull("WINTER_MELON", "WINTERMELON");
+        pamFull("PEPPER_PULT", "PEPPERPULT");
+        pamFull("PRIMAL_POTATO_MINE", "PRIMAL_POTATOMINE");
+        pamFull("CHERRY_BOMB", "CHERRYBOMB");
+        pamFull("DOOM_SHROOM", "DOOMSHROOM");
+        pamFull("TANGLE_KELP", "TANGLEKELP");
+        pamFull("PHAT_BEET", "PHATBEETS");
+        pamFull("TALL_NUT", "TALLNUT");
+        pamFull("ENDURIAN", "ENDURIAN");
+        pamFull("GARLIC", "GARLIC");
+        pamFull("SUN_BEAN", "SUNBEAN");
+        pamFull("MAGNET_SHROOM", "MAGNETSHROOM");
+        pamFull("ICE_SHROOM", "ICESHROOM");
+        pamFull("LILY_PAD", "LILYPAD");
+        pamFull("HOT_POTATO", "HOTPOTATO");
+        PAM_PATHS.put("ENLIGHTEN_MINT", "768/INITIAL/EMPOWERMINTS/PLANT/ENLIGHTENMINT/ENLIGHTENMINT.PAM");
+        PAM_PATHS.put("APPEASE_MINT", "768/INITIAL/EMPOWERMINTS/PLANT/APPEASEMINT/APPEASEMINT.PAM");
+        PAM_PATHS.put("ARMA_MINT", "768/INITIAL/EMPOWERMINTS/PLANT/ARMAMINT/ARMAMINT.PAM");
+        PAM_PATHS.put("BOMBARD_MINT", "768/INITIAL/EMPOWERMINTS/PLANT/BOMBARDMINT/BOMBARDMINT.PAM");
+        PAM_PATHS.put("ENFORCE_MINT", "768/INITIAL/EMPOWERMINTS/PLANT/ENFORCEMINT/ENFORCEMINT.PAM");
+        PAM_PATHS.put("REINFORCE_MINT", "768/INITIAL/EMPOWERMINTS/PLANT/REINFORCEMINT/REINFORCEMINT.PAM");
+        PAM_PATHS.put("ENCHANT_MINT", "768/INITIAL/EMPOWERMINTS/PLANT/ENCHANTMINT/ENCHANTMINT.PAM");
+        PAM_PATHS.put("PIERCE_MINT", "768/INITIAL/EMPOWERMINTS/PLANT/SPEARMINT/SPEARMINT.PAM");
+        pamInitial("WALLNUT_BOWLING", "WALLNUT");
+        pamInitial("GIANT_WALLNUT", "WALLNUT");
+    }
+
     private PlantTexturePaths() {
     }
 
     public static String getPath(String plantTypeName) {
         return PATHS.getOrDefault(plantTypeName, FALLBACK);
+    }
+
+    public static String getPamPath(String plantTypeName) {
+        return PAM_PATHS.get(plantTypeName);
+    }
+
+    public static boolean hasPamAnimation(String plantTypeName) {
+        return PAM_PATHS.containsKey(plantTypeName);
     }
 }

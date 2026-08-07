@@ -65,6 +65,7 @@ public class MeleeEatBehavior implements PlantBehavior {
             int damage = computeMeleeDamage(plant);
             boolean hit = applyWasabiWhipDamage(plant, context, lane, plantX, range, damage);
             if (hit) {
+                com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
                 spawnWhipVisual(plant, context, lane, plantX);
             }
             if (hit && plant.isPlantFoodActive()) {
@@ -82,6 +83,9 @@ public class MeleeEatBehavior implements PlantBehavior {
 
         int damage = computeMeleeDamage(plant);
         boolean hitAnything = applyDamageToZombies(plant, context, lane, isAreaAttack, plantX, range, damage);
+        if (hitAnything) {
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
+        }
 
         if (hitAnything && plant.getDefinition() != null
             && "phat_beet".equals(plant.getDefinition().getPlantKey())) {

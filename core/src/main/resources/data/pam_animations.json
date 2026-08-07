@@ -1,0 +1,8481 @@
+{
+"count": 475,
+"animations": [
+{
+"name": "AKEE",
+"path": "768/FULL/PLANT/AKEE/AKEE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1,
+"attack": 2.9667,
+"plantfood": 3.5,
+"water": 1.8667
+}
+},
+{
+"name": "AQUAVINE",
+"path": "768/FULL/PLANT/AQUAVINE/AQUAVINE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle1": 1.1667,
+"idle_water": 1.6667,
+"idle1_water": 1.1667,
+"attack": 1,
+"attack_water": 1,
+"plantfood_on": 1.3667,
+"plantfood_idle": 0.9333,
+"plantfood_end": 0.5333,
+"water": 1.3333
+}
+},
+{
+"name": "BANANA",
+"path": "768/FULL/PLANT/BANANA/BANANA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.9667,
+"idle2": 1.9667,
+"ready_idle": 0.2,
+"special": 0.8333,
+"reload": 0.4667,
+"reload_idle": 3.3333,
+"reload_end": 1.3667,
+"plantfood": 2.8333,
+"water": 2.4667
+}
+},
+{
+"name": "BLASTSPINNER",
+"path": "768/FULL/PLANT/BLASTSPINNER/BLASTSPINNER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"attack": 4,
+"pf_attack": 4,
+"death_explosion": 2,
+"water": 2
+}
+},
+{
+"name": "BLASTSPINNER_COCOON",
+"path": "768/FULL/PLANT/BLASTSPINNER_COCOON/BLASTSPINNER_COCOON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"cocoon_idle": 0.6667,
+"cocoon_attack": 1.5
+}
+},
+{
+"name": "BLAZELEAF",
+"path": "768/FULL/PLANT/BLAZELEAF/BLAZELEAF.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.8333,
+"idle2": 2,
+"attack1_ready": 1,
+"attack1_1": 1.1667,
+"attack1_end": 1.1667,
+"attack1_back_ready": 1,
+"attack1_1_back": 1.1667,
+"attack1_back_end": 1.1667,
+"water": 2.8333,
+"plantfood": 4.8333
+}
+},
+{
+"name": "BLAZINGKNIGHT",
+"path": "768/FULL/PLANT/BLAZINGKNIGHT/BLAZINGKNIGHT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"attack": 12.5,
+"plantfood": 0.7,
+"water": 2
+}
+},
+{
+"name": "BLOWVER",
+"path": "768/FULL/PLANT/BLOWVER/BLOWVER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.7,
+"idle2": 1.7,
+"attack": 2.4,
+"water": 2
+}
+},
+{
+"name": "BOWLINGBULB",
+"path": "768/FULL/PLANT/BOWLINGBULB/BOWLINGBULB.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.6667,
+"special": 2.6667,
+"special2": 2.6667,
+"special3": 2.6667,
+"reload": 0.8333,
+"reload2": 0.8,
+"reload3": 0.8667,
+"plantfood_on": 1.2333,
+"plantfood_idle": 2,
+"plantfood1": 0.8,
+"plantfood2": 0.7667,
+"plantfood3": 0.9,
+"water": 2.7
+}
+},
+{
+"name": "BRAINSTEM",
+"path": "768/FULL/PLANT/BRAINSTEM/BRAINSTEM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"attack": 2,
+"plantfood": 3,
+"water": 2
+}
+},
+{
+"name": "CELERYSTALKER",
+"path": "768/FULL/PLANT/CELERYSTALKER/CELERYSTALKER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"idle3": 1.6667,
+"idle4": 1.6667,
+"down": 1.0667,
+"idle_down": 1.6667,
+"idle_down2": 1.6667,
+"idle_down3": 1.6667,
+"up": 1.0667,
+"attack": 0.2667,
+"attack_loop": 0.7,
+"attack_end": 0.6,
+"plantfood_on": 0.4667,
+"plantfood": 0.2333,
+"plantfood_off": 0.5333,
+"water": 1.7
+}
+},
+{
+"name": "CHARDGUARD",
+"path": "768/FULL/PLANT/CHARDGUARD/CHARDGUARD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle_leaves3": 3.3333,
+"idle2_leaves3": 3.3333,
+"idle3_leaves3": 6.3,
+"attack_leaves3": 1.1,
+"attack_idle_leaves3": 3.3333,
+"attack_flip_leaves3": 1.4333,
+"idle_leaves2": 3.3333,
+"idle2_leaves2": 3.3333,
+"idle3_leaves2": 6.3,
+"attack_leaves2": 1.1,
+"attack_idle_leaves2": 3.3333,
+"attack_flip_leaves2": 1.4333,
+"idle_leaves1": 3.3333,
+"idle2_leaves1": 3.3333,
+"idle3_leaves1": 6.3,
+"attack_leaves1": 1.1,
+"attack_idle_leaves1": 3.3333,
+"attack_flip_leaves1": 1.8,
+"idle_leaves0": 3.3333,
+"idle2_leaves0": 3.3333,
+"idle3_leaves0": 6.3,
+"plantfood": 2.4333,
+"water": 2.1667
+}
+},
+{
+"name": "CHERRYBOMB",
+"path": "768/FULL/PLANT/CHERRYBOMB/CHERRYBOMB.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"attack": 0.7,
+"water": 1.6667
+}
+},
+{
+"name": "CHILIBEAN",
+"path": "768/FULL/PLANT/CHILIBEAN/CHILIBEAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.6667,
+"idle2": 2.6667,
+"idle3": 1.9667,
+"plantfood": 2.9667,
+"plantfood2": 0.6667,
+"plantfood3": 0.5667,
+"plantfood4": 1,
+"water": 1.7
+}
+},
+{
+"name": "CITRON",
+"path": "768/FULL/PLANT/CITRON/CITRON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"charge": 7,
+"idle": 0.9,
+"idle2": 3.3333,
+"attack": 1.3,
+"plantfood": 1.3667,
+"recovery": 1.4333,
+"water": 1.6
+}
+},
+{
+"name": "COCONUTCANNON",
+"path": "768/FULL/PLANT/COCONUTCANNON/COCONUTCANNON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1,
+"idle3": 2.0333,
+"attack": 1.3333,
+"plantfood": 1.6667,
+"recover": 1.7,
+"recover2": 1,
+"water": 2.0333
+}
+},
+{
+"name": "CORNFETTIPOPPER",
+"path": "768/FULL/PLANT/CORNFETTIPOPPER/CORNFETTIPOPPER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"attack": 1.6667,
+"plantfood": 2.1667,
+"water": 2.5
+}
+},
+{
+"name": "DEVOURBLOOM",
+"path": "768/FULL/PLANT/DEVOURBLOOM/DEVOURBLOOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 2,
+"attack_ready": 1,
+"attack_close": 1,
+"attack_ready_loop": 0.8333,
+"attack": 1.3333,
+"attack_end": 0.8333,
+"plantfood_on": 1,
+"plantfood_off": 1,
+"plantfood_replicate_attack": 2.4667,
+"water": 2
+}
+},
+{
+"name": "DOOMSHROOM",
+"path": "768/FULL/PLANT/DOOMSHROOM/DOOMSHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"stage1_spawn": 1,
+"stage1_idle": 2,
+"stage1_explode": 2,
+"stage1_transform": 2,
+"stage2_idle": 2,
+"stage2_idle2": 2,
+"stage2_explode": 2,
+"stage2_transform": 2,
+"stage3_idle": 2,
+"stage3_idle2": 2,
+"stage3_explode": 3.3333,
+"stage3_explode_short": 3.3333,
+"water": 2
+}
+},
+{
+"name": "DRAGONBABYBRUIT",
+"path": "768/FULL/PLANT/DRAGONBABYBRUIT/DRAGONBABYBRUIT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"plant": 1.9,
+"idle": 1.6667,
+"attack": 4.2,
+"pf": 0.8333
+}
+},
+{
+"name": "DRAGONBRUIT",
+"path": "768/FULL/PLANT/DRAGONBRUIT/DRAGONBRUIT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"idle3": 2,
+"attack": 3.6667,
+"charged": 2,
+"pf_start": 0.9667,
+"pf_loop": 0.5333,
+"pf_end": 0.5,
+"death": 3.8333,
+"water": 2
+}
+},
+{
+"name": "DUSKLOBBER",
+"path": "768/FULL/PLANT/DUSKLOBBER/DUSKLOBBER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6,
+"idle2": 1.6,
+"attack": 1.5,
+"plantfood": 2.2,
+"water": 1.3667
+}
+},
+{
+"name": "ELECTRICPEEL",
+"path": "768/FULL/PLANT/ELECTRICPEEL/ELECTRICPEEL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"idle3": 2.6667,
+"special_idle": 1.3333,
+"special_idle2": 1.3333,
+"special_idle3": 2.6667,
+"attack": 0.8333,
+"attack2": 0.6667,
+"attack2_end": 0.5,
+"peel_move": 0.6667,
+"peel_death": 0.6667,
+"plantfood": 1.9333,
+"plantfood1": 0.6667,
+"attack_plantfood": 0.5,
+"water": 1.8333
+}
+},
+{
+"name": "EMPEACH",
+"path": "768/FULL/PLANT/EMPEACH/EMPEACH.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1,
+"attack": 0.6667,
+"plantfood": 1,
+"water": 1.9333
+}
+},
+{
+"name": "ENDURIAN",
+"path": "768/FULL/PLANT/ENDURIAN/ENDURIAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 9,
+"idle2": 10,
+"attack_start": 0.5,
+"attack_loop": 0.3333,
+"attack_end": 0.5333,
+"damage": 3.3333,
+"attack_start_damage": 0.5,
+"attack_loop_damage": 0.3333,
+"attack_end_damage": 0.5333,
+"damage2": 3.3333,
+"attack_start_damage2": 0.5,
+"attack_loop_damage2": 0.3333,
+"attack_end_damage2": 0.5333,
+"damage3": 6.6667,
+"attack_start_damage3": 0.5,
+"attack_loop_damage3": 0.3333,
+"attack_end_damage3": 0.5333,
+"plantfood_on": 0.5667,
+"water": 1.4667
+}
+},
+{
+"name": "FROSTBONNET",
+"path": "768/FULL/PLANT/FROSTBONNET/FROSTBONNET.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"water": 2.6667,
+"idle1_ice": 2,
+"idle2_ice": 2,
+"attack_ice": 2.6667,
+"transform_ice_to_fire": 2,
+"idle1_fire": 2,
+"idle2_fire": 2,
+"attack_fire": 2.6667,
+"transform_fire_to_ice": 2,
+"transform_ice_to_pf": 2,
+"plantfood": 4.1667,
+"transform_fire_to_pf": 2
+}
+},
+{
+"name": "GARLIC",
+"path": "768/FULL/PLANT/GARLIC/GARLIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 3.2333,
+"idle_damage": 1.1333,
+"idle2_damage": 2.3333,
+"idle_damage2": 1,
+"idle2_damage2": 1.6333,
+"plantfood": 3.0333,
+"water": 1.7
+}
+},
+{
+"name": "GOLDLEAF",
+"path": "768/FULL/PLANT/GOLDLEAF/GOLDLEAF.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1,
+"idle3": 1,
+"attack": 2
+}
+},
+{
+"name": "GRIMROSE",
+"path": "768/FULL/PLANT/GRIMROSE/GRIMROSE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"attack_start": 0.6,
+"attack_loop": 0.2,
+"attack_end": 1.4,
+"plantfood_start": 0.8,
+"plantfood_loop": 0.1667,
+"plantfood_end": 1,
+"rearm": 0.8667,
+"disappear": 1.0333,
+"water": 1.8
+}
+},
+{
+"name": "GUACODILE",
+"path": "768/FULL/PLANT/GUACODILE/GUACODILE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"idle2": 3.3333,
+"idle3": 1.5,
+"attack": 2.1667,
+"special2": 0.8667,
+"special2_projectile": 0.4,
+"plantfood": 1.8667,
+"water": 3.0667
+}
+},
+{
+"name": "GUARDSHROOM",
+"path": "768/FULL/PLANT/GUARDSHROOM/GUARDSHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"attack": 2.1667,
+"plantfood": 2.5,
+"water": 1.6667
+}
+},
+{
+"name": "HAMMERUIT",
+"path": "768/FULL/PLANT/HAMMERUIT/HAMMERUIT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle1_1": 2,
+"idle1_2": 2,
+"idle1_3": 2,
+"idle2": 2,
+"attack1": 2,
+"attack2": 2.1667,
+"attack3": 2.3333,
+"plantfood": 4.5,
+"water": 2
+}
+},
+{
+"name": "HOTPOTATO",
+"path": "768/FULL/PLANT/HOTPOTATO/HOTPOTATO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"idle2": 3.3333,
+"attack": 4.6667
+}
+},
+{
+"name": "ICESHROOM",
+"path": "768/FULL/PLANT/ICESHROOM/ICESHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.9667,
+"idle2": 1.9333,
+"attack": 1.1667,
+"plantfood": 1.6667,
+"water": 1.9333
+}
+},
+{
+"name": "INFINUT",
+"path": "768/FULL/PLANT/INFINUT/INFINUT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"plant": 1,
+"idle": 5.2333,
+"idle2": 5.2333,
+"damage": 3.4333,
+"damage2": 3.5667,
+"recover": 1,
+"die": 0.6333,
+"projector_idle": 0.8667,
+"plantfood": 1.2667,
+"water": 2.8667
+}
+},
+{
+"name": "INTENSIVECARROT",
+"path": "768/FULL/PLANT/INTENSIVECARROT/INTENSIVECARROT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.8333,
+"idle2": 0.8333,
+"attack": 2
+}
+},
+{
+"name": "LASERBEAN",
+"path": "768/FULL/PLANT/LASERBEAN/LASERBEAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1,
+"attack": 0.6667,
+"plantfood_on": 0.8333,
+"plantfood": 1.8333,
+"plantfood_off": 0.8333,
+"water": 2
+}
+},
+{
+"name": "LEMONAID",
+"path": "768/FULL/PLANT/LEMONAID/LEMONAID.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"sungenerate": 1.3333,
+"healing": 1.3333,
+"plantfood": 2.8333,
+"recover": 1.5,
+"recover2": 1.1667,
+"water": 1.3333
+}
+},
+{
+"name": "LIGHTNINGREED",
+"path": "768/FULL/PLANT/LIGHTNINGREED/LIGHTNINGREED.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"idle3": 2,
+"idle4": 2.0333,
+"attack": 1,
+"plantfood": 1,
+"water": 2.0333
+}
+},
+{
+"name": "LILYPAD",
+"path": "768/FULL/PLANT/LILYPAD/LILYPAD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.0667,
+"idle2": 0.3,
+"idle3": 2.1667,
+"idle4": 3.1,
+"idle5": 3.2333,
+"plantfood": 2.1667,
+"water": 3.5333
+}
+},
+{
+"name": "MAGNETSHROOM",
+"path": "768/FULL/PLANT/MAGNETSHROOM/MAGNETSHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.6333,
+"idle2": 2.6333,
+"idle3": 2.6333,
+"busy": 2.6333,
+"special": 0.6667,
+"catch": 1.3,
+"plantfood_on": 0.4,
+"plantfood_collection": 1.4667,
+"plantfood": 0.3667,
+"plantfood_off": 0.6,
+"water": 1.7
+}
+},
+{
+"name": "MAGNIFYING_GRASS",
+"path": "768/FULL/PLANT/MAGNIFYING_GRASS/MAGNIFYING_GRASS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"idle3": 2.0333,
+"attack": 0.7,
+"attack2": 0.7,
+"plantfood_on": 0.3667,
+"plantfood": 1.2333,
+"plantfood_off": 0.3667,
+"water": 2.0333
+}
+},
+{
+"name": "MANGOFIER",
+"path": "768/FULL/PLANT/MANGOFIER/MANGOFIER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"attack": 2,
+"attack2": 2,
+"pf": 2,
+"water": 2
+}
+},
+{
+"name": "MINISHROOM",
+"path": "768/FULL/PLANT/MINISHROOM/MINISHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.5,
+"attack": 0.8333,
+"special": 1,
+"special_idle": 1.6,
+"special_end": 2.6,
+"plantfood": 0.7333,
+"plantfood_hold": 0.6667,
+"plantfood_release": 0.6667
+}
+},
+{
+"name": "MOONFLOWER",
+"path": "768/FULL/PLANT/MOONFLOWER/MOONFLOWER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"special": 2.5,
+"plantfood": 2.1333,
+"water": 2.2
+}
+},
+{
+"name": "NIGHTCAP",
+"path": "768/FULL/PLANT/NIGHTCAP/NIGHTCAP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"plant": 2.5,
+"idle": 1,
+"attack": 1.8333,
+"attackend": 1,
+"pf_attack": 1.8333,
+"stealth": 2,
+"water": 1.1667
+}
+},
+{
+"name": "NIGHTSHADE",
+"path": "768/FULL/PLANT/NIGHTSHADE/NIGHTSHADE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"attack": 3.1667,
+"plantfood": 1.5667,
+"water": 1.5667
+}
+},
+{
+"name": "PEAPOD",
+"path": "768/FULL/PLANT/PEAPOD/PEAPOD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1,
+"idle3": 1,
+"idle4": 1,
+"idle5": 1,
+"attack": 1.0333,
+"attack 2": 1,
+"attack 3": 1,
+"attack 4": 1,
+"attack 5": 1,
+"plantfood_on": 1.5,
+"plantfood": 5.2667,
+"plantfood_off": 0.8,
+"water": 2.4
+}
+},
+{
+"name": "PEPPERPULT",
+"path": "768/FULL/PLANT/PEPPERPULT/PEPPERPULT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"idle2": 3.3333,
+"idle3": 2.2667,
+"attack": 2,
+"plantfood": 3.6333,
+"water": 6.9
+}
+},
+{
+"name": "PERFSHROOM",
+"path": "768/FULL/PLANT/PERFSHROOM/PERFSHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"idle3": 2.5667,
+"attack": 3.2333
+}
+},
+{
+"name": "PHATBEETS",
+"path": "768/FULL/PLANT/PHATBEETS/PHATBEETS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.6667,
+"idle2": 0.6667,
+"attack": 0.9,
+"plantfood": 2,
+"water": 2.1667
+}
+},
+{
+"name": "POWERPLANT_PROTO",
+"path": "768/FULL/PLANT/POWERPLANT_PROTO/POWERPLANT_PROTO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"idle2": 2,
+"attack": 2.4,
+"water": 1.7
+}
+},
+{
+"name": "PRIMAL_PEASHOOTER",
+"path": "768/FULL/PLANT/PRIMAL_PEASHOOTER/PRIMAL_PEASHOOTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.0333,
+"idle2": 1.0333,
+"attack": 1.0333,
+"plantfood": 0.4333,
+"water": 2.4333
+}
+},
+{
+"name": "PRIMAL_POTATOMINE",
+"path": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"plant": 0.9667,
+"plant_idle": 0.0667,
+"recover": 0.8333,
+"idle": 1,
+"idle2": 1,
+"attack": 0.6667,
+"plantfood_on": 0.5333,
+"plantfood": 0.5,
+"plantfood_off": 0.5333,
+"plantfood2": 0.6667,
+"plantfood3": 0.0667,
+"water": 1.7
+}
+},
+{
+"name": "PRIMAL_SUNFLOWER",
+"path": "768/FULL/PLANT/PRIMAL_SUNFLOWER/PRIMAL_SUNFLOWER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.5667,
+"idle2": 1.5667,
+"special": 1.7,
+"plantfood_on": 0.6,
+"plantfood": 0.7333,
+"plantfood_off": 0.6333,
+"water": 1.7
+}
+},
+{
+"name": "PRIMAL_WALLNUT",
+"path": "768/FULL/PLANT/PRIMAL_WALLNUT/PRIMAL_WALLNUT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 9,
+"idle2": 10,
+"damage": 3.3333,
+"damage2": 3.8333,
+"damage3": 6.6667,
+"plantfood_on": 0.6667,
+"plantfood": 0.1667,
+"plantfood2": 0.1333,
+"plantfood3": 0.2,
+"plantfood_off": 0.2667,
+"water": 2.9
+}
+},
+{
+"name": "REDSTINGER",
+"path": "768/FULL/PLANT/REDSTINGER/REDSTINGER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle1_1": 2.6667,
+"idle1_2": 2.6333,
+"idle2_1": 1.3333,
+"idle2_2": 1.3333,
+"idle3_1": 1.3333,
+"idle3_dmg1_1": 1.3333,
+"idle3_dmg2_1": 1.3333,
+"idle3_dmg3_1": 1.3333,
+"attack1": 2,
+"attack2": 1.0333,
+"plantfood1": 2.2667,
+"loop_plantfood1": 0.6333,
+"end_plantfood1": 1.0333,
+"plantfood2": 2.2667,
+"loop_plantfood2": 0.6333,
+"end_plantfood2": 1.0333,
+"plantfood3": 2.2667,
+"loop_plantfood3": 0.6333,
+"end_plantfood3": 0.8667,
+"water": 2.8667
+}
+},
+{
+"name": "ROSE",
+"path": "768/FULL/PLANT/ROSE/ROSE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"idle3": 1.3333,
+"attack": 1.8333,
+"plantfood": 1.8333,
+"water": 2
+}
+},
+{
+"name": "ROTORUTABAGA",
+"path": "768/FULL/PLANT/ROTORUTABAGA/ROTORUTABAGA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.5333,
+"idle2": 2.5333,
+"attack": 1.7333,
+"plantfood_on": 3.2333,
+"water": 3.3667
+}
+},
+{
+"name": "SAKURA",
+"path": "768/FULL/PLANT/SAKURA/SAKURA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 2,
+"attack_start": 0.6667,
+"attack_loop": 1,
+"attack_end": 1,
+"plantfood": 2.6667,
+"water": 2,
+"special_attack_start": 2.8333,
+"special_attack_idle_loop": 1.1667,
+"special_attack_spawn_ready": 1
+}
+},
+{
+"name": "SEASHOOTER",
+"path": "768/FULL/PLANT/SEASHOOTER/SEASHOOTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.6667,
+"idle2": 2.6667,
+"plantfood_on": 1.0667,
+"plantfood_loop": 0.5333,
+"plantfood_off": 1.0667,
+"water": 2.6667,
+"attack": 1.2333
+}
+},
+{
+"name": "SEASHROOM",
+"path": "768/FULL/PLANT/SEASHROOM/SEASHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.0667,
+"idle2": 2.1333,
+"attack": 1.0667,
+"pf": 1.6333,
+"water": 2.1333,
+"death": 2
+}
+},
+{
+"name": "SHADOWSHROOM",
+"path": "768/FULL/PLANT/SHADOWSHROOM/SHADOWSHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.9667,
+"idle2": 3.9667,
+"plantfood": 2.2,
+"water": 1.2333
+}
+},
+{
+"name": "SNAPDRAGON",
+"path": "768/FULL/PLANT/SNAPDRAGON/SNAPDRAGON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"idle3": 1.3333,
+"attack": 1.3667,
+"plantfood": 3.3667,
+"water": 2.2667
+}
+},
+{
+"name": "SOURSHOT",
+"path": "768/FULL/PLANT/SOURSHOT/SOURSHOT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"attack_start": 0.6,
+"attack_loop": 0.5333,
+"attack_end": 0.8667,
+"pf": 3,
+"water": 2
+}
+},
+{
+"name": "SPIKEROCK",
+"path": "768/FULL/PLANT/SPIKEROCK/SPIKEROCK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3,
+"idle2": 3.0333,
+"attack": 1.1,
+"plantfood": 1.7,
+"water": 2.0333
+}
+},
+{
+"name": "SPIKEWEED",
+"path": "768/FULL/PLANT/SPIKEWEED/SPIKEWEED.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 4,
+"idle2": 4.0333,
+"attack": 0.6,
+"plantfood": 1.7,
+"water": 2.0333
+}
+},
+{
+"name": "SPLITPEA",
+"path": "768/FULL/PLANT/SPLITPEA/SPLITPEA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"attack": 0.9667,
+"attack2": 1,
+"attack3": 1,
+"plantfood": 0.4667,
+"water": 2.1
+}
+},
+{
+"name": "SPORESHROOM",
+"path": "768/FULL/PLANT/SPORESHROOM/SPORESHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"attack": 1.8667,
+"plantfood": 2.7333,
+"water": 1.4333,
+"grow": 1.1333
+}
+},
+{
+"name": "SPRINGBEAN",
+"path": "768/FULL/PLANT/SPRINGBEAN/SPRINGBEAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"attack": 1,
+"idle3": 1.3333,
+"attack2": 2.1667,
+"recover": 1.3667,
+"recover2": 0.8333,
+"plantfood": 3.1667,
+"water": 2.0333
+}
+},
+{
+"name": "STALLIA",
+"path": "768/FULL/PLANT/STALLIA/STALLIA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"idle3": 2,
+"idle4": 2,
+"attack": 1.6,
+"plantfood": 1.3,
+"water": 1.5
+}
+},
+{
+"name": "STUNION",
+"path": "768/FULL/PLANT/STUNION/STUNION.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"attack": 3.1667,
+"plantfood_on": 0.8667,
+"plantfood": 1.9333,
+"plantfood_off": 0.6667,
+"water": 4.8
+}
+},
+{
+"name": "SUNBEAN",
+"path": "768/FULL/PLANT/SUNBEAN/SUNBEAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.4,
+"idle2": 3.4,
+"plantfood_on": 1.0333,
+"plantfood": 1.3333,
+"water": 2.7667
+}
+},
+{
+"name": "SUNSHROOM",
+"path": "768/FULL/PLANT/SUNSHROOM/SUNSHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle_stage1": 0.6667,
+"idle2_stage1": 0.6667,
+"special_stage1": 1.8333,
+"plantfood_stage1": 2.2,
+"growth_stage1": 1.3333,
+"idle_stage2": 1.3333,
+"idle2_stage2": 1.3333,
+"special_stage2": 1.8333,
+"plantfood_stage2": 2.2,
+"growth_stage2": 1.3333,
+"idle_stage3": 1.7,
+"idle2_stage3": 1.7,
+"special_stage3": 1.9333,
+"plantfood_stage3": 2.5333,
+"water": 2.9333
+}
+},
+{
+"name": "SWEETHEARTSNARE",
+"path": "768/FULL/PLANT/SWEETHEARTSNARE/SWEETHEARTSNARE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle_preview": 2,
+"idle2": 2,
+"attack": 2.3333,
+"plantfood_on": 2.8333,
+"water": 2.5
+}
+},
+{
+"name": "TALLNUT",
+"path": "768/FULL/PLANT/TALLNUT/TALLNUT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 10,
+"damage": 10,
+"damage2": 10,
+"water": 2.2
+}
+},
+{
+"name": "TANGLEKELP",
+"path": "768/FULL/PLANT/TANGLEKELP/TANGLEKELP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.7333,
+"idle2": 1.7333,
+"idle3": 1.7333,
+"attack_submerge": 2.1333,
+"attack": 2.4667,
+"attack_emerge": 1.8333,
+"plantfood_on": 2,
+"plantfood": 2.1,
+"plantfood_off": 0.6667,
+"water": 1.7333,
+"zen_idle": 1.7333
+}
+},
+{
+"name": "THYMEWARP",
+"path": "768/FULL/PLANT/THYMEWARP/THYMEWARP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"attack": 7.0667
+}
+},
+{
+"name": "WINTERMELON",
+"path": "768/FULL/PLANT/WINTERMELON/WINTERMELON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3667,
+"attack": 2.1667,
+"plantfood": 2.9333,
+"water": 1.7667
+}
+},
+{
+"name": "ZNAKELILY",
+"path": "768/FULL/PLANT/ZNAKELILY/ZNAKELILY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 4,
+"attack": 3.5333,
+"plantfood": 4,
+"water": 2.6667
+}
+},
+{
+"name": "BEACH_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/BEACH_GARGANTUAR/BEACH_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "CAKE_TANK",
+"path": "768/FULL/ZOMBIE/CAKE_TANK/CAKE_TANK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"die": 7.1667
+}
+},
+{
+"name": "CAKE_TANK_14",
+"path": "768/FULL/ZOMBIE/CAKE_TANK_14/CAKE_TANK_14.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"die": 7.1667
+}
+},
+{
+"name": "CAKE_TANK_15",
+"path": "768/FULL/ZOMBIE/CAKE_TANK_15/CAKE_TANK_15.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"die": 7.1667
+}
+},
+{
+"name": "CHICKEN",
+"path": "768/FULL/ZOMBIE/CHICKEN/CHICKEN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1.5,
+"chicken_bucket": 1.4667,
+"particles": 0.0333,
+"feather_burst": 5.4333
+}
+},
+{
+"name": "COWBOY_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/COWBOY_GARGANTUAR/COWBOY_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0667,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "DARK_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/DARK_GARGANTUAR/DARK_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "EASTER_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/EASTER_GARGANTUAR/EASTER_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "EASTER_IMP",
+"path": "768/FULL/ZOMBIE/EASTER_IMP/EASTER_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"fall": 0.0333,
+"drop": 0.1333,
+"impact": 1.0667,
+"idle_ball": 0.0333,
+"transition": 1.4
+}
+},
+{
+"name": "EASTER_ZOMBIE_TUTORIAL",
+"path": "768/FULL/ZOMBIE/EASTER_ZOMBIE_TUTORIAL/EASTER_ZOMBIE_TUTORIAL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "EASTER_ZOMBIE_TUTORIAL_FLAG",
+"path": "768/FULL/ZOMBIE/EASTER_ZOMBIE_TUTORIAL_FLAG/EASTER_ZOMBIE_TUTORIAL_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "FEASTIVUS_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/FEASTIVUS_GARGANTUAR/FEASTIVUS_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "FOODFIGHT_ZOMBIE",
+"path": "768/FULL/ZOMBIE/FOODFIGHT_ZOMBIE/FOODFIGHT_ZOMBIE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "FOODFIGHT_ZOMBIE_FLAG",
+"path": "768/FULL/ZOMBIE/FOODFIGHT_ZOMBIE_FLAG/FOODFIGHT_ZOMBIE_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "GARGANTUAR",
+"path": "768/FULL/ZOMBIE/GARGANTUAR/GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.1333,
+"smash_left": 1.5,
+"smash_right": 0.4,
+"fire": 0.6667,
+"cannon_fire": 0.8667,
+"stun_start": 1.2333,
+"stun_idle": 2.7333,
+"stun_end": 0.7333,
+"die": 2.0333,
+"laser_start": 1.7667,
+"laser_idle": 0.9,
+"laser_end": 1.3
+}
+},
+{
+"name": "GARGANTUAR_FEASTIVUS",
+"path": "768/FULL/ZOMBIE/GARGANTUAR_FEASTIVUS/GARGANTUAR_FEASTIVUS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "GARGANTUAR_IMP",
+"path": "768/FULL/ZOMBIE/GARGANTUAR_IMP/GARGANTUAR_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"fall": 0.1333,
+"drop": 0.1333,
+"impact": 1.0667,
+"Idle_Ball": 0.0333,
+"idle_ball2": 1.5333,
+"transition": 1.2333,
+"idle": 2.6333,
+"walk": 3,
+"eat": 1.1333,
+"stun_start": 1.1333,
+"stun_idle": 1.0667,
+"stun_end": 1.2667,
+"die": 2.6667
+}
+},
+{
+"name": "HALLOWEEN_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/HALLOWEEN_GARGANTUAR/HALLOWEEN_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "HALLOWEEN_IMP",
+"path": "768/FULL/ZOMBIE/HALLOWEEN_IMP/HALLOWEEN_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "HALLOWEEN_ZOMBIE_BASIC",
+"path": "768/FULL/ZOMBIE/HALLOWEEN_ZOMBIE_BASIC/HALLOWEEN_ZOMBIE_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "HALLOWEEN_ZOMBIE_BASIC_FLAG",
+"path": "768/FULL/ZOMBIE/HALLOWEEN_ZOMBIE_BASIC_FLAG/HALLOWEEN_ZOMBIE_BASIC_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "HOLIDAY_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/HOLIDAY_GARGANTUAR/HOLIDAY_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "LNY_BASIC_ZOMBIE",
+"path": "768/FULL/ZOMBIE/LNY_BASIC_ZOMBIE/LNY_BASIC_ZOMBIE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "LNY_BUCKETHEAD_ZOMBIE",
+"path": "768/FULL/ZOMBIE/LNY_BUCKETHEAD_ZOMBIE/LNY_BUCKETHEAD_ZOMBIE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "LNY_CONEHEAD_ZOMBIE",
+"path": "768/FULL/ZOMBIE/LNY_CONEHEAD_ZOMBIE/LNY_CONEHEAD_ZOMBIE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "LNY_FLAG_ZOMBIE",
+"path": "768/FULL/ZOMBIE/LNY_FLAG_ZOMBIE/LNY_FLAG_ZOMBIE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "LNY_SUPERFAN_ZOMBIE",
+"path": "768/FULL/ZOMBIE/LNY_SUPERFAN_ZOMBIE/LNY_SUPERFAN_ZOMBIE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 4.8667,
+"eplode": 4.4,
+"fly": 0.3333,
+"land2": 1
+}
+},
+{
+"name": "LNY_WALL_ZOMBIE",
+"path": "768/FULL/ZOMBIE/LNY_WALL_ZOMBIE/LNY_WALL_ZOMBIE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 2,
+"die": 2.8333
+}
+},
+{
+"name": "PIANO",
+"path": "768/FULL/ZOMBIE/PIANO/PIANO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"play": 1,
+"damage": 1,
+"play2": 1,
+"die": 3,
+"particles": 0.0333
+}
+},
+{
+"name": "PIANO_HOLIDAY",
+"path": "768/FULL/ZOMBIE/PIANO_HOLIDAY/PIANO_HOLIDAY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"play": 1,
+"damage": 1,
+"play2": 1,
+"die": 3,
+"particles": 0.0333
+}
+},
+{
+"name": "PIRATE_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/PIRATE_GARGANTUAR/PIRATE_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0667,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 1.4667,
+"cannon_fire": 0.7667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "POWER_BRAIN_PROJECTILE",
+"path": "768/FULL/ZOMBIE/POWER_BRAIN_PROJECTILE/POWER_BRAIN_PROJECTILE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"animation": 0.0667
+}
+},
+{
+"name": "SEAGULL",
+"path": "768/FULL/ZOMBIE/SEAGULL/SEAGULL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"die1": 2,
+"die2": 1,
+"particles": 0.0333
+}
+},
+{
+"name": "TURKEY",
+"path": "768/FULL/ZOMBIE/TURKEY/TURKEY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1.5,
+"chicken_bucket": 1.4667,
+"particles": 0.0333,
+"feather_burst": 5.4333
+}
+},
+{
+"name": "TUTORIAL_GARGANTUAR_BIRTHDAY",
+"path": "768/FULL/ZOMBIE/TUTORIAL_GARGANTUAR_BIRTHDAY/TUTORIAL_GARGANTUAR_BIRTHDAY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "VALENTINES_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/VALENTINES_GARGANTUAR/VALENTINES_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "VASE_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/VASE_GARGANTUAR/VASE_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_80S_8BIT",
+"path": "768/FULL/ZOMBIE/ZOMBIE_80S_8BIT/ZOMBIE_80S_8BIT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_80S_ARCADE",
+"path": "768/FULL/ZOMBIE/ZOMBIE_80S_ARCADE/ZOMBIE_80S_ARCADE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"walk": 4.0333,
+"eat": 8.4667,
+"push": 4.0333,
+"die": 3.5,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_80S_BOOMBOX",
+"path": "768/FULL/ZOMBIE/ZOMBIE_80S_BOOMBOX/ZOMBIE_80S_BOOMBOX.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"walk": 4,
+"eat": 3.3333,
+"power_up": 0.6667,
+"power": 2.9333,
+"power_down": 1.2667,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_80S_BREAKDANCER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_80S_BREAKDANCER/ZOMBIE_80S_BREAKDANCER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"jam_idle": 1.5,
+"jam_walk": 3,
+"jam_transition_start": 0.7,
+"jam_spin": 1.1667,
+"jam_transition_end": 1.0667,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_80S_GLITTER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_80S_GLITTER/ZOMBIE_80S_GLITTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_80S_GLITTER_EFFECT",
+"path": "768/FULL/ZOMBIE/ZOMBIE_80S_GLITTER_EFFECT/ZOMBIE_80S_GLITTER_EFFECT.PAM",
+"canvas": [
+620.85,
+551.1
+],
+"clips": {
+"intro": 0.5,
+"animation": 3,
+"outro": 0.8333
+}
+},
+{
+"name": "ZOMBIE_80S_MCZOMBIE",
+"path": "768/FULL/ZOMBIE/ZOMBIE_80S_MCZOMBIE/ZOMBIE_80S_MCZOMBIE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"walk": 3,
+"eat": 8.6333,
+"idle_jam": 2.3333,
+"walk_jam": 3,
+"attack_jam": 2.3333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_80S_PUNK",
+"path": "768/FULL/ZOMBIE/ZOMBIE_80S_PUNK/ZOMBIE_80S_PUNK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0667,
+"idle_jam": 1.2,
+"walk": 3,
+"walk_jam": 2.0667,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BEACH_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BEACH_BASIC/ZOMBIE_BEACH_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BEACH_BASICFEM",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BEACH_BASICFEM/ZOMBIE_BEACH_BASICFEM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BEACH_FISHERMAN",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BEACH_FISHERMAN/ZOMBIE_BEACH_FISHERMAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 1.6333,
+"idle": 2.1,
+"cast": 1.2667,
+"cast_loop": 0.0333,
+"reel": 1.4667,
+"toss": 2.4333,
+"die": 3.4,
+"die2": 7.8,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BEACH_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BEACH_FLAG/ZOMBIE_BEACH_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.1,
+"die": 1.7667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BEACH_IMP_MERMAID",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BEACH_IMP_MERMAID/ZOMBIE_BEACH_IMP_MERMAID.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BEACH_OCTOPUS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BEACH_OCTOPUS/ZOMBIE_BEACH_OCTOPUS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"idle2": 3.3333,
+"idle3": 3.3333,
+"idle4": 3.3333,
+"idle5": 3.3333,
+"walk": 4.0333,
+"toss": 3.0667,
+"eat": 8.4667,
+"die": 3.5,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BEACH_SNORKELER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BEACH_SNORKELER/ZOMBIE_BEACH_SNORKELER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.3667,
+"walk": 1.9667,
+"eat": 6.8,
+"die": 2.2667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BEACH_SURFER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BEACH_SURFER/ZOMBIE_BEACH_SURFER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"slam": 2.0333,
+"walk_board": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"walk": 3,
+"die_board": 1.8333,
+"particles": 0.0333,
+"surf_idle": 2.3667,
+"surf_transition": 2.8333,
+"surf_die": 1.7
+}
+},
+{
+"name": "ZOMBIE_BEACH_ZOMBOSS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BEACH_ZOMBOSS/ZOMBIE_BEACH_ZOMBOSS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 6.2,
+"idle": 4,
+"submerge": 1.7,
+"emerge": 1.6,
+"spawn": 3,
+"suction_on": 2.1333,
+"suction_loop": 2,
+"suction_off": 2.5,
+"tangled_on": 1.1333,
+"tangled_loop": 0.9667,
+"tangled_off": 1.8,
+"stun_start": 0.1333,
+"stun_loop": 1.8333,
+"stun_end": 1.1,
+"die": 5.0667,
+"die_talk": 3.0667,
+"die_exit": 7.6667
+}
+},
+{
+"name": "ZOMBIE_BIGHEAD",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BIGHEAD/ZOMBIE_BIGHEAD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BIGHEAD_ALLSTAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BIGHEAD_ALLSTAR/ZOMBIE_BIGHEAD_ALLSTAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"walk": 3,
+"eat": 8.6333,
+"run": 0.6667,
+"tackle": 1.3,
+"kick": 1.6,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BIGHEAD_BALLOON",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BIGHEAD_BALLOON/ZOMBIE_BIGHEAD_BALLOON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle_fly": 2,
+"eat_fly": 7.9,
+"walk_fly": 3,
+"fly_start": 1.4667,
+"fly": 2.9667,
+"fly_end": 0.5333,
+"die_balloon": 0.8,
+"die_balloon_zombie": 1.9,
+"idle": 2.1,
+"walk": 3.0333,
+"eat": 8.6333,
+"die": 1.9,
+"particles": 0.1333
+}
+},
+{
+"name": "ZOMBIE_BIGHEAD_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BIGHEAD_FLAG/ZOMBIE_BIGHEAD_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BIGHEAD_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BIGHEAD_GARGANTUAR/ZOMBIE_BIGHEAD_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BIGHEAD_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BIGHEAD_IMP/ZOMBIE_BIGHEAD_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BIGHEAD_NEWSPAPER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BIGHEAD_NEWSPAPER/ZOMBIE_BIGHEAD_NEWSPAPER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle_newspaper": 2.1333,
+"walk_newspaper": 3,
+"walk": 3,
+"eat_newspaper": 8.6333,
+"newspaper_defeat": 1.4,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BIGHEAD_SUPERFAN",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BIGHEAD_SUPERFAN/ZOMBIE_BIGHEAD_SUPERFAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 4.8667,
+"eplode": 4.4,
+"fly": 0.3333,
+"land2": 1
+}
+},
+{
+"name": "ZOMBIE_BOBSLED_CREW",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BOBSLED_CREW/ZOMBIE_BOBSLED_CREW.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_BOBSLED_TEAM",
+"path": "768/FULL/ZOMBIE/ZOMBIE_BOBSLED_TEAM/ZOMBIE_BOBSLED_TEAM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"bobsled_push": 1.6667,
+"bobsled_jump": 1.4667,
+"bobsled_inside_idle": 0.9333,
+"bobsled_burn": 0.3333,
+"bobsled_damage1": 1.1667,
+"bobsled_damage2": 1.1667,
+"bobsled_damage3": 1.1667,
+"bobsled_disappear": 1.6667,
+"idle": 0.9333
+}
+},
+{
+"name": "ZOMBIE_CAKE_TANK_FEASTIVUS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CAKE_TANK_FEASTIVUS/ZOMBIE_CAKE_TANK_FEASTIVUS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"die": 7.1667
+}
+},
+{
+"name": "ZOMBIE_CARNIE_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CARNIE_BASIC/ZOMBIE_CARNIE_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CARNIE_BUCKETHEAD",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CARNIE_BUCKETHEAD/ZOMBIE_CARNIE_BUCKETHEAD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CARNIE_CANNON",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CARNIE_CANNON/ZOMBIE_CARNIE_CANNON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2.0333,
+"prep": 0.1333,
+"fire": 1.5667,
+"die": 2.9,
+"final_die": 3.6667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CARNIE_CONEHEAD",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CARNIE_CONEHEAD/ZOMBIE_CARNIE_CONEHEAD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CARNIE_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CARNIE_FLAG/ZOMBIE_CARNIE_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CARNIE_GRINDERHEAD",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CARNIE_GRINDERHEAD/ZOMBIE_CARNIE_GRINDERHEAD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CARNIE_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CARNIE_IMP/ZOMBIE_CARNIE_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CARNIE_MONKEY",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CARNIE_MONKEY/ZOMBIE_CARNIE_MONKEY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.7,
+"walk": 0.3667,
+"eat_start": 0.2,
+"eat_loop": 1.4667,
+"monkey_die": 2.3667,
+"monkey_shock": 1.3333,
+"monkey_burn": 3.2
+}
+},
+{
+"name": "ZOMBIE_CARNIE_STILT_WALKER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CARNIE_STILT_WALKER/ZOMBIE_CARNIE_STILT_WALKER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"stilt_zombie_Idle_stage1": 2.1,
+"stilt_zombie_walk_stage1": 2.7,
+"stilt_zombie_fall_stage1": 1.4667,
+"stilt_zombie_idle_stage2": 2.1,
+"stilt_zombie_walk_stage2": 3,
+"stilt_zombie_eat_stage2": 8.6333,
+"stilt_zombie_die_stage2": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CARNIVAL_2HEADED_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CARNIVAL_2HEADED_IMP/ZOMBIE_CARNIVAL_2HEADED_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2333,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CARNIVAL_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CARNIVAL_GARGANTUAR/ZOMBIE_CARNIVAL_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CARNIVAL_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CARNIVAL_IMP/ZOMBIE_CARNIVAL_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CATAPULT",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CATAPULT/ZOMBIE_CATAPULT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"attack": 2,
+"die": 2.6667
+}
+},
+{
+"name": "ZOMBIE_CHAIR_RACER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CHAIR_RACER/ZOMBIE_CHAIR_RACER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"chair_idle": 1.6667,
+"chair_walk_start": 0.5833,
+"chair_walk": 0.625,
+"chair_crash": 3.125,
+"fly": 0.5417,
+"bonk": 0.2917,
+"fall": 0.2917,
+"land": 0.75,
+"get_up": 1.75,
+"idle": 2.625,
+"walk": 3.75,
+"eat": 10.7917,
+"die": 2.2917,
+"particles": 0.0417
+}
+},
+{
+"name": "ZOMBIE_CHEFSTER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CHEFSTER/ZOMBIE_CHEFSTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.0333,
+"spinup": 0.8667,
+"spin": 1.2,
+"spindown": 0.5,
+"spin_walk": 1.2,
+"eat": 8.0667,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CIRCUS_ZOMBOSS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CIRCUS_ZOMBOSS/ZOMBIE_CIRCUS_ZOMBOSS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"Pre_Intro": 0.0667,
+"intro": 7.2667,
+"idle": 5.3,
+"walk_forward": 1.2333,
+"walk_backwards": 1.2333,
+"walk_down": 1.2333,
+"walk_up": 1.2333,
+"jump_start": 0.6667,
+"jump_mid": 0.4333,
+"jump_land": 1.1,
+"stomp": 2.5667,
+"zombie_portal_start": 2.2667,
+"zombie_portal_loop": 2,
+"zombie_portal_end": 2.0667,
+"missile_start": 3.3667,
+"rocket_launch_start": 0.3667,
+"rocket_launch_loop": 0.2,
+"rocket_launch_fire": 1.8333,
+"die": 0.2333,
+"die_idle": 4.9,
+"die_talk": 1.4333,
+"die_exit": 7.3,
+"stun_start": 0.4667,
+"stun_loop": 1.3,
+"stun_end": 0.9
+}
+},
+{
+"name": "ZOMBIE_CORPORATE_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CORPORATE_BASIC/ZOMBIE_CORPORATE_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CORPORATE_BASICFEM",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CORPORATE_BASICFEM/ZOMBIE_CORPORATE_BASICFEM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.1,
+"die": 1.7667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CORPORATE_CONSULTANT",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CORPORATE_CONSULTANT/ZOMBIE_CORPORATE_CONSULTANT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3.2,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CORPORATE_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CORPORATE_GARGANTUAR/ZOMBIE_CORPORATE_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2.3667,
+"eat": 3.0333,
+"die": 2.6333,
+"particles": 0.0333,
+"land": 0.6333,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CORPORATE_HELPDESK",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CORPORATE_HELPDESK/ZOMBIE_CORPORATE_HELPDESK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"hang_drop": 1.5667,
+"hang_idle": 3.3333,
+"hang_eat": 8.6333,
+"hang_cut": 1.4667,
+"laptop_idle": 3.3667,
+"laptop_walk": 3,
+"laptop_eat": 8.6333,
+"throw": 1.8,
+"idle": 3.3667,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8,
+"hang_die": 2.7,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_CORPORATE_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_CORPORATE_IMP/ZOMBIE_CORPORATE_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1333,
+"walk": 3.1333,
+"eat": 0.9,
+"smash_left": 1.2333,
+"fire": 0.9667,
+"cannon_fire": 1.2,
+"die": 2.6667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_COWBOY_ZOMBOSS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_COWBOY_ZOMBOSS/ZOMBIE_COWBOY_ZOMBOSS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"Pre_Intro": 0.0667,
+"intro": 6.7,
+"idle": 5.3,
+"walk_forward": 1.2333,
+"walk_backwards": 1.2333,
+"walk_down": 1.2333,
+"walk_up": 1.2333,
+"jump_start": 0.6667,
+"jump_mid": 0.4333,
+"jump_land": 0.7333,
+"stomp": 2.5333,
+"zombie_portal_start": 2.2667,
+"zombie_portal_loop": 2,
+"zombie_portal_end": 1.5667,
+"missile_start": 3.3333,
+"rocket_launch": 1.8333,
+"die": 0.2333,
+"die_idle": 4.9333,
+"die_talk": 1.4333,
+"die_exit": 7.3,
+"stun_start": 0.4667,
+"stun_loop": 1.3,
+"stun_end": 0.1
+}
+},
+{
+"name": "ZOMBIE_DARK_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC/ZOMBIE_DARK_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_DARK_BASIC_BRICK",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_DARK_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DARK_FLAG/ZOMBIE_DARK_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_DARK_IMP_DRAGON",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_DRAGON/ZOMBIE_DARK_IMP_DRAGON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333,
+"transition": 1.4
+}
+},
+{
+"name": "ZOMBIE_DARK_IMP_MONK",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_MONK/ZOMBIE_DARK_IMP_MONK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_DARK_JESTER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DARK_JESTER/ZOMBIE_DARK_JESTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.0333,
+"spinup": 0.8667,
+"spin": 1.2,
+"spindown": 0.5,
+"spin_walk": 1.4667,
+"eat": 8.3667,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_DARK_KING",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DARK_KING/ZOMBIE_DARK_KING.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 3.2333,
+"idle": 4,
+"idle2": 2.9333,
+"special": 4,
+"die": 3.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_DARK_VETERAN_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DARK_VETERAN_FLAG/ZOMBIE_DARK_VETERAN_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_DARK_WIZARD",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD/ZOMBIE_DARK_WIZARD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.8667,
+"walk": 3,
+"eat": 8.6333,
+"sheep": 2.3,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_DARK_WIZARD_VETERAN",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD_VETERAN/ZOMBIE_DARK_WIZARD_VETERAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.8667,
+"walk": 3,
+"eat": 8.6333,
+"sheep": 2.3,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_DARK_ZOMBOSS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DARK_ZOMBOSS/ZOMBIE_DARK_ZOMBOSS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 10.3333,
+"idle": 3.3333,
+"fire_attack": 1.8,
+"fire_attack_idle": 0.8333,
+"fire_attack_end": 0.8333,
+"fire_bomb": 1.8333,
+"fire_bomb_loop": 0.5333,
+"fire_bomb_end": 0.9333,
+"summoning": 2.1333,
+"vulnerable": 0.4333,
+"vulnerable_loop": 0.8,
+"vulnerable_end": 0.4667,
+"stun_start": 0.4333,
+"stun_loop": 0.8,
+"stun_end": 0.4667,
+"die": 5.6667,
+"die_talk": 3.3667,
+"die_exit": 6.1667
+}
+},
+{
+"name": "ZOMBIE_DINO_ANKYLOSAURUS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DINO_ANKYLOSAURUS/ZOMBIE_DINO_ANKYLOSAURUS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"enter": 2.8,
+"idle_1": 2.9,
+"idle_2": 2.3,
+"idle_": 2.3,
+"idle_1_charmed": 6.0667,
+"attack": 3.3667,
+"attack_charmed": 4.0333,
+"exit": 3.5333,
+"idle_1_charmed_activate": 1.3
+}
+},
+{
+"name": "ZOMBIE_DINO_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DINO_BASIC/ZOMBIE_DINO_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333,
+"drop": 1,
+"grab": 2.0333,
+"grab_idle": 1.3333
+}
+},
+{
+"name": "ZOMBIE_DINO_BASIC_BRICK",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DINO_BASIC_BRICK/ZOMBIE_DINO_BASIC_BRICK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333,
+"drop": 1,
+"grab": 2.0333,
+"grab_idle": 1.3333
+}
+},
+{
+"name": "ZOMBIE_DINO_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DINO_GARGANTUAR/ZOMBIE_DINO_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_DINO_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DINO_IMP/ZOMBIE_DINO_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_DINO_PTERODACTYL",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DINO_PTERODACTYL/ZOMBIE_DINO_PTERODACTYL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"fly": 1.9667,
+"grab": 2.0333,
+"drop": 1.9667,
+"fly_charmed": 2,
+"grab_charmed": 2.0333,
+"drop_charmed": 2,
+"idle_1": 6,
+"idle_2": 4,
+"idle_3": 3.0667,
+"idle_4": 4.1333,
+"idle_5": 2,
+"idle_6": 2,
+"idle_": 2,
+"idle_charmed_offscreen": 2.0333,
+"enter_idle": 1.2,
+"exit_idle": 1.5,
+"charm_activate": 1.3,
+"charm_fly_up_activate": 1.3667,
+"charm_fly_up_enter": 1,
+"charm_fly_up": 1.3333
+}
+},
+{
+"name": "ZOMBIE_DINO_RAPTOR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DINO_RAPTOR/ZOMBIE_DINO_RAPTOR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle_left": 1,
+"walk_left": 2,
+"kick_left": 1.5,
+"kick_left_charmed": 1.5,
+"turn_lft_to_rt": 0.4,
+"turn_rt_to_lft": 0.4,
+"turn_lft_to_rt_charmed": 0.4,
+"turn_rt_to_lft_charmed": 0.4,
+"idle_right": 1,
+"walk_right": 2,
+"idle_right_charmed": 1.3333,
+"walk_right_charmed": 2,
+"kick_right_charmed": 1.5,
+"idle_left_charmed": 1.3333,
+"walk_left_charmed": 2,
+"charmed_activate_left": 1.2667,
+"charmed_activate_right": 1.2667
+}
+},
+{
+"name": "ZOMBIE_DINO_REX",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DINO_REX/ZOMBIE_DINO_REX.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"enter": 1.7,
+"idle": 0.9667,
+"idle2": 0.9667,
+"idle3": 2,
+"roar": 1.5,
+"charmed_activate": 1.5,
+"idle_charmed": 1,
+"idle_charmed2": 1,
+"idle_charmed3": 1.9667,
+"eat_charmed": 1.3333,
+"exit": 0.7667,
+"exit_charmed": 0.7667
+}
+},
+{
+"name": "ZOMBIE_DINO_ROCKPUNCHER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DINO_ROCKPUNCHER/ZOMBIE_DINO_ROCKPUNCHER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.8462,
+"walk": 4.6538,
+"eat": 1,
+"smash_left": 1.5769,
+"die": 4.0385,
+"particles": 0.0385,
+"drop": 1.8462,
+"grab": 2.3462,
+"grab_idle": 1.5385
+}
+},
+{
+"name": "ZOMBIE_DINO_STEGOSAURUS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DINO_STEGOSAURUS/ZOMBIE_DINO_STEGOSAURUS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"head_enter": 4.8667,
+"idle_head1": 4.5667,
+"idle_head2": 3.2667,
+"idle_head3": 3.2667,
+"idle_head": 3.3667,
+"annoyed": 4,
+"head_exit": 4.1667,
+"head_charmed_activate": 1.3333,
+"head_idle_charmed": 4,
+"annoyed_charmed": 4,
+"exit_charmed": 4.1667,
+"tail_charmed_enter": 1.3333,
+"tail_enter": 1.3333,
+"tail_idle": 2.7333,
+"tail_idle_charmed": 2.7333,
+"tail_flip": 2.5667,
+"tail_smash_charmed": 2.1667,
+"tail_exit": 5.3333,
+"tail_exit_charmed": 5.3333
+}
+},
+{
+"name": "ZOMBIE_DINO_TROGLOBITE",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DINO_TROGLOBITE/ZOMBIE_DINO_TROGLOBITE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.8462,
+"walk": 4.6538,
+"eat": 9.7692,
+"die": 4.0385,
+"particles": 0.0385,
+"drop": 1.8462,
+"grab": 2.3462,
+"grab_idle": 1.5385
+}
+},
+{
+"name": "ZOMBIE_DINO_ZOMBOSS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DINO_ZOMBOSS/ZOMBIE_DINO_ZOMBOSS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 7.7667,
+"summon_dinosaurs": 2.7,
+"idle": 2.9,
+"lazer_buildup": 2.0667,
+"lazer_loop": 0.6333,
+"lazer_end": 0.6,
+"rocket_buildup": 2.4333,
+"rocket_launch": 1.7333,
+"stun_start": 0.4333,
+"stun_loop": 1.5667,
+"stun_end": 0.3333,
+"die": 0.6667,
+"die_idle": 6.1667,
+"die_talk": 0.7,
+"die_exit": 5.9667
+}
+},
+{
+"name": "ZOMBIE_DUCKYTUBE_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_DUCKYTUBE_BASIC/ZOMBIE_DUCKYTUBE_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 2,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EASTER_CAMEL",
+"path": "768/FULL/ZOMBIE/ZOMBIE_EASTER_CAMEL/ZOMBIE_EASTER_CAMEL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 2,
+"die": 2.8333
+}
+},
+{
+"name": "ZOMBIE_EASTER_PONCHO",
+"path": "768/FULL/ZOMBIE/ZOMBIE_EASTER_PONCHO/ZOMBIE_EASTER_PONCHO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.125,
+"walk": 2.5,
+"eat": 5.0833,
+"die": 3.7917,
+"particles": 0.0417
+}
+},
+{
+"name": "ZOMBIE_EASTER_WIZARD",
+"path": "768/FULL/ZOMBIE/ZOMBIE_EASTER_WIZARD/ZOMBIE_EASTER_WIZARD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.8667,
+"walk": 3,
+"eat": 8.6333,
+"sheep": 2.3,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EGYPT_CAMEL_HOLIDAY",
+"path": "768/FULL/ZOMBIE/ZOMBIE_EGYPT_CAMEL_HOLIDAY/ZOMBIE_EGYPT_CAMEL_HOLIDAY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 2,
+"die": 2.8333
+}
+},
+{
+"name": "ZOMBIE_EGYPT_SARCOPHAGUS_BIRTHDAY",
+"path": "768/FULL/ZOMBIE/ZOMBIE_EGYPT_SARCOPHAGUS_BIRTHDAY/ZOMBIE_EGYPT_SARCOPHAGUS_BIRTHDAY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"walk": 3.8667,
+"idle": 3,
+"eat": 3.9333,
+"break_power": 2,
+"idle_norm": 2.1,
+"walk_norm": 2.1667,
+"eat_norm": 1.8,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EIGHTIES_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_EIGHTIES_BASIC/ZOMBIE_EIGHTIES_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EIGHTIES_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_EIGHTIES_GARGANTUAR/ZOMBIE_EIGHTIES_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.7,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EIGHTIES_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_EIGHTIES_IMP/ZOMBIE_EIGHTIES_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EIGHTIES_ZOMBOSS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_EIGHTIES_ZOMBOSS/ZOMBIE_EIGHTIES_ZOMBOSS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 3.6,
+"idle_punk": 6.8667,
+"idle_metal": 8.7,
+"idle_newwave": 2.4,
+"idle_hiphop": 9.8,
+"idle_8bit": 6.4,
+"die": 4.0333,
+"die_talk": 1.4667,
+"die_exit": 7.4
+}
+},
+{
+"name": "ZOMBIE_EIGHTIES_ZOMBOSS_BANDMEMBERS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_EIGHTIES_ZOMBOSS_BANDMEMBERS/ZOMBIE_EIGHTIES_ZOMBOSS_BANDMEMBERS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 3.6,
+"idle_zombie_band": 4.5333,
+"die": 4.0333,
+"die_talk": 2.3667,
+"die_exit": 6.3667
+}
+},
+{
+"name": "ZOMBIE_FARMER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FARMER/ZOMBIE_FARMER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.5667,
+"idle2": 2.5667,
+"walk with chickens": 1.4667,
+"eat": 4.7,
+"walk": 2,
+"die": 3.6,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_FEASTIVUS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FEASTIVUS/ZOMBIE_FEASTIVUS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_FEASTIVUS_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FEASTIVUS_FLAG/ZOMBIE_FEASTIVUS_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_FEASTIVUS_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FEASTIVUS_IMP/ZOMBIE_FEASTIVUS_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_FIRE_BREATHER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FIRE_BREATHER/ZOMBIE_FIRE_BREATHER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.5667,
+"walk": 2,
+"eat": 8.3667,
+"fire": 4.3667,
+"particles": 0.0333,
+"die": 3.7333
+}
+},
+{
+"name": "ZOMBIE_FLAG_VALENTINES",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FLAG_VALENTINES/ZOMBIE_FLAG_VALENTINES.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 3.3333,
+"die2": 3.3333,
+"die3": 3.3333,
+"die_fart": 3.3333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_FUTURE_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FUTURE_BASIC/ZOMBIE_FUTURE_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 1.8,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_FUTURE_BASIC_BRICK",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FUTURE_BASIC_BRICK/ZOMBIE_FUTURE_BASIC_BRICK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 1.8,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_FUTURE_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FUTURE_FLAG/ZOMBIE_FUTURE_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_FUTURE_JETPACK",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FUTURE_JETPACK/ZOMBIE_FUTURE_JETPACK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.0333,
+"eat": 6.0333,
+"enter": 2.3667,
+"die": 3.5,
+"particles": 0.0333,
+"fly_up": 1.8,
+"up_idle": 0.8667,
+"fly_down": 1.2
+}
+},
+{
+"name": "ZOMBIE_FUTURE_JETPACK_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FUTURE_JETPACK_BASIC/ZOMBIE_FUTURE_JETPACK_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.0333,
+"eat": 6.0333,
+"enter": 2.3667,
+"die": 3.5,
+"particles": 0.0333,
+"fly_up": 1.8,
+"up_idle": 0.8667,
+"fly_down": 1.2
+}
+},
+{
+"name": "ZOMBIE_FUTURE_JETPACK_BASIC_HOLIDAY",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FUTURE_JETPACK_BASIC_HOLIDAY/ZOMBIE_FUTURE_JETPACK_BASIC_HOLIDAY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.0333,
+"eat": 6.0333,
+"enter": 2.3667,
+"die": 3.5,
+"particles": 0.0333,
+"fly_up": 1.8,
+"up_idle": 0.8667,
+"fly_down": 1.2
+}
+},
+{
+"name": "ZOMBIE_FUTURE_JETPACK_VETERAN",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FUTURE_JETPACK_VETERAN/ZOMBIE_FUTURE_JETPACK_VETERAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.0333,
+"eat": 6.0333,
+"enter": 2.3667,
+"die": 3.5,
+"particles": 0.0333,
+"fly_up": 1.8,
+"up_idle": 0.8667,
+"fly_down": 1.2
+}
+},
+{
+"name": "ZOMBIE_FUTURE_PROTECTOR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FUTURE_PROTECTOR/ZOMBIE_FUTURE_PROTECTOR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.9333,
+"walk": 6.3667,
+"eat": 6.2,
+"die": 3,
+"stun_start": 1.5333,
+"stun_idle": 1.9,
+"stun_end": 1.6,
+"shield_start": 1.7,
+"shield_idle": 6.3,
+"shield_end": 0.9333
+}
+},
+{
+"name": "ZOMBIE_FUTURE_VET_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FUTURE_VET_FLAG/ZOMBIE_FUTURE_VET_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_FUTURE_ZOMBOSS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_FUTURE_ZOMBOSS/ZOMBIE_FUTURE_ZOMBOSS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"Pre_Intro": 0.0667,
+"intro": 5,
+"idle": 5.3,
+"walk_forward": 1.2333,
+"walk_backwards": 1.2333,
+"walk_down": 1.2333,
+"walk_up": 1.2333,
+"jump_start": 0.6667,
+"jump_mid": 0.4333,
+"jump_land": 0.7333,
+"stomp": 2.5333,
+"zombie_portal_start": 2.2667,
+"zombie_portal_loop": 2,
+"zombie_portal_end": 1.5667,
+"missile_start": 3.3333,
+"linktile1_start": 3.3333,
+"linktile2_start": 3.3333,
+"linktile3_start": 3.3333,
+"linktile4_start": 3.3333,
+"linktile5_start": 3.3333,
+"rocket_launch": 1.8333,
+"stun_start": 1.1333,
+"stun_idle": 1.0333,
+"stun_end": 1.3,
+"die": 0.2333,
+"die_idle": 4.1667,
+"die_talk": 1.4333,
+"die_exit": 7.3
+}
+},
+{
+"name": "ZOMBIE_GOBBLER_KING",
+"path": "768/FULL/ZOMBIE/ZOMBIE_GOBBLER_KING/ZOMBIE_GOBBLER_KING.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.5667,
+"walk with chickens": 1.4667,
+"eat": 4.7,
+"walk": 2,
+"die": 3.6,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_HOLIDAY_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_HOLIDAY_IMP/ZOMBIE_HOLIDAY_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ICEAGE_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ICEAGE_BASIC_BRICK",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC_BRICK/ZOMBIE_ICEAGE_BASIC_BRICK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ICEAGE_DODORIDER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_DODORIDER/ZOMBIE_ICEAGE_DODORIDER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"idle3": 2.8667,
+"walk": 3,
+"eat": 3.3667,
+"fly_start": 0.9667,
+"fly_loop": 2.6667,
+"fly_end": 1.5,
+"die": 5.7
+}
+},
+{
+"name": "ZOMBIE_ICEAGE_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_FLAG/ZOMBIE_ICEAGE_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ICEAGE_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_GARGANTUAR/ZOMBIE_ICEAGE_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ICEAGE_HUNTER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_HUNTER/ZOMBIE_ICEAGE_HUNTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"throw": 2.1,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ICEAGE_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_IMP/ZOMBIE_ICEAGE_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ICEAGE_TROGLOBITE",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_TROGLOBITE/ZOMBIE_ICEAGE_TROGLOBITE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"walk": 4.0333,
+"eat": 8.4667,
+"push": 4.0333,
+"die": 3.5,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ICEAGE_WEASEL",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_WEASEL/ZOMBIE_ICEAGE_WEASEL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.6667,
+"walk": 0.3667,
+"eat_start": 1.3333,
+"eat_loop": 2.1667,
+"eat stop": 0.6667,
+"weasel_die": 1.5333,
+"weasel_shock": 1.3,
+"weasel_burn": 3.2
+}
+},
+{
+"name": "ZOMBIE_ICEAGE_WEASELHOARDER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_WEASELHOARDER/ZOMBIE_ICEAGE_WEASELHOARDER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8,
+"tree_idle": 4.2,
+"tree_idle_02": 4.2,
+"tree_idle_03": 2.5,
+"tree_walk": 1.5667,
+"tree_eat": 5.3333,
+"weasel_attack": 4.0667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ICEAGE_ZOMBOSS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_ZOMBOSS/ZOMBIE_ICEAGE_ZOMBOSS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 4.7,
+"idle": 3.3333,
+"wind_1": 2.8333,
+"wind_2": 2.8333,
+"wind_3": 2.8333,
+"wind_4": 2.8333,
+"slingshot": 3.5,
+"glacier_column_1": 6.3,
+"glacier_column_2": 6.3,
+"glacier_column_3": 6.3,
+"glacier_column_4": 6.3,
+"glacier_column_5": 6.3,
+"glacier_column_6": 6.3,
+"reveal": 0.6667,
+"stun": 1,
+"cover_up": 1.6667,
+"die": 4.0333,
+"die_talk": 3.3667,
+"die_exit": 3.6,
+"almanac_idle": 3.3667
+}
+},
+{
+"name": "ZOMBIE_JESTER_BIRTHDAY",
+"path": "768/FULL/ZOMBIE/ZOMBIE_JESTER_BIRTHDAY/ZOMBIE_JESTER_BIRTHDAY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.0333,
+"spinup": 0.8667,
+"spin": 1.2,
+"spindown": 0.5,
+"spin_walk": 1.2,
+"eat": 7.3667,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_LEPRACHAUN_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LEPRACHAUN_IMP/ZOMBIE_LEPRACHAUN_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333,
+"drop": 0.1333,
+"impact": 1.7,
+"Idle_Ball": 0.8333,
+"transition": 1.2333
+}
+},
+{
+"name": "ZOMBIE_LOSTCITY_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_BASIC/ZOMBIE_LOSTCITY_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333,
+"tent": 1.3667
+}
+},
+{
+"name": "ZOMBIE_LOSTCITY_BUG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_BUG/ZOMBIE_LOSTCITY_BUG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"eat": 7.9,
+"walk": 3,
+"fly_start": 0.5333,
+"fly": 2.9667,
+"fly_end": 0.5333,
+"die_bug": 1,
+"die_bug2": 1,
+"die_bug3": 1,
+"die_bug_zombie": 1.9,
+"die_bug2_zombie": 1.9,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_LOSTCITY_CRYSTALSKULL",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_CRYSTALSKULL/ZOMBIE_LOSTCITY_CRYSTALSKULL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"walk": 4,
+"eat": 3.3333,
+"power_up": 0.6667,
+"power": 1,
+"power_down": 1.2667,
+"attack": 1.9667,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_LOSTCITY_EXCAVATOR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_EXCAVATOR/ZOMBIE_LOSTCITY_EXCAVATOR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"idle_no_shovel": 3.3333,
+"drop_shovel": 0.8,
+"walk": 3,
+"walk_no_shovel": 2.9667,
+"shovel_attack": 2.8,
+"eat_shovel": 1.5333,
+"eat": 8.6333,
+"die_shovel": 1.8333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_LOSTCITY_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_FLAG/ZOMBIE_LOSTCITY_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_LOSTCITY_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_GARGANTUAR/ZOMBIE_LOSTCITY_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_LOSTCITY_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_IMP/ZOMBIE_LOSTCITY_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_LOSTCITY_JANE",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_JANE/ZOMBIE_LOSTCITY_JANE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_LOSTCITY_LOSTPILOT",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_LOSTPILOT/ZOMBIE_LOSTCITY_LOSTPILOT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"hang_drop": 1.5667,
+"hang_idle": 3.3333,
+"hang_eat": 8.6333,
+"hang_cut": 1.4667,
+"idle": 3.3667,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"hang_die": 3.3667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_LOSTCITY_PACK",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_PACK/ZOMBIE_LOSTCITY_PACK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2333,
+"die": 1.2,
+"land": 2.2,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_LOSTCITY_RELICHUNTER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_RELICHUNTER/ZOMBIE_LOSTCITY_RELICHUNTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0667,
+"walk": 2.9667,
+"eat": 4.1,
+"die": 1.8,
+"particles": 0.0333,
+"swing success": 2.2,
+"swing back": 2.5667,
+"swing failure": 2.1333
+}
+},
+{
+"name": "ZOMBIE_LOSTCITY_ZOMBOSS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_ZOMBOSS/ZOMBIE_LOSTCITY_ZOMBOSS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"Pre_Intro": 0.3333,
+"intro": 3,
+"idle": 6,
+"float_down": 1.8667,
+"float_up": 3,
+"air_strike": 2.4333,
+"air_strike_loop": 1.0333,
+"air_strike_end": 1.5,
+"zombie_drop": 2.4333,
+"zombie_drop_loop": 1.0333,
+"zombie_drop_end": 1.5,
+"sandbag_drop": 5.1,
+"die_idle": 3.5667,
+"die_talk": 2.6667,
+"die_exit": 5.7667,
+"stun": 1.1,
+"stun_loop": 1,
+"stun_end": 2.2
+}
+},
+{
+"name": "ZOMBIE_MAGICIAN",
+"path": "768/FULL/ZOMBIE/ZOMBIE_MAGICIAN/ZOMBIE_MAGICIAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3.0333,
+"eat": 8.6333,
+"particles": 0.0333,
+"die": 1.8333,
+"magic_start": 1.1333,
+"dove_release": 3.1667,
+"teleport": 3.2333
+}
+},
+{
+"name": "ZOMBIE_MAGICIAN_DOVE",
+"path": "768/FULL/ZOMBIE/ZOMBIE_MAGICIAN_DOVE/ZOMBIE_MAGICIAN_DOVE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"fly": 0.3333,
+"fly_back": 0.3333,
+"die": 0.3667
+}
+},
+{
+"name": "ZOMBIE_MECH_CONE",
+"path": "768/FULL/ZOMBIE/ZOMBIE_MECH_CONE/ZOMBIE_MECH_CONE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.9333,
+"walk": 3.1,
+"eat": 6.2,
+"die": 3.0333,
+"stun_start": 1.5333,
+"stun_idle": 1.9,
+"stun_end": 1.6
+}
+},
+{
+"name": "ZOMBIE_MECH_DISCO",
+"path": "768/FULL/ZOMBIE/ZOMBIE_MECH_DISCO/ZOMBIE_MECH_DISCO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 1.8667,
+"eat": 4.6333,
+"stun_start": 1.9,
+"stun_idle": 2.8333,
+"stun_end": 1.2333,
+"die": 3.0333,
+"dance_start": 0.7667,
+"dance_idle": 2.5667,
+"dance_end": 0.9333
+}
+},
+{
+"name": "ZOMBIE_MECH_FOOTBALL",
+"path": "768/FULL/ZOMBIE/ZOMBIE_MECH_FOOTBALL/ZOMBIE_MECH_FOOTBALL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6,
+"walk": 2,
+"eat": 2.3,
+"die": 4.2,
+"stun_start": 1.8333,
+"stun_idle": 2.0333,
+"stun_end": 1.5
+}
+},
+{
+"name": "ZOMBIE_MECH_ZMECH",
+"path": "768/FULL/ZOMBIE/ZOMBIE_MECH_ZMECH/ZOMBIE_MECH_ZMECH.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.4333,
+"walk": 1.2667,
+"landing": 4.0333,
+"orbital_strike": 2.5667,
+"summon_spiderbot_start": 1.3,
+"summon_spiderbot_loop": 0.7,
+"summon_spiderbot_end": 1.0333,
+"summon_disco_start": 0.6667,
+"summon_disco_loop": 1.5,
+"summon_disco_end": 0.8333,
+"teleport_start": 2.2333,
+"teleport_loop": 0.8333,
+"teleport_end": 1,
+"stun_start": 0.7,
+"stun_loop": 1.8333,
+"stun_end": 0.9667,
+"end_phase_timeout": 2.3333,
+"end_phase_timeout_walk": 1.8667,
+"end_phase_damaged": 5.1333,
+"end_phase_defeated": 9.7333
+}
+},
+{
+"name": "ZOMBIE_MODERN_ALLSTAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_MODERN_ALLSTAR/ZOMBIE_MODERN_ALLSTAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"walk": 3,
+"eat": 8.6333,
+"run": 0.6667,
+"tackle": 1.3,
+"kick": 1.6,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_MODERN_NEWSPAPER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_MODERN_NEWSPAPER/ZOMBIE_MODERN_NEWSPAPER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle_newspaper": 2.1333,
+"walk_newspaper": 3,
+"walk": 3,
+"eat_newspaper": 8.6333,
+"newspaper_defeat": 1.4,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_MODERN_SUPERFAN",
+"path": "768/FULL/ZOMBIE/ZOMBIE_MODERN_SUPERFAN/ZOMBIE_MODERN_SUPERFAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 4.8667,
+"eplode": 4.4,
+"fly": 0.3333,
+"land2": 1
+}
+},
+{
+"name": "ZOMBIE_MODERN_VET_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_MODERN_VET_FLAG/ZOMBIE_MODERN_VET_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_MODERN_VET_SUNDAYEDITION",
+"path": "768/FULL/ZOMBIE/ZOMBIE_MODERN_VET_SUNDAYEDITION/ZOMBIE_MODERN_VET_SUNDAYEDITION.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle_newspaper": 2.1333,
+"walk_newspaper": 3,
+"walk": 3,
+"eat_newspaper": 8.6333,
+"newspaper_defeat": 1.4,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_NUTCRACKER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_NUTCRACKER/ZOMBIE_NUTCRACKER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 1.9333,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333,
+"chop": 2.6667,
+"recharge": 3
+}
+},
+{
+"name": "ZOMBIE_PIANO",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIANO/ZOMBIE_PIANO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"play": 1,
+"die": 1,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_PIANO_HOLIDAY",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIANO_HOLIDAY/ZOMBIE_PIANO_HOLIDAY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"play": 1,
+"die": 1,
+"particles": 0.0667
+}
+},
+{
+"name": "ZOMBIE_PIRATE_BARREL_PUSHER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_BARREL_PUSHER/ZOMBIE_PIRATE_BARREL_PUSHER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"walk": 2.9667,
+"idle": 3.6,
+"eat": 4.1,
+"die": 2,
+"particles": 0.0333,
+"walk2": 2.9667,
+"idle2": 2.2667,
+"eat2": 4.1,
+"die2": 2
+}
+},
+{
+"name": "ZOMBIE_PIRATE_BARREL_PUSHER_BARREL",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_BARREL_PUSHER_BARREL/ZOMBIE_PIRATE_BARREL_PUSHER_BARREL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"roll": 12,
+"die": 1.3333
+}
+},
+{
+"name": "ZOMBIE_PIRATE_BARREL_PUSHER_BARREL_BIRTHDAY",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_BARREL_PUSHER_BARREL_BIRTHDAY/ZOMBIE_PIRATE_BARREL_PUSHER_BARREL_BIRTHDAY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"roll": 12,
+"die": 1.3333
+}
+},
+{
+"name": "ZOMBIE_PIRATE_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_BASIC/ZOMBIE_PIRATE_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.1,
+"die": 1.8,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_PIRATE_BASIC_BRICK",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_BASIC_BRICK/ZOMBIE_PIRATE_BASIC_BRICK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.1,
+"die": 1.8,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_PIRATE_BASIC_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_BASIC_FLAG/ZOMBIE_PIRATE_BASIC_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.1,
+"die": 1.7667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_PIRATE_BASIC_VET_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_BASIC_VET_FLAG/ZOMBIE_PIRATE_BASIC_VET_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.1,
+"die": 1.7667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_PIRATE_CANNON",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_CANNON/ZOMBIE_PIRATE_CANNON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2.0333,
+"prep": 0.1333,
+"fire": 1.5667,
+"die": 2.9,
+"final_die": 3.6667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_PIRATE_CAPTAIN",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_CAPTAIN/ZOMBIE_PIRATE_CAPTAIN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.9667,
+"walk": 2,
+"eat": 5.2667,
+"particles": 0.0333,
+"die": 1.4667,
+"parrot_release": 0.8,
+"parrot_land": 0.8
+}
+},
+{
+"name": "ZOMBIE_PIRATE_CAPTAIN_PARROT",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_CAPTAIN_PARROT/ZOMBIE_PIRATE_CAPTAIN_PARROT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"fly": 0.3333,
+"die": 0.3667,
+"particles": 0.0333,
+"fly back": 0.3333,
+"carry": 0.3333,
+"feather_burst": 5.4333
+}
+},
+{
+"name": "ZOMBIE_PIRATE_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_IMP/ZOMBIE_PIRATE_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_PIRATE_PELICAN",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_PELICAN/ZOMBIE_PIRATE_PELICAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 0.6667,
+"eat": 2,
+"die": 2,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_PIRATE_SEAGULL",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_SEAGULL/ZOMBIE_PIRATE_SEAGULL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 2,
+"die": 2,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_PIRATE_ZOMBOSS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_ZOMBOSS/ZOMBIE_PIRATE_ZOMBOSS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"Pre_Intro": 0.0667,
+"intro": 4.3333,
+"idle": 5.3,
+"walk_forward": 1.2333,
+"walk_backwards": 1.2333,
+"walk_down": 1.2333,
+"walk_up": 1.2333,
+"jump_start": 0.6667,
+"jump_mid": 0.4333,
+"jump_land": 0.7333,
+"stomp": 2.5333,
+"zombie_portal_start": 2.2667,
+"zombie_portal_loop": 2,
+"zombie_portal_end": 1.5667,
+"missile_start": 3.3333,
+"rocket_launch_start": 0.3667,
+"rocket_launch_loop": 0.2,
+"rocket_launch_fire": 1.2667,
+"die": 0.2333,
+"die_idle": 4.9333,
+"die_talk": 1.4333,
+"die_exit": 7.3,
+"stun_start": 0.4667,
+"stun_loop": 1.3,
+"stun_end": 0.1
+}
+},
+{
+"name": "ZOMBIE_PONCHO",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PONCHO/ZOMBIE_PONCHO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.125,
+"walk": 2.5,
+"eat": 5.0833,
+"die": 3.7917,
+"particles": 0.0417
+}
+},
+{
+"name": "ZOMBIE_PONCHO_HOLIDAY",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PONCHO_HOLIDAY/ZOMBIE_PONCHO_HOLIDAY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.125,
+"walk": 2.5,
+"eat": 5.0833,
+"die": 3.7917,
+"particles": 0.0417
+}
+},
+{
+"name": "ZOMBIE_PROSPECTOR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_PROSPECTOR/ZOMBIE_PROSPECTOR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.3667,
+"walk": 1.9667,
+"eat": 6.8,
+"die": 2.2667,
+"particles": 0.0333,
+"blastoff": 0.2667,
+"fly": 0.7,
+"land": 0.3333
+}
+},
+{
+"name": "ZOMBIE_RAINCOAT",
+"path": "768/FULL/ZOMBIE/ZOMBIE_RAINCOAT/ZOMBIE_RAINCOAT.PAM",
+"canvas": [
+390,
+500
+],
+"clips": {
+"idle": 3.3333,
+"walk": 4.8333,
+"eat": 8.5,
+"kick": 4.8333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ROMAN_BALLISTA",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ROMAN_BALLISTA/ZOMBIE_ROMAN_BALLISTA.PAM",
+"canvas": [
+800,
+600
+],
+"clips": {
+"walk": 2.25,
+"idle": 1.5417,
+"load": 2.5,
+"fire": 2.0833,
+"fire2": 4.375,
+"die": 4.0417
+}
+},
+{
+"name": "ZOMBIE_ROMAN_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ROMAN_BASIC/ZOMBIE_ROMAN_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ROMAN_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ROMAN_GARGANTUAR/ZOMBIE_ROMAN_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ROMAN_GENERAL_CAESAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ROMAN_GENERAL_CAESAR/ZOMBIE_ROMAN_GENERAL_CAESAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.5333,
+"walk": 4.0667,
+"walk_off2": 4.0667,
+"attack": 1.7667,
+"summon": 4.5667,
+"promotion": 3.5667,
+"walk_off": 11.0667,
+"die": 4.1333
+}
+},
+{
+"name": "ZOMBIE_ROMAN_HEALER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ROMAN_HEALER/ZOMBIE_ROMAN_HEALER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"power_up": 1.1333,
+"power": 0.9333,
+"power_down": 0.7667,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ROMAN_HEALER_STAFF",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ROMAN_HEALER_STAFF/ZOMBIE_ROMAN_HEALER_STAFF.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"drop": 1.6667,
+"idle": 0.2333,
+"heal": 1.5,
+"power_up": 2
+}
+},
+{
+"name": "ZOMBIE_ROMAN_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ROMAN_IMP/ZOMBIE_ROMAN_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1.2667,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ROMAN_MEDUSA",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ROMAN_MEDUSA/ZOMBIE_ROMAN_MEDUSA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"walk": 4.0333,
+"eat": 8.4667,
+"push": 4.0333,
+"petrification": 1.1,
+"die": 3.4667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ROMAN_SHIELD",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ROMAN_SHIELD/ZOMBIE_ROMAN_SHIELD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 2,
+"die": 1.4333
+}
+},
+{
+"name": "ZOMBIE_ROMAN_TOP_SHIELD",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ROMAN_TOP_SHIELD/ZOMBIE_ROMAN_TOP_SHIELD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 3.3333,
+"shield_off": 1.3,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ROMAN_ZOMBOSS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ROMAN_ZOMBOSS/ZOMBIE_ROMAN_ZOMBOSS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 6.6667,
+"idle": 5,
+"rush_start": 1.1667,
+"walk_forward": 1.1667,
+"walk_backwards": 1.1667,
+"walk_down": 1.1667,
+"walk_up": 1.1667,
+"jump_start": 0.9333,
+"jump_mid": 0.4333,
+"jump_land": 1.0667,
+"zombie_portal_start": 1.6667,
+"zombie_portal_loop": 2.3,
+"zombie_portal_end": 2.0333,
+"summon_wall": 2.3333,
+"missile_start": 3.3333,
+"rocket_launch": 3.3333,
+"stun_start": 0.4667,
+"stun_loop": 1.3,
+"stun_end": 0.1,
+"die": 0.2667,
+"die_idle": 5.5,
+"die_talk": 1.3333,
+"die_exit": 6.7667
+}
+},
+{
+"name": "ZOMBIE_SPORTZBALL_BALLOON",
+"path": "768/FULL/ZOMBIE/ZOMBIE_SPORTZBALL_BALLOON/ZOMBIE_SPORTZBALL_BALLOON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle_fly": 2,
+"eat_fly": 7.9,
+"walk_fly": 3,
+"fly_start": 1.4667,
+"fly": 2.9667,
+"fly_end": 0.5333,
+"die_balloon": 0.8,
+"die_balloon_zombie": 1.9,
+"idle": 2.1,
+"walk": 3.0333,
+"eat": 8.6333,
+"die": 1.9,
+"particles": 0.1333
+}
+},
+{
+"name": "ZOMBIE_SPORTZBALL_BUCKETHEAD",
+"path": "768/FULL/ZOMBIE/ZOMBIE_SPORTZBALL_BUCKETHEAD/ZOMBIE_SPORTZBALL_BUCKETHEAD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_SPORTZBALL_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_SPORTZBALL_GARGANTUAR/ZOMBIE_SPORTZBALL_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_SPORTZBALL_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_SPORTZBALL_IMP/ZOMBIE_SPORTZBALL_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_SPORTZBALL_WIZARD",
+"path": "768/FULL/ZOMBIE/ZOMBIE_SPORTZBALL_WIZARD/ZOMBIE_SPORTZBALL_WIZARD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.8667,
+"walk": 3,
+"eat": 8.6333,
+"sheep": 2.3,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_STPATRICKS_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_STPATRICKS_BASIC/ZOMBIE_STPATRICKS_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_STPATRICKS_DODORIDER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_STPATRICKS_DODORIDER/ZOMBIE_STPATRICKS_DODORIDER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"idle3": 2.8667,
+"walk": 3,
+"eat": 3.3667,
+"fly_start": 0.9667,
+"fly_loop": 2.6667,
+"fly_end": 1.5,
+"die": 5.6667
+}
+},
+{
+"name": "ZOMBIE_SUMMERNIGHTS",
+"path": "768/FULL/ZOMBIE/ZOMBIE_SUMMERNIGHTS/ZOMBIE_SUMMERNIGHTS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_SUMMER_GARGANTUAR",
+"path": "768/FULL/ZOMBIE/ZOMBIE_SUMMER_GARGANTUAR/ZOMBIE_SUMMER_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_SUMMER_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_SUMMER_IMP/ZOMBIE_SUMMER_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_SUMMER_LIGHTNINGBUG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_SUMMER_LIGHTNINGBUG/ZOMBIE_SUMMER_LIGHTNINGBUG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"eat": 7.9,
+"walk": 3,
+"fly_start": 0.5333,
+"fly": 2.9667,
+"fly_end": 0.5333,
+"die_bug": 1,
+"die_bug2": 1,
+"die_bug3": 1,
+"die_bug_zombie": 1.9,
+"die_bug2_zombie": 1.9,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_SWASHBUCKLER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_SWASHBUCKLER/ZOMBIE_SWASHBUCKLER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0667,
+"walk": 2.9667,
+"eat": 4.1,
+"die": 1.8,
+"particles": 0.0333,
+"swing success": 2.2,
+"swing back": 2.5667,
+"swing failure": 2.1333
+}
+},
+{
+"name": "ZOMBIE_SWASHBUCKLER_HOLIDAY",
+"path": "768/FULL/ZOMBIE/ZOMBIE_SWASHBUCKLER_HOLIDAY/ZOMBIE_SWASHBUCKLER_HOLIDAY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0667,
+"walk": 2.9667,
+"eat": 4.1,
+"die": 1.8,
+"particles": 0.0333,
+"swing success": 2.2,
+"swing back": 2.5667,
+"swing failure": 2.1333
+}
+},
+{
+"name": "ZOMBIE_TREADMILL",
+"path": "768/FULL/ZOMBIE/ZOMBIE_TREADMILL/ZOMBIE_TREADMILL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.5333,
+"walk": 1.6,
+"walk_off": 1.6,
+"walk_off2": 1.2,
+"action": 1.7667,
+"injury": 1.0333,
+"die": 5.2667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_TUTORIAL_BIRTHDAY",
+"path": "768/FULL/ZOMBIE/ZOMBIE_TUTORIAL_BIRTHDAY/ZOMBIE_TUTORIAL_BIRTHDAY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 3.3333,
+"die2": 3.3333,
+"die3": 3.3333,
+"die_fart": 3.3333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_TUTORIAL_FLAG_BIRTHDAY",
+"path": "768/FULL/ZOMBIE/ZOMBIE_TUTORIAL_FLAG_BIRTHDAY/ZOMBIE_TUTORIAL_FLAG_BIRTHDAY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 3.3333,
+"die2": 3.3333,
+"die3": 3.3333,
+"die_fart": 3.3333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_VALENTINES",
+"path": "768/FULL/ZOMBIE/ZOMBIE_VALENTINES/ZOMBIE_VALENTINES.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"die2": 1.2,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_VALENTINES_IMP",
+"path": "768/FULL/ZOMBIE/ZOMBIE_VALENTINES_IMP/ZOMBIE_VALENTINES_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_WEST_BASIC",
+"path": "768/FULL/ZOMBIE/ZOMBIE_WEST_BASIC/ZOMBIE_WEST_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.8667,
+"walk": 2,
+"eat": 3.3333,
+"die": 1.6667,
+"particles": 0.0333,
+"dance start": 0.5333,
+"dance loop": 0.8333,
+"dance stop": 1
+}
+},
+{
+"name": "ZOMBIE_WEST_BASIC_BRICK",
+"path": "768/FULL/ZOMBIE/ZOMBIE_WEST_BASIC_BRICK/ZOMBIE_WEST_BASIC_BRICK.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.8667,
+"walk": 2,
+"eat": 3.3333,
+"die": 1.6667,
+"particles": 0.0333,
+"dance start": 0.5333,
+"dance loop": 0.8333,
+"dance stop": 1
+}
+},
+{
+"name": "ZOMBIE_WEST_BULLRIDER",
+"path": "768/FULL/ZOMBIE/ZOMBIE_WEST_BULLRIDER/ZOMBIE_WEST_BULLRIDER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"bull idle": 2.375,
+"bull walk": 3.75,
+"bull run": 1.125,
+"bull eat": 8.7917,
+"bull jump back": 4.7917,
+"imp fly": 0.4167,
+"imp bonk": 0.25,
+"imp fall": 0.4167,
+"imp land": 0.8333,
+"imp get up": 2.25,
+"zombie idle": 2.5,
+"zombie walk": 2.5,
+"zombie eat": 5.3333,
+"zombie die": 1.5,
+"bull stamp": 4.1667,
+"bull run lead in": 0.5417,
+"bull die": 2.8333,
+"particles": 0.0417
+}
+},
+{
+"name": "ZOMBIE_WEST_BULLRIDER_VETERAN",
+"path": "768/FULL/ZOMBIE/ZOMBIE_WEST_BULLRIDER_VETERAN/ZOMBIE_WEST_BULLRIDER_VETERAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"bull idle": 2.375,
+"bull walk": 3.75,
+"bull run": 1.125,
+"bull eat": 8.7917,
+"bull jump back": 4.7917,
+"imp fly": 0.4167,
+"imp bonk": 0.25,
+"imp fall": 0.4167,
+"imp land": 0.8333,
+"imp get up": 2.25,
+"zombie idle": 2.5,
+"zombie walk": 2.5,
+"zombie eat": 5.3333,
+"zombie die": 1.5,
+"bull stamp": 4.1667,
+"bull run lead in": 0.5417,
+"bull die": 2.8333,
+"particles": 0.0417
+}
+},
+{
+"name": "ZOMBIE_WEST_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_WEST_FLAG/ZOMBIE_WEST_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.8667,
+"walk": 2,
+"eat": 3.3333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_WEST_VETERAN_FLAG",
+"path": "768/FULL/ZOMBIE/ZOMBIE_WEST_VETERAN_FLAG/ZOMBIE_WEST_VETERAN_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.8667,
+"walk": 2,
+"eat": 3.3333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_ZOMBONI",
+"path": "768/FULL/ZOMBIE/ZOMBIE_ZOMBONI/ZOMBIE_ZOMBONI.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"move": 0.6,
+"burn": 0.4,
+"damage01_start": 1.2,
+"damage01_loop": 0.6,
+"damage02_start": 1.2,
+"damage02_loop": 0.6,
+"damage03": 1.9667,
+"rare_death": 2.6333,
+"stun_start": 0.8333,
+"stun_idle": 1.6667,
+"stun_end": 0.8333
+}
+},
+{
+"name": "ZOMBIE_HAMSTERBALL",
+"path": "768/FULL/ZOMBIES/ZOMBIE_HAMSTERBALL/ZOMBIE_HAMSTERBALL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.2333,
+"walk": 3,
+"die": 1.5
+}
+},
+{
+"name": "AILMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/AILMINT/AILMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 2.3333,
+"loop": 1.3667,
+"outro": 2.3333
+}
+},
+{
+"name": "APPEASEMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/APPEASEMINT/APPEASEMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 2.2333,
+"loop": 1.4333,
+"outro": 0.8333
+}
+},
+{
+"name": "ARMAMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/ARMAMINT/ARMAMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 2.9667,
+"loop": 3.3333,
+"outro": 1.4
+}
+},
+{
+"name": "ARMAMINT_EXPLOSION",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/ARMAMINT_EXPLOSION/ARMAMINT_EXPLOSION.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"animation": 0.8333
+}
+},
+{
+"name": "ARMAMINT_PROJECTILE",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/ARMAMINT_PROJECTILE/ARMAMINT_PROJECTILE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"animation": 0.1
+}
+},
+{
+"name": "BOMBARDMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/BOMBARDMINT/BOMBARDMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 1.1667,
+"loop": 3.3333,
+"outro": 1.5
+}
+},
+{
+"name": "CONCEALMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/CONCEALMINT/CONCEALMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 4.2333,
+"loop": 3.3333,
+"outro": 3.3333
+}
+},
+{
+"name": "CONTAINMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/CONTAINMINT/CONTAINMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 3.3333,
+"loop": 1.7,
+"outro": 0.9667
+}
+},
+{
+"name": "ENCHANTMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/ENCHANTMINT/ENCHANTMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 1.8,
+"loop": 3.3333,
+"outro": 1.8
+}
+},
+{
+"name": "ENFORCEMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/ENFORCEMINT/ENFORCEMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 2.8333,
+"loop": 3.3667,
+"outro": 2.1667
+}
+},
+{
+"name": "ENLIGHTENMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/ENLIGHTENMINT/ENLIGHTENMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 3.2667,
+"loop": 3.3333,
+"outro": 1.2333
+}
+},
+{
+"name": "FILAMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/FILAMINT/FILAMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 1.6667,
+"loop": 3.3333,
+"outro": 2.6667
+}
+},
+{
+"name": "MINT_FX",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/MINT_FX/MINT_FX.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 1.6667,
+"loop": 1.6667,
+"outro": 1.6667
+}
+},
+{
+"name": "PEPPERMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/PEPPERMINT/PEPPERMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 1.7667,
+"loop": 1.6667,
+"outro": 0.5
+}
+},
+{
+"name": "REINFORCEMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/REINFORCEMINT/REINFORCEMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 2,
+"loop": 10,
+"outro": 1.2
+}
+},
+{
+"name": "SPEARMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/SPEARMINT/SPEARMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 1.4667,
+"loop": 1.3667,
+"outro": 2.0333
+}
+},
+{
+"name": "WINTERMINT",
+"path": "768/INITIAL/EMPOWERMINTS/PLANT/WINTERMINT/WINTERMINT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 2.9,
+"loop": 3.3333,
+"outro": 2.0333
+}
+},
+{
+"name": "ALOE",
+"path": "768/INITIAL/PLANT/ALOE/ALOE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"attack": 1.2667,
+"idle_nocharge": 1.3667,
+"idle_nocharge2": 1.3667,
+"charged": 1.5,
+"plantfood_start": 1.3,
+"plantfood_loop": 2,
+"plantfood_end": 1.3,
+"water": 2.4333
+}
+},
+{
+"name": "APPLEMORTAR",
+"path": "768/INITIAL/PLANT/APPLEMORTAR/APPLEMORTAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"idle3": 1.3333,
+"attack": 1.5667,
+"plantfood": 2.4,
+"water": 2.0667
+}
+},
+{
+"name": "BAMBOOSPARTAN",
+"path": "768/INITIAL/PLANT/BAMBOOSPARTAN/BAMBOOSPARTAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"attack": 0.5333,
+"pf_attack": 1.3333,
+"battle_trance_shield_break": 0.4667,
+"battle_trance_idle1": 2,
+"battle_trance_idle2": 2,
+"battle_trance_attack": 0.5333,
+"battle_trance_pf_attack": 1.3333,
+"water": 1.1667
+}
+},
+{
+"name": "BEANSPROUT",
+"path": "768/INITIAL/PLANT/BEANSPROUT/BEANSPROUT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3,
+"idle2": 1.3667,
+"idle3": 1.3333,
+"special_idle": 1.3333,
+"attack": 0.6667,
+"attack2": 0.6667,
+"attack_back": 0.6667,
+"attack2_back": 0.6667,
+"charged": 1.3333,
+"pf": 0.6667,
+"pf_end": 0.5,
+"water": 1.3333
+}
+},
+{
+"name": "BLOCKOLI",
+"path": "768/INITIAL/PLANT/BLOCKOLI/BLOCKOLI.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1.8333,
+"attack_start": 1.9,
+"attack_loop": 1.0333,
+"attack_end": 0.5,
+"attack_shield_start": 1.9,
+"attack_shield_loop": 1.0333,
+"attack_shield_end": 0.5,
+"plantfood_start": 0.7333,
+"plantfood_loop": 0.9,
+"plantfood_shield_start": 0.8667,
+"plantfood_shield_loop": 1.0333,
+"plantfood_shield_end": 0.5,
+"water": 1.8333,
+"idle_with_shield": 1
+}
+},
+{
+"name": "BLOOMERANG",
+"path": "768/INITIAL/PLANT/BLOOMERANG/BLOOMERANG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.7333,
+"attack": 1.3333,
+"attack_02": 0.8333,
+"plantfoodON": 0.6,
+"plantfood": 1.5,
+"plantfoodOFF": 0.3667,
+"plantfood_idle": 0.6,
+"water": 1.9333
+}
+},
+{
+"name": "BLOOMING_HEARTS",
+"path": "768/INITIAL/PLANT/BLOOMING_HEARTS/BLOOMING_HEARTS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.6667,
+"idle2": 2.6667,
+"idle3": 2.4667,
+"idle4": 1.7,
+"attack": 2.7667,
+"plantfood": 2,
+"water": 2.8
+}
+},
+{
+"name": "BOINGSETTA",
+"path": "768/INITIAL/PLANT/BOINGSETTA/BOINGSETTA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"restore": 0.5667,
+"idle3": 1.2333,
+"idle4": 1.2333,
+"attack": 2.5,
+"water": 1.6667
+}
+},
+{
+"name": "BOMBEGRANATE",
+"path": "768/INITIAL/PLANT/BOMBEGRANATE/BOMBEGRANATE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.1,
+"attack": 1.6333,
+"attack2": 1.6333,
+"attack3": 1.6333,
+"seed_land": 0.5,
+"seed_idle": 0.6667,
+"seed_attack": 1.6333
+}
+},
+{
+"name": "BONKCHOY",
+"path": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1,
+"idle3": 1.0333,
+"attack": 0.3333,
+"attack2": 0.3333,
+"attack3": 0.6667,
+"attack4": 0.5,
+"attack5": 0.5,
+"plantfood_on": 1,
+"plantfood": 1,
+"plantfood_off": 0.3333,
+"water": 1.7333
+}
+},
+{
+"name": "BOOMBALLOON",
+"path": "768/INITIAL/PLANT/BOOMBALLOON/BOOMBALLOON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6,
+"idle2": 2.6667,
+"idle3": 1.3333,
+"reload": 2.9667,
+"stage1_idle": 1.7333,
+"stage1_idle2": 2,
+"stage1_idle3": 1.3333,
+"attack": 0.7667,
+"plantfood": 2.2333,
+"water": 1.5
+}
+},
+{
+"name": "BOOMBERRY",
+"path": "768/INITIAL/PLANT/BOOMBERRY/BOOMBERRY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 2,
+"attack": 3.3333,
+"plantfood": 3.9333,
+"water": 1.5
+}
+},
+{
+"name": "BRAMBLEBUSH",
+"path": "768/INITIAL/PLANT/BRAMBLEBUSH/BRAMBLEBUSH.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1,
+"attack_start": 0.4333,
+"attack_loop": 0.5333,
+"attack_end": 0.5333,
+"plantfood_start": 0.4333,
+"plantfood_loop": 0.5333,
+"plantfood_end": 0.5333,
+"water": 1,
+"end": 0.6667
+}
+},
+{
+"name": "BUDUHBOOM",
+"path": "768/INITIAL/PLANT/BUDUHBOOM/BUDUHBOOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"water": 1.1667,
+"special_arming": 0.8333,
+"special_explosion": 1.5,
+"idle": 1.1667
+}
+},
+{
+"name": "BUTTERCUP",
+"path": "768/INITIAL/PLANT/BUTTERCUP/BUTTERCUP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 0.9667,
+"attack": 1,
+"plantfood": 2.0333,
+"water": 1.0333
+}
+},
+{
+"name": "BUZZBUTTON",
+"path": "768/INITIAL/PLANT/BUZZBUTTON/BUZZBUTTON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"attack": 1,
+"water": 1.3333,
+"plantfood": 2.1667
+}
+},
+{
+"name": "CABBAGEPULT",
+"path": "768/INITIAL/PLANT/CABBAGEPULT/CABBAGEPULT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 4,
+"idle2": 4,
+"attack": 1.6667,
+"plantfood": 2,
+"water": 2.0333
+}
+},
+{
+"name": "CACTUS",
+"path": "768/INITIAL/PLANT/CACTUS/CACTUS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.6667,
+"idle2": 2.6667,
+"idle3": 1.3333,
+"attack": 1.0333,
+"plantfood": 0.8667,
+"down": 1.0667,
+"down_idle": 0.2333,
+"down_attack": 0.5667,
+"up": 1.0667,
+"idle_plantfood": 2.6667,
+"idle_plantfood2": 2.6667,
+"idle_plantfood3": 1.3333,
+"attack_plantfood": 1.0333,
+"down_plantfood": 1.0667,
+"down_idle_plantfood": 1.6667,
+"down_attack_plantfood": 0.5667,
+"up_plantfood": 1.0667,
+"water": 2.9667,
+"up_stretch": 0.8333,
+"attack_stretch": 1.1667,
+"down_stretch": 0.8333
+}
+},
+{
+"name": "CAULIPOWER",
+"path": "768/INITIAL/PLANT/CAULIPOWER/CAULIPOWER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle1_1": 4,
+"idle2_1": 4,
+"idle3_1": 4,
+"idle4_1": 4,
+"attack": 1.7333,
+"plantfood_start": 0.3333,
+"plantfood_loop": 0.4333,
+"plantfood_loop2": 0.4333,
+"plantfood_end": 0.3333,
+"water": 4
+}
+},
+{
+"name": "CHILLYPEPPER",
+"path": "768/INITIAL/PLANT/CHILLYPEPPER/CHILLYPEPPER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.6667,
+"attack": 1.9667,
+"water": 1.5667
+}
+},
+{
+"name": "CHOMPER",
+"path": "768/INITIAL/PLANT/CHOMPER/CHOMPER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"idle3": 2.3667,
+"idle4": 3.0667,
+"bite": 0.7333,
+"bite_end": 0.8,
+"special": 1.9667,
+"special_idle": 0.9333,
+"special_end": 3.1667,
+"plantfood_on": 1,
+"plantfood": 0.9667,
+"plantfood_off": 1.9667,
+"plantfood_burp": 1.0333,
+"plantfood_burp_end": 0.7,
+"water": 2.5
+}
+},
+{
+"name": "COLD_SNAPDRAGON",
+"path": "768/INITIAL/PLANT/COLD_SNAPDRAGON/COLD_SNAPDRAGON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"idle3": 1.7,
+"attack": 1.4,
+"plantfood": 2.7,
+"water": 2.3
+}
+},
+{
+"name": "CRANJELLY",
+"path": "768/INITIAL/PLANT/CRANJELLY/CRANJELLY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"transform": 2.3333,
+"water": 1
+}
+},
+{
+"name": "DANDELION",
+"path": "768/INITIAL/PLANT/DANDELION/DANDELION.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.8667,
+"idle2": 3.7,
+"attack": 2.1667,
+"plantfood_on": 1.9333,
+"plantfood": 1.7,
+"plantfood_end": 0.3667,
+"water": 4.1333,
+"special_attack_start": 2.7667,
+"special_attack_idle_loop": 1.6,
+"special_attack_spawn_ready": 2.0667
+}
+},
+{
+"name": "DARTICHOKE",
+"path": "768/INITIAL/PLANT/DARTICHOKE/DARTICHOKE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"idle3": 1.4,
+"idle4": 2.1333,
+"attack": 2.0667,
+"plantfood": 0.5667,
+"plantfood_loop": 0.5,
+"plantfood_end": 1.6333,
+"water": 1.5333,
+"reload_start": 0.4667,
+"reload_loop": 1.6667,
+"reload_end": 1.1
+}
+},
+{
+"name": "DAZEY_CHAIN",
+"path": "768/INITIAL/PLANT/DAZEY_CHAIN/DAZEY_CHAIN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"transition1": 0.9333,
+"idle1": 1.3333,
+"playattack1": 1.3333,
+"transition2": 0.9333,
+"idle2": 1.3333,
+"playattack2": 1.3333,
+"transition3": 0.9333,
+"idle3": 1.3333,
+"playattack3": 1.3333,
+"transition4": 0.9333,
+"plantfood": 0.9333,
+"water": 2.0333
+}
+},
+{
+"name": "DRAFTODIL",
+"path": "768/INITIAL/PLANT/DRAFTODIL/DRAFTODIL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 1.4,
+"idle": 2,
+"idle2": 2,
+"idle3": 3.6,
+"attack": 2,
+"plantfood": 2.8,
+"water": 3.8
+}
+},
+{
+"name": "ELECTRICBLUEBERRY",
+"path": "768/INITIAL/PLANT/ELECTRICBLUEBERRY/ELECTRICBLUEBERRY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle1_1": 2.6667,
+"idle1_2": 2,
+"idle2_1": 2.6667,
+"idle2_2": 2.6667,
+"idle2_3": 2.6667,
+"idle2_4": 2.6667,
+"idle3_1": 1.9333,
+"idle3_2": 1.9333,
+"idle3_3": 1.9333,
+"idle4_1": 1.3333,
+"idle4_2": 1.3333,
+"idle4_3": 1.3333,
+"attack": 1.6667,
+"plantfood": 2,
+"water": 1.5333
+}
+},
+{
+"name": "ELECTRICCURRANT",
+"path": "768/INITIAL/PLANT/ELECTRICCURRANT/ELECTRICCURRANT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"idle3": 1.6667,
+"attack_start": 0.5,
+"attack_loop": 0.8,
+"attack_end": 0.3667,
+"plantfood_start": 0.5,
+"plantfood_loop": 0.8,
+"plantfood_end": 0.3667,
+"water": 0.8667
+}
+},
+{
+"name": "ELECTRICI_TEA",
+"path": "768/INITIAL/PLANT/ELECTRICI_TEA/ELECTRICI_TEA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6333,
+"idle2": 1.6333,
+"attack": 1.8333,
+"plantfood_start": 0.3,
+"plantfood_loop": 0.3333,
+"plantfood_end": 1.2,
+"water": 1.4667
+}
+},
+{
+"name": "ELECTRIC_PEASHOOTER",
+"path": "768/INITIAL/PLANT/ELECTRIC_PEASHOOTER/ELECTRIC_PEASHOOTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"idle3": 0.2667,
+"attack": 2.3667,
+"plantfood": 2.6333,
+"water": 0.3
+}
+},
+{
+"name": "ESCAPEROOT",
+"path": "768/INITIAL/PLANT/ESCAPEROOT/ESCAPEROOT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"plant": 1,
+"plant_idle": 0.0667,
+"plant_active_start": 0.8667,
+"plant_active_loop": 0.9667,
+"plant_active_burrow": 0.5667,
+"burrow_idle": 0.0667,
+"recover": 1.7,
+"idle_above": 1.6667,
+"idle_above2": 1.6667,
+"active_start": 0.7667,
+"active_loop": 1.0667,
+"burrow": 1.6333,
+"wrap": 1.7,
+"unwrap": 1.6333,
+"unwrap_quick": 0.7333,
+"unwrap_quick2": 1.5333,
+"water": 3.7,
+"pf_burrow": 1.6333
+}
+},
+{
+"name": "EXPLODEONUT",
+"path": "768/INITIAL/PLANT/EXPLODEONUT/EXPLODEONUT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"idle3": 1.6667,
+"damage": 3.5,
+"damage2": 3.3333,
+"damage3": 0.3,
+"plantfood_on": 0.6667,
+"plantfood": 0.1667,
+"plantfood2": 0.1333,
+"plantfood3": 1.6,
+"plantfood_off": 0.2667,
+"water": 2.0333
+}
+},
+{
+"name": "EXPLODEOVINE",
+"path": "768/INITIAL/PLANT/EXPLODEOVINE/EXPLODEOVINE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 1,
+"idle": 1.6333,
+"idle2": 1.6333,
+"idle3": 1.8333,
+"damage": 1.1,
+"attack": 0.4333,
+"plantfood_on": 1.3667,
+"plantfood": 0.1667,
+"plantfood2": 0.1667,
+"plantfood3": 1.6333,
+"plantfood_off": 1.5,
+"water": 1.6
+}
+},
+{
+"name": "FIREPEASHOOTER",
+"path": "768/INITIAL/PLANT/FIREPEASHOOTER/FIREPEASHOOTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.0333,
+"idle2": 1.0333,
+"attack": 1.0333,
+"plantfood": 0.7,
+"plantfood_loop": 0.7,
+"plantfood_end": 0.5667,
+"water": 4
+}
+},
+{
+"name": "FUMESHROOM",
+"path": "768/INITIAL/PLANT/FUMESHROOM/FUMESHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.9,
+"idle2": 2.9,
+"special": 1.8,
+"plantfood": 5.3333,
+"water": 2.7
+}
+},
+{
+"name": "GHOSTPEPPER",
+"path": "768/INITIAL/PLANT/GHOSTPEPPER/GHOSTPEPPER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.2,
+"idle2": 3.2,
+"attack_start": 0.8,
+"attack_loop": 1,
+"attack_end": 1.1,
+"plantfood_start": 0.8,
+"plantfood_loop": 1,
+"plantfood_end": 1.1,
+"idle_fade1": 3.2,
+"idle2_fade1": 3.2,
+"attack_start_fade1": 0.8,
+"attack_end_fade1": 1.1,
+"plantfood_start_fade1": 0.8,
+"idle_fade2": 3.2,
+"idle2_fade2": 3.2,
+"attack_start_fade2": 0.8,
+"attack_end_fade2": 1.1,
+"plantfood_start_fade2": 0.8,
+"Fade_out": 1.9667,
+"water": 4.8333
+}
+},
+{
+"name": "GLOOMVINE",
+"path": "768/INITIAL/PLANT/GLOOMVINE/GLOOMVINE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.4667,
+"idle2": 1.4667,
+"attack": 1.9,
+"plantfood_start": 3.1667,
+"water": 1.6333
+}
+},
+{
+"name": "GOLDBLOOM",
+"path": "768/INITIAL/PLANT/GOLDBLOOM/GOLDBLOOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"idle3": 2.8667,
+"attack": 2.4
+}
+},
+{
+"name": "GOOPEASHOOTER",
+"path": "768/INITIAL/PLANT/GOOPEASHOOTER/GOOPEASHOOTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"idle3": 2.1333,
+"attack": 1.6,
+"plantfood": 2.3,
+"water": 2.1333
+}
+},
+{
+"name": "GRAPESHOT",
+"path": "768/INITIAL/PLANT/GRAPESHOT/GRAPESHOT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 4,
+"attack": 1.6667,
+"attack_t2": 1.6667,
+"attack_t3": 1.6667
+}
+},
+{
+"name": "GRAVEBUSTER",
+"path": "768/INITIAL/PLANT/GRAVEBUSTER/GRAVEBUSTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"attack": 1,
+"attack1": 0.6667,
+"water": 1.8667
+}
+},
+{
+"name": "GUMNUT",
+"path": "768/INITIAL/PLANT/GUMNUT/GUMNUT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.9,
+"idle2": 3.9,
+"idle3": 1.3,
+"attack": 2.3667,
+"plantfood": 2.4,
+"water": 1.3
+}
+},
+{
+"name": "HEADBUTTER_LETTUCE",
+"path": "768/INITIAL/PLANT/HEADBUTTER_LETTUCE/HEADBUTTER_LETTUCE.PAM",
+"canvas": [
+500,
+390
+],
+"clips": {
+"idle": 1.3667,
+"idle2": 3,
+"idle3": 2.4667,
+"attack": 0.5333,
+"attack2": 0.5333,
+"plantfood_on": 0.2333,
+"plantfood_loop": 0.7,
+"plantfood_off": 0.5667,
+"water": 2.0333
+}
+},
+{
+"name": "HEATHSEEKER",
+"path": "768/INITIAL/PLANT/HEATHSEEKER/HEATHSEEKER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1,
+"attack_start": 0.7,
+"attack_loop": 0.2333,
+"attack_end": 0.7333,
+"water": 1.8667
+}
+},
+{
+"name": "HOCUS_CROCUS",
+"path": "768/INITIAL/PLANT/HOCUS_CROCUS/HOCUS_CROCUS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 3.8,
+"idle3": 2.0333,
+"attack": 2.4,
+"plantfood_start": 0.9,
+"plantfood_loop": 0.2333,
+"plantfood_end": 1.3,
+"water": 2.0333
+}
+},
+{
+"name": "HOLLY",
+"path": "768/INITIAL/PLANT/HOLLY/HOLLY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"idle2": 3.3333,
+"ready": 3.3333,
+"attack": 1.5333,
+"plantfood": 2.8667,
+"water": 3.4333
+}
+},
+{
+"name": "HOMINGTHISTLE",
+"path": "768/INITIAL/PLANT/HOMINGTHISTLE/HOMINGTHISTLE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.5,
+"idle2": 2.5,
+"attack": 1.8667,
+"plantfood": 0.8333,
+"plantfood_loop": 0.2667,
+"plantfood_end": 0.9333,
+"water": 2.5667
+}
+},
+{
+"name": "HOTDATE",
+"path": "768/INITIAL/PLANT/HOTDATE/HOTDATE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1,
+"damage": 1,
+"damage2": 2,
+"damage3": 3,
+"plantfood_on": 0.2333,
+"plantfood": 1.0667,
+"plantfood_off": 0.5,
+"death": 0.8667,
+"water": 1.8
+}
+},
+{
+"name": "HURRIKALE",
+"path": "768/INITIAL/PLANT/HURRIKALE/HURRIKALE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.3333,
+"idle2": 3.3333,
+"attack": 2.8
+}
+},
+{
+"name": "HYPNOSHROOM",
+"path": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 4,
+"idle2": 4,
+"plantfood_on": 1.2667,
+"plantfood": 4.0333,
+"water": 4
+}
+},
+{
+"name": "ICEBURG",
+"path": "768/INITIAL/PLANT/ICEBURG/ICEBURG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 3.9667,
+"attack": 1.5,
+"plantfood": 1.5,
+"water": 2.0333
+}
+},
+{
+"name": "ICEWEED",
+"path": "768/INITIAL/PLANT/ICEWEED/ICEWEED.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"stage1_idle1": 2,
+"stage1_idle2": 2,
+"stage1_attack": 0.6667,
+"stage1_pf_start": 0.5,
+"stage1_pf_loop": 0.3333,
+"stage1_pf_end": 0.3333,
+"stage2_idle1": 2,
+"stage2_idle2": 2,
+"stage2_attack": 0.6667,
+"stage2_pf_start": 0.5,
+"stage2_pf_loop": 0.3333,
+"stage2_pf_end": 0.3333,
+"water": 1.1667
+}
+},
+{
+"name": "ICE_BLOOM",
+"path": "768/INITIAL/PLANT/ICE_BLOOM/ICE_BLOOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"attack1": 1.9333,
+"water": 1.7
+}
+},
+{
+"name": "IMITATER",
+"path": "768/INITIAL/PLANT/IMITATER/IMITATER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1667,
+"idle2": 3.7667,
+"attack": 1.4667,
+"water": 2.0333
+}
+},
+{
+"name": "IMPEAR",
+"path": "768/INITIAL/PLANT/IMPEAR/IMPEAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.3,
+"idle2": 2.3,
+"plantfood": 1.3667,
+"water": 1.3667
+}
+},
+{
+"name": "INFERNO",
+"path": "768/INITIAL/PLANT/INFERNO/INFERNO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.5333,
+"idle3": 1.6333,
+"attack": 2.2333,
+"plantfood": 2.5,
+"explosion": 1.8333,
+"water": 2.6667
+}
+},
+{
+"name": "JACKOLANTERN",
+"path": "768/INITIAL/PLANT/JACKOLANTERN/JACKOLANTERN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.8333,
+"idle2": 0.8333,
+"attack_start": 0.6667,
+"attack_loop": 0.7333,
+"attack_end": 0.7333,
+"plantfood": 1.7333,
+"empty_state_start": 0.7333,
+"empty_state_loop": 1.3333,
+"empty_state_end": 1.6667,
+"water": 3.2,
+"idle_zen": 0.8333,
+"idle2_zen": 0.8333
+}
+},
+{
+"name": "JALAPENO",
+"path": "768/INITIAL/PLANT/JALAPENO/JALAPENO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.6667,
+"attack": 0.6667,
+"water": 1.6667
+}
+},
+{
+"name": "KERNALPULT",
+"path": "768/INITIAL/PLANT/KERNALPULT/KERNALPULT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"attack": 1.8667,
+"attack2": 1.8333,
+"plantfood": 1.5667,
+"water": 2.6
+}
+},
+{
+"name": "KIWIBEAST",
+"path": "768/INITIAL/PLANT/KIWIBEAST/KIWIBEAST.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle_stage1_": 1,
+"idle_stage1_2": 1,
+"idle_stage1_3": 1.7667,
+"attack_stage1": 1.4333,
+"water": 2.0333,
+"growth_stage1": 0.7667,
+"growth_stage1_2": 0.6333,
+"idle_stage2_": 1.3333,
+"idle_stage2_2": 1.3333,
+"idle_stage2_3": 1.8333,
+"attack_stage2": 1.4667,
+"growth_stage2": 0.8,
+"idle_stage3_": 1.6667,
+"idle_stage3_2": 1.6667,
+"idle_stage3_3": 1.5667,
+"attack_stage3": 1.5333,
+"plantfood_stage3": 2.9
+}
+},
+{
+"name": "LAVAGUAVA",
+"path": "768/INITIAL/PLANT/LAVAGUAVA/LAVAGUAVA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.6333,
+"idle2": 2.6333,
+"attack": 4.3667,
+"plantfood_on": 3.1,
+"plantfood": 1.7333,
+"plantfood_off": 0.7,
+"water": 5.4333
+}
+},
+{
+"name": "LEVITATER",
+"path": "768/INITIAL/PLANT/LEVITATER/LEVITATER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.9667,
+"idle2": 2,
+"attack_start": 1.1333,
+"attack_loop": 0.8333,
+"attack_end": 0.7,
+"water": 2.0333
+}
+},
+{
+"name": "MARIGOLD",
+"path": "768/INITIAL/PLANT/MARIGOLD/MARIGOLD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"special": 1.2,
+"plantfood": 2.6333,
+"sleep": 0.8,
+"sleep2": 2.0667,
+"water": 2.0333
+}
+},
+{
+"name": "MAYBEE",
+"path": "768/INITIAL/PLANT/MAYBEE/MAYBEE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"attack": 3,
+"pf": 5.3,
+"cooldown": 1.3333,
+"cooldown_idle": 1.3667,
+"recharge": 1.3333,
+"water": 1.3333
+}
+},
+{
+"name": "MEGAGATLING",
+"path": "768/INITIAL/PLANT/MEGAGATLING/MEGAGATLING.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.0333,
+"attack": 1.0333,
+"plantfood": 0.3333,
+"idle_stage2": 1.0333,
+"attack_stage2": 1.0333,
+"water": 2.3
+}
+},
+{
+"name": "MELONPULT",
+"path": "768/INITIAL/PLANT/MELONPULT/MELONPULT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3667,
+"attack": 1.9667,
+"plantfood": 2.9,
+"water": 1.7667
+}
+},
+{
+"name": "METEORFLOWER",
+"path": "768/INITIAL/PLANT/METEORFLOWER/METEORFLOWER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.5,
+"idle2": 3,
+"attack": 1.5,
+"water": 1.3333,
+"plantfood": 2,
+"recover_start": 0.2667,
+"recover_loop": 1.2,
+"recover_end": 0.6667
+}
+},
+{
+"name": "MISSILE_TOE",
+"path": "768/INITIAL/PLANT/MISSILE_TOE/MISSILE_TOE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"ready_idle": 0.3333,
+"special": 1.2,
+"reload": 1.3,
+"reload_idle": 1.3,
+"reload_end": 2.6333,
+"plantfood": 3.3,
+"water": 1.3333
+}
+},
+{
+"name": "MURKADAMIA_NUT",
+"path": "768/INITIAL/PLANT/MURKADAMIA_NUT/MURKADAMIA_NUT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"nutdamage1_murknone_idle": 1.0333,
+"nutdamage1_murknone_idle_02": 1.0333,
+"nutdamage1_murknone_idle_03": 2.1667,
+"nutdamage2_murknone_idle": 1.1,
+"nutdamage2_murknone_idle_02": 1.1,
+"nutdamage2_murknone_idle_03": 2.1667,
+"nutdamage1_murknone_plantfood_on": 0.8,
+"nutdamage1_murkdamage1_tier1_idle": 0.2333,
+"nutdamage1_murkdamage1_tier1_idle_02": 0.8667,
+"nutdamage1_murkdamage1_tier1_attack": 0.7667,
+"nutdamage1_murkdamage1_tier1_plantfood_on": 0.8333,
+"nutdamage1_murkdamage2_tier1_idle": 0.3333,
+"nutdamage1_murkdamage2_tier1_idle_02": 0.9,
+"nutdamage1_murkdamage2_tier1_attack": 0.9,
+"nutdamage1_murkdamage3_tier1_idle": 0.3333,
+"nutdamage1_murkdamage3_tier1_idle_02": 0.9,
+"nutdamage1_murkdamage3_tier1_attack": 0.9,
+"nutdamage1_murkdamage1_tier2_idle": 0.2,
+"nutdamage1_murkdamage1_tier2_idle_02": 1.3333,
+"nutdamage1_murkdamage1_tier2_attack": 0.9,
+"nutdamage1_murkdamage1_tier2_plantfood_on": 0.7667,
+"nutdamage1_murkdamage2_tier2_idle": 0.3333,
+"nutdamage1_murkdamage2_tier2_idle_02": 0.9,
+"nutdamage1_murkdamage2_tier2_attack": 0.9,
+"nutdamage1_murkdamage3_tier2_idle": 0.3667,
+"nutdamage1_murkdamage3_tier2_idle_02": 0.9,
+"nutdamage1_murkdamage3_tier2_attack": 0.9,
+"nutdamage1_murkdamage1_tier3_idle": 0.3667,
+"nutdamage1_murkdamage1_tier3_idle_02": 0.9,
+"nutdamage1_murkdamage1_tier3_attack": 0.9,
+"nutdamage1_murkdamage1_tier3_plantfood_on": 1.2333,
+"nutdamage1_murkdamage2_tier3_idle": 0.3333,
+"nutdamage1_murkdamage2_tier3_idle_02": 0.9,
+"nutdamage1_murkdamage2_tier3_attack": 0.9,
+"nutdamage1_murkdamage3_tier3_idle": 0.3333,
+"nutdamage1_murkdamage3_tier3_idle_02": 0.9,
+"nutdamage1_murkdamage3_tier3_attack": 0.9,
+"nutdamage2_murkdamage1_tier1_idle": 0.2333,
+"nutdamage2_murkdamage1_tier1_idle_02": 0.8667,
+"nutdamage2_murkdamage1_tier1_attack": 0.8667,
+"nutdamage2_murkdamage2_tier1_idle": 0.3333,
+"nutdamage2_murkdamage2_tier1_idle_02": 0.9,
+"nutdamage2_murkdamage2_tier1_attack": 0.9,
+"nutdamage2_murkdamage3_tier1_idle": 0.3333,
+"nutdamage2_murkdamage3_tier1_idle_02": 0.9,
+"nutdamage2_murkdamage3_tier1_attack": 0.9,
+"nutdamage2_murkdamage1_tier2_idle": 0.2,
+"nutdamage2_murkdamage1_tier2_idle_02": 1.3333,
+"nutdamage2_murkdamage1_tier2_attack": 0.9,
+"nutdamage2_murkdamage2_tier2_idle": 0.3333,
+"nutdamage2_murkdamage2_tier2_idle_02": 0.9,
+"nutdamage2_murkdamage2_tier2_attack": 0.9,
+"nutdamage2_murkdamage3_tier2_idle": 0.3667,
+"nutdamage2_murkdamage3_tier2_idle_02": 0.9,
+"nutdamage2_murkdamage3_tier2_attack": 0.9,
+"nutdamage2_murkdamage1_tier3_idle": 0.3667,
+"nutdamage2_murkdamage1_tier3_idle_02": 0.9,
+"nutdamage2_murkdamage1_tier3_attack": 0.9,
+"nutdamage2_murkdamage2_tier3_idle": 0.3333,
+"nutdamage2_murkdamage2_tier3_idle_02": 0.9,
+"nutdamage2_murkdamage2_tier3_attack": 0.9,
+"nutdamage2_murkdamage3_tier3_idle": 0.3333,
+"nutdamage2_murkdamage3_tier3_idle_02": 0.9,
+"nutdamage2_murkdamage3_tier3_attack": 0.9,
+"water": 1.7667
+}
+},
+{
+"name": "NOCTARINE",
+"path": "768/INITIAL/PLANT/NOCTARINE/NOCTARINE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"idle2": 4.0333,
+"attack": 0.7333,
+"attack_2": 0.7333,
+"water": 1.2667
+}
+},
+{
+"name": "OLIVEPIT",
+"path": "768/INITIAL/PLANT/OLIVEPIT/OLIVEPIT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.3,
+"idle2": 2.3,
+"drill": 2.4667,
+"drill_idle": 0.2667,
+"drill_idle2": 1.7667,
+"oil_spit": 2.0667,
+"plantfood_start": 0.4333,
+"plantfood_loop": 0.6667,
+"plantfood_end": 2.2333,
+"chewing_start": 0.8,
+"chewing_loop": 0.5667,
+"chewing_end": 1.3,
+"water": 2.2667
+}
+},
+{
+"name": "PARSNIP",
+"path": "768/INITIAL/PLANT/PARSNIP/PARSNIP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.7,
+"idle3": 1.2333,
+"idle4": 2.2333,
+"attack": 1.2667,
+"attack_pop": 0.6667,
+"attack_run": 0.2333,
+"drop": 0.7,
+"plantfood_pop": 0.6667,
+"plantfood_run": 0.2333,
+"plantfood_end": 0.7333,
+"water": 2.3
+}
+},
+{
+"name": "PEANUT",
+"path": "768/INITIAL/PLANT/PEANUT/PEANUT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.6667,
+"idle2": 0.7,
+"idle3": 0.7,
+"idle4": 0.7,
+"attack": 0.6333,
+"attack2": 0.7,
+"plantfood_on": 0.6,
+"plantfood": 0.1667,
+"plantfood_off": 0.5667,
+"idle_damage1": 0.7,
+"idle2_damage1": 0.7,
+"idle3_damage1": 0.7,
+"attack_damage1": 0.6667,
+"attack2_damage1": 0.6667,
+"idle_damage2": 1.9667,
+"idle2_damage2": 1.9667,
+"attack_damage2": 0.6667,
+"idle_damage3": 1.9667,
+"idle2_damage3": 1.9667,
+"attack_damage3": 0.6667,
+"water": 1.9333
+}
+},
+{
+"name": "PEASHOOTER",
+"path": "768/INITIAL/PLANT/PEASHOOTER/PEASHOOTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.0333,
+"attack": 1.0333,
+"plantfood": 0.4333,
+"water": 2.3
+}
+},
+{
+"name": "POKRA",
+"path": "768/INITIAL/PLANT/POKRA/POKRA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.2667,
+"idle2": 1.2667,
+"attack1": 0.2,
+"attack1loop": 0.2667,
+"attack1end": 0.7333,
+"attack2": 0.2,
+"attack2loop": 0.7333,
+"attack2end": 0.6667,
+"attack3": 1.4333,
+"plantfood": 1.4333,
+"water": 1.3667
+}
+},
+{
+"name": "POTATOMINE",
+"path": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"plant": 0.9667,
+"plant_idle": 0.0667,
+"recover": 0.8333,
+"idle": 1,
+"idle2": 1.0333,
+"attack": 0.6667,
+"plantfood_on": 0.6,
+"plantfood": 0.5,
+"plantfood_off": 0.4333,
+"plantfood2": 0.3667,
+"plantfood3": 1.0333,
+"water": 2.0333
+}
+},
+{
+"name": "POWERLILY",
+"path": "768/INITIAL/PLANT/POWERLILY/POWERLILY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"warning": 0.8667,
+"animation": 2.8,
+"plantfood": 3.1,
+"water": 2.0333
+}
+},
+{
+"name": "POWERVINE",
+"path": "768/INITIAL/PLANT/POWERVINE/POWERVINE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.2333,
+"idle2": 2.0333,
+"idle3": 1.9333,
+"idle4": 1.4333,
+"attack": 0.8667,
+"plantfood": 0.8333,
+"water": 2.8667
+}
+},
+{
+"name": "PUFFBALL",
+"path": "768/INITIAL/PLANT/PUFFBALL/PUFFBALL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3667,
+"idle2": 1.3667,
+"attack": 0.5667,
+"water": 1.2
+}
+},
+{
+"name": "PUFFSHROOM",
+"path": "768/INITIAL/PLANT/PUFFSHROOM/PUFFSHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle_stage1": 1,
+"idle2_stage1": 1,
+"special_stage1": 0.8,
+"idle_stage2": 1,
+"idle2_stage2": 1,
+"special_stage2": 0.8,
+"idle_stage3": 1,
+"idle2_stage3": 1,
+"special_stage3": 0.8,
+"idle_stage4": 0.8,
+"plantfood_on": 0.6667,
+"plantfood": 0.1,
+"plantfood_off": 0.7667,
+"water": 2.0333
+}
+},
+{
+"name": "PUMPKIN",
+"path": "768/INITIAL/PLANT/PUMPKIN/PUMPKIN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.6667,
+"idle2": 0.6667,
+"idle3": 0.6667,
+"idle_plantfood": 0.6667,
+"idle_plantfood2": 0.6667,
+"idle_plantfood3": 0.6667,
+"idle_plantfood4": 0.6667
+}
+},
+{
+"name": "PVINE",
+"path": "768/INITIAL/PLANT/PVINE/PVINE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6333,
+"idle2": 1.6333,
+"idle3": 1.7667,
+"attack": 1.2333,
+"plantfood_start": 0.1333,
+"plantfood_loop": 0.1,
+"plantfood_end": 0.7,
+"water": 1.6
+}
+},
+{
+"name": "REPEATER",
+"path": "768/INITIAL/PLANT/REPEATER/REPEATER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"attack": 1,
+"plantfood": 0.4,
+"plantfood2": 2.4333,
+"water": 1.8333
+}
+},
+{
+"name": "RHUBARBARIAN",
+"path": "768/INITIAL/PLANT/RHUBARBARIAN/RHUBARBARIAN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"plant": 0.7667,
+"attack": 0.9333,
+"attack_end": 0.5333,
+"rotation_start": 0.2667,
+"rotation_loop": 0.1333,
+"rotation_end": 0.6333,
+"idle": 1,
+"idle2": 1,
+"water": 1.2,
+"end": 0.6667
+}
+},
+{
+"name": "SAPFLING",
+"path": "768/INITIAL/PLANT/SAPFLING/SAPFLING.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"idle3": 1.8333,
+"idle4": 3.2,
+"attack": 2.6667,
+"plantfood_start": 0.8667,
+"plantfood_loop": 0.3333,
+"plantfood_end": 1.2,
+"water": 2.1333
+}
+},
+{
+"name": "SCAREDYSHROOM",
+"path": "768/INITIAL/PLANT/SCAREDYSHROOM/SCAREDYSHROOM.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 2,
+"attack": 1,
+"pf": 2,
+"hide": 1,
+"hide_idle": 1,
+"hide_idle2": 1,
+"hide_end": 1,
+"water": 2
+}
+},
+{
+"name": "SEAFLORA",
+"path": "768/INITIAL/PLANT/SEAFLORA/SEAFLORA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle1": 1.3333,
+"idle2": 1.3333,
+"regen": 1.8333,
+"attack": 2.3333,
+"plantfood": 2.8333,
+"water": 1.1667
+}
+},
+{
+"name": "SHADOWPEASHOOTER",
+"path": "768/INITIAL/PLANT/SHADOWPEASHOOTER/SHADOWPEASHOOTER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.4,
+"idle2": 2.4,
+"idle3": 1.2333,
+"attack": 1.5333,
+"attack2": 2,
+"down_start": 1.5,
+"down_idle": 2.4,
+"down_attack": 0.4333,
+"down_attack_return": 0.9,
+"down_end": 1.3333,
+"plantfood": 2.6,
+"water": 3.3
+}
+},
+{
+"name": "SHINEVINE",
+"path": "768/INITIAL/PLANT/SHINEVINE/SHINEVINE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3333,
+"idle2": 1.3333,
+"idle3": 1.4667,
+"attack": 1.1,
+"attack2": 1.4667,
+"plantfood": 1.7667,
+"water": 1.4667
+}
+},
+{
+"name": "SHRINKING_VIOLET",
+"path": "768/INITIAL/PLANT/SHRINKING_VIOLET/SHRINKING_VIOLET.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"idle3": 2.3333,
+"attack": 6.4,
+"plantfood": 5.9,
+"water": 1.6667
+}
+},
+{
+"name": "SLINGPEA",
+"path": "768/INITIAL/PLANT/SLINGPEA/SLINGPEA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.6667,
+"idle2": 2.6667,
+"idle3": 1.7667,
+"attack": 2.5333,
+"plantfood": 3.7,
+"water": 1.7667
+}
+},
+{
+"name": "SNAPPEA",
+"path": "768/INITIAL/PLANT/SNAPPEA/SNAPPEA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"idle3": 3,
+"burrow_start": 1.0667,
+"burrow_loop": 0.1667,
+"burrow_return_chewing": 1.1667,
+"burrow_return_idle": 1.1667,
+"chewing_loop": 1.7,
+"head_fire": 1.7,
+"head_fire_pf_start": 0.7,
+"head_fire_pf_loop": 0.3667,
+"head_fire_pf_end": 0.8667,
+"burrow_attack01": 4.2667,
+"burrow_attack02": 3.1667,
+"burrow_attack03": 2.8667,
+"water": 2.4
+}
+},
+{
+"name": "SNOWPEA",
+"path": "768/INITIAL/PLANT/SNOWPEA/SNOWPEA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"attack": 1.4333,
+"plantfood_on": 1.1,
+"plantfood": 0.4333,
+"plantfood_off": 0.3,
+"water": 1.7
+}
+},
+{
+"name": "SOLARSAGE",
+"path": "768/INITIAL/PLANT/SOLARSAGE/SOLARSAGE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 2.6333,
+"idle": 2.3333,
+"idle2": 2.3333,
+"attack": 2.3,
+"plantfood": 1.9667,
+"water": 2
+}
+},
+{
+"name": "SOLAR_TOMATO",
+"path": "768/INITIAL/PLANT/SOLAR_TOMATO/SOLAR_TOMATO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"attack": 1.8333
+}
+},
+{
+"name": "SQUASH",
+"path": "768/INITIAL/PLANT/SQUASH/SQUASH.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.9667,
+"turn": 1.2,
+"size_up": 1.2,
+"jump_up_right": 0.8,
+"jump_up_left": 0.8,
+"jump_down_right": 0.8,
+"jump_down_left": 0.8,
+"plantfood_jump_down_right": 0.7333,
+"plantfood_jump_down_left": 0.7,
+"water": 2.3667
+}
+},
+{
+"name": "STARFRUIT",
+"path": "768/INITIAL/PLANT/STARFRUIT/STARFRUIT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.0333,
+"idle2": 1,
+"attack": 1,
+"plantfood_on": 0.4,
+"plantfood": 0.3333,
+"plantfood_off": 0.3,
+"water": 2.0333
+}
+},
+{
+"name": "STICKYBOMB_RICE",
+"path": "768/INITIAL/PLANT/STICKYBOMB_RICE/STICKYBOMB_RICE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.7333,
+"idle2": 1.7333,
+"idle3": 2.3333,
+"attack": 2.5,
+"attack2": 2.4667,
+"plantfood_start": 3.1,
+"water": 3.5333
+}
+},
+{
+"name": "STRAWBURST",
+"path": "768/INITIAL/PLANT/STRAWBURST/STRAWBURST.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"stage1_idle": 1,
+"stage1_idle2": 0.9333,
+"stage1_idle3": 2.9667,
+"stage1_attack": 1.2333,
+"stage1_cooldown": 1.0667,
+"stage1_spawn": 1.0667,
+"stage1_explode": 1.8,
+"stage1_transform": 0.9667,
+"stage2_idle": 1.3333,
+"stage2_idle2": 1.3,
+"stage2_idle3": 2.6,
+"stage2_attack": 1.2,
+"stage2_explode": 2.2333,
+"stage2_transform": 1.3333,
+"stage3_idle": 1.6667,
+"stage3_idle2": 1.6667,
+"stage3_idle3": 1.9,
+"stage3_attack": 1.3333,
+"stage3_explode": 2.0333,
+"plantfood_on": 0.4667,
+"plantfood": 2.3,
+"plantfood_off": 0.8,
+"water": 1.5667
+}
+},
+{
+"name": "SUNDEWTANGLER",
+"path": "768/INITIAL/PLANT/SUNDEWTANGLER/SUNDEWTANGLER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.9667,
+"idle2": 2,
+"idle3": 2,
+"attack_start": 2,
+"attack_loop": 0.8333,
+"attack_end": 1.5667,
+"pf_start": 1.1667,
+"pf_loop": 1.3333,
+"pf_end": 1.1667,
+"hide": 2,
+"water": 2
+}
+},
+{
+"name": "SUNFLOWER",
+"path": "768/INITIAL/PLANT/SUNFLOWER/SUNFLOWER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"special": 2,
+"plantfood_on": 0.5,
+"plantfood": 0.5,
+"plantfood_off": 0.5,
+"water": 2.1667
+}
+},
+{
+"name": "SUNFLOWER_TWIN",
+"path": "768/INITIAL/PLANT/SUNFLOWER_TWIN/SUNFLOWER_TWIN.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"special": 1.5,
+"plantfood_on": 0.5,
+"plantfood": 0.5,
+"plantfood_off": 0.6667,
+"water": 2
+}
+},
+{
+"name": "SWEETPOTATO",
+"path": "768/INITIAL/PLANT/SWEETPOTATO/SWEETPOTATO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"idle_damage": 2,
+"idle2_damage": 2,
+"idle_damage2": 2,
+"idle2_damage2": 2,
+"idle_damage3": 2,
+"idle2_damage3": 2,
+"plantfood": 1.2333,
+"water": 2.8
+}
+},
+{
+"name": "TELEPORTATO",
+"path": "768/INITIAL/PLANT/TELEPORTATO/TELEPORTATO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"idle2": 1,
+"attack_start": 1.1667,
+"attack_loop": 0.5,
+"attack_end": 0.8333,
+"water": 1.1
+}
+},
+{
+"name": "THREEPEATER",
+"path": "768/INITIAL/PLANT/THREEPEATER/THREEPEATER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"attack": 1,
+"plantfood": 0.2333,
+"water": 1.7
+}
+},
+{
+"name": "TIGER_GRASS",
+"path": "768/INITIAL/PLANT/TIGER_GRASS/TIGER_GRASS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"lvl1_idle": 2,
+"lvl2_idle": 2,
+"lvl3_idle": 2,
+"lvl1_attack_start": 0.6333,
+"lvl1_attack_loop": 2,
+"lvl1_attack_end": 0.6,
+"lvl2_attack_start": 0.8333,
+"lvl2_attack_loop": 2,
+"lvl2_attack_end": 0.6,
+"lvl3_attack_start": 0.8,
+"lvl3_attack_loop": 2,
+"lvl3_attack_end": 0.6,
+"heal": 2,
+"water": 2
+}
+},
+{
+"name": "TOADSTOOL",
+"path": "768/INITIAL/PLANT/TOADSTOOL/TOADSTOOL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.4,
+"idle2": 2.5,
+"attack": 0.7,
+"attack_open_loop": 0.4333,
+"attack_grab": 0.1,
+"attack_loop chew": 1.1333,
+"attack_swallow": 2.5333,
+"plantfood": 0.7,
+"plantfood_open_loop": 0.4333,
+"pantfood_grab": 0.1,
+"plantfood_loop chew": 1.1333,
+"plantfood_swallow": 1.1,
+"plantfood_end": 1.4,
+"water": 2.4667,
+"idle_plantfood": 0.6667
+}
+},
+{
+"name": "TOMBTANGLER",
+"path": "768/INITIAL/PLANT/TOMBTANGLER/TOMBTANGLER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"plant": 1.3333,
+"water": 1.5,
+"idle": 1.3333,
+"idle2": 1.1667,
+"attack1": 0.4,
+"attack2": 1.4333,
+"plantfood1": 0.3667,
+"plantfood2": 2.4667
+}
+},
+{
+"name": "TORCHWOOD",
+"path": "768/INITIAL/PLANT/TORCHWOOD/TORCHWOOD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 0.6667,
+"idle2": 0.6667,
+"plantfood_on": 0.6667,
+"plantfood": 0.7,
+"plantfood_on_t2": 0.6667,
+"plantfood_t2": 0.7,
+"explosion": 1.7333,
+"water": 3
+}
+},
+{
+"name": "TUMBLEWEED",
+"path": "768/INITIAL/PLANT/TUMBLEWEED/TUMBLEWEED.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle1_1": 1.2667,
+"idle1_2": 1.2667,
+"attack": 1.7333,
+"idle2_1": 1.6667,
+"idle2_2": 1.6667,
+"attack2": 1.7333,
+"idle3_1": 1.6667,
+"idle3_2": 1.6667,
+"attack3": 1.7333
+}
+},
+{
+"name": "TURKEYPULT",
+"path": "768/INITIAL/PLANT/TURKEYPULT/TURKEYPULT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"attack": 1.9333,
+"plantfood_start": 0.8,
+"plantfood_loop": 0.6333,
+"plantfood_end": 0.8667,
+"water": 1.8667
+}
+},
+{
+"name": "ULTOMATO",
+"path": "768/INITIAL/PLANT/ULTOMATO/ULTOMATO.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle1_1": 1.3333,
+"idle1_2": 1.3333,
+"attack1_start": 0.5333,
+"attack1_loop": 1,
+"attack1_end": 1,
+"idle2_1": 2.6667,
+"idle2_2": 2.6667,
+"attack2_start": 0.4667,
+"attack2_loop": 1.0667,
+"attack2_end": 1.2333,
+"idle3_1": 0.9,
+"idle3_2": 3,
+"idle3_3": 1.6,
+"attack3_start": 0.8333,
+"attack3_loop": 0.9667,
+"attack3_end": 1.4333,
+"plantfood": 2.3,
+"water": 1.5333
+}
+},
+{
+"name": "VAMPORCINI",
+"path": "768/INITIAL/PLANT/VAMPORCINI/VAMPORCINI.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1,
+"water": 1,
+"attack_start": 1,
+"attack_loop": 1,
+"attack_end": 1.8,
+"full_sleep": 1.3,
+"sleep_end": 0.9667,
+"full_idle": 1,
+"pf_start": 1,
+"pf_loop": 1,
+"pf_end": 1.8,
+"death": 1.1333
+}
+},
+{
+"name": "VINE_BLASTBERRY",
+"path": "768/INITIAL/PLANT/VINE_BLASTBERRY/VINE_BLASTBERRY.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.6667,
+"idle2": 1.6667,
+"attack": 1.2,
+"plantfood": 1.4667,
+"water": 1.6667
+}
+},
+{
+"name": "VINE_PYRE",
+"path": "768/INITIAL/PLANT/VINE_PYRE/VINE_PYRE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.7333,
+"idle2": 1.7333,
+"attack": 0.7333,
+"attackloop": 0.8333,
+"attackend": 0.8667,
+"plantfood": 0.8667,
+"plantfoodloop": 0.9333,
+"plantfoodend": 0.8,
+"water": 4.1333
+}
+},
+{
+"name": "WALLNUT",
+"path": "768/INITIAL/PLANT/WALLNUT/WALLNUT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 9,
+"idle2": 10,
+"damage": 3.3333,
+"damage2": 3.3333,
+"damage3": 6.6667,
+"plantfood_on": 0.6667,
+"plantfood": 0.1667,
+"plantfood2": 0.1333,
+"plantfood3": 0.2,
+"plantfood_off": 0.2667,
+"water": 2.0333
+}
+},
+{
+"name": "WASABIWHIP",
+"path": "768/INITIAL/PLANT/WASABIWHIP/WASABIWHIP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.3,
+"idle2": 1.3,
+"idle3": 1.7333,
+"attack": 0.6667,
+"attack2": 0.5667,
+"attack3": 0.8333,
+"attack4": 0.6667,
+"attack5": 0.6667,
+"plantfood_on": 0.3667,
+"plantfood": 0.1333,
+"plantfood_off": 1.1,
+"water": 4.6333
+}
+},
+{
+"name": "WATERRABBIT",
+"path": "768/INITIAL/PLANT/WATERRABBIT/WATERRABBIT.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.3,
+"idle2": 3.3667,
+"attack": 3.1,
+"plantfood": 2,
+"water": 1.6667,
+"level_up": 1.7
+}
+},
+{
+"name": "WITCH_HAZEL",
+"path": "768/INITIAL/PLANT/WITCH_HAZEL/WITCH_HAZEL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"idle2": 2,
+"idle3": 2,
+"attack": 1.7917,
+"plantfood": 1.75,
+"water": 1.9583
+}
+},
+{
+"name": "ZOYBEANPOD",
+"path": "768/INITIAL/PLANT/ZOYBEANPOD/ZOYBEANPOD.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 1.4333,
+"transition": 1.2,
+"idle2": 1.3667,
+"transition2": 1.0333,
+"idle3": 0.7,
+"transition3": 1.1333,
+"idle4": 2,
+"transition4": 1.2667,
+"water": 1.2
+}
+},
+{
+"name": "EGYPT_GARGANTUAR",
+"path": "768/INITIAL/ZOMBIE/EGYPT_GARGANTUAR/EGYPT_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "GUMNUT_GUM_BLOCK_ZOMBIE",
+"path": "768/INITIAL/ZOMBIE/GUMNUT_GUM_BLOCK_ZOMBIE/GUMNUT_GUM_BLOCK_ZOMBIE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"animation": 1.2,
+"idle": 0.2333,
+"animation2": 0.4667
+}
+},
+{
+"name": "SOLARSAGE_ENLIGHTENED",
+"path": "768/INITIAL/ZOMBIE/SOLARSAGE_ENLIGHTENED/SOLARSAGE_ENLIGHTENED.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"intro": 1.0333,
+"walk": 3.5,
+"eat": 0.7
+}
+},
+{
+"name": "TUTORIAL_GARGANTUAR",
+"path": "768/INITIAL/ZOMBIE/TUTORIAL_GARGANTUAR/TUTORIAL_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"fire": 0.9667,
+"cannon_fire": 0.5667,
+"die": 2.6333,
+"particles": 0.0333
+}
+},
+{
+"name": "YETI",
+"path": "768/INITIAL/ZOMBIE/YETI/YETI.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 6,
+"eat": 7.5667,
+"die": 2.8333,
+"electric_die": 4.2333,
+"stun_start": 1.5333,
+"stun_idle": 1.9,
+"stun_end": 1.0667,
+"walk_backwards": 6,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EGYPT_BASIC",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EGYPT_CAMEL",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_CAMEL/ZOMBIE_EGYPT_CAMEL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 2,
+"die": 2.8333
+}
+},
+{
+"name": "ZOMBIE_EGYPT_FLAG",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_FLAG/ZOMBIE_EGYPT_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.8667,
+"walk": 2,
+"eat": 3.3333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EGYPT_IMP",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_IMP/ZOMBIE_EGYPT_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EGYPT_RA",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_RA/ZOMBIE_EGYPT_RA.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.8667,
+"walk": 4,
+"eat": 3.3333,
+"power_up": 0.6667,
+"power": 1,
+"power_down": 1.2667,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EGYPT_SARCOPHAGUS",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_SARCOPHAGUS/ZOMBIE_EGYPT_SARCOPHAGUS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"walk": 3.8667,
+"idle": 3,
+"eat": 3.9333,
+"break_power": 2,
+"idle_norm": 2.1,
+"walk_norm": 2.1667,
+"eat_norm": 1.8,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EGYPT_TOMBRAISER",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_TOMBRAISER/ZOMBIE_EGYPT_TOMBRAISER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"power": 3,
+"eat": 4.1,
+"die": 1.8,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EGYPT_VET_EGYPTOLOGIST",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_VET_EGYPTOLOGIST/ZOMBIE_EGYPT_VET_EGYPTOLOGIST.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1333,
+"walk": 2,
+"eat": 6.3333,
+"die": 3.7333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EGYPT_VET_FLAG",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_VET_FLAG/ZOMBIE_EGYPT_VET_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.8667,
+"walk": 2,
+"eat": 3.3333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_EGYPT_ZOMBOSS",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_ZOMBOSS/ZOMBIE_EGYPT_ZOMBOSS.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"Pre_Intro": 0.0667,
+"intro": 2.6,
+"idle": 5.3,
+"walk_forward": 1.2333,
+"walk_backwards": 1.2333,
+"walk_down": 1.2333,
+"walk_up": 1.2333,
+"jump_start": 0.6667,
+"jump_mid": 0.4333,
+"jump_land": 0.7333,
+"stomp": 2.5333,
+"zombie_portal_start": 2.2667,
+"zombie_portal_loop": 2,
+"zombie_portal_end": 1.5667,
+"missile_start": 3.3333,
+"rocket_launch": 1.8333,
+"die": 0.2667,
+"die_idle": 4.9333,
+"die_talk": 1.1667,
+"die_exit": 7.3,
+"stun_start": 0.4667,
+"stun_loop": 1.3,
+"stun_end": 0.1
+}
+},
+{
+"name": "ZOMBIE_EXPLORER",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_EXPLORER/ZOMBIE_EXPLORER.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1333,
+"walk": 2,
+"eat": 6.3333,
+"die": 3.7333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_IMP_BARE",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_IMP_BARE/ZOMBIE_IMP_BARE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOMBIE_MODERN_BALLOON",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_MODERN_BALLOON/ZOMBIE_MODERN_BALLOON.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle_fly": 2,
+"eat_fly": 7.9,
+"walk_fly": 3,
+"fly_start": 1.4667,
+"fly": 2.9667,
+"fly_end": 0.5333,
+"die_balloon": 0.8,
+"die_balloon_zombie": 1.9,
+"idle": 2.1,
+"walk": 3.0333,
+"eat": 8.6333,
+"die": 1.9,
+"particles": 0.1333
+}
+},
+{
+"name": "ZOMBIE_TUTORIAL",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_TUTORIAL_FLAG",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_FLAG/ZOMBIE_TUTORIAL_FLAG.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2.1,
+"walk": 3,
+"eat": 4.0333,
+"die": 2.1667,
+"particles": 0.0333
+}
+},
+{
+"name": "ZOMBIE_TUTORIAL_IMP",
+"path": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_IMP/ZOMBIE_TUTORIAL_IMP.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"idle": 2,
+"walk": 2,
+"eat": 4.2667,
+"die": 1.2,
+"particles": 0.0333,
+"land": 1,
+"fly": 0.0333
+}
+},
+{
+"name": "ZOYBEANPOD_GARGANTUAR",
+"path": "768/INITIAL/ZOMBIE/ZOYBEANPOD_GARGANTUAR/ZOYBEANPOD_GARGANTUAR.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"spawn": 1.7667,
+"idle": 2.0333,
+"walk": 2.3667,
+"eat": 1.2667,
+"smash_left": 1.7667,
+"die": 2
+}
+},
+{
+"name": "ZOYBEANPOD_ZOMBIE",
+"path": "768/INITIAL/ZOMBIE/ZOYBEANPOD_ZOMBIE/ZOYBEANPOD_ZOMBIE.PAM",
+"canvas": [
+390,
+390
+],
+"clips": {
+"born": 2.3667,
+"idle": 2.1,
+"walk": 3,
+"eat": 8.6333,
+"die": 1.8333,
+"particles": 0.0333
+}
+}
+]
+}

@@ -74,6 +74,9 @@ public class Plant {
 
     public void takeDamage(int amount) {
         instance.takeDamage(amount);
+        if (amount > 0) {
+            com.PVZ.model.entity.PlantAnimation.trigger(instance, "damage", 0.3);
+        }
     }
 
     public void takeDamage(int amount, Zombie attacker, BattleController controller) {
@@ -81,6 +84,7 @@ public class Plant {
             return;
         }
         instance.takeDamage(amount);
+        com.PVZ.model.entity.PlantAnimation.trigger(instance, "damage", 0.3);
         mainBehavior.onDamaged(instance, controller, attacker, amount, instance.isDead());
     }
 
@@ -127,12 +131,38 @@ public class Plant {
     private com.badlogic.gdx.graphics.Texture bodyTexture;
     private boolean triedRealTexture = false;
     private final int maxHp;
+    private float animStateTime = 0f;
+    private String idleVariant = null;
+    private double idleVariantTimer = 0.0;
 
     public void draw(SpriteBatch batch) {
         if (isDead()) {
             return;
         }
         Rectangle box = getHitbox();
+
+        String key = getType() != null ? getType().name() : null;
+        if (key != null) {
+            com.PVZ.view.renderer.EntityRenderer renderer = com.PVZ.view.renderer.EntityRenderer.getInstance();
+            boolean drewAnimated;
+            if (isPlantFoodActive()) {
+                drewAnimated = renderer.renderPlant(batch, key, "plantfood", animStateTime, box.x, box.y);
+            } else if (com.PVZ.model.entity.PlantAnimation.isActive(instance)) {
+                String state = com.PVZ.model.entity.PlantAnimation.getState(instance);
+                drewAnimated = renderer.renderPlant(batch, key, state, animStateTime, box.x, box.y);
+            } else if (idleVariant != null) {
+                drewAnimated = renderer.renderPlantExact(batch, key, idleVariant, animStateTime, box.x, box.y);
+                if (!drewAnimated) {
+                    drewAnimated = renderer.renderPlant(batch, key, "idle", animStateTime, box.x, box.y);
+                }
+            } else {
+                drewAnimated = renderer.renderPlant(batch, key, "idle", animStateTime, box.x, box.y);
+            }
+            if (drewAnimated) {
+                return;
+            }
+        }
+
         if (bodyTexture == null) {
             bodyTexture = loadTexture();
         }
@@ -193,6 +223,9 @@ public class Plant {
     }
 
     public void update(BehaviorContext context, double deltaTimeSeconds) {
+        animStateTime += (float) deltaTimeSeconds;
+        com.PVZ.model.entity.PlantAnimation.tick(instance, deltaTimeSeconds);
+        tickIdleVariant(deltaTimeSeconds);
         Object disabled = getRuntimeState("disabledTicks");
         int ticks = disabled instanceof Number ? ((Number) disabled).intValue() : 0;
         if (ticks > 0) {
@@ -208,6 +241,41 @@ public class Plant {
         Object disabled = getRuntimeState("disabledTicks");
         int cur = disabled instanceof Number ? ((Number) disabled).intValue() : 0;
         putRuntimeState("disabledTicks", Math.max(cur, ticks));
+    }
+
+    private void tickIdleVariant(double deltaTimeSeconds) {
+        idleVariantTimer -= deltaTimeSeconds;
+        if (idleVariant != null && idleVariantTimer > 0) {
+            return;
+        }
+        idleVariant = pickRandomIdleVariant();
+        idleVariantTimer = 3.0 + Math.random() * 4.0;
+    }
+
+    private String pickRandomIdleVariant() {
+        String key = getType() != null ? getType().name() : null;
+        if (key == null) {
+            return null;
+        }
+        String pamPath = PlantTexturePaths.getPamPath(key);
+        if (pamPath == null) {
+            return null;
+        }
+        java.util.Set<String> names = com.PVZ.model.entity.PamAnimationCatalog.clipNames(pamPath);
+        if (names == null) {
+            return null;
+        }
+        java.util.List<String> idles = new java.util.ArrayList<>();
+        for (String n : names) {
+            String lower = n.toLowerCase();
+            if (lower.startsWith("idle") && !lower.contains("damage")) {
+                idles.add(n);
+            }
+        }
+        if (idles.isEmpty()) {
+            return null;
+        }
+        return idles.get((int) (Math.random() * idles.size()));
     }
 
     public void applyPlantFood(BehaviorContext context) {

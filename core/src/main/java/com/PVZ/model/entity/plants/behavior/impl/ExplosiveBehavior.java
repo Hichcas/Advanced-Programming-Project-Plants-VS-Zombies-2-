@@ -37,6 +37,7 @@ public class ExplosiveBehavior implements PlantBehavior {
             return;
         if ("ice_shroom".equals(key)) {
             context.freezeAllZombies(Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
@@ -46,6 +47,7 @@ public class ExplosiveBehavior implements PlantBehavior {
             context.damageLane(lane, damage);
             if (plant.getStats().getBooleanExtra("meltsIce", false))
                 context.meltIceInLane(lane);
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
@@ -82,17 +84,20 @@ public class ExplosiveBehavior implements PlantBehavior {
                 plant.putRuntimeState("squashTimer", 0.0);
                 return;
             }
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
 
         if ("iceberg_lettuce".equals(key)) {
             context.freezeZombiesInLane(lane, Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
         if ("tangle_kelp".equals(key)) {
             context.killClosestZombieInLane(lane);
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
@@ -101,11 +106,13 @@ public class ExplosiveBehavior implements PlantBehavior {
             int grapeCount = plant.getStats().getIntExtra("grapeCount", 8);
             double grapeLifespan = plant.getStats().getDoubleExtra("grapeLifespanSeconds", 5.0);
             context.spawnBouncingProjectiles(lane, row, grapeCount, damage / 4, grapeLifespan);
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
         context.damageArea(lane, row, damage);
-        plant.takeDamage(plant.getCurrentHp());
+        com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
+            plant.takeDamage(plant.getCurrentHp());
     }
 
     private static int asInt(Object value, int defaultValue) {
