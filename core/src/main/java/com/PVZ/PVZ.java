@@ -70,6 +70,7 @@ public class PVZ extends Game {
 
         AppController.render();
         UserRegistry.saveAllDirtyUsers();
+        com.PVZ.model.status.MenuPanelSwitcher.update();
     }
 
     @Override
