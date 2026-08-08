@@ -2,10 +2,7 @@ package com.PVZ.model.status;
 
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.view.screen.manager.PanelManager;
-import com.PVZ.view.screen.panels.LoginPanel;
-import com.PVZ.view.screen.panels.MainMenuPanel;
-import com.PVZ.view.screen.panels.SettingsPanel;
-import com.PVZ.view.screen.panels.RegisterPanel;
+import com.PVZ.view.screen.panels.*;
 
 public class MenuPanelSwitcher {
 
@@ -39,10 +36,11 @@ public class MenuPanelSwitcher {
             case REGISTER:
                 PanelManager.getInstance().performPanelTransition(new RegisterPanel());
                 break;
-            // اضافه‌کردن پنل‌های دیگر در آینده:
             case LOGIN:
                 PanelManager.getInstance().performPanelTransition(new LoginPanel());
                 break;
+            case PROFILE:
+                PanelManager.getInstance().performPanelTransition(new ProfilePanel());
             default:
                 System.err.println("No UI panel mapped for menu: " + menuType);
                 break;

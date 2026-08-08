@@ -1,7 +1,7 @@
 {
   "profile" : {
-    "username" : "mahdiQuest3",
-    "nickname" : "mahdi",
+    "username" : "mahdiQuest23",
+    "nickname" : "Mahdi",
     "email" : "mahdi@example.com",
     "gender" : "male",
     "passwordHash" : "6239b479b97a15a5a494351afcc22b5b85627f37250649713c0d6f4d1d10100a",
@@ -195,10 +195,10 @@
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "forToday" : false,
-    "availableToday" : false
+    "availableToday" : false,
+    "forToday" : false
   },
-  "stayLoggedIn" : false,
+  "stayLoggedIn" : true,
   "questState" : {
     "questManager" : {
       "activeQuests" : [ {
@@ -219,8 +219,8 @@
         },
         "parameters" : { },
         "active" : false,
-        "formattedTitle" : "Master of Defense",
         "runtimeState" : { },
+        "formattedTitle" : "Master of Defense",
         "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "story_economy",
@@ -242,8 +242,8 @@
           "n" : 2
         },
         "active" : false,
-        "formattedTitle" : "Economic Herbivore",
         "runtimeState" : { },
+        "formattedTitle" : "Economic Herbivore",
         "formattedDescription" : "Win without losing more than 2 plants"
       }, {
         "id" : "daily_row_empty_1784570552016",
@@ -265,8 +265,8 @@
           "row" : 1
         },
         "active" : false,
-        "formattedTitle" : "Defenseless Row",
         "runtimeState" : { },
+        "formattedTitle" : "Defenseless Row",
         "formattedDescription" : "Win with row 1 completely empty"
       }, {
         "id" : "epic_night_day",
@@ -286,8 +286,8 @@
         },
         "parameters" : { },
         "active" : false,
-        "formattedTitle" : "Day or Night",
         "runtimeState" : { },
+        "formattedTitle" : "Day or Night",
         "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "story_speed",
@@ -307,8 +307,8 @@
         },
         "parameters" : { },
         "active" : false,
-        "formattedTitle" : "Speed Run",
         "runtimeState" : { },
+        "formattedTitle" : "Speed Run",
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_lawnmower",
@@ -330,8 +330,8 @@
           "n" : 10
         },
         "active" : false,
-        "formattedTitle" : "Lawnmower Time",
         "runtimeState" : { },
+        "formattedTitle" : "Lawnmower Time",
         "formattedDescription" : "Kill at least 10 zombies with lawnmowers"
       }, {
         "id" : "daily_plant_pro_1784570552018",
@@ -353,8 +353,8 @@
           "plant" : "POTATO_MINE"
         },
         "active" : true,
-        "formattedTitle" : "Pro with POTATO_MINE",
         "runtimeState" : { },
+        "formattedTitle" : "Pro with POTATO_MINE",
         "formattedDescription" : "Kill 10 zombies using only POTATO_MINE"
       }, {
         "id" : "story_chapter_hunt_FROSTBITE_CAVES",
@@ -376,8 +376,8 @@
           "chapter" : "FROSTBITE_CAVES"
         },
         "active" : true,
-        "formattedTitle" : "Chapter Hunter",
         "runtimeState" : { },
+        "formattedTitle" : "Chapter Hunter",
         "formattedDescription" : "Defeat 50 zombies from FROSTBITE_CAVES"
       }, {
         "id" : "daily_almost_win_1784570552021",
@@ -397,8 +397,8 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedTitle" : "Almost Victory",
         "runtimeState" : { },
+        "formattedTitle" : "Almost Victory",
         "formattedDescription" : "Kill 10 zombies in column 1 of a row without a lawnmower"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
@@ -420,8 +420,8 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
-        "formattedTitle" : "Chapter Hunter",
         "runtimeState" : { },
+        "formattedTitle" : "Chapter Hunter",
         "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
       } ],
       "lastDailyRefresh" : "2026-07-20",
@@ -429,7 +429,7 @@
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 1,
       "isDayLevel" : true,
-      "timeUntilReset" : "5h 10m"
+      "timeUntilReset" : "3h 46m"
     }
   }
 }
