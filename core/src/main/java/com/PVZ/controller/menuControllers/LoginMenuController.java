@@ -44,7 +44,7 @@ public class LoginMenuController {
         String password = input.getPassword();
 
         if (username == null || password == null) {
-            return new OutputDTO(false, "Invalid username or password.");
+            return new OutputDTO(false, "Username and password are required.");
         }
 
         User user = UserRegistry.loginUser(username);
@@ -82,18 +82,18 @@ public class LoginMenuController {
 
         pendingResetUser = user;
         resetState = ResetState.WAITING_FOR_ANSWER;
-        return new OutputDTO(true, user.profile.getSecurityQuestion() + "\nanswer -a <answer>");
+        return new OutputDTO(true, user.profile.getSecurityQuestion());
     }
 
     private OutputDTO handleAnswer(LoginInputDTO input) {
-        if (resetState != ResetState.WAITING_FOR_ANSWER || pendingResetUser == null || pendingResetUser
-                .profile == null) {
-            return new OutputDTO(false, "Please use forget password first.");
+        // اگر فرایند فراموشی رمز آغاز نشده باشد
+        if (resetState != ResetState.WAITING_FOR_ANSWER || pendingResetUser == null) {
+            return new OutputDTO(false, "Please start the password reset process first.");
         }
 
         String answer = input.getAnswer();
-        if (answer == null) {
-            return new OutputDTO(false, "Invalid answer.");
+        if (answer == null || answer.trim().isEmpty()) {
+            return new OutputDTO(false, "Answer cannot be empty.");
         }
 
         String answerHash;
@@ -103,25 +103,25 @@ public class LoginMenuController {
             return new OutputDTO(false, "Failed to verify answer.");
         }
 
+        // بررسی پاسخ
         if (!answerHash.equals(pendingResetUser.profile.getSecurityAnswerHash())) {
-            pendingResetUser = null;
-            resetState = ResetState.NONE;
-            return new OutputDTO(false, "Incorrect answer.");
+            // پاسخ اشتباه – وضعیت را نگه می‌داریم تا کاربر بتواند دوباره تلاش کند
+            return new OutputDTO(false, "Incorrect answer. Please try again.");
         }
 
+        // پاسخ درست – رفتن به مرحله‌ی رمز جدید
         resetState = ResetState.WAITING_FOR_NEW_PASSWORD;
         return new OutputDTO(true, "Correct answer. Please enter your new password.");
     }
 
     private OutputDTO handleNewPassword(LoginInputDTO input) {
-        if (resetState != ResetState.WAITING_FOR_NEW_PASSWORD || pendingResetUser == null || pendingResetUser
-                .profile == null) {
-            return new OutputDTO(false, "Please use forget password first.");
+        if (resetState != ResetState.WAITING_FOR_NEW_PASSWORD || pendingResetUser == null) {
+            return new OutputDTO(false, "Please answer the security question first.");
         }
 
         String newPassword = input.getNewPassword();
         if (!isStrongPassword(newPassword)) {
-            return new OutputDTO(false, "Weak password.");
+            return new OutputDTO(false, "Weak password. Use at least 8 characters with a mix of upper, lower, digit, and special character.");
         }
 
         String oldPasswordHash = pendingResetUser.profile.getPasswordHash();
@@ -176,6 +176,11 @@ public class LoginMenuController {
         }
 
         return hasLower && hasUpper && hasDigit && hasSpecial;
+    }
+
+    public static void resetForgotPasswordState() {
+        resetState = ResetState.NONE;
+        pendingResetUser = null;
     }
 
     public static boolean isWaitingForNewPassword() {

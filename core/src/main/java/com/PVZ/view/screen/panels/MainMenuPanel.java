@@ -2,6 +2,8 @@ package com.PVZ.view.screen.panels;
 
 import com.PVZ.model.game.GameStatus;
 import com.PVZ.model.game.RegularGameEngine;
+import com.PVZ.model.user.User;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.view.screen.GameScreen;
 import com.PVZ.view.screen.manager.PanelManager;
 import com.PVZ.view.screen.manager.ScreenManager;
@@ -38,7 +40,7 @@ public class MainMenuPanel extends BasePanel {
         setFillParent(true);
 
         // ---------- تصاویر اصلی ----------
-        Texture logoTexture   = safeTextureFromRegion("IMAGE_UI_MAINMENU_PVZ2_LOGO_HORIZONTAL");
+        Texture logoTexture = safeTextureFromRegion("IMAGE_UI_MAINMENU_PVZ2_LOGO_HORIZONTAL");
         Texture contentTexture = safeTextureFromRegion("IMAGE_UI_MAINMENU_MAINMENU_CONTENT_OFFLINE");
 
         // لوگو با 300 پیکسل پایین‌تر از لبهٔ بالا
@@ -54,9 +56,9 @@ public class MainMenuPanel extends BasePanel {
         addArt(contentTexture, contentX, contentY, contentW, contentH);
 
         // ---------- دکمه‌های متنی (سبز) ----------
-        Texture greenUpTex   = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON");
+        Texture greenUpTex = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON");
         Texture greenDownTex = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON_DOWN");
-        Texture markerTex    = new Texture(Gdx.files.internal("global/button_marker.png"));
+        Texture markerTex = new Texture(Gdx.files.internal("global/button_marker.png"));
         BitmapFont buttonFont = PvzSkin.get().getFont("FBUSV8C5EI_1_outline");
 
         // موقعیت شروع دکمه‌ها (بالای قاب) منهای مقدار جابه‌جایی
@@ -64,10 +66,10 @@ public class MainMenuPanel extends BasePanel {
         float centerX = Gdx.graphics.getWidth() / 2f;
 
         addButton("START GAME", this::onStartGame, greenUpTex, greenDownTex, buttonFont, markerTex, centerX, startY);
-        addButton("QUIT GAME",  this::onQuit,      greenUpTex, greenDownTex, buttonFont, markerTex, centerX, startY - 90);
+        addButton("QUIT GAME", this::onQuit, greenUpTex, greenDownTex, buttonFont, markerTex, centerX, startY - 90);
 
         // ---------- دکمهٔ تنظیمات (چرخ‌دنده) ----------
-        Texture settingsNormal   = safeTextureFromRegion("IMAGE_UI_HUD_SETTINGSBUTTON_BUTTONS_HUD_SETTINGS_NORMAL");
+        Texture settingsNormal = safeTextureFromRegion("IMAGE_UI_HUD_SETTINGSBUTTON_BUTTONS_HUD_SETTINGS_NORMAL");
         Texture settingsSelected = safeTextureFromRegion("IMAGE_UI_HUD_SETTINGSBUTTON_BUTTONS_HUD_SETTINGS_SELECTED");
 
         MenuButton settingsBtn = new MenuButton(
@@ -114,8 +116,15 @@ public class MainMenuPanel extends BasePanel {
     }
 
     private void onQuit() {
-//        Gdx.app.exit();
-        AppStatus.setCurrentMenuType(MenuType.REGISTER);
+        User currentUser = AppStatus.currentUser;
+        if (currentUser != null) {
+            currentUser.setStayLoggedIn(false);
+            if (currentUser.profile != null) {
+                UserRegistry.saveUserToDatabase(currentUser.profile.getUsername());
+            }
+        }
+        AppStatus.currentUser = null;
+        AppStatus.currentMenuType = MenuType.REGISTER;
     }
 
     @Override
