@@ -114,7 +114,8 @@ public class MainMenuPanel extends BasePanel {
     }
 
     private void onQuit() {
-        Gdx.app.exit();
+//        Gdx.app.exit();
+        AppStatus.setCurrentMenuType(MenuType.REGISTER);
     }
 
     @Override

@@ -130,8 +130,8 @@ public final class AppStatus {
         }
     }
 
-    public static void returnToMainMenu() {
-        returnToMainMenu(null);
+    public static void setCurrentMenuType(MenuType currentMenuType) {
+        AppStatus.currentMenuType = currentMenuType;
     }
 
     public static void returnToMainMenu(String message) {
@@ -151,9 +151,6 @@ public final class AppStatus {
                 new RegularGameEngine(new GameStatus())));
     }
 
-    public static void setCurrentMenuType (MenuType menuType) {
-        currentMenuType = menuType;
-    }
 
     public static void returnToChapterAndLevelSelection(String message) {
         currentMenuType = MenuType.CHAPTER_AND_LEVEL_SELECTION;
@@ -191,22 +188,13 @@ public final class AppStatus {
         debugMode = debug;
     }
 
-    public static int getSFXVolume() {
-        return (int) (sfxVolume * 100);
-    }
-
     public static void setSFXVolume(int amount) {
         sfxVolume = Math.max(0, Math.min(1, amount / 100f));
         // اگر در آینده SoundManager برای افکت‌ها داشتید، اینجا صدا بزنید:
         // SoundManager.getInstance().setVolume(sfxVolume);
     }
 
-    public static boolean getMuteSFX() {
-        return sfxMuted;
-    }
-
-    public static void setMutedSFX(boolean muted) {
-        sfxMuted = muted;
-        // SoundManager.getInstance().setMuted(muted);
+    public static MenuType getCurrentMenuType() {
+        return currentMenuType;
     }
 }

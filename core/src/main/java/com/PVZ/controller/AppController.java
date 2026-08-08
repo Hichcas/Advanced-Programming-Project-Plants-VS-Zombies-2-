@@ -16,7 +16,7 @@ public class AppController {
             if (input == null)
                 return;
             OutputDTO output =
-                    AppStatus.currentMenuType.getCurrentMenu()
+                    AppStatus.getCurrentMenuType().getCurrentMenu()
                             .handleInput(input);
             ShowOutput.show(output);
     }
