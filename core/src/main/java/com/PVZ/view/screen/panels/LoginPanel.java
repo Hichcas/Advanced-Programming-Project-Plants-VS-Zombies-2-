@@ -5,6 +5,7 @@ import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.view.input.DTO.LoginInputDTO;
 import com.PVZ.view.output.OutputDTO;
+import com.PVZ.view.screen.manager.PanelManager;
 import com.PVZ.view.screen.ui.MenuButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -110,6 +111,10 @@ public class LoginPanel extends BasePanel {
         Table btnRow = new Table();
         MenuButton loginBtn = createButton("Login", this::onLogin, purpleUp, purpleDown, btnFont, marker);
         MenuButton exitBtn  = createButton("Quit", this::onExit, purpleUp, purpleDown, btnFont, marker);
+        MenuButton forgotBtn = createButton("Forgot Password",
+            () -> PanelManager.getInstance().performPanelTransition(new ForgotPasswordPanel()),
+            purpleUp, purpleDown, btnFont, marker);
+        btnRow.add(forgotBtn).padRight(40f);
         btnRow.add(loginBtn).padRight(40f);
         btnRow.add(exitBtn).padRight(40f);
         mainTable.add(btnRow).colspan(2).padTop(screenH * 0.02f).row();
