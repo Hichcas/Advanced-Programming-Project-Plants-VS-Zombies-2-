@@ -42,6 +42,7 @@ public class Projectile {
     private boolean fuseExploded = false;
 
     private final Map<String, Object> extras = new HashMap<>();
+    private float animTime = 0f;
 
     public Projectile() {
     }
@@ -187,6 +188,7 @@ public class Projectile {
         if (destroyed || !worldPositioned) {
             return;
         }
+        animTime += delta;
         if (freeMotion) {
             updateFreeMotion(delta);
             return;
@@ -238,6 +240,14 @@ public class Projectile {
     public void draw(SpriteBatch batch) {
         if (destroyed || !worldPositioned) {
             return;
+        }
+        Object visualKey = extras.get("visualKey");
+        if (visualKey instanceof String key) {
+            boolean drewAnimated = com.PVZ.view.renderer.EntityRenderer.getInstance()
+                .renderProjectile(batch, key, animTime, (float) positionX, (float) positionY);
+            if (drewAnimated) {
+                return;
+            }
         }
         if (texture == null) {
             texture = buildTexture();

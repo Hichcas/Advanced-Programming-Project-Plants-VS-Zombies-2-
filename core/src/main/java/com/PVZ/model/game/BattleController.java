@@ -408,6 +408,11 @@ public class BattleController implements BehaviorContext {
     }
 
     @Override
+    public int getRowCount() {
+        return map != null ? map.getRows() : 5;
+    }
+
+    @Override
     public List<Zombie> getAllZombies() {
         return new java.util.ArrayList<>(zombies);
     }
@@ -467,8 +472,8 @@ public class BattleController implements BehaviorContext {
             col = number.intValue();
         }
 
-        float worldX = startX + col * tileWidth + tileWidth * 0.5f;
-        float worldY = startY - (row + 1) * tileHeight + tileHeight * 0.35f;
+        float worldX = startX + col * tileWidth + tileWidth * resolveDx(p);
+        float worldY = startY - (row + 1) * tileHeight + tileHeight * resolveDy(p);
 
         float speedPxPerSec = tileWidth * 1.5f;
         if (p.getType() == ProjectileType.LOB) {
@@ -478,6 +483,9 @@ public class BattleController implements BehaviorContext {
         speedPxPerSec *= speedMultiplier;
 
         double horizontalSign = p.getSpeed() < 0 ? -1.0 : 1.0;
+        if (Boolean.TRUE.equals(p.getExtra("reverseDirection"))) {
+            horizontalSign = -horizontalSign;
+        }
         double verticalSpeed = 0.0;
         Object targetLaneState = p.getExtra("targetLane");
         if (targetLaneState instanceof Number number) {
@@ -492,6 +500,18 @@ public class BattleController implements BehaviorContext {
         } else {
             p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
         }
+    }
+
+    private static float resolveDx(Projectile p) {
+        Object plantType = p.getExtra("plantType");
+        return com.PVZ.model.entity.plants.behavior.impl.ProjectileSpawnOffsets
+            .dx(plantType == null ? null : plantType.toString());
+    }
+
+    private static float resolveDy(Projectile p) {
+        Object plantType = p.getExtra("plantType");
+        return com.PVZ.model.entity.plants.behavior.impl.ProjectileSpawnOffsets
+            .dy(plantType == null ? null : plantType.toString());
     }
 
     @Override

@@ -144,19 +144,22 @@ public class Plant {
         String key = getType() != null ? getType().name() : null;
         if (key != null) {
             com.PVZ.view.renderer.EntityRenderer renderer = com.PVZ.view.renderer.EntityRenderer.getInstance();
+            float[] anchor = getVisualAnchor();
+            float ax = anchor[0];
+            float ay = anchor[1];
             boolean drewAnimated;
             if (isPlantFoodActive()) {
-                drewAnimated = renderer.renderPlant(batch, key, "plantfood", animStateTime, box.x, box.y);
+                drewAnimated = renderer.renderPlant(batch, key, "plantfood", animStateTime, ax, ay);
             } else if (com.PVZ.model.entity.PlantAnimation.isActive(instance)) {
                 String state = com.PVZ.model.entity.PlantAnimation.getState(instance);
-                drewAnimated = renderer.renderPlant(batch, key, state, animStateTime, box.x, box.y);
+                drewAnimated = renderer.renderPlant(batch, key, state, animStateTime, ax, ay);
             } else if (idleVariant != null) {
-                drewAnimated = renderer.renderPlantExact(batch, key, idleVariant, animStateTime, box.x, box.y);
+                drewAnimated = renderer.renderPlantExact(batch, key, idleVariant, animStateTime, ax, ay);
                 if (!drewAnimated) {
-                    drewAnimated = renderer.renderPlant(batch, key, "idle", animStateTime, box.x, box.y);
+                    drewAnimated = renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);
                 }
             } else {
-                drewAnimated = renderer.renderPlant(batch, key, "idle", animStateTime, box.x, box.y);
+                drewAnimated = renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);
             }
             if (drewAnimated) {
                 return;
@@ -167,6 +170,26 @@ public class Plant {
             bodyTexture = loadTexture();
         }
         batch.draw(bodyTexture, box.x, box.y, box.width, box.height);
+    }
+
+    private float[] getVisualAnchor() {
+        Object wx = getRuntimeState("worldX");
+        Object wy = getRuntimeState("worldY");
+        Object tw = getRuntimeState("tileWidth");
+        Object th = getRuntimeState("tileHeight");
+        if (wx instanceof Number && wy instanceof Number) {
+            float worldX = ((Number) wx).floatValue();
+            float worldY = ((Number) wy).floatValue();
+            float tileWidth = tw instanceof Number ? ((Number) tw).floatValue() : 100f;
+            float tileHeight = th instanceof Number ? ((Number) th).floatValue() : 100f;
+            float ax = worldX + tileWidth / 2f;
+            float ay = worldY + (tileHeight - 70f) / 2f;
+            return new float[]{ax, ay};
+        }
+        int row = asInt(getRuntimeState("row"), 0);
+        int col = asInt(getRuntimeState("col"), 0);
+        float tileSize = 100f;
+        return new float[]{col * tileSize + tileSize / 2f, row * tileSize + (tileSize - 70f) / 2f};
     }
 
     private com.badlogic.gdx.graphics.Texture loadTexture() {

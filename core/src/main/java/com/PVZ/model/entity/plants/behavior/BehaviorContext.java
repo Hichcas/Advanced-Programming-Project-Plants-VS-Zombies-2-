@@ -10,6 +10,10 @@ public interface BehaviorContext {
 
     List<Zombie> getZombiesInLane(int lane);
 
+    default int getRowCount() {
+        return 5;
+    }
+
     default List<Zombie> getAllZombies() {
         return List.of();
     }

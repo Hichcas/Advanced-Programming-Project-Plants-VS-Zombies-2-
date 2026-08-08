@@ -20,6 +20,7 @@ public final class ProjectileFactory {
         projectile.setPierce(plant == null ? 1 : Math.max(1, plant.getStats().getPierce()));
         projectile.setSpeed(resolveSpeed(plant));
         projectile.setFromPlantFood(plant != null && plant.isPlantFoodActive());
+        projectile.putExtra("visualKey", resolveVisualKey(plant, projectile.getType()));
 
         if (plant != null) {
             projectile.setLane(asInt(plant.getRuntimeState().get("lane"), 0));
@@ -106,6 +107,45 @@ public final class ProjectileFactory {
         }
 
         return 1.0;
+    }
+
+    private static String resolveVisualKey(PlantInstance plant, ProjectileType type) {
+        String plantKey = (plant != null && plant.getDefinition() != null)
+                ? plant.getDefinition().getPlantKey()
+                : null;
+        if (plantKey != null) {
+            switch (plantKey) {
+                case "cabbage_pult": return "CABBAGE";
+                case "kernel_pult": return "KERNEL";
+                case "melon_pult": return "MELON";
+                case "winter_melon": return "WINTER_MELON";
+                case "pepper_pult": return "PEPPER";
+                case "citron": return "CITRON";
+                case "caulipower": return "CAULIPOWER";
+                case "electric_blueberry": return "ELECTRIC_BLUEBERRY";
+                case "bowling_bulb": return "BOWLING_BULB_1";
+                case "starfruit": return "STARFRUIT";
+                case "rotobaga": return "ROTOBAGA_1";
+                case "grapeshot": return "GRAPESHOT";
+                case "ice_shroom": return "ICE_SHROOM";
+                case "garlic": return "GARLIC";
+                case "goo_peashooter": return "GOO_PEA";
+                case "mega_gatling_pea": return "MEGA_GATLING";
+                case "puff_shroom": return "PUFF";
+                case "sea_shroom": return "SEA_SHROOM";
+                default: break;
+            }
+        }
+        if (type == ProjectileType.FIRE_PEA) {
+            return "FIRE_PEA";
+        }
+        if (type == ProjectileType.ICE_PEA) {
+            return "SNOW_PEA";
+        }
+        if (type == ProjectileType.PEA) {
+            return "PEA";
+        }
+        return null;
     }
 
     private static int asInt(Object value, int defaultValue) {

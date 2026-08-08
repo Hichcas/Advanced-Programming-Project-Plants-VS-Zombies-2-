@@ -193,6 +193,51 @@ public class EntityRenderer {
         return renderPlant(batch, plantTypeName, "idle", stateTime, x, y);
     }
 
+    private final Map<String, ClipRef> projectileClips = new HashMap<>();
+    private final Map<String, Boolean> projectilePamFailed = new HashMap<>();
+
+    /**
+     * Draws a projectile using its real PAM effect (e.g. the flying pea sprite) instead of
+     * a procedural placeholder shape.
+     * @return true if drawn, false if this visual key has no PAM mapping / failed to load —
+     *         caller (Projectile.draw) should fall back to the pixmap shape in that case.
+     */
+    public boolean renderProjectile(SpriteBatch batch, String visualKey, float stateTime, float x, float y) {
+        if (visualKey == null) {
+            return false;
+        }
+        textures.update();
+        ClipRef clip = projectileClips.get(visualKey);
+        if (clip == null) {
+            if (Boolean.TRUE.equals(projectilePamFailed.get(visualKey))) {
+                return false;
+            }
+            String pamPath = com.PVZ.model.entity.plants.behavior.impl.ProjectileVisuals.getPath(visualKey);
+            if (pamPath == null) {
+                projectilePamFailed.put(visualKey, true);
+                return false;
+            }
+            try {
+                pamPlayer.loadSync(pamPath);
+                java.util.List<String> available = pamPlayer.clips(pamPath);
+                if (available != null && !available.isEmpty()) {
+                    clip = pamPlayer.getClip(pamPath, available.get(0));
+                }
+                if (clip == null) {
+                    projectilePamFailed.put(visualKey, true);
+                    return false;
+                }
+                projectileClips.put(visualKey, clip);
+            } catch (Exception e) {
+                System.err.println("EntityRenderer: Failed to load projectile PAM " + visualKey + ": " + e.getMessage());
+                projectilePamFailed.put(visualKey, true);
+                return false;
+            }
+        }
+        pamPlayer.draw(batch, clip, stateTime, x, y, true);
+        return true;
+    }
+
     public TextureBank getTextures() {
         return textures;
     }
