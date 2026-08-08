@@ -17,8 +17,8 @@ public class CursorManager {
         Pixmap pointerPixmap = new Pixmap(Gdx.files.internal("global/cursor/custom_pointer.png"));
 
         // 2. Create native hardware cursors. (0,0) is the hotspot (the exact click point at top-left)
-        normalCursor = Gdx.graphics.newCursor(normalPixmap, 0, 0);
-        pointerCursor = Gdx.graphics.newCursor(pointerPixmap, 0, 50);
+        normalCursor = Gdx.graphics.newCursor(normalPixmap, 40, 20);
+        pointerCursor = Gdx.graphics.newCursor(pointerPixmap, 50, 50);
 
         // 3. Clean up the pixmaps from RAM immediately to prevent memory leaks
         normalPixmap.dispose();
