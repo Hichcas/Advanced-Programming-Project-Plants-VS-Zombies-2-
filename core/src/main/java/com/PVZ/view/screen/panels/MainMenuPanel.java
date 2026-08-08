@@ -105,6 +105,7 @@ public class MainMenuPanel extends BasePanel {
             "music/Title Screen.mp3",
             new RegularGameEngine(new GameStatus())
         ));
+        AppStatus.setCurrentMenuType(MenuType.CHAPTER_AND_LEVEL_SELECTION);
     }
 
     private void onSettings() {

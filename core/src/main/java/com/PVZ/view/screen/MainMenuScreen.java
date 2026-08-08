@@ -1,5 +1,6 @@
 package com.PVZ.view.screen;
 
+import com.PVZ.view.screen.panels.RegisterPanel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -44,7 +45,9 @@ public class MainMenuScreen extends BaseScreen {
 
         PanelManager.getInstance().initialize(stage);
 
-        PanelManager.getInstance().performPanelTransition(new MainMenuPanel());
+//        PanelManager.getInstance().performPanelTransition(new MainMenuPanel());
+        PanelManager.getInstance().performPanelTransition(new RegisterPanel());
+
     }
 
     private void createBlurryParticleTexture() {
