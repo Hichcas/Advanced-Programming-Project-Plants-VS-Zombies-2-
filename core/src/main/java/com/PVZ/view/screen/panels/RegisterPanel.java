@@ -1,6 +1,8 @@
 package com.PVZ.view.screen.panels;
 
 import com.PVZ.controller.menuControllers.RegisterMenuController;
+import com.PVZ.model.enums.MenuType;
+import com.PVZ.model.status.AppStatus;
 import com.PVZ.view.input.DTO.RegisterInputDTO;
 import com.PVZ.view.output.OutputDTO;
 import com.PVZ.view.screen.ui.MenuButton;
@@ -20,7 +22,6 @@ public class RegisterPanel extends BasePanel {
 
     private final RegisterMenuController controller = new RegisterMenuController();
 
-    // ---------- فیلدها ----------
     private TextField usernameField;
     private TextField passwordField;
     private TextField confirmPasswordField;
@@ -35,12 +36,11 @@ public class RegisterPanel extends BasePanel {
     private ImageButton eyeButtonPassword;
     private ImageButton eyeButtonConfirm;
 
-    // ---------- ثابت‌های قابل تنظیم ----------
-    private static final float BUTTON_HEIGHT = 80f;
-    private static final float HORIZONTAL_PADDING = 40f;
-    private static final float FIELD_WIDTH = 500f;
-    private static final float FIELD_HEIGHT = 50f;
-    private static final float EYE_SIZE = 40f;
+    private final float FIELD_WIDTH;
+    private final float FIELD_HEIGHT;
+    private final float BUTTON_HEIGHT;
+    private final float MIN_BUTTON_WIDTH;
+    private final float EYE_SIZE;
 
     private Texture eyeOpenTex;
     private Texture eyeCloseTex;
@@ -49,68 +49,88 @@ public class RegisterPanel extends BasePanel {
         setFillParent(true);
         align(Align.center);
 
-        // بارگذاری تصاویر
+        float screenW = Gdx.graphics.getWidth();
+        float screenH = Gdx.graphics.getHeight();
+        FIELD_WIDTH = screenW * 0.25f;
+        FIELD_HEIGHT = screenH * 0.06f;
+        BUTTON_HEIGHT = screenH * 0.08f;
+        MIN_BUTTON_WIDTH = screenW * 0.15f;
+        EYE_SIZE = screenH * 0.04f;
+
         eyeOpenTex = new Texture(Gdx.files.internal("global/eyeopen.png"));
         eyeCloseTex = new Texture(Gdx.files.internal("global/eyeclose.png"));
 
         Texture purpleUp = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON");
         Texture purpleDown = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON_DOWN");
         Texture marker = new Texture(Gdx.files.internal("global/button_marker.png"));
-        BitmapFont btnFont = PvzSkin.get().getFont("FBUSV8C5EI_1_outline");
 
         Skin skin = PvzSkin.get();
+        BitmapFont bigFont = skin.getFont("FBUSV8C5EI_1_outline");
+
+        // ----- استایل فیلد متنی با رنگ زرد -----
         TextField.TextFieldStyle fieldStyle = new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
-        fieldStyle.font = skin.getFont("FBUSV8C5EI_2"); // فونت بزرگ‌تر
+        fieldStyle.font = bigFont;
+        // قبل از ایجاد فیلدها، در بخش استایل:
+        fieldStyle.fontColor = new Color(0.8f, 0.6f, 0.0f, 1f);
+        fieldStyle.messageFont = fieldStyle.font;   // یا مستقیماً bigFont// زرد تیره (کهربایی)
+
+        // ----- استایل برچسب (سفید، هم‌اندازه) -----
+        Label.LabelStyle labelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        labelStyle.font = bigFont;
+        labelStyle.fontColor = Color.WHITE;                   // برچسب‌ها سفید
+
+        // ----- استایل کشویی با متن زرد -----
+        SelectBox.SelectBoxStyle sbStyle = new SelectBox.SelectBoxStyle(skin.get(SelectBox.SelectBoxStyle.class));
+        sbStyle.font = bigFont;
+        sbStyle.fontColor = Color.YELLOW;                     // متن انتخاب‌شده زرد
+        List.ListStyle listStyle = new List.ListStyle(skin.get(List.ListStyle.class));
+        listStyle.font = bigFont;
+        listStyle.fontColorSelected = Color.YELLOW;
+        listStyle.fontColorUnselected = Color.YELLOW;         // گزینه‌های لیست زرد
+        sbStyle.listStyle = listStyle;
 
         // ---------- جدول اصلی ----------
         Table mainTable = new Table();
         mainTable.defaults().pad(8f);
 
-        // عنوان
+        BitmapFont btnFont = bigFont;
         MenuButton title = createButton("REGISTER", () -> {
         }, purpleUp, purpleDown, btnFont, marker);
         title.setDisabled(true);
-        mainTable.add(title).colspan(2).padBottom(20).row();
+        mainTable.add(title).colspan(2).padBottom(screenH * 0.02f).row();
 
-        // نام کاربری
         usernameField = createField("Username", fieldStyle);
-        mainTable.add(label("Username:")).right();
+        mainTable.add(createLabel("Username:", labelStyle)).right();
         mainTable.add(usernameField).width(FIELD_WIDTH).height(FIELD_HEIGHT).left().row();
 
-        // رمز عبور + چشم
         passwordField = createField("Password", fieldStyle);
         passwordField.setPasswordMode(true);
         passwordField.setPasswordCharacter('*');
         eyeButtonPassword = createEyeButton(passwordField);
-        mainTable.add(label("Password:")).right();
+        mainTable.add(createLabel("Password:", labelStyle)).right();
         mainTable.add(rowWithEye(passwordField, eyeButtonPassword)).left().row();
 
-        // تأیید رمز + چشم
         confirmPasswordField = createField("Confirm Password", fieldStyle);
         confirmPasswordField.setPasswordMode(true);
         confirmPasswordField.setPasswordCharacter('*');
         eyeButtonConfirm = createEyeButton(confirmPasswordField);
-        mainTable.add(label("Confirm:")).right();
+        mainTable.add(createLabel("Confirm:", labelStyle)).right();
         mainTable.add(rowWithEye(confirmPasswordField, eyeButtonConfirm)).left().row();
 
-        // نام مستعار
         nicknameField = createField("Nickname", fieldStyle);
-        mainTable.add(label("Nickname:")).right();
+        mainTable.add(createLabel("Nickname:", labelStyle)).right();
         mainTable.add(nicknameField).width(FIELD_WIDTH).height(FIELD_HEIGHT).left().row();
 
-        // ایمیل
         emailField = createField("Email", fieldStyle);
-        mainTable.add(label("Email:")).right();
+        mainTable.add(createLabel("Email:", labelStyle)).right();
         mainTable.add(emailField).width(FIELD_WIDTH).height(FIELD_HEIGHT).left().row();
 
-        // جنسیت
-        genderBox = new SelectBox<>(skin);
+        genderBox = new SelectBox<>(sbStyle);
         genderBox.setItems("Male", "Female");
-        mainTable.add(label("Gender:")).right();
+        mainTable.add(createLabel("Gender:", labelStyle)).right();
         mainTable.add(genderBox).left().row();
 
-        // سؤال امنیتی
-        questionBox = new SelectBox<>(skin);
+        questionBox = new SelectBox<>(sbStyle);
         questionBox.setItems(
             "What is your favorite color?",
             "What is your first pet's name?",
@@ -118,46 +138,44 @@ public class RegisterPanel extends BasePanel {
             "What is your mother's maiden name?",
             "What is your favorite food?"
         );
-        mainTable.add(label("Security Question:")).right();
+        mainTable.add(createLabel("Security Question:", labelStyle)).right();
         mainTable.add(questionBox).width(FIELD_WIDTH).left().row();
 
-        // پاسخ
         answerField = createField("Answer", fieldStyle);
-        mainTable.add(label("Answer:")).right();
+        mainTable.add(createLabel("Answer:", labelStyle)).right();
         mainTable.add(answerField).width(FIELD_WIDTH).height(FIELD_HEIGHT).left().row();
 
-        // تأیید پاسخ
         answerConfirmField = createField("Confirm Answer", fieldStyle);
-        mainTable.add(label("Confirm:")).right();
+        mainTable.add(createLabel("Confirm:", labelStyle)).right();
         mainTable.add(answerConfirmField).width(FIELD_WIDTH).height(FIELD_HEIGHT).left().row();
 
-        // خطا
-        errorLabel = new Label("", skin);
+        errorLabel = new Label("", labelStyle);
         errorLabel.setColor(Color.RED);
         errorLabel.setAlignment(Align.center);
         mainTable.add(errorLabel).colspan(2).width(FIELD_WIDTH).padTop(10).row();
 
-        // دکمه‌ها
         Table btnRow = new Table();
-        btnRow.add(createButton("Register", this::onRegister, purpleUp, purpleDown, btnFont, marker)).padRight(20);
-        btnRow.add(createButton("Login", this::onEnterLogin, purpleUp, purpleDown, btnFont, marker)).padRight(20);
-        btnRow.add(createButton("Quit", this::onQuit, purpleUp, purpleDown, btnFont, marker));
-        mainTable.add(btnRow).colspan(2).padTop(20).row();
+        MenuButton registerBtn = createButton("Register", this::onRegister, purpleUp, purpleDown, btnFont, marker);
+        MenuButton loginBtn = createButton("Login", this::onEnterLogin, purpleUp, purpleDown, btnFont, marker);
+        MenuButton quitBtn = createButton("Quit", this::onQuit, purpleUp, purpleDown, btnFont, marker);
+        btnRow.add(registerBtn).padRight(40f);
+        btnRow.add(loginBtn).padRight(40f);
+        btnRow.add(quitBtn);
+        mainTable.add(btnRow).colspan(2).padTop(screenH * 0.02f).row();
 
         add(mainTable);
     }
 
-    // ---------------------- متدهای کمکی ----------------------
-    private Label label(String text) {
-        Skin skin = PvzSkin.get();
-        Label l = new Label(text, skin);
-        l.setColor(Color.WHITE);
-        return l;
+    private Label createLabel(String text, Label.LabelStyle style) {
+        return new Label(text, style);   // رنگ و فونت از استایل می‌آید
     }
 
-    private MenuButton createButton(String text, Runnable action, Texture up, Texture down, BitmapFont font, Texture marker) {
+    private MenuButton createButton(String text, Runnable action, Texture up, Texture down,
+                                    BitmapFont font, Texture marker) {
         MenuButton btn = new MenuButton(up, text, font, down, null, marker, action);
-        btn.setSize(btn.getTextWidth() + HORIZONTAL_PADDING * 2, BUTTON_HEIGHT);
+        float naturalWidth = btn.getTextWidth() + 40f;
+        float finalWidth = Math.max(naturalWidth, MIN_BUTTON_WIDTH);
+        btn.setSize(finalWidth, BUTTON_HEIGHT);
         return btn;
     }
 
@@ -192,11 +210,9 @@ public class RegisterPanel extends BasePanel {
         return button;
     }
 
-    // ---------------------- رویدادها ----------------------
     private void onRegister() {
         errorLabel.setText("");
 
-        // ساخت DTO با تمام اطلاعات، از جمله سؤال امنیتی
         RegisterInputDTO dto = new RegisterInputDTO(
             com.PVZ.model.enums.commands.RegisterCommand.REGISTER,
             usernameField.getText(),
@@ -205,24 +221,23 @@ public class RegisterPanel extends BasePanel {
             nicknameField.getText(),
             emailField.getText(),
             genderBox.getSelected().toLowerCase(),
-            questionBox.getSelectedIndex() + 1,   // شماره سوال (۱ تا ۵)
+            questionBox.getSelectedIndex() + 1,
             answerField.getText(),
             answerConfirmField.getText()
         );
 
         OutputDTO result = controller.handle(dto);
         if (result != null) {
-            if (!result.isSuccess()) {
+            if (result.isSuccess()) {
+                // کاربر مستقیماً وارد بازی می‌شود
+            } else {
                 errorLabel.setText(result.getMessage());
-
             }
         }
     }
 
     private void onEnterLogin() {
-        // رفتن به صفحه ورود (در صورت وجود LoginPanel)
-        // AppStatus.currentMenuType = MenuType.LOGIN;
-        // PanelManager.getInstance().performPanelTransition(new LoginPanel());
+        AppStatus.setCurrentMenuType(MenuType.LOGIN);
     }
 
     private void onQuit() {
