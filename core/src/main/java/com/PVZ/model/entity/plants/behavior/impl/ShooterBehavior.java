@@ -3,16 +3,11 @@ package com.PVZ.model.entity.plants.behavior.impl;
 import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
-import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.enums.PlantCategory;
 import com.PVZ.model.enums.PlantTag;
 
-import java.util.List;
-
 public class ShooterBehavior implements PlantBehavior {
     private static final double BURST_GAP_SECONDS = 0.12;
-    // How long the "shooting" PAM clip stays selected after a shot is fired.
-    // Tune this to roughly match the real length of each plant's shooting animation.
     private static final double SHOOT_ANIM_SECONDS = 0.5;
 
     @Override
@@ -34,8 +29,7 @@ public class ShooterBehavior implements PlantBehavior {
         attackTimer = 0.0;
 
         int lane = asInt(plant.getRuntimeState().getOrDefault("lane", 0), 0);
-        List<Zombie> zombies = context.getZombiesInLane(lane);
-        if (zombies.isEmpty()) {
+        if (!hasTargets(plant, context, lane)) {
             plant.putRuntimeState("attackTimer", attackTimer);
             return;
         }
@@ -45,6 +39,21 @@ public class ShooterBehavior implements PlantBehavior {
         startBurst(plant, damage, projectileCount);
 
         plant.putRuntimeState("attackTimer", attackTimer);
+    }
+
+    private boolean hasTargets(PlantInstance plant, BehaviorContext context, int lane) {
+        String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+        if ("threepeater".equals(key)) {
+            int rows = context.getRowCount();
+            for (int dr = -1; dr <= 1; dr++) {
+                int r = lane + dr;
+                if (r >= 0 && r < rows && !context.getZombiesInLane(r).isEmpty()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return !context.getZombiesInLane(lane).isEmpty();
     }
 
 
@@ -101,19 +110,43 @@ public class ShooterBehavior implements PlantBehavior {
             return;
         }
         int damage = asInt(plant.getRuntimeState().getOrDefault("burstDamage", 0), 0);
-        spawnOne(plant, context, damage);
+        fireVolley(plant, context, damage);
         plant.putRuntimeState("burstRemaining", remaining - 1);
         plant.putRuntimeState("burstTimer", 0.0);
     }
 
+    private void fireVolley(PlantInstance plant, BehaviorContext context, int damage) {
+        String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+        if ("threepeater".equals(key)) {
+            int lane = asInt(plant.getRuntimeState().getOrDefault("lane", 0), 0);
+            int rows = context.getRowCount();
+            for (int dr = -1; dr <= 1; dr++) {
+                int r = lane + dr;
+                if (r >= 0 && r < rows) {
+                    spawnOne(plant, context, damage, r, false);
+                }
+            }
+        } else if ("split_pea".equals(key)) {
+            spawnOne(plant, context, damage, null, false);
+            spawnOne(plant, context, damage, null, true);
+            spawnOne(plant, context, damage, null, true);
+        } else {
+            spawnOne(plant, context, damage, null, false);
+        }
+    }
 
-    private void spawnOne(PlantInstance plant, BehaviorContext context, int damage) {
+
+    private void spawnOne(PlantInstance plant, BehaviorContext context, int damage,
+                           Integer rowOverride, boolean reverse) {
         Projectile projectile = ProjectileFactory.createProjectile(plant, damage);
+        if (rowOverride != null) {
+            projectile.setRow(rowOverride);
+            projectile.setLane(rowOverride);
+        }
+        if (reverse) {
+            projectile.putExtra("reverseDirection", Boolean.TRUE);
+        }
 
-        // Mark that a "shooting" animation should play for a short window.
-        // Plant.draw() reads this to pick the "shooting" PAM clip instead of "idle".
-        // Duration comes from the real PAM clip length when known (see PamAnimationCatalog),
-        // falling back to a generic guess otherwise.
         com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", SHOOT_ANIM_SECONDS);
 
         if (plant.getStats().getBooleanExtra("fireAttack", false)) {
