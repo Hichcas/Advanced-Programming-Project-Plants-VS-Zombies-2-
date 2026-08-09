@@ -23,6 +23,8 @@ public class Projectile {
     private double speed;
     private double verticalSpeed;
     private boolean fromPlantFood;
+    private boolean areaDamage;
+    private float areaRadiusPx = 90f;
     private boolean destroyed = false;
     private boolean worldPositioned = false;
     private Rectangle hitbox = new Rectangle();
@@ -171,6 +173,23 @@ public class Projectile {
     public void setFromPlantFood(boolean fromPlantFood) {
         this.fromPlantFood = fromPlantFood;
     }
+
+    public boolean isAreaDamage() {
+        return areaDamage;
+    }
+
+    public void setAreaDamage(boolean areaDamage) {
+        this.areaDamage = areaDamage;
+    }
+
+    public float getAreaRadiusPx() {
+        return areaRadiusPx;
+    }
+
+    public void setAreaRadiusPx(float areaRadiusPx) {
+        this.areaRadiusPx = areaRadiusPx;
+    }
+
 
     public Map<String, Object> getExtras() {
         return extras;

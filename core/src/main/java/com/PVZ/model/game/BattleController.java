@@ -343,6 +343,32 @@ public class BattleController implements BehaviorContext {
     }
 
     private void applyProjectileEffect(Projectile p, Zombie z) {
+        applySingleHit(p, z);
+        if (p.isAreaDamage()) {
+            applyAreaSplash(p, z);
+        }
+    }
+
+    /** Splash damage to nearby zombies (own lane + one lane above/below) around the impact point. */
+    private void applyAreaSplash(Projectile p, Zombie primaryTarget) {
+        int centerRow = (int) primaryTarget.getRow();
+        double cx = primaryTarget.getX();
+        for (Zombie z : zombies) {
+            if (z == null || z.isDead() || z == primaryTarget) {
+                continue;
+            }
+            int dr = Math.abs((int) z.getRow() - centerRow);
+            if (dr > 1) {
+                continue;
+            }
+            if (Math.abs(z.getX() - cx) > p.getAreaRadiusPx()) {
+                continue;
+            }
+            applySingleHit(p, z);
+        }
+    }
+
+    private void applySingleHit(Projectile p, Zombie z) {
         ProjectileType type = p.getType();
         int damage = (int) p.getDamage();
 
@@ -554,6 +580,98 @@ public class BattleController implements BehaviorContext {
     public void damageSingleTarget(Object target, int damage) {
         if (target instanceof Zombie z && z != null && !z.isDead()) {
             z.takeDamage(damage);
+        }
+    }
+
+    @Override
+    public void freezeZombiesInLane(int lane, double seconds) {
+        for (Zombie z : getZombiesInLane(lane)) {
+            if (z != null && !z.isDead()) {
+                z.freeze((float) seconds);
+            }
+        }
+    }
+
+    /**
+     * Freezes only the single nearest zombie in a lane — used by contact traps like
+     * Iceberg Lettuce, which per its real ability only freezes "the first zombie that
+     * steps on it", not the whole lane.
+     */
+    public void freezeClosestZombieInLane(int lane, double seconds) {
+        Zombie nearest = null;
+        double bestX = Double.MAX_VALUE;
+        for (Zombie z : getZombiesInLane(lane)) {
+            if (z == null || z.isDead()) {
+                continue;
+            }
+            double x = z.getX();
+            if (x < bestX) {
+                bestX = x;
+                nearest = z;
+            }
+        }
+        if (nearest != null) {
+            nearest.freeze((float) seconds);
+        }
+    }
+
+    @Override
+    public void freezeAllZombies(double seconds) {
+        for (Zombie z : zombies) {
+            if (z != null && !z.isDead()) {
+                z.freeze((float) seconds);
+            }
+        }
+    }
+
+    @Override
+    public void killClosestZombieInLane(int lane) {
+        Zombie nearest = null;
+        double bestX = Double.MAX_VALUE;
+        for (Zombie z : getZombiesInLane(lane)) {
+            if (z == null || z.isDead()) {
+                continue;
+            }
+            double x = z.getX();
+            if (x < bestX) {
+                bestX = x;
+                nearest = z;
+            }
+        }
+        if (nearest != null) {
+            nearest.takeDamage(Integer.MAX_VALUE / 2);
+        }
+    }
+
+    @Override
+    public void meltIceInLane(int lane) {
+        for (Zombie z : getZombiesInLane(lane)) {
+            if (z != null && z.isFrozen()) {
+                z.thaw();
+            }
+        }
+    }
+
+    @Override
+    public void hypnotizeZombiesInLane(int lane, double seconds) {
+        for (Zombie z : getZombiesInLane(lane)) {
+            if (z != null && !z.isDead()) {
+                z.hypnotize((float) seconds);
+            }
+        }
+    }
+
+    @Override
+    public void killRandomZombies(int count) {
+        java.util.List<Zombie> alive = new java.util.ArrayList<>();
+        for (Zombie z : zombies) {
+            if (z != null && !z.isDead()) {
+                alive.add(z);
+            }
+        }
+        java.util.Collections.shuffle(alive);
+        for (int i = 0; i < Math.min(count, alive.size()); i++) {
+            alive.get(i).takeDamage(Integer.MAX_VALUE / 2);
         }
     }
 

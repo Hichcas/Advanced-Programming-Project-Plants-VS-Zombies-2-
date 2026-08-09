@@ -33,6 +33,12 @@ public class MainMenuPanel extends BasePanel {
 
     private static final float BUTTONS_EXTRA_DOWN = 450f;
 
+    // Stage روی ویوپورت مجازی ثابت (VIRTUAL_WIDTH x VIRTUAL_HEIGHT در BaseScreen) کار می‌کند،
+    // نه اندازه‌ی واقعی پنجره. برای سنتر شدن دقیق روی هر رزولوشنی باید از همین اعداد استفاده کنیم،
+    // نه Gdx.graphics.getWidth/Height که پیکسل واقعی صفحه است و با فضای مختصات Stage یکی نیست.
+    private static final float VIRTUAL_WIDTH = com.PVZ.view.screen.BaseScreen.VIRTUAL_WIDTH;
+    private static final float VIRTUAL_HEIGHT = com.PVZ.view.screen.BaseScreen.VIRTUAL_HEIGHT;
+
     public MainMenuPanel() {
         setFillParent(true);
 
@@ -40,13 +46,13 @@ public class MainMenuPanel extends BasePanel {
         Texture logoTexture = safeTextureFromRegion("IMAGE_UI_MAINMENU_PVZ2_LOGO_HORIZONTAL");
         Texture contentTexture = safeTextureFromRegion("IMAGE_UI_MAINMENU_MAINMENU_CONTENT_OFFLINE");
 
-        float logoX = (Gdx.graphics.getWidth() - logoTexture.getWidth()) / 2f;
-        float logoY = Gdx.graphics.getHeight() - logoTexture.getHeight() - 50f - 300f;
+        float logoX = (VIRTUAL_WIDTH - logoTexture.getWidth()) / 2f;
+        float logoY = VIRTUAL_HEIGHT - logoTexture.getHeight() - 50f - 300f;
         addArt(logoTexture, logoX, logoY, logoTexture.getWidth(), logoTexture.getHeight());
 
         float contentW = contentTexture.getWidth() * CONTENT_SCALE_X;
         float contentH = contentTexture.getHeight() * CONTENT_SCALE_Y;
-        float contentX = (Gdx.graphics.getWidth() - contentW) / 2f;
+        float contentX = (VIRTUAL_WIDTH - contentW) / 2f;
         float contentY = CONTENT_Y;
         addArt(contentTexture, contentX, contentY, contentW, contentH);
 
@@ -57,7 +63,7 @@ public class MainMenuPanel extends BasePanel {
         BitmapFont buttonFont = PvzSkin.get().getFont("FBUSV8C5EI_1_outline");
 
         float startY = contentY + contentH - 150f - BUTTONS_EXTRA_DOWN;
-        float centerX = Gdx.graphics.getWidth() / 2f;
+        float centerX = VIRTUAL_WIDTH / 2f;
 
         addButton("START GAME", this::onStartGame, greenUpTex, greenDownTex, buttonFont, markerTex, centerX, startY);
         addButton("QUIT GAME", this::onQuit, greenUpTex, greenDownTex, buttonFont, markerTex, centerX, startY - 90);
@@ -72,7 +78,7 @@ public class MainMenuPanel extends BasePanel {
             this::onSettings
         );
         settingsBtn.setSize(SETTINGS_SIZE, SETTINGS_SIZE);
-        float settingsX = Gdx.graphics.getWidth() - SETTINGS_SIZE - SETTINGS_RIGHT_MARGIN;
+        float settingsX = VIRTUAL_WIDTH - SETTINGS_SIZE - SETTINGS_RIGHT_MARGIN;
         float settingsY = SETTINGS_BOTTOM_MARGIN;
         settingsBtn.setPosition(settingsX, settingsY);
         addActor(settingsBtn);
