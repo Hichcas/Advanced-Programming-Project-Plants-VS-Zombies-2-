@@ -1,18 +1,33 @@
 package com.PVZ.model.entity;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.PVZ.model.enums.ChapterEnum;
+import com.PVZ.model.status.AppStatus;
+import com.PVZ.view.renderer.EntityRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 public class LawnMower {
     private static final float SIZE = 140f;
     private static final double SPEED = 500;
-    private static final String TEXTURE_PATH = "LawnMower/LawnMower.png";
-    private static Texture sharedTexture;
-    private static boolean triedLoad = false;
+
+    /**
+     * هر فصل ماجراجویی توی بازی اصلی چمن‌زن مخصوص به خودش را دارد (طبق pam_list.txt کاربر:
+     * MOWER_EGYPT برای مصر باستان، MOWER_ICEAGE برای غار یخ‌زده، MOWER_BEACH برای ساحل موج
+     * بزرگ، MOWER_DARK برای قرون وسطا). این نگاشت مسیر PAM واقعی هر فصل را می‌دهد؛ اگر فصلی
+     * این‌جا نبود (مثلاً مینی‌گیم‌ها که فصل مشخصی ندارند)، به چمن‌زن پیش‌فرض مصر برمی‌گردیم.
+     */
+    private static final Map<ChapterEnum, String> CHAPTER_MOWER_PAM = new EnumMap<>(ChapterEnum.class);
+    static {
+        CHAPTER_MOWER_PAM.put(ChapterEnum.ANCIENT_EGYPT, "768/INITIAL/MOWERS/MOWER_EGYPT/MOWER_EGYPT.PAM");
+        CHAPTER_MOWER_PAM.put(ChapterEnum.FROSTBITE_CAVES, "768/FULL/MOWERS/MOWER_ICEAGE/MOWER_ICEAGE.PAM");
+        CHAPTER_MOWER_PAM.put(ChapterEnum.BIG_WAVE_BEACH, "768/FULL/MOWERS/MOWER_BEACH/MOWER_BEACH.PAM");
+        CHAPTER_MOWER_PAM.put(ChapterEnum.DARK_AGES, "768/FULL/MOWERS/MOWER_DARK/MOWER_DARK.PAM");
+    }
+    private static final String DEFAULT_MOWER_PAM = "768/INITIAL/MOWERS/MOWER_EGYPT/MOWER_EGYPT.PAM";
+
     private double x;
     private double y;
     private double triggerX;
@@ -20,6 +35,7 @@ public class LawnMower {
     private int row;
     private boolean triggered = false;
     private boolean used = false;
+    private float animTime = 0f;
     private final Rectangle hitbox = new Rectangle();
     private final Rectangle parkedZone = new Rectangle();
 
@@ -62,6 +78,7 @@ public class LawnMower {
     }
 
     public void advance(float delta) {
+        animTime += delta;
         if (!triggered || used) {
             return;
         }
@@ -76,59 +93,36 @@ public class LawnMower {
         if (used) {
             return;
         }
-        batch.draw(getOrLoadTexture(), (float) x, (float) y, SIZE, SIZE);
-    }
-
-
-    private static Texture getOrLoadTexture() {
-        ensureLoaded();
-        return sharedTexture;
-    }
-
-    private static void ensureLoaded() {
-        if (sharedTexture != null) {
-            return;
-        }
-        if (!triedLoad) {
-            triedLoad = true;
-            try {
-                if (Gdx.files.internal(TEXTURE_PATH).exists()) {
-                    sharedTexture = new Texture(Gdx.files.internal(TEXTURE_PATH));
-                } else {
-                    System.out.println("[LawnMower] no icon found at assets/" + TEXTURE_PATH
-                        + " -> falling back to placeholder block");
-                }
-            } catch (RuntimeException ex) {
-                System.out.println("[LawnMower] failed loading texture -> " + ex.getMessage());
-            }
-        }
-        if (sharedTexture == null) {
-            sharedTexture = buildPlaceholderTexture(new Color(0.85f, 0.15f, 0.15f, 1f));
+        String pamPath = CHAPTER_MOWER_PAM.getOrDefault(AppStatus.getCurrentChapterEnum(), DEFAULT_MOWER_PAM);
+        // "idle" وقتی پارک شده، "attack" وقتی فعال شده و در حال حرکت روی زامبی‌هاست — همان دو
+        // کلیپی که توی pam_animations.json برای همه‌ی MOWER_* تعریف شده.
+        String clip = triggered ? "attack" : "idle";
+        boolean drew = EntityRenderer.getInstance()
+            .renderPam(batch, pamPath, clip, animTime, (float) x + SIZE / 2f, (float) y + SIZE / 2f);
+        if (!drew) {
+            // اگر asset لود نشد (مثلاً پوشه‌ی asset ها کنار پروژه نیست)، حداقل یه بلوک قرمز
+            // جایگزین نشون داده بشه تا هیچ سطری بدون چمن‌زن قابل‌مشاهده نمونه.
+            batch.setColor(0.85f, 0.15f, 0.15f, 1f);
+            batch.draw(getFallbackTexture(), (float) x, (float) y, SIZE, SIZE);
+            batch.setColor(1f, 1f, 1f, 1f);
         }
     }
 
-    private static Texture buildPlaceholderTexture(Color bodyColor) {
-        int s = (int) SIZE;
-        Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
-        pixmap.setColor(bodyColor);
-        pixmap.fillRectangle(0, s / 3, s, s * 2 / 3);
-        pixmap.setColor(Color.DARK_GRAY);
-        pixmap.fillCircle(s / 4, s - 4, 6);
-        pixmap.fillCircle(s * 3 / 4, s - 4, 6);
-        Texture tex = new Texture(pixmap);
-        pixmap.dispose();
-        return tex;
+    private static com.badlogic.gdx.graphics.Texture fallbackTexture;
+
+    private static com.badlogic.gdx.graphics.Texture getFallbackTexture() {
+        if (fallbackTexture == null) {
+            com.badlogic.gdx.graphics.Pixmap pixmap =
+                new com.badlogic.gdx.graphics.Pixmap(4, 4, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+            pixmap.setColor(1f, 1f, 1f, 1f);
+            pixmap.fill();
+            fallbackTexture = new com.badlogic.gdx.graphics.Texture(pixmap);
+            pixmap.dispose();
+        }
+        return fallbackTexture;
     }
 
     public Rectangle getHitbox() {
         return hitbox;
-    }
-
-    public static void disposeSharedTextures() {
-        if (sharedTexture != null) {
-            sharedTexture.dispose();
-            sharedTexture = null;
-        }
-        triedLoad = false;
     }
 }
