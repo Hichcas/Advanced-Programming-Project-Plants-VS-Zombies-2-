@@ -10,15 +10,17 @@ import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.ChapterAndLevelSelectionInputDTO;
 import com.PVZ.view.output.OutputDTO;
 import com.PVZ.view.screen.ui.MenuButton;
-import com.PVZ.view.screen.BaseScreen;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import pvz.skin.PvzSkin;
@@ -101,7 +103,7 @@ public class ChapterSelectPanel extends BasePanel {
                 bigHeight = Math.max(350f, bigTex.getHeight());
             }
 
-            float centerY = BaseScreen.VIRTUAL_HEIGHT / 2f;
+            float centerY = Gdx.graphics.getHeight() / 2f;
             float bossY = centerY - bigHeight / 2f;
 
             // بلوک بزرگ (غیرتعاملی)
@@ -123,7 +125,12 @@ public class ChapterSelectPanel extends BasePanel {
                 MenuButton btn = new MenuButton(
                     tex, null, null,
                     tex, tex, null,
-                    () -> enterStage(chapterEnum, stageNum)
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            enterStage(chapterEnum, stageNum);
+                        }
+                    }
                 );
                 btn.setSize(islandWidth, islandHeight);
                 btn.setPosition(nextX, islandY);
@@ -143,8 +150,8 @@ public class ChapterSelectPanel extends BasePanel {
             currentX = nextX + gapBetweenChapters - gapBetweenItems;
         }
 
-        float contentWidth = Math.max(currentX - gapBetweenChapters + gapBetweenItems, BaseScreen.VIRTUAL_WIDTH);
-        contentGroup.setSize(contentWidth, BaseScreen.VIRTUAL_HEIGHT);
+        float contentWidth = Math.max(currentX - gapBetweenChapters + gapBetweenItems, Gdx.graphics.getWidth());
+        contentGroup.setSize(contentWidth, Gdx.graphics.getHeight());
 
         ScrollPane scrollPane = new ScrollPane(contentGroup, skin);
         scrollPane.setFillParent(true);
@@ -153,9 +160,90 @@ public class ChapterSelectPanel extends BasePanel {
         scrollPane.setOverscroll(false, false);
         addActor(scrollPane);
 
+        // ================== دکمه‌های بالای صفحه (حالت MenuButton) ==================
+        float topY = Gdx.graphics.getHeight() - 120f - 20f;  // بالا با کمی فاصله
+        float startX = 50f;
+        float btnSize = 120f;                                // همان اندازهٔ دکمهٔ تنظیمات
+        float spacing = btnSize + 20f;                       // فاصلهٔ بین دکمه‌ها
+
+        // استایل‌های دکمه‌های تصویری از PvzSkin
+        ImageButton.ImageButtonStyle almanacStyle = skin.get("almanac", ImageButton.ImageButtonStyle.class);
+        ImageButton.ImageButtonStyle minigamesStyle = skin.get("hud_minigames", ImageButton.ImageButtonStyle.class);
+        ImageButton.ImageButtonStyle zgStyle = skin.get("hud_zg", ImageButton.ImageButtonStyle.class);
+        ImageButton.ImageButtonStyle questsStyle = skin.get("hud_quests", ImageButton.ImageButtonStyle.class);
+
+        // 1. Almanac
+        MenuButton almanacBtn = new MenuButton(
+            almanacStyle.imageUp, null, null,
+            almanacStyle.imageDown, null, null,
+            new Runnable() {
+                @Override
+                public void run() {
+                    // TODO: باز کردن الماناک
+                }
+            }
+        );
+        almanacBtn.setSize(btnSize, btnSize);
+        almanacBtn.setPosition(startX, topY);
+        addActor(almanacBtn);
+
+        // 2. Minigames
+        MenuButton minigamesBtn = new MenuButton(
+            minigamesStyle.imageUp, null, null,
+            minigamesStyle.imageDown, null, null,
+            new Runnable() {
+                @Override
+                public void run() {
+                    // TODO: باز کردن مینی‌گیم‌ها
+                    System.out.println("minigame");
+                }
+            }
+        );
+        minigamesBtn.setSize(btnSize, btnSize);
+        minigamesBtn.setPosition(startX + spacing, topY);
+        addActor(minigamesBtn);
+
+        // 3. ZG (I, Zombie)
+        MenuButton zgBtn = new MenuButton(
+            zgStyle.imageUp, null, null,
+            zgStyle.imageDown, null, null,
+            new Runnable() {
+                @Override
+                public void run() {
+                    // TODO: باز کردن I, Zombie
+                    System.out.println("Izombie");
+                }
+            }
+        );
+        zgBtn.setSize(btnSize, btnSize);
+        zgBtn.setPosition(startX + spacing * 2, topY);
+        addActor(zgBtn);
+
+        // 4. Quests
+        MenuButton questsBtn = new MenuButton(
+            questsStyle.imageUp, null, null,
+            questsStyle.imageDown, null, null,
+            new Runnable() {
+                @Override
+                public void run() {
+                    // TODO: باز کردن کوئست‌ها
+                    AppStatus.setCurrentMenuType(MenuType.QUEST);
+                }
+            }
+        );
+        questsBtn.setSize(btnSize, btnSize);
+        questsBtn.setPosition(startX + spacing * 3, topY);
+        addActor(questsBtn);
+
         // دکمه بازگشت
         MenuButton backBtn = new MenuButton(purpleUp, "Back", bigFont, purpleDown, null, null,
-            () -> AppStatus.setCurrentMenuType(MenuType.MAIN));
+            new Runnable() {
+                @Override
+                public void run() {
+                    AppStatus.setCurrentMenuType(MenuType.MAIN);
+                }
+            }
+        );
         backBtn.setSize(200, 80);
         backBtn.setPosition(50, 50);
         addActor(backBtn);
@@ -163,8 +251,8 @@ public class ChapterSelectPanel extends BasePanel {
         // برچسب خطا
         errorLabel = new Label("", new Label.LabelStyle(bigFont, Color.RED));
         errorLabel.setAlignment(Align.center);
-        errorLabel.setSize(BaseScreen.VIRTUAL_WIDTH * 0.6f, 50);
-        errorLabel.setPosition(BaseScreen.VIRTUAL_WIDTH * 0.2f, 20);
+        errorLabel.setSize(Gdx.graphics.getWidth() * 0.6f, 50);
+        errorLabel.setPosition(Gdx.graphics.getWidth() * 0.2f, 20);
         addActor(errorLabel);
     }
 
