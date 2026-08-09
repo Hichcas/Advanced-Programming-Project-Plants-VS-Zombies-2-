@@ -5,6 +5,7 @@ import com.PVZ.model.game.RegularGameEngine;
 import com.PVZ.model.user.User;
 import com.PVZ.model.user.UserRegistry;
 import com.PVZ.view.screen.GameScreen;
+import com.PVZ.view.screen.manager.PanelManager;
 import com.PVZ.view.screen.manager.ScreenManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -175,12 +176,18 @@ public class MainMenuPanel extends BasePanel {
 
     // ---------- رویدادها ----------
     private void onStartGame() {
-        ScreenManager.getInstance().performTransition(() -> new GameScreen(
-            "maps/Frontyard.jpg",
-            "music/Title Screen.mp3",
-            new RegularGameEngine(new GameStatus())
-        ));
+//        ScreenManager.getInstance().performTransition(() -> new GameScreen(
+//            "maps/Frontyard.jpg",
+//            "music/Title Screen.mp3",
+//            new RegularGameEngine(new GameStatus())
+//        ));
+//        AppStatus.setCurrentMenuType(MenuType.CHAPTER_AND_LEVEL_SELECTION);
+
+
+//        PanelManager.getInstance().performPanelTransition(new PlantSelectionPanel("Egypt", 1));
+
         AppStatus.setCurrentMenuType(MenuType.CHAPTER_AND_LEVEL_SELECTION);
+
     }
 
     private void onSettings() {

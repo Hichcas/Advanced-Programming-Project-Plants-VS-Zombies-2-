@@ -41,6 +41,10 @@ public class MenuPanelSwitcher {
                 break;
             case PROFILE:
                 PanelManager.getInstance().performPanelTransition(new ProfilePanel());
+                break;
+            case CHAPTER_AND_LEVEL_SELECTION:
+                PanelManager.getInstance().performPanelTransition(new ChapterSelectPanel());
+                break;
             default:
                 System.err.println("No UI panel mapped for menu: " + menuType);
                 break;
