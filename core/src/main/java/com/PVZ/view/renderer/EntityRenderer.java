@@ -248,29 +248,45 @@ public class EntityRenderer {
      * which pick a specific clip by canonical state).
      */
     public boolean renderPam(SpriteBatch batch, String pamPath, float stateTime, float x, float y) {
+        return renderPam(batch, pamPath, null, stateTime, x, y);
+    }
+
+    /**
+     * مثل renderPam(batch, path, stateTime, x, y) ولی اجازه می‌دهد کلیپ مشخصی (مثلاً "attack"
+     * برای چمن‌زنِ فعال‌شده در برابر "idle" برای چمن‌زن پارک‌شده) به‌جای اولین کلیپ موجود
+     * انتخاب شود. اگر clipName پیدا نشد یا null بود، مثل قبل به اولین کلیپ موجود برمی‌گردد.
+     */
+    public boolean renderPam(SpriteBatch batch, String pamPath, String clipName, float stateTime, float x, float y) {
         if (pamPath == null) {
             return false;
         }
         textures.update();
-        ClipRef clip = genericPamClips.get(pamPath);
+        String cacheKey = clipName == null ? pamPath : pamPath + "#" + clipName;
+        ClipRef clip = genericPamClips.get(cacheKey);
         if (clip == null) {
-            if (Boolean.TRUE.equals(genericPamFailed.get(pamPath))) {
+            if (Boolean.TRUE.equals(genericPamFailed.get(cacheKey))) {
                 return false;
             }
             try {
                 pamPlayer.loadSync(pamPath);
                 java.util.List<String> available = pamPlayer.clips(pamPath);
-                if (available != null && !available.isEmpty()) {
-                    clip = pamPlayer.getClip(pamPath, available.get(0));
+                String chosen = null;
+                if (clipName != null && available != null && available.contains(clipName)) {
+                    chosen = clipName;
+                } else if (available != null && !available.isEmpty()) {
+                    chosen = available.get(0);
+                }
+                if (chosen != null) {
+                    clip = pamPlayer.getClip(pamPath, chosen);
                 }
                 if (clip == null) {
-                    genericPamFailed.put(pamPath, true);
+                    genericPamFailed.put(cacheKey, true);
                     return false;
                 }
-                genericPamClips.put(pamPath, clip);
+                genericPamClips.put(cacheKey, clip);
             } catch (Exception e) {
                 System.err.println("EntityRenderer: Failed to load PAM " + pamPath + ": " + e.getMessage());
-                genericPamFailed.put(pamPath, true);
+                genericPamFailed.put(cacheKey, true);
                 return false;
             }
         }

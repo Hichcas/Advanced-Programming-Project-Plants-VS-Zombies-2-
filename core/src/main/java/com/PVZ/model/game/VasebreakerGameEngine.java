@@ -13,6 +13,7 @@ import com.PVZ.model.minigame.vasebreaker.VasebreakerGame;
 import com.PVZ.model.minigame.vasebreaker.VasebreakerTexturePaths;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.UserRegistry;
+import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, com.PVZ.model.minigame.vasebreaker
@@ -42,12 +44,25 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
     private float gameOverTimer = 0f;
 
     private VasebreakerGame game;
-    private Texture vaseNormal;
-    private Texture vasePlant;
-    private Texture vaseGargantuar;
     private Texture seedPacketGround;
     private Texture background;
     private BitmapFont font;
+    private float vaseAnimTime = 0f;
+    /** ظرف‌هایی که همین الان شکسته شده‌اند: مقدار = زمان سپری‌شده از لحظه‌ی شکستن (برای پخش کلیپ break). */
+    private final HashMap<Vase, Float> breakingVases = new HashMap<>();
+    private static final float BREAK_CLIP_DURATION = 1.8f;
+
+    /**
+     * مسیر PAM واقعی هر نوع کوزه، طبق pam_animations.json: کوزه‌ی معمولی قهوه‌ای (VASE_BROWN)،
+     * کوزه‌ای که گیاه داخلش هست سبز رنگ (VASE_GREEN)، و کوزه‌ی گارگانتوار (VASE_GARGANTUAR).
+     */
+    private static String vasePamPath(com.PVZ.model.minigame.vasebreaker.VaseType type) {
+        return switch (type) {
+            case NORMAL -> "768/FULL/VASEBREAKER/VASE_BROWN/VASE_BROWN.PAM";
+            case PLANT -> "768/FULL/VASEBREAKER/VASE_GREEN/VASE_GREEN.PAM";
+            case GARGANTUAR -> "768/FULL/VASEBREAKER/VASE_GARGANTUAR/VASE_GARGANTUAR.PAM";
+        };
+    }
 
     public VasebreakerGameEngine() {
         super(new GameStatus(), new VasebreakerInputProcessor());
@@ -91,6 +106,19 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
 
     @Override
     public void update(float delta) {
+        vaseAnimTime += delta;
+        if (game != null) {
+            for (int row = 0; row < game.getRows(); row++) {
+                for (int col = 0; col < game.getCols(); col++) {
+                    Vase vase = game.getVase(row, col);
+                    if (vase != null && vase.isBroken() && !breakingVases.containsKey(vase)) {
+                        breakingVases.put(vase, 0f);
+                    }
+                }
+            }
+            breakingVases.replaceAll((v, t) -> t + delta);
+            breakingVases.values().removeIf(t -> t > BREAK_CLIP_DURATION);
+        }
         if (gameOverTriggered) {
             updateGameOverTimer(delta);
             return;
@@ -224,17 +252,25 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
         for (int row = 0; row < game.getRows(); row++) {
             for (int col = 0; col < game.getCols(); col++) {
                 Vase vase = game.getVase(row, col);
-                if (vase == null || vase.isBroken()) continue;
+                if (vase == null) continue;
                 com.PVZ.model.entity.Tile tile = map.getTile(row, col);
                 if (tile == null) continue;
-                Texture texture = switch (vase.getType()) {
-                    case NORMAL -> vaseNormal;
-                    case PLANT -> vasePlant;
-                    case GARGANTUAR -> vaseGargantuar;
-                };
-                float margin = tile.getWidth() * 0.08f;
-                batch.draw(texture, tile.getX() + margin, tile.getY() + margin,
-                    tile.getWidth() - margin * 2, tile.getHeight() - margin * 2);
+
+                String pamPath = vasePamPath(vase.getType());
+                float cx = tile.getX() + tile.getWidth() / 2f;
+                float cy = tile.getY() + tile.getHeight() / 2f;
+
+                if (!vase.isBroken()) {
+                    EntityRenderer.getInstance().renderPam(batch, pamPath, "idle", vaseAnimTime, cx, cy);
+                } else {
+                    Float breakElapsed = breakingVases.get(vase);
+                    if (breakElapsed != null) {
+                        // در حال پخش انیمیشن شکستن (کلیپ "break")؛ بعد از تمام‌شدنش دیگر چیزی
+                        // کشیده نمی‌شود چون خودِ کوزه از بین رفته و محتوایش (زامبی/بذر) قبلاً
+                        // جدا آزاد شده.
+                        EntityRenderer.getInstance().renderPam(batch, pamPath, "break", breakElapsed, cx, cy);
+                    }
+                }
             }
         }
 
@@ -274,10 +310,7 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
     }
 
     private void ensureVaseTexturesLoaded() {
-        if (vaseNormal != null) return;
-        vaseNormal = new Texture(VasebreakerTexturePaths.NORMAL);
-        vasePlant = new Texture(VasebreakerTexturePaths.PLANT);
-        vaseGargantuar = new Texture(VasebreakerTexturePaths.GARGANTUAR);
+        if (seedPacketGround != null) return;
         seedPacketGround = new Texture(VasebreakerTexturePaths.SEED_PACKET_GROUND);
         background = new Texture(VasebreakerTexturePaths.BACKGROUND);
         font = FontManager.getInstance().getEnglishMenuFont();
@@ -293,9 +326,6 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
     public void dispose() {
         zombieEngine.dispose();
         battleController.dispose();
-        if (vaseNormal != null) vaseNormal.dispose();
-        if (vasePlant != null) vasePlant.dispose();
-        if (vaseGargantuar != null) vaseGargantuar.dispose();
         if (seedPacketGround != null) seedPacketGround.dispose();
         if (background != null) background.dispose();
     }

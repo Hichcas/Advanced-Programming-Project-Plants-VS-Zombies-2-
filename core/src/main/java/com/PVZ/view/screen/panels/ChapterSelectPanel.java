@@ -10,7 +10,7 @@ import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.ChapterAndLevelSelectionInputDTO;
 import com.PVZ.view.output.OutputDTO;
 import com.PVZ.view.screen.ui.MenuButton;
-import com.badlogic.gdx.Gdx;
+import com.PVZ.view.screen.BaseScreen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -101,7 +101,7 @@ public class ChapterSelectPanel extends BasePanel {
                 bigHeight = Math.max(350f, bigTex.getHeight());
             }
 
-            float centerY = Gdx.graphics.getHeight() / 2f;
+            float centerY = BaseScreen.VIRTUAL_HEIGHT / 2f;
             float bossY = centerY - bigHeight / 2f;
 
             // بلوک بزرگ (غیرتعاملی)
@@ -143,8 +143,8 @@ public class ChapterSelectPanel extends BasePanel {
             currentX = nextX + gapBetweenChapters - gapBetweenItems;
         }
 
-        float contentWidth = Math.max(currentX - gapBetweenChapters + gapBetweenItems, Gdx.graphics.getWidth());
-        contentGroup.setSize(contentWidth, Gdx.graphics.getHeight());
+        float contentWidth = Math.max(currentX - gapBetweenChapters + gapBetweenItems, BaseScreen.VIRTUAL_WIDTH);
+        contentGroup.setSize(contentWidth, BaseScreen.VIRTUAL_HEIGHT);
 
         ScrollPane scrollPane = new ScrollPane(contentGroup, skin);
         scrollPane.setFillParent(true);
@@ -163,8 +163,8 @@ public class ChapterSelectPanel extends BasePanel {
         // برچسب خطا
         errorLabel = new Label("", new Label.LabelStyle(bigFont, Color.RED));
         errorLabel.setAlignment(Align.center);
-        errorLabel.setSize(Gdx.graphics.getWidth() * 0.6f, 50);
-        errorLabel.setPosition(Gdx.graphics.getWidth() * 0.2f, 20);
+        errorLabel.setSize(BaseScreen.VIRTUAL_WIDTH * 0.6f, 50);
+        errorLabel.setPosition(BaseScreen.VIRTUAL_WIDTH * 0.2f, 20);
         addActor(errorLabel);
     }
 

@@ -45,6 +45,23 @@ public class MenuPanelSwitcher {
             case CHAPTER_AND_LEVEL_SELECTION:
                 PanelManager.getInstance().performPanelTransition(new ChapterSelectPanel());
                 break;
+            case PLANT_SELECTION:
+                // این کیس قبلاً اصلاً وجود نداشت: کنترلر (ChapterAndLevelSelectionMenuController
+                // .enterChapter) به‌درستی AppStatus.currentMenuType را روی PLANT_SELECTION
+                // می‌گذاشت، ولی چون این‌جا هیچ پنلی برایش map نشده بود، سوییچر می‌رفت توی
+                // default و فقط یک پیام خطا لاگ می‌کرد — یعنی بعد از انتخاب فصل/مرحله هیچ پنل
+                // انتخاب گیاهی واقعاً روی صفحه نمی‌آمد. مقادیر فصل/مرحله را از همان
+                // AppStatus.currentChapterName/currentStageNumber که enterChapter ست کرده
+                // می‌خوانیم چون این متد فقط MenuType می‌گیرد.
+                PanelManager.getInstance().performPanelTransition(
+                    new PlantSelectionPanel(AppStatus.currentChapterName, AppStatus.currentStageNumber));
+                break;
+            case IN_GAME:
+                // ورود به بازی از طریق ScreenManager.performTransition (که خودِ GameScreen را
+                // می‌سازد) انجام می‌شود، نه از طریق پنل‌های این کلاس؛ پس این‌جا کاری لازم نیست.
+                // فقط برای اینکه در کنسول به‌اشتباه به‌عنوان «پنل نگاشت‌نشده» لاگ نشود این کیس
+                // را صریح خالی می‌گذاریم.
+                break;
             default:
                 System.err.println("No UI panel mapped for menu: " + menuType);
                 break;

@@ -11,6 +11,7 @@ import com.PVZ.model.minigame.wallnutbowling.WallnutBowlingGame;
 import com.PVZ.model.minigame.wallnutbowling.WallnutBowlingTexturePaths;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.UserRegistry;
+import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Texture;
@@ -38,11 +39,22 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     private float tickAccumulator = 0f;
 
     private WallnutBowlingGame game;
-    private Texture nutNormalTex;
-    private Texture nutExplosiveTex;
-    private Texture nutGiantTex;
     private Texture background;
     private BitmapFont font;
+    private float nutAnimTime = 0f;
+
+    /**
+     * مسیر PAM واقعی هر نوع گردو در این مینی‌گیم: گردوی معمولی و انفجاری همان گیاه‌های خودِ
+     * بازی‌اند (WALLNUT / EXPLODEONUT)، و برای گردوی غول‌پیکر از PRIMAL_WALLNUT استفاده شده
+     * چون طرحش واقعاً بزرگ‌تر و متفاوت‌تر از والنات معمولیه.
+     */
+    private static String nutPamPath(NutType type) {
+        return switch (type) {
+            case NORMAL -> "768/INITIAL/PLANT/WALLNUT/WALLNUT.PAM";
+            case EXPLOSIVE -> "768/INITIAL/PLANT/EXPLODEONUT/EXPLODEONUT.PAM";
+            case GIANT -> "768/FULL/PLANT/PRIMAL_WALLNUT/PRIMAL_WALLNUT.PAM";
+        };
+    }
 
     private boolean gameOverTriggered = false;
     private boolean gameOverNavigated = false;
@@ -106,6 +118,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
 
     @Override
     public void update(float delta) {
+        nutAnimTime += delta;
         if (gameOverTriggered) {
             updateGameOverTimer(delta);
             return;
@@ -327,13 +340,9 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
 
         batch.begin();
         for (BowlingNut nut : game.getNuts()) {
-            Texture texture = switch (nut.getType()) {
-                case NORMAL -> nutNormalTex;
-                case EXPLOSIVE -> nutExplosiveTex;
-                case GIANT -> nutGiantTex;
-            };
-            float size = map.getTileWidth() * 0.5f;
-            batch.draw(texture, (float) nut.getX() - size / 2f, (float) nut.getY() - size / 2f, size, size);
+            String pamPath = nutPamPath(nut.getType());
+            EntityRenderer.getInstance().renderPam(batch, pamPath, "idle", nutAnimTime,
+                (float) nut.getX(), (float) nut.getY());
         }
 
         if (!gameOverTriggered) {
@@ -372,10 +381,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     }
 
     private void ensureTexturesLoaded() {
-        if (nutNormalTex != null) return;
-        nutNormalTex = new Texture(WallnutBowlingTexturePaths.NUT_NORMAL);
-        nutExplosiveTex = new Texture(WallnutBowlingTexturePaths.NUT_EXPLOSIVE);
-        nutGiantTex = new Texture(WallnutBowlingTexturePaths.NUT_GIANT);
+        if (background != null) return;
         background = new Texture(WallnutBowlingTexturePaths.BACKGROUND);
         font = FontManager.getInstance().getEnglishMenuFont();
     }
@@ -390,9 +396,6 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     public void dispose() {
         zombieEngine.dispose();
         battleController.dispose();
-        if (nutNormalTex != null) nutNormalTex.dispose();
-        if (nutExplosiveTex != null) nutExplosiveTex.dispose();
-        if (nutGiantTex != null) nutGiantTex.dispose();
         if (background != null) background.dispose();
     }
 
