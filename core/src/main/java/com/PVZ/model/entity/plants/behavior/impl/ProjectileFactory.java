@@ -17,10 +17,11 @@ public final class ProjectileFactory {
 
         projectile.setType(resolveType(plant));
         projectile.setDamage(Math.max(0, damage));
-        projectile.setPierce(plant == null ? 1 : Math.max(1, plant.getStats().getPierce()));
+        projectile.setPierce(resolvePierce(plant));
         projectile.setSpeed(resolveSpeed(plant));
         projectile.setFromPlantFood(plant != null && plant.isPlantFoodActive());
         projectile.putExtra("visualKey", resolveVisualKey(plant, projectile.getType()));
+        projectile.setAreaDamage(hasAreaDamage(plant));
 
         if (plant != null) {
             projectile.setLane(asInt(plant.getRuntimeState().get("lane"), 0));
@@ -97,6 +98,40 @@ public final class ProjectileFactory {
         return ProjectileType.PEA;
     }
 
+    /**
+     * Base pierce count. Matches the real per-plant behavior from the design doc/Excel:
+     * "Strike-through" plants pass through obstacles — Cactus explicitly says "passes
+     * through 3 zombies" (base level), while Fume-shroom's smoke has no stated limit so
+     * it's treated as effectively unlimited. Everything else defaults to the plant's own
+     * configured pierce stat (falling back to 1 = single target) unless overridden.
+     */
+    private static int resolvePierce(PlantInstance plant) {
+        String plantKey = (plant != null && plant.getDefinition() != null)
+                ? plant.getDefinition().getPlantKey()
+                : null;
+        int statPierce = (plant == null || plant.getStats() == null) ? 0 : plant.getStats().getPierce();
+        if ("cactus".equals(plantKey)) {
+            // Base ability: "passes through 3 zombies"; Lvl2 upgrade adds +1 on top of that.
+            return Math.max(3, statPierce);
+        }
+        if ("fume_shroom".equals(plantKey)) {
+            return 999; // "passes through zombies" with no stated limit
+        }
+        return Math.max(1, statPierce);
+    }
+
+    /**
+     * Whether this shot deals splash damage to zombies in the target's tile and the lanes
+     * above/below — per the design doc, only Pepper-pult's shot and (regular/ice) Watermelon
+     * shots have this area effect; everything else is single-target.
+     */
+    private static boolean hasAreaDamage(PlantInstance plant) {
+        String plantKey = (plant != null && plant.getDefinition() != null)
+                ? plant.getDefinition().getPlantKey()
+                : null;
+        return "pepper_pult".equals(plantKey) || "melon_pult".equals(plantKey) || "winter_melon".equals(plantKey);
+    }
+
     private static double resolveSpeed(PlantInstance plant) {
         if (plant == null || plant.getStats() == null) {
             return 1.0;
@@ -109,6 +144,14 @@ public final class ProjectileFactory {
         return 1.0;
     }
 
+    /**
+     * Picks the real PAM visual for this shot. Plant-specific keys (Cabbage-pult, Kernel-pult,
+     * Melon-pult, Citron, ...) take priority since those don't share a visual with anything
+     * else; everything left over (the plain pea-shooter family) falls back to the resolved
+     * {@link ProjectileType} (PEA / FIRE_PEA / ICE_PEA), which they genuinely do share.
+     * Returns null if we don't have a real PAM for this plant/type yet — Projectile.draw()
+     * falls back to the procedural pixmap shape in that case.
+     */
     private static String resolveVisualKey(PlantInstance plant, ProjectileType type) {
         String plantKey = (plant != null && plant.getDefinition() != null)
                 ? plant.getDefinition().getPlantKey()

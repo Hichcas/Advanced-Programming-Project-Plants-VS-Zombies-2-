@@ -1,7 +1,7 @@
 {
   "profile" : {
-    "username" : "mahdiQuest23",
-    "nickname" : "Mahdi",
+    "username" : "mahdiQuest3",
+    "nickname" : "mahdi",
     "email" : "mahdi@example.com",
     "gender" : "male",
     "passwordHash" : "6239b479b97a15a5a494351afcc22b5b85627f37250649713c0d6f4d1d10100a",
@@ -10,7 +10,7 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 4992000,
+    "coins" : 0,
     "diamonds" : 0,
     "stagesCompleted" : 0,
     "highestScore" : 0,
@@ -33,7 +33,7 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "SUNFLOWER", "SNOW_PEA", "PEASHOOTER", "ROTOBAGA" ],
+    "unlockedPlants" : [ ],
     "seenZombies" : [ ],
     "seedPackets" : { },
     "plantLevels" : { },
@@ -181,8 +181,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 15,
-    "numberOfUnlockedPots" : 5
+    "numberOfUnlockedPots" : 5,
+    "numberOfLockedPots" : 15
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -198,7 +198,7 @@
     "forToday" : false,
     "availableToday" : false
   },
-  "stayLoggedIn" : true,
+  "stayLoggedIn" : false,
   "questState" : {
     "questManager" : {
       "activeQuests" : [ {
@@ -219,9 +219,9 @@
         },
         "parameters" : { },
         "active" : false,
-        "formattedDescription" : "End a level with exactly 0 sun",
+        "runtimeState" : { },
         "formattedTitle" : "Master of Defense",
-        "runtimeState" : { }
+        "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "story_economy",
         "title" : "Economic Herbivore",
@@ -242,9 +242,9 @@
           "n" : 2
         },
         "active" : false,
-        "formattedDescription" : "Win without losing more than 2 plants",
+        "runtimeState" : { },
         "formattedTitle" : "Economic Herbivore",
-        "runtimeState" : { }
+        "formattedDescription" : "Win without losing more than 2 plants"
       }, {
         "id" : "daily_row_empty_1784570552016",
         "title" : "Defenseless Row",
@@ -265,9 +265,9 @@
           "row" : 1
         },
         "active" : false,
-        "formattedDescription" : "Win with row 1 completely empty",
+        "runtimeState" : { },
         "formattedTitle" : "Defenseless Row",
-        "runtimeState" : { }
+        "formattedDescription" : "Win with row 1 completely empty"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -286,9 +286,9 @@
         },
         "parameters" : { },
         "active" : false,
-        "formattedDescription" : "Win a day level using only mushrooms",
+        "runtimeState" : { },
         "formattedTitle" : "Day or Night",
-        "runtimeState" : { }
+        "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -307,9 +307,9 @@
         },
         "parameters" : { },
         "active" : false,
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
+        "runtimeState" : { },
         "formattedTitle" : "Speed Run",
-        "runtimeState" : { }
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -330,9 +330,9 @@
           "n" : 10
         },
         "active" : false,
-        "formattedDescription" : "Kill at least 10 zombies with lawnmowers",
+        "runtimeState" : { },
         "formattedTitle" : "Lawnmower Time",
-        "runtimeState" : { }
+        "formattedDescription" : "Kill at least 10 zombies with lawnmowers"
       }, {
         "id" : "daily_plant_pro_1784570552018",
         "title" : "Pro with {plant}",
@@ -353,9 +353,9 @@
           "plant" : "POTATO_MINE"
         },
         "active" : true,
-        "formattedDescription" : "Kill 10 zombies using only POTATO_MINE",
-        "formattedTitle" : "Pro with POTATO_MINE",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedTitle" : "Pro with Potato Mine",
+        "formattedDescription" : "Kill 10 zombies using only Potato Mine"
       }, {
         "id" : "story_chapter_hunt_FROSTBITE_CAVES",
         "title" : "Chapter Hunter",
@@ -376,9 +376,9 @@
           "chapter" : "FROSTBITE_CAVES"
         },
         "active" : true,
-        "formattedDescription" : "Defeat 50 zombies from FROSTBITE_CAVES",
+        "runtimeState" : { },
         "formattedTitle" : "Chapter Hunter",
-        "runtimeState" : { }
+        "formattedDescription" : "Defeat 50 zombies from Frostbite Caves"
       }, {
         "id" : "daily_almost_win_1784570552021",
         "title" : "Almost Victory",
@@ -397,9 +397,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "Kill 10 zombies in column 1 of a row without a lawnmower",
+        "runtimeState" : { },
         "formattedTitle" : "Almost Victory",
-        "runtimeState" : { }
+        "formattedDescription" : "Kill 10 zombies in column 1 of a row without a lawnmower"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -420,16 +420,13 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
+        "runtimeState" : { },
         "formattedTitle" : "Chapter Hunter",
-        "runtimeState" : { }
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
       } ],
       "lastDailyRefresh" : "2026-07-20",
       "consecutiveMaxDifficultyWins" : 0,
-      "currentChapter" : "ANCIENT_EGYPT",
-      "currentDifficulty" : 1,
-      "isDayLevel" : true,
-      "timeUntilReset" : "12h 51m"
+      "timeUntilReset" : "2h 19m"
     }
   }
 }

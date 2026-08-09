@@ -19,8 +19,10 @@ public abstract class BaseScreen implements Screen {
     protected Stage stage;
     protected InputMultiplexer multiplexer;
 
-    protected static final float VIRTUAL_WIDTH = 2560;
-    protected static final float VIRTUAL_HEIGHT = 1440;
+    // public: پنل‌ها (که مستقیماً روی Stage با این ویوپورت مجازی کشیده می‌شوند) هم برای
+    // محاسبه‌ی سنتر/چیدمان دقیق باید به همین اعداد دسترسی داشته باشند، نه به سایز واقعی پنجره.
+    public static final float VIRTUAL_WIDTH = 2560;
+    public static final float VIRTUAL_HEIGHT = 1440;
 
     private boolean disposed = false;
 

@@ -11,7 +11,7 @@ import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.chapter.sepecialLevel.SpecialLevel;
 import com.PVZ.model.status.AppStatus;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
+import com.PVZ.model.game.PlantFoodManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +30,13 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     final List<Zombie> zombies = new ArrayList<>();
     final SunManager sunManager = new SunManager();
     final LootManager lootManager = new LootManager();
-    final PlantFoodManager plantFoodManager = new PlantFoodManager();
+    PlantFoodManager plantFoodManager = new PlantFoodManager();
+    /** بازگرداندن مدیر غذای گیاه، برای نمایش تعداد غذای گیاهِ جمع‌آوری‌شده در HUD. */
+    public PlantFoodManager getPlantFoodManager() {
+        return plantFoodManager;
+    }
+
+
     final Random random = new Random();
     float tickAccumulator = 0f;
     boolean zombieWavesStarted = false;

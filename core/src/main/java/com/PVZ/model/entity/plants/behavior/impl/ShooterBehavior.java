@@ -8,6 +8,8 @@ import com.PVZ.model.enums.PlantTag;
 
 public class ShooterBehavior implements PlantBehavior {
     private static final double BURST_GAP_SECONDS = 0.12;
+    // How long the "shooting" PAM clip stays selected after a shot is fired.
+    // Tune this to roughly match the real length of each plant's shooting animation.
     private static final double SHOOT_ANIM_SECONDS = 0.5;
 
     @Override
@@ -41,6 +43,12 @@ public class ShooterBehavior implements PlantBehavior {
         plant.putRuntimeState("attackTimer", attackTimer);
     }
 
+    /**
+     * Whether this plant currently has a valid target to fire at. Threepeater checks its
+     * own lane plus the lane above/below (it fires into all 3 the moment any one has a
+     * zombie); Split Pea only needs its own lane, since its backward shot always
+     * accompanies the forward one. Everything else just checks its own lane.
+     */
     private boolean hasTargets(PlantInstance plant, BehaviorContext context, int lane) {
         String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
         if ("threepeater".equals(key)) {
@@ -115,6 +123,13 @@ public class ShooterBehavior implements PlantBehavior {
         plant.putRuntimeState("burstTimer", 0.0);
     }
 
+    /**
+     * Fires one "volley" for this plant's shot pattern:
+     * - Threepeater: one pea into its own lane plus the lane above and below, simultaneously.
+     * - Split Pea: one pea forward (its own lane, normal direction) plus two peas backward
+     *   (same lane, reversed direction) — per its real ability: "1 shot forward, 2 backward".
+     * - Everything else: a single forward pea, same as before.
+     */
     private void fireVolley(PlantInstance plant, BehaviorContext context, int damage) {
         String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
         if ("threepeater".equals(key)) {
@@ -147,6 +162,10 @@ public class ShooterBehavior implements PlantBehavior {
             projectile.putExtra("reverseDirection", Boolean.TRUE);
         }
 
+        // Mark that a "shooting" animation should play for a short window.
+        // Plant.draw() reads this to pick the "shooting" PAM clip instead of "idle".
+        // Duration comes from the real PAM clip length when known (see PamAnimationCatalog),
+        // falling back to a generic guess otherwise.
         com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", SHOOT_ANIM_SECONDS);
 
         if (plant.getStats().getBooleanExtra("fireAttack", false)) {

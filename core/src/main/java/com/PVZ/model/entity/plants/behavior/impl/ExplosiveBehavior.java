@@ -90,7 +90,12 @@ public class ExplosiveBehavior implements PlantBehavior {
         }
 
         if ("iceberg_lettuce".equals(key)) {
-            context.freezeZombiesInLane(lane, Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
+            // Real ability: freezes only the first zombie that steps on it — not the whole lane.
+            if (context instanceof com.PVZ.model.game.BattleController bc) {
+                bc.freezeClosestZombieInLane(lane, Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
+            } else {
+                context.freezeZombiesInLane(lane, Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
+            }
             com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
             plant.takeDamage(plant.getCurrentHp());
             return;

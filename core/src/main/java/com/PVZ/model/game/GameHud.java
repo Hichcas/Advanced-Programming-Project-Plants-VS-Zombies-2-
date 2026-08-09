@@ -3,12 +3,18 @@ package com.PVZ.model.game;
 import com.PVZ.model.entity.PlantTexturePaths;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
+import com.PVZ.view.renderer.EntityRenderer;
+import com.PVZ.view.screen.BaseScreen;
 import com.PVZ.view.screen.manager.FontManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
 import java.util.ArrayList;
@@ -18,9 +24,28 @@ import java.util.Map;
 
 public class GameHud extends Group {
 
+    // این PAM ها همان جلوه‌های واقعی بازی هستند (طبق pam_list.txt کاربر تأیید شده که وجود دارند)
+    // نه آیکون رسم‌شده‌ی دستی، تا HUD واقعاً گرافیکی و هم‌راستا با بقیه‌ی رندرهای PAM باشد.
+    private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
+    private static final String PLANTFOOD_PAM = "768/INITIAL/EFFECTS/PLANTFOOD_PICKUP/PLANTFOOD_PICKUP.PAM";
+
+    private static final float PANEL_ICON_SIZE = 74f;
+    private static final float PANEL_HEIGHT = 84f;
+    private static final float PANEL_GAP = 14f;
+    private static final float PANEL_TOP_MARGIN = 30f;
+    private static final float PANEL_LEFT_MARGIN = 24f;
+
+    private static final float WAVEBAR_HEIGHT = 30f;
+    private static final float WAVEBAR_TOP_MARGIN = 18f;
+    private static final float WAVEBAR_SIDE_MARGIN = 480f;
+
     private final BitmapFont font;
+    private final BitmapFont bigFont;
+    private float animTime = 0f;
     private int sunflowerCount = 0;
+    private int plantFoodCount = 0;
     private int zombieWavePercent = 0;
+    private List<Float> waveMarkerRatios = List.of();
     private String beltLine = null;
 
     private static final float LOCKED_ICON_SIZE = 32f;
@@ -28,15 +53,49 @@ public class GameHud extends Group {
     private List<PlantType> lockedPlantsForHud = new ArrayList<>();
     private final Map<PlantType, Texture> lockedIconCache = new HashMap<>();
 
+    private static NinePatch panelBackground;
+    private static NinePatch waveBarTrack;
+    private static NinePatch waveBarFill;
 
     public GameHud() {
         this.font = FontManager.getInstance().getEnglishMenuFont();
-        setSize(AppStatus.getQuality().width, AppStatus.getQuality().height);
+        this.bigFont = FontManager.getInstance().getEnglishMenuFont();
+        // مقدار ثابت VIRTUAL_WIDTH/HEIGHT (فضای مختصات واقعی Stage)، نه AppStatus.getQuality():
+        // این HUD مستقیم روی Stage اضافه می‌شود (GameScreen: stage.addActor(gameHud)) و Stage
+        // همیشه با همان ویوپورت مجازی ثابت کار می‌کند، صرف‌نظر از تنظیمات کیفیت گرافیک کاربر.
+        // اگر از AppStatus.getQuality() استفاده می‌شد، تغییر کیفیت گرافیک از Ultra_High به
+        // چیز دیگری باعث می‌شد HUD در جای اشتباه رسم شود.
+        setSize(BaseScreen.VIRTUAL_WIDTH, BaseScreen.VIRTUAL_HEIGHT);
+        ensureBackgrounds();
+    }
+
+    private static void ensureBackgrounds() {
+        if (panelBackground != null) {
+            return;
+        }
+        panelBackground = buildNinePatch(0.06f, 0.05f, 0.03f, 0.72f, 0.85f, 0.65f, 0.25f, 1f, 10);
+        waveBarTrack = buildNinePatch(0.08f, 0.08f, 0.08f, 0.8f, 0.4f, 0.4f, 0.4f, 1f, 6);
+        waveBarFill = buildNinePatch(0.75f, 0.12f, 0.1f, 1f, 1f, 0.55f, 0.5f, 1f, 6);
+    }
+
+    private static NinePatch buildNinePatch(float r, float g, float b, float a,
+                                             float borderR, float borderG, float borderB, float borderA,
+                                             int border) {
+        int size = border * 2 + 4;
+        Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+        pixmap.setColor(r, g, b, a);
+        pixmap.fill();
+        pixmap.setColor(borderR, borderG, borderB, borderA);
+        pixmap.drawRectangle(0, 0, size, size);
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return new NinePatch(texture, border, border, border, border);
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
+        animTime += delta;
 
         GameEngine engine = AppStatus.getGameEngine();
         if (engine == null || engine.gameStatus == null) {
@@ -44,6 +103,15 @@ public class GameHud extends Group {
         }
         sunflowerCount = engine.gameStatus.getSunflower();
         zombieWavePercent = engine.gameStatus.getRemainingZombieWaveInPercent();
+
+        if (engine instanceof RegularGameEngine regularEngine) {
+            plantFoodCount = regularEngine.getPlantFoodManager().getPlantFoodCount();
+            WaveManager waveManager = regularEngine.getWaveManager();
+            waveMarkerRatios = waveManager != null ? waveManager.getWaveMarkerRatios() : List.of();
+        } else {
+            plantFoodCount = 0;
+            waveMarkerRatios = List.of();
+        }
 
         if (engine instanceof RegularGameEngine regularEngine && regularEngine.isConveyorBeltMode()) {
             beltLine = "Belt: " + formatBelt(regularEngine.getConveyorBeltQueue());
@@ -92,23 +160,32 @@ public class GameHud extends Group {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        font.setColor(Color.GOLD);
-        font.draw(batch, "Sunflowers: " + sunflowerCount, 20, AppStatus.getQuality().height - 50);
-        font.setColor(Color.RED);
-        font.draw(batch, "Zombie Wave: " + zombieWavePercent + "%", 20, AppStatus.getQuality().height - 100);
+
+        float top = BaseScreen.VIRTUAL_HEIGHT - PANEL_TOP_MARGIN;
+        float sunPanelY = top - PANEL_HEIGHT;
+        float sunPanelX = PANEL_LEFT_MARGIN;
+
+        drawCounterPanel(batch, parentAlpha, SUN_PAM, sunflowerCount, sunPanelX, sunPanelY, Color.GOLD);
+
+        float plantFoodPanelY = sunPanelY - PANEL_HEIGHT - PANEL_GAP;
+        drawCounterPanel(batch, parentAlpha, PLANTFOOD_PAM, plantFoodCount, sunPanelX, plantFoodPanelY, Color.LIME);
+
+        drawWaveBar(batch, parentAlpha, top);
+
+        float nextLineY = top - PANEL_HEIGHT - PANEL_HEIGHT - PANEL_GAP * 2 - 30f;
 
         if (beltLine != null) {
             font.setColor(Color.CYAN);
-            font.draw(batch, beltLine, 20, AppStatus.getQuality().height - 150);
+            font.draw(batch, beltLine, sunPanelX, nextLineY);
+            nextLineY -= 40f;
         }
 
         if (!lockedPlantsForHud.isEmpty()) {
             font.setColor(Color.ORANGE);
-            float labelY = AppStatus.getQuality().height - 150;
-            font.draw(batch, "Locked:", 20, labelY);
+            font.draw(batch, "Locked:", sunPanelX, nextLineY);
 
-            float iconX = 20;
-            float iconY = labelY - LOCKED_ICON_SIZE - 6;
+            float iconX = sunPanelX;
+            float iconY = nextLineY - LOCKED_ICON_SIZE - 6;
             for (PlantType type : lockedPlantsForHud) {
                 Texture icon = getLockedIcon(type);
                 if (icon != null) {
@@ -120,5 +197,119 @@ public class GameHud extends Group {
             }
         }
         font.setColor(Color.WHITE);
+    }
+
+    /**
+     * یک کارت مستطیلی سایه‌دار با آیکون انیمیشنِ واقعی PAM (خورشید یا غذای گیاه) در سمت چپ و
+     * عدد شمارنده در سمت راستش رسم می‌کند — دقیقاً همان الگوی نمایش "تعداد خورشیدها" و
+     * "تعداد غذای گیاه" در بازی اصلی (تصویر ۱۸ و ۲۰ سند)، فقط بدون وابستگی به شناسه‌ی تکسچر UI
+     * ناشناخته: پس‌زمینه رسم‌شده با کد است و آیکون از همان PAM واقعی جلوه‌ی مربوطه گرفته می‌شود.
+     */
+    private void drawCounterPanel(Batch batch, float parentAlpha, String pamPath, int value,
+                                   float x, float y, Color textColor) {
+        batch.setColor(1f, 1f, 1f, parentAlpha);
+        float panelWidth = PANEL_ICON_SIZE + 90f;
+        panelBackground.draw(batch, x, y, panelWidth, PANEL_HEIGHT);
+
+        float iconCx = x + PANEL_ICON_SIZE / 2f + 6f;
+        float iconCy = y + PANEL_HEIGHT / 2f;
+        boolean drew = false;
+        if (batch instanceof SpriteBatch spriteBatch) {
+            drew = EntityRenderer.getInstance().renderPam(spriteBatch, pamPath, animTime, iconCx, iconCy);
+        }
+        if (!drew) {
+            // اگر PAM هنوز لود نشده/در دسترس نیست (مثلاً assets قرار نگرفته)، حداقل یک دایره‌ی
+            // رنگی جای آیکون بماند تا HUD خالی به نظر نرسد.
+            batch.setColor(textColor.r, textColor.g, textColor.b, 0.85f * parentAlpha);
+            batch.draw(getFallbackDot(), iconCx - PANEL_ICON_SIZE / 2.2f, iconCy - PANEL_ICON_SIZE / 2.2f,
+                PANEL_ICON_SIZE * 0.9f, PANEL_ICON_SIZE * 0.9f);
+        }
+
+        bigFont.setColor(textColor);
+        String text = String.valueOf(value);
+        GlyphLayout layout = new GlyphLayout(bigFont, text);
+        float textX = x + PANEL_ICON_SIZE + 14f;
+        float textY = y + PANEL_HEIGHT / 2f + layout.height / 2f;
+        bigFont.draw(batch, text, textX, textY);
+        batch.setColor(1f, 1f, 1f, parentAlpha);
+    }
+
+    /**
+     * نوار پیشروی زامبی‌ها بالای صفحه: خالی در ابتدای مرحله، پر در انتهای آن — طبق تصویر ۱۹
+     * سند. جایگاه هر موج هم با یک پرچم کوچک روی نوار مشخص می‌شود (نسبت‌ها از
+     * WaveManager.getWaveMarkerRatios می‌آید که بر همان مبنای «درصد کشته‌شدن زامبی‌ها»
+     * محاسبه شده که خودِ درصد پیشروی نوار هم از آن می‌آید — پس پرچم آخرین موج همیشه دقیقاً
+     * روی انتهای نوار می‌افتد).
+     */
+    private void drawWaveBar(Batch batch, float parentAlpha, float top) {
+        float barX = WAVEBAR_SIDE_MARGIN;
+        float barWidth = BaseScreen.VIRTUAL_WIDTH - 2 * WAVEBAR_SIDE_MARGIN;
+        float barY = top - WAVEBAR_TOP_MARGIN - WAVEBAR_HEIGHT;
+
+        batch.setColor(1f, 1f, 1f, parentAlpha);
+        waveBarTrack.draw(batch, barX, barY, barWidth, WAVEBAR_HEIGHT);
+
+        float fillRatio = Math.max(0f, Math.min(1f, zombieWavePercent / 100f));
+        float fillWidth = Math.max(WAVEBAR_HEIGHT, barWidth * fillRatio);
+        if (fillRatio > 0.01f) {
+            waveBarFill.draw(batch, barX, barY, fillWidth, WAVEBAR_HEIGHT);
+        }
+
+        for (int i = 0; i < waveMarkerRatios.size(); i++) {
+            float ratio = waveMarkerRatios.get(i);
+            boolean isLastWave = i == waveMarkerRatios.size() - 1;
+            float markerX = barX + barWidth * ratio;
+            drawWaveFlag(batch, parentAlpha, markerX, barY, isLastWave);
+        }
+
+        font.setColor(Color.WHITE);
+        String label = "Zombies: " + zombieWavePercent + "%";
+        GlyphLayout layout = new GlyphLayout(font, label);
+        font.draw(batch, label, barX + barWidth / 2f - layout.width / 2f, barY + WAVEBAR_HEIGHT / 2f + layout.height / 2f);
+        batch.setColor(1f, 1f, 1f, parentAlpha);
+    }
+
+    /**
+     * پرچم کوچکِ یک موج روی نوار پیشروی. آخرین موج (مثلاً موج بزرگ نهایی) قرمزتر/بزرگ‌تر رسم
+     * می‌شود تا از موج‌های میانی متمایز باشد — دقیقاً همان تمایزی که در بازی اصلی بین پرچم
+     * موج‌های عادی و «آخرین موج» دیده می‌شود.
+     */
+    private void drawWaveFlag(Batch batch, float parentAlpha, float x, float barY, boolean isFinalWave) {
+        float poleHeight = isFinalWave ? WAVEBAR_HEIGHT + 22f : WAVEBAR_HEIGHT + 10f;
+        float poleWidth = 4f;
+        Color color = isFinalWave ? Color.SCARLET : Color.WHITE;
+        batch.setColor(color.r, color.g, color.b, parentAlpha);
+        batch.draw(getFallbackSquare(), x - poleWidth / 2f, barY - 4f, poleWidth, poleHeight);
+
+        float flagSize = isFinalWave ? 20f : 14f;
+        batch.draw(getFallbackSquare(), x - poleWidth / 2f, barY - 4f + poleHeight - flagSize,
+            flagSize, flagSize * 0.7f);
+        batch.setColor(1f, 1f, 1f, parentAlpha);
+    }
+
+    private static Texture fallbackDot;
+    private static Texture fallbackSquare;
+
+    private static Texture getFallbackDot() {
+        if (fallbackDot == null) {
+            int size = 32;
+            Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+            pixmap.setColor(1f, 1f, 1f, 1f);
+            pixmap.fillCircle(size / 2, size / 2, size / 2 - 1);
+            fallbackDot = new Texture(pixmap);
+            pixmap.dispose();
+        }
+        return fallbackDot;
+    }
+
+    private static Texture getFallbackSquare() {
+        if (fallbackSquare == null) {
+            Pixmap pixmap = new Pixmap(4, 4, Pixmap.Format.RGBA8888);
+            pixmap.setColor(1f, 1f, 1f, 1f);
+            pixmap.fill();
+            fallbackSquare = new Texture(pixmap);
+            pixmap.dispose();
+        }
+        return fallbackSquare;
     }
 }

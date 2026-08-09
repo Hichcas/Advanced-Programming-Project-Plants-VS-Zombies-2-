@@ -194,4 +194,28 @@ public class WaveManager {
         }
         return Math.min(100, killed * 100 / totalZombieCount);
     }
+
+    /**
+     * برای هر موج، نسبت (بین ۰ تا ۱) جایگاهش روی نوار پیشروی را برمی‌گرداند — یعنی چند درصد
+     * از کل زامبی‌های مرحله باید کشته شوند تا آن موج تمام شود. HUD از این لیست برای رسم
+     * پرچم/نشانه‌ی هر موج روی نوار استفاده می‌کند (طبق تصویر ۱۹ سند: «جایگاه موج‌ها روی نوار
+     * باید مشخص باشد»). محاسبه بر همان مبنای تجمعیِ تعداد زامبی هر موج است که getProgressPercent
+     * هم استفاده می‌کند، برای هم‌خوانی کامل بین عدد پیشروی و جای پرچم‌ها.
+     */
+    public java.util.List<Float> getWaveMarkerRatios() {
+        java.util.List<Float> ratios = new ArrayList<>();
+        if (totalZombieCount == 0) {
+            return ratios;
+        }
+        int cumulative = 0;
+        for (Wave w : waves) {
+            int waveCount = 0;
+            for (Wave.WaveEntry e : w.getEntries()) {
+                waveCount += e.getCount();
+            }
+            cumulative += waveCount;
+            ratios.add(Math.min(1f, cumulative / (float) totalZombieCount));
+        }
+        return ratios;
+    }
 }
