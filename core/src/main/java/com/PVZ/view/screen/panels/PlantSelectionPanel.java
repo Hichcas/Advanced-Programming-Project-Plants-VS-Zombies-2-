@@ -1,12 +1,20 @@
 package com.PVZ.view.screen.panels;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.PVZ.model.enums.MenuType;
@@ -23,8 +31,8 @@ import com.PVZ.view.output.OutputDTO;
 import com.PVZ.view.screen.GameScreen;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.screen.manager.ScreenManager;
-import com.PVZ.view.screen.ui.MenuButton;
 import com.PVZ.view.screen.ui.PlantCardActor;
+import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,12 +75,6 @@ public class PlantSelectionPanel extends BasePanel {
     }
 
     private void buildPicker() {
-        // این پنل باید یک پاپ‌آپ شناور و دقیقاً سنتر روی صفحه باشد (مثل تصویر انتخاب گیاه در
-        // بازی اصلی)، نه چند تا Actor پراکنده که در گوشه‌ی پایین-چپ Stage می‌نشینند. برای این کار:
-        // ۱) خودِ ریشه (این Table) با setFillParent + align(center) کل فضای Stage را می‌گیرد و
-        //    محتوا را در وسط آن سنتر می‌کند.
-        // ۲) محتوای واقعی داخل یک Table جدا («window») قرار می‌گیرد که یک پس‌زمینه‌ی مجزا (frame)
-        //    دارد تا شبیه یک پنجره‌ی مستقل روی صفحه دیده شود، نه چند المان شناور روی زمینه‌ی بازی.
         setFillParent(true);
         align(Align.center);
 
@@ -80,18 +82,28 @@ public class PlantSelectionPanel extends BasePanel {
 
         Table grid = new Table();
         grid.top().left();
+        Drawable cardSlotBg = resolveCardSlotBackground();
         int col = 0;
         for (PlantType type : PlantType.values()) {
             PlantCardActor card = new PlantCardActor(type, font);
             card.setOnClick(() -> onCardClicked(card));
             cards.add(card);
 
-            Table cell = new Table();
-            cell.setSize(card.getWidth(), card.getHeight());
-            cell.addActor(card);
-            grid.add(cell).size(card.getWidth() + 6f, card.getHeight() + 6f).pad(2f);
+            float slotW = card.getWidth() + 20f;
+            float slotH = card.getHeight() + 26f;
+            Stack cell = new Stack();
+            if (cardSlotBg != null) {
+                Table slotFrame = new Table();
+                slotFrame.setBackground(cardSlotBg);
+                cell.add(slotFrame);
+            }
+            Table cardHolder = new Table();
+            cardHolder.add(card).size(card.getWidth(), card.getHeight());
+            cell.add(cardHolder);
+
+            grid.add(cell).size(slotW, slotH).pad(20f);
             col++;
-            if (col >= 8) {
+            if (col >= 6) {
                 col = 0;
                 grid.row();
             }
@@ -103,26 +115,101 @@ public class PlantSelectionPanel extends BasePanel {
         countLabel = new Label("0 / 8 selected", new Label.LabelStyle(font, com.badlogic.gdx.graphics.Color.WHITE));
         statusLabel = new Label("", new Label.LabelStyle(font, com.badlogic.gdx.graphics.Color.SALMON));
 
-        MenuButton letsRock = new MenuButton("LET'S ROCK", font, this::onLetsRock);
+        TextButton letsRock = buildLetsRockButton(font);
 
         Table window = new Table();
         window.pad(24f);
-        window.setBackground(new NinePatchDrawable(buildWindowNinePatch()));
-        window.add(scrollPane).size(8 * 96f, 5 * 116f).row();
+        window.setBackground(resolveWindowBackground());
+        window.add(scrollPane).size(6 * 150f, 4 * 175f).row();
         window.add(countLabel).padTop(8f).row();
         window.add(statusLabel).padTop(4f).row();
-        window.add(letsRock).padTop(12f).size(220f, 60f).row();
+        window.add(letsRock).padTop(12f).size(240f, 64f).row();
+        Stack windowStack = new Stack();
+        windowStack.add(window);
+        ImageButton closeButton = buildCloseButton();
+        if (closeButton != null) {
+            Table closeOverlay = new Table();
+            closeOverlay.top().right();
+            closeOverlay.add(closeButton).size(48f, 48f).padTop(-10f).padRight(-10f);
+            windowStack.add(closeOverlay);
+        }
 
-        add(window).center();
+        add(windowStack).center();
 
         refresh();
     }
 
-    /**
-     * پس‌زمینه‌ی ساده‌ی چوبی/تیره برای پنجره‌ی انتخاب گیاه؛ چون به آی‌دی تکسچر مشخصی از
-     * TextureBank برای این کادر متکی نیستیم (ریسک نال‌بودن روی asset پک‌های مختلف)، یک بافت
-     * قابل‌کش (nine-patch) با کد تولید می‌شود تا صرف‌نظر از سایز محتوا، لبه‌ها تمیز بمانند.
-     */
+    private Drawable resolveCardSlotBackground() {
+        try {
+            Skin skin = PvzSkin.get();
+            if (skin != null && skin.has("image_ui_cards_almanac_plant_card_10", Drawable.class)) {
+                return skin.getDrawable("image_ui_cards_almanac_plant_card_10");
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
+    private TextButton buildLetsRockButton(BitmapFont font) {
+        try {
+            Skin skin = PvzSkin.get();
+            if (skin != null && skin.has("green", TextButton.TextButtonStyle.class)) {
+                TextButton button = new TextButton("LET'S ROCK", skin, "green");
+                button.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        onLetsRock();
+                    }
+                });
+                return button;
+            }
+        } catch (Exception ignored) {
+        }
+        TextButton.TextButtonStyle fallbackStyle = new TextButton.TextButtonStyle();
+        fallbackStyle.font = font;
+        fallbackStyle.fontColor = Color.WHITE;
+        TextButton fallback = new TextButton("LET'S ROCK", fallbackStyle);
+        fallback.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                onLetsRock();
+            }
+        });
+        return fallback;
+    }
+
+    private Drawable resolveWindowBackground() {
+        try {
+            Skin skin = PvzSkin.get();
+            if (skin != null && skin.has("image_ui_dialog_asset_inner_bkgd_10",
+                    Drawable.class)) {
+                return skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10");
+            }
+        } catch (Exception ignored) {
+        }
+        return new NinePatchDrawable(buildWindowNinePatch());
+    }
+
+    private ImageButton buildCloseButton() {
+        Skin skin;
+        try {
+            skin = PvzSkin.get();
+        } catch (Exception e) {
+            return null;
+        }
+        if (skin == null || !skin.has("generic_close_circle", ImageButton.ImageButtonStyle.class)) {
+            return null;
+        }
+        ImageButton button = new ImageButton(skin, "generic_close_circle");
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                onClosePanel();
+            }
+        });
+        return button;
+    }
+
     private static NinePatch buildWindowNinePatch() {
         int size = 32;
         int border = 10;
@@ -135,6 +222,13 @@ public class PlantSelectionPanel extends BasePanel {
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
         return new NinePatch(texture, border, border, border, border);
+    }
+
+    private void onClosePanel() {
+        OutputDTO result = plantController.handle(new PlantSelectionInputDTO(PlantSelectionCommand.EXIT, null));
+        if (!result.isSuccess()) {
+            statusLabel.setText(stripColorCodes(result.getMessage()));
+        }
     }
 
     private void onCardClicked(PlantCardActor card) {
@@ -181,4 +275,3 @@ public class PlantSelectionPanel extends BasePanel {
         return s == null ? "" : s.replaceAll("\u001B\\[[;\\d]*m", "");
     }
 }
-

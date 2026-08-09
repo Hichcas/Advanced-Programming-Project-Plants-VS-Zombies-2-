@@ -1,6 +1,7 @@
 package com.PVZ.model.game;
 
 import com.PVZ.model.entity.PlantTexturePaths;
+import com.PVZ.model.enums.ChapterEnum;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.view.renderer.EntityRenderer;
@@ -16,6 +17,8 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,8 +27,6 @@ import java.util.Map;
 
 public class GameHud extends Group {
 
-    // این PAM ها همان جلوه‌های واقعی بازی هستند (طبق pam_list.txt کاربر تأیید شده که وجود دارند)
-    // نه آیکون رسم‌شده‌ی دستی، تا HUD واقعاً گرافیکی و هم‌راستا با بقیه‌ی رندرهای PAM باشد.
     private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
     private static final String PLANTFOOD_PAM = "768/INITIAL/EFFECTS/PLANTFOOD_PICKUP/PLANTFOOD_PICKUP.PAM";
 
@@ -60,11 +61,6 @@ public class GameHud extends Group {
     public GameHud() {
         this.font = FontManager.getInstance().getEnglishMenuFont();
         this.bigFont = FontManager.getInstance().getEnglishMenuFont();
-        // مقدار ثابت VIRTUAL_WIDTH/HEIGHT (فضای مختصات واقعی Stage)، نه AppStatus.getQuality():
-        // این HUD مستقیم روی Stage اضافه می‌شود (GameScreen: stage.addActor(gameHud)) و Stage
-        // همیشه با همان ویوپورت مجازی ثابت کار می‌کند، صرف‌نظر از تنظیمات کیفیت گرافیک کاربر.
-        // اگر از AppStatus.getQuality() استفاده می‌شد، تغییر کیفیت گرافیک از Ultra_High به
-        // چیز دیگری باعث می‌شد HUD در جای اشتباه رسم شود.
         setSize(BaseScreen.VIRTUAL_WIDTH, BaseScreen.VIRTUAL_HEIGHT);
         ensureBackgrounds();
     }
@@ -199,12 +195,6 @@ public class GameHud extends Group {
         font.setColor(Color.WHITE);
     }
 
-    /**
-     * یک کارت مستطیلی سایه‌دار با آیکون انیمیشنِ واقعی PAM (خورشید یا غذای گیاه) در سمت چپ و
-     * عدد شمارنده در سمت راستش رسم می‌کند — دقیقاً همان الگوی نمایش "تعداد خورشیدها" و
-     * "تعداد غذای گیاه" در بازی اصلی (تصویر ۱۸ و ۲۰ سند)، فقط بدون وابستگی به شناسه‌ی تکسچر UI
-     * ناشناخته: پس‌زمینه رسم‌شده با کد است و آیکون از همان PAM واقعی جلوه‌ی مربوطه گرفته می‌شود.
-     */
     private void drawCounterPanel(Batch batch, float parentAlpha, String pamPath, int value,
                                    float x, float y, Color textColor) {
         batch.setColor(1f, 1f, 1f, parentAlpha);
@@ -218,8 +208,6 @@ public class GameHud extends Group {
             drew = EntityRenderer.getInstance().renderPam(spriteBatch, pamPath, animTime, iconCx, iconCy);
         }
         if (!drew) {
-            // اگر PAM هنوز لود نشده/در دسترس نیست (مثلاً assets قرار نگرفته)، حداقل یک دایره‌ی
-            // رنگی جای آیکون بماند تا HUD خالی به نظر نرسد.
             batch.setColor(textColor.r, textColor.g, textColor.b, 0.85f * parentAlpha);
             batch.draw(getFallbackDot(), iconCx - PANEL_ICON_SIZE / 2.2f, iconCy - PANEL_ICON_SIZE / 2.2f,
                 PANEL_ICON_SIZE * 0.9f, PANEL_ICON_SIZE * 0.9f);
@@ -234,25 +222,28 @@ public class GameHud extends Group {
         batch.setColor(1f, 1f, 1f, parentAlpha);
     }
 
-    /**
-     * نوار پیشروی زامبی‌ها بالای صفحه: خالی در ابتدای مرحله، پر در انتهای آن — طبق تصویر ۱۹
-     * سند. جایگاه هر موج هم با یک پرچم کوچک روی نوار مشخص می‌شود (نسبت‌ها از
-     * WaveManager.getWaveMarkerRatios می‌آید که بر همان مبنای «درصد کشته‌شدن زامبی‌ها»
-     * محاسبه شده که خودِ درصد پیشروی نوار هم از آن می‌آید — پس پرچم آخرین موج همیشه دقیقاً
-     * روی انتهای نوار می‌افتد).
-     */
     private void drawWaveBar(Batch batch, float parentAlpha, float top) {
         float barX = WAVEBAR_SIDE_MARGIN;
         float barWidth = BaseScreen.VIRTUAL_WIDTH - 2 * WAVEBAR_SIDE_MARGIN;
         float barY = top - WAVEBAR_TOP_MARGIN - WAVEBAR_HEIGHT;
 
         batch.setColor(1f, 1f, 1f, parentAlpha);
-        waveBarTrack.draw(batch, barX, barY, barWidth, WAVEBAR_HEIGHT);
+        Drawable trackDrawable = resolveMeterDrawable(false);
+        if (trackDrawable != null) {
+            trackDrawable.draw(batch, barX, barY, barWidth, WAVEBAR_HEIGHT);
+        } else {
+            waveBarTrack.draw(batch, barX, barY, barWidth, WAVEBAR_HEIGHT);
+        }
 
         float fillRatio = Math.max(0f, Math.min(1f, zombieWavePercent / 100f));
         float fillWidth = Math.max(WAVEBAR_HEIGHT, barWidth * fillRatio);
         if (fillRatio > 0.01f) {
-            waveBarFill.draw(batch, barX, barY, fillWidth, WAVEBAR_HEIGHT);
+            Drawable fillDrawable = resolveMeterDrawable(true);
+            if (fillDrawable != null) {
+                fillDrawable.draw(batch, barX, barY, fillWidth, WAVEBAR_HEIGHT);
+            } else {
+                waveBarFill.draw(batch, barX, barY, fillWidth, WAVEBAR_HEIGHT);
+            }
         }
 
         for (int i = 0; i < waveMarkerRatios.size(); i++) {
@@ -269,13 +260,40 @@ public class GameHud extends Group {
         batch.setColor(1f, 1f, 1f, parentAlpha);
     }
 
-    /**
-     * پرچم کوچکِ یک موج روی نوار پیشروی. آخرین موج (مثلاً موج بزرگ نهایی) قرمزتر/بزرگ‌تر رسم
-     * می‌شود تا از موج‌های میانی متمایز باشد — دقیقاً همان تمایزی که در بازی اصلی بین پرچم
-     * موج‌های عادی و «آخرین موج» دیده می‌شود.
-     */
+    private static Drawable resolveMeterDrawable(boolean fill) {
+        try {
+            com.badlogic.gdx.scenes.scene2d.ui.Skin skin = PvzSkin.get();
+            if (skin == null) {
+                return null;
+            }
+            String name = fill ? "image_ui_hud_ingame_progress_meter_fill_10"
+                                : "image_ui_hud_ingame_progress_meter_10";
+            if (skin.has(name, Drawable.class)) {
+                return skin.getDrawable(name);
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
+
     private void drawWaveFlag(Batch batch, float parentAlpha, float x, float barY, boolean isFinalWave) {
         float poleHeight = isFinalWave ? WAVEBAR_HEIGHT + 22f : WAVEBAR_HEIGHT + 10f;
+
+        boolean drewPam = false;
+        if (batch instanceof SpriteBatch spriteBatch) {
+            String flagPam = resolveChapterFlagPam();
+            if (flagPam != null) {
+                float flagCx = x;
+                float flagCy = barY + poleHeight * 0.5f;
+                drewPam = EntityRenderer.getInstance().renderPam(spriteBatch, flagPam, animTime, flagCx, flagCy);
+            }
+        }
+
+        if (drewPam) {
+            return;
+        }
+
         float poleWidth = 4f;
         Color color = isFinalWave ? Color.SCARLET : Color.WHITE;
         batch.setColor(color.r, color.g, color.b, parentAlpha);
@@ -285,6 +303,26 @@ public class GameHud extends Group {
         batch.draw(getFallbackSquare(), x - poleWidth / 2f, barY - 4f + poleHeight - flagSize,
             flagSize, flagSize * 0.7f);
         batch.setColor(1f, 1f, 1f, parentAlpha);
+    }
+
+    private static final Map<ChapterEnum, String> CHAPTER_FLAG_PAM = new HashMap<>();
+    static {
+        CHAPTER_FLAG_PAM.put(ChapterEnum.ANCIENT_EGYPT, "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_FLAG/ZOMBIE_EGYPT_FLAG.PAM");
+        CHAPTER_FLAG_PAM.put(ChapterEnum.FROSTBITE_CAVES, "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_FLAG/ZOMBIE_ICEAGE_FLAG.PAM");
+        CHAPTER_FLAG_PAM.put(ChapterEnum.BIG_WAVE_BEACH, "768/FULL/ZOMBIE/ZOMBIE_BEACH_FLAG/ZOMBIE_BEACH_FLAG.PAM");
+        CHAPTER_FLAG_PAM.put(ChapterEnum.DARK_AGES, "768/FULL/ZOMBIE/ZOMBIE_DARK_FLAG/ZOMBIE_DARK_FLAG.PAM");
+    }
+    private static final String DEFAULT_FLAG_PAM = "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_FLAG/ZOMBIE_TUTORIAL_FLAG.PAM";
+
+    private static String resolveChapterFlagPam() {
+        ChapterEnum chapter;
+        try {
+            chapter = AppStatus.getCurrentChapterEnum();
+        } catch (Exception e) {
+            chapter = null;
+        }
+        String pam = chapter != null ? CHAPTER_FLAG_PAM.get(chapter) : null;
+        return pam != null ? pam : DEFAULT_FLAG_PAM;
     }
 
     private static Texture fallbackDot;
