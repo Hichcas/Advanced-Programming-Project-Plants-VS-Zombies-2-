@@ -5,40 +5,19 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import pvz.skin.PvzSkin;
 
 public class FontManager {
     private static FontManager instance;
 
-    private BitmapFont englishMenuFont;
-    private BitmapFont englishTitleFont;
-    private BitmapFont englishTinyFont;
     private BitmapFont persianMenuFont;
     private BitmapFont persianTitleFont;
 
     private static final String PERSIAN_CHARS = FreeTypeFontGenerator.DEFAULT_CHARS +
-            "ابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیيکآأإؤئ";
+        "ابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهیيکآأإؤئ";
 
     private FontManager() {
-        loadEnglishFonts();
         loadPersianFonts();
-    }
-
-    private void loadEnglishFonts() {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/TrajanPro-Regular.ttf"));
-        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-
-        parameter.size = 54;
-        parameter.minFilter = Texture.TextureFilter.Linear;
-        parameter.magFilter = Texture.TextureFilter.Linear;
-        englishMenuFont = generator.generateFont(parameter);
-
-        parameter.size = 72;
-        englishTitleFont = generator.generateFont(parameter);
-
-        parameter.size = 20;
-        englishTinyFont = generator.generateFont(parameter);
-
-        generator.dispose();
     }
 
     private void loadPersianFonts() {
@@ -65,17 +44,34 @@ public class FontManager {
         return instance;
     }
 
-    public BitmapFont getEnglishMenuFont() { return englishMenuFont; }
-    public BitmapFont getEnglishTitleFont() { return englishTitleFont; }
-    public BitmapFont getEnglishTinyFont() { return englishTinyFont; }
+    // ==================== فونت‌های انگلیسی (از PvzSkin) ====================
+    public BitmapFont getEnglishMenuFont() {
+        // فونت بزرگ و خوانا با حاشیه، مناسب دکمه‌های منو
+        return PvzSkin.get().getFont("FBUSV8C5EI_1_outline");
+    }
 
-    public BitmapFont getPersianMenuFont() { return persianMenuFont; }
-    public BitmapFont getPersianTitleFont() { return persianTitleFont; }
+    public BitmapFont getEnglishTitleFont() {
+        // برای تیترها از همان فونت بزرگ استفاده می‌کنیم
+        return PvzSkin.get().getFont("FBUSV8C5EI_1_outline");
+    }
 
+    public BitmapFont getEnglishTinyFont() {
+        // فونت ریزتر برای توضیحات یا اطلاعات فرعی
+        return PvzSkin.get().getFont("FBUSV8C6EI_3");
+    }
+
+    // ==================== فونت‌های فارسی (بدون تغییر) ====================
+    public BitmapFont getPersianMenuFont() {
+        return persianMenuFont;
+    }
+
+    public BitmapFont getPersianTitleFont() {
+        return persianTitleFont;
+    }
+
+    // ==================== مدیریت منابع ====================
     public void dispose() {
-        if (englishMenuFont != null) englishMenuFont.dispose();
-        if (englishTitleFont != null) englishTitleFont.dispose();
-        if (englishTinyFont != null) englishTinyFont.dispose();
+        // فونت‌های انگلیسی متعلق به PvzSkin هستند و نباید اینجا dispose شوند.
         if (persianMenuFont != null) persianMenuFont.dispose();
         if (persianTitleFont != null) persianTitleFont.dispose();
     }
