@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -17,6 +18,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.PVZ.model.entity.ChapterMapPaths;
+import com.PVZ.model.entity.plants.PlantDefinition;
+import com.PVZ.model.entity.plants.PlantLibrary;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
@@ -28,6 +32,7 @@ import com.PVZ.view.input.DTO.PlantSelectionInputDTO;
 import com.PVZ.controller.menuControllers.ChapterAndLevelSelectionMenuController;
 import com.PVZ.controller.menuControllers.PlantSelectionMenuController;
 import com.PVZ.view.output.OutputDTO;
+import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.view.screen.GameScreen;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.screen.manager.ScreenManager;
@@ -42,9 +47,16 @@ public class PlantSelectionPanel extends BasePanel {
     private final List<PlantCardActor> cards = new ArrayList<>();
     private Label statusLabel;
     private Label countLabel;
+    private String chapterName;
     private boolean readyToShow = true;
+    private Label detailNameLabel;
+    private Label detailDescriptionLabel;
+    private Label detailCostLabel;
+    private DetailPreviewActor detailPreviewActor;
+    private PlantType detailPlantType;
 
     public PlantSelectionPanel(String chapterName, int stage) {
+        this.chapterName = chapterName;
         OutputDTO enterResult = new ChapterAndLevelSelectionMenuController().handle(
             new ChapterAndLevelSelectionInputDTO(ChapterAndLevelSelectionCommand.ENTER_CHAPTER,
                 chapterName, null, null, stage));
@@ -56,14 +68,14 @@ public class PlantSelectionPanel extends BasePanel {
         if (AppStatus.currentMenuType != MenuType.PLANT_SELECTION) {
             readyToShow = false;
             ScreenManager.getInstance().performTransition(() -> new GameScreen(
-                "maps/Frontyard.jpg",
+                ChapterMapPaths.resolve(chapterName),
                 "music/Title Screen.mp3",
                 AppStatus.getGameEngine()
             ));
             return;
         }
 
-        buildPicker();
+        buildPicker(chapterName);
     }
 
     private void buildErrorOnly(String message) {
@@ -74,11 +86,18 @@ public class PlantSelectionPanel extends BasePanel {
         add(statusLabel).pad(20f).row();
     }
 
-    private void buildPicker() {
+    private void buildPicker(String chapterName) {
         setFillParent(true);
         align(Align.center);
 
         BitmapFont font = FontManager.getInstance().getEnglishMenuFont();
+        String mapPath = ChapterMapPaths.resolve(chapterName);
+        Image levelBackground = new Image(new Texture(com.badlogic.gdx.Gdx.files.internal(mapPath)));
+        levelBackground.setFillParent(true);
+        levelBackground.setScaling(com.badlogic.gdx.utils.Scaling.fill);
+        addActor(levelBackground);
+
+        Table detailPanel = buildDetailPanel(font);
 
         Table grid = new Table();
         grid.top().left();
@@ -120,6 +139,7 @@ public class PlantSelectionPanel extends BasePanel {
         Table window = new Table();
         window.pad(24f);
         window.setBackground(resolveWindowBackground());
+        window.add(detailPanel).width(6 * 150f).padBottom(14f).row();
         window.add(scrollPane).size(6 * 150f, 4 * 175f).row();
         window.add(countLabel).padTop(8f).row();
         window.add(statusLabel).padTop(4f).row();
@@ -137,6 +157,109 @@ public class PlantSelectionPanel extends BasePanel {
         add(windowStack).center();
 
         refresh();
+    }
+
+    private Table buildDetailPanel(BitmapFont font) {
+        Table panel = new Table();
+        Drawable panelBg = resolveCardSlotBackground();
+        if (panelBg != null) {
+            panel.setBackground(panelBg);
+        }
+        panel.pad(10f);
+
+        detailPreviewActor = new DetailPreviewActor();
+        detailNameLabel = new Label("", new Label.LabelStyle(font, Color.WHITE));
+        detailDescriptionLabel = new Label("", new Label.LabelStyle(font, Color.LIGHT_GRAY));
+        detailDescriptionLabel.setWrap(true);
+        detailCostLabel = new Label("", new Label.LabelStyle(font, Color.GOLD));
+        SunIconActor sunIcon = new SunIconActor();
+
+        Table infoColumn = new Table();
+        infoColumn.top().left();
+        infoColumn.add(detailNameLabel).left().row();
+        infoColumn.add(detailDescriptionLabel).left().width(4 * 150f).padTop(4f).row();
+        Table costRow = new Table();
+        costRow.add(sunIcon).size(28f, 28f).padRight(6f);
+        costRow.add(detailCostLabel).left();
+        infoColumn.add(costRow).left().padTop(6f).row();
+
+        TextButton upgradeButton = buildSkinTextButton("UPGRADE", "green", font, this::onUpgradeClicked);
+        TextButton boostButton = buildSkinTextButton("BOOST", "purple", font, this::onBoostClicked);
+        Table actionColumn = new Table();
+        actionColumn.add(upgradeButton).size(140f, 48f).padBottom(8f).row();
+        actionColumn.add(boostButton).size(140f, 48f).row();
+
+        panel.add(detailPreviewActor).size(96f, 116f).padRight(10f);
+        panel.add(infoColumn).expandX().fillX();
+        panel.add(actionColumn).padLeft(10f);
+
+        showDetailFor(null);
+        return panel;
+    }
+
+    private void showDetailFor(PlantType type) {
+        detailPlantType = type;
+        if (type == null) {
+            detailNameLabel.setText("یک گیاه را برای دیدن جزئیات انتخاب کنید");
+            detailDescriptionLabel.setText("");
+            detailCostLabel.setText("");
+            detailPreviewActor.setPlantType(null);
+            return;
+        }
+        PlantDefinition def = PlantLibrary.findByType(type).orElse(null);
+        detailPreviewActor.setPlantType(type);
+        if (def == null) {
+            detailNameLabel.setText(type.name());
+            detailDescriptionLabel.setText("");
+            detailCostLabel.setText("");
+            return;
+        }
+        detailNameLabel.setText(def.getName());
+        String description = def.getBaseAbility() != null ? def.getBaseAbility().getRaw() : "";
+        detailDescriptionLabel.setText(description == null ? "" : description);
+        detailCostLabel.setText(String.valueOf(def.getCost()));
+    }
+
+    private void onUpgradeClicked() {
+        if (detailPlantType == null) {
+            return;
+        }
+        //todo
+    }
+
+    private void onBoostClicked() {
+        if (detailPlantType == null) {
+            return;
+        }
+        // TODO
+    }
+
+    private TextButton buildSkinTextButton(String text, String styleName, BitmapFont fallbackFont, Runnable onClick) {
+        try {
+            Skin skin = PvzSkin.get();
+            if (skin != null && skin.has(styleName, TextButton.TextButtonStyle.class)) {
+                TextButton button = new TextButton(text, skin, styleName);
+                button.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        onClick.run();
+                    }
+                });
+                return button;
+            }
+        } catch (Exception ignored) {
+        }
+        TextButton.TextButtonStyle fallbackStyle = new TextButton.TextButtonStyle();
+        fallbackStyle.font = fallbackFont;
+        fallbackStyle.fontColor = Color.WHITE;
+        TextButton fallback = new TextButton(text, fallbackStyle);
+        fallback.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                onClick.run();
+            }
+        });
+        return fallback;
     }
 
     private Drawable resolveCardSlotBackground() {
@@ -239,6 +362,7 @@ public class PlantSelectionPanel extends BasePanel {
             : PlantSelectionCommand.ADD_PLANT;
         OutputDTO result = plantController.handle(new PlantSelectionInputDTO(command, type.name()));
         statusLabel.setText(result.isSuccess() ? "" : stripColorCodes(result.getMessage()));
+        showDetailFor(type);
         refresh();
     }
 
@@ -249,7 +373,7 @@ public class PlantSelectionPanel extends BasePanel {
             return;
         }
         ScreenManager.getInstance().performTransition(() -> new GameScreen(
-            "maps/Frontyard.jpg",
+            ChapterMapPaths.resolve(chapterName),
             "music/Title Screen.mp3",
             AppStatus.getGameEngine()
         ));
@@ -273,5 +397,54 @@ public class PlantSelectionPanel extends BasePanel {
 
     private static String stripColorCodes(String s) {
         return s == null ? "" : s.replaceAll("\u001B\\[[;\\d]*m", "");
+    }
+    private static final class DetailPreviewActor extends com.badlogic.gdx.scenes.scene2d.Actor {
+        private PlantType type;
+        private float animTime;
+
+        void setPlantType(PlantType type) {
+            this.type = type;
+            this.animTime = 0f;
+        }
+
+        @Override
+        public void act(float delta) {
+            super.act(delta);
+            animTime += delta;
+        }
+
+        @Override
+        public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
+            if (type == null) {
+                return;
+            }
+            float cx = getX() + getWidth() / 2f;
+            float cy = getY() + getHeight() / 2f;
+            batch.setColor(1f, 1f, 1f, parentAlpha);
+            EntityRenderer.getInstance().renderPlant((com.badlogic.gdx.graphics.g2d.SpriteBatch) batch,
+                type.name(), animTime, cx, cy);
+            batch.setColor(Color.WHITE);
+        }
+    }
+
+    private static final class SunIconActor extends com.badlogic.gdx.scenes.scene2d.Actor {
+        private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
+        private float animTime;
+
+        @Override
+        public void act(float delta) {
+            super.act(delta);
+            animTime += delta;
+        }
+
+        @Override
+        public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
+            float cx = getX() + getWidth() / 2f;
+            float cy = getY() + getHeight() / 2f;
+            batch.setColor(1f, 1f, 1f, parentAlpha);
+            EntityRenderer.getInstance().renderPam(
+                (com.badlogic.gdx.graphics.g2d.SpriteBatch) batch, SUN_PAM, animTime, cx, cy);
+            batch.setColor(Color.WHITE);
+        }
     }
 }
