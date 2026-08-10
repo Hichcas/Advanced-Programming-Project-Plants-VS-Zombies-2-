@@ -4,16 +4,27 @@ import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.game.GameEngine;
 import com.PVZ.model.game.GameHud;
+import com.PVZ.model.game.LevelStartOverlay;
 import com.PVZ.model.game.Map;
+import com.PVZ.model.game.PauseMenuOverlay;
 import com.PVZ.model.game.RegularGameEngine;
 import com.PVZ.model.game.SeedPacketBar;
+import com.PVZ.model.game.WinLoseOverlay;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.screen.manager.MusicManager;
+import com.PVZ.view.screen.manager.ScreenManager;
+import com.PVZ.model.user.UserRegistry;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +34,9 @@ public class GameScreen extends BaseScreen {
 
     private final SpriteBatch gameBatch;
     private GameHud gameHud;
+    private PauseMenuOverlay pauseMenuOverlay;
+    private LevelStartOverlay levelStartOverlay;
+    private WinLoseOverlay winLoseOverlay;
     private final GameEngine gameEngine;
     private final String mapPath;
     private final String musicPath;
@@ -54,6 +68,14 @@ public class GameScreen extends BaseScreen {
 
         gameHud = new GameHud();
         stage.addActor(gameHud);
+        pauseMenuOverlay = new PauseMenuOverlay(this::handleSaveAndExit, this::handleRestart);
+        pauseMenuOverlay.setMissionText(resolveMissionText());
+        stage.addActor(pauseMenuOverlay);
+        levelStartOverlay = new LevelStartOverlay(resolveStageConfig(), () -> { });
+        stage.addActor(levelStartOverlay);
+        winLoseOverlay = new WinLoseOverlay(this::handleSaveAndExit, this::handleRestart);
+        stage.addActor(winLoseOverlay);
+        stage.addActor(buildPauseButton());
 
         gameMap = new Map(550, 1240, 1600, 1170, 5, 9);
         shapeDebug = new ShapeRenderer();
@@ -65,6 +87,93 @@ public class GameScreen extends BaseScreen {
         if (gameEngine instanceof RegularGameEngine regularGameEngine) {
             layoutSeedPacketBar(regularGameEngine);
         }
+
+        levelStartOverlay.show();
+    }
+
+    private com.PVZ.model.game.chapter.StageConfig resolveStageConfig() {
+        try {
+            return com.PVZ.model.game.chapter.ChapterLibrary
+                .getStageConfig(AppStatus.currentChapterName, AppStatus.currentStageNumber);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String resolveMissionText() {
+        com.PVZ.model.game.chapter.StageConfig stageConfig = resolveStageConfig();
+        if (stageConfig != null && stageConfig.getType() != null
+                && stageConfig.getType().toUpperCase().contains("DEADLINE")) {
+            return "Don't let the zombies cross the marked line!";
+        }
+        return "Don't let the zombies reach your house!";
+    }
+
+    private boolean isSimulationFrozen() {
+        return (pauseMenuOverlay != null && pauseMenuOverlay.isPaused())
+            || (levelStartOverlay != null && levelStartOverlay.isShowing())
+            || (winLoseOverlay != null && winLoseOverlay.isShowing());
+    }
+
+    private Table buildPauseButton() {
+        Table overlay = new Table();
+        overlay.setFillParent(true);
+        overlay.top().right();
+        ImageButton button = null;
+        try {
+            Skin skin = PvzSkin.get();
+            if (skin != null && skin.has("ingame_pause", ImageButton.ImageButtonStyle.class)) {
+                button = new ImageButton(skin, "ingame_pause");
+            }
+        } catch (Exception ignored) {
+        }
+        if (button == null) {
+            button = new ImageButton(new ImageButton.ImageButtonStyle());
+        }
+        final ImageButton pauseButton = button;
+        pauseButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                pauseMenuOverlay.toggle();
+            }
+        });
+        overlay.add(pauseButton).size(70f, 70f).padTop(20f).padRight(20f);
+        return overlay;
+    }
+
+    private void handleSaveAndExit() {
+        if (AppStatus.currentUser != null && AppStatus.currentUser.profile != null) {
+            UserRegistry.saveUserToDatabase(AppStatus.currentUser.profile.getUsername());
+        }
+        AppStatus.currentMenuType = MenuType.CHAPTER_AND_LEVEL_SELECTION;
+        ScreenManager.getInstance().performTransition(MainMenuScreen::new);
+    }
+
+    private void handleRestart() {
+        OutputDTOResultHolder result = restartCurrentStage();
+        if (result.success) {
+            ScreenManager.getInstance().performTransition(() -> new GameScreen(
+                mapPath, musicPath, AppStatus.getGameEngine()));
+        } else {
+            System.err.println("GameScreen: restart failed: " + result.message);
+        }
+    }
+
+    private static final class OutputDTOResultHolder {
+        final boolean success;
+        final String message;
+
+        OutputDTOResultHolder(boolean success, String message) {
+            this.success = success;
+            this.message = message;
+        }
+    }
+
+    private OutputDTOResultHolder restartCurrentStage() {
+        com.PVZ.view.output.OutputDTO result = new com.PVZ.controller.menuControllers.PlantSelectionMenuController()
+            .handle(new com.PVZ.view.input.DTO.PlantSelectionInputDTO(
+                com.PVZ.model.enums.commands.PlantSelectionCommand.START_GAME, null));
+        return new OutputDTOResultHolder(result.isSuccess(), result.getMessage());
     }
 
     @Override
@@ -73,11 +182,17 @@ public class GameScreen extends BaseScreen {
         multiplexer.addProcessor(new com.badlogic.gdx.InputAdapter() {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                if (isSimulationFrozen()) {
+                    return false;
+                }
                 return activeInputProcessor().touchDown(screenX, screenY, pointer, button);
             }
 
             @Override
             public boolean mouseMoved(int screenX, int screenY) {
+                if (isSimulationFrozen()) {
+                    return false;
+                }
                 return activeInputProcessor().mouseMoved(screenX, screenY);
             }
         });
@@ -147,10 +262,17 @@ public class GameScreen extends BaseScreen {
                 } else {
                     gameOverAlpha = 1.0f;
                 }
+
+                if (displayTime >= 1.2f && winLoseOverlay != null && !winLoseOverlay.isShowing()) {
+                    winLoseOverlay.showResult(regularGameEngine.isGameOverWin());
+                }
                 return new GameOverState(true, regularGameEngine.isGameOverWin(), inEndOfGame);
             } else {
                 gameOverShown = false;
                 gameOverAlpha = 0f;
+                if (winLoseOverlay != null && winLoseOverlay.isShowing()) {
+                    winLoseOverlay.hide();
+                }
                 return new GameOverState(false, false, false);
             }
         }
@@ -181,7 +303,7 @@ public class GameScreen extends BaseScreen {
         }
         gameBatch.end();
 
-        float renderDelta = Math.min(delta, 1 / 30f);
+        float renderDelta = isSimulationFrozen() ? 0f : Math.min(delta, 1 / 30f);
         activeEngine.render(renderDelta, gameBatch);
     }
 
