@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
@@ -36,6 +35,7 @@ import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.view.screen.GameScreen;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.screen.manager.ScreenManager;
+import com.PVZ.view.screen.ui.MenuButton;
 import com.PVZ.view.screen.ui.PlantCardActor;
 import pvz.skin.PvzSkin;
 
@@ -82,7 +82,7 @@ public class PlantSelectionPanel extends BasePanel {
         setFillParent(true);
         align(Align.center);
         BitmapFont font = FontManager.getInstance().getEnglishMenuFont();
-        statusLabel = new Label(message, new Label.LabelStyle(font, com.badlogic.gdx.graphics.Color.SALMON));
+        statusLabel = new Label(message, new Label.LabelStyle(font, Color.SALMON));
         add(statusLabel).pad(20f).row();
     }
 
@@ -131,10 +131,14 @@ public class PlantSelectionPanel extends BasePanel {
         ScrollPane scrollPane = new ScrollPane(grid);
         scrollPane.setFadeScrollBars(false);
 
-        countLabel = new Label("0 / 8 selected", new Label.LabelStyle(font, com.badlogic.gdx.graphics.Color.WHITE));
-        statusLabel = new Label("", new Label.LabelStyle(font, com.badlogic.gdx.graphics.Color.SALMON));
+        countLabel = new Label("0 / 8 selected", new Label.LabelStyle(font, Color.WHITE));
+        statusLabel = new Label("", new Label.LabelStyle(font, Color.SALMON));
 
-        TextButton letsRock = buildLetsRockButton(font);
+        // دکمه LET'S ROCK (جایگزین با MenuButton)
+        Texture greenUp   = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON");
+        Texture greenDown = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON_DOWN");
+        MenuButton letsRock = new MenuButton(greenUp, "LET'S ROCK", font, greenDown, null, null, this::onLetsRock);
+        letsRock.setSize(240f, 64f);
 
         Table window = new Table();
         window.pad(24f);
@@ -183,8 +187,16 @@ public class PlantSelectionPanel extends BasePanel {
         costRow.add(detailCostLabel).left();
         infoColumn.add(costRow).left().padTop(6f).row();
 
-        TextButton upgradeButton = buildSkinTextButton("UPGRADE", "green", font, this::onUpgradeClicked);
-        TextButton boostButton = buildSkinTextButton("BOOST", "purple", font, this::onBoostClicked);
+        // دکمه‌های UPGRADE و BOOST با MenuButton سفارشی
+        Texture purpleUp   = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON");
+        Texture purpleDown = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON_DOWN");
+        Texture marker = null;
+
+        MenuButton upgradeButton = new MenuButton(purpleUp, "UPGRADE", font, purpleDown, null, marker, this::onUpgradeClicked);
+        upgradeButton.setSize(140f, 48f);
+        MenuButton boostButton = new MenuButton(purpleUp, "BOOST", font, purpleDown, null, marker, this::onBoostClicked);
+        boostButton.setSize(140f, 48f);
+
         Table actionColumn = new Table();
         actionColumn.add(upgradeButton).size(140f, 48f).padBottom(8f).row();
         actionColumn.add(boostButton).size(140f, 48f).row();
@@ -234,33 +246,7 @@ public class PlantSelectionPanel extends BasePanel {
         // TODO
     }
 
-    private TextButton buildSkinTextButton(String text, String styleName, BitmapFont fallbackFont, Runnable onClick) {
-        try {
-            Skin skin = PvzSkin.get();
-            if (skin != null && skin.has(styleName, TextButton.TextButtonStyle.class)) {
-                TextButton button = new TextButton(text, skin, styleName);
-                button.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        onClick.run();
-                    }
-                });
-                return button;
-            }
-        } catch (Exception ignored) {
-        }
-        TextButton.TextButtonStyle fallbackStyle = new TextButton.TextButtonStyle();
-        fallbackStyle.font = fallbackFont;
-        fallbackStyle.fontColor = Color.WHITE;
-        TextButton fallback = new TextButton(text, fallbackStyle);
-        fallback.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                onClick.run();
-            }
-        });
-        return fallback;
-    }
+    // --- متدهای قدیمی ساخت دکمه حذف شده‌اند و دیگر استفاده نمی‌شوند ---
 
     private Drawable resolveCardSlotBackground() {
         try {
@@ -273,39 +259,10 @@ public class PlantSelectionPanel extends BasePanel {
         return null;
     }
 
-    private TextButton buildLetsRockButton(BitmapFont font) {
-        try {
-            Skin skin = PvzSkin.get();
-            if (skin != null && skin.has("green", TextButton.TextButtonStyle.class)) {
-                TextButton button = new TextButton("LET'S ROCK", skin, "green");
-                button.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        onLetsRock();
-                    }
-                });
-                return button;
-            }
-        } catch (Exception ignored) {
-        }
-        TextButton.TextButtonStyle fallbackStyle = new TextButton.TextButtonStyle();
-        fallbackStyle.font = font;
-        fallbackStyle.fontColor = Color.WHITE;
-        TextButton fallback = new TextButton("LET'S ROCK", fallbackStyle);
-        fallback.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                onLetsRock();
-            }
-        });
-        return fallback;
-    }
-
     private Drawable resolveWindowBackground() {
         try {
             Skin skin = PvzSkin.get();
-            if (skin != null && skin.has("image_ui_dialog_asset_inner_bkgd_10",
-                    Drawable.class)) {
+            if (skin != null && skin.has("image_ui_dialog_asset_inner_bkgd_10", Drawable.class)) {
                 return skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10");
             }
         } catch (Exception ignored) {
@@ -398,6 +355,7 @@ public class PlantSelectionPanel extends BasePanel {
     private static String stripColorCodes(String s) {
         return s == null ? "" : s.replaceAll("\u001B\\[[;\\d]*m", "");
     }
+
     private static final class DetailPreviewActor extends com.badlogic.gdx.scenes.scene2d.Actor {
         private PlantType type;
         private float animTime;

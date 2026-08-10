@@ -2,17 +2,15 @@ package com.PVZ.model.game;
 
 import com.PVZ.model.game.chapter.StageConfig;
 import com.PVZ.view.screen.manager.FontManager;
+import com.PVZ.view.screen.ui.MenuButton;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -51,12 +49,17 @@ public class LevelStartOverlay extends Table {
             dialog.add(line).width(620f).left().padBottom(8f).row();
         }
 
-        TextButton continueButton = buildContinueButton(font, () -> {
+        // --- دکمه CONTINUE با MenuButton سفارشی ---
+        Drawable purpleUp = PvzSkin.get().getDrawable("image_ui_generic_purplebutton_10");
+        Drawable purpleDown = PvzSkin.get().getDrawable("image_ui_generic_purplebutton_down_10");
+        MenuButton continueButton = new MenuButton(purpleUp, "CONTINUE", font,
+            purpleDown, null, null, () -> {
             hide();
             if (continueHandler != null) {
                 continueHandler.onContinue();
             }
         });
+        continueButton.setSize(220f, 60f);
         dialog.add(continueButton).size(220f, 60f).padTop(16f).row();
 
         add(dialog);
@@ -94,34 +97,6 @@ public class LevelStartOverlay extends Table {
         }
 
         return objectives;
-    }
-
-    private TextButton buildContinueButton(BitmapFont fallbackFont, Runnable action) {
-        try {
-            Skin skin = PvzSkin.get();
-            if (skin != null && skin.has("purple", TextButton.TextButtonStyle.class)) {
-                TextButton button = new TextButton("CONTINUE", skin, "purple");
-                button.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        action.run();
-                    }
-                });
-                return button;
-            }
-        } catch (Exception ignored) {
-        }
-        TextButton.TextButtonStyle fallbackStyle = new TextButton.TextButtonStyle();
-        fallbackStyle.font = fallbackFont;
-        fallbackStyle.fontColor = Color.WHITE;
-        TextButton fallback = new TextButton("CONTINUE", fallbackStyle);
-        fallback.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                action.run();
-            }
-        });
-        return fallback;
     }
 
     private Drawable resolveDialogBackground() {

@@ -1,17 +1,15 @@
 package com.PVZ.model.game;
 
 import com.PVZ.view.screen.manager.FontManager;
+import com.PVZ.view.screen.ui.MenuButton;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import pvz.skin.PvzSkin;
@@ -27,7 +25,7 @@ public class WinLoseOverlay extends Table {
 
     private boolean showing = false;
     private final Label titleLabel;
-    private final TextButton retryButton;
+    private final MenuButton retryButton;
 
     public WinLoseOverlay(ExitHandler exitHandler, RetryHandler retryHandler) {
         setFillParent(true);
@@ -45,18 +43,29 @@ public class WinLoseOverlay extends Table {
         titleLabel.setFontScale(1.6f);
         dialog.add(titleLabel).padBottom(24f).colspan(2).row();
 
-        TextButton exitButton = buildButton("EXIT", "brown", font, () -> {
+        // --- دکمه‌ها با MenuButton سفارشی ---
+        Drawable brownUp   = PvzSkin.get().getDrawable("image_ui_generic_brownbutton_10");
+        Drawable brownDown = PvzSkin.get().getDrawable("image_ui_generic_brownbutton_down_10");
+        Drawable greenUp   = PvzSkin.get().getDrawable("image_ui_generic_greenbutton_10");
+        Drawable greenDown = PvzSkin.get().getDrawable("image_ui_generic_greenbutton_down_10");
+
+        MenuButton exitButton = new MenuButton(brownUp, "EXIT", font,
+            brownDown, null, null, () -> {
             hide();
             if (exitHandler != null) {
                 exitHandler.onExit();
             }
         });
-        retryButton = buildButton("TRY AGAIN", "green", font, () -> {
+        exitButton.setSize(200f, 64f);
+
+        retryButton = new MenuButton(greenUp, "TRY AGAIN", font,
+            greenDown, null, null, () -> {
             hide();
             if (retryHandler != null) {
                 retryHandler.onRetry();
             }
         });
+        retryButton.setSize(200f, 64f);
 
         dialog.add(exitButton).size(200f, 64f).padRight(16f);
         dialog.add(retryButton).size(200f, 64f);
@@ -66,7 +75,7 @@ public class WinLoseOverlay extends Table {
 
     public void showResult(boolean win) {
         titleLabel.setText(win ? "LEVEL COMPLETE!" : "GAME OVER");
-        retryButton.setVisible(!win);
+        retryButton.setVisible(!win);   // دکمه Try Again فقط در باخت نمایش داده شود
         showing = true;
         setVisible(true);
         setTouchable(Touchable.enabled);
@@ -80,34 +89,6 @@ public class WinLoseOverlay extends Table {
 
     public boolean isShowing() {
         return showing;
-    }
-
-    private TextButton buildButton(String text, String styleName, BitmapFont fallbackFont, Runnable action) {
-        try {
-            Skin skin = PvzSkin.get();
-            if (skin != null && skin.has(styleName, TextButton.TextButtonStyle.class)) {
-                TextButton button = new TextButton(text, skin, styleName);
-                button.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        action.run();
-                    }
-                });
-                return button;
-            }
-        } catch (Exception ignored) {
-        }
-        TextButton.TextButtonStyle fallbackStyle = new TextButton.TextButtonStyle();
-        fallbackStyle.font = fallbackFont;
-        fallbackStyle.fontColor = Color.WHITE;
-        TextButton fallback = new TextButton(text, fallbackStyle);
-        fallback.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                action.run();
-            }
-        });
-        return fallback;
     }
 
     private Drawable resolveDialogBackground() {
