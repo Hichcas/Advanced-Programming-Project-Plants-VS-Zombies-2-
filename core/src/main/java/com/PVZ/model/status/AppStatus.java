@@ -138,18 +138,13 @@ public final class AppStatus {
     public static void returnToMainMenu(String message) {
         currentMenuType = MenuType.MAIN;
         setGameEngine(null);
-        ScreenManager.getInstance().performTransition(() ->
-                new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3",
-                    new RegularGameEngine(new GameStatus())),
-            message);
+        ScreenManager.getInstance().performTransition(MainMenuScreen::new, message);
     }
 
     public static void returnToTravelLog() {
         currentMenuType = MenuType.TRAVEL_LOG;
         setGameEngine(null);
-        ScreenManager.getInstance().performTransition(() ->
-            new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3",
-                new RegularGameEngine(new GameStatus())));
+        ScreenManager.getInstance().performTransition(MainMenuScreen::new);
     }
 
 

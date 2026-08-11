@@ -33,8 +33,8 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "PEASHOOTER", "SUNFLOWER" ],
-    "seenZombies" : [ "WEASEL", "MUMMY_ARMOR1", "IMP_TUTORIAL", "TOMB_RAISER", "DARK_ARMOR2", "ZOMBOSS_COWBOY", "RA", "CAMEL", "GARGANTUAR_BASIC", "WEASEL_HOARDER", "PHARAOH", "MUMMY_ARMOR2", "MUMMY_DEFAULT", "ICEAGE_ARMOR3", "TUTORIAL_ARMOR2", "DARK_ARMOR4", "DARK_ARMOR3", "ICEAGE_ARMOR1", "MUMMY_ARMOR4", "ICEAGE_ARMOR2", "ZOMBOTANY_JALAPENO", "DARK_JUGGLER", "EXPLORER", "TUTORIAL_DEFAULT", "BEACH_OCTOPUS", "DARK_DEFAULT", "TUTORIAL_ARMOR1", "ZOMBOTANY_PEASHOOTER", "TUTORIAL_ARMOR4", "ZOMBOSS_EGYPT" ],
+    "unlockedPlants" : [ "SUNFLOWER", "PEASHOOTER" ],
+    "seenZombies" : [ "TUTORIAL_ARMOR4", "BEACH_SURFER", "IMP_TUTORIAL", "WEASEL", "ZOMBOTANY_JALAPENO", "MUMMY_ARMOR1", "WEASEL_HOARDER", "ZOMBOTANY_SQUASH", "DARK_ARMOR2", "BEACH_ARMOR2", "GARGANTUAR_EGYPT", "ICEAGE_HUNTER", "MUMMY_ARMOR2", "ICEAGE_ARMOR2", "DARK_JUGGLER", "ZOMBOSS_COWBOY", "DARK_DEFAULT", "BEACH_DEFAULT", "TUTORIAL_ARMOR2", "DARK_ARMOR4", "CAMEL", "TOMB_RAISER", "PHARAOH", "ZOMBOSS_EGYPT", "ICEAGE_ARMOR3", "DARK_ARMOR3", "EXPLORER", "BEACH_OCTOPUS", "RA", "ICEAGE_ARMOR1", "MUMMY_DEFAULT", "TUTORIAL_ARMOR1", "MUMMY_ARMOR4", "DARK_KING", "TUTORIAL_DEFAULT", "ZOMBOTANY_PEASHOOTER", "GARGANTUAR_BASIC" ],
     "seedPackets" : { },
     "plantLevels" : { },
     "greenhouseBoosts" : [ ]
@@ -221,8 +221,8 @@
           "n" : 2
         },
         "active" : true,
-        "formattedDescription" : "Win without losing more than 2 plants",
         "runtimeState" : { },
+        "formattedDescription" : "Win without losing more than 2 plants",
         "formattedTitle" : "Economic Herbivore"
       }, {
         "id" : "story_speed",
@@ -242,10 +242,10 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "runtimeState" : {
-          "waveStartTime" : 1786376734588
+          "waveStartTime" : 1786463553426
         },
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "formattedTitle" : "Speed Run"
       }, {
         "id" : "epic_defense",
@@ -265,8 +265,8 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "End a level with exactly 0 sun",
         "runtimeState" : { },
+        "formattedDescription" : "End a level with exactly 0 sun",
         "formattedTitle" : "Master of Defense"
       }, {
         "id" : "epic_night_day",
@@ -286,8 +286,8 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "Win a day level using only mushrooms",
         "runtimeState" : { },
+        "formattedDescription" : "Win a day level using only mushrooms",
         "formattedTitle" : "Day or Night"
       }, {
         "id" : "epic_lawnmower",
@@ -309,8 +309,8 @@
           "n" : 20
         },
         "active" : true,
-        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
         "runtimeState" : { },
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
         "formattedTitle" : "Lawnmower Time"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
@@ -332,8 +332,8 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
         "runtimeState" : { },
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
         "formattedTitle" : "Chapter Hunter"
       } ],
       "lastDailyRefresh" : null,
@@ -341,7 +341,7 @@
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "13h 41m"
+      "timeUntilReset" : "4h 36m"
     }
   }
 }
