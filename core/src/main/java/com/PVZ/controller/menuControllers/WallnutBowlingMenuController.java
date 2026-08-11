@@ -109,8 +109,8 @@ public class WallnutBowlingMenuController {
     private OutputDTO exit() {
         currentGame = null;
         currentEngine = null;
-        AppStatus.returnToTravelLog();
-        return new OutputDTO(true, "Exited Wallnut Bowling. Returning to Travel Log.");
+        AppStatus.returnToChapterAndLevelSelection(null);
+        return new OutputDTO(true, "Exited Wallnut Bowling. Returning to Chapter Selection.");
     }
 
     public static WallnutBowlingGame getCurrentGame() {

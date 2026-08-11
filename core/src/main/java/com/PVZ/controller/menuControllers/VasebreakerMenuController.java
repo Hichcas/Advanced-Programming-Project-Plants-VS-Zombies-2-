@@ -86,8 +86,8 @@ public class VasebreakerMenuController {
     private OutputDTO exit() {
         currentGame = null;
         currentEngine = null;
-        AppStatus.returnToTravelLog();
-        return new OutputDTO(true, "Exited Vasebreaker. Returning to Travel Log.");
+        AppStatus.returnToChapterAndLevelSelection(null);
+        return new OutputDTO(true, "Exited Vasebreaker. Returning to Chapter Selection.");
     }
 
     public static VasebreakerGame getCurrentGame() {

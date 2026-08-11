@@ -27,11 +27,11 @@ public class BeghouledMenuController {
 
         if (currentGame != null && currentGame.isFinished()) {
             String message = currentGame.isWon()
-                ? "Target matches reached! Level complete! Returning to Travel Log."
-                : "A zombie reached your house. GAME OVER! Returning to Travel Log.";
+                ? "Target matches reached! Level complete! Returning to Chapter Selection."
+                : "A zombie reached your house. GAME OVER! Returning to Chapter Selection.";
             currentGame = null;
             currentEngine = null;
-            AppStatus.returnToTravelLog();
+            AppStatus.returnToChapterAndLevelSelection(null);
             return new OutputDTO(true, message);
         }
 
@@ -135,8 +135,8 @@ public class BeghouledMenuController {
     private OutputDTO exit() {
         currentGame = null;
         currentEngine = null;
-        AppStatus.returnToTravelLog();
-        return new OutputDTO(true, "Exited Beghouled. Returning to Travel Log.");
+        AppStatus.returnToChapterAndLevelSelection(null);
+        return new OutputDTO(true, "Exited Beghouled. Returning to Chapter Selection.");
     }
 
     public static BeghouledGame getCurrentGame() {

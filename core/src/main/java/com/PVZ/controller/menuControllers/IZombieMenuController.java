@@ -24,11 +24,11 @@ public class IZombieMenuController {
 
         if (currentGame != null && currentGame.isFinished()) {
             String message = currentGame.isWon()
-                    ? "All brains eaten! Level complete! Returning to Travel Log."
-                    : "Out of sun and zombies. GAME OVER! Returning to Travel Log.";
+                    ? "All brains eaten! Level complete! Returning to Chapter Selection."
+                    : "Out of sun and zombies. GAME OVER! Returning to Chapter Selection.";
             currentGame = null;
             currentEngine = null;
-            AppStatus.returnToTravelLog();
+            AppStatus.returnToChapterAndLevelSelection(null);
             return new OutputDTO(true, message);
         }
 
@@ -109,8 +109,8 @@ public class IZombieMenuController {
     private OutputDTO exit() {
         currentGame = null;
         currentEngine = null;
-        AppStatus.returnToTravelLog();
-        return new OutputDTO(true, "Exited I, Zombie. Returning to Travel Log.");
+        AppStatus.returnToChapterAndLevelSelection(null);
+        return new OutputDTO(true, "Exited I, Zombie. Returning to Chapter Selection.");
     }
 
     public static IZombieGame getCurrentGame() {
