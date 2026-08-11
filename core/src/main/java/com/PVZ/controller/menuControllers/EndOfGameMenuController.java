@@ -54,12 +54,8 @@ public class EndOfGameMenuController {
             UpdateHandler.resetBoardAfterGameOver(engine);
             AppStatus.setGameEngine(null);
         }
-        if (AppStatus.lastGameResultWin) {
-            AppStatus.returnToTravelLog();
-        } else {
-            AppStatus.returnToMainMenu("GAME OVER");
-        }
-        return new OutputDTO(true, "Returning to menu...");
+        AppStatus.returnToChapterAndLevelSelection(AppStatus.lastGameResultWin ? null : "GAME OVER");
+        return new OutputDTO(true, "Returning to Chapter Selection...");
     }
 
     private RegularGameEngine getRegularEngine() {

@@ -27,11 +27,11 @@ public class ZombotanyMenuController {
 
         if (currentGame != null && currentGame.isFinished()) {
             String message = currentGame.isWon()
-                    ? "All waves cleared! Level complete! Returning to Travel Log."
-                    : "The zombies reached your house. GAME OVER! Returning to Travel Log.";
+                    ? "All waves cleared! Level complete! Returning to Chapter Selection."
+                    : "The zombies reached your house. GAME OVER! Returning to Chapter Selection.";
             currentGame = null;
             currentEngine = null;
-            AppStatus.returnToTravelLog();
+            AppStatus.returnToChapterAndLevelSelection(null);
             return new OutputDTO(true, message);
         }
 
@@ -122,8 +122,8 @@ public class ZombotanyMenuController {
     private OutputDTO exit() {
         currentGame = null;
         currentEngine = null;
-        AppStatus.returnToTravelLog();
-        return new OutputDTO(true, "Exited Zombotany. Returning to Travel Log.");
+        AppStatus.returnToChapterAndLevelSelection(null);
+        return new OutputDTO(true, "Exited Zombotany. Returning to Chapter Selection.");
     }
 
     public static ZombotanyGame getCurrentGame() {
