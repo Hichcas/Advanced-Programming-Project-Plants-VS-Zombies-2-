@@ -25,16 +25,16 @@
       "ANCIENT_EGYPT" : 1
     },
     "minigameClearedCounts" : {
-      "WALLNUT_BOWLING" : 0,
+      "WALLNUT_BOWLING" : 1,
       "ZOMBOTANY" : 0,
-      "VASEBREAKER" : 0,
+      "VASEBREAKER" : 2,
       "I_ZOMBIE" : 0,
       "BEGHOULED" : 0
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "SUNFLOWER", "PEASHOOTER" ],
-    "seenZombies" : [ "MUMMY_ARMOR4", "MUMMY_ARMOR2", "EXPLORER", "MUMMY_DEFAULT", "RA", "TOMB_RAISER", "MUMMY_ARMOR1" ],
+    "unlockedPlants" : [ "PEASHOOTER", "SUNFLOWER" ],
+    "seenZombies" : [ "MUMMY_ARMOR1", "IMP_TUTORIAL", "TOMB_RAISER", "ICEAGE_ARMOR1", "DARK_ARMOR2", "ICEAGE_ARMOR3", "RA", "CAMEL", "GARGANTUAR_BASIC", "WEASEL_HOARDER", "PHARAOH", "MUMMY_ARMOR2", "MUMMY_DEFAULT", "DARK_ARMOR3", "TUTORIAL_ARMOR2", "DARK_ARMOR4", "ZOMBOSS_COWBOY", "ZOMBOTANY_JALAPENO", "MUMMY_ARMOR4", "ICEAGE_ARMOR2", "WEASEL", "DARK_JUGGLER", "EXPLORER", "TUTORIAL_DEFAULT", "BEACH_OCTOPUS", "DARK_DEFAULT", "TUTORIAL_ARMOR1", "ZOMBOTANY_PEASHOOTER", "TUTORIAL_ARMOR4", "ZOMBOSS_EGYPT" ],
     "seedPackets" : { },
     "plantLevels" : { },
     "greenhouseBoosts" : [ ]
@@ -244,7 +244,7 @@
         "active" : true,
         "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1786359273392
+          "waveStartTime" : 1786376734588
         },
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
@@ -341,7 +341,7 @@
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "9h 35m"
+      "timeUntilReset" : "4h 37m"
     }
   }
 }

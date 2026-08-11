@@ -194,8 +194,7 @@ public class ChapterSelectPanel extends BasePanel {
             new Runnable() {
                 @Override
                 public void run() {
-                    // TODO: باز کردن مینی‌گیم‌ها
-                    System.out.println("minigame");
+                    AppStatus.setCurrentMenuType(MenuType.MINIGAME_SELECTION);
                 }
             }
         );
