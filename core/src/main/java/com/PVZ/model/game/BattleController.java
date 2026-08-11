@@ -349,7 +349,6 @@ public class BattleController implements BehaviorContext {
         }
     }
 
-    /** Splash damage to nearby zombies (own lane + one lane above/below) around the impact point. */
     private void applyAreaSplash(Projectile p, Zombie primaryTarget) {
         int centerRow = (int) primaryTarget.getRow();
         double cx = primaryTarget.getX();
@@ -592,11 +591,6 @@ public class BattleController implements BehaviorContext {
         }
     }
 
-    /**
-     * Freezes only the single nearest zombie in a lane — used by contact traps like
-     * Iceberg Lettuce, which per its real ability only freezes "the first zombie that
-     * steps on it", not the whole lane.
-     */
     public void freezeClosestZombieInLane(int lane, double seconds) {
         Zombie nearest = null;
         double bestX = Double.MAX_VALUE;
@@ -717,7 +711,7 @@ public class BattleController implements BehaviorContext {
         }
         System.out.println("GAME OVER — zombie reached the house!");
         gameStatus.setGameOver(true);
-        AppStatus.returnToMainMenu("GAME OVER");
+        AppStatus.returnToChapterAndLevelSelection("GAME OVER");
     }
 
     public void removeZombie(Zombie zombie) {

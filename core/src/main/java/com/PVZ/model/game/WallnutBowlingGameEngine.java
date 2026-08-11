@@ -37,17 +37,12 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     private final Random random = new Random();
     private LawnMower[] lawnMowers;
     private float tickAccumulator = 0f;
-
     private WallnutBowlingGame game;
     private Texture background;
     private BitmapFont font;
     private float nutAnimTime = 0f;
 
-    /**
-     * مسیر PAM واقعی هر نوع گردو در این مینی‌گیم: گردوی معمولی و انفجاری همان گیاه‌های خودِ
-     * بازی‌اند (WALLNUT / EXPLODEONUT)، و برای گردوی غول‌پیکر از PRIMAL_WALLNUT استفاده شده
-     * چون طرحش واقعاً بزرگ‌تر و متفاوت‌تر از والنات معمولیه.
-     */
+
     private static String nutPamPath(NutType type) {
         return switch (type) {
             case NORMAL -> "768/INITIAL/PLANT/WALLNUT/WALLNUT.PAM";
@@ -310,7 +305,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
         gameOverTimer += delta;
         if (gameOverTimer >= GAME_OVER_DISPLAY_DURATION) {
             gameOverNavigated = true;
-            AppStatus.returnToTravelLog();
+            AppStatus.returnToChapterAndLevelSelection(null);
         }
     }
 

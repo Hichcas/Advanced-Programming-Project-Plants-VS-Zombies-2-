@@ -11,6 +11,7 @@ import com.PVZ.model.game.RegularGameEngine;
 import com.PVZ.model.graphics.GraphicsQuality;
 import com.PVZ.model.user.User;
 import com.PVZ.view.screen.GameScreen;
+import com.PVZ.view.screen.MainMenuScreen;
 import com.PVZ.view.screen.manager.BrightnessController;
 import com.PVZ.view.screen.manager.MusicManager;
 import com.PVZ.view.screen.manager.ScreenManager;
@@ -155,10 +156,7 @@ public final class AppStatus {
     public static void returnToChapterAndLevelSelection(String message) {
         currentMenuType = MenuType.CHAPTER_AND_LEVEL_SELECTION;
         setGameEngine(null);
-        ScreenManager.getInstance().performTransition(() ->
-                new GameScreen("maps/Frontyard.jpg", "music/Title Screen.mp3",
-                    new RegularGameEngine(new GameStatus())),
-            message);
+        ScreenManager.getInstance().performTransition(MainMenuScreen::new, message);
     }
 
     // ====================== getter/setter های جدید ======================

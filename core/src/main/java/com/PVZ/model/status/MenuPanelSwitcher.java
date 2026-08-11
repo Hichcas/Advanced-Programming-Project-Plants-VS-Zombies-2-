@@ -56,6 +56,9 @@ public class MenuPanelSwitcher {
                 PanelManager.getInstance().performPanelTransition(
                     new PlantSelectionPanel(AppStatus.currentChapterName, AppStatus.currentStageNumber));
                 break;
+            case MINIGAME_SELECTION:
+                PanelManager.getInstance().performPanelTransition(new MinigameSelectionPanel());
+                break;
             case IN_GAME:
                 // ورود به بازی از طریق ScreenManager.performTransition (که خودِ GameScreen را
                 // می‌سازد) انجام می‌شود، نه از طریق پنل‌های این کلاس؛ پس این‌جا کاری لازم نیست.

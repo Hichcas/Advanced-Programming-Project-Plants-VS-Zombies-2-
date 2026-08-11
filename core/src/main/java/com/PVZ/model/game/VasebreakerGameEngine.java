@@ -117,7 +117,6 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
                 }
             }
             breakingVases.replaceAll((v, t) -> t + delta);
-            breakingVases.values().removeIf(t -> t > BREAK_CLIP_DURATION);
         }
         if (gameOverTriggered) {
             updateGameOverTimer(delta);
@@ -209,7 +208,7 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
         gameOverTimer += delta;
         if (gameOverTimer >= GAME_OVER_DISPLAY_DURATION) {
             gameOverNavigated = true;
-            AppStatus.returnToTravelLog();
+            AppStatus.returnToChapterAndLevelSelection(null);
         }
     }
 
@@ -264,10 +263,7 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
                     EntityRenderer.getInstance().renderPam(batch, pamPath, "idle", vaseAnimTime, cx, cy);
                 } else {
                     Float breakElapsed = breakingVases.get(vase);
-                    if (breakElapsed != null) {
-                        // در حال پخش انیمیشن شکستن (کلیپ "break")؛ بعد از تمام‌شدنش دیگر چیزی
-                        // کشیده نمی‌شود چون خودِ کوزه از بین رفته و محتوایش (زامبی/بذر) قبلاً
-                        // جدا آزاد شده.
+                    if (breakElapsed != null && breakElapsed <= BREAK_CLIP_DURATION) {
                         EntityRenderer.getInstance().renderPam(batch, pamPath, "break", breakElapsed, cx, cy);
                     }
                 }

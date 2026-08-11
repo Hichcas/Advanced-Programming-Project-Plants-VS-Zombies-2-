@@ -317,7 +317,7 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         gameOverTimer += delta;
         if (gameOverTimer >= GAME_OVER_DISPLAY_DURATION) {
             gameOverNavigated = true;
-            com.PVZ.model.status.AppStatus.returnToTravelLog();
+            com.PVZ.model.status.AppStatus.returnToChapterAndLevelSelection(null);
         }
     }
 
