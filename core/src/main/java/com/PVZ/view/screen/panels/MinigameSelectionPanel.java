@@ -117,11 +117,11 @@ public class MinigameSelectionPanel extends BasePanel {
         row.defaults().padRight(CARD_GAP);
 
         List<MinigameInfo> infos = List.of(
-            new MinigameInfo(MinigameEnum.VASEBREAKER, "vasebreaker", "VASE_GARGANTUAR", "Break vases to reveal plants, zombies, and seeds."),
-            new MinigameInfo(MinigameEnum.WALLNUT_BOWLING, "wallnut_bowling", "BOWLINGBULB", "Launch nuts left of the red line and clear the lane."),
-            new MinigameInfo(MinigameEnum.I_ZOMBIE, "i_zombie", "ZOMBIE_BIGHEAD", "Pick zombies instead of plants and break through the line."),
-            new MinigameInfo(MinigameEnum.BEGHOULED, "beghouled", "BOMBEGRANATE", "Swap plants to make matches and unlock stronger upgrades."),
-            new MinigameInfo(MinigameEnum.ZOMBOTANY, "zombotany", "ZOMBIE_NUTCRACKER", "Plant-zombie chaos: place zombie plants and survive the waves.")
+            new MinigameInfo(MinigameEnum.VASEBREAKER, "vasebreaker", "vasebreaker_cover.png", "Break vases to reveal plants, zombies, and seeds."),
+            new MinigameInfo(MinigameEnum.WALLNUT_BOWLING, "wallnut_bowling", "wallnut_bowling_cover.png", "Launch nuts left of the red line and clear the lane."),
+            new MinigameInfo(MinigameEnum.I_ZOMBIE, "i_zombie", "i_zombie_cover.png", "Pick zombies instead of plants and break through the line."),
+            new MinigameInfo(MinigameEnum.BEGHOULED, "beghouled", "beghouled_cover.png", "Swap plants to make matches and unlock stronger upgrades."),
+            new MinigameInfo(MinigameEnum.ZOMBOTANY, "zombotany", "zombotany_cover.png", "Plant-zombie chaos: place zombie plants and survive the waves.")
         );
 
         float cardWidth = Math.max(300f, Math.min(340f, (VW - (OUTER_MARGIN * 2f) - (CARD_GAP * 4f)) / 5f));
@@ -458,6 +458,25 @@ public class MinigameSelectionPanel extends BasePanel {
         return new com.badlogic.gdx.graphics.g2d.NinePatch(texture, 8, 8, 8, 8);
     }
 
+    private Texture loadCoverTexture(String fileName) {
+        try {
+            String path = "pvz-assets/Minigames/Covers/" + fileName;
+            com.badlogic.gdx.files.FileHandle file = Gdx.files.internal(path);
+
+            if (!file.exists()) {
+                System.err.println("MinigameSelectionPanel: cover not found: " + path);
+                return createSolidTexture(new Color(0.3f, 0.3f, 0.3f, 1f));
+            }
+
+            Texture texture = new Texture(file);
+            disposableTextures.add(texture);
+            return texture;
+        } catch (Exception e) {
+            System.err.println("MinigameSelectionPanel: failed to load cover " + fileName + ": " + e.getMessage());
+            return createSolidTexture(new Color(0.3f, 0.3f, 0.3f, 1f));
+        }
+    }
+
     private Texture loadTextureFromRegion(String id) {
         try {
             if (getTextureBank() == null) return createSolidTexture(new Color(0.3f, 0.3f, 0.3f, 1f));
@@ -506,7 +525,7 @@ public class MinigameSelectionPanel extends BasePanel {
             pad(18f);
             setTouchable(Touchable.enabled);
 
-            Texture iconTex = loadTextureFromRegion(info.iconResource);
+            Texture iconTex = loadCoverTexture(info.iconResource);
             Image icon = new Image(iconTex);
             icon.setScaling(com.badlogic.gdx.utils.Scaling.fit);
 

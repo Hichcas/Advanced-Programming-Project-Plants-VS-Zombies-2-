@@ -34,7 +34,7 @@
   },
   "collectionState" : {
     "unlockedPlants" : [ "PEASHOOTER", "SUNFLOWER" ],
-    "seenZombies" : [ "MUMMY_ARMOR1", "IMP_TUTORIAL", "TOMB_RAISER", "ICEAGE_ARMOR1", "DARK_ARMOR2", "ICEAGE_ARMOR3", "RA", "CAMEL", "GARGANTUAR_BASIC", "WEASEL_HOARDER", "PHARAOH", "MUMMY_ARMOR2", "MUMMY_DEFAULT", "DARK_ARMOR3", "TUTORIAL_ARMOR2", "DARK_ARMOR4", "ZOMBOSS_COWBOY", "ZOMBOTANY_JALAPENO", "MUMMY_ARMOR4", "ICEAGE_ARMOR2", "WEASEL", "DARK_JUGGLER", "EXPLORER", "TUTORIAL_DEFAULT", "BEACH_OCTOPUS", "DARK_DEFAULT", "TUTORIAL_ARMOR1", "ZOMBOTANY_PEASHOOTER", "TUTORIAL_ARMOR4", "ZOMBOSS_EGYPT" ],
+    "seenZombies" : [ "WEASEL", "MUMMY_ARMOR1", "IMP_TUTORIAL", "TOMB_RAISER", "DARK_ARMOR2", "ZOMBOSS_COWBOY", "RA", "CAMEL", "GARGANTUAR_BASIC", "WEASEL_HOARDER", "PHARAOH", "MUMMY_ARMOR2", "MUMMY_DEFAULT", "ICEAGE_ARMOR3", "TUTORIAL_ARMOR2", "DARK_ARMOR4", "DARK_ARMOR3", "ICEAGE_ARMOR1", "MUMMY_ARMOR4", "ICEAGE_ARMOR2", "ZOMBOTANY_JALAPENO", "DARK_JUGGLER", "EXPLORER", "TUTORIAL_DEFAULT", "BEACH_OCTOPUS", "DARK_DEFAULT", "TUTORIAL_ARMOR1", "ZOMBOTANY_PEASHOOTER", "TUTORIAL_ARMOR4", "ZOMBOSS_EGYPT" ],
     "seedPackets" : { },
     "plantLevels" : { },
     "greenhouseBoosts" : [ ]
@@ -221,9 +221,9 @@
           "n" : 2
         },
         "active" : true,
-        "formattedTitle" : "Economic Herbivore",
+        "formattedDescription" : "Win without losing more than 2 plants",
         "runtimeState" : { },
-        "formattedDescription" : "Win without losing more than 2 plants"
+        "formattedTitle" : "Economic Herbivore"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -242,11 +242,11 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedTitle" : "Speed Run",
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "runtimeState" : {
           "waveStartTime" : 1786376734588
         },
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
+        "formattedTitle" : "Speed Run"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -265,9 +265,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedTitle" : "Master of Defense",
+        "formattedDescription" : "End a level with exactly 0 sun",
         "runtimeState" : { },
-        "formattedDescription" : "End a level with exactly 0 sun"
+        "formattedTitle" : "Master of Defense"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -286,9 +286,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedTitle" : "Day or Night",
+        "formattedDescription" : "Win a day level using only mushrooms",
         "runtimeState" : { },
-        "formattedDescription" : "Win a day level using only mushrooms"
+        "formattedTitle" : "Day or Night"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -309,9 +309,9 @@
           "n" : 20
         },
         "active" : true,
-        "formattedTitle" : "Lawnmower Time",
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
         "runtimeState" : { },
-        "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
+        "formattedTitle" : "Lawnmower Time"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -332,16 +332,16 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
-        "formattedTitle" : "Chapter Hunter",
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
         "runtimeState" : { },
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
+        "formattedTitle" : "Chapter Hunter"
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "4h 37m"
+      "timeUntilReset" : "13h 41m"
     }
   }
 }
