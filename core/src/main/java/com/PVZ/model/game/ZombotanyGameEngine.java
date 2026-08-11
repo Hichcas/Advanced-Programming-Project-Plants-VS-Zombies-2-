@@ -256,7 +256,7 @@ public class ZombotanyGameEngine extends GameEngine implements ZombieEngine, See
         gameOverTimer += delta;
         if (gameOverTimer >= GAME_OVER_DISPLAY_DURATION) {
             gameOverNavigated = true;
-            AppStatus.returnToTravelLog();
+            AppStatus.returnToChapterAndLevelSelection(null);
         }
     }
 
