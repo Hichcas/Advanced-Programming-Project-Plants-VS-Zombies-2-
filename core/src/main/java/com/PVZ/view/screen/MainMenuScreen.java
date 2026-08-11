@@ -1,5 +1,9 @@
 package com.PVZ.view.screen;
 
+import com.PVZ.view.screen.panels.ChapterSelectPanel;
+import com.PVZ.view.screen.panels.LoginPanel;
+import com.PVZ.view.screen.panels.MainMenuPanel;
+import com.PVZ.view.screen.panels.MinigameSelectionPanel;
 import com.PVZ.view.screen.panels.RegisterPanel;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -45,8 +49,14 @@ public class MainMenuScreen extends BaseScreen {
 
         PanelManager.getInstance().initialize(stage);
 
-//        PanelManager.getInstance().performPanelTransition(new MainMenuPanel());
-        PanelManager.getInstance().performPanelTransition(new RegisterPanel());
+        switch (com.PVZ.model.status.AppStatus.currentMenuType) {
+            case MAIN -> PanelManager.getInstance().performPanelTransition(new MainMenuPanel());
+            case CHAPTER_AND_LEVEL_SELECTION -> PanelManager.getInstance().performPanelTransition(new ChapterSelectPanel());
+            case MINIGAME_SELECTION -> PanelManager.getInstance().performPanelTransition(new MinigameSelectionPanel());
+            case LOGIN -> PanelManager.getInstance().performPanelTransition(new LoginPanel());
+            case REGISTER -> PanelManager.getInstance().performPanelTransition(new RegisterPanel());
+            default -> PanelManager.getInstance().performPanelTransition(new MainMenuPanel());
+        }
 
     }
 

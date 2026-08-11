@@ -145,8 +145,11 @@ public class GameScreen extends BaseScreen {
         if (AppStatus.currentUser != null && AppStatus.currentUser.profile != null) {
             UserRegistry.saveUserToDatabase(AppStatus.currentUser.profile.getUsername());
         }
-        AppStatus.currentMenuType = MenuType.CHAPTER_AND_LEVEL_SELECTION;
-        ScreenManager.getInstance().performTransition(MainMenuScreen::new);
+        if (gameEngine instanceof RegularGameEngine) {
+            AppStatus.returnToChapterAndLevelSelection(null);
+        } else {
+            AppStatus.returnToMainMenu(null);
+        }
     }
 
     private void handleRestart() {
