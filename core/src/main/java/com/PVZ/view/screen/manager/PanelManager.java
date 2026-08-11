@@ -25,7 +25,7 @@ public class PanelManager {
 
     public void performPanelTransition(BasePanel newPanel) {
         if (stage == null) {
-            throw new IllegalStateException("PanelManager not initialized with a Stage. Call initialize() first.");
+            return;
         }
 
         if (currentPanel != null) {
