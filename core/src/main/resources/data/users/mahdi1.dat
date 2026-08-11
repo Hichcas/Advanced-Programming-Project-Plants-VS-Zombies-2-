@@ -34,7 +34,7 @@
   },
   "collectionState" : {
     "unlockedPlants" : [ "SUNFLOWER", "PEASHOOTER" ],
-    "seenZombies" : [ "TUTORIAL_ARMOR4", "BEACH_SURFER", "IMP_TUTORIAL", "WEASEL", "ZOMBOTANY_JALAPENO", "MUMMY_ARMOR1", "WEASEL_HOARDER", "ZOMBOTANY_SQUASH", "DARK_ARMOR2", "BEACH_ARMOR2", "GARGANTUAR_EGYPT", "ICEAGE_HUNTER", "MUMMY_ARMOR2", "ICEAGE_ARMOR2", "DARK_JUGGLER", "ZOMBOSS_COWBOY", "DARK_DEFAULT", "BEACH_DEFAULT", "TUTORIAL_ARMOR2", "DARK_ARMOR4", "CAMEL", "TOMB_RAISER", "PHARAOH", "ZOMBOSS_EGYPT", "ICEAGE_ARMOR3", "DARK_ARMOR3", "EXPLORER", "BEACH_OCTOPUS", "RA", "ICEAGE_ARMOR1", "MUMMY_DEFAULT", "TUTORIAL_ARMOR1", "MUMMY_ARMOR4", "DARK_KING", "TUTORIAL_DEFAULT", "ZOMBOTANY_PEASHOOTER", "GARGANTUAR_BASIC" ],
+    "seenZombies" : [ "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "IMP_ICEAGE", "GARGANTUAR_EGYPT", "ZOMBOSS_DARK", "BEACH_OCTOPUS", "DARK_JUGGLER", "GARGANTUAR_BASIC", "IMP_DARK", "DARK_ARMOR4", "WEASEL", "DARK_ARMOR3", "GARGANTUAR_BEACH", "ZOMBOSS_PIRATE", "ICEAGE_ARMOR2", "WIZARD", "DARK_DEFAULT", "DARK_KING", "TROGLOBITE", "MUMMY_ARMOR1", "IMP_TUTORIAL", "ZOMBOTANY_PEASHOOTER", "BEACH_SURFER", "DARK_ARMOR2", "BEACH_FAST_SWIMMER", "WEASEL_HOARDER", "MUMMY_DEFAULT", "ZOMBOTANY_JALAPENO", "DARK_ARMOR1", "BEACH_DEFAULT", "ICEAGE_DEFAULT", "ZOMBOTANY_SQUASH" ],
     "seedPackets" : { },
     "plantLevels" : { },
     "greenhouseBoosts" : [ ]
@@ -181,22 +181,122 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 13,
-    "numberOfUnlockedPots" : 7
+    "numberOfUnlockedPots" : 7,
+    "numberOfLockedPots" : 13
   },
   "appStats" : {
     "difficultyLevel" : 3,
     "soundVolume" : 15
   },
   "newsState" : {
-    "news" : [ ]
+    "news" : [ {
+      "text" : "New zombie spotted: GARGANTUAR_BEACH!",
+      "read" : true,
+      "timestamp" : 1786470747596,
+      "formattedText" : "New zombie spotted: GARGANTUAR_BEACH!\n2026/08/11  21:22"
+    }, {
+      "text" : "New zombie spotted: GARGANTUAR_EGYPT!",
+      "read" : true,
+      "timestamp" : 1786470749105,
+      "formattedText" : "New zombie spotted: GARGANTUAR_EGYPT!\n2026/08/11  21:22"
+    }, {
+      "text" : "New zombie spotted: IMP_DARK!",
+      "read" : true,
+      "timestamp" : 1786470749622,
+      "formattedText" : "New zombie spotted: IMP_DARK!\n2026/08/11  21:22"
+    }, {
+      "text" : "New zombie spotted: MUMMY_ARMOR1!",
+      "read" : true,
+      "timestamp" : 1786470750435,
+      "formattedText" : "New zombie spotted: MUMMY_ARMOR1!\n2026/08/11  21:22"
+    }, {
+      "text" : "New zombie spotted: MUMMY_ARMOR4!",
+      "read" : true,
+      "timestamp" : 1786470750956,
+      "formattedText" : "New zombie spotted: MUMMY_ARMOR4!\n2026/08/11  21:22"
+    }, {
+      "text" : "New zombie spotted: ZOMBOTANY_SQUASH!",
+      "read" : true,
+      "timestamp" : 1786470782822,
+      "formattedText" : "New zombie spotted: ZOMBOTANY_SQUASH!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: DARK_ARMOR4!",
+      "read" : true,
+      "timestamp" : 1786470782993,
+      "formattedText" : "New zombie spotted: DARK_ARMOR4!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: BEACH_OCTOPUS!",
+      "read" : true,
+      "timestamp" : 1786470783137,
+      "formattedText" : "New zombie spotted: BEACH_OCTOPUS!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: WEASEL_HOARDER!",
+      "read" : true,
+      "timestamp" : 1786470785030,
+      "formattedText" : "New zombie spotted: WEASEL_HOARDER!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: ZOMBOSS_PIRATE!",
+      "read" : true,
+      "timestamp" : 1786470785998,
+      "formattedText" : "New zombie spotted: ZOMBOSS_PIRATE!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: DARK_DEFAULT!",
+      "read" : true,
+      "timestamp" : 1786470788314,
+      "formattedText" : "New zombie spotted: DARK_DEFAULT!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: MUMMY_DEFAULT!",
+      "read" : true,
+      "timestamp" : 1786470788491,
+      "formattedText" : "New zombie spotted: MUMMY_DEFAULT!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: TUTORIAL_ARMOR4!",
+      "read" : true,
+      "timestamp" : 1786470788818,
+      "formattedText" : "New zombie spotted: TUTORIAL_ARMOR4!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: DARK_ARMOR3!",
+      "read" : true,
+      "timestamp" : 1786470792416,
+      "formattedText" : "New zombie spotted: DARK_ARMOR3!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: IMP_TUTORIAL!",
+      "read" : true,
+      "timestamp" : 1786470792732,
+      "formattedText" : "New zombie spotted: IMP_TUTORIAL!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: DARK_ARMOR2!",
+      "read" : true,
+      "timestamp" : 1786470793207,
+      "formattedText" : "New zombie spotted: DARK_ARMOR2!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: ICEAGE_DEFAULT!",
+      "read" : true,
+      "timestamp" : 1786470793498,
+      "formattedText" : "New zombie spotted: ICEAGE_DEFAULT!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: DARK_KING!",
+      "read" : true,
+      "timestamp" : 1786470793654,
+      "formattedText" : "New zombie spotted: DARK_KING!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: BEACH_SURFER!",
+      "read" : true,
+      "timestamp" : 1786470797600,
+      "formattedText" : "New zombie spotted: BEACH_SURFER!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: WIZARD!",
+      "read" : true,
+      "timestamp" : 1786470797635,
+      "formattedText" : "New zombie spotted: WIZARD!\n2026/08/11  21:23"
+    } ]
   },
   "shopDaily" : {
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "availableToday" : false,
-    "forToday" : false
+    "forToday" : false,
+    "availableToday" : false
   },
   "stayLoggedIn" : true,
   "questState" : {
@@ -221,9 +321,9 @@
           "n" : 2
         },
         "active" : true,
-        "runtimeState" : { },
         "formattedDescription" : "Win without losing more than 2 plants",
-        "formattedTitle" : "Economic Herbivore"
+        "formattedTitle" : "Economic Herbivore",
+        "runtimeState" : { }
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -242,11 +342,11 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
+        "formattedTitle" : "Speed Run",
         "runtimeState" : {
           "waveStartTime" : 1786463553426
-        },
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
-        "formattedTitle" : "Speed Run"
+        }
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -265,9 +365,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "runtimeState" : { },
         "formattedDescription" : "End a level with exactly 0 sun",
-        "formattedTitle" : "Master of Defense"
+        "formattedTitle" : "Master of Defense",
+        "runtimeState" : { }
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -286,9 +386,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "runtimeState" : { },
         "formattedDescription" : "Win a day level using only mushrooms",
-        "formattedTitle" : "Day or Night"
+        "formattedTitle" : "Day or Night",
+        "runtimeState" : { }
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -309,9 +409,9 @@
           "n" : 20
         },
         "active" : true,
-        "runtimeState" : { },
         "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
-        "formattedTitle" : "Lawnmower Time"
+        "formattedTitle" : "Lawnmower Time",
+        "runtimeState" : { }
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -332,16 +432,16 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
-        "runtimeState" : { },
         "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
-        "formattedTitle" : "Chapter Hunter"
+        "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { }
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "4h 36m"
+      "timeUntilReset" : "2h 35m"
     }
   }
 }
