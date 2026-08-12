@@ -110,8 +110,9 @@ public class WallnutBowlingGame {
 
     public NutType consumeHeldNut() {
         NutType type = heldNut;
-        heldNut = null;
         cooldownRemaining = launchCooldownSeconds;
+        // Conveyor belt immediately presents the next nut after planting the current one.
+        drawNextNut();
         return type;
     }
 

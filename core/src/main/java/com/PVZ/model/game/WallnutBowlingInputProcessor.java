@@ -30,9 +30,6 @@ public class WallnutBowlingInputProcessor extends InputAdapter {
 
         boolean onCooldown = engine.getGame().getCooldownRemaining() > 0.0;
         boolean launched = !onCooldown && engine.launchHeldNut(row, col);
-        if (launched) {
-            engine.getGame().drawNextNut();
-        }
         String reason = launched ? "nut launched at row " + row + " col " + col
                 : onCooldown ? "still reloading, wait a bit"
                 : "can't launch there (must be left of the red line)";

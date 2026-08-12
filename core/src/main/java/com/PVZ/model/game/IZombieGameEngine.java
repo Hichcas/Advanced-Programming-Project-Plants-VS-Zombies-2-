@@ -8,12 +8,15 @@ import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.minigame.izombie.IZombieGame;
 import com.PVZ.model.minigame.izombie.IZombieTexturePaths;
 import com.PVZ.model.minigame.izombie.ZombieOption;
+import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.model.enums.MinigameEnum;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.UserRegistry;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -48,6 +51,8 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     private BitmapFont font;
     private BitmapFont tinyFont;
     private final ZombiePacketBar zombiePacketBar = new ZombiePacketBar();
+    private Texture hudPixel;
+    private float hudAnimTime = 0f;
 
     public IZombieGameEngine() {
         super(new GameStatus(), new IZombieInputProcessor());
@@ -124,6 +129,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
 
     @Override
     public void update(float delta) {
+        hudAnimTime += delta;
         if (gameOverTriggered) {
             updateGameOverTimer(delta);
             return;
@@ -257,6 +263,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     public void draw(SpriteBatch batch) {
         zombieEngine.draw(batch);
         batch.begin();
+        drawRedLineAndBrains(batch);
         for (Zombie z : zombieEngine.getZombies()) {
             if (z == null || z.isDead()) continue;
             HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
@@ -274,6 +281,24 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         }
         batch.end();
         drawHud(batch);
+    }
+
+    private void drawRedLineAndBrains(SpriteBatch batch) {
+        if (map == null || game == null || hudPixel == null) return;
+        float tw = map.getTileWidth();
+        float th = map.getTileHeight();
+        float redX = map.getStartX() + game.getRedLineCol() * tw;
+        float boardHeight = game.getRows() * th;
+        batch.setColor(0.95f, 0.12f, 0.10f, 0.95f);
+        batch.draw(hudPixel, redX - 5f, map.getStartY() - boardHeight, 10f, boardHeight);
+        batch.setColor(Color.WHITE);
+        for (int row = 0; row < game.getRows(); row++) {
+            if (game.isBrainEaten(row)) continue;
+            float y = map.getStartY() - (row + 1) * th + 18f;
+            EntityRenderer.getInstance().renderPam(batch, 
+                    "768/FULL/EFFECTS/BRAIN_EFFECT/BRAIN_EFFECT.PAM",
+                    "animation", hudAnimTime, map.getStartX() - 100f, y);
+        }
     }
 
     private void drawHud(SpriteBatch batch) {
@@ -318,6 +343,11 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         background = new Texture(IZombieTexturePaths.BACKGROUND);
         font = FontManager.getInstance().getEnglishMenuFont();
         tinyFont = FontManager.getInstance().getEnglishTinyFont();
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(Color.WHITE);
+        pm.fill();
+        hudPixel = new Texture(pm);
+        pm.dispose();
     }
 
     @Override
@@ -332,6 +362,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         battleController.dispose();
         zombiePacketBar.dispose();
         if (background != null) background.dispose();
+        if (hudPixel != null) hudPixel.dispose();
     }
 
     @Override
