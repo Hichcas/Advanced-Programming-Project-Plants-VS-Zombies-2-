@@ -57,6 +57,9 @@ public class MenuPanelSwitcher {
             case NEWS:
                 PanelManager.getInstance().performPanelTransition(new NewsPanel());
                 break;
+            case GREENHOUSE:
+                PanelManager.getInstance().performPanelTransition(new GreenhousePanel());
+                break;
             default:
                 System.err.println("No UI panel mapped for menu: " + menuType);
                 break;

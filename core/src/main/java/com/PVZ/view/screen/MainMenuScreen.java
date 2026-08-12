@@ -13,12 +13,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.PVZ.view.screen.manager.MusicManager;
 import com.PVZ.view.screen.manager.PanelManager;
-import com.PVZ.view.screen.panels.MainMenuPanel;
 
 import java.util.ArrayList;
 
 public class MainMenuScreen extends BaseScreen {
-    private final Texture backgroundTexture;
+    private Texture backgroundTexture;
     private final SpriteBatch batch;
 
     private Texture blurParticleTexture;
@@ -26,14 +25,16 @@ public class MainMenuScreen extends BaseScreen {
     private final int PARTICLE_COUNT = 50;
     private final float MAX_HEIGHT_ZONE = 1200f;
 
+    private boolean particlesEnabled = true;
+    private static final String DEFAULT_BACKGROUND = "MainMenu/MainMenu_BackGround2.png";
+
     public MainMenuScreen() {
         super();
         this.batch = (SpriteBatch) stage.getBatch();
 
         Gdx.input.setInputProcessor(stage);
 
-        backgroundTexture = new Texture(Gdx.files.internal("MainMenu/MainMenu_BackGround2.png"));
-
+        backgroundTexture = new Texture(Gdx.files.internal(DEFAULT_BACKGROUND));
         createBlurryParticleTexture();
 
         MusicManager.getInstance().playMusic("music/Title Screen.mp3");
@@ -57,7 +58,25 @@ public class MainMenuScreen extends BaseScreen {
             case REGISTER -> PanelManager.getInstance().performPanelTransition(new RegisterPanel());
             default -> PanelManager.getInstance().performPanelTransition(new MainMenuPanel());
         }
+    }
 
+    /** تغییر پس‌زمینه و غیرفعال/فعال‌سازی ذرات */
+    public void switchToBackground(String backgroundPath, boolean disableParticles) {
+        if (backgroundTexture != null) backgroundTexture.dispose();
+        try {
+            backgroundTexture = new Texture(Gdx.files.internal(backgroundPath));
+        } catch (Exception e) {
+            System.err.println("MainMenuScreen: failed to load background: " + backgroundPath);
+            backgroundTexture = new Texture(Gdx.files.internal(DEFAULT_BACKGROUND));
+        }
+        this.particlesEnabled = !disableParticles;
+    }
+
+    /** بازگشت به حالت اولیه (پس‌زمینه اصلی + ذرات فعال) */
+    public void restoreDefaultBackground() {
+        if (backgroundTexture != null) backgroundTexture.dispose();
+        backgroundTexture = new Texture(Gdx.files.internal(DEFAULT_BACKGROUND));
+        this.particlesEnabled = true;
     }
 
     private void createBlurryParticleTexture() {
@@ -89,14 +108,16 @@ public class MainMenuScreen extends BaseScreen {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, 2560, 1440);
 
-        for (VoidParticle p : particles) {
-            p.update(delta);
-            batch.setColor(1f, 1f, 1f, p.alpha);
-            batch.draw(blurParticleTexture, p.x, p.y, p.size, p.size);
+        if (particlesEnabled) {
+            for (VoidParticle p : particles) {
+                p.update(delta);
+                batch.setColor(1f, 1f, 1f, p.alpha);
+                batch.draw(blurParticleTexture, p.x, p.y, p.size, p.size);
+            }
+            batch.setColor(Color.WHITE);
         }
-        batch.setColor(Color.WHITE);
-        batch.end();
 
+        batch.end();
     }
 
     @Override
@@ -110,7 +131,6 @@ public class MainMenuScreen extends BaseScreen {
         float initialSpeedY;
         float size;
         float alpha;
-
         boolean isFading;
         float fadeProgress;
         private final float FADE_DURATION = 2.0f;
@@ -137,20 +157,13 @@ public class MainMenuScreen extends BaseScreen {
 
         public void update(float delta) {
             y += currentSpeedY * delta;
-
-            if (!isFading && y >= 850f) {
-                isFading = true;
-            }
-
+            if (!isFading && y >= 850f) isFading = true;
             if (isFading) {
                 fadeProgress += delta / FADE_DURATION;
-                if (fadeProgress > 1.0f)
-                    fadeProgress = 1.0f;
-
+                if (fadeProgress > 1.0f) fadeProgress = 1.0f;
                 alpha = 1.0f - fadeProgress;
                 currentSpeedY = MathUtils.lerp(initialSpeedY, initialSpeedY * 0.25f, fadeProgress);
             }
-
             if (alpha <= 0.001f || currentSpeedY <= 0.1f || y >= MAX_HEIGHT_ZONE) {
                 resetPosition();
             }
@@ -160,13 +173,8 @@ public class MainMenuScreen extends BaseScreen {
     @Override
     public void dispose() {
         PanelManager.getInstance().dispose();
-
-        if (backgroundTexture != null) {
-            backgroundTexture.dispose();
-        }
-        if (blurParticleTexture != null) {
-            blurParticleTexture.dispose();
-        }
+        if (backgroundTexture != null) backgroundTexture.dispose();
+        if (blurParticleTexture != null) blurParticleTexture.dispose();
         super.dispose();
     }
 }
