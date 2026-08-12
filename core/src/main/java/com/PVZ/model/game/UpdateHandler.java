@@ -14,6 +14,7 @@ import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.UserRegistry;
 
 public class UpdateHandler {
+    private static final double SKY_SUN_FALL_SPEED = 240.0;
 
     private static final double TICK_SECONDS = 0.1;
 
@@ -131,8 +132,7 @@ public class UpdateHandler {
         double groundY = tile.getY() + tile.getHeight() / 2.0;
         double startY = engine.map.getStartY() + engine.map.getTileHeight() * 2.0;
 
-        // Sky sun type roll per spec: 80% normal (25 sun), 15% special (100 sun),
-        // 5% radioactive (explodes if harvested mid-air; turns into a normal sun on landing).
+        // Sky sun type roll per project specification: 80% normal, 15% special, 5% radioactive.
         Sun.SunType type;
         int amount;
         int roll = engine.random.nextInt(100);
@@ -146,7 +146,8 @@ public class UpdateHandler {
             type = Sun.SunType.RADIOACTIVE;
             amount = 25;
         }
-        engine.sunManager.spawnFalling(landingX, startY, amount, groundY, type);
+        // Phase 3: sky suns fall 25% faster than the existing 180 units/s path.
+        engine.sunManager.spawnFalling(landingX, startY, amount, groundY, type, SKY_SUN_FALL_SPEED);
     }
 
     // ---------- Game Over ----------

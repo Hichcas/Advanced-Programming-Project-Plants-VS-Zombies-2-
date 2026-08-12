@@ -68,7 +68,11 @@ public class LootDrop {
         if (collected) {
             return;
         }
-        batch.draw(getOrLoadTexture(type), (float) x, (float) y, hitbox.width, hitbox.height);
+        boolean drawn = com.PVZ.view.renderer.EntityRenderer.getInstance()
+            .renderLoot(batch, type, timer, (float) x, (float) y);
+        if (!drawn) {
+            batch.draw(getOrLoadTexture(type), (float) x, (float) y, hitbox.width, hitbox.height);
+        }
     }
 
     private static Texture getOrLoadTexture(LootType type) {
@@ -114,6 +118,10 @@ public class LootDrop {
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
         return texture;
+    }
+
+    public float getAnimationTime() {
+        return timer;
     }
 
     public Rectangle getHitbox() {

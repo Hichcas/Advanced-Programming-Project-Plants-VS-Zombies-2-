@@ -13,6 +13,10 @@ public class SunHandler {
     }
 
     public static void spawnSunAt(RegularGameEngine engine, int row, int col, int amount) {
+        spawnSunAt(engine, row, col, amount, 180.0);
+    }
+
+    public static void spawnSunAt(RegularGameEngine engine, int row, int col, int amount, double fallSpeed) {
         if (amount <= 0) return;
         double x = 0, y = 0;
         if (engine.map != null) {
@@ -22,7 +26,7 @@ public class SunHandler {
                 y = tile.getY() + tile.getHeight() / 2.0;
             }
         }
-        engine.sunManager.spawnFalling(x, y, amount, y - 120);
+        engine.sunManager.spawnFalling(x, y, amount, y - 120, Sun.SunType.NORMAL, fallSpeed);
     }
 
     public static int collectSunAtWorldPoint(RegularGameEngine engine, float worldX, float worldY) {

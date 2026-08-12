@@ -69,7 +69,7 @@ public class SunProducerBehavior implements PlantBehavior {
                 amount = 5;
             }
             logSunProduction(plant, row, col);
-            context.spawnSunAt(row, col, amount);
+            spawnProducedSun(plant, context, row, col, amount);
             com.PVZ.model.entity.PlantAnimation.trigger(plant, "producing", 0.6);
             timer = 0.0;
         }
@@ -98,7 +98,7 @@ public class SunProducerBehavior implements PlantBehavior {
         if (!triggered && stage == 0) {
             int amount = asInt(sunAmounts.get(0), plant.getStats().getSunAmount());
             logSunProduction(plant, row, col);
-            context.spawnSunAt(row, col, amount);
+            spawnProducedSun(plant, context, row, col, amount);
             com.PVZ.model.entity.PlantAnimation.trigger(plant, "producing", 0.6);
             plant.putRuntimeState("growthTriggered", Boolean.TRUE);
         }
@@ -113,7 +113,7 @@ public class SunProducerBehavior implements PlantBehavior {
             int amount = asInt(sunAmounts.get(Math.min(stage, sunAmounts.size() - 1)),
                 plant.getStats().getSunAmount());
             logSunProduction(plant, row, col);
-            context.spawnSunAt(row, col, amount);
+            spawnProducedSun(plant, context, row, col, amount);
             com.PVZ.model.entity.PlantAnimation.trigger(plant, "producing", 0.6);
         }
 
@@ -147,13 +147,25 @@ public class SunProducerBehavior implements PlantBehavior {
                 amount *= 2;
             }
             logSunProduction(plant, row, col);
-            context.spawnSunAt(row, col, amount);
+            spawnProducedSun(plant, context, row, col, amount);
             com.PVZ.model.entity.PlantAnimation.trigger(plant, "producing", 0.6);
         }
 
         plant.putRuntimeState("sunTimer", timer);
     }
 
+
+    private void spawnProducedSun(PlantInstance plant, BehaviorContext context,
+                                  int row, int col, int amount) {
+        String plantKey = plant.getDefinition() == null || plant.getDefinition().getPlantKey() == null
+            ? "" : plant.getDefinition().getPlantKey().toLowerCase();
+        if ("sunflower".equals(plantKey)) {
+            // Phase 3: Sunflower-produced suns reach the ground 1/3 faster.
+            context.spawnSunAt(row, col, amount, 270.0);
+            return;
+        }
+        context.spawnSunAt(row, col, amount);
+    }
 
     private void logSunProduction(PlantInstance plant, int row, int col) {
         String name = plant.getDefinition() == null ? "Unknown" : plant.getDefinition().getName();
