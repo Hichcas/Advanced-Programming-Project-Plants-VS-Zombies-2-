@@ -39,6 +39,15 @@ public class NewsMenuController {
         return currentUser.newsState;
     }
 
+    /** بررسی وجود اخبار نخوانده – برای نشان‌گر قرمز استفاده می‌شود */
+    public static boolean hasUnreadNews() {
+        User user = AppStatus.currentUser;
+        if (user == null || user.newsState == null) {
+            return false;
+        }
+        return !user.newsState.getUnreadNews().isEmpty();
+    }
+
     private OutputDTO showUnread() {
         NewsState newsState = getNewsState();
         if (newsState == null) {
