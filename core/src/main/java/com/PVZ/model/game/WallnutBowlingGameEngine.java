@@ -41,6 +41,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     private float tickAccumulator = 0f;
     private WallnutBowlingGame game;
     private Texture background;
+    private Texture backgroundRight;
     private BitmapFont font;
     private float nutAnimTime = 0f;
     private Texture hudPixel;
@@ -408,7 +409,8 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
 
     private void ensureTexturesLoaded() {
         if (background != null) return;
-        background = new Texture(WallnutBowlingTexturePaths.BACKGROUND);
+        background = new Texture(WallnutBowlingTexturePaths.BACKGROUND_LEFT);
+        backgroundRight = new Texture(WallnutBowlingTexturePaths.BACKGROUND_RIGHT);
         font = FontManager.getInstance().getEnglishMenuFont();
         Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pm.setColor(Color.WHITE);
@@ -421,6 +423,12 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     public Texture getBackgroundOverride() {
         ensureTexturesLoaded();
         return background;
+    }
+
+    @Override
+    public Texture getBackgroundOverrideRight() {
+        ensureTexturesLoaded();
+        return backgroundRight;
     }
 
     @Override

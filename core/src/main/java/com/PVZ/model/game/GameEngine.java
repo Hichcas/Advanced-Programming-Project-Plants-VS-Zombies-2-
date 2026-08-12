@@ -36,4 +36,8 @@ public abstract class GameEngine {
     public Texture getBackgroundOverride() {
         return null;
     }
+
+    public Texture getBackgroundOverrideRight() {
+        return null;
+    }
 }

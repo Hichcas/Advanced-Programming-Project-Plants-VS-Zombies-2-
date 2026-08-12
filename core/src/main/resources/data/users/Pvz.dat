@@ -1,0 +1,452 @@
+{
+  "profile" : {
+    "username" : "Pvz",
+    "nickname" : "Pvz",
+    "email" : "Pvz@Pvz.Pvz",
+    "gender" : "male",
+    "passwordHash" : "edeac427e783fa08a7e08b6d8f03a0ea62e3e322930ff1592f3108fb462134db",
+    "securityQuestion" : "What is your favorite color?",
+    "securityAnswerHash" : "d486dfbd5fb578340bccbdd0a662527eab38550648d5f44517e5ac71b8824703"
+  },
+  "userStats" : {
+    "gamesPlayed" : 0,
+    "coins" : 0,
+    "diamonds" : 0,
+    "stagesCompleted" : 0,
+    "highestScore" : 0,
+    "dailyQuestsCompleted" : 0,
+    "nonDailyQuestsCompleted" : 0
+  },
+  "progressState" : {
+    "completedLevels" : {
+      "ANCIENT_EGYPT" : 1,
+      "BIG_WAVE_BEACH" : -1,
+      "DARK_AGES" : -1,
+      "FROSTBITE_CAVES" : -1
+    },
+    "minigameClearedCounts" : {
+      "ZOMBOTANY" : 0,
+      "WALLNUT_BOWLING" : 0,
+      "I_ZOMBIE" : 0,
+      "VASEBREAKER" : 1,
+      "BEGHOULED" : 0
+    }
+  },
+  "collectionState" : {
+    "unlockedPlants" : [ "PEASHOOTER", "SUNFLOWER" ],
+    "seenZombies" : [ "DODO", "TOMB_RAISER", "DARK_DEFAULT", "GARGANTUAR_BASIC", "DARK_ARMOR4", "ICEAGE_ARMOR3", "TUTORIAL_ARMOR1", "MUMMY_ARMOR1", "IMP_EGYPT", "MUMMY_DEFAULT", "ICEAGE_ARMOR1", "ZOMBOSS_EGYPT", "BEACH_ARMOR1", "TUTORIAL_DEFAULT", "BEACH_SURFER", "ZOMBOTANY_PEASHOOTER", "TUTORIAL_ARMOR2", "MUMMY_ARMOR4", "IMP_BEACH", "IMP_DARK", "IMP_ICEAGE" ],
+    "seedPackets" : { },
+    "plantLevels" : { },
+    "greenhouseBoosts" : [ ]
+  },
+  "greenhouseState" : {
+    "pots" : [ [ {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    } ], [ {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    } ], [ {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    } ], [ {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    } ] ],
+    "numberOfLockedPots" : 15,
+    "numberOfUnlockedPots" : 5
+  },
+  "appStats" : {
+    "difficultyLevel" : 3,
+    "soundVolume" : 15
+  },
+  "newsState" : {
+    "news" : [ {
+      "text" : "New zombie spotted: IMP_BEACH!",
+      "read" : true,
+      "timestamp" : 1786523647546,
+      "formattedText" : "New zombie spotted: IMP_BEACH!\n2026/08/12  12:04"
+    }, {
+      "text" : "New zombie spotted: ICEAGE_ARMOR1!",
+      "read" : true,
+      "timestamp" : 1786523653184,
+      "formattedText" : "New zombie spotted: ICEAGE_ARMOR1!\n2026/08/12  12:04"
+    }, {
+      "text" : "New zombie spotted: MUMMY_ARMOR4!",
+      "read" : true,
+      "timestamp" : 1786523654993,
+      "formattedText" : "New zombie spotted: MUMMY_ARMOR4!\n2026/08/12  12:04"
+    }, {
+      "text" : "New zombie spotted: MUMMY_ARMOR1!",
+      "read" : true,
+      "timestamp" : 1786523657086,
+      "formattedText" : "New zombie spotted: MUMMY_ARMOR1!\n2026/08/12  12:04"
+    }, {
+      "text" : "New zombie spotted: IMP_ICEAGE!",
+      "read" : true,
+      "timestamp" : 1786523661199,
+      "formattedText" : "New zombie spotted: IMP_ICEAGE!\n2026/08/12  12:04"
+    }, {
+      "text" : "New zombie spotted: ZOMBOSS_EGYPT!",
+      "read" : true,
+      "timestamp" : 1786523661884,
+      "formattedText" : "New zombie spotted: ZOMBOSS_EGYPT!\n2026/08/12  12:04"
+    }, {
+      "text" : "New zombie spotted: ZOMBOTANY_PEASHOOTER!",
+      "read" : true,
+      "timestamp" : 1786523668140,
+      "formattedText" : "New zombie spotted: ZOMBOTANY_PEASHOOTER!\n2026/08/12  12:04"
+    }, {
+      "text" : "New zombie spotted: IMP_DARK!",
+      "read" : true,
+      "timestamp" : 1786523669364,
+      "formattedText" : "New zombie spotted: IMP_DARK!\n2026/08/12  12:04"
+    }, {
+      "text" : "New zombie spotted: DODO!",
+      "read" : true,
+      "timestamp" : 1786523689247,
+      "formattedText" : "New zombie spotted: DODO!\n2026/08/12  12:04"
+    }, {
+      "text" : "New zombie spotted: DARK_ARMOR4!",
+      "read" : true,
+      "timestamp" : 1786523689820,
+      "formattedText" : "New zombie spotted: DARK_ARMOR4!\n2026/08/12  12:04"
+    }, {
+      "text" : "New zombie spotted: TOMB_RAISER!",
+      "read" : true,
+      "timestamp" : 1786523690967,
+      "formattedText" : "New zombie spotted: TOMB_RAISER!\n2026/08/12  12:04"
+    }, {
+      "text" : "New zombie spotted: ICEAGE_ARMOR3!",
+      "read" : true,
+      "timestamp" : 1786523691856,
+      "formattedText" : "New zombie spotted: ICEAGE_ARMOR3!\n2026/08/12  12:04"
+    }, {
+      "text" : "New zombie spotted: IMP_EGYPT!",
+      "read" : true,
+      "timestamp" : 1786523707521,
+      "formattedText" : "New zombie spotted: IMP_EGYPT!\n2026/08/12  12:05"
+    }, {
+      "text" : "New zombie spotted: BEACH_ARMOR1!",
+      "read" : true,
+      "timestamp" : 1786523708090,
+      "formattedText" : "New zombie spotted: BEACH_ARMOR1!\n2026/08/12  12:05"
+    }, {
+      "text" : "New zombie spotted: BEACH_SURFER!",
+      "read" : true,
+      "timestamp" : 1786523708624,
+      "formattedText" : "New zombie spotted: BEACH_SURFER!\n2026/08/12  12:05"
+    }, {
+      "text" : "New zombie spotted: GARGANTUAR_BASIC!",
+      "read" : true,
+      "timestamp" : 1786523711660,
+      "formattedText" : "New zombie spotted: GARGANTUAR_BASIC!\n2026/08/12  12:05"
+    }, {
+      "text" : "New zombie spotted: DARK_DEFAULT!",
+      "read" : true,
+      "timestamp" : 1786523738732,
+      "formattedText" : "New zombie spotted: DARK_DEFAULT!\n2026/08/12  12:05"
+    }, {
+      "text" : "New zombie spotted: TUTORIAL_DEFAULT!",
+      "read" : false,
+      "timestamp" : 1786523871419,
+      "formattedText" : "New zombie spotted: TUTORIAL_DEFAULT!\n2026/08/12  12:07"
+    }, {
+      "text" : "New zombie spotted: TUTORIAL_ARMOR1!",
+      "read" : false,
+      "timestamp" : 1786523876930,
+      "formattedText" : "New zombie spotted: TUTORIAL_ARMOR1!\n2026/08/12  12:07"
+    }, {
+      "text" : "New zombie spotted: TUTORIAL_ARMOR2!",
+      "read" : false,
+      "timestamp" : 1786523882438,
+      "formattedText" : "New zombie spotted: TUTORIAL_ARMOR2!\n2026/08/12  12:08"
+    }, {
+      "text" : "New zombie spotted: MUMMY_DEFAULT!",
+      "read" : false,
+      "timestamp" : 1786523887945,
+      "formattedText" : "New zombie spotted: MUMMY_DEFAULT!\n2026/08/12  12:08"
+    } ]
+  },
+  "shopDaily" : {
+    "offerPlant" : null,
+    "offerDate" : null,
+    "purchased" : false,
+    "availableToday" : false,
+    "forToday" : false
+  },
+  "stayLoggedIn" : true,
+  "questState" : {
+    "questManager" : {
+      "activeQuests" : [ {
+        "id" : "story_economy",
+        "title" : "Economic Herbivore",
+        "descriptionTemplate" : "Win without losing more than {n} plants",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "max_plant_loss",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 18,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "n" : 2
+        },
+        "active" : true,
+        "formattedDescription" : "Win without losing more than 2 plants",
+        "formattedTitle" : "Economic Herbivore",
+        "runtimeState" : { }
+      }, {
+        "id" : "story_speed",
+        "title" : "Speed Run",
+        "descriptionTemplate" : "Kill 10 zombies within 30 seconds of the first wave",
+        "type" : "STORY",
+        "priority" : "MEDIUM",
+        "conditionKey" : "speed_kill",
+        "targetCount" : 10,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "COINS",
+          "amount" : 500,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
+        "formattedTitle" : "Speed Run",
+        "runtimeState" : {
+          "waveStartTime" : 1786527742517
+        }
+      }, {
+        "id" : "epic_defense",
+        "title" : "Master of Defense",
+        "descriptionTemplate" : "End a level with exactly 0 sun",
+        "type" : "EPIC",
+        "priority" : "CRITICAL",
+        "conditionKey" : "zero_sun_end",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 200,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "formattedDescription" : "End a level with exactly 0 sun",
+        "formattedTitle" : "Master of Defense",
+        "runtimeState" : { }
+      }, {
+        "id" : "epic_night_day",
+        "title" : "Day or Night",
+        "descriptionTemplate" : "Win a day level using only mushrooms",
+        "type" : "EPIC",
+        "priority" : "HIGH",
+        "conditionKey" : "day_with_mushrooms",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 20,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "formattedDescription" : "Win a day level using only mushrooms",
+        "formattedTitle" : "Day or Night",
+        "runtimeState" : { }
+      }, {
+        "id" : "epic_lawnmower",
+        "title" : "Lawnmower Time",
+        "descriptionTemplate" : "Kill at least {n} zombies with lawnmowers",
+        "type" : "EPIC",
+        "priority" : "MEDIUM",
+        "conditionKey" : "lawnmower_kill",
+        "targetCount" : 50,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 50,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "n" : 50
+        },
+        "active" : true,
+        "formattedDescription" : "Kill at least 50 zombies with lawnmowers",
+        "formattedTitle" : "Lawnmower Time",
+        "runtimeState" : { }
+      }, {
+        "id" : "story_chapter_hunt_ANCIENT_EGYPT",
+        "title" : "Chapter Hunter",
+        "descriptionTemplate" : "Defeat 50 zombies from {chapter}",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "chapter_zombie_kill",
+        "targetCount" : 50,
+        "currentCount" : 10,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "chapter" : "ANCIENT_EGYPT"
+        },
+        "active" : true,
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
+        "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { }
+      } ],
+      "lastDailyRefresh" : null,
+      "consecutiveMaxDifficultyWins" : 0,
+      "currentChapter" : "ANCIENT_EGYPT",
+      "currentDifficulty" : 1,
+      "isDayLevel" : true,
+      "timeUntilReset" : "10h 40m"
+    }
+  }
+}

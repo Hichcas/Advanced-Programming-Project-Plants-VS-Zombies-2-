@@ -17,6 +17,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,7 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
 
     private BeghouledGame game;
     private Texture background;
+    private Texture backgroundRight;
     private Texture pixel;
     private BitmapFont font;
     private BitmapFont tinyFont;
@@ -390,28 +394,52 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
         batch.setColor(Color.WHITE);
     }
 
+    // پنل مخصوص Beghouled: به‌جای مستطیل‌های رنگی خام، از drawable های همان Skin ای که بقیه‌ی
+    // UI بازی (PauseMenuOverlay، WinLoseOverlay و ...) استفاده می‌کنن بهره می‌بریم تا ظاهرش با
+    // بقیه‌ی بازی هم‌خوان باشه. اگه به هر دلیلی اسکین لود نشده باشه (مثلاً موقع تست بدون assets)
+    // به همون مستطیل رنگی ساده به‌عنوان fallback برمی‌گردیم تا کرش نکنه.
+    private static final String PANEL_BG = "image_ui_dialog_asset_inner_bkgd_10";
+    private static final String BUTTON_AFFORDABLE = "image_ui_generic_greenbutton_10";
+    private static final String BUTTON_LOCKED = "image_ui_generic_brownbutton_10";
+
     private void drawHud(SpriteBatch batch) {
         ensureTexturesLoaded();
         batch.begin();
-        float left = map.getStartX() + 20f;
-        float top = map.getStartY() + 40f;
+        drawStatusPanel(batch);
+        drawUpgradeButtons(batch);
+        batch.end();
+        drawGameOverOverlay(batch);
+    }
+
+    private void drawStatusPanel(SpriteBatch batch) {
+        float left = map.getStartX() + 10f;
+        float top = map.getStartY() + 70f;
+        float panelW = 460f;
+        float panelH = 56f;
+
+        Drawable panelBg = resolveDrawable(PANEL_BG);
+        if (panelBg != null) {
+            panelBg.draw(batch, left, top - panelH, panelW, panelH);
+        } else if (pixel != null) {
+            batch.setColor(0f, 0f, 0f, 0.55f);
+            batch.draw(pixel, left, top - panelH, panelW, panelH);
+            batch.setColor(Color.WHITE);
+        }
+
         int made = game.getMatchesMade();
         int target = game.getTargetMatches();
         int remaining = Math.max(0, target - made);
         String label = String.format("Sun: %d   |   Matches: %d/%d   |   %d more match%s to win",
             game.getSun(), made, target, remaining, remaining == 1 ? "" : "es");
-        font.draw(batch, label, left, top);
-        drawUpgradeButtons(batch);
-        batch.end();
-        drawGameOverOverlay(batch);
+        font.draw(batch, label, left + 16f, top - panelH / 2f + 12f);
     }
 
     private void drawUpgradeButtons(SpriteBatch batch) {
         upgradeButtons.clear();
         List<BeghouledUpgrade> ups = game.getUpgrades();
         float btnW = 360f;
-        float btnH = 42f;
-        float gap = 8f;
+        float btnH = 46f;
+        float gap = 10f;
         float bx = map.getStartX() + map.getTotalWidth() - btnW - 10f;
         float by = map.getStartY() + 60f;
         for (int i = 0; i < ups.size(); i++) {
@@ -420,11 +448,29 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
             Rectangle rect = new Rectangle(bx, y - btnH, btnW, btnH);
             upgradeButtons.add(rect);
             boolean afford = game.getSun() >= up.getCost();
-            batch.setColor(afford ? new Color(0.2f, 0.5f, 0.2f, 0.8f) : new Color(0.4f, 0.2f, 0.2f, 0.8f));
-            if (pixel != null) batch.draw(pixel, rect.x, rect.y, rect.width, rect.height);
-            batch.setColor(Color.WHITE);
-            tinyFont.draw(batch, up.describe(), rect.x + 8f, rect.y + btnH - 12f);
+
+            Drawable buttonBg = resolveDrawable(afford ? BUTTON_AFFORDABLE : BUTTON_LOCKED);
+            if (buttonBg != null) {
+                buttonBg.draw(batch, rect.x, rect.y, rect.width, rect.height);
+            } else if (pixel != null) {
+                batch.setColor(afford ? new Color(0.2f, 0.5f, 0.2f, 0.8f) : new Color(0.4f, 0.2f, 0.2f, 0.8f));
+                batch.draw(pixel, rect.x, rect.y, rect.width, rect.height);
+                batch.setColor(Color.WHITE);
+            }
+            tinyFont.draw(batch, up.describe(), rect.x + 14f, rect.y + btnH - 14f);
         }
+    }
+
+    private static Drawable resolveDrawable(String name) {
+        try {
+            Skin skin = PvzSkin.get();
+            if (skin != null && skin.has(name, Drawable.class)) {
+                return skin.getDrawable(name);
+            }
+        } catch (Exception ignored) {
+            // اسکین لود نشده یا drawable وجود نداره؛ کالر به fallback رنگی برمی‌گرده
+        }
+        return null;
     }
 
     private void drawGameOverOverlay(SpriteBatch batch) {
@@ -447,7 +493,23 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
 
     private void ensureTexturesLoaded() {
         if (font != null) return;
-        background = new Texture(BeghouledTexturePaths.BACKGROUND);
+        // اگه هنوز فایل background.png مخصوص Beghouled رو زیر assets/Minigames/Beghouled/
+        // نذاشتی، به‌جای کرش کردن یه پس‌زمینه‌ی خالی fallback می‌گیریم تا بازی بالا بیاد؛
+        // همین که فایل رو اضافه کنی خودش پیک می‌شه.
+        if (com.badlogic.gdx.Gdx.files.internal(BeghouledTexturePaths.BACKGROUND_LEFT).exists()) {
+            background = new Texture(BeghouledTexturePaths.BACKGROUND_LEFT);
+        } else {
+            System.out.println("[Beghouled] background not found: " + BeghouledTexturePaths.BACKGROUND_LEFT
+                + " (falling back to no background)");
+            background = null;
+        }
+        if (com.badlogic.gdx.Gdx.files.internal(BeghouledTexturePaths.BACKGROUND_RIGHT).exists()) {
+            backgroundRight = new Texture(BeghouledTexturePaths.BACKGROUND_RIGHT);
+        } else {
+            System.out.println("[Beghouled] background_right not found: " + BeghouledTexturePaths.BACKGROUND_RIGHT
+                + " (falling back to no background)");
+            backgroundRight = null;
+        }
         font = FontManager.getInstance().getEnglishMenuFont();
         tinyFont = FontManager.getInstance().getEnglishTinyFont();
         Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -461,6 +523,12 @@ public class BeghouledGameEngine extends GameEngine implements ZombieEngine {
     public Texture getBackgroundOverride() {
         ensureTexturesLoaded();
         return background;
+    }
+
+    @Override
+    public Texture getBackgroundOverrideRight() {
+        ensureTexturesLoaded();
+        return backgroundRight;
     }
 
     @Override
