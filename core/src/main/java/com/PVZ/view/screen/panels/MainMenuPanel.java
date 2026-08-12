@@ -1,17 +1,14 @@
 package com.PVZ.view.screen.panels;
 
-import com.PVZ.model.game.GameStatus;
-import com.PVZ.model.game.RegularGameEngine;
-import com.PVZ.model.user.User;
-import com.PVZ.model.user.UserRegistry;
-import com.PVZ.view.screen.GameScreen;
-import com.PVZ.view.screen.manager.PanelManager;
-import com.PVZ.view.screen.manager.ScreenManager;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.PVZ.controller.menuControllers.NewsMenuController;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.view.screen.ui.MenuButton;
@@ -20,7 +17,6 @@ import pvz.skin.PvzSkin;
 
 public class MainMenuPanel extends BasePanel {
 
-    // ---------- ثابت‌های قابل تنظیم ----------
     private static final float BUTTON_HEIGHT = 80f;
     private static final float HORIZONTAL_PADDING = 40f;
 
@@ -34,11 +30,10 @@ public class MainMenuPanel extends BasePanel {
 
     private static final float BUTTONS_EXTRA_DOWN = 450f;
 
-    // Stage روی ویوپورت مجازی ثابت (VIRTUAL_WIDTH x VIRTUAL_HEIGHT در BaseScreen) کار می‌کند،
-    // نه اندازه‌ی واقعی پنجره. برای سنتر شدن دقیق روی هر رزولوشنی باید از همین اعداد استفاده کنیم،
-    // نه Gdx.graphics.getWidth/Height که پیکسل واقعی صفحه است و با فضای مختصات Stage یکی نیست.
     private static final float VIRTUAL_WIDTH = com.PVZ.view.screen.BaseScreen.VIRTUAL_WIDTH;
     private static final float VIRTUAL_HEIGHT = com.PVZ.view.screen.BaseScreen.VIRTUAL_HEIGHT;
+
+    private NewsBadge newsBadge;
 
     public MainMenuPanel() {
         setFillParent(true);
@@ -83,12 +78,12 @@ public class MainMenuPanel extends BasePanel {
         float settingsY = SETTINGS_BOTTOM_MARGIN;
         settingsBtn.setPosition(settingsX, settingsY);
         addActor(settingsBtn);
-// ---------- دکمهٔ پروفایل (سمت چپ تنظیمات) ----------
-        Texture profileTex = createProfileButtonTexture(); // تصویر ترکیبی
 
+        // ---------- دکمهٔ پروفایل ----------
+        Texture profileTex = createProfileButtonTexture();
         MenuButton profileBtn = new MenuButton(
-            profileTex, null, null,       // عادی
-            profileTex, profileTex, null, // هاور و غیرفعال هم همان تصویر
+            profileTex, null, null,
+            profileTex, profileTex, null,
             this::onProfile
         );
         profileBtn.setSize(SETTINGS_SIZE, SETTINGS_SIZE);
@@ -96,25 +91,38 @@ public class MainMenuPanel extends BasePanel {
         float profileX = settingsX - SETTINGS_SIZE - gap;
         profileBtn.setPosition(profileX, settingsY);
         addActor(profileBtn);
+
+        // ---------- دکمهٔ News (پایین سمت چپ) ----------
+        Texture newsNormal = safeTextureFromRegion("IMAGE_UI_HUD_NEWSBUTTON_BUTTONS_HUD_NEWS_NORMAL");
+        Texture newsSelected = safeTextureFromRegion("IMAGE_UI_HUD_NEWSBUTTON_BUTTONS_HUD_NEWS_SELECTED");
+
+        MenuButton newsBtn = new MenuButton(
+            newsNormal, null, null,
+            newsSelected, null, null,
+            this::onNews
+        );
+        newsBtn.setSize(SETTINGS_SIZE, SETTINGS_SIZE);
+        float newsX = SETTINGS_RIGHT_MARGIN;
+        float newsY = SETTINGS_BOTTOM_MARGIN;
+        newsBtn.setPosition(newsX, newsY);
+        addActor(newsBtn);
+
+        // نشان‌گر قرمز روی دکمهٔ News
+        newsBadge = new NewsBadge();
+        newsBadge.setSize(24f, 24f);
+        newsBadge.setPosition(newsX + SETTINGS_SIZE - newsBadge.getWidth()/2f,
+            newsY + SETTINGS_SIZE - newsBadge.getHeight()/2f);
+        addActor(newsBadge);
     }
 
-    /**
-     * ساخت تکسچر ترکیبی برای دکمهٔ پروفایل:
-     * پس‌زمینه = IMAGE_UI_MAINMENU_BTN_BKGD
-     * آیکون   = IMAGE_UI_MAINMENU_MM_PLAYERICON
-     */
+    // ======================== متدهای کمکی ========================
     private Texture createProfileButtonTexture() {
-        TextureBank bank = getTextureBank(); // همان نمونهٔ سینگلتون EntityRenderer
-
+        TextureBank bank = getTextureBank();
         TextureRegion bgRegion = bank.region("IMAGE_UI_MAINMENU_BTN_BKGD");
         TextureRegion iconRegion = bank.region("IMAGE_UI_MAINMENU_MM_PLAYERICON");
-
         if (bgRegion == null || iconRegion == null) {
-            // fallback
-            return createDummyTexture((int) SETTINGS_SIZE, (int) SETTINGS_SIZE);
+            return createDummyTexture((int)SETTINGS_SIZE, (int)SETTINGS_SIZE);
         }
-
-        // استخراج Pixmap از نواحی
         Texture bgTex = bgRegion.getTexture();
         if (!bgTex.getTextureData().isPrepared()) bgTex.getTextureData().prepare();
         Pixmap bgPix = bgTex.getTextureData().consumePixmap();
@@ -129,33 +137,23 @@ public class MainMenuPanel extends BasePanel {
         iconSub.drawPixmap(iconPix, 0, 0, iconRegion.getRegionX(), iconRegion.getRegionY(),
             iconRegion.getRegionWidth(), iconRegion.getRegionHeight());
 
-        int w = (int) SETTINGS_SIZE;
-        int h = (int) SETTINGS_SIZE;
+        int w = (int)SETTINGS_SIZE, h = (int)SETTINGS_SIZE;
         Pixmap finalPix = new Pixmap(w, h, bgSub.getFormat());
-
-        // رسم پس‌زمینه
         finalPix.drawPixmap(bgSub, 0, 0, bgSub.getWidth(), bgSub.getHeight(), 0, 0, w, h);
-
-        // رسم آیکون در وسط (حدود ۶۰٪ اندازهٔ دکمه)
-        int iconSize = (int) (w * 0.6f);
-        int iconX = (w - iconSize) / 2;
-        int iconY = (h - iconSize) / 2;
+        int iconSize = (int)(w * 0.6f);
+        int iconX = (w - iconSize)/2, iconY = (h - iconSize)/2;
         finalPix.drawPixmap(iconSub, 0, 0, iconSub.getWidth(), iconSub.getHeight(),
             iconX, iconY, iconSize, iconSize);
-
         Texture finalTex = new Texture(finalPix);
-        bgSub.dispose();
-        iconSub.dispose();
-        finalPix.dispose();
+        bgSub.dispose(); iconSub.dispose(); finalPix.dispose();
         if (bgPix != null) bgPix.dispose();
         if (iconPix != null) iconPix.dispose();
-
         return finalTex;
     }
 
     private Texture createDummyTexture(int w, int h) {
         Pixmap pix = new Pixmap(w, h, Pixmap.Format.RGBA8888);
-        pix.setColor(0, 0, 0, 0);
+        pix.setColor(0,0,0,0);
         pix.fill();
         Texture tex = new Texture(pix);
         pix.dispose();
@@ -174,20 +172,9 @@ public class MainMenuPanel extends BasePanel {
         addActor(btn);
     }
 
-    // ---------- رویدادها ----------
+    // ======================== رویدادها ========================
     private void onStartGame() {
-//        ScreenManager.getInstance().performTransition(() -> new GameScreen(
-//            "maps/Frontyard.jpg",
-//            "music/Title Screen.mp3",
-//            new RegularGameEngine(new GameStatus())
-//        ));
-//        AppStatus.setCurrentMenuType(MenuType.CHAPTER_AND_LEVEL_SELECTION);
-
-
-//        PanelManager.getInstance().performPanelTransition(new PlantSelectionPanel("Egypt", 1));
-
         AppStatus.setCurrentMenuType(MenuType.CHAPTER_AND_LEVEL_SELECTION);
-
     }
 
     private void onSettings() {
@@ -198,10 +185,41 @@ public class MainMenuPanel extends BasePanel {
         AppStatus.setCurrentMenuType(MenuType.PROFILE);
     }
 
+    private void onNews() {
+        AppStatus.setCurrentMenuType(MenuType.NEWS);
+    }
+
     private void onQuit() {
         Gdx.app.exit();
     }
 
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if (newsBadge != null) {
+            newsBadge.updateVisibility();
+        }
+    }
+
+    // ======================== نشان‌گر قرمز ========================
+    private static class NewsBadge extends Image {
+        private static final Texture dotTexture;
+        static {
+            int size = 24;
+            Pixmap pix = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+            pix.setColor(Color.RED);
+            pix.fillCircle(size/2, size/2, size/2 - 1);
+            dotTexture = new Texture(pix);
+            pix.dispose();
+        }
+        public NewsBadge() {
+            super(new TextureRegionDrawable(new TextureRegion(dotTexture)));
+            setVisible(false);
+        }
+        public void updateVisibility() {
+            setVisible(NewsMenuController.hasUnreadNews());
+        }
+    }
 
     @Override
     public void dispose() {

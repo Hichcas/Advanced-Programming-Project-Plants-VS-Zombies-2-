@@ -2,9 +2,9 @@ package com.PVZ.model.user;
 
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.ZombieType;
+import com.PVZ.model.status.AppStatus;
 
 import java.util.*;
-
 
 public class CollectionState {
     private Set<PlantType> unlockedPlants;
@@ -68,11 +68,23 @@ public class CollectionState {
     }
 
     public void unlockPlant(PlantType plant) {
-        unlockedPlants.add(plant);
+        if (unlockedPlants.add(plant)) {
+            // فقط در صورتی که گیاه قبلاً باز نشده بود، خبر ثبت شود
+            User user = AppStatus.getCurrentUser();
+            if (user != null && user.newsState != null) {
+                user.newsState.addNews("New plant unlocked: " + plant.getDisplayName() + "!");
+            }
+        }
     }
 
     public void seeZombie(ZombieType zombie) {
-        seenZombies.add(zombie);
+        if (seenZombies.add(zombie)) {
+            User user = AppStatus.getCurrentUser();
+            if (user != null && user.newsState != null) {
+                user.newsState.addNews("New zombie spotted: " + zombie.name() + "!");
+                System.err.println("New zombie spotted: " + zombie.name() + "!");
+            }
+        }
     }
 
     public int getSeedPacketCount(PlantType plant) {
@@ -107,7 +119,12 @@ public class CollectionState {
     }
 
     public void setAllPlantsUnlocked() {
-        unlockedPlants.addAll(Arrays.asList(PlantType.values()));
+        // برای باز شدن همهٔ گیاهان هم خبر ارسال می‌کنیم
+        for (PlantType type : PlantType.values()) {
+            if (!unlockedPlants.contains(type)) {
+                unlockPlant(type);  // اینجا خبر ثبت می‌شود
+            }
+        }
     }
 
     public boolean hasGreenhouseBoost(PlantType plant) {
