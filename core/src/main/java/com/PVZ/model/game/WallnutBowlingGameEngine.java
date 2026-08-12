@@ -15,6 +15,8 @@ import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.HealthBarRenderer;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -41,6 +43,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     private Texture background;
     private BitmapFont font;
     private float nutAnimTime = 0f;
+    private Texture hudPixel;
 
 
     private static String nutPamPath(NutType type) {
@@ -334,6 +337,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
         ensureTexturesLoaded();
 
         batch.begin();
+        drawRedLine(batch);
         for (BowlingNut nut : game.getNuts()) {
             String pamPath = nutPamPath(nut.getType());
             EntityRenderer.getInstance().renderPam(batch, pamPath, "idle", nutAnimTime,
@@ -341,16 +345,43 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
         }
 
         if (!gameOverTriggered) {
-            NutType held = game.getHeldNut();
-            String cooldown = game.getCooldownRemaining() > 0
-                ? String.format(" | reload: %.1fs", game.getCooldownRemaining())
-                : "";
-            String label = "Next nut: " + (held != null ? held.name() : "-")
-                + "  (" + game.getZombiesSpawned() + "/" + game.getTotalZombies() + " zombies)" + cooldown;
-            font.draw(batch, label, map.getStartX() + 20f, map.getStartY() + 40f);
+            drawConveyorHud(batch);
         }
         batch.end();
         drawGameOverOverlay(batch);
+    }
+
+    private void drawRedLine(SpriteBatch batch) {
+        ensureTexturesLoaded();
+        if (hudPixel == null || map == null || game == null) return;
+        float x = map.getStartX() + (game.getRedLineCol() + 1) * map.getTileWidth();
+        batch.setColor(0.95f, 0.12f, 0.10f, 0.95f);
+        batch.draw(hudPixel, x - 5f, map.getStartY() - game.getRows() * map.getTileHeight(), 10f, game.getRows() * map.getTileHeight());
+        batch.setColor(Color.WHITE);
+    }
+
+    private void drawConveyorHud(SpriteBatch batch) {
+        if (hudPixel == null || map == null || game == null) return;
+        float x = map.getStartX() + map.getTotalWidth() - 460f;
+        float y = map.getStartY() + 58f;
+        float panelW = 430f;
+        float panelH = 96f;
+        batch.setColor(0.08f, 0.05f, 0.025f, 0.82f);
+        batch.draw(hudPixel, x, y, panelW, panelH);
+        batch.setColor(0.9f, 0.72f, 0.3f, 0.9f);
+        batch.draw(hudPixel, x + 3f, y + 3f, panelW - 6f, 4f);
+        batch.setColor(Color.WHITE);
+        font.draw(batch, "CONVEYOR", x + 14f, y + 75f);
+        NutType held = game.getHeldNut();
+        if (held != null) {
+            EntityRenderer.getInstance().renderPam(batch, nutPamPath(held), "idle", nutAnimTime, x + 115f, y + 8f);
+            font.draw(batch, held.name().replace('_',' '), x + 185f, y + 55f);
+        }
+        String status = game.getCooldownRemaining() > 0.0
+                ? String.format("Reload %.1fs", game.getCooldownRemaining())
+                : "Ready";
+        font.draw(batch, status, x + 185f, y + 30f);
+        font.draw(batch, game.getZombiesSpawned() + "/" + game.getTotalZombies() + " zombies", x + 305f, y + 30f);
     }
 
     private void drawGameOverOverlay(SpriteBatch batch) {
@@ -379,6 +410,11 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
         if (background != null) return;
         background = new Texture(WallnutBowlingTexturePaths.BACKGROUND);
         font = FontManager.getInstance().getEnglishMenuFont();
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(Color.WHITE);
+        pm.fill();
+        hudPixel = new Texture(pm);
+        pm.dispose();
     }
 
     @Override
@@ -392,6 +428,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
         zombieEngine.dispose();
         battleController.dispose();
         if (background != null) background.dispose();
+        if (hudPixel != null) hudPixel.dispose();
     }
 
 

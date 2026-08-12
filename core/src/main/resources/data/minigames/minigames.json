@@ -155,7 +155,7 @@
         "rows": 5,
         "cols": 9,
         "redLineCol": 5,
-        "startingSun": 150,
+        "startingSun": 180,
         "plantDensity": 0.45,
         "sunZombieAlias": "ZombieTutorialArmor2Default",
         "sunProductionBase": 5.0,
@@ -334,10 +334,10 @@
         "zombieSpawnIntervalSeconds": 5.5,
         "plantTypes": [
           "PEASHOOTER",
+          "REPEATER",
           "WALL_NUT",
           "PUFF_SHROOM",
-          "CABBAGE_PULT",
-          "SUNFLOWER"
+          "CABBAGE_PULT"
         ],
         "zombieAliases": [
           "ZombieTutorialDefault",
@@ -391,11 +391,11 @@
         "startingSun": 150,
         "zombieSpawnIntervalSeconds": 4.5,
         "plantTypes": [
-          "PEASHOOTER",
+          "REPEATER",
           "WALL_NUT",
-          "PUFF_SHROOM",
+          "TALL_NUT",
           "CABBAGE_PULT",
-          "SUNFLOWER"
+          "MELON_PULT"
         ],
         "zombieAliases": [
           "ZombieTutorialDefault",
@@ -407,24 +407,19 @@
         ],
         "upgrades": [
           {
-            "from": "PEASHOOTER",
-            "to": "REPEATER",
-            "cost": 500
-          },
-          {
             "from": "REPEATER",
             "to": "THREEPEATER",
             "cost": 1500
           },
           {
+            "from": "REPEATER",
+            "to": "MEGA_GATLING_PEA",
+            "cost": 3000
+          },
+          {
             "from": "WALL_NUT",
             "to": "TALL_NUT",
             "cost": 500
-          },
-          {
-            "from": "PUFF_SHROOM",
-            "to": "FUME_SHROOM",
-            "cost": 250
           },
           {
             "from": "CABBAGE_PULT",
@@ -435,11 +430,6 @@
             "from": "MELON_PULT",
             "to": "WINTER_MELON",
             "cost": 750
-          },
-          {
-            "from": "REPEATER",
-            "to": "MEGA_GATLING_PEA",
-            "cost": 3000
           }
         ]
       }

@@ -1,14 +1,15 @@
 package com.PVZ.model.game;
 
 import com.PVZ.model.entity.zombies.base.ZombieTexturePaths;
+import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.model.minigame.izombie.IZombieGame;
 import com.PVZ.model.minigame.izombie.ZombieOption;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
@@ -33,31 +34,11 @@ public class ZombiePacketBar {
         for (ZombieOption option : game.getRoster()) {
             Rectangle bounds = new Rectangle(x, y, SLOT_SIZE, SLOT_SIZE);
             ZombiePacket packet = new ZombiePacket(option, bounds);
-            packet.setIcon(getOrLoadIcon(option.getAlias()));
+            // The icon is a PAM animation, not a Texture/PNG. EntityRenderer draws it below.
+            packet.setIcon(null);
             packets.add(packet);
             y -= (SLOT_SIZE + GAP);
         }
-    }
-
-    private Texture getOrLoadIcon(String alias) {
-        if (alias == null) return null;
-        if (iconCache.containsKey(alias)) return iconCache.get(alias);
-        String path = ZombieTexturePaths.getPath(alias);
-        Texture texture = null;
-        try {
-            if (path != null && Gdx.files.internal(path).exists()) {
-                texture = new Texture(Gdx.files.internal(path));
-            }
-        } catch (RuntimeException ex) {
-            texture = null;
-        }
-        if (texture == null && !missingLogged.containsKey(alias)) {
-            missingLogged.put(alias, Boolean.TRUE);
-            System.out.println("[ZombiePacketBar] no icon found for " + alias + " at assets/" + path
-                    + " -> falling back to label box");
-        }
-        iconCache.put(alias, texture);
-        return texture;
     }
 
     public ZombiePacket getPacketAt(float worldX, float worldY) {
@@ -78,10 +59,8 @@ public class ZombiePacketBar {
             boolean selected = packet.getOption().getAlias().equalsIgnoreCase(
                     selectedAlias == null ? "" : selectedAlias);
 
-            if (packet.getIcon() != null) {
-                batch.setColor(Color.WHITE);
-                batch.draw(packet.getIcon(), b.x, b.y, b.width, b.height);
-            } else {
+            boolean pamDrawn = drawPamIcon(batch, packet.getOption().getAlias(), b);
+            if (!pamDrawn) {
                 smallFont.setColor(Color.WHITE);
                 smallFont.draw(batch, packet.getOption().getDisplayName(), b.x + 4, b.y + b.height - 8, b.width - 8, -1,
                         true);
@@ -106,6 +85,27 @@ public class ZombiePacketBar {
 
             smallFont.setColor(Color.WHITE);
             smallFont.draw(batch, packet.getOption().getCost() + "", b.x, b.y - 2, b.width, 1, true);
+        }
+    }
+
+    private boolean drawPamIcon(SpriteBatch batch, String alias, Rectangle b) {
+        String pamPath = ZombieTexturePaths.getPamPath(alias);
+        if (pamPath == null || EntityRenderer.getInstance() == null) return false;
+        try {
+            Matrix4 original = new Matrix4(batch.getTransformMatrix());
+            float scale = 0.20f;
+            float cx = b.x + b.width * 0.5f;
+            float cy = b.y + b.height * 0.5f;
+            Matrix4 hud = new Matrix4(original);
+            hud.translate(cx, cy, 0f);
+            hud.scale(scale, scale, 1f);
+            hud.translate(-195f, -195f, 0f);
+            batch.setTransformMatrix(hud);
+            boolean ok = EntityRenderer.getInstance().renderPam(batch, pamPath, "idle", 0f, 0f, 0f);
+            batch.setTransformMatrix(original);
+            return ok;
+        } catch (RuntimeException ex) {
+            return false;
         }
     }
 
