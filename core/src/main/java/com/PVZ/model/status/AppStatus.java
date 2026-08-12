@@ -40,6 +40,7 @@ public final class AppStatus {
     public static int currentStageNumber = 1;
     public static boolean tileDebugEnabled = false;
     public static boolean lastGameResultWin = false;
+    public static MainMenuScreen lastMainMenu;
 
     // ====================== تنظیمات جدید ======================
     public enum Difficulty {
@@ -183,8 +184,6 @@ public final class AppStatus {
 
     public static void setSFXVolume(int amount) {
         sfxVolume = Math.max(0, Math.min(1, amount / 100f));
-        // اگر در آینده SoundManager برای افکت‌ها داشتید، اینجا صدا بزنید:
-        // SoundManager.getInstance().setVolume(sfxVolume);
     }
 
     public static MenuType getCurrentMenuType() {

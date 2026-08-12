@@ -10,8 +10,8 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 200,
-    "diamonds" : 3,
+    "coins" : 1999500,
+    "diamonds" : 299858,
     "stagesCompleted" : 0,
     "highestScore" : 1000,
     "dailyQuestsCompleted" : 0,
@@ -33,11 +33,11 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "PEASHOOTER", "SUNFLOWER" ],
-    "seenZombies" : [ "WEASEL", "BEACH_OCTOPUS", "ZOMBOTANY_SQUASH", "BEACH_DEFAULT", "TUTORIAL_ARMOR4", "DARK_ARMOR3", "MUMMY_ARMOR1", "ZOMBOTANY_JALAPENO", "DARK_ARMOR1", "ZOMBOSS_PIRATE", "DARK_ARMOR2", "GARGANTUAR_EGYPT", "BEACH_SURFER", "ICEAGE_DEFAULT", "ICEAGE_ARMOR2", "WEASEL_HOARDER", "IMP_DARK", "BEACH_FAST_SWIMMER", "DARK_DEFAULT", "GARGANTUAR_BASIC", "WIZARD", "DARK_ARMOR4", "MUMMY_DEFAULT", "DARK_KING", "IMP_TUTORIAL", "GARGANTUAR_BEACH", "ZOMBOTANY_PEASHOOTER", "DARK_JUGGLER", "MUMMY_ARMOR4", "ZOMBOSS_DARK", "TROGLOBITE", "IMP_ICEAGE" ],
+    "unlockedPlants" : [ "SUNFLOWER", "PEASHOOTER" ],
+    "seenZombies" : [ "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "IMP_ICEAGE", "GARGANTUAR_EGYPT", "ZOMBOSS_DARK", "BEACH_OCTOPUS", "DARK_JUGGLER", "GARGANTUAR_BASIC", "DARK_ARMOR3", "IMP_DARK", "DARK_ARMOR4", "ZOMBOTANY_JALAPENO", "TROGLOBITE", "ZOMBOSS_PIRATE", "GARGANTUAR_BEACH", "ICEAGE_ARMOR2", "DARK_DEFAULT", "DARK_KING", "DARK_ARMOR1", "MUMMY_ARMOR1", "IMP_TUTORIAL", "BEACH_SURFER", "ZOMBOTANY_PEASHOOTER", "DARK_ARMOR2", "BEACH_FAST_SWIMMER", "WEASEL_HOARDER", "MUMMY_DEFAULT", "WEASEL", "WIZARD", "BEACH_DEFAULT", "ICEAGE_DEFAULT", "ZOMBOTANY_SQUASH" ],
     "seedPackets" : { },
     "plantLevels" : { },
-    "greenhouseBoosts" : [ ]
+    "greenhouseBoosts" : [ "SUNFLOWER", "PEASHOOTER" ]
   },
   "greenhouseState" : {
     "pots" : [ [ {
@@ -64,10 +64,10 @@
     }, {
       "unlocked" : true,
       "plantType" : null,
-      "plantedTimeMillis" : 0,
-      "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : true
+      "plantedTimeMillis" : 1786554546780,
+      "marigold" : true,
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : null,
@@ -90,19 +90,19 @@
       "empty" : true,
       "readyForPlanting" : true
     }, {
-      "unlocked" : false,
+      "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : false
+      "readyForPlanting" : true
     }, {
-      "unlocked" : false,
+      "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : false
+      "readyForPlanting" : true
     }, {
       "unlocked" : false,
       "plantType" : null,
@@ -132,12 +132,12 @@
       "empty" : true,
       "readyForPlanting" : false
     }, {
-      "unlocked" : false,
+      "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : false
+      "readyForPlanting" : true
     }, {
       "unlocked" : false,
       "plantType" : null,
@@ -181,8 +181,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 13,
-    "numberOfUnlockedPots" : 7
+    "numberOfLockedPots" : 2,
+    "numberOfUnlockedPots" : 10
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -295,10 +295,10 @@
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "availableToday" : false,
-    "forToday" : false
+    "forToday" : false,
+    "availableToday" : false
   },
-  "stayLoggedIn" : false,
+  "stayLoggedIn" : true,
   "questState" : {
     "questManager" : {
       "activeQuests" : [ {
@@ -321,9 +321,9 @@
           "n" : 2
         },
         "active" : true,
+        "runtimeState" : { },
         "formattedDescription" : "Win without losing more than 2 plants",
-        "formattedTitle" : "Economic Herbivore",
-        "runtimeState" : { }
+        "formattedTitle" : "Economic Herbivore"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -342,11 +342,11 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
-        "formattedTitle" : "Speed Run",
         "runtimeState" : {
           "waveStartTime" : 1786463553426
-        }
+        },
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
+        "formattedTitle" : "Speed Run"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -365,9 +365,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "runtimeState" : { },
         "formattedDescription" : "End a level with exactly 0 sun",
-        "formattedTitle" : "Master of Defense",
-        "runtimeState" : { }
+        "formattedTitle" : "Master of Defense"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -386,9 +386,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "runtimeState" : { },
         "formattedDescription" : "Win a day level using only mushrooms",
-        "formattedTitle" : "Day or Night",
-        "runtimeState" : { }
+        "formattedTitle" : "Day or Night"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -409,9 +409,9 @@
           "n" : 20
         },
         "active" : true,
+        "runtimeState" : { },
         "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
-        "formattedTitle" : "Lawnmower Time",
-        "runtimeState" : { }
+        "formattedTitle" : "Lawnmower Time"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -432,16 +432,16 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
+        "runtimeState" : { },
         "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
-        "formattedTitle" : "Chapter Hunter",
-        "runtimeState" : { }
+        "formattedTitle" : "Chapter Hunter"
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "11h 58m"
+      "timeUntilReset" : "3h 13m"
     }
   }
 }

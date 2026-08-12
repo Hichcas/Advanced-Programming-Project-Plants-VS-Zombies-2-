@@ -48,8 +48,9 @@ public class GreenhouseMenuController {
         StringBuilder matrix = new StringBuilder();
         StringBuilder details = new StringBuilder();
 
-        for (int y = 1; y <= 4; y++) {
-            for (int x = 1; x <= 5; x++) {
+        // تغییر به ۳ سطر و ۴ ستون
+        for (int y = 1; y <= 3; y++) {
+            for (int x = 1; x <= 4; x++) {
                 Pot pot = state.getPot(x, y);
                 if (!pot.isUnlocked()) {
                     matrix.append("[X] ");

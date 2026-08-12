@@ -1,0 +1,17 @@
+{
+  "gridStartX": 685,
+  "gridStartY": 180,
+  "gapX": 73,
+  "gapY": 125,
+  "slotWidth": 240,
+  "slotHeight": 180,
+  "lockOffsetX": 147,
+  "lockOffsetY": 25,
+  "plantOffsetX": 0,
+  "plantOffsetY": 50,
+  "buttonOffsetX": 22,
+  "buttonOffsetY": -110,
+  "buttonWidth": 200,
+  "buttonHeight": 60,
+  "buttonIconSize": 30
+}
