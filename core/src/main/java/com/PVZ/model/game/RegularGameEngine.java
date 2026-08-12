@@ -205,6 +205,11 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     }
 
     @Override
+    public void spawnSunAt(int row, int col, int amount, double fallSpeed) {
+        SunHandler.spawnSunAt(this, row, col, amount, fallSpeed);
+    }
+
+    @Override
     public void damageArea(int lane, int row, int damage) {
         CombatHandler.damageArea(this, lane, row, damage);
     }

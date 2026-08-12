@@ -40,6 +40,10 @@ public interface BehaviorContext {
         spawnSun(amount);
     }
 
+    default void spawnSunAt(int row, int col, int amount, double fallSpeed) {
+        spawnSunAt(row, col, amount);
+    }
+
     void damageArea(int lane, int row, int damage);
 
     default void freezeZombiesInLane(int lane, double seconds) {

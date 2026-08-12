@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -46,6 +47,8 @@ public class GameScreen extends BaseScreen {
     private Texture backgroundTexture;
     private float gameOverAlpha = 0f;
     private boolean gameOverShown = false;
+    private boolean pluckModeActive = false;
+    private ImageButton shovelButton;
 
     public GameScreen(String mapPath, String musicPath, GameEngine gameEngine) {
         super();
@@ -76,6 +79,9 @@ public class GameScreen extends BaseScreen {
         winLoseOverlay = new WinLoseOverlay(this::handleSaveAndExit, this::handleRestart);
         stage.addActor(winLoseOverlay);
         stage.addActor(buildPauseButton());
+        if (gameEngine instanceof RegularGameEngine) {
+            stage.addActor(buildShovelButton());
+        }
 
         if (gameEngine.getMap() != null) {
             gameMap = gameEngine.getMap();
@@ -144,6 +150,67 @@ public class GameScreen extends BaseScreen {
         return overlay;
     }
 
+    private Table buildShovelButton() {
+        Table overlay = new Table();
+        overlay.setFillParent(true);
+        overlay.top().right();
+
+        ImageButton button;
+        try {
+            Skin skin = PvzSkin.get();
+            if (skin != null && skin.has("ingame_shovel", ImageButton.ImageButtonStyle.class)) {
+                button = new ImageButton(skin, "ingame_shovel");
+            } else {
+                button = new ImageButton(new ImageButton.ImageButtonStyle());
+            }
+        } catch (Exception ex) {
+            button = new ImageButton(new ImageButton.ImageButtonStyle());
+        }
+
+        shovelButton = button;
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                pluckModeActive = !pluckModeActive;
+                updateShovelButtonState();
+            }
+        });
+
+        overlay.add(button).size(82f, 82f).padTop(108f).padRight(20f);
+        return overlay;
+    }
+
+    private void updateShovelButtonState() {
+        if (shovelButton != null) {
+            shovelButton.setColor(1f, 1f, 1f, pluckModeActive ? 1f : 0.78f);
+        }
+    }
+
+    private boolean handlePluckAtScreenPoint(int screenX, int screenY) {
+        if (!(AppStatus.getGameEngine() instanceof RegularGameEngine regularEngine)) {
+            return false;
+        }
+        Map map = regularEngine.getMap();
+        if (map == null) {
+            return false;
+        }
+
+        Vector3 world = camera.unproject(new Vector3(screenX, screenY, 0f));
+        int row = map.worldToRow(world.y);
+        int col = map.worldToCol(world.x);
+        if (!map.isWithinBounds(row, col)) {
+            return false;
+        }
+
+        String result = regularEngine.pluckPlant(col, row);
+        System.out.println(result);
+        if (result != null && result.startsWith("Plant plucked from")) {
+            pluckModeActive = false;
+            updateShovelButtonState();
+        }
+        return true;
+    }
+
     private void handleSaveAndExit() {
         if (AppStatus.currentUser != null && AppStatus.currentUser.profile != null) {
             UserRegistry.saveUserToDatabase(AppStatus.currentUser.profile.getUsername());
@@ -185,11 +252,15 @@ public class GameScreen extends BaseScreen {
     @Override
     public void show() {
         multiplexer.clear();
+        multiplexer.addProcessor(stage);
         multiplexer.addProcessor(new com.badlogic.gdx.InputAdapter() {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 if (isSimulationFrozen()) {
                     return false;
+                }
+                if (pluckModeActive && handlePluckAtScreenPoint(screenX, screenY)) {
+                    return true;
                 }
                 return activeInputProcessor().touchDown(screenX, screenY, pointer, button);
             }
@@ -202,7 +273,6 @@ public class GameScreen extends BaseScreen {
                 return activeInputProcessor().mouseMoved(screenX, screenY);
             }
         });
-        multiplexer.addProcessor(stage);
         super.show();
 
         refreshSeedPacketBar();
@@ -492,6 +562,8 @@ public class GameScreen extends BaseScreen {
         if (gameEngine != null) {
             gameEngine.dispose();
         }
+        pluckModeActive = false;
+        shovelButton = null;
         if (backgroundTexture != null) {
             backgroundTexture.dispose();
         }

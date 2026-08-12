@@ -30,9 +30,14 @@ public class SunManager {
     }
 
     public Sun spawnFalling(double x, double y, int amount, double groundY, Sun.SunType type) {
+        return spawnFalling(x, y, amount, groundY, type, 180.0);
+    }
+
+    public Sun spawnFalling(double x, double y, int amount, double groundY,
+                            Sun.SunType type, double fallSpeed) {
         Sun sun = spawn(x, y, amount);
         sun.setType(type);
-        sun.configureFalling(180.0, groundY);
+        sun.configureFalling(fallSpeed, groundY);
         System.out.println("A " + describeType(type) + " sun is dropping at position ("
             + Math.round(x) + ", " + Math.round(y) + ")");
         return sun;
