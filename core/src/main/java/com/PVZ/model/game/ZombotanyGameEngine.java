@@ -52,6 +52,7 @@ public class ZombotanyGameEngine extends GameEngine implements ZombieEngine, See
     private float gameOverTimer = 0f;
 
     private Texture background;
+    private Texture backgroundRight;
     private BitmapFont font;
     private BitmapFont tinyFont;
 
@@ -401,7 +402,8 @@ public class ZombotanyGameEngine extends GameEngine implements ZombieEngine, See
 
     private void ensureTexturesLoaded() {
         if (font != null) return;
-        background = new Texture(ZombotanyTexturePaths.BACKGROUND);
+        background = new Texture(ZombotanyTexturePaths.BACKGROUND_LEFT);
+        backgroundRight = new Texture(ZombotanyTexturePaths.BACKGROUND_RIGHT);
         font = FontManager.getInstance().getEnglishMenuFont();
         tinyFont = FontManager.getInstance().getEnglishTinyFont();
     }
@@ -410,6 +412,12 @@ public class ZombotanyGameEngine extends GameEngine implements ZombieEngine, See
     public Texture getBackgroundOverride() {
         ensureTexturesLoaded();
         return background;
+    }
+
+    @Override
+    public Texture getBackgroundOverrideRight() {
+        ensureTexturesLoaded();
+        return backgroundRight;
     }
 
     @Override

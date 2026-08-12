@@ -48,6 +48,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
 
     private IZombieGame game;
     private Texture background;
+    private Texture backgroundRight;
     private BitmapFont font;
     private BitmapFont tinyFont;
     private final ZombiePacketBar zombiePacketBar = new ZombiePacketBar();
@@ -340,7 +341,8 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
 
     private void ensureTexturesLoaded() {
         if (font != null) return;
-        background = new Texture(IZombieTexturePaths.BACKGROUND);
+        background = new Texture(IZombieTexturePaths.BACKGROUND_LEFT);
+        backgroundRight = new Texture(IZombieTexturePaths.BACKGROUND_RIGHT);
         font = FontManager.getInstance().getEnglishMenuFont();
         tinyFont = FontManager.getInstance().getEnglishTinyFont();
         Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -354,6 +356,12 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     public Texture getBackgroundOverride() {
         ensureTexturesLoaded();
         return background;
+    }
+
+    @Override
+    public Texture getBackgroundOverrideRight() {
+        ensureTexturesLoaded();
+        return backgroundRight;
     }
 
     @Override

@@ -46,6 +46,7 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
     private VasebreakerGame game;
     private Texture seedPacketGround;
     private Texture background;
+    private Texture backgroundRight;
     private BitmapFont font;
     private float vaseAnimTime = 0f;
     /** ظرف‌هایی که همین الان شکسته شده‌اند: مقدار = زمان سپری‌شده از لحظه‌ی شکستن (برای پخش کلیپ break). */
@@ -308,7 +309,8 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
     private void ensureVaseTexturesLoaded() {
         if (seedPacketGround != null) return;
         seedPacketGround = new Texture(VasebreakerTexturePaths.SEED_PACKET_GROUND);
-        background = new Texture(VasebreakerTexturePaths.BACKGROUND);
+        background = new Texture(VasebreakerTexturePaths.BACKGROUND_LEFT);
+        backgroundRight = new Texture(VasebreakerTexturePaths.BACKGROUND_RIGHT);
         font = FontManager.getInstance().getEnglishMenuFont();
     }
 
@@ -316,6 +318,12 @@ public class VasebreakerGameEngine extends GameEngine implements ZombieEngine, c
     public Texture getBackgroundOverride() {
         ensureVaseTexturesLoaded();
         return background;
+    }
+
+    @Override
+    public Texture getBackgroundOverrideRight() {
+        ensureVaseTexturesLoaded();
+        return backgroundRight;
     }
 
     @Override

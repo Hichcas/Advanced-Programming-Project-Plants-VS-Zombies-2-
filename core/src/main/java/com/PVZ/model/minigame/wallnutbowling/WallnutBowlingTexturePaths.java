@@ -4,7 +4,8 @@ public final class WallnutBowlingTexturePaths {
 
     public static final String BASE = "Minigames/WallnutBowling/";
 
-    public static final String BACKGROUND = BASE + "background.png";
+    public static final String BACKGROUND_LEFT = BASE + "background.png";
+    public static final String BACKGROUND_RIGHT = BASE + "background_right.png";
     public static final String THUMBNAIL = BASE + "thumbnail.png";
 
     public static final String NUT_NORMAL = BASE + "nut_normal.png";

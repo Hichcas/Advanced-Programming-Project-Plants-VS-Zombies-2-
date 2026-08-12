@@ -307,11 +307,19 @@ public class GameScreen extends BaseScreen {
     private void drawBackgroundAndEngine(GameEngine activeEngine, float delta) {
         gameBatch.setProjectionMatrix(camera.combined);
         Texture activeBackground = activeEngine.getBackgroundOverride();
+        Texture activeBackgroundRight = activeEngine.getBackgroundOverrideRight();
         if (activeBackground == null) {
             activeBackground = backgroundTexture;
         }
         gameBatch.begin();
-        if (activeBackground != null) {
+        if (activeBackgroundRight != null) {
+            // پس‌زمینه دو تکه است: نصف چپ و نصف راست کنار هم کشیده می‌شوند.
+            float halfWidth = (VIRTUAL_WIDTH + 500) / 2f;
+            if (activeBackground != null) {
+                gameBatch.draw(activeBackground, 0, 0, halfWidth, VIRTUAL_HEIGHT);
+            }
+            gameBatch.draw(activeBackgroundRight, halfWidth, 0, halfWidth, VIRTUAL_HEIGHT);
+        } else if (activeBackground != null) {
             gameBatch.draw(activeBackground, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
         }
         gameBatch.end();
