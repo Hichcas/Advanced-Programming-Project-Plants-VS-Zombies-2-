@@ -193,15 +193,58 @@ public class EntityRenderer {
         return renderPlant(batch, plantTypeName, "idle", stateTime, x, y);
     }
 
+    private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
+    private static final float SUN_PAM_SCALE = 0.35f;
+    private final Map<String, ClipRef> sunClips = new HashMap<>();
+    private boolean sunPamLoadFailed = false;
+
+    public boolean renderSun(SpriteBatch batch, com.PVZ.model.entity.Sun sun) {
+        if (sun == null || sun.isCollected() || sunPamLoadFailed) {
+            return false;
+        }
+        textures.update();
+
+        String clipName;
+        float animationTime = sun.getAnimationTime();
+        switch (sun.getType()) {
+            case SPECIAL:
+                clipName = animationTime < 0.5333f ? "transition_blue" : "blue";
+                break;
+            case RADIOACTIVE:
+                clipName = animationTime < 0.5333f ? "transition_red" : "red";
+                break;
+            default:
+                clipName = "animation";
+                break;
+        }
+
+        ClipRef clip = sunClips.get(clipName);
+        if (clip == null && !sunClips.containsKey(clipName)) {
+            try {
+                pamPlayer.loadSync(SUN_PAM);
+                clip = pamPlayer.getClip(SUN_PAM, clipName);
+                sunClips.put(clipName, clip);
+            } catch (Exception e) {
+                System.err.println("EntityRenderer: Failed to load sun PAM: " + e.getMessage());
+                sunPamLoadFailed = true;
+                return false;
+            }
+        }
+
+        if (clip == null) {
+            return false;
+        }
+
+        float centerX = (float) sun.getX() + sun.getHitbox().width / 2f;
+        float centerY = (float) sun.getY() + sun.getHitbox().height / 2f;
+        pamPlayer.draw(batch, clip, animationTime, centerX, centerY, true);
+        return true;
+    }
+
     private final Map<String, ClipRef> projectileClips = new HashMap<>();
     private final Map<String, Boolean> projectilePamFailed = new HashMap<>();
 
-    /**
-     * Draws a projectile using its real PAM effect (e.g. the flying pea sprite) instead of
-     * a procedural placeholder shape.
-     * @return true if drawn, false if this visual key has no PAM mapping / failed to load —
-     *         caller (Projectile.draw) should fall back to the pixmap shape in that case.
-     */
+
     public boolean renderProjectile(SpriteBatch batch, String visualKey, float stateTime, float x, float y) {
         if (visualKey == null) {
             return false;
