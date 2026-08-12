@@ -77,12 +77,22 @@ public class GameScreen extends BaseScreen {
         stage.addActor(winLoseOverlay);
         stage.addActor(buildPauseButton());
 
-        gameMap = new Map(550, 1240, 1600, 1170, 5, 9);
+        // Minigame engines (Beghouled, Vasebreaker, Wallnut Bowling, ...) build and populate
+        // their own Map *before* this screen is created (grid size, plant placement, etc. can
+        // differ per level). If we blindly replace it here with a fresh empty 5x9 map, the
+        // engine keeps drawing the plant objects it already created (they're held directly in
+        // its own list) while all logic that goes through map.getPlantAt/worldToRow/worldToCol
+        // (clicks, crater detection, zombie collisions) now points at the new, empty map. That
+        // mismatch is what made plants "look" present but be untouchable and unhittable.
+        if (gameEngine.getMap() != null) {
+            gameMap = gameEngine.getMap();
+        } else {
+            gameMap = new Map(550, 1240, 1600, 1170, 5, 9);
+            gameEngine.setMap(gameMap);
+        }
         shapeDebug = new ShapeRenderer();
         hudFont = FontManager.getInstance().getEnglishMenuFont();
         gameOverFont = FontManager.getInstance().getEnglishMenuFont();
-
-        gameEngine.setMap(gameMap);
 
         if (gameEngine instanceof RegularGameEngine regularGameEngine) {
             layoutSeedPacketBar(regularGameEngine);
@@ -103,7 +113,7 @@ public class GameScreen extends BaseScreen {
     private String resolveMissionText() {
         com.PVZ.model.game.chapter.StageConfig stageConfig = resolveStageConfig();
         if (stageConfig != null && stageConfig.getType() != null
-                && stageConfig.getType().toUpperCase().contains("DEADLINE")) {
+            && stageConfig.getType().toUpperCase().contains("DEADLINE")) {
             return "Don't let the zombies cross the marked line!";
         }
         return "Don't let the zombies reach your house!";

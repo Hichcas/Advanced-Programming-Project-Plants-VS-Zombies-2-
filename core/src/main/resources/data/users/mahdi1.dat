@@ -33,8 +33,8 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "SUNFLOWER", "PEASHOOTER" ],
-    "seenZombies" : [ "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "IMP_ICEAGE", "GARGANTUAR_EGYPT", "ZOMBOSS_DARK", "BEACH_OCTOPUS", "DARK_JUGGLER", "GARGANTUAR_BASIC", "IMP_DARK", "DARK_ARMOR4", "WEASEL", "DARK_ARMOR3", "GARGANTUAR_BEACH", "ZOMBOSS_PIRATE", "ICEAGE_ARMOR2", "WIZARD", "DARK_DEFAULT", "DARK_KING", "TROGLOBITE", "MUMMY_ARMOR1", "IMP_TUTORIAL", "ZOMBOTANY_PEASHOOTER", "BEACH_SURFER", "DARK_ARMOR2", "BEACH_FAST_SWIMMER", "WEASEL_HOARDER", "MUMMY_DEFAULT", "ZOMBOTANY_JALAPENO", "DARK_ARMOR1", "BEACH_DEFAULT", "ICEAGE_DEFAULT", "ZOMBOTANY_SQUASH" ],
+    "unlockedPlants" : [ "PEASHOOTER", "SUNFLOWER" ],
+    "seenZombies" : [ "WEASEL", "BEACH_OCTOPUS", "ZOMBOTANY_SQUASH", "BEACH_DEFAULT", "TUTORIAL_ARMOR4", "DARK_ARMOR3", "MUMMY_ARMOR1", "ZOMBOTANY_JALAPENO", "DARK_ARMOR1", "ZOMBOSS_PIRATE", "DARK_ARMOR2", "GARGANTUAR_EGYPT", "BEACH_SURFER", "ICEAGE_DEFAULT", "ICEAGE_ARMOR2", "WEASEL_HOARDER", "IMP_DARK", "BEACH_FAST_SWIMMER", "DARK_DEFAULT", "GARGANTUAR_BASIC", "WIZARD", "DARK_ARMOR4", "MUMMY_DEFAULT", "DARK_KING", "IMP_TUTORIAL", "GARGANTUAR_BEACH", "ZOMBOTANY_PEASHOOTER", "DARK_JUGGLER", "MUMMY_ARMOR4", "ZOMBOSS_DARK", "TROGLOBITE", "IMP_ICEAGE" ],
     "seedPackets" : { },
     "plantLevels" : { },
     "greenhouseBoosts" : [ ]
@@ -181,8 +181,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfUnlockedPots" : 7,
-    "numberOfLockedPots" : 13
+    "numberOfLockedPots" : 13,
+    "numberOfUnlockedPots" : 7
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -295,10 +295,10 @@
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "forToday" : false,
-    "availableToday" : false
+    "availableToday" : false,
+    "forToday" : false
   },
-  "stayLoggedIn" : true,
+  "stayLoggedIn" : false,
   "questState" : {
     "questManager" : {
       "activeQuests" : [ {
@@ -441,7 +441,7 @@
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "2h 35m"
+      "timeUntilReset" : "11h 58m"
     }
   }
 }
