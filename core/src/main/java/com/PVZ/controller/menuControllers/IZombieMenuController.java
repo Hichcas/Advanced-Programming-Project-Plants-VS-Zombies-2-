@@ -47,7 +47,7 @@ public class IZombieMenuController {
         currentGame = new IZombieGame(level);
         currentEngine.setGame(currentGame);
 
-        Map map = new Map(550, 1240, 1600, 1170, currentGame.getRows(), currentGame.getCols());
+        Map map = new Map(480, 1235, 1655, 1170, currentGame.getRows(), currentGame.getCols());
         currentEngine.setMap(map);
         currentEngine.initializeBoard();
 
