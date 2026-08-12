@@ -9,9 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Sun {
     private static final String TEXTURE_PATH = "Sun/Sun.png";
-    private static Texture sharedTexture;
-    private static boolean triedLoad = false;
-
+    private static Texture fallbackTexture;
+    private static boolean triedFallbackLoad;
     private static final float SIZE = 70f;
     private double x;
     private double y;
@@ -72,41 +71,35 @@ public class Sun {
         if (collected) {
             return;
         }
-        Texture texture = getOrLoadTexture();
-        batch.draw(texture, (float) x, (float) y, hitbox.width, hitbox.height);
+        boolean rendered = com.PVZ.view.renderer.EntityRenderer.getInstance().renderSun(batch, this);
+        if (!rendered) {
+            batch.draw(getFallbackTexture(), (float) x, (float) y, hitbox.width, hitbox.height);
+        }
     }
 
-    private static Texture getOrLoadTexture() {
-        if (sharedTexture != null) {
-            return sharedTexture;
+    private static Texture getFallbackTexture() {
+        if (fallbackTexture != null) {
+            return fallbackTexture;
         }
-        if (!triedLoad) {
-            triedLoad = true;
+        if (!triedFallbackLoad) {
+            triedFallbackLoad = true;
             try {
                 if (Gdx.files.internal(TEXTURE_PATH).exists()) {
-                    sharedTexture = new Texture(Gdx.files.internal(TEXTURE_PATH));
-                    return sharedTexture;
+                    fallbackTexture = new Texture(Gdx.files.internal(TEXTURE_PATH));
+                    return fallbackTexture;
                 }
-                System.out.println("[Sun] no icon found at assets/" + TEXTURE_PATH
-                    + " -> falling back to placeholder circle");
-            } catch (RuntimeException ex) {
-                System.out.println("[Sun] failed loading texture at assets/" + TEXTURE_PATH + " -> " + ex.getMessage());
+            } catch (RuntimeException ignored) {
+                // Keep the procedural fallback below.
             }
         }
-        sharedTexture = buildPlaceholderTexture();
-        return sharedTexture;
-    }
-
-    private static Texture buildPlaceholderTexture() {
-        int size = (int) SIZE;
-        Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap((int) SIZE, (int) SIZE, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.GOLD);
-        pixmap.fillCircle(size / 2, size / 2, size / 2 - 1);
+        pixmap.fillCircle((int) SIZE / 2, (int) SIZE / 2, (int) SIZE / 2 - 1);
         pixmap.setColor(1f, 1f, 0.6f, 0.8f);
-        pixmap.fillCircle(size / 2, size / 2, size / 4);
-        Texture texture = new Texture(pixmap);
+        pixmap.fillCircle((int) SIZE / 2, (int) SIZE / 2, (int) SIZE / 4);
+        fallbackTexture = new Texture(pixmap);
         pixmap.dispose();
-        return texture;
+        return fallbackTexture;
     }
 
     private void updateHitbox() {
@@ -163,6 +156,10 @@ public class Sun {
 
     public double getY() {
         return y;
+    }
+
+    public float getAnimationTime() {
+        return timer;
     }
 
     public void setPosition(double x, double y) {

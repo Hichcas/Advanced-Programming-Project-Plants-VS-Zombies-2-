@@ -131,15 +131,15 @@ public class UpdateHandler {
         double groundY = tile.getY() + tile.getHeight() / 2.0;
         double startY = engine.map.getStartY() + engine.map.getTileHeight() * 2.0;
 
-        // Sky sun type roll per spec: 80% normal (25 sun), 5% special (100 sun),
-        // 15% radioactive (explodes if harvested mid-air; turns into a normal sun on landing).
+        // Sky sun type roll per spec: 80% normal (25 sun), 15% special (100 sun),
+        // 5% radioactive (explodes if harvested mid-air; turns into a normal sun on landing).
         Sun.SunType type;
         int amount;
         int roll = engine.random.nextInt(100);
         if (roll < 80) {
             type = Sun.SunType.NORMAL;
             amount = 25;
-        } else if (roll < 85) {
+        } else if (roll < 95) {
             type = Sun.SunType.SPECIAL;
             amount = 100;
         } else {
