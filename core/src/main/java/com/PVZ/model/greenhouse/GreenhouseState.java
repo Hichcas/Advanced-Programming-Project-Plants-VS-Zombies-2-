@@ -2,15 +2,15 @@ package com.PVZ.model.greenhouse;
 
 import com.PVZ.model.enums.PlantType;
 
-
 public class GreenhouseState {
 
     private Pot[][] pots;
 
     public GreenhouseState() {
-        pots = new Pot[4][5];
-        for (int row = 0; row < 4; row++) {
-            for (int col = 0; col < 5; col++) {
+        // تغییر به ۳ سطر و ۴ ستون
+        pots = new Pot[3][4];
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 4; col++) {
                 pots[row][col] = new Pot(row == 0);
             }
         }
@@ -25,7 +25,7 @@ public class GreenhouseState {
     }
 
     public Pot getPot(int x, int y) {
-        if (x < 1 || x > 5 || y < 1 || y > 4) {
+        if (x < 1 || x > 4 || y < 1 || y > 3) {
             throw new IllegalArgumentException("Invalid greenhouse coordinates: (" + x + ", " + y + ")");
         }
         return pots[y - 1][x - 1];
@@ -33,23 +33,20 @@ public class GreenhouseState {
 
     public void unlockPots(int count) {
         if (count <= 0) return;
-
         int unlockedSoFar = 0;
-        for (int row = 0; row < 4; row++) {
-            for (int col = 0; col < 5; col++) {
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 4; col++) {
                 if (!pots[row][col].isUnlocked()) {
                     pots[row][col].setUnlocked(true);
                     unlockedSoFar++;
-                    if (unlockedSoFar == count) {
-                        return;
-                    }
+                    if (unlockedSoFar == count) return;
                 }
             }
         }
     }
 
     public int getNumberOfLockedPots() {
-        return 20 - getNumberOfUnlockedPots();
+        return 12 - getNumberOfUnlockedPots();
     }
 
     public boolean hasLockedPots() {

@@ -209,8 +209,7 @@ public class ChapterSelectPanel extends BasePanel {
             new Runnable() {
                 @Override
                 public void run() {
-                    // TODO: باز کردن I, Zombie
-                    System.out.println("Izombie");
+                    AppStatus.setCurrentMenuType(MenuType.GREENHOUSE);
                 }
             }
         );

@@ -42,32 +42,32 @@
   "greenhouseState" : {
     "pots" : [ [ {
       "unlocked" : true,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
+      "plantType" : "SUNFLOWER",
+      "plantedTimeMillis" : 1786548347672,
       "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : true
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : null,
-      "plantedTimeMillis" : 0,
-      "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : true
+      "plantedTimeMillis" : 1786548350668,
+      "marigold" : true,
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
+      "plantType" : "PEASHOOTER",
+      "plantedTimeMillis" : 1786548352484,
       "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : true
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
+      "plantType" : "SUNFLOWER",
+      "plantedTimeMillis" : 1786548353651,
       "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : true
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : null,
@@ -181,7 +181,7 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 15,
+    "numberOfLockedPots" : 7,
     "numberOfUnlockedPots" : 5
   },
   "appStats" : {
@@ -303,7 +303,7 @@
     "availableToday" : false,
     "forToday" : false
   },
-  "stayLoggedIn" : true,
+  "stayLoggedIn" : false,
   "questState" : {
     "questManager" : {
       "activeQuests" : [ {
@@ -349,7 +349,7 @@
         "active" : true,
         "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1786537913258
+          "waveStartTime" : 1786538326894
         },
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
@@ -446,7 +446,7 @@
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "7h 57m"
+      "timeUntilReset" : "3h 58m"
     }
   }
 }
