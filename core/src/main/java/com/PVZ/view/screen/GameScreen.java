@@ -29,7 +29,6 @@ import pvz.skin.PvzSkin;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GameScreen extends BaseScreen {
 
     private final SpriteBatch gameBatch;
@@ -71,23 +70,17 @@ public class GameScreen extends BaseScreen {
         pauseMenuOverlay = new PauseMenuOverlay(this::handleSaveAndExit, this::handleRestart);
         pauseMenuOverlay.setMissionText(resolveMissionText());
         stage.addActor(pauseMenuOverlay);
-        levelStartOverlay = new LevelStartOverlay(resolveStageConfig(), () -> { });
+        levelStartOverlay = new LevelStartOverlay(resolveStageConfig(), () -> {
+        });
         stage.addActor(levelStartOverlay);
         winLoseOverlay = new WinLoseOverlay(this::handleSaveAndExit, this::handleRestart);
         stage.addActor(winLoseOverlay);
         stage.addActor(buildPauseButton());
 
-        // Minigame engines (Beghouled, Vasebreaker, Wallnut Bowling, ...) build and populate
-        // their own Map *before* this screen is created (grid size, plant placement, etc. can
-        // differ per level). If we blindly replace it here with a fresh empty 5x9 map, the
-        // engine keeps drawing the plant objects it already created (they're held directly in
-        // its own list) while all logic that goes through map.getPlantAt/worldToRow/worldToCol
-        // (clicks, crater detection, zombie collisions) now points at the new, empty map. That
-        // mismatch is what made plants "look" present but be untouchable and unhittable.
         if (gameEngine.getMap() != null) {
             gameMap = gameEngine.getMap();
         } else {
-            gameMap = new Map(550, 1240, 1600, 1170, 5, 9);
+            gameMap = new Map(480, 1235, 1655, 1170, 5, 9);
             gameEngine.setMap(gameMap);
         }
         shapeDebug = new ShapeRenderer();
@@ -311,17 +304,51 @@ public class GameScreen extends BaseScreen {
         if (activeBackground == null) {
             activeBackground = backgroundTexture;
         }
+
+        // ----- تنظیمات مقیاس و آفست (قابل دریافت از activeEngine یا متغیرهای کلاس) -----
+        float scaleX = 1.20f;
+        float scaleY = 1.30f;
+
+        float offsetX = -100f;    // جابه‌جایی افقی کل عکس بزرگ (به پیکسل)
+        float offsetY = -140f;    // جابه‌جایی عمودی کل عکس بزرگ (به پیکسل)
+
         gameBatch.begin();
-        if (activeBackgroundRight != null) {
-            // پس‌زمینه دو تکه است: نصف چپ و نصف راست کنار هم کشیده می‌شوند.
-            float halfWidth = (VIRTUAL_WIDTH + 500) / 2f;
-            if (activeBackground != null) {
-                gameBatch.draw(activeBackground, 0, 0, halfWidth, VIRTUAL_HEIGHT);
-            }
-            gameBatch.draw(activeBackgroundRight, halfWidth, 0, halfWidth, VIRTUAL_HEIGHT);
+
+        if (activeBackgroundRight != null && activeBackground != null) {
+            // ----- حالت دو تکه (ترکیب دو تصویر به عنوان یک تصویر واحد) -----
+
+            // ۱. محاسبه مقیاس پایه برای فیت شدن عمودی اولیه در VIRTUAL_HEIGHT
+            float baseScale = VIRTUAL_HEIGHT / (float) activeBackground.getHeight();
+
+            // ۲. ابعاد نهایی تصویر چپ بعد از اعمال scaleX و scaleY
+            float leftW = activeBackground.getWidth() * baseScale * scaleX;
+            float leftH = VIRTUAL_HEIGHT * scaleY;
+
+            // ۳. ابعاد نهایی تصویر راست با همان ضریب مقیاس
+            float rightW = activeBackgroundRight.getWidth() * baseScale * scaleX;
+            float rightH = VIRTUAL_HEIGHT * scaleY;
+
+            // ۴. نقطه‌ی مبدا پایین-چپ عکس یکپارچه (با احتساب آفست‌ها)
+            float startX = 0f + offsetX;
+            float startY = 0f + offsetY;
+
+            // ۵. رسم تصویر چپ از نقطه مبدا
+            gameBatch.draw(activeBackground, startX, startY, leftW, leftH);
+
+            // ۶. رسم تصویر راست دقیقاً چسبیده به انتهای تصویر چپ
+            gameBatch.draw(activeBackgroundRight, startX + leftW, startY, rightW, rightH);
+
         } else if (activeBackground != null) {
-            gameBatch.draw(activeBackground, 0, 0, VIRTUAL_WIDTH + 500, VIRTUAL_HEIGHT);
+            // ----- حالت تک‌تصویری (مراحل اصلی) -----
+            float finalW = VIRTUAL_WIDTH * scaleX;
+            float finalH = VIRTUAL_HEIGHT * scaleY;
+
+            float startX = 0f + offsetX;
+            float startY = 0f + offsetY;
+
+            gameBatch.draw(activeBackground, startX, startY, finalW, finalH);
         }
+
         gameBatch.end();
 
         float renderDelta = isSimulationFrozen() ? 0f : Math.min(delta, 1 / 30f);
@@ -427,16 +454,26 @@ public class GameScreen extends BaseScreen {
     private static String tileDebugLabel(com.PVZ.model.enums.TileType type) {
         if (type == null) return ".";
         switch (type) {
-            case TOMBSTONE: return "T";
-            case WATER: return "~";
-            case TIDE: return "^";
-            case ICE: return "*";
-            case SLIPPERY_UP: return "U";
-            case SLIPPERY_DOWN: return "D";
-            case NECROMANCY: return "N";
-            case LOW_COAST: return "L";
-            case CRATER: return "C";
-            default: return ".";
+            case TOMBSTONE:
+                return "T";
+            case WATER:
+                return "~";
+            case TIDE:
+                return "^";
+            case ICE:
+                return "*";
+            case SLIPPERY_UP:
+                return "U";
+            case SLIPPERY_DOWN:
+                return "D";
+            case NECROMANCY:
+                return "N";
+            case LOW_COAST:
+                return "L";
+            case CRATER:
+                return "C";
+            default:
+                return ".";
         }
     }
 

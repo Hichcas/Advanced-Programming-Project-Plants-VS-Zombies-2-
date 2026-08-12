@@ -33,8 +33,8 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "PEASHOOTER", "SUNFLOWER" ],
-    "seenZombies" : [ "DODO", "TOMB_RAISER", "DARK_DEFAULT", "GARGANTUAR_BASIC", "DARK_ARMOR4", "ICEAGE_ARMOR3", "TUTORIAL_ARMOR1", "MUMMY_ARMOR1", "IMP_EGYPT", "MUMMY_DEFAULT", "ICEAGE_ARMOR1", "ZOMBOSS_EGYPT", "BEACH_ARMOR1", "TUTORIAL_DEFAULT", "BEACH_SURFER", "ZOMBOTANY_PEASHOOTER", "TUTORIAL_ARMOR2", "MUMMY_ARMOR4", "IMP_BEACH", "IMP_DARK", "IMP_ICEAGE" ],
+    "unlockedPlants" : [ "SUNFLOWER", "PEASHOOTER" ],
+    "seenZombies" : [ "MUMMY_ARMOR4", "BEACH_ARMOR1", "DARK_DEFAULT", "TUTORIAL_ARMOR1", "ICEAGE_ARMOR3", "TOMB_RAISER", "IMP_ICEAGE", "ZOMBOSS_EGYPT", "MUMMY_ARMOR1", "ICEAGE_ARMOR1", "DODO", "IMP_BEACH", "BEACH_SURFER", "TUTORIAL_DEFAULT", "ZOMBOTANY_PEASHOOTER", "GARGANTUAR_BASIC", "MUMMY_DEFAULT", "IMP_DARK", "DARK_ARMOR4", "TUTORIAL_ARMOR2", "IMP_EGYPT" ],
     "seedPackets" : { },
     "plantLevels" : { },
     "greenhouseBoosts" : [ ]
@@ -276,22 +276,22 @@
       "formattedText" : "New zombie spotted: DARK_DEFAULT!\n2026/08/12  12:05"
     }, {
       "text" : "New zombie spotted: TUTORIAL_DEFAULT!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786523871419,
       "formattedText" : "New zombie spotted: TUTORIAL_DEFAULT!\n2026/08/12  12:07"
     }, {
       "text" : "New zombie spotted: TUTORIAL_ARMOR1!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786523876930,
       "formattedText" : "New zombie spotted: TUTORIAL_ARMOR1!\n2026/08/12  12:07"
     }, {
       "text" : "New zombie spotted: TUTORIAL_ARMOR2!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786523882438,
       "formattedText" : "New zombie spotted: TUTORIAL_ARMOR2!\n2026/08/12  12:08"
     }, {
       "text" : "New zombie spotted: MUMMY_DEFAULT!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786523887945,
       "formattedText" : "New zombie spotted: MUMMY_DEFAULT!\n2026/08/12  12:08"
     } ]
@@ -326,9 +326,9 @@
           "n" : 2
         },
         "active" : true,
-        "formattedDescription" : "Win without losing more than 2 plants",
         "formattedTitle" : "Economic Herbivore",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedDescription" : "Win without losing more than 2 plants"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -347,11 +347,11 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1786527742517
-        }
+          "waveStartTime" : 1786537913258
+        },
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -370,9 +370,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "End a level with exactly 0 sun",
         "formattedTitle" : "Master of Defense",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -391,9 +391,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "Win a day level using only mushrooms",
         "formattedTitle" : "Day or Night",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -414,9 +414,9 @@
           "n" : 50
         },
         "active" : true,
-        "formattedDescription" : "Kill at least 50 zombies with lawnmowers",
         "formattedTitle" : "Lawnmower Time",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedDescription" : "Kill at least 50 zombies with lawnmowers"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -437,16 +437,16 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : true,
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
         "formattedTitle" : "Chapter Hunter",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
-      "currentDifficulty" : 1,
+      "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "10h 40m"
+      "timeUntilReset" : "7h 57m"
     }
   }
 }
