@@ -195,8 +195,9 @@
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "forToday" : false,
-    "availableToday" : false
+    "availableToday" : false,
+    "forToday" : false
   },
-  "stayLoggedIn" : false
+  "stayLoggedIn" : false,
+  "questState" : null
 }
