@@ -1,7 +1,6 @@
 package com.PVZ.view.screen.panels;
 
 import com.PVZ.controller.menuControllers.ChapterAndLevelSelectionMenuController;
-import com.PVZ.controller.menuControllers.InGameMenuController;
 import com.PVZ.controller.menuControllers.ShopMenuController;
 import com.PVZ.model.enums.ChapterEnum;
 import com.PVZ.model.enums.PlantType;
@@ -19,6 +18,7 @@ import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.screen.manager.CursorManager;
 import com.PVZ.view.screen.manager.SoundManager;
+import com.PVZ.view.screen.ui.MenuButton;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -28,10 +28,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -43,25 +43,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import pvz.skin.PvzSkin;
 
-/**
- * Graphical "cheat shop": a floating, shop-styled window that lists every cheat
- * command described in the design doc as a clickable card instead of a typed
- * command. It never replaces the text pipeline — every button here simply
- * builds the exact same InputDTO the CLI parser would have produced and hands
- * it to the existing controllers, so game rules/validation stay in one place.
- *
- * The panel is a plain overlay actor (NOT routed through PanelManager, which
- * swaps full-screen panels). That means it can be dropped on top of the stage
- * of ANY screen — menus or the live GameScreen — without disturbing whatever
- * else is already on that stage. Use {@link #attachToggleButton(Stage)} once
- * per screen to get a floating skull button that opens/closes it.
- */
 public class CheatPanel extends BasePanel {
     private static final float VW = com.PVZ.view.screen.BaseScreen.VIRTUAL_WIDTH;
     private static final float VH = com.PVZ.view.screen.BaseScreen.VIRTUAL_HEIGHT;
     private static final float PANEL_W = 1500f;
     private static final float PANEL_H = 900f;
-    /** Pushed down from dead-center so the title/tabs never clip the top of the virtual screen. */
     private static final float PANEL_Y = (VH - PANEL_H) / 2f - 110f;
     private static final int GRID_COLUMNS = 4;
     private static final float CARD_W = 330f;
@@ -70,9 +56,7 @@ public class CheatPanel extends BasePanel {
     private static final String COIN_PAM = "768/INITIAL/EFFECTS/COIN_GOLD/COIN_GOLD.PAM";
     private static final String DIAMOND_PAM = "768/INITIAL/EFFECTS/COIN_DIAMOND/COIN_DIAMOND.PAM";
     private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
-    private static final String SPARKLE_PAM = "768/INITIAL/UI/STORE/CARD_SPARKLE/CARD_SPARKLE.PAM";
 
-    /** Bridge to the currently running level, supplied only when the panel is opened in-game. */
     public interface InGameCheatBridge {
         OutputDTO handle(InGameInputDTO dto);
     }
@@ -80,7 +64,6 @@ public class CheatPanel extends BasePanel {
     private final Skin skin = PvzSkin.get();
     private final BitmapFont titleFont = FontManager.getInstance().getEnglishTitleFont();
     private final BitmapFont bodyFont = FontManager.getInstance().getEnglishMenuFont();
-    /** Lighter, non-outlined font for description/body copy - keeps titleFont/bodyFont for headers and buttons. */
     private final BitmapFont descFont = FontManager.getInstance().getEnglishTinyFont();
     private final ChapterAndLevelSelectionMenuController economyController = new ChapterAndLevelSelectionMenuController();
     private final ShopMenuController shopController = new ShopMenuController();
@@ -97,25 +80,14 @@ public class CheatPanel extends BasePanel {
         build();
     }
 
-    /** Cheat panel with only economy/chapter cheats (safe from any menu screen). */
     public static CheatPanel forMenu() {
         return new CheatPanel(null);
     }
 
-    /** Cheat panel that also exposes live in-game cheats (suns, plant food, zombies, nuke...). */
     public static CheatPanel forGame(InGameCheatBridge bridge) {
         return new CheatPanel(bridge);
     }
 
-    /**
-     * Adds a small floating skull button to {@code stage} that toggles a fresh
-     * CheatPanel on/off. Safe to call from every screen's constructor - one line.
-     *
-     * The button registers itself with {@link com.PVZ.view.screen.manager.PanelManager}
-     * as a persistent overlay, so it keeps floating above LoginPanel, RegisterPanel,
-     * ShopPanel, ChapterSelectPanel, etc. - every panel the manager swaps in from
-     * now on - instead of getting buried underneath the next full-screen panel.
-     */
     public static Actor attachToggleButton(Stage stage, InGameCheatBridge bridgeOrNull) {
         Table corner = new Table();
         corner.setFillParent(true);
@@ -194,8 +166,14 @@ public class CheatPanel extends BasePanel {
         statusLabel.setAlignment(Align.center);
         statusLabel.setWrap(true);
         footer.add(statusLabel).growX().width(1050f);
-        footer.add(makeTextButton("CLOSE", "brown", () -> { remove(); dispose(); })).width(180f).height(58f);
         root.add(footer).growX().height(70f).bottom();
+
+        // دکمهٔ بستن به پایین راست منتقل شد
+        MenuButton closeBtn = makeTextButton("CLOSE", "brown", () -> { remove(); dispose(); });
+        closeBtn.setSize(180f, 58f);
+        closeBtn.setPosition(PANEL_W - closeBtn.getWidth() - 18f, 18f);
+        addActor(closeBtn);
+        closeBtn.toFront();
 
         refresh();
     }
@@ -234,9 +212,6 @@ public class CheatPanel extends BasePanel {
         }
     }
 
-    // ---------------------------------------------------------------- economy
-
-    /** Half of the usable inner card width - every 2-across button/field row in a card uses this. */
     private static final float HALF_COL = (CARD_W - 2f * 16f) / 2f;
 
     private void buildEconomyTab() {
@@ -257,19 +232,16 @@ public class CheatPanel extends BasePanel {
         cell.add(new Label(label, new Label.LabelStyle(titleFont, Color.WHITE))).growX().height(40f).row();
         cell.add(new PamIconActor(iconPam)).size(110f).row();
 
-        TextField amountField = new TextField("100", skin);
-        amountField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+        TextField amountField = createNumberField("100");
         cell.add(amountField).width(2f * HALF_COL).height(52f).row();
 
         cell.add(makeTextButton("ADD", "green_small", () -> {
             int amount = parseIntOr(amountField.getText(), 100);
             runEconomy(ChapterAndLevelSelectionCommand.CHEAT_ADD, null, amount, currency, null);
-        })).width(2f * HALF_COL).height(56f).row();
+        })).width(2f * HALF_COL).height(52f).padBottom(10f).row();
 
         return placeCard(cell, col);
     }
-
-    // --------------------------------------------------------------- chapters
 
     private void buildChapterTab() {
         int col = 0;
@@ -278,11 +250,6 @@ public class CheatPanel extends BasePanel {
         }
     }
 
-    /**
-     * Every row in this card is exactly two HALF_COL-wide cells, so the field/
-     * button in row 2 line up cleanly under the buttons in row 1 instead of
-     * spilling past the edge of the card.
-     */
     private int addChapterCard(int col, ChapterEnum chapter) {
         Table cell = new Table();
         cell.setBackground(skin.getDrawable("image_ui_if_bundle_reward1_bg_10"));
@@ -293,30 +260,28 @@ public class CheatPanel extends BasePanel {
         nameLabel.setWrap(true);
         cell.add(nameLabel).growX().height(48f).colspan(2).row();
 
-        cell.add(makeTextButton("COMPLETE", "green_small",
-            () -> runEconomy(ChapterAndLevelSelectionCommand.CHEAT_COMPLETE_CHAPTER, chapter.name(), null, null, null)))
+        // دکمه‌های داخل کارت فصل با فونت کوچک‌تر
+        cell.add(makeSmallTextButton("COMPLETE", "green_small",
+                () -> runEconomy(ChapterAndLevelSelectionCommand.CHEAT_COMPLETE_CHAPTER, chapter.name(), null, null, null)))
             .width(HALF_COL).height(50f);
-        cell.add(makeTextButton("LOCK", "brown",
-            () -> runEconomy(ChapterAndLevelSelectionCommand.CHEAT_LOCK_CHAPTER, chapter.name(), null, null, null)))
+        cell.add(makeSmallTextButton("LOCK", "brown",
+                () -> runEconomy(ChapterAndLevelSelectionCommand.CHEAT_LOCK_CHAPTER, chapter.name(), null, null, null)))
             .width(HALF_COL).height(50f).row();
 
-        TextField stageField = new TextField("1", skin);
-        stageField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+        TextField stageField = createNumberField("1");
         cell.add(stageField).width(HALF_COL).height(50f);
-        cell.add(makeTextButton("STAGE +", "green_small", () -> {
+        cell.add(makeSmallTextButton("STAGE +", "green_small", () -> {
             int stage = parseIntOr(stageField.getText(), 1);
             runEconomy(ChapterAndLevelSelectionCommand.CHEAT_COMPLETE_STAGE, chapter.name(), null, null, stage);
         })).width(HALF_COL).height(50f).row();
 
-        cell.add(makeTextButton("LOCK THAT STAGE", "brown", () -> {
+        cell.add(makeSmallTextButton("LOCK THAT STAGE", "brown", () -> {
             int stage = parseIntOr(stageField.getText(), 1);
             runEconomy(ChapterAndLevelSelectionCommand.CHEAT_LOCK_STAGE, chapter.name(), null, null, stage);
         })).width(2f * HALF_COL).height(46f).colspan(2).row();
 
         return placeCard(cell, col);
     }
-
-    // --------------------------------------------------------------- in-game
 
     private void buildInGameTab() {
         if (inGameBridge == null) {
@@ -331,8 +296,7 @@ public class CheatPanel extends BasePanel {
         sunCell.defaults().pad(8f);
         sunCell.add(new Label("SUNS", new Label.LabelStyle(titleFont, Color.WHITE))).growX().height(40f).row();
         sunCell.add(new PamIconActor(SUN_PAM)).size(110f).row();
-        TextField sunField = new TextField("100", skin);
-        sunField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+        TextField sunField = createNumberField("100");
         sunCell.add(sunField).width(2f * HALF_COL).height(52f).row();
         sunCell.add(makeTextButton("ADD", "green_small", () ->
             runInGame(new InGameInputDTO(InGameCommand.CHEAT_ADD_SUNS, null,
@@ -360,14 +324,11 @@ public class CheatPanel extends BasePanel {
 
         cell.add(new Label("SPAWN ZOMBIE", new Label.LabelStyle(titleFont, Color.WHITE))).growX().colspan(2).height(32f).row();
 
-        SelectBox<ZombieType> zombieSelect = new SelectBox<>(skin);
-        zombieSelect.setItems(ZombieType.values());
+        SelectBox<ZombieType> zombieSelect = createSelectBox(ZombieType.values());
         cell.add(zombieSelect).width(2f * HALF_COL).height(46f).colspan(2).row();
 
-        TextField xField = new TextField("0", skin);
-        xField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
-        TextField yField = new TextField("0", skin);
-        yField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+        TextField xField = createNumberField("0");
+        TextField yField = createNumberField("0");
         cell.add(labeledField("Col (x)", xField, skin)).width(HALF_COL);
         cell.add(labeledField("Row (y)", yField, skin)).width(HALF_COL).row();
 
@@ -381,7 +342,6 @@ public class CheatPanel extends BasePanel {
         return placeCard(cell, col);
     }
 
-    /** Shared layout for the two tile-state cheats (set-water / set-dry) - just a col/row pair. */
     private int addTileCard(int col, String title, String buttonStyle, InGameCommand command) {
         Table cell = new Table();
         cell.setBackground(skin.getDrawable("image_ui_if_bundle_reward1_bg_10"));
@@ -392,10 +352,8 @@ public class CheatPanel extends BasePanel {
         label.setAlignment(Align.center);
         cell.add(label).growX().colspan(2).height(60f).row();
 
-        TextField xField = new TextField("0", skin);
-        xField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
-        TextField yField = new TextField("0", skin);
-        yField.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+        TextField xField = createNumberField("0");
+        TextField yField = createNumberField("0");
         cell.add(labeledField("Col (x)", xField, skin)).width(HALF_COL);
         cell.add(labeledField("Row (y)", yField, skin)).width(HALF_COL).row();
 
@@ -415,8 +373,6 @@ public class CheatPanel extends BasePanel {
         return t;
     }
 
-    // ----------------------------------------------------------------- plants
-
     private void buildPlantsTab() {
         int col = 0;
         col = addActionCard(col, "UNLOCK ALL PLANTS", "Every plant species becomes available in the seed bank.",
@@ -424,11 +380,6 @@ public class CheatPanel extends BasePanel {
         col = addPlantPickerCard(col);
     }
 
-    /**
-     * Shop-style card: a live idle animation of the currently selected plant on
-     * top, a species dropdown, and an UNLOCK button - so a single specific plant
-     * can be unlocked without touching the rest of the collection.
-     */
     private int addPlantPickerCard(int col) {
         Table cell = new Table();
         cell.setBackground(skin.getDrawable("image_ui_if_bundle_reward1_bg_10"));
@@ -440,8 +391,7 @@ public class CheatPanel extends BasePanel {
         Table previewHolder = new Table();
         cell.add(previewHolder).size(96f, 116f).row();
 
-        SelectBox<PlantType> plantSelect = new SelectBox<>(skin);
-        plantSelect.setItems(PlantType.values());
+        SelectBox<PlantType> plantSelect = createSelectBox(PlantType.values());
         cell.add(plantSelect).width(2f * HALF_COL).height(46f).row();
 
         Runnable refreshPreview = () -> {
@@ -489,12 +439,6 @@ public class CheatPanel extends BasePanel {
         return placeCard(cell, col);
     }
 
-    /**
-     * Every card is placed in a fixed-size CARD_W x CARD_H slot in a GRID_COLUMNS-wide
-     * grid, top-aligned, so cards of different internal shape (chapter cards, action
-     * cards, currency cards...) still line up cleanly row after row instead of
-     * drifting based on their own content height.
-     */
     private int placeCard(Table cell, int col) {
         content.add(cell).width(CARD_W).height(CARD_H).top();
         int next = col + 1;
@@ -512,9 +456,7 @@ public class CheatPanel extends BasePanel {
     }
 
     private void runInGame(InGameInputDTO dto) {
-        if (inGameBridge == null) {
-            return;
-        }
+        if (inGameBridge == null) return;
         setStatus(inGameBridge.handle(dto));
     }
 
@@ -528,84 +470,106 @@ public class CheatPanel extends BasePanel {
     }
 
     private static int parseIntOr(String text, int fallback) {
-        try {
-            return Integer.parseInt(text.trim());
-        } catch (Exception e) {
-            return fallback;
-        }
+        try { return Integer.parseInt(text.trim()); } catch (Exception e) { return fallback; }
+    }
+
+    // ------------------------- UI helper methods -------------------------
+
+    private TextField createNumberField(String initialValue) {
+        TextField field = new TextField(initialValue, skin);
+        TextField.TextFieldStyle style = new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
+        style.font = FontManager.getInstance().getEnglishMenuFont();
+        style.fontColor = Color.YELLOW;
+        style.messageFont = style.font;
+        field.setStyle(style);
+        field.setAlignment(Align.center);
+        field.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+        return field;
+    }
+
+    private <T> SelectBox<T> createSelectBox(T[] items) {
+        SelectBox<T> box = new SelectBox<>(skin);
+
+        SelectBox.SelectBoxStyle style = new SelectBox.SelectBoxStyle(skin.get(SelectBox.SelectBoxStyle.class));
+        style.font = FontManager.getInstance().getEnglishMenuFont();
+        style.fontColor = Color.WHITE;
+
+        List.ListStyle listStyle = new List.ListStyle(skin.get(List.ListStyle.class));
+        listStyle.font = style.font;
+        listStyle.fontColorSelected = Color.YELLOW;
+        listStyle.fontColorUnselected = Color.WHITE;
+        style.listStyle = listStyle;
+
+        box.setStyle(style);
+        box.setItems(items);
+        box.setAlignment(Align.center);
+        return box;
     }
 
     private static Sound hoverSound;
     private static Sound clickSound;
 
     private static Sound getHoverSound() {
-        if (hoverSound == null) {
-            hoverSound = Gdx.audio.newSound(Gdx.files.internal("global/BottomSelection.mp3"));
-        }
+        if (hoverSound == null) hoverSound = Gdx.audio.newSound(Gdx.files.internal("global/BottomSelection.mp3"));
         return hoverSound;
     }
 
     private static Sound getClickSound() {
-        if (clickSound == null) {
-            clickSound = Gdx.audio.newSound(Gdx.files.internal("global/BottomClicked.mp3"));
-        }
+        if (clickSound == null) clickSound = Gdx.audio.newSound(Gdx.files.internal("global/BottomClicked.mp3"));
         return clickSound;
     }
 
-    /**
-     * Same feedback every other button in the game gives: a hover blip
-     * (+ tiny grow) from {@code global/BottomSelection.mp3} and a click
-     * pop (+ tiny squash) from {@code global/BottomClicked.mp3}, exactly
-     * like {@link com.PVZ.view.screen.ui.MenuButton} does elsewhere.
-     */
-    private TextButton makeTextButton(String text, String style, Runnable action) {
+    /** دکمه‌های عمومی با فونت استاندارد منو */
+    private MenuButton makeTextButton(String text, String style, Runnable action) {
         TextButton.TextButtonStyle styleData = skin.get(style, TextButton.TextButtonStyle.class);
-        TextButton button = new TextButton(text, styleData);
-        button.getLabel().setFontScale(0.85f);
-        button.setTransform(true);
-        button.setOrigin(Align.center);
-        button.addListener(new ClickListener() {
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                if (pointer == -1) {
-                    SoundManager.getInstance().playSound(getHoverSound());
-                    button.clearActions();
-                    button.addAction(Actions.scaleTo(1.06f, 1.06f, 0.08f));
-                    CursorManager.getInstance().setPointerMode(true);
-                }
-            }
+        Drawable up = styleData.up;
+        Drawable down = styleData.down;
+        Drawable over = styleData.over;
+        Drawable disabled = styleData.disabled;
 
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                if (pointer == -1) {
-                    button.clearActions();
-                    button.addAction(Actions.scaleTo(1f, 1f, 0.08f));
-                    CursorManager.getInstance().setPointerMode(false);
-                }
-            }
+        Drawable hover = (over != null) ? over : down;
+        BitmapFont font = FontManager.getInstance().getEnglishMenuFont();
 
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                SoundManager.getInstance().playSound(getClickSound());
-                button.clearActions();
-                button.addAction(Actions.sequence(
-                    Actions.scaleTo(0.92f, 0.92f, 0.05f),
-                    Actions.scaleTo(1f, 1f, 0.08f)));
-                action.run();
-            }
-        });
+        MenuButton button = new MenuButton(
+            up, text, font,
+            hover != null ? hover : up,
+            disabled,
+            null,
+            action
+        );
         return button;
     }
 
-    // ----------------------------------------------------------- pam actors
+    /** دکمه‌های کوچک‌تر مخصوص کارت‌های فصل */
+    private MenuButton makeSmallTextButton(String text, String style, Runnable action) {
+        TextButton.TextButtonStyle styleData = skin.get(style, TextButton.TextButtonStyle.class);
+        Drawable up = styleData.up;
+        Drawable down = styleData.down;
+        Drawable over = styleData.over;
+        Drawable disabled = styleData.disabled;
 
+        Drawable hover = (over != null) ? over : down;
+        BitmapFont font = FontManager.getInstance().getEnglishTinyFont(); // فونت کوچک‌تر
+
+        MenuButton button = new MenuButton(
+            up, text, font,
+            hover != null ? hover : up,
+            disabled,
+            null,
+            action
+        );
+        return button;
+    }
+
+    // ------------------------------------------------------------------------
     private static final class PamIconActor extends Actor {
         private final String path;
         private float time;
         PamIconActor(String path) { this.path = path; }
         @Override public void act(float delta) { super.act(delta); time += delta; }
         @Override public void draw(Batch batch, float parentAlpha) {
-            EntityRenderer.getInstance().renderPam((SpriteBatch) batch, path, time, getX() + 55f, getY() + 55f);
+            EntityRenderer.getInstance().renderPam((SpriteBatch) batch, path, time,
+                getX() + getWidth() / 2f, getY() + getHeight() / 2f);
         }
     }
 
@@ -613,11 +577,11 @@ public class CheatPanel extends BasePanel {
         private float time;
         @Override public void act(float delta) { super.act(delta); time += delta; }
         @Override public void draw(Batch batch, float parentAlpha) {
-            EntityRenderer.getInstance().renderPam((SpriteBatch) batch, SKULL_PAM, time, getX() + 36f, getY() + 36f);
+            EntityRenderer.getInstance().renderPam((SpriteBatch) batch, SKULL_PAM, time,
+                getX() + getWidth() / 2f, getY() + getHeight() / 2f);
         }
     }
 
-    /** Small live idle-animation preview of a plant species, reusing the same renderer the lawn uses. */
     private static final class PlantPreviewActor extends Actor {
         private final PlantType type;
         private float time = (float) (Math.random() * 2.0);
@@ -629,13 +593,13 @@ public class CheatPanel extends BasePanel {
         }
     }
 
-    /** Small floating skull button used to open/close the cheat vault from any screen. */
     private static final class CheatButtonActor extends Actor {
         private float time;
-        CheatButtonActor() { setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.enabled); }
+        CheatButtonActor() { setTouchable(Touchable.enabled); }
         @Override public void act(float delta) { super.act(delta); time += delta; }
         @Override public void draw(Batch batch, float parentAlpha) {
-            EntityRenderer.getInstance().renderPam((SpriteBatch) batch, SKULL_PAM, time, getX() + 42f, getY() + 42f);
+            EntityRenderer.getInstance().renderPam((SpriteBatch) batch, SKULL_PAM, time,
+                getX() + getWidth() / 2f, getY() + getHeight() / 2f);
         }
     }
 }
