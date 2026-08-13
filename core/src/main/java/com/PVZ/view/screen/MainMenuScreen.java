@@ -49,6 +49,7 @@ public class MainMenuScreen extends BaseScreen {
         }
 
         PanelManager.getInstance().initialize(stage);
+        com.PVZ.view.screen.panels.CheatPanel.attachToggleButton(stage, null);
 
         switch (com.PVZ.model.status.AppStatus.currentMenuType) {
             case MAIN -> PanelManager.getInstance().performPanelTransition(new MainMenuPanel());

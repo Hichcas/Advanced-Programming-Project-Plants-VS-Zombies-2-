@@ -2,6 +2,7 @@ package com.PVZ.model.game;
 
 import com.PVZ.model.entity.PlantTexturePaths;
 import com.PVZ.model.enums.PlantType;
+import com.PVZ.view.renderer.EntityRenderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -131,15 +132,27 @@ public class SeedPacketBar {
         drawIconsAndLabels(batch, font, null);
     }
 
+    /** Advances once per draw call so every packet's idle animation plays in sync. */
+    private float animTime = 0f;
+
     public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font, SeedBarEngine engine) {
+        animTime += Gdx.graphics.getDeltaTime();
         for (SeedPacket packet : packets) {
             Rectangle b = packet.getBounds();
-            if (packet.getIcon() != null) {
-                batch.draw(packet.getIcon(), b.x, b.y, b.width, b.height);
-            } else {
-                font.setColor(Color.WHITE);
-                font.draw(batch, packet.getPlantType().getDisplayName(), b.x + 4, b.y + b.height - 8, b.width - 8, -1,
-                    true);
+            float centerX = b.x + b.width / 2f;
+            float centerY = b.y + b.height * 0.55f;
+            boolean drewAnimated = EntityRenderer.getInstance()
+                .renderPlant(batch, packet.getPlantType().name(), animTime, centerX, centerY);
+            if (!drewAnimated) {
+                // Fall back to the static icon (or the plain label if even that is missing)
+                // so nothing on the bar ever silently disappears.
+                if (packet.getIcon() != null) {
+                    batch.draw(packet.getIcon(), b.x, b.y, b.width, b.height);
+                } else {
+                    font.setColor(Color.WHITE);
+                    font.draw(batch, packet.getPlantType().getDisplayName(), b.x + 4, b.y + b.height - 8, b.width - 8, -1,
+                        true);
+                }
             }
 
             if (engine == null) {

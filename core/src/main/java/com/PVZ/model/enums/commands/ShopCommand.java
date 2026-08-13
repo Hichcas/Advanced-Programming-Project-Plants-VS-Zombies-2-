@@ -52,6 +52,12 @@ public enum ShopCommand {
         public ShopInputDTO createDTO(Matcher matcher) {
             return new ShopInputDTO(this, null, null, null);
         }
+    },
+    UNLOCK_PLANT("^\\s*unlock\\s+plant\\s+-t\\s+(?<plantType>.+?)\\s*$") {
+        @Override
+        public ShopInputDTO createDTO(Matcher matcher) {
+            return new ShopInputDTO(this, null, null, matcher.group("plantType"));
+        }
     };
 
     private final Pattern pattern;

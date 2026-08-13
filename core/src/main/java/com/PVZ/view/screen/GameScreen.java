@@ -82,6 +82,8 @@ public class GameScreen extends BaseScreen {
         if (gameEngine instanceof RegularGameEngine) {
             stage.addActor(buildShovelButton());
         }
+        com.PVZ.view.screen.panels.CheatPanel.attachToggleButton(stage, dto ->
+            new com.PVZ.controller.menuControllers.InGameMenuController().handle(dto));
 
         if (gameEngine.getMap() != null) {
             gameMap = gameEngine.getMap();
