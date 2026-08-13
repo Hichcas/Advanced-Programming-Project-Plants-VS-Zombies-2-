@@ -33,12 +33,30 @@ public class ShopMenuController {
             case EXIT -> exitToGreenhouse();
             case COINS -> new OutputDTO(true, showCoins());
             case UNLOCK_ALL_PLANTS -> new OutputDTO(true, unlockAllPlants());
+            case UNLOCK_PLANT -> unlockPlant(dto.getPlantType());
         };
     }
 
     private String unlockAllPlants() {
         AppStatus.getCurrentUser().collectionState.setAllPlantsUnlocked();
         return "all plants are unlocked now, boro halesho bebar.";
+    }
+
+    private OutputDTO unlockPlant(String plantType) {
+        if (plantType == null || plantType.isBlank()) {
+            return new OutputDTO(false, "Plant type is required (-t <plant_type>).");
+        }
+        PlantType type;
+        try {
+            type = PlantType.valueof(plantType.trim().toUpperCase());
+        } catch (Exception e) {
+            return new OutputDTO(false, "Invalid plant type: " + plantType);
+        }
+        boolean wasAlreadyUnlocked = AppStatus.getCurrentUser().collectionState.isPlantUnlocked(type);
+        AppStatus.getCurrentUser().collectionState.unlockPlant(type);
+        return new OutputDTO(true, wasAlreadyUnlocked
+            ? type.getDisplayName() + " was already unlocked."
+            : type.getDisplayName() + " is unlocked now!");
     }
 
     private String showCoins() {
