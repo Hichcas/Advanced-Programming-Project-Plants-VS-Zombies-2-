@@ -16,6 +16,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Map;
 
+import static com.PVZ.model.entity.plants.behavior.impl.ManualPlantBehavior.asDouble;
+
 public class Plant {
     private final PlantInstance instance;
     private final PlantBehavior mainBehavior;
@@ -116,6 +118,10 @@ public class Plant {
         instance.setPlantFoodTicksRemaining(ticks);
     }
 
+    public void setPlantFoodSeconds(double seconds) {
+        instance.setPlantFoodSeconds(seconds);
+    }
+
     public Map<String, Object> getRuntimeState() {
         return instance.getRuntimeState();
     }
@@ -149,7 +155,22 @@ public class Plant {
             float ay = anchor[1];
             boolean drewAnimated;
             if (isPlantFoodActive()) {
-                drewAnimated = renderer.renderPlant(batch, key, "plantfood", animStateTime, ax, ay);
+                double pfVisualTime = asDouble(getRuntimeState("plantFoodVisualTime"), 0.0);
+                boolean drewOn = pfVisualTime < 0.5
+                    && renderer.renderPlantExact(batch, key, "plantfood_on", (float) pfVisualTime, ax, ay);
+                if (!drewOn) {
+                    drewAnimated = renderer.renderPlantExact(batch, key, "plantfood",
+                        Math.max(0f, (float) (pfVisualTime - 0.5)), ax, ay);
+                    if (!drewAnimated) {
+                        drewAnimated = renderer.renderPlant(batch, key, "plantfood", animStateTime, ax, ay);
+                    }
+                } else {
+                    drewAnimated = true;
+                }
+                // The native PvZ2 plant-food aura is a separate PAM effect.
+                renderer.renderPam(batch,
+                    "768/INITIAL/EFFECTS/PLANTFOOD_FX/PLANTFOOD_FX.PAM",
+                    "plantfood", (float) pfVisualTime, ax, ay);
             } else if (com.PVZ.model.entity.PlantAnimation.isActive(instance)) {
                 String state = com.PVZ.model.entity.PlantAnimation.getState(instance);
                 drewAnimated = renderer.renderPlant(batch, key, state, animStateTime, ax, ay);
@@ -247,6 +268,12 @@ public class Plant {
 
     public void update(BehaviorContext context, double deltaTimeSeconds) {
         animStateTime += (float) deltaTimeSeconds;
+        if (isPlantFoodActive()) {
+            double visualTime = asDouble(getRuntimeState("plantFoodVisualTime"), 0.0);
+            putRuntimeState("plantFoodVisualTime", visualTime + deltaTimeSeconds);
+        } else {
+            putRuntimeState("plantFoodVisualTime", 0.0);
+        }
         com.PVZ.model.entity.PlantAnimation.tick(instance, deltaTimeSeconds);
         tickIdleVariant(deltaTimeSeconds);
         Object disabled = getRuntimeState("disabledTicks");
@@ -303,6 +330,8 @@ public class Plant {
 
     public void applyPlantFood(BehaviorContext context) {
         plantFoodBehavior.onPlantFood(instance, context);
+        com.PVZ.model.entity.PlantAnimation.trigger(instance, "plantfood", 2.5);
+        instance.putRuntimeState("plantFoodVisualTime", 0.0);
     }
 
     public String getMainBehaviorId() {

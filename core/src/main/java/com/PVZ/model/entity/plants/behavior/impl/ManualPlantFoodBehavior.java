@@ -33,7 +33,7 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
         int lane = asInt(plant.getRuntimeState().getOrDefault("lane", row), row);
 
         plant.setPlantFoodActive(true);
-        plant.setPlantFoodTicksRemaining(5);
+        plant.setPlantFoodSeconds(5);
 
         applyBehavior(plant, context, lane, row, col, behaviorId);
     }
@@ -112,7 +112,13 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
             case "electric_blueberry" -> handleElectricBlueberry(context);
             case "cactus" -> handleCactus(plant);
             case "fume_shroom" -> handleFumeShroom(plant, context, lane, row, col);
-            case "cabbage_pult", "melon_pult", "winter_melon", "pepper_pult" -> handlePultFamily(plant, plantKey);
+            case "cabbage_pult" -> handlePultFamily(plant, plantKey);
+            case "melon_pult" -> handleRandomDamageTargets(context, abilitySpec, 3, 160, false);
+            case "winter_melon" -> handleRandomDamageTargets(context, abilitySpec, 3, 160, true);
+            case "pepper_pult" -> handleRandomDamageTargets(context, abilitySpec, 3, 100, true);
+            case "kernel_pult" -> handleKernelPult(context, abilitySpec);
+            case "potato_mine", "primal_potato_mine" -> handlePotatoMine(plant);
+            case "squash" -> handleSquash(context, abilitySpec);
             case "iceberg_lettuce" -> handleIcebergLettuce(context);
             case "phat_beet" -> handlePhatBeet(plant, context, lane, row);
             case "chomper" -> handleChomper(context, lane);
@@ -155,6 +161,55 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
                     }
                 }
             }
+        }
+    }
+
+    private void handleKernelPult(BehaviorContext context, AbilitySpec spec) {
+        // The current zombie model has no persistent "buttered" state, so the closest
+        // supported gameplay primitive is a temporary stun on every zombie.
+        double duration = spec == null ? 8.0 : spec.getDoubleParam("butterDurationSeconds", 8.0);
+        for (Zombie zombie : context.getAllZombies()) {
+            if (zombie != null && !zombie.isDead()) {
+                zombie.stunOnHit();
+            }
+        }
+        if (context instanceof com.PVZ.model.game.RegularGameEngine) {
+            context.freezeAllZombies(Math.max(0.5, Math.min(duration, 8.0)));
+        }
+    }
+
+    private void handleRandomDamageTargets(BehaviorContext context, AbilitySpec spec,
+                                           int fallbackCount, int fallbackDamage, boolean slow) {
+        int count = spec == null ? fallbackCount : spec.getIntParam("count", fallbackCount);
+        int damage = spec == null ? fallbackDamage : spec.getIntParam("damage", fallbackDamage);
+        java.util.List<Zombie> targets = new java.util.ArrayList<>(context.getAllZombies());
+        targets.removeIf(z -> z == null || z.isDead());
+        java.util.Collections.shuffle(targets);
+        count = Math.min(count, targets.size());
+        for (int i = 0; i < count; i++) {
+            Zombie z = targets.get(i);
+            z.takeDamage(Math.max(1, damage));
+            if (slow) {
+                z.applyEffect(new com.PVZ.model.entity.zombies.base.StatusEffect(
+                    com.PVZ.model.enums.DamageType.ICE, 3.0f));
+            }
+        }
+    }
+
+    private void handlePotatoMine(PlantInstance plant) {
+        plant.putRuntimeState("armed", Boolean.TRUE);
+        plant.putRuntimeState("armTimer", 0.0);
+        plant.setPlantFoodActive(true);
+        plant.setPlantFoodSeconds(1);
+    }
+
+    private void handleSquash(BehaviorContext context, AbilitySpec spec) {
+        int count = spec == null ? 2 : spec.getIntParam("count", 2);
+        java.util.List<Zombie> targets = new java.util.ArrayList<>(context.getAllZombies());
+        targets.removeIf(z -> z == null || z.isDead());
+        targets.sort((a, b) -> Double.compare(a.getX(), b.getX()));
+        for (int i = 0; i < Math.min(count, targets.size()); i++) {
+            context.damageSingleTarget(targets.get(i), 999999);
         }
     }
 
