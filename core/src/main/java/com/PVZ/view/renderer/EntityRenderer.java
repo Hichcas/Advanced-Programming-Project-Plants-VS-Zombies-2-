@@ -13,12 +13,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.PVZ.model.entity.zombies.base.ZombieAnimation;
+import com.PVZ.model.enums.DamageType;
+import com.badlogic.gdx.graphics.Color;
+
 public class EntityRenderer {
     private static EntityRenderer instance;
 
     private final TextureBank textures;
     private final PamPlayer pamPlayer;
     private final Map<String, ClipRef> walkClips = new HashMap<>();
+    private final Map<String, ClipRef> zombieClips = new HashMap<>();
     private final Map<String, ClipRef> plantClips = new HashMap<>();
     private final Map<String, Boolean> plantPamFailed = new HashMap<>();
     private final java.util.Set<String> loggedPams = new java.util.HashSet<>();
@@ -43,41 +48,77 @@ public class EntityRenderer {
         textures.update();
     }
 
-    public ClipRef getWalkClip(String alias) {
-        if (!walkClips.containsKey(alias)) {
-            String pamPath = ZombieTexturePaths.getPamPath(alias);
-            try {
-                pamPlayer.loadSync(pamPath);
-                String resolvedName = PamAnimationCatalog.resolveClip(pamPath, "walk");
-                ClipRef clip = resolvedName != null ? pamPlayer.getClip(pamPath, resolvedName) : null;
-                if (clip == null) {
-                    clip = pamPlayer.getClip(pamPath, "walk");
-                }
-                if (clip == null) {
-                    java.util.List<String> available = pamPlayer.clips(pamPath);
-                    if (available != null && !available.isEmpty()) {
-                        clip = pamPlayer.getClip(pamPath, available.get(0));
-                    }
-                }
-                walkClips.put(alias, clip);
-            } catch (Exception e) {
-                System.err.println("EntityRenderer: Failed to load PAM for alias " + alias + ": " + e.getMessage());
-                walkClips.put(alias, null);
-            }
+    public ClipRef getZombieClip(String effectiveAlias, String state) {
+        if (effectiveAlias == null) {
+            return null;
         }
-        return walkClips.get(alias);
+        String cacheKey = effectiveAlias + "#" + state;
+        if (zombieClips.containsKey(cacheKey)) {
+            return zombieClips.get(cacheKey);
+        }
+        String pamPath = ZombieTexturePaths.getPamPath(effectiveAlias);
+        try {
+            pamPlayer.loadSync(pamPath);
+            String resolvedName = PamAnimationCatalog.resolveClip(pamPath, state);
+            ClipRef clip = resolvedName != null ? pamPlayer.getClip(pamPath, resolvedName) : null;
+            if (clip == null) {
+                clip = pamPlayer.getClip(pamPath, "walk");
+            }
+            if (clip == null) {
+                java.util.List<String> available = pamPlayer.clips(pamPath);
+                if (available != null && !available.isEmpty()) {
+                    clip = pamPlayer.getClip(pamPath, available.get(0));
+                }
+            }
+            zombieClips.put(cacheKey, clip);
+            return clip;
+        } catch (Exception e) {
+            System.err.println("EntityRenderer: Failed to load Zombie PAM for alias " + effectiveAlias + " state " + state + ": " + e.getMessage());
+            zombieClips.put(cacheKey, null);
+            return null;
+        }
+    }
+
+    public ClipRef getWalkClip(String alias) {
+        return getZombieClip(alias, "walk");
     }
 
     public void renderZombie(SpriteBatch batch, Zombie zombie, float stateTime) {
+        if (zombie == null) return;
         textures.update();
-        ClipRef walkClip = getWalkClip(zombie.getAlias());
 
-        if (walkClip == null) {
-            walkClip = getWalkClip("DEFAULT");
+        String effectiveAlias = ZombieTexturePaths.getEffectivePamAlias(zombie);
+        String state = ZombieAnimation.getState(zombie);
+        if (state == null) {
+            state = "walk";
         }
 
-        if (walkClip != null) {
-            pamPlayer.draw(batch, walkClip, stateTime, (float) zombie.getX(), (float) zombie.getY(), true);
+        ClipRef clip = getZombieClip(effectiveAlias, state);
+        if (clip == null) {
+            clip = getZombieClip("DEFAULT", "walk");
+        }
+
+        if (clip != null) {
+            Color origColor = batch.getColor() != null ? new Color(batch.getColor()) : new Color(Color.WHITE);
+
+            // Apply Status Effect Color Tinting & Overlays
+            if (zombie.isFrozen()) {
+                batch.setColor(0.5f, 0.7f, 1.0f, 1.0f); // Frozen solid (blue)
+            } else if (zombie.hasStatusEffect(DamageType.ICE)) {
+                batch.setColor(0.7f, 0.85f, 1.0f, 1.0f); // Chilled / Slowed (cyan)
+            } else if (zombie.hasStatusEffect(DamageType.POISON)) {
+                batch.setColor(0.7f, 0.3f, 0.9f, 1.0f); // Poisoned (purple)
+            } else if (zombie.isHypnotized()) {
+                batch.setColor(1.0f, 0.6f, 0.9f, 1.0f); // Hypnotized (pink)
+            } else if (zombie.isGlowing()) {
+                batch.setColor(0.8f, 1.0f, 0.5f, 1.0f); // Plant Food Drop Glow (bright green/gold)
+            }
+
+            boolean flipX = zombie.isHypnotized();
+            float effectiveTime = zombie.isFrozen() ? 0.0f : stateTime;
+
+            pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
+            batch.setColor(origColor);
         }
     }
 

@@ -48,6 +48,34 @@ public class ZombieTexturePaths {
     }
 
     public static String getPamPath(String alias) {
-        return PAM_PATHS.getOrDefault(alias, PAM_PATHS.get("DEFAULT"));
+        if (alias == null) return PAM_PATHS.get("DEFAULT");
+        if (PAM_PATHS.containsKey(alias)) {
+            return PAM_PATHS.get(alias);
+        }
+        if (!alias.endsWith("Default") && PAM_PATHS.containsKey(alias + "Default")) {
+            return PAM_PATHS.get(alias + "Default");
+        }
+        if (alias.endsWith("Default") && PAM_PATHS.containsKey(alias.substring(0, alias.length() - 7))) {
+            return PAM_PATHS.get(alias.substring(0, alias.length() - 7));
+        }
+        return PAM_PATHS.get("DEFAULT");
+    }
+
+    public static String getEffectivePamAlias(Zombie zombie) {
+        if (zombie == null) {
+            return "DEFAULT";
+        }
+        String alias = zombie.getAlias();
+        ZombieArmor armor = zombie.getArmor();
+        if (armor == null || armor.isDestroyed()) {
+            if (alias != null && alias.contains("Armor")) {
+                if (alias.startsWith("ZombieTutorialArmor")) return "ZombieTutorialDefault";
+                if (alias.startsWith("ZombieMummyArmor")) return "ZombieMummyDefault";
+                if (alias.startsWith("ZombieIceageArmor")) return "ZombieIceageDefault";
+                if (alias.startsWith("ZombieBeachArmor")) return "ZombieBeachDefault";
+                if (alias.startsWith("ZombieDarkArmor")) return "ZombieDarkDefault";
+            }
+        }
+        return alias != null ? alias : "DEFAULT";
     }
 }

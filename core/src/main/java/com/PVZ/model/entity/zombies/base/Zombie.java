@@ -34,10 +34,24 @@ public abstract class Zombie {
     private float chillDuration = 3.0f;
     protected Rectangle hitbox;
     protected boolean moving = true;
-    private Texture texture;
     protected boolean hypnotized = false;
     protected int icingLevel = 0;
     protected int iceHp = 0;
+    protected float animStateTime = 0f;
+    private final java.util.Map<String, Object> runtimeState = new java.util.HashMap<>();
+
+    public Object getRuntimeState(String key) { return runtimeState.get(key); }
+    public void putRuntimeState(String key, Object val) { runtimeState.put(key, val); }
+
+    public boolean hasStatusEffect(DamageType type) {
+        if (activeEffects == null) return false;
+        for (StatusEffect e : activeEffects) {
+            if (e != null && e.getType() == type) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public Zombie(String alias, double hitpoints, double eatDPS, double speed,
                   int wavePointCost, int weight, List<ScaledProperty> scaledProps) {
@@ -69,6 +83,10 @@ public abstract class Zombie {
 
     public void update(float delta, BattleController controller) {
         updateEffects(delta);
+        ZombieAnimation.tick(this, delta);
+        if (!isFrozen()) {
+            animStateTime += delta;
+        }
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
             die(controller);
             return;
@@ -100,6 +118,7 @@ public abstract class Zombie {
 
     protected void move(float delta, BattleController controller) {
         if (isFrozen()) return;
+        ZombieAnimation.trigger(this, "walk", 1.0);
         if (hypnotized) {
             x += currentSpeed * delta * 100;
         } else {
@@ -122,6 +141,7 @@ public abstract class Zombie {
     protected void attack(Plant targetPlant, float delta, BattleController controller) {
         if (isFrozen()) return;
         if (hypnotized) return;
+        ZombieAnimation.trigger(this, "eat", 1.0);
         attackCooldownTimer += delta;
         if (attackCooldownTimer >= 1.0f) {
             targetPlant.takeDamage((int) eatDPS, this, controller);
@@ -300,8 +320,7 @@ public abstract class Zombie {
     }
 
     public void draw(SpriteBatch batch) {
-        float delta = com.badlogic.gdx.Gdx.graphics.getDeltaTime();
-        EntityRenderer.getInstance().renderZombie(batch, this, delta);
+        EntityRenderer.getInstance().renderZombie(batch, this, animStateTime);
     }
 
     public double getEffectiveHitpoints() {
