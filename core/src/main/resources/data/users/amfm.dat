@@ -1,0 +1,641 @@
+{
+  "profile" : {
+    "username" : "amfm",
+    "nickname" : "fatemeh",
+    "email" : "fatemeh@gmail.com",
+    "gender" : "female",
+    "passwordHash" : "55fbd323d3a787370e51f50b202d31b6166835a324a6da16b18cbd76c0b85b80",
+    "securityQuestion" : "What is your favorite color?",
+    "securityAnswerHash" : "16477688c0e00699c6cfa4497a3612d7e83c532062b64b250fed8908128ed548"
+  },
+  "userStats" : {
+    "gamesPlayed" : 0,
+    "coins" : 5000000,
+    "diamonds" : 5000000,
+    "stagesCompleted" : 0,
+    "highestScore" : 0,
+    "dailyQuestsCompleted" : 0,
+    "nonDailyQuestsCompleted" : 0
+  },
+  "progressState" : {
+    "completedLevels" : {
+      "BIG_WAVE_BEACH" : 99,
+      "FROSTBITE_CAVES" : 99,
+      "DARK_AGES" : 99,
+      "ANCIENT_EGYPT" : 99
+    },
+    "minigameClearedCounts" : {
+      "I_ZOMBIE" : 0,
+      "WALLNUT_BOWLING" : 0,
+      "ZOMBOTANY" : 0,
+      "VASEBREAKER" : 0,
+      "BEGHOULED" : 0
+    }
+  },
+  "collectionState" : {
+    "unlockedPlants" : [ "LILY_PAD", "HYPNO_SHROOM", "FUME_SHROOM", "CACTUS", "ARMA_MINT", "GRAVE_BUSTER", "TANGLE_KELP", "PEASHOOTER", "BOWLING_BULB", "ENFORCE_MINT", "REINFORCE_MINT", "REPEATER", "CAT_TAIL", "SUNFLOWER", "MEGA_GATLING_PEA", "CHERRY_BOMB", "CAULIPOWER", "CHOMPER", "CAT_TAIL_MINT", "TORCHWOOD", "SPLIT_PEA", "GOO_PEASHOOTER", "JALAPENO", "SUN_SHROOM", "GOLD_BLOOM", "ENDURIAN", "WASABI_WHIP", "BONK_CHOY", "PIERCE_MINT", "PRIMAL_SUNFLOWER", "GIANT_WALLNUT", "KIWIBEAST", "APPEASE_MINT", "ELECTRIC_BLUEBERRY", "TALL_NUT", "IMITATER", "SQUASH", "POTATO_MINE", "WALLNUT_BOWLING", "ICE_SHROOM", "PRIMAL_POTATO_MINE", "ENCHANT_MINT", "WINTER_MELON", "MELON_PULT", "PUMPKIN", "THREEPEATER", "MAGNET_SHROOM", "PEA_POD", "SEA_SHROOM", "DOOM_SHROOM", "HOT_POTATO", "CITRON", "PHAT_BEET", "EXPLODE_O_NUT", "SNOW_PEA", "TWIN_SUNFLOWER", "PEPPER_PULT", "ICEBERG_LETTUCE", "PUFF_SHROOM", "KERNEL_PULT", "FIRE_PEASHOOTER", "CABBAGE_PULT", "STARFRUIT", "BOMBARD_MINT", "ENLIGHTEN_MINT", "ROTOBAGA", "WALL_NUT", "SWEET_POTATO", "GRAPESHOT", "GARLIC", "SUN_BEAN" ],
+    "seenZombies" : [ "ICEAGE_DEFAULT" ],
+    "seedPackets" : { },
+    "plantLevels" : { },
+    "greenhouseBoosts" : [ ]
+  },
+  "greenhouseState" : {
+    "pots" : [ [ {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
+    } ], [ {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    } ], [ {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : false
+    } ] ],
+    "numberOfUnlockedPots" : 4,
+    "numberOfLockedPots" : 8
+  },
+  "appStats" : {
+    "difficultyLevel" : 3,
+    "soundVolume" : 15
+  },
+  "newsState" : {
+    "news" : [ {
+      "text" : "New plant unlocked: Twin Sunflower!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Twin Sunflower!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Sun-shroom!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Sun-shroom!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Primal Sunflower!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Primal Sunflower!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Gold Bloom!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Gold Bloom!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Repeater!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Repeater!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Threepeater!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Threepeater!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Snow Pea!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Snow Pea!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Rotobaga!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Rotobaga!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Pea Pod!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Pea Pod!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Split Pea!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Split Pea!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Citron!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Citron!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Caulipower!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Caulipower!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Electric Blueberry!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Electric Blueberry!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Bowling Bulb!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Bowling Bulb!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Cactus!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Cactus!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Fire Peashooter!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Fire Peashooter!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Starfruit!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Starfruit!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Goo Peashooter!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Goo Peashooter!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Mega Gatling Pea!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Mega Gatling Pea!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Sea-shroom!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Sea-shroom!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Puff-shroom!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Puff-shroom!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Fume-shroom!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Fume-shroom!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Cabbage-pult!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Cabbage-pult!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Kernel-pult!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Kernel-pult!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Melon-pult!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Melon-pult!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Winter Melon!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Winter Melon!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Pepper-pult!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Pepper-pult!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Potato Mine!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Potato Mine!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Primal Potato Mine!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Primal Potato Mine!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Cherry Bomb!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Cherry Bomb!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Squash!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Squash!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Grapeshot!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Grapeshot!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Jalapeno!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Jalapeno!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Doom-shroom!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Doom-shroom!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Tangle Kelp!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Tangle Kelp!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Iceberg Lettuce!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Iceberg Lettuce!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Bonk Choy!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Bonk Choy!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Phat Beet!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Phat Beet!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Chomper!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Chomper!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Wasabi Whip!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Wasabi Whip!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Kiwibeast!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Kiwibeast!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Wall-nut!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Wall-nut!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Tall-nut!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Tall-nut!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Endurian!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Endurian!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Garlic!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Garlic!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Sweet Potato!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Sweet Potato!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Explode-o-nut!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Explode-o-nut!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Pumpkin!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Pumpkin!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Sun Bean!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Sun Bean!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Torchwood!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Torchwood!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Magnet-shroom!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Magnet-shroom!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Hypno-shroom!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Hypno-shroom!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Cat-tail!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Cat-tail!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Imitater!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Imitater!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Ice-shroom!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Ice-shroom!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Lily Pad!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Lily Pad!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Hot Potato!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Hot Potato!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Grave Buster!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Grave Buster!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Enlighten-mint!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Enlighten-mint!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Appease-mint!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Appease-mint!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Arma-mint!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Arma-mint!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Bombard-mint!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Bombard-mint!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Enforce-mint!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Enforce-mint!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Reinforce-mint!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Reinforce-mint!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Enchant-mint!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Enchant-mint!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Pierce-mint!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Pierce-mint!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: catTail-mint!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: catTail-mint!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Bowling Wallnut!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Bowling Wallnut!\n2026/08/14  17:02"
+    }, {
+      "text" : "New plant unlocked: Giant Wallnut!",
+      "read" : false,
+      "timestamp" : 1786714373220,
+      "formattedText" : "New plant unlocked: Giant Wallnut!\n2026/08/14  17:02"
+    }, {
+      "text" : "New zombie spotted: ICEAGE_DEFAULT!",
+      "read" : false,
+      "timestamp" : 1786714410716,
+      "formattedText" : "New zombie spotted: ICEAGE_DEFAULT!\n2026/08/14  17:03"
+    } ]
+  },
+  "shopDaily" : {
+    "offerPlant" : "SUNFLOWER",
+    "offerDate" : "2026-08-14",
+    "purchased" : false,
+    "forToday" : true,
+    "availableToday" : true
+  },
+  "stayLoggedIn" : false,
+  "questState" : {
+    "questManager" : {
+      "activeQuests" : [ {
+        "id" : "story_economy",
+        "title" : "Economic Herbivore",
+        "descriptionTemplate" : "Win without losing more than {n} plants",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "max_plant_loss",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 20,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "n" : 0
+        },
+        "active" : true,
+        "formattedDescription" : "Win without losing more than 0 plants",
+        "runtimeState" : { },
+        "formattedTitle" : "Economic Herbivore"
+      }, {
+        "id" : "story_speed",
+        "title" : "Speed Run",
+        "descriptionTemplate" : "Kill 10 zombies within 30 seconds of the first wave",
+        "type" : "STORY",
+        "priority" : "MEDIUM",
+        "conditionKey" : "speed_kill",
+        "targetCount" : 10,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "COINS",
+          "amount" : 500,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
+        "runtimeState" : {
+          "waveStartTime" : 1786714400392
+        },
+        "formattedTitle" : "Speed Run"
+      }, {
+        "id" : "epic_defense",
+        "title" : "Master of Defense",
+        "descriptionTemplate" : "End a level with exactly 0 sun",
+        "type" : "EPIC",
+        "priority" : "CRITICAL",
+        "conditionKey" : "zero_sun_end",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 200,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "formattedDescription" : "End a level with exactly 0 sun",
+        "runtimeState" : { },
+        "formattedTitle" : "Master of Defense"
+      }, {
+        "id" : "epic_night_day",
+        "title" : "Day or Night",
+        "descriptionTemplate" : "Win a day level using only mushrooms",
+        "type" : "EPIC",
+        "priority" : "HIGH",
+        "conditionKey" : "day_with_mushrooms",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 20,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "formattedDescription" : "Win a day level using only mushrooms",
+        "runtimeState" : { },
+        "formattedTitle" : "Day or Night"
+      }, {
+        "id" : "epic_lawnmower",
+        "title" : "Lawnmower Time",
+        "descriptionTemplate" : "Kill at least {n} zombies with lawnmowers",
+        "type" : "EPIC",
+        "priority" : "MEDIUM",
+        "conditionKey" : "lawnmower_kill",
+        "targetCount" : 20,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 20,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "n" : 20
+        },
+        "active" : true,
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
+        "runtimeState" : { },
+        "formattedTitle" : "Lawnmower Time"
+      }, {
+        "id" : "story_chapter_hunt_ANCIENT_EGYPT",
+        "title" : "Chapter Hunter",
+        "descriptionTemplate" : "Defeat 50 zombies from {chapter}",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "chapter_zombie_kill",
+        "targetCount" : 50,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "chapter" : "ANCIENT_EGYPT"
+        },
+        "active" : true,
+        "formattedDescription" : "Defeat 50 zombies from Ancient Egypt",
+        "runtimeState" : { },
+        "formattedTitle" : "Chapter Hunter"
+      } ],
+      "lastDailyRefresh" : null,
+      "consecutiveMaxDifficultyWins" : 0,
+      "currentChapter" : "FROSTBITE_CAVES",
+      "currentDifficulty" : 3,
+      "isDayLevel" : true,
+      "timeUntilReset" : "6h 56m"
+    }
+  }
+}
