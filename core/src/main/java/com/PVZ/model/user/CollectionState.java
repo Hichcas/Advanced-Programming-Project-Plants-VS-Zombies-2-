@@ -1,5 +1,7 @@
 package com.PVZ.model.user;
 
+import com.PVZ.model.entity.plants.PlantDefinition;
+import com.PVZ.model.entity.plants.PlantLibrary;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.ZombieType;
 import com.PVZ.model.status.AppStatus;
@@ -113,7 +115,10 @@ public class CollectionState {
     }
 
     public int upgradePlant(PlantType plant) {
-        int newLevel = getPlantLevel(plant) + 1;
+        int maxRawLevel = PlantLibrary.findByType(plant)
+            .map(PlantDefinition::getMaxLevel)
+            .orElse(4) - 1;
+        int newLevel = Math.min(getPlantLevel(plant) + 1, maxRawLevel);
         plantLevels.put(plant, newLevel);
         return newLevel;
     }

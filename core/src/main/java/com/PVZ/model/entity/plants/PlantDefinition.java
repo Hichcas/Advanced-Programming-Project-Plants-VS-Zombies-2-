@@ -268,6 +268,24 @@ public class PlantDefinition {
         return null;
     }
 
+    /**
+     * Highest level this plant can actually reach, straight from the JSON's own
+     * upgrade list (base level 1 + however many upgrade tiers it defines - almost
+     * always 3, so max level 4). Plants with no upgrades at all cap at level 1.
+     */
+    public int getMaxLevel() {
+        if (upgrades == null || upgrades.isEmpty()) {
+            return 1;
+        }
+        int max = 1;
+        for (UpgradeRule upgrade : upgrades) {
+            if (upgrade != null && upgrade.getLevel() > max) {
+                max = upgrade.getLevel();
+            }
+        }
+        return max;
+    }
+
     public static final class Builder {
         private final PlantDefinition definition = new PlantDefinition();
 
