@@ -10,8 +10,8 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 100200,
-    "diamonds" : 1000101,
+    "coins" : 100400,
+    "diamonds" : 1000301,
     "stagesCompleted" : 0,
     "highestScore" : 0,
     "dailyQuestsCompleted" : 0,
@@ -34,8 +34,10 @@
   },
   "collectionState" : {
     "unlockedPlants" : [ "IMITATER", "SUN_BEAN", "MEGA_GATLING_PEA", "TANGLE_KELP", "REINFORCE_MINT", "CHOMPER", "GOO_PEASHOOTER", "ICEBERG_LETTUCE", "TWIN_SUNFLOWER", "GOLD_BLOOM", "PEASHOOTER", "CHERRY_BOMB", "GRAVE_BUSTER", "PEA_POD", "CAULIPOWER", "WALL_NUT", "THREEPEATER", "CITRON", "PUFF_SHROOM", "JALAPENO", "SQUASH", "STARFRUIT", "CAT_TAIL", "PRIMAL_SUNFLOWER", "SWEET_POTATO", "CABBAGE_PULT", "GIANT_WALLNUT", "SEA_SHROOM", "APPEASE_MINT", "WASABI_WHIP", "GARLIC", "PIERCE_MINT", "FIRE_PEASHOOTER", "SNOW_PEA", "SPLIT_PEA", "SUN_SHROOM", "ENDURIAN", "PRIMAL_POTATO_MINE", "BOMBARD_MINT", "ICE_SHROOM", "TALL_NUT", "MELON_PULT", "DOOM_SHROOM", "HYPNO_SHROOM", "EXPLODE_O_NUT", "ENCHANT_MINT", "CAT_TAIL_MINT", "MAGNET_SHROOM", "BOWLING_BULB", "REPEATER", "PUMPKIN", "CACTUS", "PEPPER_PULT", "ENLIGHTEN_MINT", "KERNEL_PULT", "FUME_SHROOM", "SUNFLOWER", "GRAPESHOT", "ARMA_MINT", "LILY_PAD", "TORCHWOOD", "ENFORCE_MINT", "PHAT_BEET", "KIWIBEAST", "BONK_CHOY", "HOT_POTATO", "ELECTRIC_BLUEBERRY", "ROTOBAGA", "WINTER_MELON", "WALLNUT_BOWLING", "POTATO_MINE" ],
-    "seenZombies" : [ "BEACH_ARMOR1", "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "GARGANTUAR_DARK", "TOMB_RAISER", "IMP_ICEAGE", "ZOMBOSS_EGYPT", "IMP_BEACH", "TUTORIAL_DEFAULT", "DARK_JUGGLER", "GARGANTUAR_BASIC", "RA", "BEACH_ARMOR2", "IMP_DARK", "DARK_ARMOR4", "WEASEL", "MUMMY_ARMOR2", "TUTORIAL_ARMOR1", "DARK_DEFAULT", "BEACH_FISHERMAN", "DARK_ARMOR1", "MUMMY_ARMOR1", "PHARAOH", "ICEAGE_ARMOR1", "ICEAGE_ARMOR3", "BEACH_SURFER", "ZOMBOTANY_PEASHOOTER", "DARK_ARMOR2", "DODO", "EXPLORER", "MUMMY_DEFAULT", "BEACH_DEFAULT", "IMP_EGYPT", "TUTORIAL_ARMOR2", "GARGANTUAR_ICEAGE" ],
-    "seedPackets" : { },
+    "seenZombies" : [ "BEACH_ARMOR1", "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "ICEAGE_ARMOR3", "TOMB_RAISER", "IMP_ICEAGE", "ZOMBOSS_EGYPT", "IMP_BEACH", "TUTORIAL_DEFAULT", "DARK_JUGGLER", "GARGANTUAR_BASIC", "RA", "BEACH_ARMOR2", "IMP_DARK", "DARK_ARMOR4", "WEASEL", "DODO", "MUMMY_ARMOR2", "TUTORIAL_ARMOR1", "DARK_DEFAULT", "BEACH_FISHERMAN", "DARK_ARMOR1", "MUMMY_ARMOR1", "GARGANTUAR_DARK", "PHARAOH", "BEACH_SURFER", "ZOMBOTANY_PEASHOOTER", "ICEAGE_ARMOR1", "DARK_ARMOR2", "EXPLORER", "MUMMY_DEFAULT", "BEACH_DEFAULT", "IMP_EGYPT", "TUTORIAL_ARMOR2", "GARGANTUAR_ICEAGE" ],
+    "seedPackets" : {
+      "SWEET_POTATO" : 10
+    },
     "plantLevels" : { },
     "greenhouseBoosts" : [ ]
   },
@@ -715,10 +717,10 @@
     "offerPlant" : "PEASHOOTER",
     "offerDate" : "2026-08-13",
     "purchased" : false,
-    "forToday" : true,
-    "availableToday" : true
+    "forToday" : false,
+    "availableToday" : false
   },
-  "stayLoggedIn" : true,
+  "stayLoggedIn" : false,
   "questState" : {
     "questManager" : {
       "activeQuests" : [ {
@@ -741,8 +743,8 @@
           "n" : 2
         },
         "active" : true,
-        "runtimeState" : { },
         "formattedTitle" : "Economic Herbivore",
+        "runtimeState" : { },
         "formattedDescription" : "Win without losing more than 2 plants"
       }, {
         "id" : "story_speed",
@@ -762,10 +764,10 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedTitle" : "Speed Run",
         "runtimeState" : {
           "waveStartTime" : 1786543714859
         },
-        "formattedTitle" : "Speed Run",
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_defense",
@@ -785,8 +787,8 @@
         },
         "parameters" : { },
         "active" : true,
-        "runtimeState" : { },
         "formattedTitle" : "Master of Defense",
+        "runtimeState" : { },
         "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "epic_night_day",
@@ -806,8 +808,8 @@
         },
         "parameters" : { },
         "active" : true,
-        "runtimeState" : { },
         "formattedTitle" : "Day or Night",
+        "runtimeState" : { },
         "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "epic_lawnmower",
@@ -829,8 +831,8 @@
           "n" : 50
         },
         "active" : true,
-        "runtimeState" : { },
         "formattedTitle" : "Lawnmower Time",
+        "runtimeState" : { },
         "formattedDescription" : "Kill at least 50 zombies with lawnmowers"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
@@ -842,7 +844,7 @@
         "targetCount" : 50,
         "currentCount" : 50,
         "completed" : true,
-        "claimed" : false,
+        "claimed" : true,
         "reward" : {
           "type" : "SEED_PACKETS",
           "amount" : 10,
@@ -852,16 +854,106 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
-        "runtimeState" : { },
         "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { },
         "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
+      }, {
+        "id" : "story_chapter_hunt_FROSTBITE_CAVES",
+        "title" : "Chapter Hunter",
+        "descriptionTemplate" : "Defeat 50 zombies from {chapter}",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "chapter_zombie_kill",
+        "targetCount" : 50,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "chapter" : "FROSTBITE_CAVES"
+        },
+        "active" : true,
+        "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { },
+        "formattedDescription" : "Defeat 50 zombies from FROSTBITE_CAVES"
+      }, {
+        "id" : "daily_only_cactus_1786700054222",
+        "title" : "Only Cactus",
+        "descriptionTemplate" : "Kill 10 zombies using only Cactus",
+        "type" : "DAILY",
+        "priority" : "HIGH",
+        "conditionKey" : "specific_plant_kill",
+        "targetCount" : 10,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 20,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "plant" : "CACTUS"
+        },
+        "active" : true,
+        "formattedTitle" : "Only Cactus",
+        "runtimeState" : { },
+        "formattedDescription" : "Kill 10 zombies using only Cactus"
+      }, {
+        "id" : "daily_no_symmetry_1786700054236",
+        "title" : "No OCD",
+        "descriptionTemplate" : "No symmetry in garden except middle row",
+        "type" : "DAILY",
+        "priority" : "MEDIUM",
+        "conditionKey" : "no_symmetry",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "COINS",
+          "amount" : 800,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "formattedTitle" : "No OCD",
+        "runtimeState" : { },
+        "formattedDescription" : "No symmetry in garden except middle row"
+      }, {
+        "id" : "daily_column_empty_1786700054236",
+        "title" : "One Column Less",
+        "descriptionTemplate" : "Win with column {col} completely empty",
+        "type" : "DAILY",
+        "priority" : "HIGH",
+        "conditionKey" : "column_empty",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "col" : 6
+        },
+        "active" : true,
+        "formattedTitle" : "One Column Less",
+        "runtimeState" : { },
+        "formattedDescription" : "Win with column 6 completely empty"
       } ],
-      "lastDailyRefresh" : null,
+      "lastDailyRefresh" : "2026-08-14",
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "10h 33m"
+      "timeUntilReset" : "10h 32m"
     }
   }
 }

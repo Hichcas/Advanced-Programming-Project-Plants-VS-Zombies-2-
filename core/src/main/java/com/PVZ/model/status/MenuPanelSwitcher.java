@@ -60,6 +60,9 @@ public class MenuPanelSwitcher {
             case GREENHOUSE:
                 PanelManager.getInstance().performPanelTransition(new GreenhousePanel());
                 break;
+            case QUEST:
+                PanelManager.getInstance().performPanelTransition(new QuestPanel());
+                break;
             default:
                 System.err.println("No UI panel mapped for menu: " + menuType);
                 break;
