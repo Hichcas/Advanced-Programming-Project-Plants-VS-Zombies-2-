@@ -84,6 +84,7 @@ public class PVZ extends Game {
         CommandParser.end();
     }
 
+
     public void updateGraphics(GraphicsQuality quality) {
         Gdx.graphics.setWindowedMode(quality.width, quality.height);
         Gdx.graphics.setVSync(quality.vSync);
