@@ -9,6 +9,19 @@ public class UserStats {
     private int highestScore;
     private int dailyQuestsCompleted;
     private int nonDailyQuestsCompleted;
+    private int purchasedPlantFood;
+
+    public int getPurchasedPlantFood() {
+        return purchasedPlantFood;
+    }
+
+    public void setPurchasedPlantFood(int purchasedPlantFood) {
+        this.purchasedPlantFood = purchasedPlantFood;
+    }
+
+    public void addPurchasedPlantFood(int amount) {
+        this.purchasedPlantFood += amount;
+    }
 
     public int getGamesPlayed() {
         return gamesPlayed;

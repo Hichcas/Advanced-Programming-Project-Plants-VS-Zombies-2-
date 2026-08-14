@@ -60,6 +60,9 @@ public class MenuPanelSwitcher {
             case GREENHOUSE:
                 PanelManager.getInstance().performPanelTransition(new GreenhousePanel());
                 break;
+            case SHOP:
+                PanelManager.getInstance().performPanelTransition(new ShopPanel());
+                break;
             case QUEST:
                 PanelManager.getInstance().performPanelTransition(new QuestPanel());
                 break;
