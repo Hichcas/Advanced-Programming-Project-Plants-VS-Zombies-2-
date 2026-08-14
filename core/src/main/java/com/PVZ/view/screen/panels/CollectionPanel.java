@@ -288,11 +288,16 @@ public class CollectionPanel extends BasePanel {
                 int displayLevel = level + 1;
                 int seedPackets = user.collectionState.getSeedPacketCount(type);
                 int requiredPackets = level + 1;
+                int maxDisplayLevel = PlantLibrary.findByType(type)
+                    .map(PlantDefinition::getMaxLevel)
+                    .orElse(4);
+                boolean maxedOut = displayLevel >= maxDisplayLevel;
 
                 Table info = new Table();
                 info.setTouchable(Touchable.disabled);
                 Label lvl = new Label("Lv." + displayLevel, new Label.LabelStyle(descFont, Color.YELLOW));
-                Label seeds = new Label(seedPackets + "/" + requiredPackets, new Label.LabelStyle(descFont, Color.WHITE));
+                Label seeds = new Label(maxedOut ? "MAX" : seedPackets + "/" + requiredPackets,
+                    new Label.LabelStyle(descFont, Color.WHITE));
                 info.add(lvl).padRight(8f);
                 info.add(seeds);
                 info.setPosition(0, -CARD_SLOT_H / 2f + 15f);
@@ -332,6 +337,10 @@ public class CollectionPanel extends BasePanel {
         String upgradeSelection = upgradeFilter.getSelected();
         if (upgradeSelection.equals("Upgradable")) {
             int currentLevel = user.collectionState.getPlantLevel(type);
+            int maxRawLevel = PlantLibrary.findByType(type)
+                .map(PlantDefinition::getMaxLevel)
+                .orElse(4) - 1;
+            if (currentLevel >= maxRawLevel) return false; // already maxed - never "upgradable"
             int needed = currentLevel + 1;
             if (user.collectionState.getSeedPacketCount(type) < needed) return false;
         }
@@ -477,6 +486,11 @@ public class CollectionPanel extends BasePanel {
                 int displayLevel = level + 1; // نمایش لول به صورت Base-1
                 int seedPackets = user.collectionState.getSeedPacketCount(selectedPlant);
                 int required = level + 1;
+                // JSON only defines 3 upgrade tiers (levels 2/3/4) per plant, so the
+                // slider - and the button below - must respect that real cap instead
+                // of the old hardcoded 1..10 range.
+                int maxDisplayLevel = def.getMaxLevel();
+                boolean maxedOut = displayLevel >= maxDisplayLevel;
 
                 hpSlider.setRange(0, Math.max(1000, def.getBaseHp()));
                 hpSlider.setValue(def.getBaseHp());
@@ -486,13 +500,13 @@ public class CollectionPanel extends BasePanel {
                 costSlider.setValue(def.getCost());
                 costValueLabel.setText(String.valueOf(def.getCost()));
 
-                levelSlider.setRange(1, 10);
+                levelSlider.setRange(1, Math.max(1, maxDisplayLevel));
                 levelSlider.setValue(displayLevel);
-                levelValueLabel.setText("Lv." + displayLevel);
+                levelValueLabel.setText("Lv." + displayLevel + "/" + maxDisplayLevel);
 
                 seedSlider.setRange(0, Math.max(1, required));
                 seedSlider.setValue(Math.min(seedPackets, required));
-                seedValueLabel.setText(seedPackets + "/" + required);
+                seedValueLabel.setText(maxedOut ? "MAX" : seedPackets + "/" + required);
 
                 plantStatsTable.setVisible(true);
                 actionButtons.setVisible(true);
@@ -503,6 +517,8 @@ public class CollectionPanel extends BasePanel {
                 } else {
                     buyBtn.setVisible(true);
                     upgradeBtn.setVisible(true);
+                    upgradeBtn.setDisabled(maxedOut);
+                    upgradeBtn.setText(maxedOut ? "MAX LEVEL" : "UPGRADE");
                 }
             }
             detailPreviewActor.setType(selectedPlant);

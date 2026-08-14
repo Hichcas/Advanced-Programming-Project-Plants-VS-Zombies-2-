@@ -165,6 +165,9 @@ public final class UpgradeResolver {
             case CHILL_TIME -> stats.setChillTimeSeconds(applyDouble(stats.getChillTimeSeconds(),
                 operation, value));
             case SUN_AMOUNT -> stats.setSunAmount(applyInt(stats.getSunAmount(), operation, value));
+            case ATTACK_SPEED -> stats.setActionIntervalSeconds(
+                applyAttackSpeedPercent(stats.getActionIntervalSeconds(), operation, value));
+            case DAMAGE_PER_TICK -> stats.setDamage(applyInt(stats.getDamage(), operation, value));
             case DURATION -> stats.setDurationSeconds(applyDouble(stats.getDurationSeconds(), operation, value));
             case ARM_TIME -> stats.setArmTimeSeconds(applyDouble(stats.getArmTimeSeconds(), operation, value));
             case BOUNCES -> stats.setBounces(applyInt(stats.getBounces(), operation, value));
@@ -222,6 +225,8 @@ public final class UpgradeResolver {
             case SUMMON_ALLY -> stats.putExtra("summonAlly", Boolean.TRUE);
             case TRANSFORM_TARGET -> stats.putExtra("transformTarget", Boolean.TRUE);
             case CAN_CRUSH_2X -> stats.putExtra("canCrush2x", Boolean.TRUE);
+            case ZOMBIE_HP_BUFF -> stats.putExtra("zombieHpBuff", Boolean.TRUE);
+            case ZOMBIE_DAMAGE_BUFF -> stats.putExtra("zombieDamageBuff", Boolean.TRUE);
             case UNKNOWN -> stats.putExtra("special:" + rule.getRaw(), rule.getParams());
         }
     }
@@ -246,6 +251,23 @@ public final class UpgradeResolver {
             case MULTIPLY -> (int) Math.round(current * value);
             case UNKNOWN -> current;
         };
+    }
+
+    /**
+     * "Atk Speed +X%" (Starfruit, Cabbage-pult, Bonk Choy, Phat Beet) means the
+     * plant fires X% more often, i.e. its actionIntervalSeconds - the value
+     * ShooterBehavior.getCooldown() actually reads - must go DOWN, not up. A
+     * plain applyDouble(ADD) would have subtracted raw seconds from a percent,
+     * which is why this stat previously did nothing at all.
+     */
+    private static double applyAttackSpeedPercent(double currentIntervalSeconds, UpgradeOperation operation,
+            double percent) {
+        if (currentIntervalSeconds <= 0 || percent == 0) {
+            return currentIntervalSeconds;
+        }
+        double signedPercent = operation == UpgradeOperation.SUBTRACT ? -percent : percent;
+        double factor = Math.max(0.1, 1.0 + (signedPercent / 100.0));
+        return currentIntervalSeconds / factor;
     }
 
     private static double applyDouble(double current, UpgradeOperation operation, double value) {

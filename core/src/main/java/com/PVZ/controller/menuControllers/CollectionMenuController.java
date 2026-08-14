@@ -1,6 +1,8 @@
 
 package com.PVZ.controller.menuControllers;
 
+import com.PVZ.model.entity.plants.PlantDefinition;
+import com.PVZ.model.entity.plants.PlantLibrary;
 import com.PVZ.model.enums.commands.CollectionCommand;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
@@ -132,6 +134,19 @@ public class CollectionMenuController {
                 return new OutputDTO(false, "You must be logged in.");
             }
             int currentLevel = user.collectionState.getPlantLevel(type);
+
+            // plants_structured_v6.json only defines 3 upgrade tiers per plant
+            // (levels 2/3/4 - a couple of plants have none at all), so the raw
+            // stored level (0-based) must never pass maxJsonLevel - 1. Without
+            // this the collection screen let you spend seed packets forever
+            // past the plant's real cap.
+            int maxRawLevel = PlantLibrary.findByType(type)
+                .map(PlantDefinition::getMaxLevel)
+                .orElse(4) - 1;
+            if (currentLevel >= maxRawLevel) {
+                return new OutputDTO(false, "This plant is already at its max level.");
+            }
+
             if (!user.collectionState.spendSeedPackets(type, currentLevel + 1)) {
                 return new OutputDTO(false, "Not enough seed packets.");
             }
