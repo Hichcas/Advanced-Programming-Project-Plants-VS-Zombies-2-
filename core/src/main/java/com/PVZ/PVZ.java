@@ -84,15 +84,11 @@ public class PVZ extends Game {
         CommandParser.end();
     }
 
+
     public void updateGraphics(GraphicsQuality quality) {
-        // Real fullscreen at the monitor's native resolution, instead of a windowed
-        // surface at quality.width/height - a windowed surface always leaves the
-        // OS window chrome/desktop visible behind the game and can end up anchored
-        // to the bottom of the screen depending on the window manager.
-        Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+        Gdx.graphics.setWindowedMode(quality.width, quality.height);
         Gdx.graphics.setVSync(quality.vSync);
         System.out
-            .println("Graphics updated to: " + quality.name() + " (fullscreen "
-                + Gdx.graphics.getDisplayMode().width + "x" + Gdx.graphics.getDisplayMode().height + ")");
+            .println("Graphics updated to: " + quality.name() + " (" + quality.width + "x" + quality.height + ")");
     }
 }
