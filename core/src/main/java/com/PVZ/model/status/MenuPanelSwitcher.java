@@ -60,6 +60,12 @@ public class MenuPanelSwitcher {
             case GREENHOUSE:
                 PanelManager.getInstance().performPanelTransition(new GreenhousePanel());
                 break;
+            case SHOP:
+                // این کیس اصلاً map نشده بود؛ یعنی وقتی از گلخانه وارد فروشگاه می‌شدید
+                // (GreenhouseMenuController آن‌جا currentMenuType را روی SHOP می‌گذاشت)،
+                // هیچ پنلی عوض نمی‌شد و فقط یک خطا در کنسول لاگ می‌شد.
+                PanelManager.getInstance().performPanelTransition(new ShopPanel());
+                break;
             default:
                 System.err.println("No UI panel mapped for menu: " + menuType);
                 break;

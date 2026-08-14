@@ -148,6 +148,20 @@ public class ShopMenuController {
     }
 
     private OutputDTO buyFood(User user, int count, StringBuilder log) {
+        final int maxStorage = 3;
+        int owned = user.userStats.getPurchasedPlantFood();
+        if (owned + count > maxStorage) {
+            return new OutputDTO(false,
+                "Max plant food storage is " + maxStorage + ". You already have " + owned + ".");
+        }
+        int cost = 3 * count;
+        if (user.userStats.getDiamonds() < cost) {
+            return new OutputDTO(false, "Not enough diamonds.");
+        }
+        user.userStats.spendDiamonds(cost);
+        user.userStats.addPurchasedPlantFood(count);
+        UserRegistry.markDirty(user.profile.getUsername());
+        log.append("Bought ").append(count).append(" plant food for ").append(cost).append(" diamonds.");
         return new OutputDTO(true, log.toString());
     }
 
