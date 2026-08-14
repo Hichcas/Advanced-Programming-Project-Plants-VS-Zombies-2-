@@ -68,13 +68,20 @@ public class BattleController implements BehaviorContext {
         }
     }
 
-    public void grantPlantFoodDrop() {
-        if (plantFoodManager == null) {
+    /**
+     * Spawns a real Plant Food pickup at the glowing zombie's death position.
+     * The food is added to the inventory only when the player collects the pickup.
+     */
+    public void grantPlantFoodDrop(double x, double y) {
+        if (lootManager == null) {
+            if (plantFoodManager != null) {
+                plantFoodManager.addPlantFood(1);
+            }
             return;
         }
-        plantFoodManager.addPlantFood(1);
-        System.out.println("The glowing zombie dropped a plant food; you have "
-            + plantFoodManager.getPlantFoodCount() + " plant foods now.");
+        lootManager.spawn(x, y, com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
+        System.out.println("A glowing zombie dropped Plant Food at ("
+            + String.format("%.1f", x) + ", " + String.format("%.1f", y) + ").");
     }
 
     public void rollLootDrop(double x, double y) {
@@ -110,6 +117,16 @@ public class BattleController implements BehaviorContext {
                     AppStatus.currentUser.greenhouseState.unlockPots(drop.getType().getAmount());
                 }
                 String msg = "A zombie dropped a pot; you have a new greenhouse slot now.";
+                System.out.println(msg);
+                return msg;
+            }
+            case PLANT_FOOD -> {
+                if (plantFoodManager == null) {
+                    return "Plant Food manager is not available.";
+                }
+                plantFoodManager.addPlantFood(drop.getType().getAmount());
+                String msg = "Collected Plant Food! You now have "
+                    + plantFoodManager.getPlantFoodCount() + ".";
                 System.out.println(msg);
                 return msg;
             }

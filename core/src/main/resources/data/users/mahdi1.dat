@@ -10,8 +10,8 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 1991050,
-    "diamonds" : 299545,
+    "coins" : 1989050,
+    "diamonds" : 299520,
     "stagesCompleted" : 0,
     "highestScore" : 965000,
     "dailyQuestsCompleted" : 0,
@@ -35,14 +35,16 @@
   },
   "collectionState" : {
     "unlockedPlants" : [ "CHOMPER", "GIANT_WALLNUT", "ROTOBAGA", "JALAPENO", "PUFF_SHROOM", "PEA_POD", "THREEPEATER", "PEPPER_PULT", "LILY_PAD", "PEASHOOTER", "ARMA_MINT", "GOO_PEASHOOTER", "WINTER_MELON", "EXPLODE_O_NUT", "KERNEL_PULT", "ELECTRIC_BLUEBERRY", "PRIMAL_POTATO_MINE", "POTATO_MINE", "SQUASH", "SPLIT_PEA", "SWEET_POTATO", "ENLIGHTEN_MINT", "CABBAGE_PULT", "GARLIC", "CAT_TAIL_MINT", "WALLNUT_BOWLING", "CAT_TAIL", "BOMBARD_MINT", "SUN_SHROOM", "ENCHANT_MINT", "PIERCE_MINT", "GRAVE_BUSTER", "ICE_SHROOM", "SUNFLOWER", "CACTUS", "MAGNET_SHROOM", "PRIMAL_SUNFLOWER", "HYPNO_SHROOM", "BONK_CHOY", "FUME_SHROOM", "APPEASE_MINT", "CAULIPOWER", "FIRE_PEASHOOTER", "ENFORCE_MINT", "CHERRY_BOMB", "STARFRUIT", "TORCHWOOD", "DOOM_SHROOM", "GRAPESHOT", "WALL_NUT", "PHAT_BEET", "CITRON", "ICEBERG_LETTUCE", "SNOW_PEA", "ENDURIAN", "TANGLE_KELP", "HOT_POTATO", "KIWIBEAST", "TWIN_SUNFLOWER", "MEGA_GATLING_PEA", "MELON_PULT", "REPEATER", "REINFORCE_MINT", "GOLD_BLOOM", "WASABI_WHIP", "IMITATER", "SUN_BEAN", "BOWLING_BULB", "PUMPKIN", "SEA_SHROOM", "TALL_NUT" ],
-    "seenZombies" : [ "BEACH_OCTOPUS", "ZOMBOTANY_SQUASH", "BEACH_DEFAULT", "TUTORIAL_ARMOR4", "WEASEL", "WIZARD", "MUMMY_ARMOR1", "DARK_ARMOR1", "BEACH_FISHERMAN", "ZOMBOSS_PIRATE", "DARK_ARMOR2", "GARGANTUAR_EGYPT", "BEACH_SURFER", "ICEAGE_DEFAULT", "ICEAGE_ARMOR2", "WEASEL_HOARDER", "ICEAGE_HUNTER", "IMP_BEACH", "IMP_DARK", "RA", "BEACH_FAST_SWIMMER", "DARK_DEFAULT", "GARGANTUAR_BASIC", "ZOMBOTANY_JALAPENO", "DARK_ARMOR4", "MUMMY_DEFAULT", "TROGLOBITE", "DARK_KING", "IMP_TUTORIAL", "GARGANTUAR_BEACH", "BEACH_SNORKEL", "ZOMBOTANY_PEASHOOTER", "EXPLORER", "MUMMY_ARMOR2", "DARK_JUGGLER", "MUMMY_ARMOR4", "ZOMBOSS_DARK", "DARK_ARMOR3", "IMP_ICEAGE" ],
+    "seenZombies" : [ "BEACH_OCTOPUS", "ZOMBOTANY_SQUASH", "BEACH_DEFAULT", "TUTORIAL_ARMOR4", "WEASEL", "MUMMY_ARMOR1", "WIZARD", "DARK_ARMOR3", "TUTORIAL_DEFAULT", "BEACH_FISHERMAN", "ZOMBOSS_PIRATE", "DARK_ARMOR2", "GARGANTUAR_EGYPT", "BEACH_SURFER", "ICEAGE_DEFAULT", "ICEAGE_ARMOR2", "WEASEL_HOARDER", "ICEAGE_HUNTER", "IMP_BEACH", "IMP_DARK", "RA", "BEACH_FAST_SWIMMER", "DARK_DEFAULT", "TOMB_RAISER", "ZOMBOTANY_JALAPENO", "GARGANTUAR_BASIC", "DARK_ARMOR4", "MUMMY_DEFAULT", "DARK_ARMOR1", "DARK_KING", "IMP_TUTORIAL", "GARGANTUAR_BEACH", "BEACH_SNORKEL", "ZOMBOTANY_PEASHOOTER", "EXPLORER", "MUMMY_ARMOR2", "DARK_JUGGLER", "MUMMY_ARMOR4", "ZOMBOSS_DARK", "TROGLOBITE", "IMP_ICEAGE" ],
     "seedPackets" : {
       "SUNFLOWER" : 24,
-      "SPLIT_PEA" : 34
+      "SPLIT_PEA" : 34,
+      "CACTUS" : 44
     },
     "plantLevels" : {
       "SUNFLOWER" : 36,
-      "SPLIT_PEA" : 3
+      "SPLIT_PEA" : 3,
+      "CACTUS" : 3
     },
     "greenhouseBoosts" : [ "CABBAGE_PULT", "FUME_SHROOM", "PEASHOOTER", "BOMBARD_MINT", "ENFORCE_MINT", "MEGA_GATLING_PEA", "ENCHANT_MINT", "GRAPESHOT", "ICE_SHROOM", "GRAVE_BUSTER", "ELECTRIC_BLUEBERRY", "SUNFLOWER", "POTATO_MINE" ]
   },
@@ -676,6 +678,16 @@
       "read" : false,
       "timestamp" : 1786717607797,
       "formattedText" : "New zombie spotted: ICEAGE_HUNTER!\n2026/08/14  17:56"
+    }, {
+      "text" : "New zombie spotted: TOMB_RAISER!",
+      "read" : false,
+      "timestamp" : 1786733933921,
+      "formattedText" : "New zombie spotted: TOMB_RAISER!\n2026/08/14  22:28"
+    }, {
+      "text" : "New zombie spotted: TUTORIAL_DEFAULT!",
+      "read" : false,
+      "timestamp" : 1786734004494,
+      "formattedText" : "New zombie spotted: TUTORIAL_DEFAULT!\n2026/08/14  22:30"
     } ]
   },
   "shopDaily" : {
@@ -732,7 +744,7 @@
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1786717488922
+          "waveStartTime" : 1786733778436
         }
       }, {
         "id" : "epic_defense",
@@ -913,10 +925,10 @@
       } ],
       "lastDailyRefresh" : "2026-08-14",
       "consecutiveMaxDifficultyWins" : 0,
-      "currentChapter" : "FROSTBITE_CAVES",
+      "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "2h 3m"
+      "timeUntilReset" : "1h 29m"
     }
   }
 }

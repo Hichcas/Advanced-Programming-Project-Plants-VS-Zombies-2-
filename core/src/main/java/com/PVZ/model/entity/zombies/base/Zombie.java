@@ -305,7 +305,7 @@ public abstract class Zombie {
         System.out.println("Zombie [" + alias + "] died at x=" + String.format("%.1f", x) + " row=" + (int) row);
         onDestroy();
         if (isGlowing) {
-            controller.grantPlantFoodDrop();
+            controller.grantPlantFoodDrop(x, y);
         }
         controller.rollLootDrop(x, y);
         controller.removeZombie(this);

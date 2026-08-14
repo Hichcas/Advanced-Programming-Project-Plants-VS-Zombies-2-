@@ -16,6 +16,6 @@ public class DefaultPlantFoodBehavior implements PlantFoodBehavior {
         }
 
         plant.setPlantFoodActive(true);
-        plant.setPlantFoodTicksRemaining(5);
+        plant.setPlantFoodSeconds(5);
     }
 }

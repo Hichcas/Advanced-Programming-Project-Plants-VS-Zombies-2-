@@ -374,6 +374,10 @@ public class EntityRenderer {
                 pamPath = "768/INITIAL/EFFECTS/TUTORIAL_DIAMOND/TUTORIAL_DIAMOND.PAM";
                 clip = "idle";
                 break;
+            case PLANT_FOOD:
+                pamPath = "768/INITIAL/EFFECTS/PLANTFOOD_PICKUP/PLANTFOOD_PICKUP.PAM";
+                clip = "idle";
+                break;
             case POT:
             default:
                 return false;

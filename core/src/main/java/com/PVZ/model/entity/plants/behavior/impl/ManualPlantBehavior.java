@@ -464,7 +464,7 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (context.getZombiesInLane(lane).isEmpty()) {
             return;
         }
-  
+
         int heads = asInt(plant.getRuntimeState().getOrDefault("peaPodHeads", 5), 5);
         heads = Math.max(1, Math.min(5, heads));
         int volleys = plant.isPlantFoodActive() ? 2 : 1;
@@ -533,7 +533,7 @@ public class ManualPlantBehavior implements PlantBehavior {
         }
     }
 
-    private static double asDouble(Object value, double defaultValue) {
+    public static double asDouble(Object value, double defaultValue) {
         if (value instanceof Number number) {
             return number.doubleValue();
         }
