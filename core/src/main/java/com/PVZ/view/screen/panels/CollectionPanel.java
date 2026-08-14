@@ -8,6 +8,8 @@ import com.PVZ.model.enums.ZombieType;
 import com.PVZ.model.enums.commands.CollectionCommand;
 import com.PVZ.model.entity.plants.PlantDefinition;
 import com.PVZ.model.entity.plants.PlantLibrary;
+import com.PVZ.model.entity.plants.UpgradeRule;
+import com.PVZ.model.entity.plants.UpgradeCostPolicy;
 import com.PVZ.model.entity.zombies.base.ZombieTexturePaths;
 import com.PVZ.model.quest.PlantFamilyMapper;
 import com.PVZ.model.status.AppStatus;
@@ -18,6 +20,8 @@ import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.screen.ui.MenuButton;
 import com.PVZ.view.screen.ui.PlantCardActor;
+import com.PVZ.view.screen.ui.UpgradeDescriptionCatalog;
+import com.PVZ.view.screen.ui.UpgradeNotificationPopup;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -65,6 +69,7 @@ public class CollectionPanel extends BasePanel {
     private Slider zombieHpSlider, zombieSpeedSlider, zombieDamageSlider;
     private Label zombieHpTitleLabel, zombieSpeedTitleLabel, zombieDamageTitleLabel;
     private Label zombieHpValueLabel, zombieSpeedValueLabel, zombieDamageValueLabel, zombieInfoLabel;
+    private Label nextUpgradeLabel;
 
     private Table actionButtons;
 
@@ -287,11 +292,12 @@ public class CollectionPanel extends BasePanel {
                 int level = user.collectionState.getPlantLevel(type);
                 int displayLevel = level + 1;
                 int seedPackets = user.collectionState.getSeedPacketCount(type);
-                int requiredPackets = level + 1;
                 int maxDisplayLevel = PlantLibrary.findByType(type)
                     .map(PlantDefinition::getMaxLevel)
                     .orElse(4);
                 boolean maxedOut = displayLevel >= maxDisplayLevel;
+                int requiredPackets = maxedOut ? 0
+                    : UpgradeCostPolicy.currentUpgradeRequirement(displayLevel, maxDisplayLevel);
 
                 Table info = new Table();
                 info.setTouchable(Touchable.disabled);
@@ -393,6 +399,10 @@ public class CollectionPanel extends BasePanel {
         addStatRow(plantStatsTable, costTitleLabel, costSlider, costValueLabel);
         addStatRow(plantStatsTable, levelTitleLabel, levelSlider, levelValueLabel);
         addStatRow(plantStatsTable, seedTitleLabel, seedSlider, seedValueLabel);
+        nextUpgradeLabel = new Label("", new Label.LabelStyle(descFont, Color.valueOf("D7E8FF")));
+        nextUpgradeLabel.setWrap(true);
+        nextUpgradeLabel.setAlignment(Align.center);
+        plantStatsTable.add(nextUpgradeLabel).colspan(3).growX().padTop(4f).padBottom(8f).row();
 
         // ==================== Zombie Stats Table (تفکیک ۳ ستونه) ====================
         zombieStatsTable = new Table();
@@ -483,14 +493,23 @@ public class CollectionPanel extends BasePanel {
             if (def != null) {
                 detailNameLabel.setText(def.getName());
                 int level = user.collectionState.getPlantLevel(selectedPlant);
-                int displayLevel = level + 1; // نمایش لول به صورت Base-1
+                int displayLevel = level + 1; // display level is 1-based
                 int seedPackets = user.collectionState.getSeedPacketCount(selectedPlant);
-                int required = level + 1;
-                // JSON only defines 3 upgrade tiers (levels 2/3/4) per plant, so the
-                // slider - and the button below - must respect that real cap instead
-                // of the old hardcoded 1..10 range.
                 int maxDisplayLevel = def.getMaxLevel();
                 boolean maxedOut = displayLevel >= maxDisplayLevel;
+                int required = maxedOut ? 0 : UpgradeCostPolicy.currentUpgradeRequirement(displayLevel, maxDisplayLevel);
+                if (maxedOut) {
+                    nextUpgradeLabel.setText("MAX LEVEL\nNo further upgrades available.");
+                } else {
+                    int nextLevel = displayLevel + 1;
+                    String nextDescription = UpgradeDescriptionCatalog.find(def.getName(), nextLevel);
+                    if (nextDescription == null || nextDescription.isBlank()) {
+                        nextDescription = "New permanent upgrade available.";
+                    }
+                    nextUpgradeLabel.setText("NEXT UPGRADE — LEVEL " + nextLevel + "\n" + nextDescription);
+                }
+                // The sheet defines the actual upgrade effect per target level.
+                // Seed cost is handled centrally and increases with each tier.
 
                 hpSlider.setRange(0, Math.max(1000, def.getBaseHp()));
                 hpSlider.setValue(def.getBaseHp());
@@ -707,12 +726,38 @@ public class CollectionPanel extends BasePanel {
 
     private void onUpgrade() {
         if (selectedPlant == null) return;
+
+        User user = AppStatus.getCurrentUser();
+        if (user == null || user.collectionState == null) return;
+
+        int oldDisplayLevel = user.collectionState.getPlantLevel(selectedPlant) + 1;
+        PlantDefinition definition = PlantLibrary.findByType(selectedPlant).orElse(null);
+        if (definition == null) return;
+
         OutputDTO result = controller.handle(new CollectionInputDTO(
             CollectionCommand.UPGRADE_PLANT, selectedPlant.name(), null));
+
         statusLabel.setText(result.getMessage());
         statusLabel.setColor(result.isSuccess() ? Color.GREEN : Color.SALMON);
         refreshGrid();
         refreshDetail();
+
+        if (result.isSuccess()) {
+            int newDisplayLevel = user.collectionState.getPlantLevel(selectedPlant) + 1;
+            UpgradeRule upgradeRule = definition.getUpgradeForLevel(newDisplayLevel);
+
+            UpgradeNotificationPopup.show(
+                this,
+                selectedPlant,
+                definition,
+                oldDisplayLevel,
+                newDisplayLevel,
+                upgradeRule,
+                () -> {
+                    statusLabel.setText("Upgrade complete!");
+                    statusLabel.setColor(Color.GREEN);
+                });
+        }
     }
 
     private void onBuy() {
@@ -740,17 +785,34 @@ public class CollectionPanel extends BasePanel {
         PlantDefinition def = PlantLibrary.findByType(plant).orElse(null);
         String plantName = (def != null) ? def.getName() : plant.name();
         Label plantInfo = new Label("Plant: " + plantName, new Label.LabelStyle(bodyFont, Color.WHITE));
-        dialogBox.add(plantInfo).colspan(3).padBottom(15f).row();
+        dialogBox.add(plantInfo).colspan(3).padBottom(6f).row();
 
-        final int DIAMOND_COST_PER_PACK = 5;
-        final int SEEDS_PER_PACK = 10;
-        final int[] packCount = {1};
+        int previewLevel = user.collectionState.getPlantLevel(plant) + 1;
+        int previewMaxLevel = def == null ? 4 : def.getMaxLevel();
+        int previewRequired = UpgradeCostPolicy.currentUpgradeRequirement(previewLevel, previewMaxLevel);
+        int previewOwned = user.collectionState.getSeedPacketCount(plant);
+        String needText = previewRequired > 0
+            ? "Next upgrade: Level " + (previewLevel + 1) + " • Need " + previewRequired + " seed packets • You have " + previewOwned
+            : "Plant is at max level.";
+        Label needInfo = new Label(needText, new Label.LabelStyle(descFont, Color.valueOf("CFE8FF")));
+        needInfo.setWrap(true);
+        dialogBox.add(needInfo).width(380f).colspan(3).padBottom(10f).row();
+
+        final int DIAMOND_COST_PER_PACK = UpgradeCostPolicy.diamondsPerShopPack();
+        final int SEEDS_PER_PACK = UpgradeCostPolicy.seedsPerShopPack();
+        int currentLevel = user.collectionState.getPlantLevel(plant) + 1;
+        int maxLevel = def == null ? 4 : def.getMaxLevel();
+        int requiredSeeds = UpgradeCostPolicy.currentUpgradeRequirement(currentLevel, maxLevel);
+        int ownedSeeds = user.collectionState.getSeedPacketCount(plant);
+        int missingSeeds = Math.max(0, requiredSeeds - ownedSeeds);
+        int initialPacks = Math.max(1, (missingSeeds + SEEDS_PER_PACK - 1) / SEEDS_PER_PACK);
+        final int[] packCount = {initialPacks};
 
         Label seedsInfoLabel = new Label("", new Label.LabelStyle(bodyFont, Color.CYAN));
         Label costInfoLabel = new Label("", new Label.LabelStyle(bodyFont, Color.GOLD));
         Label diamondBalanceLabel = new Label("Your Diamonds: " + user.userStats.getDiamonds(), new Label.LabelStyle(descFont, Color.LIGHT_GRAY));
 
-        Label countLabel = new Label("1 Pack", new Label.LabelStyle(bodyFont, Color.WHITE));
+        Label countLabel = new Label(initialPacks + " Pack" + (initialPacks > 1 ? "s" : ""), new Label.LabelStyle(bodyFont, Color.WHITE));
         countLabel.setAlignment(Align.center);
 
         Runnable updateDialogStats = () -> {
@@ -847,12 +909,8 @@ public class CollectionPanel extends BasePanel {
             user.collectionState.unlockPlant(plant);
         }
 
-        // ۳. فراخوانی کنترلر جهت همگام‌سازی دستور
-        controller.handle(new CollectionInputDTO(
-            CollectionCommand.PURCHASE_PLANT, plant.name(), String.valueOf(packCount)
-        ));
-
-        return new OutputDTO(true, "Successfully bought " + totalSeeds + " seed packets for " + totalDiamonds + " diamonds!");
+        return new OutputDTO(true,
+            "Bought " + totalSeeds + " seed packets for " + totalDiamonds + " diamonds.");
     }
 
     @Override
