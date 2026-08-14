@@ -1,7 +1,6 @@
 package com.PVZ.view.screen.panels;
 
 import com.PVZ.controller.menuControllers.ShopMenuController;
-import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.ShopDaily;
@@ -17,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
@@ -29,15 +29,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
-import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-
 public class ShopPanel extends BasePanel {
+
     private static final float VW = com.PVZ.view.screen.BaseScreen.VIRTUAL_WIDTH;
     private static final float VH = com.PVZ.view.screen.BaseScreen.VIRTUAL_HEIGHT;
     private static final float CARD_W = 430f;
@@ -60,67 +59,50 @@ public class ShopPanel extends BasePanel {
     private String activeTab = "permanent";
 
     public ShopPanel() {
+        // این پنل یک Overlay است؛ پس کل صفحه را می‌پوشاند
         setFillParent(true);
-        build();
+        setTouchable(Touchable.enabled);
+        buildOverlay();
     }
 
-    /**
-     * The shop is only reachable from the greenhouse, so it reuses the same
-     * cropped Zen Garden backdrop the greenhouse panel uses instead of a flat
-     * fill - there is no dedicated "store" background asset in the skin.
-     */
-    private void addBackground() {
-        TextureRegion originalBg = getTextureBank().region("IMAGE_BACKGROUNDS_ZEN_GARDEN");
-        if (originalBg == null) {
-            return;
-        }
-        int cropLeft = 180;
-        int cropRight = 180;
-        TextureRegion cropped = new TextureRegion(
-            originalBg.getTexture(),
-            originalBg.getRegionX() + cropLeft,
-            originalBg.getRegionY(),
-            originalBg.getRegionWidth() - cropLeft - cropRight,
-            originalBg.getRegionHeight());
-        Image bgImage = new Image(new TextureRegionDrawable(cropped));
-        bgImage.setFillParent(true);
-        bgImage.setScaling(Scaling.fill);
-        bgImage.setColor(1f, 1f, 1f, 0.55f);
-        addActor(bgImage);
+    private void buildOverlay() {
+        clearChildren();
 
+        // لایهٔ تاریک پس‌زمینهٔ Overlay
         Image dim = new Image(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
         dim.setFillParent(true);
-        dim.setColor(1f, 1f, 1f, 0.35f);
+        dim.setColor(0f, 0f, 0f, 0.7f);
         addActor(dim);
-    }
 
-    private void build() {
-        clearChildren();
-        addBackground();
+        // پنجرهٔ اصلی فروشگاه (وسط صفحه) - پس‌زمینه زشت و رنگی حذف شد تا شفاف/هم‌رنگ زمینه باشد
+        Table window = new Table();
+        window.setSize(1300f, 850f);
+        window.setPosition((VW - 1300f) / 2f, (VH - 850f) / 2f);
+        window.pad(25f);
+        addActor(window);
 
-        Table root = new Table();
-        root.setFillParent(true);
-        root.pad(36f);
-        addActor(root);
-
+        // Header
         Label title = new Label("SHOP", new Label.LabelStyle(titleFont, Color.WHITE));
         title.setAlignment(Align.center);
         title.setFontScale(1.3f);
-        root.add(title).growX().height(64f).top().row();
+        window.add(title).growX().height(64f).top().row();
 
-        root.add(buildBalanceRow()).height(72f).padBottom(10f).row();
+        window.add(buildBalanceRow()).height(72f).padBottom(10f).row();
 
+        // Tabs
         Table tabs = new Table();
         tabs.defaults().space(10f);
         tabs.add(tabButton("PERMANENT ITEMS", "permanent")).width(340f).height(58f);
         tabs.add(tabButton("DAILY OFFER", "daily")).width(340f).height(58f);
-        root.add(tabs).height(64f).padBottom(14f).row();
+        window.add(tabs).height(64f).padBottom(14f).row();
 
+        // Content - پس‌زمینه کرم‌رنگ خالی کلاً برداشته شد
         content = new Table();
         content.defaults().pad(10f);
-        content.top();
-        root.add(content).grow().row();
+        content.top().center(); // وسط‌چین کردن کارت‌ها برای ظاهر بسیار تمیزتر
+        window.add(content).grow().row();
 
+        // Footer
         Table footer = new Table();
         footer.defaults().pad(8f);
         statusLabel = new Label("", new Label.LabelStyle(bodyFont, Color.WHITE));
@@ -128,11 +110,17 @@ public class ShopPanel extends BasePanel {
         statusLabel.setFontScale(0.7f);
         footer.add(statusLabel).growX().width(720f);
 
-        TextButton closeButton = makeTextButton("BACK", "brown", this::exitShop);
+        TextButton closeButton = makeTextButton("BACK", "brown", this::closeOverlay);
         footer.add(closeButton).width(180f).height(62f);
-        root.add(footer).growX().height(80f).bottom();
+        window.add(footer).growX().height(80f).bottom();
 
         refresh();
+    }
+
+    private void closeOverlay() {
+        // فقط Overlay را حذف می‌کنیم؛ پنل قبلی دست‌نخورده می‌ماند
+        remove();
+        dispose();
     }
 
     private Table buildBalanceRow() {
@@ -155,7 +143,7 @@ public class ShopPanel extends BasePanel {
     private TextButton tabButton(String label, String tabId) {
         return makeTextButton(label, activeTab.equals(tabId) ? "green" : "brown", () -> {
             activeTab = tabId;
-            build();
+            buildOverlay();
         });
     }
 
@@ -177,8 +165,6 @@ public class ShopPanel extends BasePanel {
             buildPermanentPanel();
         }
     }
-
-    // ----------------------------------------------------------- permanent
 
     private void buildPermanentPanel() {
         int card = 0;
@@ -230,12 +216,6 @@ public class ShopPanel extends BasePanel {
         return next;
     }
 
-    /**
-     * Icon + price fused into one button, matching the same pattern the
-     * greenhouse's buy/upgrade buttons already use, instead of a plain text
-     * button - this is what keeps the coin/diamond icon from floating loose
-     * next to the price text.
-     */
     private Table buildPriceButton(int price, boolean diamonds, Runnable action) {
         Drawable up = skin.getDrawable("image_ui_generic_purplebutton_10");
         Drawable down = skin.getDrawable("image_ui_generic_purplebutton_down_10");
@@ -244,7 +224,7 @@ public class ShopPanel extends BasePanel {
         button.setSize(250f, 70f);
 
         Table overlay = new Table();
-        overlay.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.disabled);
+        overlay.setTouchable(Touchable.disabled);
         PamIconActor icon = diamonds
             ? new PamIconActor(DIAMOND_PAM, "idle", 200f, 46f)
             : new PamIconActor(COIN_PAM, "animation", 45f, 23f);
@@ -266,8 +246,6 @@ public class ShopPanel extends BasePanel {
         return t;
     }
 
-    // --------------------------------------------------------------- daily
-
     private void buildDailyPanel(User user) {
         ShopDaily daily = user.shopDaily;
         if (daily == null) {
@@ -286,8 +264,6 @@ public class ShopPanel extends BasePanel {
         name.setFontScale(1.0f);
         panel.add(name).growX().height(56f).row();
 
-        // The one deliberate flourish in the shop: a soft sparkle drifting
-        // behind the offered plant's own idle animation.
         Stack preview = new Stack();
         if (offer != null) {
             preview.add(new PamIconActor(
@@ -323,7 +299,7 @@ public class ShopPanel extends BasePanel {
         boolean available = daily.isAvailableToday();
         Table buyChip = buildPriceButton(1600, false,
             available ? () -> buy("daily", 1, null)
-                      : () -> setStatus("Today's daily offer is already purchased.", true));
+                : () -> setStatus("Today's daily offer is already purchased.", true));
         if (!available) {
             Label purchased = new Label("ALREADY PURCHASED TODAY", new Label.LabelStyle(bodyFont, Color.SALMON));
             purchased.setFontScale(0.6f);
@@ -335,7 +311,6 @@ public class ShopPanel extends BasePanel {
         content.add(panel).width(460f).height(560f);
     }
 
-    /** Ticking countdown to the next local midnight, when the daily offer resets. */
     private static final class CountdownLabel extends Label {
         CountdownLabel(BitmapFont font) {
             super("", new LabelStyle(font, Color.LIME));
@@ -354,8 +329,6 @@ public class ShopPanel extends BasePanel {
             setText(String.format("%02d:%02d:%02d", h, m, s));
         }
     }
-
-    // -------------------------------------------------------------- helpers
 
     private TextButton makeTextButton(String text, String style, Runnable action) {
         TextButton.TextButtonStyle styleData = skin.get(style, TextButton.TextButtonStyle.class);
@@ -425,22 +398,10 @@ public class ShopPanel extends BasePanel {
         diamondLabel.setText(String.valueOf(user.userStats.getDiamonds()));
     }
 
-    private void exitShop() {
-        // The shop is entered from the greenhouse (GreenhouseMenuController), so
-        // backing out returns there too, not to chapter select.
-        AppStatus.setCurrentMenuType(MenuType.GREENHOUSE);
-        com.PVZ.view.screen.manager.PanelManager.getInstance()
-            .performPanelTransition(new GreenhousePanel());
-    }
+    // ====================== PAM HELPERS ======================
 
-    /**
-     * Draws a PAM at a fixed on-screen pixel size regardless of its native
-     * canvas (several of these assets are authored at 390x390), by scaling
-     * the batch's transform matrix around the icon's own center and
-     * restoring it right after.
-     */
     private static void drawScaledPam(SpriteBatch batch, String path, String clip, float nativeCanvas,
-                                       float targetSize, float time, float cx, float cy) {
+                                      float targetSize, float time, float cx, float cy) {
         float scale = targetSize / nativeCanvas;
         Matrix4 old = batch.getTransformMatrix().cpy();
         Matrix4 scaled = old.cpy().translate(cx, cy, 0f).scale(scale, scale, 1f).translate(-cx, -cy, 0f);

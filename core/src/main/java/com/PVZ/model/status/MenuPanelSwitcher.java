@@ -62,6 +62,7 @@ public class MenuPanelSwitcher {
                 break;
             case SHOP:
                 PanelManager.getInstance().performPanelTransition(new ShopPanel());
+                break;
             case QUEST:
                 PanelManager.getInstance().performPanelTransition(new QuestPanel());
                 break;

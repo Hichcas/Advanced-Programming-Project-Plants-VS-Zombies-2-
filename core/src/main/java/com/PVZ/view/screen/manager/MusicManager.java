@@ -9,7 +9,7 @@ public class MusicManager {
     private Music currentMusic;
     private Music previousMusic;
 
-    private boolean isMuted = false;
+    private boolean isMuted = true;
     private float masterVolume = 0.6f;
     private String currentTrackName = "";
     private enum FadeState {

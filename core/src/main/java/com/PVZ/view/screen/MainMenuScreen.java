@@ -1,20 +1,35 @@
 package com.PVZ.view.screen;
 
-import com.PVZ.view.screen.panels.ChapterSelectPanel;
-import com.PVZ.view.screen.panels.LoginPanel;
-import com.PVZ.view.screen.panels.MainMenuPanel;
-import com.PVZ.view.screen.panels.MinigameSelectionPanel;
-import com.PVZ.view.screen.panels.RegisterPanel;
+import com.PVZ.view.screen.panels.*;
+import com.PVZ.view.screen.ui.MenuButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.PVZ.model.enums.MenuType;
+import com.PVZ.model.status.AppStatus;
+import com.PVZ.model.user.User;
+import com.PVZ.view.renderer.EntityRenderer;
+import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.screen.manager.MusicManager;
 import com.PVZ.view.screen.manager.PanelManager;
+import pvz.libpvz.textures.TextureBank;
+import pvz.skin.PvzSkin;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainMenuScreen extends BaseScreen {
     private Texture backgroundTexture;
@@ -27,6 +42,8 @@ public class MainMenuScreen extends BaseScreen {
 
     private boolean particlesEnabled = true;
     private static final String DEFAULT_BACKGROUND = "MainMenu/MainMenu_BackGround2.png";
+
+    private EconomyHud economyHud;
 
     public MainMenuScreen() {
         super();
@@ -51,7 +68,7 @@ public class MainMenuScreen extends BaseScreen {
         PanelManager.getInstance().initialize(stage);
         com.PVZ.view.screen.panels.CheatPanel.attachToggleButton(stage, null);
 
-        switch (com.PVZ.model.status.AppStatus.currentMenuType) {
+        switch (AppStatus.currentMenuType) {
             case MAIN -> PanelManager.getInstance().performPanelTransition(new MainMenuPanel());
             case CHAPTER_AND_LEVEL_SELECTION -> PanelManager.getInstance().performPanelTransition(new ChapterSelectPanel());
             case MINIGAME_SELECTION -> PanelManager.getInstance().performPanelTransition(new MinigameSelectionPanel());
@@ -59,6 +76,11 @@ public class MainMenuScreen extends BaseScreen {
             case REGISTER -> PanelManager.getInstance().performPanelTransition(new RegisterPanel());
             default -> PanelManager.getInstance().performPanelTransition(new MainMenuPanel());
         }
+
+        // ====================== HUD اقتصادی (بالا راست) ======================
+        economyHud = new EconomyHud();
+        stage.addActor(economyHud);
+        economyHud.toFront();
     }
 
     /** تغییر پس‌زمینه و غیرفعال/فعال‌سازی ذرات */
@@ -177,5 +199,105 @@ public class MainMenuScreen extends BaseScreen {
         if (backgroundTexture != null) backgroundTexture.dispose();
         if (blurParticleTexture != null) blurParticleTexture.dispose();
         super.dispose();
+    }
+
+    // ====================== HUD اقتصادی ======================
+    private static class EconomyHud extends Table {
+        private final float MARGIN_RIGHT = 30f;
+        private final float MARGIN_TOP = 110f;
+
+        private final CurrencyButton coinButton;
+        private final CurrencyButton gemButton;
+        private final MenuButton storeButton;
+
+        EconomyHud() {
+            Skin skin = PvzSkin.get();
+            BitmapFont font = FontManager.getInstance().getEnglishMenuFont();
+
+            TextureBank bank = EntityRenderer.getInstance().getTextures();
+            TextureRegion coinRegion = bank.region("IMAGE_UI_GENERIC_BUTTONS_COIN_BUY_NORMAL");
+            TextureRegion gemRegion = bank.region("IMAGE_UI_GENERIC_BUTTONS_PREMIUM_NORMAL");
+            TextureRegion storeRegion = bank.region("IMAGE_UI_HUD_WORLDMAP_BUTTONS_HUD_STORE_NORMAL");
+
+            Drawable coinUp = createNinePatchDrawable(coinRegion, 35, 20, 0, 0);
+            Drawable gemUp = createNinePatchDrawable(gemRegion, 35, 20, 0, 0);
+            Drawable storeUp = new TextureRegionDrawable(storeRegion);
+
+            coinButton = new CurrencyButton(coinUp, font);
+            gemButton = new CurrencyButton(gemUp, font);
+
+            storeButton = new MenuButton(
+                storeUp, "", font,
+                storeUp, storeUp, null,
+                this::openShop
+            );
+            storeButton.setSize(90f, 70f);
+
+            // چیدمان: فروشگاه، الماس، سکه (از راست به چپ)
+            this.add(storeButton).size(90f, 70f).padRight(12f);
+            this.add(gemButton).padRight(12f);
+            this.add(coinButton);
+
+            pack(); // محاسبه اولیه ابعاد
+        }
+
+        private void openShop() {
+
+                ShopPanel shopPanel = new ShopPanel();
+                shopPanel.setFillParent(true);
+                getStage().addActor(shopPanel);
+                shopPanel.toFront();
+
+        }
+
+        @Override
+        public void act(float delta) {
+            super.act(delta);
+            this.toFront();
+
+            User user = AppStatus.currentUser;
+            if (user != null && user.userStats != null) {
+                coinButton.setValue(user.userStats.getCoins());
+                gemButton.setValue(user.userStats.getDiamonds());
+            } else {
+                coinButton.setValue(0);
+                gemButton.setValue(0);
+            }
+
+            pack(); // به‌روزرسانی عرض بر اساس اعداد جدید
+            setPosition(
+                VIRTUAL_WIDTH - getWidth() - MARGIN_RIGHT,
+                VIRTUAL_HEIGHT - MARGIN_TOP
+            );
+        }
+
+        private static NinePatchDrawable createNinePatchDrawable(TextureRegion region,
+                                                                 int left, int right,
+                                                                 int top, int bottom) {
+            if (region == null) {
+                return null;
+            }
+            NinePatch patch = new NinePatch(region, left, right, top, bottom);
+            return new NinePatchDrawable(patch);
+        }
+    }
+
+    /** دکمه‌ای که عرضش بر اساس عدد تغییر می‌کند و پس‌زمینه‌اش NinePatch است */
+    private static class CurrencyButton extends MenuButton {
+        private final NumberFormat numberFormat;
+
+        CurrencyButton(Drawable background, BitmapFont font) {
+            super(background, "", font, background, background, null, null);
+            this.numberFormat = NumberFormat.getNumberInstance(Locale.US);
+            setSize(200f, 70f);
+        }
+
+        void setValue(int value) {
+            String text = numberFormat.format(value);
+            setText(text);
+
+            float desiredWidth = Math.max(200f, getTextWidth() + 50f);
+            setSize(desiredWidth, 70f);
+        }
     }
 }
