@@ -10,12 +10,13 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 1999650,
-    "diamonds" : 299860,
+    "coins" : 1998150,
+    "diamonds" : 299849,
     "stagesCompleted" : 0,
     "highestScore" : 965000,
     "dailyQuestsCompleted" : 0,
-    "nonDailyQuestsCompleted" : 0
+    "nonDailyQuestsCompleted" : 0,
+    "purchasedPlantFood" : 2
   },
   "progressState" : {
     "completedLevels" : {
@@ -34,7 +35,7 @@
   },
   "collectionState" : {
     "unlockedPlants" : [ "IMITATER", "SUN_BEAN", "MEGA_GATLING_PEA", "TANGLE_KELP", "REINFORCE_MINT", "TWIN_SUNFLOWER", "GOO_PEASHOOTER", "ICEBERG_LETTUCE", "CHOMPER", "GOLD_BLOOM", "PEASHOOTER", "CHERRY_BOMB", "GRAVE_BUSTER", "PEA_POD", "CAULIPOWER", "WALL_NUT", "THREEPEATER", "CITRON", "PUFF_SHROOM", "JALAPENO", "STARFRUIT", "SQUASH", "PRIMAL_SUNFLOWER", "CAT_TAIL", "SWEET_POTATO", "CABBAGE_PULT", "GIANT_WALLNUT", "SEA_SHROOM", "WASABI_WHIP", "APPEASE_MINT", "SNOW_PEA", "FIRE_PEASHOOTER", "GARLIC", "PIERCE_MINT", "SPLIT_PEA", "SUN_SHROOM", "ENDURIAN", "PRIMAL_POTATO_MINE", "TALL_NUT", "ICE_SHROOM", "BOMBARD_MINT", "MELON_PULT", "DOOM_SHROOM", "HYPNO_SHROOM", "EXPLODE_O_NUT", "ENCHANT_MINT", "MAGNET_SHROOM", "CAT_TAIL_MINT", "BOWLING_BULB", "REPEATER", "PUMPKIN", "CACTUS", "PEPPER_PULT", "ENLIGHTEN_MINT", "KERNEL_PULT", "FUME_SHROOM", "SUNFLOWER", "GRAPESHOT", "ARMA_MINT", "TORCHWOOD", "LILY_PAD", "PHAT_BEET", "ENFORCE_MINT", "KIWIBEAST", "BONK_CHOY", "HOT_POTATO", "ELECTRIC_BLUEBERRY", "ROTOBAGA", "WINTER_MELON", "WALLNUT_BOWLING", "POTATO_MINE" ],
-    "seenZombies" : [ "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "IMP_ICEAGE", "GARGANTUAR_EGYPT", "ZOMBOSS_DARK", "IMP_BEACH", "BEACH_OCTOPUS", "DARK_JUGGLER", "GARGANTUAR_BASIC", "ZOMBOTANY_JALAPENO", "RA", "IMP_DARK", "DARK_ARMOR4", "TROGLOBITE", "DARK_ARMOR1", "BEACH_SNORKEL", "ZOMBOSS_PIRATE", "GARGANTUAR_BEACH", "ICEAGE_ARMOR2", "MUMMY_ARMOR2", "DARK_KING", "DARK_DEFAULT", "BEACH_FISHERMAN", "WEASEL", "MUMMY_ARMOR1", "IMP_TUTORIAL", "BEACH_SURFER", "ZOMBOTANY_PEASHOOTER", "DARK_ARMOR2", "BEACH_FAST_SWIMMER", "EXPLORER", "WEASEL_HOARDER", "MUMMY_DEFAULT", "WIZARD", "DARK_ARMOR3", "BEACH_DEFAULT", "ICEAGE_DEFAULT", "ZOMBOTANY_SQUASH" ],
+    "seenZombies" : [ "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "DARK_ARMOR3", "IMP_ICEAGE", "GARGANTUAR_EGYPT", "ZOMBOSS_DARK", "IMP_BEACH", "BEACH_OCTOPUS", "DARK_JUGGLER", "GARGANTUAR_BASIC", "TROGLOBITE", "RA", "IMP_DARK", "DARK_ARMOR4", "DARK_ARMOR1", "BEACH_SNORKEL", "ZOMBOSS_PIRATE", "GARGANTUAR_BEACH", "ICEAGE_ARMOR2", "MUMMY_ARMOR2", "DARK_KING", "DARK_DEFAULT", "BEACH_FISHERMAN", "WEASEL", "MUMMY_ARMOR1", "ZOMBOTANY_JALAPENO", "IMP_TUTORIAL", "BEACH_SURFER", "ZOMBOTANY_PEASHOOTER", "DARK_ARMOR2", "BEACH_FAST_SWIMMER", "EXPLORER", "WEASEL_HOARDER", "MUMMY_DEFAULT", "WIZARD", "BEACH_DEFAULT", "ICEAGE_DEFAULT", "ZOMBOTANY_SQUASH" ],
     "seedPackets" : {
       "SUNFLOWER" : 10
     },
@@ -120,12 +121,12 @@
       "empty" : true,
       "readyForPlanting" : true
     }, {
-      "unlocked" : false,
+      "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : false
+      "readyForPlanting" : true
     }, {
       "unlocked" : false,
       "plantType" : null,
@@ -183,8 +184,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 1,
-    "numberOfUnlockedPots" : 11
+    "numberOfUnlockedPots" : 12,
+    "numberOfLockedPots" : 0
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -293,377 +294,377 @@
       "formattedText" : "New zombie spotted: WIZARD!\n2026/08/11  21:23"
     }, {
       "text" : "New zombie spotted: MUMMY_ARMOR2!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786703366368,
       "formattedText" : "New zombie spotted: MUMMY_ARMOR2!\n2026/08/14  13:59"
     }, {
       "text" : "New zombie spotted: RA!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786703370677,
       "formattedText" : "New zombie spotted: RA!\n2026/08/14  13:59"
     }, {
       "text" : "New zombie spotted: EXPLORER!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786703376186,
       "formattedText" : "New zombie spotted: EXPLORER!\n2026/08/14  13:59"
     }, {
       "text" : "New plant unlocked: Twin Sunflower!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Twin Sunflower!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Sun-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Sun-shroom!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Primal Sunflower!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Primal Sunflower!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Gold Bloom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Gold Bloom!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Repeater!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Repeater!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Threepeater!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Threepeater!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Snow Pea!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Snow Pea!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Rotobaga!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Rotobaga!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Pea Pod!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Pea Pod!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Split Pea!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Split Pea!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Citron!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Citron!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Caulipower!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Caulipower!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Electric Blueberry!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Electric Blueberry!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Bowling Bulb!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Bowling Bulb!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Cactus!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Cactus!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Fire Peashooter!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Fire Peashooter!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Starfruit!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Starfruit!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Goo Peashooter!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Goo Peashooter!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Mega Gatling Pea!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Mega Gatling Pea!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Sea-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Sea-shroom!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Puff-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Puff-shroom!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Fume-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Fume-shroom!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Cabbage-pult!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Cabbage-pult!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Kernel-pult!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Kernel-pult!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Melon-pult!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Melon-pult!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Winter Melon!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Winter Melon!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Pepper-pult!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Pepper-pult!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Potato Mine!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Potato Mine!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Primal Potato Mine!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Primal Potato Mine!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Cherry Bomb!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Cherry Bomb!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Squash!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Squash!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Grapeshot!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Grapeshot!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Jalapeno!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Jalapeno!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Doom-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Doom-shroom!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Tangle Kelp!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Tangle Kelp!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Iceberg Lettuce!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Iceberg Lettuce!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Bonk Choy!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Bonk Choy!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Phat Beet!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Phat Beet!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Chomper!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Chomper!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Wasabi Whip!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Wasabi Whip!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Kiwibeast!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Kiwibeast!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Wall-nut!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Wall-nut!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Tall-nut!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Tall-nut!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Endurian!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Endurian!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Garlic!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Garlic!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Sweet Potato!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Sweet Potato!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Explode-o-nut!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Explode-o-nut!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Pumpkin!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Pumpkin!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Sun Bean!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Sun Bean!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Torchwood!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Torchwood!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Magnet-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Magnet-shroom!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Hypno-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Hypno-shroom!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Cat-tail!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Cat-tail!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Imitater!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Imitater!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Ice-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Ice-shroom!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Lily Pad!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Lily Pad!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Hot Potato!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Hot Potato!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Grave Buster!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Grave Buster!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Enlighten-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Enlighten-mint!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Appease-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Appease-mint!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Arma-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Arma-mint!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Bombard-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Bombard-mint!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Enforce-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Enforce-mint!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Reinforce-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Reinforce-mint!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Enchant-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Enchant-mint!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Pierce-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Pierce-mint!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: catTail-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: catTail-mint!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Bowling Wallnut!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Bowling Wallnut!\n2026/08/14  14:23"
     }, {
       "text" : "New plant unlocked: Giant Wallnut!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704824872,
       "formattedText" : "New plant unlocked: Giant Wallnut!\n2026/08/14  14:23"
     }, {
       "text" : "New zombie spotted: BEACH_SNORKEL!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704901861,
       "formattedText" : "New zombie spotted: BEACH_SNORKEL!\n2026/08/14  14:25"
     }, {
       "text" : "New zombie spotted: IMP_BEACH!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704907086,
       "formattedText" : "New zombie spotted: IMP_BEACH!\n2026/08/14  14:25"
     }, {
       "text" : "New zombie spotted: BEACH_FISHERMAN!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786704913701,
       "formattedText" : "New zombie spotted: BEACH_FISHERMAN!\n2026/08/14  14:25"
     } ]
@@ -698,9 +699,9 @@
           "n" : 2
         },
         "active" : true,
+        "formattedDescription" : "Win without losing more than 2 plants",
         "runtimeState" : { },
-        "formattedTitle" : "Economic Herbivore",
-        "formattedDescription" : "Win without losing more than 2 plants"
+        "formattedTitle" : "Economic Herbivore"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -719,9 +720,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "runtimeState" : { },
-        "formattedTitle" : "Speed Run",
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
+        "formattedTitle" : "Speed Run"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -740,9 +741,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedDescription" : "End a level with exactly 0 sun",
         "runtimeState" : { },
-        "formattedTitle" : "Master of Defense",
-        "formattedDescription" : "End a level with exactly 0 sun"
+        "formattedTitle" : "Master of Defense"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -761,9 +762,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedDescription" : "Win a day level using only mushrooms",
         "runtimeState" : { },
-        "formattedTitle" : "Day or Night",
-        "formattedDescription" : "Win a day level using only mushrooms"
+        "formattedTitle" : "Day or Night"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -784,9 +785,9 @@
           "n" : 20
         },
         "active" : true,
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
         "runtimeState" : { },
-        "formattedTitle" : "Lawnmower Time",
-        "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
+        "formattedTitle" : "Lawnmower Time"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -807,9 +808,9 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
         "runtimeState" : { },
-        "formattedTitle" : "Chapter Hunter",
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
+        "formattedTitle" : "Chapter Hunter"
       }, {
         "id" : "story_chapter_hunt_FROSTBITE_CAVES",
         "title" : "Chapter Hunter",
@@ -830,9 +831,9 @@
           "chapter" : "FROSTBITE_CAVES"
         },
         "active" : true,
+        "formattedDescription" : "Defeat 50 zombies from FROSTBITE_CAVES",
         "runtimeState" : { },
-        "formattedTitle" : "Chapter Hunter",
-        "formattedDescription" : "Defeat 50 zombies from FROSTBITE_CAVES"
+        "formattedTitle" : "Chapter Hunter"
       }, {
         "id" : "daily_no_symmetry_1786703233768",
         "title" : "No OCD",
@@ -851,9 +852,9 @@
         },
         "parameters" : { },
         "active" : false,
+        "formattedDescription" : "No symmetry in garden except middle row",
         "runtimeState" : { },
-        "formattedTitle" : "No OCD",
-        "formattedDescription" : "No symmetry in garden except middle row"
+        "formattedTitle" : "No OCD"
       }, {
         "id" : "daily_almost_win_1786703233771",
         "title" : "Almost Victory",
@@ -872,9 +873,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedDescription" : "Kill 10 zombies in column 1 of a row without a lawnmower",
         "runtimeState" : { },
-        "formattedTitle" : "Almost Victory",
-        "formattedDescription" : "Kill 10 zombies in column 1 of a row without a lawnmower"
+        "formattedTitle" : "Almost Victory"
       }, {
         "id" : "daily_no_family_1786703233771",
         "title" : "Blossom in Limitations",
@@ -895,16 +896,16 @@
           "family" : "CAT_TAIL_MINT"
         },
         "active" : false,
+        "formattedDescription" : "Win without using any CAT_TAIL_MINT plant",
         "runtimeState" : { },
-        "formattedTitle" : "Blossom in Limitations",
-        "formattedDescription" : "Win without using any CAT_TAIL_MINT plant"
+        "formattedTitle" : "Blossom in Limitations"
       } ],
       "lastDailyRefresh" : "2026-08-14",
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "BIG_WAVE_BEACH",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "9h 32m"
+      "timeUntilReset" : "6h 42m"
     }
   }
 }
