@@ -224,7 +224,6 @@ public class ChapterSelectPanel extends BasePanel {
             new Runnable() {
                 @Override
                 public void run() {
-                    // TODO: باز کردن کوئست‌ها
                     AppStatus.setCurrentMenuType(MenuType.QUEST);
                 }
             }

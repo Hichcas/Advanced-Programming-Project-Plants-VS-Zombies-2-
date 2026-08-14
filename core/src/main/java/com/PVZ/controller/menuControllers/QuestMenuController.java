@@ -125,7 +125,7 @@ public class QuestMenuController {
 
     private OutputDTO claimQuest(QuestManager qm, String questId) {
         if (questId == null || questId.isBlank())
-            return new OutputDTO(false, "Quest ID is required. Usage: quest claim -i <id>");
+            return new OutputDTO(false, "Quest ID is required.");
 
         Optional<Quest> opt = qm.getActiveQuests().stream()
             .filter(q -> q.getId().equals(questId))
@@ -136,33 +136,40 @@ public class QuestMenuController {
         if (!quest.isCompleted()) return new OutputDTO(false, "Quest not yet completed.");
         if (quest.isClaimed()) return new OutputDTO(false, "Reward already claimed.");
 
-        applyReward(quest.getReward());
+        String rewardDescription = applyReward(quest.getReward());
         quest.claim();
-        String username = AppStatus.currentUser.profile.getUsername();
-        UserRegistry.touch(username);
-        return new OutputDTO(true, "Reward claimed: " + describeReward(quest.getReward()));
+        UserRegistry.touch(AppStatus.currentUser.profile.getUsername());
+        return new OutputDTO(true, "Reward claimed: " + rewardDescription);
     }
 
-    private void applyReward(Quest.Reward reward) {
-        if (reward == null) return;
+    private String applyReward(Quest.Reward reward) {
+        if (reward == null) return "None";
         User user = AppStatus.currentUser;
-        if (user == null) return;
+        if (user == null) return "None";
 
         switch (reward.getType()) {
-            case COINS -> user.userStats.addCoins(reward.getAmount());
-            case DIAMONDS -> user.userStats.addDiamonds(reward.getAmount());
-            case UNLOCK_PLANT -> {
-                if (reward.getTargetPlant() != null)
+            case COINS:
+                user.userStats.addCoins(reward.getAmount());
+                return reward.getAmount() + " Coins";
+            case DIAMONDS:
+                user.userStats.addDiamonds(reward.getAmount());
+                return reward.getAmount() + " Gems";
+            case UNLOCK_PLANT:
+                if (reward.getTargetPlant() != null) {
                     user.collectionState.unlockPlant(reward.getTargetPlant());
-            }
-            case SEED_PACKETS -> {
+                    return "Plant Unlocked: " + reward.getTargetPlant().getDisplayName();
+                }
+                return "Unlock Plant";
+            case SEED_PACKETS:
                 if (user.collectionState != null && !user.collectionState.getUnlockedPlants().isEmpty()) {
                     PlantType[] unlocked = user.collectionState.getUnlockedPlants().toArray(new PlantType[0]);
                     PlantType randomPlant = unlocked[new Random().nextInt(unlocked.length)];
                     user.collectionState.addSeedPackets(randomPlant, reward.getAmount());
+                    return reward.getAmount() + " Seed Packets for " + randomPlant.getDisplayName();
                 }
-            }
+                return reward.getAmount() + " Seed Packets";
         }
+        return "None";
     }
 
     private String describeReward(Quest.Reward r) {
