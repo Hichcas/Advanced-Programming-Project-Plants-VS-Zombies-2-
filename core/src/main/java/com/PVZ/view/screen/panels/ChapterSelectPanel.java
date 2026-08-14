@@ -179,7 +179,7 @@ public class ChapterSelectPanel extends BasePanel {
             new Runnable() {
                 @Override
                 public void run() {
-                    // TODO: باز کردن الماناک
+                    AppStatus.setCurrentMenuType(MenuType.COLLECTION);
                 }
             }
         );
