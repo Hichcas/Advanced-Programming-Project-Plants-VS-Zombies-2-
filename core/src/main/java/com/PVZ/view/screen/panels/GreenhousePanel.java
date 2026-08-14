@@ -118,6 +118,8 @@ public class GreenhousePanel extends BasePanel {
         backBtn.setPosition(BaseScreen.VIRTUAL_WIDTH - 250f, 30f);
         addActor(backBtn);
 
+        addActor(buildShopButton());
+
         buildGrid();
 
         // ======================= Popup جایزه (بدون آیکون) =======================
@@ -257,6 +259,66 @@ public class GreenhousePanel extends BasePanel {
         popupTextLabel.setText(message);
         popupTable.setVisible(true);
         popupTable.toFront();
+    }
+
+    /**
+     * "enter shop" is only reachable from the greenhouse per the design doc.
+     * Styled like the other greenhouse buttons (purple button skin) with an
+     * animated seed-packet PAM icon and a passing sparkle for a bit of shop flair.
+     */
+    private Stack buildShopButton() {
+        Skin skin = PvzSkin.get();
+        BitmapFont font = skin.getFont("FBUSV8C5EI_1_outline");
+        Texture purpleUp = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON");
+        Texture purpleDown = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON_DOWN");
+        Texture marker = new Texture(Gdx.files.internal("global/button_marker.png"));
+
+        MenuButton shopBtn = new MenuButton(purpleUp, "SHOP", font, purpleDown, null, marker,
+            () -> com.PVZ.view.screen.manager.PanelManager.getInstance()
+                .performPanelTransition(new ShopPanel()));
+        shopBtn.setSize(220f, 74f);
+
+        // Small, fixed-size icon tucked in the button's left margin so it sits
+        // beside the label instead of covering it (the PRIZE_COINS_MID PAM is
+        // authored at 390x390 - drawing it unscaled would swallow the whole button).
+        ShopIconGlintActor icon = new ShopIconGlintActor();
+        icon.setTouchable(Touchable.disabled);
+        icon.setSize(220f, 74f);
+
+        Stack stack = new Stack();
+        stack.setSize(220f, 74f);
+        stack.setPosition(30f, 30f);
+        stack.add(shopBtn);
+        stack.add(icon);
+        return stack;
+    }
+
+    /** Small fixed-size coin-pile icon drawn at the button's left edge, behind the label. */
+    private static final class ShopIconGlintActor extends Actor {
+        private static final String COINS_PAM = "768/INITIAL/EFFECTS/PRIZE_COINS_MID/PRIZE_COINS_MID.PAM";
+        private static final float NATIVE_CANVAS = 390f;
+        private static final float ICON_SIZE = 44f;
+        private float time;
+
+        @Override
+        public void act(float delta) {
+            super.act(delta);
+            time += delta;
+        }
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            SpriteBatch sb = (SpriteBatch) batch;
+            float cx = getX() + 34f;
+            float cy = getY() + getHeight() / 2f;
+            float scale = ICON_SIZE / NATIVE_CANVAS;
+            com.badlogic.gdx.math.Matrix4 old = sb.getTransformMatrix().cpy();
+            com.badlogic.gdx.math.Matrix4 scaled = old.cpy()
+                .translate(cx, cy, 0f).scale(scale, scale, 1f).translate(-cx, -cy, 0f);
+            sb.setTransformMatrix(scaled);
+            EntityRenderer.getInstance().renderPam(sb, COINS_PAM, "idle", time, cx, cy);
+            sb.setTransformMatrix(old);
+        }
     }
 
     private void onBack() {
