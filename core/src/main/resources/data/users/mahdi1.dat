@@ -34,8 +34,10 @@
   },
   "collectionState" : {
     "unlockedPlants" : [ "SUNFLOWER", "PEASHOOTER" ],
-    "seenZombies" : [ "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "IMP_ICEAGE", "GARGANTUAR_EGYPT", "ZOMBOSS_DARK", "BEACH_OCTOPUS", "DARK_JUGGLER", "GARGANTUAR_BASIC", "DARK_ARMOR3", "IMP_DARK", "DARK_ARMOR4", "ZOMBOTANY_JALAPENO", "TROGLOBITE", "ZOMBOSS_PIRATE", "GARGANTUAR_BEACH", "ICEAGE_ARMOR2", "DARK_DEFAULT", "DARK_KING", "DARK_ARMOR1", "MUMMY_ARMOR1", "IMP_TUTORIAL", "BEACH_SURFER", "ZOMBOTANY_PEASHOOTER", "DARK_ARMOR2", "BEACH_FAST_SWIMMER", "WEASEL_HOARDER", "MUMMY_DEFAULT", "WEASEL", "WIZARD", "BEACH_DEFAULT", "ICEAGE_DEFAULT", "ZOMBOTANY_SQUASH" ],
-    "seedPackets" : { },
+    "seenZombies" : [ "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "IMP_ICEAGE", "GARGANTUAR_EGYPT", "ZOMBOSS_DARK", "BEACH_OCTOPUS", "DARK_JUGGLER", "GARGANTUAR_BASIC", "DARK_ARMOR1", "RA", "IMP_DARK", "DARK_ARMOR4", "DARK_ARMOR3", "WIZARD", "ZOMBOSS_PIRATE", "GARGANTUAR_BEACH", "ICEAGE_ARMOR2", "MUMMY_ARMOR2", "DARK_KING", "DARK_DEFAULT", "WEASEL", "MUMMY_ARMOR1", "IMP_TUTORIAL", "BEACH_SURFER", "ZOMBOTANY_PEASHOOTER", "DARK_ARMOR2", "BEACH_FAST_SWIMMER", "EXPLORER", "WEASEL_HOARDER", "MUMMY_DEFAULT", "TROGLOBITE", "ZOMBOTANY_JALAPENO", "BEACH_DEFAULT", "ICEAGE_DEFAULT", "ZOMBOTANY_SQUASH" ],
+    "seedPackets" : {
+      "SUNFLOWER" : 10
+    },
     "plantLevels" : { },
     "greenhouseBoosts" : [ "SUNFLOWER", "PEASHOOTER" ]
   },
@@ -289,6 +291,21 @@
       "read" : true,
       "timestamp" : 1786470797635,
       "formattedText" : "New zombie spotted: WIZARD!\n2026/08/11  21:23"
+    }, {
+      "text" : "New zombie spotted: MUMMY_ARMOR2!",
+      "read" : false,
+      "timestamp" : 1786703366368,
+      "formattedText" : "New zombie spotted: MUMMY_ARMOR2!\n2026/08/14  13:59"
+    }, {
+      "text" : "New zombie spotted: RA!",
+      "read" : false,
+      "timestamp" : 1786703370677,
+      "formattedText" : "New zombie spotted: RA!\n2026/08/14  13:59"
+    }, {
+      "text" : "New zombie spotted: EXPLORER!",
+      "read" : false,
+      "timestamp" : 1786703376186,
+      "formattedText" : "New zombie spotted: EXPLORER!\n2026/08/14  13:59"
     } ]
   },
   "shopDaily" : {
@@ -321,9 +338,9 @@
           "n" : 2
         },
         "active" : true,
+        "formattedTitle" : "Economic Herbivore",
         "runtimeState" : { },
-        "formattedDescription" : "Win without losing more than 2 plants",
-        "formattedTitle" : "Economic Herbivore"
+        "formattedDescription" : "Win without losing more than 2 plants"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -342,11 +359,11 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1786463553426
+          "waveStartTime" : 1786703265409
         },
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
-        "formattedTitle" : "Speed Run"
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -365,9 +382,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedTitle" : "Master of Defense",
         "runtimeState" : { },
-        "formattedDescription" : "End a level with exactly 0 sun",
-        "formattedTitle" : "Master of Defense"
+        "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -386,9 +403,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedTitle" : "Day or Night",
         "runtimeState" : { },
-        "formattedDescription" : "Win a day level using only mushrooms",
-        "formattedTitle" : "Day or Night"
+        "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -409,9 +426,9 @@
           "n" : 20
         },
         "active" : true,
+        "formattedTitle" : "Lawnmower Time",
         "runtimeState" : { },
-        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
-        "formattedTitle" : "Lawnmower Time"
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -422,7 +439,7 @@
         "targetCount" : 50,
         "currentCount" : 50,
         "completed" : true,
-        "claimed" : false,
+        "claimed" : true,
         "reward" : {
           "type" : "SEED_PACKETS",
           "amount" : 10,
@@ -432,16 +449,104 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
+        "formattedTitle" : "Chapter Hunter",
         "runtimeState" : { },
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
-        "formattedTitle" : "Chapter Hunter"
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
+      }, {
+        "id" : "story_chapter_hunt_FROSTBITE_CAVES",
+        "title" : "Chapter Hunter",
+        "descriptionTemplate" : "Defeat 50 zombies from {chapter}",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "chapter_zombie_kill",
+        "targetCount" : 50,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "chapter" : "FROSTBITE_CAVES"
+        },
+        "active" : true,
+        "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { },
+        "formattedDescription" : "Defeat 50 zombies from FROSTBITE_CAVES"
+      }, {
+        "id" : "daily_no_symmetry_1786703233768",
+        "title" : "No OCD",
+        "descriptionTemplate" : "No symmetry in garden except middle row",
+        "type" : "DAILY",
+        "priority" : "MEDIUM",
+        "conditionKey" : "no_symmetry",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "COINS",
+          "amount" : 800,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "formattedTitle" : "No OCD",
+        "runtimeState" : { },
+        "formattedDescription" : "No symmetry in garden except middle row"
+      }, {
+        "id" : "daily_almost_win_1786703233771",
+        "title" : "Almost Victory",
+        "descriptionTemplate" : "Kill 10 zombies in column 1 of a row without a lawnmower",
+        "type" : "DAILY",
+        "priority" : "MEDIUM",
+        "conditionKey" : "lawnless_col1_kill",
+        "targetCount" : 10,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "COINS",
+          "amount" : 300,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "formattedTitle" : "Almost Victory",
+        "runtimeState" : { },
+        "formattedDescription" : "Kill 10 zombies in column 1 of a row without a lawnmower"
+      }, {
+        "id" : "daily_no_family_1786703233771",
+        "title" : "Blossom in Limitations",
+        "descriptionTemplate" : "Win without using any {family} plant",
+        "type" : "DAILY",
+        "priority" : "HIGH",
+        "conditionKey" : "no_family_used",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 100,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "family" : "CAT_TAIL_MINT"
+        },
+        "active" : true,
+        "formattedTitle" : "Blossom in Limitations",
+        "runtimeState" : { },
+        "formattedDescription" : "Win without using any cat-tail-mint plant"
       } ],
-      "lastDailyRefresh" : null,
+      "lastDailyRefresh" : "2026-08-14",
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "3h 13m"
+      "timeUntilReset" : "9h 59m"
     }
   }
 }

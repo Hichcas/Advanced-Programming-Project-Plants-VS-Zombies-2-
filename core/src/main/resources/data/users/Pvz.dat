@@ -10,13 +10,12 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 90250,
-    "diamonds" : 1000052,
+    "coins" : 100400,
+    "diamonds" : 1000301,
     "stagesCompleted" : 0,
-    "highestScore" : 976750,
+    "highestScore" : 0,
     "dailyQuestsCompleted" : 0,
-    "nonDailyQuestsCompleted" : 0,
-    "purchasedPlantFood" : 3
+    "nonDailyQuestsCompleted" : 0
   },
   "progressState" : {
     "completedLevels" : {
@@ -34,18 +33,13 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "CHOMPER", "GIANT_WALLNUT", "ROTOBAGA", "JALAPENO", "PUFF_SHROOM", "PEA_POD", "THREEPEATER", "PEPPER_PULT", "LILY_PAD", "PEASHOOTER", "ARMA_MINT", "GOO_PEASHOOTER", "WINTER_MELON", "EXPLODE_O_NUT", "KERNEL_PULT", "ELECTRIC_BLUEBERRY", "PRIMAL_POTATO_MINE", "POTATO_MINE", "SQUASH", "SPLIT_PEA", "SWEET_POTATO", "ENLIGHTEN_MINT", "CABBAGE_PULT", "GARLIC", "CAT_TAIL_MINT", "WALLNUT_BOWLING", "CAT_TAIL", "BOMBARD_MINT", "SUN_SHROOM", "ENCHANT_MINT", "PIERCE_MINT", "GRAVE_BUSTER", "ICE_SHROOM", "SUNFLOWER", "CACTUS", "MAGNET_SHROOM", "PRIMAL_SUNFLOWER", "HYPNO_SHROOM", "BONK_CHOY", "FUME_SHROOM", "APPEASE_MINT", "CAULIPOWER", "FIRE_PEASHOOTER", "ENFORCE_MINT", "CHERRY_BOMB", "STARFRUIT", "TORCHWOOD", "DOOM_SHROOM", "GRAPESHOT", "WALL_NUT", "PHAT_BEET", "CITRON", "ICEBERG_LETTUCE", "SNOW_PEA", "ENDURIAN", "TANGLE_KELP", "HOT_POTATO", "KIWIBEAST", "TWIN_SUNFLOWER", "MEGA_GATLING_PEA", "MELON_PULT", "REPEATER", "REINFORCE_MINT", "GOLD_BLOOM", "WASABI_WHIP", "IMITATER", "SUN_BEAN", "BOWLING_BULB", "PUMPKIN", "SEA_SHROOM", "TALL_NUT" ],
-    "seenZombies" : [ "ICEAGE_ARMOR1", "PHARAOH", "BEACH_DEFAULT", "GARGANTUAR_DARK", "TUTORIAL_ARMOR1", "TUTORIAL_ARMOR4", "WEASEL", "MUMMY_ARMOR1", "ZOMBOSS_EGYPT", "TUTORIAL_DEFAULT", "BEACH_FISHERMAN", "DARK_ARMOR2", "BEACH_SURFER", "ICEAGE_DEFAULT", "ICEAGE_HUNTER", "IMP_BEACH", "GARGANTUAR_ICEAGE", "IMP_DARK", "RA", "ICEAGE_ARMOR3", "TOMB_RAISER", "DARK_DEFAULT", "GARGANTUAR_BASIC", "DARK_ARMOR4", "MUMMY_DEFAULT", "IMP_EGYPT", "DODO", "BEACH_ARMOR1", "BEACH_ARMOR2", "ZOMBOTANY_PEASHOOTER", "EXPLORER", "TUTORIAL_ARMOR2", "BEACH_SNORKEL", "MUMMY_ARMOR2", "DARK_JUGGLER", "MUMMY_ARMOR4", "DARK_ARMOR1", "IMP_ICEAGE" ],
+    "unlockedPlants" : [ "IMITATER", "SUN_BEAN", "MEGA_GATLING_PEA", "TANGLE_KELP", "REINFORCE_MINT", "CHOMPER", "GOO_PEASHOOTER", "ICEBERG_LETTUCE", "TWIN_SUNFLOWER", "GOLD_BLOOM", "PEASHOOTER", "CHERRY_BOMB", "GRAVE_BUSTER", "PEA_POD", "CAULIPOWER", "WALL_NUT", "THREEPEATER", "CITRON", "PUFF_SHROOM", "JALAPENO", "SQUASH", "STARFRUIT", "CAT_TAIL", "PRIMAL_SUNFLOWER", "SWEET_POTATO", "CABBAGE_PULT", "GIANT_WALLNUT", "SEA_SHROOM", "APPEASE_MINT", "WASABI_WHIP", "GARLIC", "PIERCE_MINT", "FIRE_PEASHOOTER", "SNOW_PEA", "SPLIT_PEA", "SUN_SHROOM", "ENDURIAN", "PRIMAL_POTATO_MINE", "BOMBARD_MINT", "ICE_SHROOM", "TALL_NUT", "MELON_PULT", "DOOM_SHROOM", "HYPNO_SHROOM", "EXPLODE_O_NUT", "ENCHANT_MINT", "CAT_TAIL_MINT", "MAGNET_SHROOM", "BOWLING_BULB", "REPEATER", "PUMPKIN", "CACTUS", "PEPPER_PULT", "ENLIGHTEN_MINT", "KERNEL_PULT", "FUME_SHROOM", "SUNFLOWER", "GRAPESHOT", "ARMA_MINT", "LILY_PAD", "TORCHWOOD", "ENFORCE_MINT", "PHAT_BEET", "KIWIBEAST", "BONK_CHOY", "HOT_POTATO", "ELECTRIC_BLUEBERRY", "ROTOBAGA", "WINTER_MELON", "WALLNUT_BOWLING", "POTATO_MINE" ],
+    "seenZombies" : [ "BEACH_ARMOR1", "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "ICEAGE_ARMOR3", "TOMB_RAISER", "IMP_ICEAGE", "ZOMBOSS_EGYPT", "IMP_BEACH", "TUTORIAL_DEFAULT", "DARK_JUGGLER", "GARGANTUAR_BASIC", "RA", "BEACH_ARMOR2", "IMP_DARK", "DARK_ARMOR4", "WEASEL", "DODO", "MUMMY_ARMOR2", "TUTORIAL_ARMOR1", "DARK_DEFAULT", "BEACH_FISHERMAN", "DARK_ARMOR1", "MUMMY_ARMOR1", "GARGANTUAR_DARK", "PHARAOH", "BEACH_SURFER", "ZOMBOTANY_PEASHOOTER", "ICEAGE_ARMOR1", "DARK_ARMOR2", "EXPLORER", "MUMMY_DEFAULT", "BEACH_DEFAULT", "IMP_EGYPT", "TUTORIAL_ARMOR2", "GARGANTUAR_ICEAGE" ],
     "seedPackets" : {
-      "BOMBARD_MINT" : 10,
-      "CHOMPER" : 20,
-      "ICEBERG_LETTUCE" : 5,
-      "TALL_NUT" : 5,
-      "CAT_TAIL" : 5,
-      "THREEPEATER" : 10
+      "SWEET_POTATO" : 10
     },
     "plantLevels" : { },
-    "greenhouseBoosts" : [ "PEASHOOTER", "SUNFLOWER" ]
+    "greenhouseBoosts" : [ ]
   },
   "greenhouseState" : {
     "pots" : [ [ {
@@ -64,18 +58,18 @@
       "readyForPlanting" : false
     }, {
       "unlocked" : true,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
+      "plantType" : "SUNFLOWER",
+      "plantedTimeMillis" : 1786606796110,
       "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : true
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
+      "plantType" : "PEASHOOTER",
+      "plantedTimeMillis" : 1786606800655,
       "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : true
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : null,
@@ -84,33 +78,33 @@
       "empty" : true,
       "readyForPlanting" : true
     } ], [ {
-      "unlocked" : true,
+      "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : true
+      "readyForPlanting" : false
     }, {
-      "unlocked" : true,
+      "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : true
+      "readyForPlanting" : false
     }, {
-      "unlocked" : true,
+      "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : true
+      "readyForPlanting" : false
     }, {
-      "unlocked" : true,
+      "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : true
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
@@ -119,12 +113,12 @@
       "empty" : true,
       "readyForPlanting" : false
     } ], [ {
-      "unlocked" : true,
+      "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : true
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
@@ -189,8 +183,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 2,
-    "numberOfUnlockedPots" : 10
+    "numberOfUnlockedPots" : 5,
+    "numberOfLockedPots" : 7
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -717,31 +711,16 @@
       "read" : true,
       "timestamp" : 1786614085447,
       "formattedText" : "New plant unlocked: Giant Wallnut!\n2026/08/13  13:11"
-    }, {
-      "text" : "New zombie spotted: ICEAGE_DEFAULT!",
-      "read" : true,
-      "timestamp" : 1786689829693,
-      "formattedText" : "New zombie spotted: ICEAGE_DEFAULT!\n2026/08/14  10:13"
-    }, {
-      "text" : "New zombie spotted: ICEAGE_HUNTER!",
-      "read" : true,
-      "timestamp" : 1786689882710,
-      "formattedText" : "New zombie spotted: ICEAGE_HUNTER!\n2026/08/14  10:14"
-    }, {
-      "text" : "New zombie spotted: BEACH_SNORKEL!",
-      "read" : true,
-      "timestamp" : 1786690128082,
-      "formattedText" : "New zombie spotted: BEACH_SNORKEL!\n2026/08/14  10:18"
     } ]
   },
   "shopDaily" : {
-    "offerPlant" : "BOMBARD_MINT",
-    "offerDate" : "2026-08-14",
-    "purchased" : true,
-    "forToday" : true,
+    "offerPlant" : "PEASHOOTER",
+    "offerDate" : "2026-08-13",
+    "purchased" : false,
+    "forToday" : false,
     "availableToday" : false
   },
-  "stayLoggedIn" : true,
+  "stayLoggedIn" : false,
   "questState" : {
     "questManager" : {
       "activeQuests" : [ {
@@ -764,9 +743,9 @@
           "n" : 2
         },
         "active" : true,
-        "formattedDescription" : "Win without losing more than 2 plants",
+        "formattedTitle" : "Economic Herbivore",
         "runtimeState" : { },
-        "formattedTitle" : "Economic Herbivore"
+        "formattedDescription" : "Win without losing more than 2 plants"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -785,11 +764,11 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
+        "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1786690067427
+          "waveStartTime" : 1786543714859
         },
-        "formattedTitle" : "Speed Run"
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -808,9 +787,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "End a level with exactly 0 sun",
+        "formattedTitle" : "Master of Defense",
         "runtimeState" : { },
-        "formattedTitle" : "Master of Defense"
+        "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -829,9 +808,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "Win a day level using only mushrooms",
+        "formattedTitle" : "Day or Night",
         "runtimeState" : { },
-        "formattedTitle" : "Day or Night"
+        "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -840,7 +819,7 @@
         "priority" : "MEDIUM",
         "conditionKey" : "lawnmower_kill",
         "targetCount" : 50,
-        "currentCount" : 2,
+        "currentCount" : 0,
         "completed" : false,
         "claimed" : false,
         "reward" : {
@@ -852,9 +831,9 @@
           "n" : 50
         },
         "active" : true,
-        "formattedDescription" : "Kill at least 50 zombies with lawnmowers",
+        "formattedTitle" : "Lawnmower Time",
         "runtimeState" : { },
-        "formattedTitle" : "Lawnmower Time"
+        "formattedDescription" : "Kill at least 50 zombies with lawnmowers"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -865,7 +844,7 @@
         "targetCount" : 50,
         "currentCount" : 50,
         "completed" : true,
-        "claimed" : false,
+        "claimed" : true,
         "reward" : {
           "type" : "SEED_PACKETS",
           "amount" : 10,
@@ -875,16 +854,106 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
+        "formattedTitle" : "Chapter Hunter",
         "runtimeState" : { },
-        "formattedTitle" : "Chapter Hunter"
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
+      }, {
+        "id" : "story_chapter_hunt_FROSTBITE_CAVES",
+        "title" : "Chapter Hunter",
+        "descriptionTemplate" : "Defeat 50 zombies from {chapter}",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "chapter_zombie_kill",
+        "targetCount" : 50,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "chapter" : "FROSTBITE_CAVES"
+        },
+        "active" : true,
+        "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { },
+        "formattedDescription" : "Defeat 50 zombies from FROSTBITE_CAVES"
+      }, {
+        "id" : "daily_only_cactus_1786700054222",
+        "title" : "Only Cactus",
+        "descriptionTemplate" : "Kill 10 zombies using only Cactus",
+        "type" : "DAILY",
+        "priority" : "HIGH",
+        "conditionKey" : "specific_plant_kill",
+        "targetCount" : 10,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 20,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "plant" : "CACTUS"
+        },
+        "active" : true,
+        "formattedTitle" : "Only Cactus",
+        "runtimeState" : { },
+        "formattedDescription" : "Kill 10 zombies using only Cactus"
+      }, {
+        "id" : "daily_no_symmetry_1786700054236",
+        "title" : "No OCD",
+        "descriptionTemplate" : "No symmetry in garden except middle row",
+        "type" : "DAILY",
+        "priority" : "MEDIUM",
+        "conditionKey" : "no_symmetry",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "COINS",
+          "amount" : 800,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "formattedTitle" : "No OCD",
+        "runtimeState" : { },
+        "formattedDescription" : "No symmetry in garden except middle row"
+      }, {
+        "id" : "daily_column_empty_1786700054236",
+        "title" : "One Column Less",
+        "descriptionTemplate" : "Win with column {col} completely empty",
+        "type" : "DAILY",
+        "priority" : "HIGH",
+        "conditionKey" : "column_empty",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "col" : 6
+        },
+        "active" : true,
+        "formattedTitle" : "One Column Less",
+        "runtimeState" : { },
+        "formattedDescription" : "Win with column 6 completely empty"
       } ],
-      "lastDailyRefresh" : null,
+      "lastDailyRefresh" : "2026-08-14",
       "consecutiveMaxDifficultyWins" : 0,
-      "currentChapter" : "BIG_WAVE_BEACH",
+      "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "8h 22m"
+      "timeUntilReset" : "10h 32m"
     }
   }
 }
