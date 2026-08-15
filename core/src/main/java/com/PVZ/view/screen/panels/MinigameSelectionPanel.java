@@ -287,7 +287,7 @@ public class MinigameSelectionPanel extends BasePanel {
         AppStatus.setCurrentMenuType(MenuType.IN_GAME);
         ScreenManager.getInstance().performTransition(() -> new GameScreen(
             "maps/Frontyard.jpg",
-            "music/Title Screen.mp3",
+            "music/TitleScreen.mp3",
             AppStatus.getGameEngine()
         ));
     }

@@ -9,6 +9,7 @@ import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.ChapterAndLevelSelectionInputDTO;
 import com.PVZ.view.output.OutputDTO;
+import com.PVZ.view.screen.manager.MusicManager;
 import com.PVZ.view.screen.ui.MenuButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -71,6 +72,7 @@ public class ChapterSelectPanel extends BasePanel {
     public ChapterSelectPanel() {
         setFillParent(true);
 
+        MusicManager.getInstance().playMusic("music/WorldMap.mp3");
         Skin skin = PvzSkin.get();
         BitmapFont bigFont = skin.getFont("FBUSV8C5EI_1_outline");
         Texture purpleUp = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON");

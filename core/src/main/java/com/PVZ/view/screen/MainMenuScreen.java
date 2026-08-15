@@ -55,7 +55,7 @@ public class MainMenuScreen extends BaseScreen {
         backgroundTexture = new Texture(Gdx.files.internal(DEFAULT_BACKGROUND));
         createBlurryParticleTexture();
 
-        MusicManager.getInstance().playMusic("music/Title Screen.mp3");
+        MusicManager.getInstance().playMusic("music/TitleScreen.mp3");
 
         particles = new ArrayList<>();
         for (int i = 0; i < PARTICLE_COUNT; i++) {

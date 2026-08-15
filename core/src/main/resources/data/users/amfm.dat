@@ -10,8 +10,8 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 4997500,
-    "diamonds" : 4999874,
+    "coins" : 4996400,
+    "diamonds" : 4999869,
     "stagesCompleted" : 0,
     "highestScore" : 0,
     "dailyQuestsCompleted" : 0,
@@ -41,7 +41,8 @@
       "FUME_SHROOM" : 10,
       "WALL_NUT" : 10,
       "CAULIPOWER" : 70,
-      "PEA_POD" : 10
+      "PEA_POD" : 10,
+      "FIRE_PEASHOOTER" : 10
     },
     "plantLevels" : {
       "FUME_SHROOM" : 2,
@@ -136,8 +137,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfUnlockedPots" : 6,
-    "numberOfLockedPots" : 6
+    "numberOfLockedPots" : 6,
+    "numberOfUnlockedPots" : 6
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -579,8 +580,8 @@
   "shopDaily" : {
     "offerPlant" : "FIRE_PEASHOOTER",
     "offerDate" : "2026-08-15",
-    "purchased" : false,
-    "availableToday" : true,
+    "purchased" : true,
+    "availableToday" : false,
     "forToday" : true
   },
   "stayLoggedIn" : true,
@@ -606,9 +607,9 @@
           "n" : 0
         },
         "active" : true,
+        "formattedDescription" : "Win without losing more than 0 plants",
         "formattedTitle" : "Economic Herbivore",
-        "runtimeState" : { },
-        "formattedDescription" : "Win without losing more than 0 plants"
+        "runtimeState" : { }
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -627,11 +628,11 @@
         },
         "parameters" : { },
         "active" : false,
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "formattedTitle" : "Speed Run",
         "runtimeState" : {
           "waveStartTime" : 1786813142834
-        },
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
+        }
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -650,9 +651,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedDescription" : "End a level with exactly 0 sun",
         "formattedTitle" : "Master of Defense",
-        "runtimeState" : { },
-        "formattedDescription" : "End a level with exactly 0 sun"
+        "runtimeState" : { }
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -671,9 +672,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedDescription" : "Win a day level using only mushrooms",
         "formattedTitle" : "Day or Night",
-        "runtimeState" : { },
-        "formattedDescription" : "Win a day level using only mushrooms"
+        "runtimeState" : { }
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -694,9 +695,9 @@
           "n" : 20
         },
         "active" : true,
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
         "formattedTitle" : "Lawnmower Time",
-        "runtimeState" : { },
-        "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
+        "runtimeState" : { }
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -717,9 +718,9 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
         "formattedTitle" : "Chapter Hunter",
-        "runtimeState" : { },
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
+        "runtimeState" : { }
       }, {
         "id" : "daily_sun_producers_1786811953399",
         "title" : "Cloudy Day",
@@ -738,9 +739,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedDescription" : "Win with at most 3 sun producers",
         "formattedTitle" : "Cloudy Day",
-        "runtimeState" : { },
-        "formattedDescription" : "Win with at most 3 sun producers"
+        "runtimeState" : { }
       }, {
         "id" : "daily_cross_empty_1786811953405",
         "title" : "Defenseless Cross",
@@ -762,9 +763,9 @@
           "row" : 4
         },
         "active" : true,
+        "formattedDescription" : "Win with column 4 and row 4 empty",
         "formattedTitle" : "Defenseless Cross",
-        "runtimeState" : { },
-        "formattedDescription" : "Win with column 4 and row 4 empty"
+        "runtimeState" : { }
       }, {
         "id" : "daily_no_symmetry_1786811953405",
         "title" : "No OCD",
@@ -783,9 +784,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedDescription" : "No symmetry in garden except middle row",
         "formattedTitle" : "No OCD",
-        "runtimeState" : { },
-        "formattedDescription" : "No symmetry in garden except middle row"
+        "runtimeState" : { }
       }, {
         "id" : "story_chapter_hunt_FROSTBITE_CAVES",
         "title" : "Chapter Hunter",
@@ -806,16 +807,16 @@
           "chapter" : "FROSTBITE_CAVES"
         },
         "active" : true,
+        "formattedDescription" : "Defeat 50 zombies from FROSTBITE_CAVES",
         "formattedTitle" : "Chapter Hunter",
-        "runtimeState" : { },
-        "formattedDescription" : "Defeat 50 zombies from FROSTBITE_CAVES"
+        "runtimeState" : { }
       } ],
       "lastDailyRefresh" : "2026-08-15",
       "consecutiveMaxDifficultyWins" : 0,
-      "currentChapter" : "ANCIENT_EGYPT",
+      "currentChapter" : "FROSTBITE_CAVES",
       "currentDifficulty" : 3,
-      "isDayLevel" : false,
-      "timeUntilReset" : "3h 30m"
+      "isDayLevel" : true,
+      "timeUntilReset" : "3h 22m"
     }
   }
 }

@@ -77,7 +77,7 @@ public class PlantSelectionPanel extends BasePanel {
             readyToShow = false;
             ScreenManager.getInstance().performTransition(() -> new GameScreen(
                 ChapterMapPaths.resolve(chapterName),
-                "music/Title Screen.mp3",
+                "music/TitleScreen.mp3",
                 AppStatus.getGameEngine()
             ));
             return;
@@ -449,7 +449,7 @@ public class PlantSelectionPanel extends BasePanel {
         }
         ScreenManager.getInstance().performTransition(() -> new GameScreen(
             ChapterMapPaths.resolve(chapterName),
-            "music/Title Screen.mp3",
+            "music/TitleScreen.mp3",
             AppStatus.getGameEngine()
         ));
     }

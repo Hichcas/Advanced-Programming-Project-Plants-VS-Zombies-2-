@@ -1,5 +1,6 @@
 package com.PVZ.view.screen.panels;
 
+import com.PVZ.view.screen.manager.MusicManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -39,6 +40,7 @@ public class MainMenuPanel extends BasePanel {
         setFillParent(true);
 
         // ---------- تصاویر اصلی ----------
+        MusicManager.getInstance().playMusic("music/TitleScreen.mp3");
         Texture logoTexture = safeTextureFromRegion("IMAGE_UI_MAINMENU_PVZ2_LOGO_HORIZONTAL");
         Texture contentTexture = safeTextureFromRegion("IMAGE_UI_MAINMENU_MAINMENU_CONTENT_OFFLINE");
 
