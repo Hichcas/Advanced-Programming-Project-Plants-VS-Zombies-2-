@@ -29,7 +29,10 @@ import com.PVZ.model.enums.commands.PlantSelectionCommand;
 import com.PVZ.view.input.DTO.ChapterAndLevelSelectionInputDTO;
 import com.PVZ.view.input.DTO.PlantSelectionInputDTO;
 import com.PVZ.controller.menuControllers.ChapterAndLevelSelectionMenuController;
+import com.PVZ.controller.menuControllers.CollectionMenuController;
 import com.PVZ.controller.menuControllers.PlantSelectionMenuController;
+import com.PVZ.model.enums.commands.CollectionCommand;
+import com.PVZ.view.input.DTO.CollectionInputDTO;
 import com.PVZ.view.output.OutputDTO;
 import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.view.screen.GameScreen;
@@ -45,6 +48,8 @@ import java.util.List;
 public class PlantSelectionPanel extends BasePanel {
     private final PlantSelectionMenuController plantController = new PlantSelectionMenuController();
     private final List<PlantCardActor> cards = new ArrayList<>();
+    private final List<DetailPreviewActor> selectedSlotPreviews = new ArrayList<>();
+    private static final int MAX_SELECTED_SLOTS = 8;
     private Label statusLabel;
     private Label countLabel;
     private String chapterName;
@@ -52,8 +57,11 @@ public class PlantSelectionPanel extends BasePanel {
     private Label detailNameLabel;
     private Label detailDescriptionLabel;
     private Label detailCostLabel;
+    private Label detailStatusLabel;
     private DetailPreviewActor detailPreviewActor;
     private PlantType detailPlantType;
+    private MenuButton upgradeButton;
+    private MenuButton boostButton;
 
     public PlantSelectionPanel(String chapterName, int stage) {
         this.chapterName = chapterName;
@@ -97,6 +105,7 @@ public class PlantSelectionPanel extends BasePanel {
         levelBackground.setScaling(com.badlogic.gdx.utils.Scaling.fill);
         addActor(levelBackground);
 
+        Table selectedTray = buildSelectedTray();
         Table detailPanel = buildDetailPanel(font);
 
         Table grid = new Table();
@@ -142,13 +151,22 @@ public class PlantSelectionPanel extends BasePanel {
 
         Table window = new Table();
         window.pad(24f);
-        window.setBackground(resolveWindowBackground());
+        window.add(selectedTray).padBottom(10f).row();
         window.add(detailPanel).width(6 * 150f).padBottom(14f).row();
         window.add(scrollPane).size(6 * 150f, 4 * 175f).row();
         window.add(countLabel).padTop(8f).row();
         window.add(statusLabel).padTop(4f).row();
         window.add(letsRock).padTop(12f).size(240f, 64f).row();
+
+        // The dialog texture is a separate, semi-transparent layer BEHIND the
+        // window's actual content (rather than an opaque Table background), so
+        // the level's own background image loaded above stays visible through
+        // it instead of always looking like the same flat backdrop everywhere.
+        Image windowBackdrop = new Image(resolveWindowBackground());
+        windowBackdrop.setColor(1f, 1f, 1f, 0.6f);
+
         Stack windowStack = new Stack();
+        windowStack.add(windowBackdrop);
         windowStack.add(window);
         ImageButton closeButton = buildCloseButton();
         if (closeButton != null) {
@@ -161,6 +179,47 @@ public class PlantSelectionPanel extends BasePanel {
         add(windowStack).center();
 
         refresh();
+    }
+
+    /**
+     * 8 fixed seed-packet slots showing the currently selected plants in
+     * order, each with the same small animated plant preview used in the
+     * detail panel. Slot background is just the almanac card-frame drawable
+     * (semi-transparent, no fill) so the level's own background stays visible
+     * behind/around it instead of a flat fixed backdrop.
+     */
+    private Table buildSelectedTray() {
+        Table tray = new Table();
+        tray.defaults().pad(6f);
+        Drawable slotFrame = resolveCardSlotBackground();
+
+        selectedSlotPreviews.clear();
+        for (int i = 0; i < MAX_SELECTED_SLOTS; i++) {
+            Stack slot = new Stack();
+            if (slotFrame != null) {
+                Table frame = new Table();
+                frame.setBackground(slotFrame);
+                frame.setColor(1f, 1f, 1f, 0.75f);
+                slot.add(frame);
+            }
+            DetailPreviewActor preview = new DetailPreviewActor();
+            selectedSlotPreviews.add(preview);
+            Table previewHolder = new Table();
+            previewHolder.add(preview).size(64f, 78f);
+            slot.add(previewHolder);
+            tray.add(slot).size(74f, 90f);
+        }
+        return tray;
+    }
+
+    private void updateSelectedTray() {
+        if (selectedSlotPreviews.isEmpty()) {
+            return;
+        }
+        List<PlantType> selected = new ArrayList<>(AppStatus.SELECTED_PLANTS);
+        for (int i = 0; i < selectedSlotPreviews.size(); i++) {
+            selectedSlotPreviews.get(i).setPlantType(i < selected.size() ? selected.get(i) : null);
+        }
     }
 
     private Table buildDetailPanel(BitmapFont font) {
@@ -176,6 +235,7 @@ public class PlantSelectionPanel extends BasePanel {
         detailDescriptionLabel = new Label("", new Label.LabelStyle(font, Color.LIGHT_GRAY));
         detailDescriptionLabel.setWrap(true);
         detailCostLabel = new Label("", new Label.LabelStyle(font, Color.GOLD));
+        detailStatusLabel = new Label("", new Label.LabelStyle(font, Color.SKY));
         SunIconActor sunIcon = new SunIconActor();
 
         Table infoColumn = new Table();
@@ -186,15 +246,16 @@ public class PlantSelectionPanel extends BasePanel {
         costRow.add(sunIcon).size(28f, 28f).padRight(6f);
         costRow.add(detailCostLabel).left();
         infoColumn.add(costRow).left().padTop(6f).row();
+        infoColumn.add(detailStatusLabel).left().padTop(4f).row();
 
         // دکمه‌های UPGRADE و BOOST با MenuButton سفارشی
         Texture purpleUp   = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON");
         Texture purpleDown = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON_DOWN");
         Texture marker = null;
 
-        MenuButton upgradeButton = new MenuButton(purpleUp, "UPGRADE", font, purpleDown, null, marker, this::onUpgradeClicked);
+        upgradeButton = new MenuButton(purpleUp, "UPGRADE", font, purpleDown, null, marker, this::onUpgradeClicked);
         upgradeButton.setSize(140f, 48f);
-        MenuButton boostButton = new MenuButton(purpleUp, "BOOST", font, purpleDown, null, marker, this::onBoostClicked);
+        boostButton = new MenuButton(purpleUp, "BOOST", font, purpleDown, null, marker, this::onBoostClicked);
         boostButton.setSize(140f, 48f);
 
         Table actionColumn = new Table();
@@ -215,7 +276,9 @@ public class PlantSelectionPanel extends BasePanel {
             detailNameLabel.setText("یک گیاه را برای دیدن جزئیات انتخاب کنید");
             detailDescriptionLabel.setText("");
             detailCostLabel.setText("");
+            detailStatusLabel.setText("");
             detailPreviewActor.setPlantType(null);
+            setActionButtonsEnabled(false, false);
             return;
         }
         PlantDefinition def = PlantLibrary.findByType(type).orElse(null);
@@ -224,26 +287,81 @@ public class PlantSelectionPanel extends BasePanel {
             detailNameLabel.setText(type.name());
             detailDescriptionLabel.setText("");
             detailCostLabel.setText("");
+            detailStatusLabel.setText("");
+            setActionButtonsEnabled(false, false);
             return;
         }
         detailNameLabel.setText(def.getName());
         String description = def.getBaseAbility() != null ? def.getBaseAbility().getRaw() : "";
         detailDescriptionLabel.setText(description == null ? "" : description);
         detailCostLabel.setText(String.valueOf(PlantLibrary.getEffectiveCost(type)));
+        updateDetailStatus(type);
+    }
+
+    /** Shows the plant's current level (1-based, capped by its real JSON tier count) and boost state. */
+    private void updateDetailStatus(PlantType type) {
+        User user = AppStatus.currentUser;
+        boolean owned = user != null && user.collectionState != null
+            && user.collectionState.isPlantUnlocked(type);
+        boolean selected = AppStatus.SELECTED_PLANTS.contains(type);
+
+        if (!owned) {
+            detailStatusLabel.setText("Not owned yet");
+            setActionButtonsEnabled(false, false);
+            return;
+        }
+
+        int currentLevel = user.collectionState.getPlantLevel(type);
+        int maxRawLevel = PlantLibrary.findByType(type)
+            .map(PlantDefinition::getMaxLevel)
+            .orElse(4) - 1;
+        boolean maxed = currentLevel >= maxRawLevel;
+        boolean boosted = AppStatus.BOOSTED_PLANTS.contains(type);
+
+        StringBuilder status = new StringBuilder("Level ").append(currentLevel + 1)
+            .append(" / ").append(maxRawLevel + 1);
+        if (boosted) {
+            status.append("  -  BOOSTED");
+        }
+        detailStatusLabel.setText(status.toString());
+        setActionButtonsEnabled(!maxed, selected && !boosted);
+    }
+
+    private void setActionButtonsEnabled(boolean upgradeEnabled, boolean boostEnabled) {
+        if (upgradeButton != null) {
+            upgradeButton.setColor(1f, 1f, 1f, upgradeEnabled ? 1f : 0.5f);
+            upgradeButton.setTouchable(upgradeEnabled
+                ? com.badlogic.gdx.scenes.scene2d.Touchable.enabled
+                : com.badlogic.gdx.scenes.scene2d.Touchable.disabled);
+        }
+        if (boostButton != null) {
+            boostButton.setColor(1f, 1f, 1f, boostEnabled ? 1f : 0.5f);
+            boostButton.setTouchable(boostEnabled
+                ? com.badlogic.gdx.scenes.scene2d.Touchable.enabled
+                : com.badlogic.gdx.scenes.scene2d.Touchable.disabled);
+        }
     }
 
     private void onUpgradeClicked() {
         if (detailPlantType == null) {
             return;
         }
-        //todo
+        OutputDTO result = new CollectionMenuController().handle(
+            new CollectionInputDTO(CollectionCommand.UPGRADE_PLANT, detailPlantType.name(), null));
+        statusLabel.setText(stripColorCodes(result.getMessage()));
+        updateDetailStatus(detailPlantType);
+        refresh();
     }
 
     private void onBoostClicked() {
         if (detailPlantType == null) {
             return;
         }
-        // TODO
+        OutputDTO result = plantController.handle(
+            new PlantSelectionInputDTO(PlantSelectionCommand.BOOST_PLANT, detailPlantType.name()));
+        statusLabel.setText(stripColorCodes(result.getMessage()));
+        updateDetailStatus(detailPlantType);
+        refresh();
     }
 
     // --- متدهای قدیمی ساخت دکمه حذف شده‌اند و دیگر استفاده نمی‌شوند ---
@@ -350,6 +468,7 @@ public class PlantSelectionPanel extends BasePanel {
             card.setSelected(AppStatus.SELECTED_PLANTS.contains(type));
         }
         countLabel.setText(AppStatus.SELECTED_PLANTS.size() + " / 8 selected");
+        updateSelectedTray();
     }
 
     private static String stripColorCodes(String s) {
