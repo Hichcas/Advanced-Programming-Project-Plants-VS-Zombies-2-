@@ -93,6 +93,9 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
         }
         Collections.shuffle(candidates, random);
         int n = Math.min(3, candidates.size());
+        if (n > 0) {
+            com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "power", 1.8);
+        }
         for (int i = 0; i < n; i++) {
             int targetCol = candidates.get(i);
             ZombieProjectile bone = new ZombieProjectile(

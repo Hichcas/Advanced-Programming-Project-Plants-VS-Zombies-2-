@@ -31,7 +31,7 @@ public class RegularZombieEngine implements ZombieEngine {
     public void draw(SpriteBatch batch) {
         batch.begin();
         for (Zombie z : zombies) {
-            if (!z.isDead()) {
+            if (!z.isDead() || com.PVZ.model.entity.zombies.base.ZombieAnimation.isActive(z)) {
                 z.draw(batch);
             }
         }

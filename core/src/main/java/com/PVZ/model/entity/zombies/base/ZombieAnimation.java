@@ -13,6 +13,9 @@ public final class ZombieAnimation {
         if (zombie == null || canonicalState == null) {
             return;
         }
+        if (canonicalState.equals(zombie.getRuntimeState(STATE_KEY)) && isActive(zombie)) {
+            return;
+        }
         zombie.putRuntimeState(STATE_KEY, canonicalState);
         zombie.putRuntimeState(REMAINING_KEY, resolveDuration(zombie, canonicalState, fallbackSeconds));
     }
@@ -44,10 +47,13 @@ public final class ZombieAnimation {
 
     public static String getState(Zombie zombie) {
         if (zombie == null) {
-            return null;
+            return "walk";
+        }
+        if (!isActive(zombie)) {
+            return "walk";
         }
         Object v = zombie.getRuntimeState(STATE_KEY);
-        return v instanceof String ? (String) v : null;
+        return v instanceof String ? (String) v : "walk";
     }
 
     public static void tick(Zombie zombie, double deltaTimeSeconds) {

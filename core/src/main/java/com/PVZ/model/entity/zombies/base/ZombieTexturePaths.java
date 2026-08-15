@@ -9,19 +9,25 @@ public class ZombieTexturePaths {
     static {
         // PAM Animation File Mappings with resolution prefix
         PAM_PATHS.put("ZombieTutorialDefault", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM");
-        PAM_PATHS.put("ZombieTutorialArmor1Default", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
-        PAM_PATHS.put("ZombieTutorialArmor2Default", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
-        PAM_PATHS.put("ZombieTutorialArmor4Default", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
+        PAM_PATHS.put("ZombieTutorialArmor1Default", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM");
+        PAM_PATHS.put("ZombieTutorialArmor2Default", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM");
+        PAM_PATHS.put("ZombieTutorialArmor4Default", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM");
         PAM_PATHS.put("ZombieTutorialFlagDefault", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_FLAG/ZOMBIE_TUTORIAL_FLAG.PAM");
         PAM_PATHS.put("ZombieMummyDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
         PAM_PATHS.put("ZombieMummyArmor1Default", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
         PAM_PATHS.put("ZombieMummyArmor2Default", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
         PAM_PATHS.put("ZombieMummyArmor4Default", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
         PAM_PATHS.put("ZombieCamelDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_CAMEL/ZOMBIE_EGYPT_CAMEL.PAM");
+        PAM_PATHS.put("ZombieCamelMiddle", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_CAMEL/ZOMBIE_EGYPT_CAMEL.PAM");
+        PAM_PATHS.put("ZombieCamelRear", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_CAMEL/ZOMBIE_EGYPT_CAMEL.PAM");
         PAM_PATHS.put("ZombieRaDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_RA/ZOMBIE_EGYPT_RA.PAM");
+        PAM_PATHS.put("ZombieRa", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_RA/ZOMBIE_EGYPT_RA.PAM");
         PAM_PATHS.put("ZombiePharaohDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_SARCOPHAGUS/ZOMBIE_EGYPT_SARCOPHAGUS.PAM");
+        PAM_PATHS.put("ZombiePharaoh", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_SARCOPHAGUS/ZOMBIE_EGYPT_SARCOPHAGUS.PAM");
         PAM_PATHS.put("ZombieExplorerDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EXPLORER/ZOMBIE_EXPLORER.PAM");
+        PAM_PATHS.put("ZombieExplorer", "768/INITIAL/ZOMBIE/ZOMBIE_EXPLORER/ZOMBIE_EXPLORER.PAM");
         PAM_PATHS.put("ZombieTombRaiserDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_TOMBRAISER/ZOMBIE_EGYPT_TOMBRAISER.PAM");
+        PAM_PATHS.put("ZombieTombRaiser", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_TOMBRAISER/ZOMBIE_EGYPT_TOMBRAISER.PAM");
         PAM_PATHS.put("ZombieEgyptGargantuar", "768/INITIAL/ZOMBIE/EGYPT_GARGANTUAR/EGYPT_GARGANTUAR.PAM");
         PAM_PATHS.put("ZombieGargantuarBasic", "768/INITIAL/ZOMBIE/TUTORIAL_GARGANTUAR/TUTORIAL_GARGANTUAR.PAM");
         PAM_PATHS.put("ZombieEgyptImpDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_IMP/ZOMBIE_EGYPT_IMP.PAM");
@@ -61,6 +67,37 @@ public class ZombieTexturePaths {
         return PAM_PATHS.get("DEFAULT");
     }
 
+    public static String getArmorSubBranchTrack(Zombie zombie) {
+        if (zombie == null) return null;
+        ZombieArmor armor = zombie.getArmor();
+        if (armor == null || armor.isDestroyed()) return null;
+
+        double base = armor.getBaseHealth();
+        double current = armor.getHealth();
+        if (base <= 0) return null;
+        double ratio = current / base;
+
+        ZombieArmor.ArmorType type = armor.getType();
+        if (type == ZombieArmor.ArmorType.CONE) {
+            if (ratio > 0.666) return "zombie_armor_cone_norm";
+            if (ratio > 0.333) return "zombie_armor_cone_damage_01";
+            return "zombie_armor_cone_damage_02";
+        } else if (type == ZombieArmor.ArmorType.BUCKET) {
+            if (ratio > 0.666) return "zombie_armor_bucket_norm";
+            if (ratio > 0.333) return "zombie_armor_bucket_damage_01";
+            return "zombie_armor_bucket_damage_02";
+        } else if (type == ZombieArmor.ArmorType.BRICK) {
+            if (ratio > 0.666) return "zombie_armor_brick_norm";
+            if (ratio > 0.333) return "zombie_armor_brick_damage_01";
+            return "zombie_armor_brick_damage_02";
+        } else if (type == ZombieArmor.ArmorType.CROWN) {
+            if (ratio > 0.666) return "zombie_armor_crown_norm";
+            if (ratio > 0.333) return "zombie_armor_crown_damage_01";
+            return "zombie_armor_crown_damage_02";
+        }
+        return null;
+    }
+
     public static String getEffectivePamAlias(Zombie zombie) {
         if (zombie == null) {
             return "DEFAULT";
@@ -75,6 +112,7 @@ public class ZombieTexturePaths {
                 if (alias.startsWith("ZombieBeachArmor")) return "ZombieBeachDefault";
                 if (alias.startsWith("ZombieDarkArmor")) return "ZombieDarkDefault";
             }
+            return alias != null ? alias : "DEFAULT";
         }
         return alias != null ? alias : "DEFAULT";
     }
