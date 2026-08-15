@@ -46,8 +46,8 @@ public class CollectionPanel extends BasePanel {
 
     private final CollectionMenuController controller = new CollectionMenuController();
 
-    private static final float CARD_SLOT_W = 135f;
-    private static final float CARD_SLOT_H = 155f;
+    private static final float CARD_SLOT_W = 135f * 1.5f;
+    private static final float CARD_SLOT_H = 155f * 1.5f;
     private static final float DETAIL_PREVIEW_SIZE = 140f;
     private static final int GRID_COLS = 6; // ۶ ستون برای پر کردن کامل فضای سمت چپ
 
@@ -167,11 +167,11 @@ public class CollectionPanel extends BasePanel {
         ScrollPane scroll = new ScrollPane(contentGrid, skin);
         scroll.setFadeScrollBars(false);
         scroll.setScrollingDisabled(true, false);
-        mainBody.add(scroll).width(860f).growY().padRight(15f);
+        mainBody.add(scroll).width(1500).growY().padRight(50f);
 
         // پنل جزئیات (سمت راست - رشد گسترده برای پر کردن کل فضای باقی‌مانده)
         detailPanel = buildDetailPanel();
-        mainBody.add(detailPanel).grow().top();
+        mainBody.add(detailPanel).width(900f).growY().top();
 
         root.add(mainBody).colspan(2).grow().row();
 
@@ -256,7 +256,7 @@ public class CollectionPanel extends BasePanel {
                     cell.add(unknown);
                 }
 
-                contentGrid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(4f);
+                contentGrid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(15f);
                 col++;
                 if (col >= GRID_COLS) {
                     col = 0;
@@ -322,7 +322,7 @@ public class CollectionPanel extends BasePanel {
 
                 cell.add(info);
 
-                contentGrid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(4f);
+                contentGrid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(15f);
                 col++;
                 if (col >= GRID_COLS) {
                     col = 0;
@@ -488,7 +488,7 @@ public class CollectionPanel extends BasePanel {
 
     private void addStatRow(Table table, Label titleLabel, Slider slider, Label valueLabel) {
         table.add(titleLabel).width(70f).left().padBottom(12f);
-        table.add(slider).growX().padLeft(5f).padRight(5f).padBottom(12f);
+        table.add(slider).width(420f).padLeft(5f).padRight(5f).padBottom(12f);
         table.add(valueLabel).width(80f).right().padBottom(12f).row();
     }
 
