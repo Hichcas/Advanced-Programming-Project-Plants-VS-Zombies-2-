@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
@@ -54,7 +55,7 @@ public class MainMenuScreen extends BaseScreen {
         backgroundTexture = new Texture(Gdx.files.internal(DEFAULT_BACKGROUND));
         createBlurryParticleTexture();
 
-        MusicManager.getInstance().playMusic("music/Title Screen.mp3");
+        MusicManager.getInstance().playMusic("music/TitleScreen.mp3");
 
         particles = new ArrayList<>();
         for (int i = 0; i < PARTICLE_COUNT; i++) {
@@ -67,6 +68,9 @@ public class MainMenuScreen extends BaseScreen {
 
         PanelManager.getInstance().initialize(stage);
         com.PVZ.view.screen.panels.CheatPanel.attachToggleButton(stage, null);
+
+        // داک ناوبری سراسری: کالکشن، مینی‌گیم، گلخانه، کوئست
+        addGlobalNavigationDock();
 
         switch (AppStatus.currentMenuType) {
             case MAIN -> PanelManager.getInstance().performPanelTransition(new MainMenuPanel());
@@ -81,6 +85,64 @@ public class MainMenuScreen extends BaseScreen {
         economyHud = new EconomyHud();
         stage.addActor(economyHud);
         economyHud.toFront();
+        PanelManager.getInstance().addPersistentOverlay(economyHud);
+    }
+
+    private void addGlobalNavigationDock() {
+        Skin skin = PvzSkin.get();
+
+        ImageButton.ImageButtonStyle almanacStyle =
+            skin.get("almanac", ImageButton.ImageButtonStyle.class);
+        ImageButton.ImageButtonStyle minigamesStyle =
+            skin.get("hud_minigames", ImageButton.ImageButtonStyle.class);
+        ImageButton.ImageButtonStyle zgStyle =
+            skin.get("hud_zg", ImageButton.ImageButtonStyle.class);
+        ImageButton.ImageButtonStyle questsStyle =
+            skin.get("hud_quests", ImageButton.ImageButtonStyle.class);
+
+        Table navDock = new Table();
+        navDock.setFillParent(true);
+        navDock.top().left().padTop(20f).padLeft(50f);
+        navDock.setTouchable(Touchable.childrenOnly);
+
+        float btnSize = 120f;
+        float spacing = 20f;
+
+        MenuButton collectionBtn = new MenuButton(
+            almanacStyle.imageUp, null, null,
+            almanacStyle.imageDown, null, null,
+            () -> AppStatus.setCurrentMenuType(MenuType.COLLECTION)
+        );
+        collectionBtn.setSize(btnSize, btnSize);
+
+        MenuButton minigamesBtn = new MenuButton(
+            minigamesStyle.imageUp, null, null,
+            minigamesStyle.imageDown, null, null,
+            () -> AppStatus.setCurrentMenuType(MenuType.MINIGAME_SELECTION)
+        );
+        minigamesBtn.setSize(btnSize, btnSize);
+
+        MenuButton greenhouseBtn = new MenuButton(
+            zgStyle.imageUp, null, null,
+            zgStyle.imageDown, null, null,
+            () -> AppStatus.setCurrentMenuType(MenuType.GREENHOUSE)
+        );
+        greenhouseBtn.setSize(btnSize, btnSize);
+
+        MenuButton questsBtn = new MenuButton(
+            questsStyle.imageUp, null, null,
+            questsStyle.imageDown, null, null,
+            () -> AppStatus.setCurrentMenuType(MenuType.QUEST)
+        );
+        questsBtn.setSize(btnSize, btnSize);
+
+        navDock.add(collectionBtn).size(btnSize).padRight(spacing);
+        navDock.add(minigamesBtn).size(btnSize).padRight(spacing);
+        navDock.add(greenhouseBtn).size(btnSize).padRight(spacing);
+        navDock.add(questsBtn).size(btnSize);
+
+        stage.addActor(navDock);
+        PanelManager.getInstance().addPersistentOverlay(navDock);
     }
 
     /** تغییر پس‌زمینه و غیرفعال/فعال‌سازی ذرات */
@@ -242,12 +304,10 @@ public class MainMenuScreen extends BaseScreen {
         }
 
         private void openShop() {
-
-                ShopPanel shopPanel = new ShopPanel();
-                shopPanel.setFillParent(true);
-                getStage().addActor(shopPanel);
-                shopPanel.toFront();
-
+            ShopPanel shopPanel = new ShopPanel();
+            shopPanel.setFillParent(true);
+            getStage().addActor(shopPanel);
+            shopPanel.toFront();
         }
 
         @Override

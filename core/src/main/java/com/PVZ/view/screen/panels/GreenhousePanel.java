@@ -13,6 +13,7 @@ import com.PVZ.view.output.OutputDTO;
 import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.view.screen.BaseScreen;
 import com.PVZ.view.screen.MainMenuScreen;
+import com.PVZ.view.screen.manager.MusicManager;
 import com.PVZ.view.screen.ui.MenuButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -80,6 +81,7 @@ public class GreenhousePanel extends BasePanel {
     public GreenhousePanel() {
         setFillParent(true);
 
+        MusicManager.getInstance().playMusic("music/ZenGarden.mp3");
         TextureBank bank = getTextureBank();
         TextureRegion originalBg = bank.region("IMAGE_BACKGROUNDS_ZEN_GARDEN");
         if (originalBg != null) {
@@ -325,7 +327,7 @@ public class GreenhousePanel extends BasePanel {
         if (AppStatus.lastMainMenu instanceof MainMenuScreen mainMenu) {
             mainMenu.restoreDefaultBackground();
         }
-        AppStatus.setCurrentMenuType(MenuType.CHAPTER_AND_LEVEL_SELECTION);
+        AppStatus.setCurrentMenuType(MenuType.MAIN);
     }
 
     private String formatRemaining(double hours) {

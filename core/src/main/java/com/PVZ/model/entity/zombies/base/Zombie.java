@@ -53,6 +53,16 @@ public abstract class Zombie {
         return false;
     }
 
+    private StatusEffect findEffect(DamageType type) {
+        if (activeEffects == null) return null;
+        for (StatusEffect e : activeEffects) {
+            if (e != null && e.getType() == type) {
+                return e;
+            }
+        }
+        return null;
+    }
+
     public Zombie(String alias, double hitpoints, double eatDPS, double speed,
                   int wavePointCost, int weight, List<ScaledProperty> scaledProps) {
         this.alias = alias;
@@ -224,12 +234,19 @@ public abstract class Zombie {
     }
 
     public void applyEffect(StatusEffect e) {
-        activeEffects.add(e);
         if (e.getType() == DamageType.ICE) {
+            StatusEffect existing = findEffect(DamageType.ICE);
+            if (existing != null) {
+                existing.refresh(e.getDuration());
+            } else {
+                activeEffects.add(e);
+            }
             if (!"FROSTBITE_CAVES".equals(com.PVZ.model.status.AppStatus.currentChapterName)) {
                 currentSpeed = speed * 0.5;
             }
+            return;
         }
+        activeEffects.add(e);
     }
 
     public void freeze(float duration) {
@@ -261,14 +278,16 @@ public abstract class Zombie {
             return;
         }
         if (type == DamageType.ICE) {
-            boolean hasSlow = false;
-            for (StatusEffect e : activeEffects) {
-                if (e.getType() == DamageType.ICE) {
-                    hasSlow = true;
-                    break;
-                }
+            StatusEffect existing = findEffect(DamageType.ICE);
+            if (existing != null) {
+                // Re-hitting an already-slowed zombie should refresh the slow,
+                // not leave the earlier (possibly near-expiry) timer running -
+                // otherwise the zombie can pop back to full speed moments after
+                // being hit a second time.
+                existing.refresh(chillDuration);
+            } else {
+                activeEffects.add(new StatusEffect(DamageType.ICE, chillDuration));
             }
-            if (!hasSlow) activeEffects.add(new StatusEffect(DamageType.ICE, chillDuration));
             if (!"FROSTBITE_CAVES".equals(com.PVZ.model.status.AppStatus.currentChapterName)) {
                 currentSpeed = speed * 0.5;
             }
@@ -297,13 +316,16 @@ public abstract class Zombie {
             StatusEffect e = it.next();
             if (e.update(delta)) {
                 it.remove();
-                if (e.getType() == DamageType.ICE) {
-                    currentSpeed = speed;
-                }
-                if (e.getType() == DamageType.HYPNOTIZE) {
-                    hypnotized = false;
-                }
             }
+        }
+        // Only clear the slow/hypnosis once nothing of that type remains active -
+        // dedupe+refresh above means there's normally at most one ICE entry, but
+        // this stays correct even if something else ever stacks a second one.
+        if (!hasStatusEffect(DamageType.ICE)) {
+            currentSpeed = speed;
+        }
+        if (!hasStatusEffect(DamageType.HYPNOTIZE)) {
+            hypnotized = false;
         }
         for (StatusEffect e : activeEffects) {
             if (e.getType() == DamageType.POISON) {

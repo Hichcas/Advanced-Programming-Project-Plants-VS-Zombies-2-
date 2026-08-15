@@ -136,7 +136,7 @@ public class MinigameSelectionPanel extends BasePanel {
 
         Table bottom = new Table();
         MenuButton backButton = new MenuButton(purpleUp, "BACK", titleFont, purpleDown, null, markerTexture,
-            () -> AppStatus.setCurrentMenuType(MenuType.CHAPTER_AND_LEVEL_SELECTION));
+            () -> AppStatus.setCurrentMenuType(MenuType.MAIN));
         backButton.setSize(220f, 66f);
         bottom.add(backButton).size(220f, 66f).padTop(18f);
 
@@ -287,7 +287,7 @@ public class MinigameSelectionPanel extends BasePanel {
         AppStatus.setCurrentMenuType(MenuType.IN_GAME);
         ScreenManager.getInstance().performTransition(() -> new GameScreen(
             "maps/Frontyard.jpg",
-            "music/Title Screen.mp3",
+            "music/TitleScreen.mp3",
             AppStatus.getGameEngine()
         ));
     }

@@ -46,8 +46,8 @@ public class CollectionPanel extends BasePanel {
 
     private final CollectionMenuController controller = new CollectionMenuController();
 
-    private static final float CARD_SLOT_W = 135f;
-    private static final float CARD_SLOT_H = 155f;
+    private static final float CARD_SLOT_W = 135f * 1.5f;
+    private static final float CARD_SLOT_H = 155f * 1.5f;
     private static final float DETAIL_PREVIEW_SIZE = 140f;
     private static final int GRID_COLS = 6; // ۶ ستون برای پر کردن کامل فضای سمت چپ
 
@@ -167,11 +167,11 @@ public class CollectionPanel extends BasePanel {
         ScrollPane scroll = new ScrollPane(contentGrid, skin);
         scroll.setFadeScrollBars(false);
         scroll.setScrollingDisabled(true, false);
-        mainBody.add(scroll).width(860f).growY().padRight(15f);
+        mainBody.add(scroll).width(1500).growY().padRight(50f);
 
         // پنل جزئیات (سمت راست - رشد گسترده برای پر کردن کل فضای باقی‌مانده)
         detailPanel = buildDetailPanel();
-        mainBody.add(detailPanel).grow().top();
+        mainBody.add(detailPanel).width(900f).growY().top();
 
         root.add(mainBody).colspan(2).grow().row();
 
@@ -256,7 +256,7 @@ public class CollectionPanel extends BasePanel {
                     cell.add(unknown);
                 }
 
-                contentGrid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(4f);
+                contentGrid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(15f);
                 col++;
                 if (col >= GRID_COLS) {
                     col = 0;
@@ -300,16 +300,29 @@ public class CollectionPanel extends BasePanel {
                     : UpgradeCostPolicy.currentUpgradeRequirement(displayLevel, maxDisplayLevel);
 
                 Table info = new Table();
+                info.setFillParent(true);          // کل سطح کارت را بگیرد
+                info.top().right();                // محتوا را بالا‑راست بچیند
+                info.pad(-7f);
+                info.padRight(-8f);
                 info.setTouchable(Touchable.disabled);
-                Label lvl = new Label("Lv." + displayLevel, new Label.LabelStyle(descFont, Color.YELLOW));
-                Label seeds = new Label(maxedOut ? "MAX" : seedPackets + "/" + requiredPackets,
-                    new Label.LabelStyle(descFont, Color.WHITE));
-                info.add(lvl).padRight(8f);
-                info.add(seeds);
-                info.setPosition(0, -CARD_SLOT_H / 2f + 15f);
+
+                Label lvl = new Label(
+                    maxedOut ? "MAX" : "Lv." + displayLevel,
+                    new Label.LabelStyle(bodyFont, Color.YELLOW)
+                );
+                lvl.setFontScale(1f);            // کمی بزرگ‌تر و خوانا
+
+                Label seeds = new Label(
+                    maxedOut ? "" : seedPackets + "/" + requiredPackets,
+                    new Label.LabelStyle(descFont, Color.WHITE)
+                );
+
+                info.add(lvl).right().row();
+                info.add(seeds).right();
+
                 cell.add(info);
 
-                contentGrid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(4f);
+                contentGrid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(15f);
                 col++;
                 if (col >= GRID_COLS) {
                     col = 0;
@@ -475,7 +488,7 @@ public class CollectionPanel extends BasePanel {
 
     private void addStatRow(Table table, Label titleLabel, Slider slider, Label valueLabel) {
         table.add(titleLabel).width(70f).left().padBottom(12f);
-        table.add(slider).growX().padLeft(5f).padRight(5f).padBottom(12f);
+        table.add(slider).width(420f).padLeft(5f).padRight(5f).padBottom(12f);
         table.add(valueLabel).width(80f).right().padBottom(12f).row();
     }
 
@@ -940,7 +953,10 @@ public class CollectionPanel extends BasePanel {
         private PlantType type;
         private float time;
 
-        void setType(PlantType type) { this.type = type; this.time = 0f; }
+        void setType(PlantType type) {
+            this.type = type;
+            this.time = 0f;
+        }
 
         @Override
         public void act(float delta) {

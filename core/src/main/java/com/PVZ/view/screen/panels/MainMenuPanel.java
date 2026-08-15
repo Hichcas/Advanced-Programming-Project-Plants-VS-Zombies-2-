@@ -1,5 +1,6 @@
 package com.PVZ.view.screen.panels;
 
+import com.PVZ.view.screen.manager.MusicManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -39,6 +40,7 @@ public class MainMenuPanel extends BasePanel {
         setFillParent(true);
 
         // ---------- تصاویر اصلی ----------
+        MusicManager.getInstance().playMusic("music/TitleScreen.mp3");
         Texture logoTexture = safeTextureFromRegion("IMAGE_UI_MAINMENU_PVZ2_LOGO_HORIZONTAL");
         Texture contentTexture = safeTextureFromRegion("IMAGE_UI_MAINMENU_MAINMENU_CONTENT_OFFLINE");
 
@@ -113,6 +115,21 @@ public class MainMenuPanel extends BasePanel {
         newsBadge.setPosition(newsX + SETTINGS_SIZE - newsBadge.getWidth()/2f,
             newsY + SETTINGS_SIZE - newsBadge.getHeight()/2f);
         addActor(newsBadge);
+
+        // ---------- دکمهٔ Leaderboard (پایین سمت چپ، کنار News) ----------
+        Texture leaderboardNormal = safeTextureFromRegion("IMAGE_UI_GAMECENTER_ANDROID_LEADERBOARD");
+        Texture leaderboardSelected = safeTextureFromRegion("IMAGE_UI_GAMECENTER_ANDROID_LEADERBOARD_SELECT");
+
+        MenuButton leaderboardBtn = new MenuButton(
+            leaderboardNormal, null, null,
+            leaderboardSelected, null, null,
+            this::onLeaderboard
+        );
+        leaderboardBtn.setSize(SETTINGS_SIZE, SETTINGS_SIZE);
+        float leaderboardX = newsX + SETTINGS_SIZE + gap;
+        float leaderboardY = SETTINGS_BOTTOM_MARGIN;
+        leaderboardBtn.setPosition(leaderboardX, leaderboardY);
+        addActor(leaderboardBtn);
     }
 
     // ======================== متدهای کمکی ========================
@@ -187,6 +204,10 @@ public class MainMenuPanel extends BasePanel {
 
     private void onNews() {
         AppStatus.setCurrentMenuType(MenuType.NEWS);
+    }
+
+    private void onLeaderboard() {
+        AppStatus.setCurrentMenuType(MenuType.LEADERBOARD);
     }
 
     private void onQuit() {

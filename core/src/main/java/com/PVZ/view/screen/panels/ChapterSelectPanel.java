@@ -9,6 +9,7 @@ import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.ChapterAndLevelSelectionInputDTO;
 import com.PVZ.view.output.OutputDTO;
+import com.PVZ.view.screen.manager.MusicManager;
 import com.PVZ.view.screen.ui.MenuButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -20,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import pvz.skin.PvzSkin;
@@ -59,15 +59,20 @@ public class ChapterSelectPanel extends BasePanel {
 
     private static final Map<ChapterEnum, String> BIG_NODES = new LinkedHashMap<>();
     static {
-        BIG_NODES.put(ChapterEnum.ANCIENT_EGYPT, "IMAGE_WORLDMAP_ZOMBOSS_NODE_EGYPT_ZOMBOSS_NODE_EGYPT_914X994");
-        BIG_NODES.put(ChapterEnum.FROSTBITE_CAVES, "IMAGE_WORLDMAP_ICEAGE_ANIM3_ANIM3_1307X1318");
-        BIG_NODES.put(ChapterEnum.BIG_WAVE_BEACH, "IMAGE_WORLDMAP_ZOMBOSS_NODE_BEACH_ZOMBOSS_NODE_BEACH_905X1096");
-        BIG_NODES.put(ChapterEnum.DARK_AGES, "IMAGE_WORLDMAP_DARK_ANIM1_ANIM1_1201X1413");
+        BIG_NODES.put(ChapterEnum.ANCIENT_EGYPT,
+            "IMAGE_WORLDMAP_ZOMBOSS_NODE_EGYPT_ZOMBOSS_NODE_EGYPT_914X994");
+        BIG_NODES.put(ChapterEnum.FROSTBITE_CAVES,
+            "IMAGE_WORLDMAP_ICEAGE_ANIM3_ANIM3_1307X1318");
+        BIG_NODES.put(ChapterEnum.BIG_WAVE_BEACH,
+            "IMAGE_WORLDMAP_ZOMBOSS_NODE_BEACH_ZOMBOSS_NODE_BEACH_905X1096");
+        BIG_NODES.put(ChapterEnum.DARK_AGES,
+            "IMAGE_WORLDMAP_DARK_ANIM1_ANIM1_1201X1413");
     }
 
     public ChapterSelectPanel() {
         setFillParent(true);
 
+        MusicManager.getInstance().playMusic("music/WorldMap.mp3");
         Skin skin = PvzSkin.get();
         BitmapFont bigFont = skin.getFont("FBUSV8C5EI_1_outline");
         Texture purpleUp = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON");
@@ -138,7 +143,8 @@ public class ChapterSelectPanel extends BasePanel {
                 contentGroup.addActor(btn);
 
                 Color numberColor = locked ? Color.RED : Color.GREEN;
-                Label numLabel = new Label(String.valueOf(stageNum), new Label.LabelStyle(bigFont, numberColor));
+                Label numLabel = new Label(String.valueOf(stageNum),
+                    new Label.LabelStyle(bigFont, numberColor));
                 numLabel.setAlignment(Align.center);
                 numLabel.setSize(islandWidth, 30f);
                 numLabel.setPosition(nextX, islandY + islandHeight / 2f - 15f);
@@ -150,7 +156,8 @@ public class ChapterSelectPanel extends BasePanel {
             currentX = nextX + gapBetweenChapters - gapBetweenItems;
         }
 
-        float contentWidth = Math.max(currentX - gapBetweenChapters + gapBetweenItems, Gdx.graphics.getWidth());
+        float contentWidth = Math.max(currentX - gapBetweenChapters + gapBetweenItems,
+            Gdx.graphics.getWidth());
         contentGroup.setSize(contentWidth, Gdx.graphics.getHeight());
 
         ScrollPane scrollPane = new ScrollPane(contentGroup, skin);
@@ -159,78 +166,6 @@ public class ChapterSelectPanel extends BasePanel {
         scrollPane.setFadeScrollBars(false);
         scrollPane.setOverscroll(false, false);
         addActor(scrollPane);
-
-        // ================== دکمه‌های بالای صفحه (حالت MenuButton) ==================
-        float topY = Gdx.graphics.getHeight() - 120f - 20f;  // بالا با کمی فاصله
-        float startX = 50f;
-        float btnSize = 120f;                                // همان اندازهٔ دکمهٔ تنظیمات
-        float spacing = btnSize + 20f;                       // فاصلهٔ بین دکمه‌ها
-
-        // استایل‌های دکمه‌های تصویری از PvzSkin
-        ImageButton.ImageButtonStyle almanacStyle = skin.get("almanac", ImageButton.ImageButtonStyle.class);
-        ImageButton.ImageButtonStyle minigamesStyle = skin.get("hud_minigames", ImageButton.ImageButtonStyle.class);
-        ImageButton.ImageButtonStyle zgStyle = skin.get("hud_zg", ImageButton.ImageButtonStyle.class);
-        ImageButton.ImageButtonStyle questsStyle = skin.get("hud_quests", ImageButton.ImageButtonStyle.class);
-
-        // 1. Almanac
-        MenuButton almanacBtn = new MenuButton(
-            almanacStyle.imageUp, null, null,
-            almanacStyle.imageDown, null, null,
-            new Runnable() {
-                @Override
-                public void run() {
-                    AppStatus.setCurrentMenuType(MenuType.COLLECTION);
-                }
-            }
-        );
-        almanacBtn.setSize(btnSize, btnSize);
-        almanacBtn.setPosition(startX, topY);
-        addActor(almanacBtn);
-
-        // 2. Minigames
-        MenuButton minigamesBtn = new MenuButton(
-            minigamesStyle.imageUp, null, null,
-            minigamesStyle.imageDown, null, null,
-            new Runnable() {
-                @Override
-                public void run() {
-                    AppStatus.setCurrentMenuType(MenuType.MINIGAME_SELECTION);
-                }
-            }
-        );
-        minigamesBtn.setSize(btnSize, btnSize);
-        minigamesBtn.setPosition(startX + spacing, topY);
-        addActor(minigamesBtn);
-
-        // 3. ZG (I, Zombie)
-        MenuButton zgBtn = new MenuButton(
-            zgStyle.imageUp, null, null,
-            zgStyle.imageDown, null, null,
-            new Runnable() {
-                @Override
-                public void run() {
-                    AppStatus.setCurrentMenuType(MenuType.GREENHOUSE);
-                }
-            }
-        );
-        zgBtn.setSize(btnSize, btnSize);
-        zgBtn.setPosition(startX + spacing * 2, topY);
-        addActor(zgBtn);
-
-        // 4. Quests
-        MenuButton questsBtn = new MenuButton(
-            questsStyle.imageUp, null, null,
-            questsStyle.imageDown, null, null,
-            new Runnable() {
-                @Override
-                public void run() {
-                    AppStatus.setCurrentMenuType(MenuType.QUEST);
-                }
-            }
-        );
-        questsBtn.setSize(btnSize, btnSize);
-        questsBtn.setPosition(startX + spacing * 3, topY);
-        addActor(questsBtn);
 
         // دکمه بازگشت
         MenuButton backBtn = new MenuButton(purpleUp, "Back", bigFont, purpleDown, null, null,
