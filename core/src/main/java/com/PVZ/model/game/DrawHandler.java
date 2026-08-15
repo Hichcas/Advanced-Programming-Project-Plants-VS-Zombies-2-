@@ -35,6 +35,7 @@ public class DrawHandler {
         if (engine.zombieEngine != null) engine.zombieEngine.draw(batch);
         batch.begin();
         drawTileOverlays(engine, batch);
+        drawTombstonesWithHealthBars(engine, batch);
         drawBattleProjectiles(engine, batch);
         drawSuns(engine, batch);
         drawLootDrops(engine, batch);
@@ -81,6 +82,29 @@ public class DrawHandler {
             }
         }
         batch.setColor(orig);
+    }
+
+    private static void drawTombstonesWithHealthBars(RegularGameEngine engine, SpriteBatch batch) {
+        if (engine.map == null) return;
+        BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
+        font.setColor(Color.WHITE);
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 9; col++) {
+                Tile tile = engine.map.getTile(row, col);
+                if (tile != null && tile.getType() == TileType.TOMBSTONE) {
+                    float tileX = tile.getX();
+                    float tileY = tile.getY();
+                    float width = tile.getWidth();
+                    float height = tile.getHeight();
+
+                    float hpPercent = Math.max(0f, (float) tile.getHp() / 700f);
+                    HealthBarRenderer.draw(batch, tileX + 10f, tileY + height - 15f, width - 20f, hpPercent, true);
+
+                    String label = "Tomb (" + tile.getHp() + "hp)";
+                    font.draw(batch, label, tileX + 10f, tileY + height - 2f);
+                }
+            }
+        }
     }
 
     private static void drawPlantsWithLabels(RegularGameEngine engine, SpriteBatch batch) {

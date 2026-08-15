@@ -16,6 +16,14 @@ public final class ZombieAnimation {
         if (canonicalState.equals(zombie.getRuntimeState(STATE_KEY)) && isActive(zombie)) {
             return;
         }
+        if (isActive(zombie)) {
+            String currentState = (String) zombie.getRuntimeState(STATE_KEY);
+            if (currentState != null && !currentState.equals("walk") && !currentState.equals("idle")) {
+                if (canonicalState.equals("walk") || canonicalState.equals("idle")) {
+                    return;
+                }
+            }
+        }
         zombie.putRuntimeState(STATE_KEY, canonicalState);
         zombie.putRuntimeState(REMAINING_KEY, resolveDuration(zombie, canonicalState, fallbackSeconds));
     }
