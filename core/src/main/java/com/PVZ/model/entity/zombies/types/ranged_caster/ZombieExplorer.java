@@ -2,19 +2,18 @@ package com.PVZ.model.entity.zombies.types.ranged_caster;
 
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
-import com.PVZ.model.entity.zombies.base.ZombieProjectile;
+import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.DamageType;
 import com.PVZ.model.game.BattleController;
-import com.PVZ.model.game.Map;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ZombieExplorer extends AbstractRangedCasterZombie {
+public class ZombieExplorer extends Zombie {
     private boolean torchOn;
 
     public ZombieExplorer() {
-        super("ZombieExplorer", 120, 100, 0.185, 300, 2500, defaultScaledProps(),
-              150, 150, 2.0, 2);
+        super("ZombieExplorer", 120, 100, 0.185, 300, 2500, defaultScaledProps());
         this.torchOn = true;
     }
 
@@ -24,44 +23,43 @@ public class ZombieExplorer extends AbstractRangedCasterZombie {
         list.add(new ScaledProperty("EatDPS", ScaledProperty.Formula.STANDARD, 1.3, 0.05));
         list.add(new ScaledProperty("Speed", ScaledProperty.Formula.CONSTANT, 0, 0));
         list.add(new ScaledProperty("WavePointCost", ScaledProperty.Formula.CONSTANT, 0, 0));
-        list.add(new ScaledProperty("ProjectileDamage", ScaledProperty.Formula.STANDARD, 1.3, 0.05));
         return list;
     }
 
     @Override
-    public void shoot(BattleController controller, Plant target) {
-        int dmg = torchOn ? (int) projectileDamage * 2 : (int) projectileDamage;
-        controller.addZombieProjectile(new ZombieProjectile(
-            (float) x, (float) y, dmg, (float) projectileSpeed, (int) row, this));
+    public void takeDamage(int amount, DamageType type) {
+        if (torchOn && type == DamageType.ICE) {
+            extinguishTorch();
+            System.out.println("[ZombieExplorer] Explorer zombie torch extinguished by ice attack!");
+            return;
+        }
+        super.takeDamage(amount, type);
     }
 
     @Override
-    public void onHit(Plant target) { }
+    public void onSpawn() { }
 
     @Override
-    public void burnPlantsAhead(Map map, BattleController controller) {
-        if (!torchOn || map == null || controller == null) {
-            return;
-        }
-        int r = (int) row;
-        int currentCol = controller.getTileColumn((float) x);
-        for (int c = currentCol - 1; c >= Math.max(0, currentCol - 1); c--) {
-            Plant plant = controller.getPlantAt(r, c);
-            if (plant != null && !plant.isDead()) {
-                plant.takeDamage(9999);
+    public void onDestroy() { }
+
+    @Override
+    public void onUpdate(float delta, BattleController controller) {
+        if (torchOn && controller != null && !isDead()) {
+            int tileCol = controller.getTileColumn((float) x);
+            Plant plantInFront = controller.getPlantAt((int) row, tileCol);
+            if (plantInFront != null && !plantInFront.isDead()) {
+                plantInFront.takeDamage(9999);
+                System.out.println("[ZombieExplorer] Explorer zombie burned plant " + plantInFront.getDefinition().getName() + " instantly with torch!");
             }
         }
     }
 
-    public void reigniteTorch() {
-        torchOn = true;
-    }
+    public boolean isTorchOn() { return torchOn; }
+    public void extinguishTorch() { torchOn = false; }
+    public void reigniteTorch() { torchOn = true; }
 
     @Override
     public String getDebugString() {
         return super.getDebugString() + (torchOn ? "\nFIRE" : "\nNOFIRE");
     }
-
-    public boolean isTorchOn() { return torchOn; }
-    public void extinguishTorch() { torchOn = false; }
 }

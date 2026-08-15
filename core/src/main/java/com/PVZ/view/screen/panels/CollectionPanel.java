@@ -959,21 +959,43 @@ public class CollectionPanel extends BasePanel {
     private static class ZombiePreviewActor extends Actor {
         private ZombieType type;
         private float time;
+        private com.PVZ.model.entity.zombies.base.Zombie cachedZombie;
 
-        void setType(ZombieType type) { this.type = type; this.time = 0f; }
+        void setType(ZombieType type) {
+            if (this.type != type) {
+                this.type = type;
+                this.time = 0f;
+                this.cachedZombie = type != null ? type.create() : null;
+                if (this.cachedZombie != null) {
+                    com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this.cachedZombie, "idle", 999999f);
+                }
+            }
+        }
 
         @Override
         public void act(float delta) {
             super.act(delta);
             time += delta;
+            if (cachedZombie != null) {
+                cachedZombie.update(delta, null);
+            }
         }
 
         @Override
         public void draw(Batch batch, float parentAlpha) {
             if (type == null) return;
-            String pamPath = ZombieTexturePaths.getPamPath(type.alias);
-            EntityRenderer.getInstance().renderPam((SpriteBatch) batch, pamPath, "idle", time,
-                getX() + getWidth() / 2f, getY() + getHeight() / 2f);
+            float renderX = getX() + getWidth() / 2f;
+            float renderY = getY() + getHeight() / 2f;
+            if (cachedZombie != null) {
+                com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(cachedZombie, "idle", 999999f);
+                cachedZombie.setX(renderX);
+                cachedZombie.setY(renderY);
+                EntityRenderer.getInstance().renderZombie((SpriteBatch) batch, cachedZombie, time);
+            } else {
+                String pamPath = ZombieTexturePaths.getPamPath(type.alias);
+                EntityRenderer.getInstance().renderPam((SpriteBatch) batch, pamPath, "idle", time,
+                    renderX, renderY);
+            }
         }
     }
 }

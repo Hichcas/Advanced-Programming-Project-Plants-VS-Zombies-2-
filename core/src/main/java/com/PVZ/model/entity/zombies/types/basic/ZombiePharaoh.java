@@ -11,9 +11,9 @@ public class ZombiePharaoh extends AbstractBasicZombie {
     private boolean sarcophagusBroken;
 
     public ZombiePharaoh() {
-        super("ZombiePharaohDefault", 400, 100, 0.12, 350, 3000, defaultScaledProps());
+        super("ZombiePharaohDefault", 500, 100, 0.12, 350, 3000, defaultScaledProps());
         this.sarcophagusBroken = false;
-        this.armor = new ZombieArmor(ZombieArmor.ArmorType.SARCOPHAGUS, 600, false, false, false);
+        this.armor = new ZombieArmor(ZombieArmor.ArmorType.SARCOPHAGUS, 1200, false, false, false);
     }
 
     private static List<ScaledProperty> defaultScaledProps() {
@@ -41,7 +41,8 @@ public class ZombiePharaoh extends AbstractBasicZombie {
             armor = null;
             speed = 0.3;
             currentSpeed = 0.3;
-            System.out.println(alias + " sarcophagus broken, speeding up");
+            com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "break_power", 2.0);
+            System.out.println(alias + " sarcophagus broken, speeding up!");
         }
     }
 

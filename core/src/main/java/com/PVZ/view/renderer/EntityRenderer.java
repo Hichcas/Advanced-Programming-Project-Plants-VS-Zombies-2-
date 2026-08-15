@@ -49,7 +49,7 @@ public class EntityRenderer {
     }
 
     public ClipRef getZombieClip(String effectiveAlias, String state) {
-        if (effectiveAlias == null) {
+        if (effectiveAlias == null || state == null) {
             return null;
         }
         String cacheKey = effectiveAlias + "#" + state;
@@ -59,18 +59,26 @@ public class EntityRenderer {
         String pamPath = ZombieTexturePaths.getPamPath(effectiveAlias);
         try {
             pamPlayer.loadSync(pamPath);
-            String resolvedName = PamAnimationCatalog.resolveClip(pamPath, state);
-            ClipRef clip = resolvedName != null ? pamPlayer.getClip(pamPath, resolvedName) : null;
+
+            if (loggedPams.add(pamPath)) {
+                java.util.Set<String> catalogClips = PamAnimationCatalog.clipNames(pamPath);
+                java.util.List<String> runtimeClips = pamPlayer.clips(pamPath);
+                System.out.println("[EntityRenderer] Zombie " + effectiveAlias + " (" + pamPath
+                    + ") catalog clips: " + catalogClips + " | runtime clips: " + runtimeClips);
+            }
+
+            // Try exact name match first (e.g. for sub-branch tracks like zombie_armor_cone_norm)
+            ClipRef clip = pamPlayer.getClip(pamPath, state);
+            if (clip == null) {
+                String resolvedName = PamAnimationCatalog.resolveClip(pamPath, state);
+                clip = resolvedName != null ? pamPlayer.getClip(pamPath, resolvedName) : null;
+            }
             if (clip == null) {
                 clip = pamPlayer.getClip(pamPath, "walk");
             }
-            if (clip == null) {
-                java.util.List<String> available = pamPlayer.clips(pamPath);
-                if (available != null && !available.isEmpty()) {
-                    clip = pamPlayer.getClip(pamPath, available.get(0));
-                }
+            if (clip != null) {
+                zombieClips.put(cacheKey, clip);
             }
-            zombieClips.put(cacheKey, clip);
             return clip;
         } catch (Exception e) {
             System.err.println("EntityRenderer: Failed to load Zombie PAM for alias " + effectiveAlias + " state " + state + ": " + e.getMessage());
@@ -87,10 +95,20 @@ public class EntityRenderer {
         if (zombie == null) return;
         textures.update();
 
+        if (zombie instanceof com.PVZ.model.entity.zombies.types.basic.ZombieCamel camel) {
+            renderZombieCamel(batch, camel, stateTime);
+            return;
+        }
+
         String effectiveAlias = ZombieTexturePaths.getEffectivePamAlias(zombie);
         String state = ZombieAnimation.getState(zombie);
         if (state == null) {
             state = "walk";
+        }
+        if (zombie instanceof com.PVZ.model.entity.zombies.types.basic.ZombiePharaoh pharaoh && pharaoh.isSarcophagusBroken()) {
+            if ("walk".equals(state)) state = "walk_norm";
+            else if ("eat".equals(state)) state = "eat_norm";
+            else if ("idle".equals(state)) state = "idle_norm";
         }
 
         ClipRef clip = getZombieClip(effectiveAlias, state);
@@ -117,9 +135,97 @@ public class EntityRenderer {
             boolean flipX = zombie.isHypnotized();
             float effectiveTime = zombie.isFrozen() ? 0.0f : stateTime;
 
-            pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
+            String activeArmorTrack = ZombieTexturePaths.getArmorSubBranchTrack(zombie);
+            if (activeArmorTrack != null) {
+                Map<String, Boolean> trackVisibility = new HashMap<>();
+                trackVisibility.put("zombie_armor_cone_norm", false);
+                trackVisibility.put("zombie_armor_cone_damage_01", false);
+                trackVisibility.put("zombie_armor_cone_damage_02", false);
+                trackVisibility.put("zombie_armor_bucket_norm", false);
+                trackVisibility.put("zombie_armor_bucket_damage_01", false);
+                trackVisibility.put("zombie_armor_bucket_damage_02", false);
+                trackVisibility.put("zombie_armor_brick_norm", false);
+                trackVisibility.put("zombie_armor_brick_damage_01", false);
+                trackVisibility.put("zombie_armor_brick_damage_02", false);
+                trackVisibility.put("_zombie_egypt_armor1_states", false);
+                trackVisibility.put("_zombie_egypt_armor2_states", false);
+
+                trackVisibility.put(activeArmorTrack, true);
+
+                if (zombie.getAlias() != null && zombie.getAlias().contains("Mummy")) {
+                    com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType type = zombie.getArmor() != null ? zombie.getArmor().getType() : null;
+                    if (type == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.CONE) {
+                        trackVisibility.put("_zombie_egypt_armor1_states", true);
+                    } else if (type == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.BUCKET) {
+                        trackVisibility.put("_zombie_egypt_armor2_states", true);
+                    }
+                }
+
+                pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true, trackVisibility);
+            } else {
+                pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
+            }
             batch.setColor(origColor);
         }
+        renderFallingArmors(batch);
+    }
+
+    private void renderZombieCamel(SpriteBatch batch, com.PVZ.model.entity.zombies.types.basic.ZombieCamel camel, float stateTime) {
+        float x = (float) camel.getX();
+        float y = (float) camel.getY();
+        float effectiveTime = camel.isFrozen() ? 0.0f : stateTime;
+        String state = ZombieAnimation.getState(camel);
+        if (state == null) state = "walk";
+
+        boolean isDying = "die".equals(state) || camel.isDead();
+        Color origColor = batch.getColor() != null ? new Color(batch.getColor()) : new Color(Color.WHITE);
+
+        // 1. Render Rear Segment (Tail) (Offset 240f)
+        if (camel.getRearSegment() != null && (!camel.getRearSegment().isDestroyed() || isDying)) {
+            String rearState = isDying ? "die" : ("eat".equals(state) ? "idle" : state);
+            ClipRef rearClip = getZombieClip("ZombieCamelRear", rearState);
+            if (rearClip == null) rearClip = getZombieClip("ZombieCamelRear", "walk");
+            if (rearClip != null) {
+                Map<String, Boolean> vis = new HashMap<>();
+                vis.put("_zombie_camel_board_tail_states", true);
+                vis.put("_zombie_camel_board_tail_norm", true);
+                vis.put("_zombie_camel_board_head_states", false);
+                vis.put("_zombie_camel_board_hump_states", false);
+                pamPlayer.draw(batch, rearClip, effectiveTime, x + 240f, y, true, vis);
+            }
+        }
+
+        // 2. Render Middle Segment (Hump) (Offset 120f)
+        if (camel.getMiddleSegment() != null && (!camel.getMiddleSegment().isDestroyed() || isDying)) {
+            String middleState = isDying ? "die" : ("eat".equals(state) ? "idle" : state);
+            ClipRef middleClip = getZombieClip("ZombieCamelMiddle", middleState);
+            if (middleClip == null) middleClip = getZombieClip("ZombieCamelMiddle", "walk");
+            if (middleClip != null) {
+                Map<String, Boolean> vis = new HashMap<>();
+                vis.put("_zombie_camel_board_hump_states", true);
+                vis.put("_zombie_camel_board_hump_norm", true);
+                vis.put("_zombie_camel_board_head_states", false);
+                vis.put("_zombie_camel_board_tail_states", false);
+                pamPlayer.draw(batch, middleClip, effectiveTime, x + 120f, y, true, vis);
+            }
+        }
+
+        // 3. Render Front Segment (Head) (Offset 0f)
+        if (camel.getFrontSegment() != null && (!camel.getFrontSegment().isDestroyed() || isDying)) {
+            String frontState = isDying ? "die" : state;
+            ClipRef frontClip = getZombieClip("ZombieCamelDefault", frontState);
+            if (frontClip == null) frontClip = getZombieClip("ZombieCamelDefault", "walk");
+            if (frontClip != null) {
+                Map<String, Boolean> vis = new HashMap<>();
+                vis.put("_zombie_camel_board_head_states", true);
+                vis.put("_zombie_camel_board_head_norm", true);
+                vis.put("_zombie_camel_board_hump_states", false);
+                vis.put("_zombie_camel_board_tail_states", false);
+                pamPlayer.draw(batch, frontClip, effectiveTime, x, y, true, vis);
+            }
+        }
+
+        batch.setColor(origColor);
     }
 
 
@@ -385,11 +491,89 @@ public class EntityRenderer {
         return renderPam(batch, pamPath, clip, animationTime, x, y);
     }
 
+    private static class FallingArmorPiece {
+        float x, y;
+        float vx, vy;
+        float lifetime;
+        float alpha;
+        String pamAlias;
+        String armorTrack;
+
+        FallingArmorPiece(float x, float y, String pamAlias, String armorTrack) {
+            this.x = x;
+            this.y = y;
+            this.vx = (float) (Math.random() * 40 - 20);
+            this.vy = (float) (Math.random() * 60 + 80);
+            this.lifetime = 0.8f;
+            this.alpha = 1.0f;
+            this.pamAlias = pamAlias;
+            this.armorTrack = armorTrack;
+        }
+
+        boolean update(float delta) {
+            x += vx * delta;
+            y += vy * delta;
+            vy -= 350f * delta;
+            lifetime -= delta;
+            if (lifetime < 0.3f) {
+                alpha = Math.max(0f, lifetime / 0.3f);
+            }
+            return lifetime <= 0;
+        }
+    }
+
     public TextureBank getTextures() {
         return textures;
     }
 
     public PamPlayer getPamPlayer() {
         return pamPlayer;
+    }
+
+    private final java.util.List<FallingArmorPiece> fallingArmors = new java.util.concurrent.CopyOnWriteArrayList<>();
+
+    public void spawnFallingArmor(float x, float y, com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType type, String alias) {
+        String pamAlias = alias != null ? alias : "ZombieTutorialArmor1Default";
+        String trackName = null;
+        if (type == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.CONE) trackName = "zombie_armor_cone_damage_02";
+        else if (type == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.BUCKET) trackName = "zombie_armor_bucket_damage_02";
+        else if (type == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.BRICK) trackName = "zombie_armor_brick_damage_02";
+        else if (type == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.CROWN) trackName = "zombie_armor_crown_damage_02";
+
+        fallingArmors.add(new FallingArmorPiece(x, y, pamAlias, trackName));
+    }
+
+    public void renderFallingArmors(SpriteBatch batch) {
+        if (fallingArmors.isEmpty()) return;
+        float delta = com.badlogic.gdx.Gdx.graphics.getDeltaTime();
+        Color origColor = batch.getColor() != null ? new Color(batch.getColor()) : new Color(Color.WHITE);
+
+        for (FallingArmorPiece piece : fallingArmors) {
+            if (piece.update(delta)) {
+                fallingArmors.remove(piece);
+                continue;
+            }
+            ClipRef clip = getZombieClip(piece.pamAlias, "walk");
+            if (clip != null) {
+                batch.setColor(1.0f, 1.0f, 1.0f, piece.alpha);
+                if (piece.armorTrack != null) {
+                    Map<String, Boolean> trackVisibility = new HashMap<>();
+                    trackVisibility.put("zombie_armor_cone_norm", false);
+                    trackVisibility.put("zombie_armor_cone_damage_01", false);
+                    trackVisibility.put("zombie_armor_cone_damage_02", false);
+                    trackVisibility.put("zombie_armor_bucket_norm", false);
+                    trackVisibility.put("zombie_armor_bucket_damage_01", false);
+                    trackVisibility.put("zombie_armor_bucket_damage_02", false);
+                    trackVisibility.put("zombie_armor_brick_norm", false);
+                    trackVisibility.put("zombie_armor_brick_damage_01", false);
+                    trackVisibility.put("zombie_armor_brick_damage_02", false);
+                    trackVisibility.put(piece.armorTrack, true);
+                    pamPlayer.draw(batch, clip, 0.5f, piece.x, piece.y, false, trackVisibility);
+                } else {
+                    pamPlayer.draw(batch, clip, 0.5f, piece.x, piece.y, false);
+                }
+            }
+        }
+        batch.setColor(origColor);
     }
 }
