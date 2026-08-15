@@ -3692,8 +3692,12 @@
         },
         {
           "raw": "Melt Area 3x3",
-          "kind": "UNKNOWN",
-          "level": 3
+          "kind": "STAT",
+          "level": 3,
+          "stat": "MELT_AREA",
+          "op": "SET",
+          "value": 3,
+          "unit": "tiles"
         },
         {
           "raw": "Explode on Finish",
