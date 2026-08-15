@@ -511,13 +511,20 @@ public class CollectionPanel extends BasePanel {
                 // The sheet defines the actual upgrade effect per target level.
                 // Seed cost is handled centrally and increases with each tier.
 
-                hpSlider.setRange(0, Math.max(1000, def.getBaseHp()));
-                hpSlider.setValue(def.getBaseHp());
-                hpValueLabel.setText(String.valueOf(def.getBaseHp()));
+                // Show the player's ACTUAL current stats (HP/cost upgrades already
+                // applied), not the plant's static level-1 baseline - otherwise the
+                // detail sheet never visibly changes after an upgrade even though
+                // the upgrade genuinely applied in-game.
+                com.PVZ.model.entity.plants.PlantStats currentStats =
+                    com.PVZ.model.entity.plants.UpgradeResolver.resolveStats(def, displayLevel);
+
+                hpSlider.setRange(0, Math.max(1000, currentStats.getMaxHp()));
+                hpSlider.setValue(currentStats.getMaxHp());
+                hpValueLabel.setText(String.valueOf(currentStats.getMaxHp()));
 
                 costSlider.setRange(0, 300);
-                costSlider.setValue(def.getCost());
-                costValueLabel.setText(String.valueOf(def.getCost()));
+                costSlider.setValue(currentStats.getCost());
+                costValueLabel.setText(String.valueOf(currentStats.getCost()));
 
                 levelSlider.setRange(1, Math.max(1, maxDisplayLevel));
                 levelSlider.setValue(displayLevel);

@@ -109,7 +109,7 @@ public class SeedPacketBar {
             boolean affordable = engine == null
                 || engine.isConveyorBeltMode()
                 || packet.getPlantType().getDefinition() == null
-                || engine.getSunCount() >= packet.getPlantType().getDefinition().getCost();
+                || engine.getSunCount() >= com.PVZ.model.entity.plants.PlantLibrary.getEffectiveCost(packet.getPlantType());
             boolean onCooldown = engine != null && !engine.isConveyorBeltMode()
                 && engine.isOnCooldown(packet.getPlantType());
 
