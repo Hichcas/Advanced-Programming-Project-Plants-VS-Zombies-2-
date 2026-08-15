@@ -16,6 +16,13 @@ public class StatusEffect {
         return duration <= 0;
     }
 
+    /** Extends this effect back out to at least {@code newDuration} instead of stacking a duplicate. */
+    public void refresh(float newDuration) {
+        if (newDuration > duration) {
+            duration = newDuration;
+        }
+    }
+
     public DamageType getType() { return type; }
     public float getDuration() { return duration; }
 }
