@@ -40,7 +40,8 @@
       "SUN_SHROOM" : 5,
       "FUME_SHROOM" : 10,
       "WALL_NUT" : 10,
-      "CAULIPOWER" : 70
+      "CAULIPOWER" : 70,
+      "PEA_POD" : 10
     },
     "plantLevels" : {
       "FUME_SHROOM" : 2,
@@ -706,7 +707,7 @@
         "targetCount" : 50,
         "currentCount" : 50,
         "completed" : true,
-        "claimed" : false,
+        "claimed" : true,
         "reward" : {
           "type" : "SEED_PACKETS",
           "amount" : 10,
@@ -719,13 +720,102 @@
         "formattedTitle" : "Chapter Hunter",
         "runtimeState" : { },
         "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
+      }, {
+        "id" : "daily_sun_producers_1786811953399",
+        "title" : "Cloudy Day",
+        "descriptionTemplate" : "Win with at most 3 sun producers",
+        "type" : "DAILY",
+        "priority" : "HIGH",
+        "conditionKey" : "max_sun_producers",
+        "targetCount" : 3,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "formattedTitle" : "Cloudy Day",
+        "runtimeState" : { },
+        "formattedDescription" : "Win with at most 3 sun producers"
+      }, {
+        "id" : "daily_cross_empty_1786811953405",
+        "title" : "Defenseless Cross",
+        "descriptionTemplate" : "Win with column {col} and row {row} empty",
+        "type" : "DAILY",
+        "priority" : "HIGH",
+        "conditionKey" : "cross_empty",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 25,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "col" : 4,
+          "row" : 4
+        },
+        "active" : true,
+        "formattedTitle" : "Defenseless Cross",
+        "runtimeState" : { },
+        "formattedDescription" : "Win with column 4 and row 4 empty"
+      }, {
+        "id" : "daily_no_symmetry_1786811953405",
+        "title" : "No OCD",
+        "descriptionTemplate" : "No symmetry in garden except middle row",
+        "type" : "DAILY",
+        "priority" : "MEDIUM",
+        "conditionKey" : "no_symmetry",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "COINS",
+          "amount" : 800,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "active" : true,
+        "formattedTitle" : "No OCD",
+        "runtimeState" : { },
+        "formattedDescription" : "No symmetry in garden except middle row"
+      }, {
+        "id" : "story_chapter_hunt_FROSTBITE_CAVES",
+        "title" : "Chapter Hunter",
+        "descriptionTemplate" : "Defeat 50 zombies from {chapter}",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "chapter_zombie_kill",
+        "targetCount" : 50,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "chapter" : "FROSTBITE_CAVES"
+        },
+        "active" : true,
+        "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { },
+        "formattedDescription" : "Defeat 50 zombies from Frostbite Caves"
       } ],
-      "lastDailyRefresh" : null,
+      "lastDailyRefresh" : "2026-08-15",
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "11h 37m"
+      "timeUntilReset" : "3h 50m"
     }
   }
 }
