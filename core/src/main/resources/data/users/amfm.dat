@@ -11,7 +11,7 @@
   "userStats" : {
     "gamesPlayed" : 0,
     "coins" : 4997500,
-    "diamonds" : 4999872,
+    "diamonds" : 4999874,
     "stagesCompleted" : 0,
     "highestScore" : 0,
     "dailyQuestsCompleted" : 0,
@@ -580,8 +580,8 @@
     "offerPlant" : "FIRE_PEASHOOTER",
     "offerDate" : "2026-08-15",
     "purchased" : false,
-    "forToday" : true,
-    "availableToday" : true
+    "availableToday" : true,
+    "forToday" : true
   },
   "stayLoggedIn" : true,
   "questState" : {
@@ -617,8 +617,8 @@
         "priority" : "MEDIUM",
         "conditionKey" : "speed_kill",
         "targetCount" : 10,
-        "currentCount" : 6,
-        "completed" : false,
+        "currentCount" : 10,
+        "completed" : true,
         "claimed" : false,
         "reward" : {
           "type" : "COINS",
@@ -626,10 +626,10 @@
           "targetPlant" : null
         },
         "parameters" : { },
-        "active" : true,
+        "active" : false,
         "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1786779863769
+          "waveStartTime" : 1786813142834
         },
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
@@ -808,14 +808,14 @@
         "active" : true,
         "formattedTitle" : "Chapter Hunter",
         "runtimeState" : { },
-        "formattedDescription" : "Defeat 50 zombies from Frostbite Caves"
+        "formattedDescription" : "Defeat 50 zombies from FROSTBITE_CAVES"
       } ],
       "lastDailyRefresh" : "2026-08-15",
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
-      "isDayLevel" : true,
-      "timeUntilReset" : "3h 50m"
+      "isDayLevel" : false,
+      "timeUntilReset" : "3h 30m"
     }
   }
 }
