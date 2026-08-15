@@ -206,7 +206,8 @@ public class ShopPanel extends BasePanel {
         desc.setFontScale(0.68f);
         cell.add(desc).growX().height(56f).row();
 
-        cell.add(buildPriceButton(price, priceInDiamonds, action)).width(230f).height(64f).row();
+        cell.add(buildPriceButton(price, priceInDiamonds,
+            () -> confirmPurchase(title, price, priceInDiamonds, action))).width(230f).height(64f).row();
 
         content.add(cell).width(CARD_W).height(CARD_H);
         int next = cardIndex + 1;
@@ -298,7 +299,8 @@ public class ShopPanel extends BasePanel {
 
         boolean available = daily.isAvailableToday();
         Table buyChip = buildPriceButton(1600, false,
-            available ? () -> buy("daily", 1, null)
+            available ? () -> confirmPurchase("Today's Offer (10 seed packets for " + plantName + ")",
+                1600, false, () -> buy("daily", 1, null))
                 : () -> setStatus("Today's daily offer is already purchased.", true));
         if (!available) {
             Label purchased = new Label("ALREADY PURCHASED TODAY", new Label.LabelStyle(bodyFont, Color.SALMON));
@@ -369,8 +371,9 @@ public class ShopPanel extends BasePanel {
         select.setItems(unlocked);
         TextButton buy = makeTextButton("BUY 5 DIAMONDS", "green", () -> {
             PlantType chosen = select.getSelected();
-            buy("selected-seed", 1, chosen.name());
             dialog.remove();
+            confirmPurchase("Seed Pack (" + chosen.getDisplayName() + ")", 5, true,
+                () -> buy("selected-seed", 1, chosen.name()));
         });
         TextButton cancel = makeTextButton("CANCEL", "brown", dialog::remove);
         dialog.add(title).growX().height(48f).row();
@@ -379,6 +382,50 @@ public class ShopPanel extends BasePanel {
         row.add(buy).width(220f).height(60f).pad(6f);
         row.add(cancel).width(180f).height(60f).pad(6f);
         dialog.add(row).growX();
+        addActor(dialog);
+    }
+
+    /**
+     * Same dialog skin/background as {@link #showSelectedSeedDialog()} - a
+     * simple Confirm/Cancel prompt with the item's own coin/diamond PAM icon,
+     * so nothing purchases on a single click.
+     */
+    private void confirmPurchase(String itemName, int price, boolean diamonds, Runnable onConfirm) {
+        Table dialog = new Table();
+        dialog.setBackground(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
+        dialog.pad(24f);
+        dialog.setSize(600f, 320f);
+        dialog.setPosition((VW - 600f) / 2f, (VH - 320f) / 2f);
+
+        Label title = new Label("CONFIRM PURCHASE", new Label.LabelStyle(titleFont, Color.GOLD));
+        title.setFontScale(0.85f);
+        dialog.add(title).growX().height(48f).row();
+
+        Table priceRow = new Table();
+        PamIconActor icon = diamonds
+            ? new PamIconActor(DIAMOND_PAM, "idle", 200f, 46f)
+            : new PamIconActor(COIN_PAM, "animation", 45f, 46f);
+        priceRow.add(icon).size(46f).padRight(10f);
+        Label priceLabel = new Label(String.valueOf(price), new Label.LabelStyle(bodyFont, Color.WHITE));
+        priceLabel.setFontScale(0.9f);
+        priceRow.add(priceLabel);
+        dialog.add(priceRow).height(56f).padTop(6f).row();
+
+        Label question = new Label("Buy " + itemName + "?", new Label.LabelStyle(bodyFont, Color.WHITE));
+        question.setFontScale(0.75f);
+        question.setAlignment(Align.center);
+        question.setWrap(true);
+        dialog.add(question).growX().width(500f).height(60f).padTop(6f).row();
+
+        TextButton confirm = makeTextButton("CONFIRM", "green", () -> {
+            dialog.remove();
+            onConfirm.run();
+        });
+        TextButton cancel = makeTextButton("CANCEL", "brown", dialog::remove);
+        Table row = new Table();
+        row.add(confirm).width(220f).height(60f).pad(6f);
+        row.add(cancel).width(180f).height(60f).pad(6f);
+        dialog.add(row).growX().padTop(10f);
         addActor(dialog);
     }
 
