@@ -10,13 +10,13 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 5000000,
-    "diamonds" : 5000000,
+    "coins" : 4997500,
+    "diamonds" : 4999992,
     "stagesCompleted" : 0,
     "highestScore" : 0,
     "dailyQuestsCompleted" : 0,
     "nonDailyQuestsCompleted" : 0,
-    "purchasedPlantFood" : 0
+    "purchasedPlantFood" : 1
   },
   "progressState" : {
     "completedLevels" : {
@@ -35,8 +35,10 @@
   },
   "collectionState" : {
     "unlockedPlants" : [ "LILY_PAD", "HYPNO_SHROOM", "FUME_SHROOM", "CACTUS", "ARMA_MINT", "GRAVE_BUSTER", "TANGLE_KELP", "PEASHOOTER", "BOWLING_BULB", "ENFORCE_MINT", "REINFORCE_MINT", "REPEATER", "CAT_TAIL", "SUNFLOWER", "MEGA_GATLING_PEA", "CHERRY_BOMB", "CAULIPOWER", "CHOMPER", "CAT_TAIL_MINT", "TORCHWOOD", "SPLIT_PEA", "GOO_PEASHOOTER", "JALAPENO", "SUN_SHROOM", "GOLD_BLOOM", "ENDURIAN", "WASABI_WHIP", "BONK_CHOY", "PIERCE_MINT", "PRIMAL_SUNFLOWER", "GIANT_WALLNUT", "KIWIBEAST", "APPEASE_MINT", "ELECTRIC_BLUEBERRY", "TALL_NUT", "IMITATER", "SQUASH", "POTATO_MINE", "WALLNUT_BOWLING", "ICE_SHROOM", "PRIMAL_POTATO_MINE", "ENCHANT_MINT", "WINTER_MELON", "MELON_PULT", "PUMPKIN", "THREEPEATER", "MAGNET_SHROOM", "PEA_POD", "SEA_SHROOM", "DOOM_SHROOM", "HOT_POTATO", "CITRON", "PHAT_BEET", "EXPLODE_O_NUT", "SNOW_PEA", "TWIN_SUNFLOWER", "PEPPER_PULT", "ICEBERG_LETTUCE", "PUFF_SHROOM", "KERNEL_PULT", "FIRE_PEASHOOTER", "CABBAGE_PULT", "STARFRUIT", "BOMBARD_MINT", "ENLIGHTEN_MINT", "ROTOBAGA", "WALL_NUT", "SWEET_POTATO", "GRAPESHOT", "GARLIC", "SUN_BEAN" ],
-    "seenZombies" : [ "TUTORIAL_ARMOR1", "ICEAGE_HUNTER", "TUTORIAL_FLAG", "RA", "IMP_ICEAGE", "CAMEL", "TUTORIAL_DEFAULT", "MUMMY_DEFAULT", "MUMMY_ARMOR4", "ICEAGE_DEFAULT", "MUMMY_ARMOR2", "TUTORIAL_ARMOR4", "TUTORIAL_ARMOR2", "MUMMY_ARMOR1" ],
-    "seedPackets" : { },
+    "seenZombies" : [ "PHARAOH", "TOMB_RAISER", "TUTORIAL_ARMOR1", "ICEAGE_HUNTER", "TUTORIAL_FLAG", "RA", "IMP_ICEAGE", "CAMEL", "TUTORIAL_DEFAULT", "MUMMY_DEFAULT", "MUMMY_ARMOR4", "ICEAGE_DEFAULT", "MUMMY_ARMOR2", "EXPLORER", "TUTORIAL_ARMOR4", "TUTORIAL_ARMOR2", "MUMMY_ARMOR1" ],
+    "seedPackets" : {
+      "SUN_SHROOM" : 5
+    },
     "plantLevels" : { },
     "greenhouseBoosts" : [ ]
   },
@@ -77,12 +79,12 @@
       "empty" : true,
       "readyForPlanting" : true
     }, {
-      "unlocked" : false,
+      "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : false
+      "readyForPlanting" : true
     }, {
       "unlocked" : false,
       "plantType" : null,
@@ -126,8 +128,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 7,
-    "numberOfUnlockedPots" : 5
+    "numberOfLockedPots" : 6,
+    "numberOfUnlockedPots" : 6
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -549,14 +551,29 @@
       "read" : false,
       "timestamp" : 1786772836313,
       "formattedText" : "New zombie spotted: IMP_ICEAGE!\n2026/08/15  09:17"
+    }, {
+      "text" : "New zombie spotted: EXPLORER!",
+      "read" : false,
+      "timestamp" : 1786775473811,
+      "formattedText" : "New zombie spotted: EXPLORER!\n2026/08/15  10:01"
+    }, {
+      "text" : "New zombie spotted: PHARAOH!",
+      "read" : false,
+      "timestamp" : 1786776103071,
+      "formattedText" : "New zombie spotted: PHARAOH!\n2026/08/15  10:11"
+    }, {
+      "text" : "New zombie spotted: TOMB_RAISER!",
+      "read" : false,
+      "timestamp" : 1786779679376,
+      "formattedText" : "New zombie spotted: TOMB_RAISER!\n2026/08/15  11:11"
     } ]
   },
   "shopDaily" : {
-    "offerPlant" : "SUNFLOWER",
-    "offerDate" : "2026-08-14",
+    "offerPlant" : "FIRE_PEASHOOTER",
+    "offerDate" : "2026-08-15",
     "purchased" : false,
-    "availableToday" : false,
-    "forToday" : false
+    "availableToday" : true,
+    "forToday" : true
   },
   "stayLoggedIn" : true,
   "questState" : {
@@ -581,9 +598,9 @@
           "n" : 0
         },
         "active" : true,
+        "formattedTitle" : "Economic Herbivore",
         "runtimeState" : { },
-        "formattedDescription" : "Win without losing more than 0 plants",
-        "formattedTitle" : "Economic Herbivore"
+        "formattedDescription" : "Win without losing more than 0 plants"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -592,7 +609,7 @@
         "priority" : "MEDIUM",
         "conditionKey" : "speed_kill",
         "targetCount" : 10,
-        "currentCount" : 4,
+        "currentCount" : 6,
         "completed" : false,
         "claimed" : false,
         "reward" : {
@@ -602,11 +619,11 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1786773070884
+          "waveStartTime" : 1786779863769
         },
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
-        "formattedTitle" : "Speed Run"
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -625,9 +642,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedTitle" : "Master of Defense",
         "runtimeState" : { },
-        "formattedDescription" : "End a level with exactly 0 sun",
-        "formattedTitle" : "Master of Defense"
+        "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -646,9 +663,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedTitle" : "Day or Night",
         "runtimeState" : { },
-        "formattedDescription" : "Win a day level using only mushrooms",
-        "formattedTitle" : "Day or Night"
+        "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -669,9 +686,9 @@
           "n" : 20
         },
         "active" : true,
+        "formattedTitle" : "Lawnmower Time",
         "runtimeState" : { },
-        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
-        "formattedTitle" : "Lawnmower Time"
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -680,8 +697,8 @@
         "priority" : "HIGH",
         "conditionKey" : "chapter_zombie_kill",
         "targetCount" : 50,
-        "currentCount" : 33,
-        "completed" : false,
+        "currentCount" : 50,
+        "completed" : true,
         "claimed" : false,
         "reward" : {
           "type" : "SEED_PACKETS",
@@ -691,17 +708,17 @@
         "parameters" : {
           "chapter" : "ANCIENT_EGYPT"
         },
-        "active" : true,
+        "active" : false,
+        "formattedTitle" : "Chapter Hunter",
         "runtimeState" : { },
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
-        "formattedTitle" : "Chapter Hunter"
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "14h 38m"
+      "timeUntilReset" : "12h 42m"
     }
   }
 }

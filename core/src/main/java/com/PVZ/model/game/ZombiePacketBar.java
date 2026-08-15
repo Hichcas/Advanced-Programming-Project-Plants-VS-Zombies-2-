@@ -88,9 +88,49 @@ public class ZombiePacketBar {
         }
     }
 
+    private final Map<String, com.PVZ.model.entity.zombies.base.Zombie> cachedPreviewZombies = new HashMap<>();
+
+    private com.PVZ.model.entity.zombies.base.Zombie getPreviewZombie(String alias) {
+        return cachedPreviewZombies.computeIfAbsent(alias, a -> {
+            for (com.PVZ.model.enums.ZombieType t : com.PVZ.model.enums.ZombieType.values()) {
+                if (t.alias.equals(a)) {
+                    com.PVZ.model.entity.zombies.base.Zombie z = t.create();
+                    if (z != null) {
+                        com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(z, "idle", 999999f);
+                    }
+                    return z;
+                }
+            }
+            return null;
+        });
+    }
+
     private boolean drawPamIcon(SpriteBatch batch, String alias, Rectangle b) {
+        if (EntityRenderer.getInstance() == null) return false;
+        com.PVZ.model.entity.zombies.base.Zombie previewZombie = getPreviewZombie(alias);
+        if (previewZombie != null) {
+            try {
+                com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(previewZombie, "idle", 999999f);
+                Matrix4 original = new Matrix4(batch.getTransformMatrix());
+                float scale = 0.20f;
+                float cx = b.x + b.width * 0.5f;
+                float cy = b.y + b.height * 0.5f;
+                Matrix4 hud = new Matrix4(original);
+                hud.translate(cx, cy, 0f);
+                hud.scale(scale, scale, 1f);
+                hud.translate(-195f, -195f, 0f);
+                batch.setTransformMatrix(hud);
+                previewZombie.setX(0.0);
+                previewZombie.setY(0.0);
+                EntityRenderer.getInstance().renderZombie(batch, previewZombie, 0f);
+                batch.setTransformMatrix(original);
+                return true;
+            } catch (RuntimeException ex) {
+                return false;
+            }
+        }
         String pamPath = ZombieTexturePaths.getPamPath(alias);
-        if (pamPath == null || EntityRenderer.getInstance() == null) return false;
+        if (pamPath == null) return false;
         try {
             Matrix4 original = new Matrix4(batch.getTransformMatrix());
             float scale = 0.20f;

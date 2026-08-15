@@ -16,8 +16,8 @@ import java.util.Random;
 public class ZombieTombRaiser extends AbstractRangedCasterZombie {
     private int maxTombs;
     private int tombsRaised;
-    private int throwTickCounter;
-    private static final int BONE_THROW_INTERVAL_TICKS = 5;
+    private float throwCooldownTimer;
+    private static final float BONE_THROW_INTERVAL_SECONDS = 12.0f;
     private final Random random = new Random();
     private Map map;
     private final List<ZombieProjectile> bones = new ArrayList<>();
@@ -27,7 +27,7 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
             50, 100, 5.0, 5);
         this.maxTombs = 3;
         this.tombsRaised = 0;
-        this.throwTickCounter = 0;
+        this.throwCooldownTimer = 0f;
     }
 
     private static List<ScaledProperty> defaultScaledProps() {
@@ -59,6 +59,7 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
                         tile.setType(TileType.TOMBSTONE);
                         tile.setHp(700);
                         raiseTomb();
+                        System.out.println("[ZombieTombRaiser] Tomb Raiser Zombie raised a Tombstone (700 HP) at tile (" + (int) row + ", " + bone.getTargetCol() + ")!");
                     }
                     bone.destroy();
                     if (controller != null) controller.removeZombieProjectile(bone);
@@ -70,11 +71,11 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
         if (map == null || !canRaiseTomb()) {
             return;
         }
-        throwTickCounter++;
-        if (throwTickCounter < BONE_THROW_INTERVAL_TICKS) {
+        throwCooldownTimer += delta;
+        if (throwCooldownTimer < BONE_THROW_INTERVAL_SECONDS) {
             return;
         }
-        throwTickCounter = 0;
+        throwCooldownTimer = 0f;
         throwBones(controller);
     }
 
@@ -94,7 +95,8 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
         Collections.shuffle(candidates, random);
         int n = Math.min(3, candidates.size());
         if (n > 0) {
-            com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "power", 1.8);
+            com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "power", 3.0);
+            System.out.println("[ZombieTombRaiser] Tomb Raiser Zombie performing power summoning animation!");
         }
         for (int i = 0; i < n; i++) {
             int targetCol = candidates.get(i);

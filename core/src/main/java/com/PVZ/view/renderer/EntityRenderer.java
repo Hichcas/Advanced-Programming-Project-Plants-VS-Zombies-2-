@@ -105,6 +105,11 @@ public class EntityRenderer {
         if (state == null) {
             state = "walk";
         }
+        if (zombie instanceof com.PVZ.model.entity.zombies.types.basic.ZombiePharaoh pharaoh && pharaoh.isSarcophagusBroken()) {
+            if ("walk".equals(state)) state = "walk_norm";
+            else if ("eat".equals(state)) state = "eat_norm";
+            else if ("idle".equals(state)) state = "idle_norm";
+        }
 
         ClipRef clip = getZombieClip(effectiveAlias, state);
         if (clip == null) {
@@ -473,6 +478,10 @@ public class EntityRenderer {
                 break;
             case DIAMOND:
                 pamPath = "768/INITIAL/EFFECTS/TUTORIAL_DIAMOND/TUTORIAL_DIAMOND.PAM";
+                clip = "idle";
+                break;
+            case PLANT_FOOD:
+                pamPath = "768/INITIAL/EFFECTS/PLANTFOOD_PICKUP/PLANTFOOD_PICKUP.PAM";
                 clip = "idle";
                 break;
             case POT:

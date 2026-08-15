@@ -163,7 +163,7 @@ public final class BehaviorFactory {
                 amount = 150;
             }
             plant.setPlantFoodActive(true);
-            plant.setPlantFoodTicksRemaining(Math.max(1, plantFood.getIntParam("durationSeconds", 5)));
+            plant.setPlantFoodSeconds(Math.max(1, plantFood.getIntParam("durationSeconds", 5)));
             int row = asInt(plant.getRuntimeState().getOrDefault("row", 0), 0);
             int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
             context.spawnSunAt(row, col, amount);
@@ -180,7 +180,7 @@ public final class BehaviorFactory {
             damageMultiplier = params.damageMultiplier;
 
             plant.setPlantFoodActive(true);
-            plant.setPlantFoodTicksRemaining(Math.max(1, duration));
+            plant.setPlantFoodSeconds(Math.max(1, duration));
             plant.getStats().putExtra("projectileCount", projectiles);
             plant.getStats().putExtra("plantFoodProjectileCount", projectiles);
             plant.getStats().putExtra("damageMultiplier", damageMultiplier);
@@ -225,7 +225,7 @@ public final class BehaviorFactory {
     private static PlantFoodBehavior createFreezeBurstFoodBehavior() {
         return (plant, context) -> {
             plant.setPlantFoodActive(true);
-            plant.setPlantFoodTicksRemaining(3);
+            plant.setPlantFoodSeconds(3);
             context.freezeAllZombies(3.0);
             plant.getStats().putExtra("iceAttack", Boolean.TRUE);
             plant.getStats().putExtra("plantFoodProjectileCount", 5);
@@ -235,7 +235,7 @@ public final class BehaviorFactory {
     private static PlantFoodBehavior createPlasmaBurstFoodBehavior() {
         return (plant, context) -> {
             plant.setPlantFoodActive(true);
-            plant.setPlantFoodTicksRemaining(1);
+            plant.setPlantFoodSeconds(1);
             int row = asInt(plant.getRuntimeState().getOrDefault("row", 0), 0);
             int lane = asInt(plant.getRuntimeState().getOrDefault("lane", row), row);
             context.damageArea(lane, row, Math.max(1000, plant.getStats().getDamage() * 20));
@@ -247,7 +247,7 @@ public final class BehaviorFactory {
                                                                  String plantKey) {
         return (plant, context) -> {
             plant.setPlantFoodActive(true);
-            plant.setPlantFoodTicksRemaining(4);
+            plant.setPlantFoodSeconds(4);
 
             if ("caulipower".equals(plantKey)) {
                 List<com.PVZ.model.entity.zombies.base.Zombie> zombies =
@@ -271,7 +271,7 @@ public final class BehaviorFactory {
     private static PlantFoodBehavior createFireBurstFoodBehavior() {
         return (plant, context) -> {
             plant.setPlantFoodActive(true);
-            plant.setPlantFoodTicksRemaining(5);
+            plant.setPlantFoodSeconds(5);
             plant.getStats().putExtra("fireAttack", Boolean.TRUE);
             plant.getStats().putExtra("damageMultiplier", 2.0);
             plant.getStats().putExtra("plantFoodDamageMultiplier", 2.0);
@@ -285,7 +285,7 @@ public final class BehaviorFactory {
             int lane = asInt(plant.getRuntimeState().getOrDefault("lane", row), row);
             context.damageArea(lane, row, Math.max(500, plant.getStats().getDamage()));
             plant.setPlantFoodActive(true);
-            plant.setPlantFoodTicksRemaining(1);
+            plant.setPlantFoodSeconds(1);
         };
     }
 
@@ -293,7 +293,7 @@ public final class BehaviorFactory {
                                                                   String plantKey) {
         return (plant, context) -> {
             plant.setPlantFoodActive(true);
-            plant.setPlantFoodTicksRemaining(3);
+            plant.setPlantFoodSeconds(3);
 
             switch (plantKey) {
                 case "torchwood" -> {
@@ -311,7 +311,7 @@ public final class BehaviorFactory {
     private static PlantFoodBehavior createMagnetPulseFoodBehavior() {
         return (plant, context) -> {
             plant.setPlantFoodActive(true);
-            plant.setPlantFoodTicksRemaining(3);
+            plant.setPlantFoodSeconds(3);
             int lane = asInt(plant.getRuntimeState().getOrDefault("lane", 0), 0);
             context.disarmZombiesInLane(lane);
         };

@@ -114,6 +114,9 @@ public abstract class Zombie {
             onUpdate(delta, controller);
             return;
         }
+        if (controller == null) {
+            return;
+        }
         int tileCol = controller.getTileColumn((float) x);
         col = tileCol;
         Plant plant = controller.getPlantAt((int) row, tileCol);
@@ -323,7 +326,7 @@ public abstract class Zombie {
         animStateTime = 0.0f;
         ZombieAnimation.trigger(this, "die", 2.8333);
         if (isGlowing) {
-            controller.grantPlantFoodDrop();
+            controller.grantPlantFoodDrop(x, y);
         }
         controller.rollLootDrop(x, y);
     }
@@ -381,6 +384,10 @@ public abstract class Zombie {
 
     public void startMoving() {
         this.moving = true;
+    }
+
+    public boolean isDying() {
+        return dying;
     }
 
     public boolean isDead() {
