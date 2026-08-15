@@ -325,7 +325,7 @@ public class GreenhousePanel extends BasePanel {
         if (AppStatus.lastMainMenu instanceof MainMenuScreen mainMenu) {
             mainMenu.restoreDefaultBackground();
         }
-        AppStatus.setCurrentMenuType(MenuType.CHAPTER_AND_LEVEL_SELECTION);
+        AppStatus.setCurrentMenuType(MenuType.MAIN);
     }
 
     private String formatRemaining(double hours) {
