@@ -88,6 +88,7 @@ public class ZombieGargantuar extends AbstractGargantuar {
         target.takeDamage((int) smashDamage);
         smashing = true;
         smashTimer = 0;
+        com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "smash", 1.7667);
     }
 
     @Override

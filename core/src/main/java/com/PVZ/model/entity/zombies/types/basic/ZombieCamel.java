@@ -35,12 +35,12 @@ public class ZombieCamel extends AbstractBasicZombie {
     @Override
     public void takeDamage(int amount, DamageType type) {
         double dmg = amount;
-        if (!rearSegment.isDestroyed()) {
-            rearSegment.takeDamage(dmg);
+        if (!frontSegment.isDestroyed()) {
+            frontSegment.takeDamage(dmg);
         } else if (!middleSegment.isDestroyed()) {
             middleSegment.takeDamage(dmg);
-        } else if (!frontSegment.isDestroyed()) {
-            frontSegment.takeDamage(dmg);
+        } else if (!rearSegment.isDestroyed()) {
+            rearSegment.takeDamage(dmg);
         }
         this.hitpoints = getEffectiveHitpoints();
     }

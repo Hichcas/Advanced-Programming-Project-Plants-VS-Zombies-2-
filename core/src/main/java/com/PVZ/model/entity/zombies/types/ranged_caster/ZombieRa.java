@@ -16,7 +16,7 @@ public class ZombieRa extends AbstractRangedCasterZombie {
 
     public ZombieRa() {
         super("ZombieRa", 380, 100, 0.185, 700, 3000, defaultScaledProps(),
-              100, 200, 3.0, 4);
+              0, 0, 3.0, 0);
         this.stolenSunAmount = 0;
     }
 
@@ -55,6 +55,7 @@ public class ZombieRa extends AbstractRangedCasterZombie {
                 if (dist < range) {
                     stolenSunAmount += sun.getAmount();
                     sun.collect();
+                    com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "power", 1.5);
                 }
             }
         }
