@@ -16,7 +16,7 @@ public class ZombieRa extends AbstractRangedCasterZombie {
 
     public ZombieRa() {
         super("ZombieRa", 380, 100, 0.185, 700, 3000, defaultScaledProps(),
-              100, 200, 3.0, 4);
+              0, 0, 3.0, 0);
         this.stolenSunAmount = 0;
     }
 
@@ -30,6 +30,21 @@ public class ZombieRa extends AbstractRangedCasterZombie {
         return list;
     }
 
+    private enum StealState { IDLE, POWER_UP, POWER, POWER_DOWN }
+    private StealState stealState = StealState.IDLE;
+    private float stealTimer = 0.0f;
+
+    @Override
+    public void update(float delta, BattleController ctrl) {
+        super.update(delta, ctrl);
+        if (!isDead() && ctrl != null) {
+            com.PVZ.model.game.RegularGameEngine engine = com.PVZ.model.status.AppStatus.getGameEngine() instanceof com.PVZ.model.game.RegularGameEngine re ? re : null;
+            if (engine != null && engine.getSunManager() != null) {
+                stealNearbySun(engine.getSunManager());
+            }
+        }
+    }
+
     @Override
     public void shoot(BattleController controller, Plant target) {
         controller.addZombieProjectile(new ZombieProjectile(
@@ -41,20 +56,59 @@ public class ZombieRa extends AbstractRangedCasterZombie {
 
     @Override
     public void stealNearbySun(SunManager sunManager) {
-        if (sunManager == null) {
+        if (sunManager == null || isDead()) {
             return;
         }
-        double range = 150.0;
-        Iterator<Sun> it = sunManager.getSuns().iterator();
-        while (it.hasNext()) {
-            Sun sun = it.next();
-            if (!sun.isCollected() && sun.hasReachedGround()) {
+
+        double range = 400.0;
+        List<Sun> nearbySuns = new ArrayList<>();
+        for (Sun sun : sunManager.getSuns()) {
+            if (sun != null && !sun.isCollected()) {
                 double dx = sun.getX() - x;
                 double dy = sun.getY() - y;
                 double dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist < range) {
+                    nearbySuns.add(sun);
+                }
+            }
+        }
+
+        if (nearbySuns.isEmpty()) {
+            if (stealState == StealState.POWER || stealState == StealState.POWER_UP) {
+                stealState = StealState.POWER_DOWN;
+                stealTimer = 0;
+                com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "power_down", 1.2667);
+                System.out.println("[ZombieRa] Finished stealing sun. Lowering staff (power_down).");
+            }
+            return;
+        }
+
+        if (stealState == StealState.IDLE) {
+            stealState = StealState.POWER_UP;
+            stealTimer = 0;
+            com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "power_up", 0.6667);
+            System.out.println("[ZombieRa] Sun detected nearby! Raising Anubis staff (power_up).");
+        } else if (stealState == StealState.POWER_UP) {
+            stealTimer += 0.016f;
+            if (stealTimer >= 0.6667f) {
+                stealState = StealState.POWER;
+                stealTimer = 0;
+                com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "power", 1.0);
+                System.out.println("[ZombieRa] Staff raised! Activating Anubis beam (power).");
+            }
+        } else if (stealState == StealState.POWER) {
+            com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "power", 1.0);
+            for (Sun sun : nearbySuns) {
+                double speed = 250.0 * 0.016;
+                double dx = x - sun.getX();
+                double dy = y - sun.getY();
+                double dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 30.0) {
                     stolenSunAmount += sun.getAmount();
                     sun.collect();
+                    System.out.println("[ZombieRa] Absorbed sun! Amount: " + sun.getAmount() + " | Total stolen sun: " + stolenSunAmount);
+                } else {
+                    sun.setPosition(sun.getX() + (dx / dist) * speed, sun.getY() + (dy / dist) * speed);
                 }
             }
         }
@@ -65,9 +119,21 @@ public class ZombieRa extends AbstractRangedCasterZombie {
 
     @Override
     public void die(BattleController controller) {
-        if (stolenSunAmount > 0 && controller != null) {
-            controller.addSun(stolenSunAmount);
-            System.out.println("Ra zombie returned " + stolenSunAmount + " stolen suns.");
+        if (stolenSunAmount > 0) {
+            com.PVZ.model.game.RegularGameEngine engine = com.PVZ.model.status.AppStatus.getGameEngine() instanceof com.PVZ.model.game.RegularGameEngine re ? re : null;
+            if (engine != null && engine.getSunManager() != null) {
+                int count = Math.max(1, stolenSunAmount / 25);
+                int sunPerEntity = stolenSunAmount / count;
+                for (int i = 0; i < count; i++) {
+                    double offsetX = (Math.random() - 0.5) * 60.0;
+                    double offsetY = (Math.random() - 0.5) * 40.0;
+                    engine.getSunManager().spawn(x + offsetX, y + offsetY, sunPerEntity);
+                }
+                System.out.println("[ZombieRa] Ra zombie died! Dropped " + count + " sun(s) (" + stolenSunAmount + " sun total) at position (" + Math.round(x) + ", " + Math.round(y) + ").");
+            } else if (controller != null) {
+                controller.addSun(stolenSunAmount);
+                System.out.println("[ZombieRa] Ra zombie died! Returned " + stolenSunAmount + " stolen suns back to player.");
+            }
         }
         super.die(controller);
     }

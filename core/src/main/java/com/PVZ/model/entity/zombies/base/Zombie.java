@@ -91,14 +91,26 @@ public abstract class Zombie {
         System.out.println("Zombie spawned: alias=" + alias + " x=" + String.format("%.1f", x) + " row=" + (int) row);
     }
 
+    private boolean dying = false;
+
     public void update(float delta, BattleController controller) {
         updateEffects(delta);
         ZombieAnimation.tick(this, delta);
+
+        if (dying) {
+            animStateTime += delta;
+            if (!ZombieAnimation.isActive(this)) {
+                finishDeath(controller);
+            }
+            return;
+        }
+
         if (!isFrozen()) {
             animStateTime += delta;
         }
+
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
-            die(controller);
+            startDeath(controller);
             return;
         }
         if (isFrozen()) {
@@ -110,6 +122,9 @@ public abstract class Zombie {
             updateHypnotized(delta, controller);
             hitbox.setPosition((float) x, (float) y);
             onUpdate(delta, controller);
+            return;
+        }
+        if (controller == null) {
             return;
         }
         int tileCol = controller.getTileColumn((float) x);
@@ -280,10 +295,14 @@ public abstract class Zombie {
         if (armor != null && !armor.isDestroyed()) {
             armor.takeDamage(amount);
             if (armor.isDestroyed() && armor.isDroppable()) {
+                com.PVZ.view.renderer.EntityRenderer.getInstance().spawnFallingArmor((float) x, (float) y, armor.getType(), alias);
                 armor = null;
             }
         } else {
             hitpoints -= amount;
+            if (hitpoints <= 0) {
+                ZombieAnimation.trigger(this, "die", 2.8333);
+            }
         }
     }
 
@@ -321,16 +340,28 @@ public abstract class Zombie {
         }
     }
 
-    public void die(BattleController controller) {
+    public void startDeath(BattleController controller) {
+        if (dying) return;
+        dying = true;
         hitpoints = 0;
         armor = null;
-        System.out.println("Zombie [" + alias + "] died at x=" + String.format("%.1f", x) + " row=" + (int) row);
-        onDestroy();
+        animStateTime = 0.0f;
+        ZombieAnimation.trigger(this, "die", 2.8333);
         if (isGlowing) {
             controller.grantPlantFoodDrop(x, y);
         }
         controller.rollLootDrop(x, y);
+    }
+
+    public void finishDeath(BattleController controller) {
+        System.out.println("Zombie [" + alias + "] died at x=" + String.format("%.1f", x) + " row=" + (int) row);
+        onDestroy();
         controller.removeZombie(this);
+    }
+
+    public void die(BattleController controller) {
+        startDeath(controller);
+        finishDeath(controller);
     }
 
     public boolean isGlowing() {
@@ -377,8 +408,12 @@ public abstract class Zombie {
         this.moving = true;
     }
 
+    public boolean isDying() {
+        return dying;
+    }
+
     public boolean isDead() {
-        return hitpoints <= 0 && (armor == null || armor.isDestroyed());
+        return dying || (hitpoints <= 0 && (armor == null || armor.isDestroyed()));
     }
 
     public boolean isProjectileImmune() {
