@@ -1,5 +1,6 @@
 package com.PVZ.model.entity;
 
+import com.PVZ.view.renderer.EntityRenderer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -16,7 +17,8 @@ public class LootDrop {
     public enum LootType {
         COIN(50, "Loot/Coin.png"),
         DIAMOND(1, "Loot/Diamond.png"),
-        POT(1, "Loot/Pot.png");
+        POT(1, "Loot/Pot.png"),
+        PLANT_FOOD(1, "");
 
         private final int amount;
         private final String texturePath;
@@ -68,7 +70,7 @@ public class LootDrop {
         if (collected) {
             return;
         }
-        boolean drawn = com.PVZ.view.renderer.EntityRenderer.getInstance()
+        boolean drawn = EntityRenderer.getInstance()
             .renderLoot(batch, type, timer, (float) x, (float) y);
         if (!drawn) {
             batch.draw(getOrLoadTexture(type), (float) x, (float) y, hitbox.width, hitbox.height);
@@ -107,6 +109,7 @@ public class LootDrop {
             case COIN -> Color.GOLD;
             case DIAMOND -> Color.SKY;
             case POT -> Color.BROWN;
+            case PLANT_FOOD -> null;
         };
         pixmap.setColor(base);
         if (type == LootType.DIAMOND) {

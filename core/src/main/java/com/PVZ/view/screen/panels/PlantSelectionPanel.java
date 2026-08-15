@@ -229,7 +229,7 @@ public class PlantSelectionPanel extends BasePanel {
         detailNameLabel.setText(def.getName());
         String description = def.getBaseAbility() != null ? def.getBaseAbility().getRaw() : "";
         detailDescriptionLabel.setText(description == null ? "" : description);
-        detailCostLabel.setText(String.valueOf(def.getCost()));
+        detailCostLabel.setText(String.valueOf(PlantLibrary.getEffectiveCost(type)));
     }
 
     private void onUpgradeClicked() {

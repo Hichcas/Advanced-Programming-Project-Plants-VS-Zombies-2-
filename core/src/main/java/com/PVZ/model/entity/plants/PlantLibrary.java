@@ -52,6 +52,26 @@ public final class PlantLibrary {
         return Optional.ofNullable(BY_NAME.get(normalize(name)));
     }
 
+    /**
+     * Cost/HP/damage/etc. actually depend on the player's current collection level
+     * (a "Planting cost decreases by X" upgrade is real and permanent), but several
+     * UI spots (seed-bar affordability check, plant-selection cost label) were still
+     * reading PlantDefinition.getCost() directly - the un-upgraded, level-1 value.
+     * This always resolves the cost the player would actually be charged right now.
+     */
+    public static int getEffectiveCost(PlantType type) {
+        PlantDefinition definition = BY_TYPE.get(type);
+        if (definition == null) {
+            return 0;
+        }
+        int level = 1;
+        com.PVZ.model.user.User user = com.PVZ.model.status.AppStatus.currentUser;
+        if (user != null && user.collectionState != null) {
+            level = user.collectionState.getPlantLevel(type) + 1;
+        }
+        return UpgradeResolver.resolveStats(definition, level).getCost();
+    }
+
     public static PlantDefinition getByType(PlantType type) {
         return findByType(type).orElseThrow(() ->
                 new IllegalArgumentException("Unknown plant type: " + type));

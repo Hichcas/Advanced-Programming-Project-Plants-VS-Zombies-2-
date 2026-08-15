@@ -39,14 +39,31 @@ public abstract class AbstractRangedCasterZombie extends Zombie {
     @Override
     public void update(float delta, BattleController ctrl) {
         updateEffects(delta);
+        com.PVZ.model.entity.zombies.base.ZombieAnimation.tick(this, delta);
+
+        if (isDying()) {
+            animStateTime += delta;
+            if (!com.PVZ.model.entity.zombies.base.ZombieAnimation.isActive(this)) {
+                finishDeath(ctrl);
+            }
+            return;
+        }
+
+        if (!isFrozen()) {
+            animStateTime += delta;
+        }
+
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
-            die(ctrl);
+            startDeath(ctrl);
             return;
         }
         if (hypnotized) {
             updateHypnotized(delta, ctrl);
             hitbox.setPosition((float) x, (float) y);
             onUpdate(delta, ctrl);
+            return;
+        }
+        if (ctrl == null) {
             return;
         }
         int tileCol = ctrl.getTileColumn((float) x);
