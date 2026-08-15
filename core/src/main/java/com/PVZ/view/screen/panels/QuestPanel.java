@@ -374,7 +374,7 @@ public class QuestPanel extends BasePanel {
     }
 
     private void onClose() {
-        AppStatus.setCurrentMenuType(MenuType.CHAPTER_AND_LEVEL_SELECTION);
+        AppStatus.setCurrentMenuType(MenuType.MAIN);
     }
 
     @Override
