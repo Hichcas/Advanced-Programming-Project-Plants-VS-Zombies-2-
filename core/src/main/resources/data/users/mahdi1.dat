@@ -11,7 +11,7 @@
   "userStats" : {
     "gamesPlayed" : 0,
     "coins" : 1991050,
-    "diamonds" : 299490,
+    "diamonds" : 299470,
     "stagesCompleted" : 0,
     "highestScore" : 965000,
     "dailyQuestsCompleted" : 0,
@@ -40,13 +40,15 @@
       "SUNFLOWER" : 24,
       "SPLIT_PEA" : 34,
       "CITRON" : 10,
-      "BOWLING_BULB" : 10
+      "THREEPEATER" : 0,
+      "CACTUS" : 20
     },
     "plantLevels" : {
       "SUNFLOWER" : 36,
       "SPLIT_PEA" : 3,
       "CITRON" : 2,
-      "BOWLING_BULB" : 3
+      "THREEPEATER" : 3,
+      "CACTUS" : 2
     },
     "greenhouseBoosts" : [ "CABBAGE_PULT", "FUME_SHROOM", "PEASHOOTER", "BOMBARD_MINT", "ENFORCE_MINT", "MEGA_GATLING_PEA", "ENCHANT_MINT", "GRAPESHOT", "ICE_SHROOM", "GRAVE_BUSTER", "ELECTRIC_BLUEBERRY", "SUNFLOWER", "POTATO_MINE" ]
   },
@@ -920,7 +922,7 @@
       "currentChapter" : "FROSTBITE_CAVES",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "15h 7m"
+      "timeUntilReset" : "15h 3m"
     }
   }
 }

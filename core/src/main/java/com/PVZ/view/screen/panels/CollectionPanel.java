@@ -60,9 +60,9 @@ public class CollectionPanel extends BasePanel {
 
     // Plant Stats UI
     private Table plantStatsTable;
-    private Slider hpSlider, costSlider, levelSlider, seedSlider;
-    private Label hpTitleLabel, costTitleLabel, levelTitleLabel, seedTitleLabel;
-    private Label hpValueLabel, costValueLabel, levelValueLabel, seedValueLabel;
+    private Slider hpSlider, costSlider, damageSlider, levelSlider, seedSlider;
+    private Label hpTitleLabel, costTitleLabel, damageTitleLabel, levelTitleLabel, seedTitleLabel;
+    private Label hpValueLabel, costValueLabel, damageValueLabel, levelValueLabel, seedValueLabel;
 
     // Zombie Stats UI
     private Table zombieStatsTable;
@@ -380,6 +380,7 @@ public class CollectionPanel extends BasePanel {
 
         hpSlider = createStatSlider(0, 1000);
         costSlider = createStatSlider(0, 300);
+        damageSlider = createStatSlider(0, 300);
         levelSlider = createStatSlider(1, 10);
         seedSlider = createStatSlider(0, 50);
 
@@ -389,6 +390,9 @@ public class CollectionPanel extends BasePanel {
         costTitleLabel = new Label("Cost", new Label.LabelStyle(bodyFont, Color.WHITE));
         costValueLabel = new Label("0", new Label.LabelStyle(bodyFont, Color.GOLD));
 
+        damageTitleLabel = new Label("Damage", new Label.LabelStyle(bodyFont, Color.WHITE));
+        damageValueLabel = new Label("0", new Label.LabelStyle(bodyFont, Color.GOLD));
+
         levelTitleLabel = new Label("Level", new Label.LabelStyle(bodyFont, Color.WHITE));
         levelValueLabel = new Label("Lv.1", new Label.LabelStyle(bodyFont, Color.GOLD));
 
@@ -396,6 +400,7 @@ public class CollectionPanel extends BasePanel {
         seedValueLabel = new Label("0/0", new Label.LabelStyle(bodyFont, Color.GOLD));
 
         addStatRow(plantStatsTable, hpTitleLabel, hpSlider, hpValueLabel);
+        addStatRow(plantStatsTable, damageTitleLabel, damageSlider, damageValueLabel);
         addStatRow(plantStatsTable, costTitleLabel, costSlider, costValueLabel);
         addStatRow(plantStatsTable, levelTitleLabel, levelSlider, levelValueLabel);
         addStatRow(plantStatsTable, seedTitleLabel, seedSlider, seedValueLabel);
@@ -521,6 +526,10 @@ public class CollectionPanel extends BasePanel {
                 hpSlider.setRange(0, Math.max(1000, currentStats.getMaxHp()));
                 hpSlider.setValue(currentStats.getMaxHp());
                 hpValueLabel.setText(String.valueOf(currentStats.getMaxHp()));
+
+                damageSlider.setRange(0, Math.max(300, currentStats.getDamage()));
+                damageSlider.setValue(currentStats.getDamage());
+                damageValueLabel.setText(String.valueOf(currentStats.getDamage()));
 
                 costSlider.setRange(0, 300);
                 costSlider.setValue(currentStats.getCost());
