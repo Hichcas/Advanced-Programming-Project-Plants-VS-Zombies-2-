@@ -3,6 +3,7 @@ package com.PVZ.model.entity.zombies.types.ranged_caster;
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.entity.zombies.base.ZombieProjectile;
 import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.BattleController;
@@ -13,21 +14,25 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class ZombieTombRaiser extends AbstractRangedCasterZombie {
+public class ZombieTombRaiser extends Zombie {
     private int maxTombs;
     private int tombsRaised;
     private float throwCooldownTimer;
-    private static final float BONE_THROW_INTERVAL_SECONDS = 12.0f;
+    private static final float INITIAL_DELAY_SECONDS = 5.0f;
+    private static final float THROW_INTERVAL_SECONDS = 10.0f;
     private final Random random = new Random();
     private Map map;
     private final List<ZombieProjectile> bones = new ArrayList<>();
 
+    private boolean isCastingPower = false;
+    private float castTimer = 0.0f;
+    private int pendingTargetCol = -1;
+
     public ZombieTombRaiser() {
-        super("ZombieTombRaiser", 320, 100, 0.185, 700, 3500, defaultScaledProps(),
-            50, 100, 5.0, 5);
+        super("ZombieTombRaiser", 320, 100, 0.185, 700, 3500, defaultScaledProps());
         this.maxTombs = 3;
         this.tombsRaised = 0;
-        this.throwCooldownTimer = 0f;
+        this.throwCooldownTimer = THROW_INTERVAL_SECONDS - INITIAL_DELAY_SECONDS;
     }
 
     private static List<ScaledProperty> defaultScaledProps() {
@@ -36,17 +41,20 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
         list.add(new ScaledProperty("EatDPS", ScaledProperty.Formula.STANDARD, 1.3, 0.05));
         list.add(new ScaledProperty("Speed", ScaledProperty.Formula.CONSTANT, 0, 0));
         list.add(new ScaledProperty("WavePointCost", ScaledProperty.Formula.CONSTANT, 0, 0));
-        list.add(new ScaledProperty("ProjectileDamage", ScaledProperty.Formula.STANDARD, 1.3, 0.05));
         return list;
     }
 
     @Override
-    public void shoot(BattleController controller, Plant target) {
-    }
+    public void onSpawn() { }
+
+    @Override
+    public void onDestroy() { }
 
     @Override
     public void onUpdate(float delta, BattleController controller) {
         this.map = controller != null ? controller.getMap() : this.map;
+        
+        // 1. Update flying bone projectiles & tombstone creation on landing
         if (map != null) {
             for (int i = bones.size() - 1; i >= 0; i--) {
                 ZombieProjectile bone = bones.get(i);
@@ -54,12 +62,11 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
                 boolean reached = boneCol <= bone.getTargetCol();
                 if (bone.isDestroyed() || reached) {
                     Tile tile = map.getTile((int) row, bone.getTargetCol());
-                    if (tile != null && tile.getType() == TileType.NORMAL && tile.getPlant() == null
-                        && canRaiseTomb()) {
+                    if (tile != null && tile.getType() == TileType.NORMAL && tile.getPlant() == null && canRaiseTomb()) {
                         tile.setType(TileType.TOMBSTONE);
                         tile.setHp(700);
                         raiseTomb();
-                        System.out.println("[ZombieTombRaiser] Tomb Raiser Zombie raised a Tombstone (700 HP) at tile (" + (int) row + ", " + bone.getTargetCol() + ")!");
+                        System.out.println("[ZombieTombRaiser] Bone landed! Raised Tombstone (700 HP) at tile (" + (int) row + ", " + bone.getTargetCol() + ")!");
                     }
                     bone.destroy();
                     if (controller != null) controller.removeZombieProjectile(bone);
@@ -71,19 +78,40 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
         if (map == null || !canRaiseTomb()) {
             return;
         }
-        throwCooldownTimer += delta;
-        if (throwCooldownTimer < BONE_THROW_INTERVAL_SECONDS) {
+
+        // 2. Handle casting state (releasing bone projectile at 0.8s of power animation)
+        if (isCastingPower) {
+            castTimer += delta;
+            if (castTimer >= 0.8f && pendingTargetCol != -1) {
+                ZombieProjectile bone = new ZombieProjectile(
+                    (float) x, (float) y, 0, 180f, (int) row, this, pendingTargetCol, true);
+                bones.add(bone);
+                if (controller != null) {
+                    controller.addZombieProjectile(bone);
+                }
+                System.out.println("[ZombieTombRaiser] Bone projectile released from hands towards column " + pendingTargetCol + "!");
+                pendingTargetCol = -1;
+            }
+            if (castTimer >= 3.0f) {
+                isCastingPower = false;
+                castTimer = 0.0f;
+            }
             return;
         }
-        throwCooldownTimer = 0f;
-        throwBones(controller);
+
+        // 3. Cooldown timer for throwing bones
+        throwCooldownTimer += delta;
+        if (throwCooldownTimer >= THROW_INTERVAL_SECONDS) {
+            throwCooldownTimer = 0f;
+            prepareBoneThrow(controller);
+        }
     }
 
-    private void throwBones(BattleController controller) {
-        int frontCol = (int) col;
+    private void prepareBoneThrow(BattleController controller) {
+        int currentColumn = controller != null ? controller.getTileColumn((float) x) : (int) col;
         List<Integer> candidates = new ArrayList<>();
-        for (int dc = 1; dc <= frontCol; dc++) {
-            int c = frontCol - dc;
+        for (int dc = 1; dc <= currentColumn; dc++) {
+            int c = currentColumn - dc;
             Tile t = map.getTile((int) row, c);
             if (t != null && t.getType() == TileType.NORMAL && t.getPlant() == null) {
                 candidates.add(c);
@@ -93,24 +121,11 @@ public class ZombieTombRaiser extends AbstractRangedCasterZombie {
             return;
         }
         Collections.shuffle(candidates, random);
-        int n = Math.min(3, candidates.size());
-        if (n > 0) {
-            com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "power", 3.0);
-            System.out.println("[ZombieTombRaiser] Tomb Raiser Zombie performing power summoning animation!");
-        }
-        for (int i = 0; i < n; i++) {
-            int targetCol = candidates.get(i);
-            ZombieProjectile bone = new ZombieProjectile(
-                (float) x, (float) y, 0, (float) projectileSpeed, (int) row, this, targetCol, true);
-            bones.add(bone);
-            if (controller != null) {
-                controller.addZombieProjectile(bone);
-            }
-        }
-    }
-
-    @Override
-    public void onHit(Plant target) {
+        pendingTargetCol = candidates.get(0);
+        isCastingPower = true;
+        castTimer = 0.0f;
+        com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "power", 3.0);
+        System.out.println("[ZombieTombRaiser] Started power animation (3.0s)! Target column: " + pendingTargetCol);
     }
 
     @Override
