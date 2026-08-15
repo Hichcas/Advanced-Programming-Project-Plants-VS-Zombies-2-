@@ -69,6 +69,9 @@ public class MenuPanelSwitcher {
             case COLLECTION:
                 PanelManager.getInstance().performPanelTransition(new CollectionPanel());
                 break;
+            case LEADERBOARD:
+                PanelManager.getInstance().performPanelTransition(new LeaderboardPanel());
+                break;
             default:
                 System.err.println("No UI panel mapped for menu: " + menuType);
                 break;
