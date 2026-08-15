@@ -300,13 +300,26 @@ public class CollectionPanel extends BasePanel {
                     : UpgradeCostPolicy.currentUpgradeRequirement(displayLevel, maxDisplayLevel);
 
                 Table info = new Table();
+                info.setFillParent(true);          // کل سطح کارت را بگیرد
+                info.top().right();                // محتوا را بالا‑راست بچیند
+                info.pad(-7f);
+                info.padRight(-8f);
                 info.setTouchable(Touchable.disabled);
-                Label lvl = new Label("Lv." + displayLevel, new Label.LabelStyle(descFont, Color.YELLOW));
-                Label seeds = new Label(maxedOut ? "MAX" : seedPackets + "/" + requiredPackets,
-                    new Label.LabelStyle(descFont, Color.WHITE));
-                info.add(lvl).padRight(8f);
-                info.add(seeds);
-                info.setPosition(0, -CARD_SLOT_H / 2f + 15f);
+
+                Label lvl = new Label(
+                    maxedOut ? "MAX" : "Lv." + displayLevel,
+                    new Label.LabelStyle(bodyFont, Color.YELLOW)
+                );
+                lvl.setFontScale(1f);            // کمی بزرگ‌تر و خوانا
+
+                Label seeds = new Label(
+                    maxedOut ? "" : seedPackets + "/" + requiredPackets,
+                    new Label.LabelStyle(descFont, Color.WHITE)
+                );
+
+                info.add(lvl).right().row();
+                info.add(seeds).right();
+
                 cell.add(info);
 
                 contentGrid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(4f);
@@ -940,7 +953,10 @@ public class CollectionPanel extends BasePanel {
         private PlantType type;
         private float time;
 
-        void setType(PlantType type) { this.type = type; this.time = 0f; }
+        void setType(PlantType type) {
+            this.type = type;
+            this.time = 0f;
+        }
 
         @Override
         public void act(float delta) {
