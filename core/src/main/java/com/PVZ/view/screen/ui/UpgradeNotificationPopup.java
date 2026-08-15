@@ -65,13 +65,15 @@ public final class UpgradeNotificationPopup {
 
         Label message = new Label(
             readableUpgradeMessage(definition, rule, newDisplayLevel),
-            new Label.LabelStyle(fonts.getEnglishTinyFont(), Color.WHITE));
+            new Label.LabelStyle(fonts.getEnglishMenuFont(), Color.WHITE));
+        message.setFontScale(0.62f);
         message.setWrap(true);
         message.setAlignment(Align.center);
 
         Label levelLine = new Label(
             "Level " + oldDisplayLevel + "  →  " + newDisplayLevel,
-            new Label.LabelStyle(fonts.getEnglishTinyFont(), Color.valueOf("D7E8FF")));
+            new Label.LabelStyle(fonts.getEnglishMenuFont(), Color.valueOf("D7E8FF")));
+        levelLine.setFontScale(0.62f);
         levelLine.setAlignment(Align.center);
 
         notification.add(title).center().growX().padBottom(4f).row();
@@ -79,6 +81,10 @@ public final class UpgradeNotificationPopup {
         notification.add(message).width(520f).center().growX().padBottom(7f).row();
         notification.add(levelLine).center().growX();
 
+        notification.pack();
+        // Wrapped Labels need a second layout pass to report their real (post-wrap)
+        // preferred height - a single pack() can leave the message row squashed to
+        // ~0 height, which is why only the title/plant-name line was ever visible.
         notification.pack();
 
         float worldWidth = host.getStage().getViewport().getWorldWidth();
