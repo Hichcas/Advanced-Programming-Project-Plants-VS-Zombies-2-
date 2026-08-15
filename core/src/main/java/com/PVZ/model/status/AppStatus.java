@@ -38,7 +38,7 @@ public final class AppStatus {
     public static String currentChapterName = null;
     public static com.PVZ.model.game.chapter.Chapter currentChapter = null;
     public static int currentStageNumber = 1;
-    public static boolean tileDebugEnabled = false;
+    public static boolean tileDebugEnabled = true;
     public static boolean lastGameResultWin = false;
     public static MainMenuScreen lastMainMenu;
 

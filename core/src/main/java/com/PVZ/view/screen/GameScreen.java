@@ -539,6 +539,10 @@ public class GameScreen extends BaseScreen {
     }
 
     private void drawMapBorders(GameEngine activeEngine) {
+        if (!AppStatus.tileDebugEnabled) {
+            return;
+        }
+
         Map activeMap = activeEngine.getMap();
         if (activeMap == null) {
             activeMap = gameMap;
