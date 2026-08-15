@@ -15,6 +15,7 @@ import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.screen.manager.MusicManager;
 import com.PVZ.view.screen.manager.ScreenManager;
 import com.PVZ.model.user.UserRegistry;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,6 +30,7 @@ import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GameScreen extends BaseScreen {
 
@@ -312,6 +314,8 @@ public class GameScreen extends BaseScreen {
 
     @Override
     protected void renderScreen(float delta) {
+        applyCameraShake();
+
         refreshSeedPacketBar();
         GameEngine activeEngine = AppStatus.getGameEngine();
         if (activeEngine == null) {
@@ -570,5 +574,41 @@ public class GameScreen extends BaseScreen {
             backgroundTexture.dispose();
         }
         System.out.println("[GameScreen] PVZ resources disposed cleanly.");
+    }
+
+    // camera shake part
+    // ===================== شیک دوربین =====================
+    private static final float SHAKE_DURATION = 0.4f;      // مدت لرزش (ثانیه)
+    private static final float SHAKE_MAGNITUDE = 14f;      // شدت لرزش (پیکسل)
+    private float shakeTimer = 0f;
+    private final Random random = new Random();
+    /**
+     * صدا زدنش یک لرزش کوتاه به دوربین می‌دهد.
+     * مثال استفاده: وقتی باس ضربه می‌زند -> activeCameraShake();
+     */
+    public void activeCameraShake() {
+        shakeTimer = SHAKE_DURATION;
+    }
+    /**
+     * اعمال لرزش به دوربین. این متد باید در ابتدای renderScreen صدا زده شود.
+     */
+    private void applyCameraShake() {
+        float shakeOffsetX = 0f;
+        float shakeOffsetY = 0f;
+
+        if (shakeTimer > 0f) {
+            shakeTimer -= Gdx.graphics.getDeltaTime();
+            float fade = Math.max(shakeTimer, 0f) / SHAKE_DURATION;
+            shakeOffsetX = (random.nextFloat() * 2f - 1f) * SHAKE_MAGNITUDE * fade;
+            shakeOffsetY = (random.nextFloat() * 2f - 1f) * SHAKE_MAGNITUDE * fade;
+        }
+
+        // موقعیت پایه‌ی دوربین در این بازی ثابت است (وسط صفحه‌ی مجازی)
+        camera.position.set(
+            VIRTUAL_WIDTH / 2f + shakeOffsetX,
+            VIRTUAL_HEIGHT / 2f + shakeOffsetY,
+            0f
+        );
+        camera.update();
     }
 }
