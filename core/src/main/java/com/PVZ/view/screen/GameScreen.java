@@ -48,7 +48,9 @@ public class GameScreen extends BaseScreen {
     private float gameOverAlpha = 0f;
     private boolean gameOverShown = false;
     private boolean pluckModeActive = false;
+    private boolean plantFoodModeActive = false;
     private ImageButton shovelButton;
+    private ImageButton plantFoodButton;
 
     public GameScreen(String mapPath, String musicPath, GameEngine gameEngine) {
         super();
@@ -80,6 +82,7 @@ public class GameScreen extends BaseScreen {
         stage.addActor(winLoseOverlay);
         stage.addActor(buildPauseButton());
         if (gameEngine instanceof RegularGameEngine) {
+            stage.addActor(buildPlantFoodButton());
             stage.addActor(buildShovelButton());
         }
         com.PVZ.view.screen.panels.CheatPanel.attachToggleButton(stage, dto ->
@@ -152,6 +155,100 @@ public class GameScreen extends BaseScreen {
         return overlay;
     }
 
+    private Table buildPlantFoodButton() {
+        Table overlay = new Table();
+        overlay.setFillParent(true);
+        overlay.top().right();
+
+        ImageButton button;
+        try {
+            Skin skin = PvzSkin.get();
+            if (skin != null && skin.has("plantfood", ImageButton.ImageButtonStyle.class)) {
+                button = new ImageButton(skin, "plantfood");
+            } else {
+                button = new ImageButton(new ImageButton.ImageButtonStyle());
+            }
+        } catch (Exception ex) {
+            button = new ImageButton(new ImageButton.ImageButtonStyle());
+        }
+
+        plantFoodButton = button;
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!(AppStatus.getGameEngine() instanceof RegularGameEngine engine)) {
+                    return;
+                }
+                if (engine.getPlantFoodManager().getPlantFoodCount() <= 0) {
+                    System.out.println("No plant food available.");
+                    return;
+                }
+                plantFoodModeActive = !plantFoodModeActive;
+                if (plantFoodModeActive) {
+                    pluckModeActive = false;
+                    updateShovelButtonState();
+                }
+                updatePlantFoodButtonState();
+            }
+        });
+
+        overlay.add(button).size(82f, 82f).padTop(20f).padRight(110f);
+        return overlay;
+    }
+
+    private void updatePlantFoodButtonState() {
+        if (plantFoodButton != null) {
+            plantFoodButton.setColor(1f, 1f, 1f, plantFoodModeActive ? 1f : 0.78f);
+        }
+    }
+
+    private boolean handleLootAtScreenPoint(int screenX, int screenY) {
+        if (!(AppStatus.getGameEngine() instanceof RegularGameEngine regularEngine)) {
+            return false;
+        }
+        Map map = regularEngine.getMap();
+        if (map == null) {
+            return false;
+        }
+
+        Vector3 world = camera.unproject(new Vector3(screenX, screenY, 0f));
+        String result = regularEngine.collectLootAtWorldPoint(world.x, world.y);
+        if (result != null && !result.isBlank()) {
+            System.out.println(result);
+            if (result.startsWith("Collected Plant Food!")) {
+                plantFoodModeActive = false;
+                updatePlantFoodButtonState();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean handlePlantFoodAtScreenPoint(int screenX, int screenY) {
+        if (!(AppStatus.getGameEngine() instanceof RegularGameEngine regularEngine)) {
+            return false;
+        }
+        Map map = regularEngine.getMap();
+        if (map == null) {
+            return false;
+        }
+
+        Vector3 world = camera.unproject(new Vector3(screenX, screenY, 0f));
+        int row = map.worldToRow(world.y);
+        int col = map.worldToCol(world.x);
+        if (!map.isWithinBounds(row, col)) {
+            return false;
+        }
+
+        String result = regularEngine.feedPlant(col, row);
+        System.out.println(result);
+        if (result != null && result.startsWith("Plant fed at")) {
+            plantFoodModeActive = false;
+            updatePlantFoodButtonState();
+        }
+        return true;
+    }
+
     private Table buildShovelButton() {
         Table overlay = new Table();
         overlay.setFillParent(true);
@@ -174,6 +271,10 @@ public class GameScreen extends BaseScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 pluckModeActive = !pluckModeActive;
+                if (pluckModeActive) {
+                    plantFoodModeActive = false;
+                    updatePlantFoodButtonState();
+                }
                 updateShovelButtonState();
             }
         });
@@ -260,6 +361,12 @@ public class GameScreen extends BaseScreen {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 if (isSimulationFrozen()) {
                     return false;
+                }
+                if (handleLootAtScreenPoint(screenX, screenY)) {
+                    return true;
+                }
+                if (plantFoodModeActive && handlePlantFoodAtScreenPoint(screenX, screenY)) {
+                    return true;
                 }
                 if (pluckModeActive && handlePluckAtScreenPoint(screenX, screenY)) {
                     return true;

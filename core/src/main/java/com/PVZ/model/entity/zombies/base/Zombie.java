@@ -323,7 +323,7 @@ public abstract class Zombie {
         animStateTime = 0.0f;
         ZombieAnimation.trigger(this, "die", 2.8333);
         if (isGlowing) {
-            controller.grantPlantFoodDrop();
+            controller.grantPlantFoodDrop(x, y);
         }
         controller.rollLootDrop(x, y);
     }

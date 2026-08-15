@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlantInstance {
+    /** RegularGameEngine advances gameplay in 0.1 second ticks. */
+    public static final int PLANT_FOOD_TICKS_PER_SECOND = 10;
     private final PlantDefinition definition;
     private final PlantStats stats;
     private final Map<String, Object> runtimeState = new HashMap<>();
@@ -95,6 +97,11 @@ public class PlantInstance {
 
     public int getPlantFoodTicksRemaining() {
         return plantFoodTicksRemaining;
+    }
+
+    public void setPlantFoodSeconds(double seconds) {
+        int ticks = (int) Math.ceil(Math.max(0.0, seconds) * PLANT_FOOD_TICKS_PER_SECOND);
+        setPlantFoodTicksRemaining(ticks);
     }
 
     public void setPlantFoodTicksRemaining(int plantFoodTicksRemaining) {

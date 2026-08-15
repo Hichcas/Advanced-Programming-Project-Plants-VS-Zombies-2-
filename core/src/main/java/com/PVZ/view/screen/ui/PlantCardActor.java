@@ -100,8 +100,7 @@ public class PlantCardActor extends Actor {
         EntityRenderer.getInstance().renderPlant((SpriteBatch) batch, type.name(), animTime, plantCx, plantCy);
 
         if (font != null) {
-            PlantDefinition def = PlantLibrary.findByType(type).orElse(null);
-            int cost = def != null ? def.getCost() : 0;
+            int cost = com.PVZ.model.entity.plants.PlantLibrary.getEffectiveCost(type);
             font.setColor(1f, 1f, 1f, parentAlpha);
             font.draw(batch, String.valueOf(cost), x + 4f, y + 16f);
         }
