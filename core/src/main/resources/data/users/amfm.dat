@@ -11,7 +11,7 @@
   "userStats" : {
     "gamesPlayed" : 0,
     "coins" : 4997500,
-    "diamonds" : 4999992,
+    "diamonds" : 4999872,
     "stagesCompleted" : 0,
     "highestScore" : 0,
     "dailyQuestsCompleted" : 0,
@@ -34,12 +34,19 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "LILY_PAD", "HYPNO_SHROOM", "FUME_SHROOM", "CACTUS", "ARMA_MINT", "GRAVE_BUSTER", "TANGLE_KELP", "PEASHOOTER", "BOWLING_BULB", "ENFORCE_MINT", "REINFORCE_MINT", "REPEATER", "CAT_TAIL", "SUNFLOWER", "MEGA_GATLING_PEA", "CHERRY_BOMB", "CAULIPOWER", "CHOMPER", "CAT_TAIL_MINT", "TORCHWOOD", "SPLIT_PEA", "GOO_PEASHOOTER", "JALAPENO", "SUN_SHROOM", "GOLD_BLOOM", "ENDURIAN", "WASABI_WHIP", "BONK_CHOY", "PIERCE_MINT", "PRIMAL_SUNFLOWER", "GIANT_WALLNUT", "KIWIBEAST", "APPEASE_MINT", "ELECTRIC_BLUEBERRY", "TALL_NUT", "IMITATER", "SQUASH", "POTATO_MINE", "WALLNUT_BOWLING", "ICE_SHROOM", "PRIMAL_POTATO_MINE", "ENCHANT_MINT", "WINTER_MELON", "MELON_PULT", "PUMPKIN", "THREEPEATER", "MAGNET_SHROOM", "PEA_POD", "SEA_SHROOM", "DOOM_SHROOM", "HOT_POTATO", "CITRON", "PHAT_BEET", "EXPLODE_O_NUT", "SNOW_PEA", "TWIN_SUNFLOWER", "PEPPER_PULT", "ICEBERG_LETTUCE", "PUFF_SHROOM", "KERNEL_PULT", "FIRE_PEASHOOTER", "CABBAGE_PULT", "STARFRUIT", "BOMBARD_MINT", "ENLIGHTEN_MINT", "ROTOBAGA", "WALL_NUT", "SWEET_POTATO", "GRAPESHOT", "GARLIC", "SUN_BEAN" ],
-    "seenZombies" : [ "PHARAOH", "TOMB_RAISER", "TUTORIAL_ARMOR1", "ICEAGE_HUNTER", "TUTORIAL_FLAG", "RA", "IMP_ICEAGE", "CAMEL", "TUTORIAL_DEFAULT", "MUMMY_DEFAULT", "MUMMY_ARMOR4", "ICEAGE_DEFAULT", "MUMMY_ARMOR2", "EXPLORER", "TUTORIAL_ARMOR4", "TUTORIAL_ARMOR2", "MUMMY_ARMOR1" ],
+    "unlockedPlants" : [ "IMITATER", "SUN_BEAN", "MEGA_GATLING_PEA", "TANGLE_KELP", "REINFORCE_MINT", "CHOMPER", "GOO_PEASHOOTER", "TWIN_SUNFLOWER", "ICEBERG_LETTUCE", "GOLD_BLOOM", "PEASHOOTER", "CHERRY_BOMB", "GRAVE_BUSTER", "CAULIPOWER", "PEA_POD", "WALL_NUT", "THREEPEATER", "CITRON", "PUFF_SHROOM", "JALAPENO", "SQUASH", "STARFRUIT", "CAT_TAIL", "PRIMAL_SUNFLOWER", "SWEET_POTATO", "CABBAGE_PULT", "GIANT_WALLNUT", "SEA_SHROOM", "WASABI_WHIP", "APPEASE_MINT", "PIERCE_MINT", "SNOW_PEA", "FIRE_PEASHOOTER", "GARLIC", "SPLIT_PEA", "SUN_SHROOM", "ENDURIAN", "TALL_NUT", "ICE_SHROOM", "PRIMAL_POTATO_MINE", "BOMBARD_MINT", "MELON_PULT", "DOOM_SHROOM", "HYPNO_SHROOM", "EXPLODE_O_NUT", "ENCHANT_MINT", "CAT_TAIL_MINT", "MAGNET_SHROOM", "BOWLING_BULB", "REPEATER", "PUMPKIN", "CACTUS", "PEPPER_PULT", "ENLIGHTEN_MINT", "KERNEL_PULT", "FUME_SHROOM", "SUNFLOWER", "GRAPESHOT", "ARMA_MINT", "LILY_PAD", "TORCHWOOD", "ENFORCE_MINT", "PHAT_BEET", "KIWIBEAST", "BONK_CHOY", "HOT_POTATO", "ELECTRIC_BLUEBERRY", "WALLNUT_BOWLING", "WINTER_MELON", "ROTOBAGA", "POTATO_MINE" ],
+    "seenZombies" : [ "MUMMY_ARMOR4", "CAMEL", "MUMMY_ARMOR2", "TUTORIAL_ARMOR4", "TUTORIAL_ARMOR1", "TOMB_RAISER", "IMP_ICEAGE", "MUMMY_ARMOR1", "PHARAOH", "TUTORIAL_DEFAULT", "EXPLORER", "MUMMY_DEFAULT", "RA", "ICEAGE_HUNTER", "ICEAGE_DEFAULT", "TUTORIAL_FLAG", "TUTORIAL_ARMOR2" ],
     "seedPackets" : {
-      "SUN_SHROOM" : 5
+      "SUN_SHROOM" : 5,
+      "FUME_SHROOM" : 10,
+      "WALL_NUT" : 10,
+      "CAULIPOWER" : 70
     },
-    "plantLevels" : { },
+    "plantLevels" : {
+      "FUME_SHROOM" : 2,
+      "WALL_NUT" : 3,
+      "CAULIPOWER" : 3
+    },
     "greenhouseBoosts" : [ ]
   },
   "greenhouseState" : {
@@ -128,8 +135,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 6,
-    "numberOfUnlockedPots" : 6
+    "numberOfUnlockedPots" : 6,
+    "numberOfLockedPots" : 6
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -572,8 +579,8 @@
     "offerPlant" : "FIRE_PEASHOOTER",
     "offerDate" : "2026-08-15",
     "purchased" : false,
-    "availableToday" : true,
-    "forToday" : true
+    "forToday" : true,
+    "availableToday" : true
   },
   "stayLoggedIn" : true,
   "questState" : {
@@ -718,7 +725,7 @@
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "12h 42m"
+      "timeUntilReset" : "11h 37m"
     }
   }
 }
