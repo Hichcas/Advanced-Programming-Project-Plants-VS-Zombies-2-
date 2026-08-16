@@ -117,12 +117,7 @@ public class GameScreen extends BaseScreen {
     }
 
     private String resolveMissionText() {
-        com.PVZ.model.game.chapter.StageConfig stageConfig = resolveStageConfig();
-        if (stageConfig != null && stageConfig.getType() != null
-            && stageConfig.getType().toUpperCase().contains("DEADLINE")) {
-            return "Don't let the zombies cross the marked line!";
-        }
-        return "Don't let the zombies reach your house!";
+        return com.PVZ.model.game.chapter.StageRules.summary(resolveStageConfig());
     }
 
     private boolean isSimulationFrozen() {
@@ -432,6 +427,7 @@ public class GameScreen extends BaseScreen {
         GameOverState overState = updateGameOverState(activeEngine);
         drawBackgroundAndEngine(activeEngine, delta);
         drawMapBorders(activeEngine);
+        drawDeadline(activeEngine);
         drawSeedPacketBar(activeEngine);
         drawGameOverOverlay(overState);
         drawTileDebug(activeEngine);
@@ -550,6 +546,33 @@ public class GameScreen extends BaseScreen {
         shapeDebug.setProjectionMatrix(camera.combined);
         shapeDebug.begin(ShapeRenderer.ShapeType.Line);
         activeMap.renderBorders(shapeDebug);
+        shapeDebug.end();
+    }
+
+    private void drawDeadline(GameEngine activeEngine) {
+        if (!(activeEngine instanceof RegularGameEngine regularEngine)) {
+            return;
+        }
+        if (!(regularEngine.getSpecialLevel()
+            instanceof com.PVZ.model.game.chapter.sepecialLevel.DeadLineLevel deadline)) {
+            return;
+        }
+        Map activeMap = regularEngine.getMap();
+        if (activeMap == null) {
+            return;
+        }
+        // Each lane gets its own random deadline column; draw one segment per
+        // lane exactly over that lane's tiles (map Y grows downward from startY).
+        float tileHeight = activeMap.getTileHeight();
+        shapeDebug.setProjectionMatrix(camera.combined);
+        shapeDebug.begin(ShapeRenderer.ShapeType.Filled);
+        shapeDebug.setColor(com.badlogic.gdx.graphics.Color.RED);
+        for (int row = 0; row < activeMap.getRows(); row++) {
+            float x = (float) deadline.getLineXForRow(activeMap, row);
+            float y = activeMap.getStartY() - (row + 1) * tileHeight;
+            shapeDebug.rect(x - 3f, y + 3f, 6f, tileHeight - 6f);
+        }
+        shapeDebug.setColor(com.badlogic.gdx.graphics.Color.WHITE);
         shapeDebug.end();
     }
 

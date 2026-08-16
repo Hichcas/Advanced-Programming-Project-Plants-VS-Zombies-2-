@@ -51,7 +51,9 @@ public class ProgressState {
     }
 
     public boolean isLevelUnlocked(ChapterEnum chapter, int stage) {
-        return getCompletedLevel(chapter) >= stage;
+        // A stage is unlocked once the previous stage is completed
+        // (completed = highest finished stage; -1 means the chapter is still locked).
+        return getCompletedLevel(chapter) >= stage - 1;
     }
 
     public void lockLevel(ChapterEnum chapter, int stage) {

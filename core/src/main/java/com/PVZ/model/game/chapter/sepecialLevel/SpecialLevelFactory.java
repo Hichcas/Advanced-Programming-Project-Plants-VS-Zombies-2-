@@ -14,6 +14,8 @@ public final class SpecialLevelFactory {
                 return new NightOpsLevel();
             case "LOVE_YOUR_PLANTS":
                 return new LoveYourPlantsLevel();
+            case "DEAD_LINE":
+                return new DeadLineLevel();
             default:
                 return null;
         }
