@@ -424,18 +424,24 @@ public class BattleController implements BehaviorContext {
     }
 
     private void removeDeadPlants() {
-        Iterator<Plant> pit = plants.iterator();
-        while (pit.hasNext()) {
-            Plant p = pit.next();
-            if (p.isDead()) {
-                int r = asInt(p.getRuntimeState("row"), 0);
-                int c = asInt(p.getRuntimeState("col"), 0);
-                if (map != null) {
-                    map.removePlant(r, c);
+        if (map != null) {
+            for (int r = 0; r < map.getRows(); r++) {
+                for (int c = 0; c < map.getCols(); c++) {
+                    Tile t = map.getTile(r, c);
+                    if (t != null) {
+                        Plant p = t.getPlant();
+                        if (p != null && p.isDead()) {
+                            map.removePlant(r, c);
+                        }
+                        Plant bp = t.getBasePlant();
+                        if (bp != null && bp.isDead()) {
+                            map.removeBasePlant(r, c);
+                        }
+                    }
                 }
-                pit.remove();
             }
         }
+        plants.removeIf(p -> p == null || p.isDead());
     }
 
     @Override
