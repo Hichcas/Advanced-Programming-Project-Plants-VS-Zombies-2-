@@ -71,6 +71,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     public int questPlantsLost = 0;
     public int questLawnmowerKills = 0;
     public int questLawnlessCol1Kills = 0;
+    public int totalZombieKills = 0;
     public final java.util.List<PlantType> questPlantTypesUsed = new java.util.ArrayList<>();
     public final java.util.Set<PlantFamily> questPlantFamiliesUsed = new java.util.HashSet<>();
 
@@ -395,6 +396,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         int col = normalizeIndex(x);
         Plant plant = map.getPlantAt(row, col);
         if (plant == null) return "No plant at selected tile.";
+        if (!plant.hasPlantFoodEffect()) return "This plant has no plant food effect.";
         if (!plantFoodManager.consumePlantFood()) return "No plant food available.";
         plant.applyPlantFood(this);
         return "Plant fed at (" + col + ", " + row + ")";

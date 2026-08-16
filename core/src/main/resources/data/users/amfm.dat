@@ -10,10 +10,10 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 4997550,
-    "diamonds" : 4999990,
+    "coins" : 4997650,
+    "diamonds" : 4999991,
     "stagesCompleted" : 0,
-    "highestScore" : 3000,
+    "highestScore" : 999500,
     "dailyQuestsCompleted" : 0,
     "nonDailyQuestsCompleted" : 0,
     "purchasedPlantFood" : 1
@@ -93,12 +93,12 @@
       "empty" : true,
       "readyForPlanting" : true
     }, {
-      "unlocked" : false,
+      "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : false
+      "readyForPlanting" : true
     } ], [ {
       "unlocked" : false,
       "plantType" : null,
@@ -128,8 +128,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 5,
-    "numberOfUnlockedPots" : 7
+    "numberOfLockedPots" : 4,
+    "numberOfUnlockedPots" : 8
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -592,7 +592,7 @@
         "conditionKey" : "max_plant_loss",
         "targetCount" : 0,
         "currentCount" : 0,
-        "completed" : false,
+        "completed" : true,
         "claimed" : false,
         "reward" : {
           "type" : "SEED_PACKETS",
@@ -602,10 +602,10 @@
         "parameters" : {
           "n" : 0
         },
-        "active" : true,
+        "active" : false,
         "formattedDescription" : "Win without losing more than 0 plants",
-        "runtimeState" : { },
-        "formattedTitle" : "Economic Herbivore"
+        "formattedTitle" : "Economic Herbivore",
+        "runtimeState" : { }
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -625,10 +625,10 @@
         "parameters" : { },
         "active" : true,
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
+        "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1786884105093
-        },
-        "formattedTitle" : "Speed Run"
+          "waveStartTime" : 1786895848475
+        }
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -648,8 +648,8 @@
         "parameters" : { },
         "active" : true,
         "formattedDescription" : "End a level with exactly 0 sun",
-        "runtimeState" : { },
-        "formattedTitle" : "Master of Defense"
+        "formattedTitle" : "Master of Defense",
+        "runtimeState" : { }
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -669,8 +669,8 @@
         "parameters" : { },
         "active" : true,
         "formattedDescription" : "Win a day level using only mushrooms",
-        "runtimeState" : { },
-        "formattedTitle" : "Day or Night"
+        "formattedTitle" : "Day or Night",
+        "runtimeState" : { }
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -692,8 +692,8 @@
         },
         "active" : true,
         "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
-        "runtimeState" : { },
-        "formattedTitle" : "Lawnmower Time"
+        "formattedTitle" : "Lawnmower Time",
+        "runtimeState" : { }
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -715,15 +715,15 @@
         },
         "active" : false,
         "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
-        "runtimeState" : { },
-        "formattedTitle" : "Chapter Hunter"
+        "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { }
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "FROSTBITE_CAVES",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "7h 47m"
+      "timeUntilReset" : "4h 31m"
     }
   }
 }

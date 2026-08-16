@@ -252,6 +252,7 @@ public class UpdateHandler {
         engine.projectiles.clear();
         engine.zombies.clear();
         if (engine.zombieEngine != null) engine.zombieEngine.getZombies().clear();
+        engine.totalZombieKills = 0;
         BoardHandler.initLawnMowers(engine, engine.map);
         engine.zombieWavesStarted = false;
         engine.tickAccumulator = 0f;

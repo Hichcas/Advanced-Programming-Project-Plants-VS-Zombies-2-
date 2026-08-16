@@ -16,6 +16,8 @@ public final class SpecialLevelFactory {
                 return new LoveYourPlantsLevel();
             case "DEAD_LINE":
                 return new DeadLineLevel();
+            case "TIMED_WAR":
+                return new TimedWarLevel();
             default:
                 return null;
         }

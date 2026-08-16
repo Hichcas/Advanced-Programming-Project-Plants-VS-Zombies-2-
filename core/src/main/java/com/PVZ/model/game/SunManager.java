@@ -10,6 +10,7 @@ import java.util.List;
 
 public class SunManager {
     private final List<Sun> suns = new ArrayList<>();
+    private int totalCollectedSun = 0;
     private final List<Sun> explodedSuns = new ArrayList<>();
 
     public List<Sun> getSuns() {
@@ -90,7 +91,13 @@ public class SunManager {
                 }
             }
         }
+        totalCollectedSun += collectedAmount;
         return collectedAmount;
+    }
+
+    /** Total sun collected during this level (for Timed War goals). */
+    public int getTotalCollectedSun() {
+        return totalCollectedSun;
     }
 
     public List<Sun> drainExplodedSuns() {
@@ -109,5 +116,6 @@ public class SunManager {
 
     public void clear() {
         suns.clear();
+        totalCollectedSun = 0;
     }
 }
