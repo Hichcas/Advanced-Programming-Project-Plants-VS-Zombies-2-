@@ -272,6 +272,10 @@ public abstract class Zombie {
             alias, x, (int) row, (int) col, hitpoints, armorStr, currentSpeed, eatStr);
     }
 
+    public boolean isMoving() {
+        return moving;
+    }
+
     public void takeDamage(int amount, DamageType type) {
         if (type == DamageType.POISON) {
             hitpoints -= amount;

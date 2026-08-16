@@ -48,4 +48,9 @@ public class ZombieZombossMechPirate extends AbstractZomboss {
         System.out.println("[ZombossPirate] Cannon Barrage x" + numCannonballs
             + " damage=" + damage + " hit=" + hitCount + " plants");
     }
+
+    @Override
+    public void spawnZombieWave(BattleController ctrl) {
+        System.out.println("[ZombossPirate] Portal Wave spawned pirate zombies!");
+    }
 }

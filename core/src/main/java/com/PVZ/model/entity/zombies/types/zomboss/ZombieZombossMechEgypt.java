@@ -2,6 +2,8 @@ package com.PVZ.model.entity.zombies.types.zomboss;
 
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.entity.zombies.base.ZombieAnimation;
+import com.PVZ.model.entity.zombies.factory.ZombieFactory;
 import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
@@ -34,32 +36,59 @@ public class ZombieZombossMechEgypt extends AbstractZomboss {
 
     @Override
     public void useSpecialAbility(BattleController ctrl) {
+        ZombieAnimation.trigger(this, "stomp", 2.5333);
         List<Plant> plants = ctrl.getPlants();
-        if (plants.isEmpty()) return;
-        int damage = 800 * currentPhase;
+        if (plants == null || plants.isEmpty()) return;
+
+        int currentRow = (int) this.getRow();
         Set<Integer> targetRows = new HashSet<>();
-        List<Integer> rowsWithPlants = new ArrayList<>();
-        for (Plant p : plants) {
-            int r = asInt(p.getRuntimeState("row"), 0);
-            if (!rowsWithPlants.contains(r)) rowsWithPlants.add(r);
+        targetRows.add(currentRow);
+
+        if (currentPhase >= 2) {
+            for (Plant p : plants) {
+                int r = asInt(p.getRuntimeState("row"), 0);
+                targetRows.add(r);
+                if (targetRows.size() >= currentPhase) break;
+            }
         }
-        if (rowsWithPlants.isEmpty()) return;
-        int numStomps = Math.min(currentPhase, rowsWithPlants.size());
-        for (int i = 0; i < numStomps; i++) {
-            int idx = (int) (Math.random() * rowsWithPlants.size());
-            targetRows.add(rowsWithPlants.get(idx));
-            rowsWithPlants.remove(idx);
-            if (rowsWithPlants.isEmpty()) break;
-        }
+
         int hitCount = 0;
+        int damage = 99999;
         for (Plant p : plants) {
-            if (targetRows.contains(asInt(p.getRuntimeState("row"), Integer.MIN_VALUE))) {
+            int r = asInt(p.getRuntimeState("row"), Integer.MIN_VALUE);
+            if (targetRows.contains(r)) {
                 p.takeDamage(damage);
                 hitCount++;
             }
         }
-        System.out.println("[ZombossEgypt] Pyramid Stomp x" + numStomps + " rows=" + targetRows
-            + " damage=" + damage + " hit=" + hitCount + " plants");
+        System.out.println("[ZombossEgypt] Pyramid Stomp x" + targetRows.size() + " rows=" + targetRows
+            + " damage=" + damage + " crushed=" + hitCount + " plants!");
+    }
+
+    @Override
+    public void spawnZombieWave(BattleController ctrl) {
+        String[] egyptTypes = currentPhase >= 3 ?
+            new String[]{"ZombiePharaohDefault", "ZombieTombRaiserDefault", "ZombieMummyArmor2Default"} :
+            new String[]{"ZombieMummyDefault", "ZombieMummyArmor1Default", "ZombieMummyArmor2Default"};
+
+        int count = 2 + currentPhase;
+        float zombossX = (float) this.getX();
+        int zombossRow = (int) this.getRow();
+
+        com.PVZ.model.entity.Tile tile = ctrl.getMap() != null ? ctrl.getMap().getTile(zombossRow, 8) : null;
+        float spawnY = tile != null ? (tile.getY() + (tile.getHeight() - 70f) / 2f) : (float) this.getY();
+
+        for (int i = 0; i < count; i++) {
+            String type = egyptTypes[(int) (Math.random() * egyptTypes.length)];
+            com.PVZ.model.entity.zombies.base.Zombie z = ZombieFactory.createZombie(type);
+            if (z != null) {
+                z.initPosition(zombossX, spawnY, zombossRow);
+                z.setRow(zombossRow);
+                z.setCol(8);
+                ctrl.addZombie(z);
+            }
+        }
+        System.out.println("[ZombossEgypt] Portal Wave spawned " + count + " Egypt zombies at centered position (" + zombossX + ", " + spawnY + ")!");
     }
 
     private static int asInt(Object value, int defaultValue) {

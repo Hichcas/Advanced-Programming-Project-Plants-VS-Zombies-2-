@@ -2,6 +2,7 @@ package com.PVZ.model.entity.zombies.types.heavy_gargantuar;
 
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.entity.zombies.base.ZombieAnimation;
 import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class ZombieGargantuar extends AbstractGargantuar {
 
     public ZombieGargantuar(String alias, Theme theme) {
         super(alias, 3600, 0, 0.24, 1500, 3000, defaultScaledProps(),
-            1500, 2.0, 1.0, 0.5, 2);
+            1500, 1.7667, 0.9667, 0.5, 2);
         this.theme = theme;
         this.impThrown = false;
         this.smashing = false;
@@ -39,8 +40,22 @@ public class ZombieGargantuar extends AbstractGargantuar {
     @Override
     public void update(float delta, BattleController ctrl) {
         updateEffects(delta);
+        ZombieAnimation.tick(this, delta);
+
+        if (isDying()) {
+            animStateTime += delta;
+            if (!ZombieAnimation.isActive(this)) {
+                finishDeath(ctrl);
+            }
+            return;
+        }
+
+        if (!isFrozen()) {
+            animStateTime += delta;
+        }
+
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
-            die(ctrl);
+            startDeath(ctrl);
             return;
         }
         if (hypnotized) {
@@ -88,17 +103,31 @@ public class ZombieGargantuar extends AbstractGargantuar {
         target.takeDamage((int) smashDamage);
         smashing = true;
         smashTimer = 0;
-        com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "smash", 1.7667);
+        ZombieAnimation.trigger(this, "smash", 1.7667);
     }
 
     @Override
     public void throwImp(BattleController ctrl) {
-        ZombieImp imp = new ZombieImp("ZombieTutorialImpDefault", ZombieImp.Theme.BASIC);
-        double impCol = Math.min(col + impTargetColumn, 8);
-        imp.initPosition(x - 100, y, row);
-        imp.setCol(impCol);
+        ZombieAnimation.trigger(this, "fire", 0.9667);
+        String impAlias = (theme == Theme.EGYPT) ? "ZombieEgyptImpDefault" : "ZombieTutorialImpDefault";
+        ZombieImp.Theme impTheme = (theme == Theme.EGYPT) ? ZombieImp.Theme.EGYPT : ZombieImp.Theme.BASIC;
+        ZombieImp imp = new ZombieImp(impAlias, impTheme);
+
+        int currentTileCol = ctrl.getTileColumn((float) x);
+        int targetCol = Math.max(0, currentTileCol - 3);
+        float targetX = (float) x - 300f;
+        if (ctrl.getMap() != null) {
+            com.PVZ.model.entity.Tile t = ctrl.getMap().getTile((int) row, targetCol);
+            if (t != null) {
+                targetX = t.getX();
+            }
+        }
+
+        imp.initPosition(targetX, y, row);
+        imp.setCol(targetCol);
+        ZombieAnimation.trigger(imp, "land", 1.0);
         ctrl.addZombie(imp);
-        System.out.println(alias + " threw an Imp!");
+        System.out.println(alias + " threw an Imp (" + impAlias + ") to column " + targetCol + "!");
     }
 
     @Override
@@ -107,4 +136,5 @@ public class ZombieGargantuar extends AbstractGargantuar {
     }
 
     public Theme getTheme() { return theme; }
+    public boolean isImpThrown() { return impThrown; }
 }
