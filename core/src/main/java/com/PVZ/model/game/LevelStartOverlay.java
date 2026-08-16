@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import pvz.skin.PvzSkin;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LevelStartOverlay extends Table {
@@ -66,38 +65,7 @@ public class LevelStartOverlay extends Table {
     }
 
     private static List<String> buildObjectives(StageConfig config) {
-        List<String> objectives = new ArrayList<>();
-        if (config == null) {
-            objectives.add("Don't let the zombies reach your house!");
-            return objectives;
-        }
-
-        String type = config.getType() == null ? "" : config.getType().toUpperCase();
-        String special = config.getSpecialLevel() == null ? "" : config.getSpecialLevel().toUpperCase();
-        if (type.contains("DEADLINE") || special.contains("DEAD_LINE")) {
-            objectives.add("Each lane has its own red line — don't let any zombie cross it!");
-        } else {
-            objectives.add("Don't let the zombies reach your house!");
-        }
-
-        if (config.getMaxPlantDeaths() > 0) {
-            objectives.add("Lose no more than " + config.getMaxPlantDeaths() + " plants!");
-        }
-
-        if (config.isDisableFallingSun()) {
-            objectives.add("No sun will fall from the sky this level!");
-        }
-
-        if (config.getLockedPlants() != null && !config.getLockedPlants().isEmpty()) {
-            objectives.add("These plants are locked for this level: "
-                + String.join(", ", config.getLockedPlants()));
-        }
-
-        if (!special.isBlank() && !special.contains("DEAD_LINE")) {
-            objectives.add("Special level: " + config.getSpecialLevel());
-        }
-
-        return objectives;
+        return com.PVZ.model.game.chapter.StageRules.describe(config);
     }
 
     private Drawable resolveDialogBackground() {
