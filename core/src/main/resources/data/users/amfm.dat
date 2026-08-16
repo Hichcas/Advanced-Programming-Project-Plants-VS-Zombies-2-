@@ -10,10 +10,10 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 4997500,
-    "diamonds" : 4999992,
+    "coins" : 4997550,
+    "diamonds" : 4999993,
     "stagesCompleted" : 0,
-    "highestScore" : 0,
+    "highestScore" : 2000,
     "dailyQuestsCompleted" : 0,
     "nonDailyQuestsCompleted" : 0,
     "purchasedPlantFood" : 1
@@ -34,8 +34,8 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "LILY_PAD", "HYPNO_SHROOM", "FUME_SHROOM", "CACTUS", "ARMA_MINT", "GRAVE_BUSTER", "TANGLE_KELP", "PEASHOOTER", "BOWLING_BULB", "REINFORCE_MINT", "ENFORCE_MINT", "REPEATER", "CAT_TAIL", "SUNFLOWER", "MEGA_GATLING_PEA", "CHERRY_BOMB", "CAULIPOWER", "CHOMPER", "CAT_TAIL_MINT", "TORCHWOOD", "SPLIT_PEA", "GOO_PEASHOOTER", "JALAPENO", "SUN_SHROOM", "GOLD_BLOOM", "ENDURIAN", "WASABI_WHIP", "BONK_CHOY", "PIERCE_MINT", "PRIMAL_SUNFLOWER", "GIANT_WALLNUT", "APPEASE_MINT", "KIWIBEAST", "ELECTRIC_BLUEBERRY", "TALL_NUT", "IMITATER", "SQUASH", "POTATO_MINE", "WALLNUT_BOWLING", "ICE_SHROOM", "PRIMAL_POTATO_MINE", "ENCHANT_MINT", "WINTER_MELON", "MELON_PULT", "PUMPKIN", "MAGNET_SHROOM", "THREEPEATER", "PEA_POD", "SEA_SHROOM", "DOOM_SHROOM", "HOT_POTATO", "CITRON", "EXPLODE_O_NUT", "PHAT_BEET", "SNOW_PEA", "TWIN_SUNFLOWER", "ICEBERG_LETTUCE", "PEPPER_PULT", "PUFF_SHROOM", "KERNEL_PULT", "FIRE_PEASHOOTER", "CABBAGE_PULT", "STARFRUIT", "BOMBARD_MINT", "ENLIGHTEN_MINT", "ROTOBAGA", "WALL_NUT", "SWEET_POTATO", "GARLIC", "GRAPESHOT", "SUN_BEAN" ],
-    "seenZombies" : [ "TOMB_RAISER", "PHARAOH", "TUTORIAL_ARMOR1", "ICEAGE_HUNTER", "TUTORIAL_FLAG", "RA", "IMP_ICEAGE", "CAMEL", "TUTORIAL_DEFAULT", "MUMMY_DEFAULT", "MUMMY_ARMOR4", "ICEAGE_DEFAULT", "MUMMY_ARMOR2", "EXPLORER", "TUTORIAL_ARMOR4", "TUTORIAL_ARMOR2", "MUMMY_ARMOR1" ],
+    "unlockedPlants" : [ "EXPLODE_O_NUT", "PHAT_BEET", "JALAPENO", "ENLIGHTEN_MINT", "GOLD_BLOOM", "HOT_POTATO", "MAGNET_SHROOM", "WALL_NUT", "IMITATER", "TORCHWOOD", "CAULIPOWER", "GOO_PEASHOOTER", "ICE_SHROOM", "ELECTRIC_BLUEBERRY", "STARFRUIT", "WALLNUT_BOWLING", "GRAVE_BUSTER", "SUNFLOWER", "SEA_SHROOM", "PIERCE_MINT", "CABBAGE_PULT", "PUMPKIN", "LILY_PAD", "SUN_BEAN", "BOMBARD_MINT", "CAT_TAIL", "PRIMAL_POTATO_MINE", "PEASHOOTER", "PUFF_SHROOM", "PRIMAL_SUNFLOWER", "TWIN_SUNFLOWER", "CITRON", "PEA_POD", "GARLIC", "POTATO_MINE", "THREEPEATER", "FIRE_PEASHOOTER", "KIWIBEAST", "DOOM_SHROOM", "GRAPESHOT", "TALL_NUT", "SQUASH", "FUME_SHROOM", "ROTOBAGA", "ICEBERG_LETTUCE", "BOWLING_BULB", "CACTUS", "WINTER_MELON", "MEGA_GATLING_PEA", "TANGLE_KELP", "ENDURIAN", "REINFORCE_MINT", "MELON_PULT", "ENFORCE_MINT", "SNOW_PEA", "ARMA_MINT", "CHOMPER", "GIANT_WALLNUT", "SPLIT_PEA", "KERNEL_PULT", "WASABI_WHIP", "ENCHANT_MINT", "HYPNO_SHROOM", "REPEATER", "PEPPER_PULT", "CHERRY_BOMB", "BONK_CHOY", "CAT_TAIL_MINT", "SWEET_POTATO", "APPEASE_MINT", "SUN_SHROOM" ],
+    "seenZombies" : [ "MUMMY_ARMOR2", "TUTORIAL_ARMOR2", "MUMMY_ARMOR4", "GARGANTUAR_EGYPT", "PHARAOH", "ICEAGE_DEFAULT", "TUTORIAL_ARMOR4", "TUTORIAL_ARMOR1", "TUTORIAL_DEFAULT", "MUMMY_ARMOR1", "RA", "GARGANTUAR_BASIC", "CAMEL", "IMP_ICEAGE", "EXPLORER", "IMP_TUTORIAL", "TOMB_RAISER", "MUMMY_DEFAULT", "IMP_EGYPT", "ZOMBOSS_EGYPT", "ICEAGE_HUNTER", "TUTORIAL_FLAG" ],
     "seedPackets" : {
       "SUN_SHROOM" : 5
     },
@@ -128,8 +128,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 6,
-    "numberOfUnlockedPots" : 6
+    "numberOfUnlockedPots" : 6,
+    "numberOfLockedPots" : 6
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -566,14 +566,39 @@
       "read" : false,
       "timestamp" : 1786779679376,
       "formattedText" : "New zombie spotted: TOMB_RAISER!\n2026/08/15  11:11"
+    }, {
+      "text" : "New zombie spotted: GARGANTUAR_EGYPT!",
+      "read" : false,
+      "timestamp" : 1786816179682,
+      "formattedText" : "New zombie spotted: GARGANTUAR_EGYPT!\n2026/08/15  21:19"
+    }, {
+      "text" : "New zombie spotted: GARGANTUAR_BASIC!",
+      "read" : false,
+      "timestamp" : 1786816179733,
+      "formattedText" : "New zombie spotted: GARGANTUAR_BASIC!\n2026/08/15  21:19"
+    }, {
+      "text" : "New zombie spotted: IMP_EGYPT!",
+      "read" : false,
+      "timestamp" : 1786860834877,
+      "formattedText" : "New zombie spotted: IMP_EGYPT!\n2026/08/16  09:43"
+    }, {
+      "text" : "New zombie spotted: IMP_TUTORIAL!",
+      "read" : false,
+      "timestamp" : 1786860834896,
+      "formattedText" : "New zombie spotted: IMP_TUTORIAL!\n2026/08/16  09:43"
+    }, {
+      "text" : "New zombie spotted: ZOMBOSS_EGYPT!",
+      "read" : false,
+      "timestamp" : 1786861901842,
+      "formattedText" : "New zombie spotted: ZOMBOSS_EGYPT!\n2026/08/16  10:01"
     } ]
   },
   "shopDaily" : {
     "offerPlant" : "FIRE_PEASHOOTER",
     "offerDate" : "2026-08-15",
     "purchased" : false,
-    "availableToday" : true,
-    "forToday" : true
+    "forToday" : false,
+    "availableToday" : false
   },
   "stayLoggedIn" : true,
   "questState" : {
@@ -587,7 +612,7 @@
         "conditionKey" : "max_plant_loss",
         "targetCount" : 0,
         "currentCount" : 0,
-        "completed" : false,
+        "completed" : true,
         "claimed" : false,
         "reward" : {
           "type" : "SEED_PACKETS",
@@ -597,7 +622,7 @@
         "parameters" : {
           "n" : 0
         },
-        "active" : true,
+        "active" : false,
         "formattedDescription" : "Win without losing more than 0 plants",
         "formattedTitle" : "Economic Herbivore",
         "runtimeState" : { }
@@ -609,7 +634,7 @@
         "priority" : "MEDIUM",
         "conditionKey" : "speed_kill",
         "targetCount" : 10,
-        "currentCount" : 6,
+        "currentCount" : 0,
         "completed" : false,
         "claimed" : false,
         "reward" : {
@@ -621,9 +646,7 @@
         "active" : true,
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "formattedTitle" : "Speed Run",
-        "runtimeState" : {
-          "waveStartTime" : 1786815509602
-        }
+        "runtimeState" : { }
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -633,7 +656,7 @@
         "conditionKey" : "zero_sun_end",
         "targetCount" : 0,
         "currentCount" : 0,
-        "completed" : false,
+        "completed" : true,
         "claimed" : false,
         "reward" : {
           "type" : "DIAMONDS",
@@ -641,7 +664,7 @@
           "targetPlant" : null
         },
         "parameters" : { },
-        "active" : true,
+        "active" : false,
         "formattedDescription" : "End a level with exactly 0 sun",
         "formattedTitle" : "Master of Defense",
         "runtimeState" : { }
@@ -654,7 +677,7 @@
         "conditionKey" : "day_with_mushrooms",
         "targetCount" : 0,
         "currentCount" : 0,
-        "completed" : false,
+        "completed" : true,
         "claimed" : false,
         "reward" : {
           "type" : "DIAMONDS",
@@ -662,7 +685,7 @@
           "targetPlant" : null
         },
         "parameters" : { },
-        "active" : true,
+        "active" : false,
         "formattedDescription" : "Win a day level using only mushrooms",
         "formattedTitle" : "Day or Night",
         "runtimeState" : { }
@@ -718,7 +741,7 @@
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "2h 50m"
+      "timeUntilReset" : "9h 59m"
     }
   }
 }

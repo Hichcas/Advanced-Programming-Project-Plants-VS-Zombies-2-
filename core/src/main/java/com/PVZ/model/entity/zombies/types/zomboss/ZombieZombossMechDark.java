@@ -48,4 +48,9 @@ public class ZombieZombossMechDark extends AbstractZomboss {
         System.out.println("[ZombossDark] Dark Magic x" + numCurses
             + " damage=" + damage + " hit=" + hitCount + " plants");
     }
+
+    @Override
+    public void spawnZombieWave(BattleController ctrl) {
+        System.out.println("[ZombossDark] Portal Wave spawned dark ages zombies!");
+    }
 }

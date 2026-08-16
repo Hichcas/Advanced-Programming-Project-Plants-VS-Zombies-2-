@@ -67,12 +67,11 @@ public class EntityRenderer {
                     + ") catalog clips: " + catalogClips + " | runtime clips: " + runtimeClips);
             }
 
-            // Try exact name match first (e.g. for sub-branch tracks like zombie_armor_cone_norm)
-            ClipRef clip = pamPlayer.getClip(pamPath, state);
-            if (clip == null) {
-                String resolvedName = PamAnimationCatalog.resolveClip(pamPath, state);
-                clip = resolvedName != null ? pamPlayer.getClip(pamPath, resolvedName) : null;
+            String resolvedName = PamAnimationCatalog.resolveClip(pamPath, state);
+            if (resolvedName == null) {
+                resolvedName = state;
             }
+            ClipRef clip = pamPlayer.getClip(pamPath, resolvedName);
             if (clip == null) {
                 clip = pamPlayer.getClip(pamPath, "walk");
             }
@@ -135,9 +134,10 @@ public class EntityRenderer {
             boolean flipX = zombie.isHypnotized();
             float effectiveTime = zombie.isFrozen() ? 0.0f : stateTime;
 
+            Map<String, Boolean> trackVisibility = null;
             String activeArmorTrack = ZombieTexturePaths.getArmorSubBranchTrack(zombie);
             if (activeArmorTrack != null) {
-                Map<String, Boolean> trackVisibility = new HashMap<>();
+                trackVisibility = new HashMap<>();
                 trackVisibility.put("zombie_armor_cone_norm", false);
                 trackVisibility.put("zombie_armor_cone_damage_01", false);
                 trackVisibility.put("zombie_armor_cone_damage_02", false);
@@ -160,7 +160,20 @@ public class EntityRenderer {
                         trackVisibility.put("_zombie_egypt_armor2_states", true);
                     }
                 }
+            }
 
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.heavy_gargantuar.ZombieGargantuar garg && garg.isImpThrown()) {
+                if (trackVisibility == null) trackVisibility = new HashMap<>();
+                trackVisibility.put("imp", false);
+                trackVisibility.put("zombie_imp", false);
+                trackVisibility.put("_zombie_imp_states", false);
+                trackVisibility.put("_zombie_egypt_imp_states", false);
+                trackVisibility.put("imp_body", false);
+                trackVisibility.put("imp_head", false);
+                trackVisibility.put("imp_arm", false);
+            }
+
+            if (trackVisibility != null) {
                 pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true, trackVisibility);
             } else {
                 pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
