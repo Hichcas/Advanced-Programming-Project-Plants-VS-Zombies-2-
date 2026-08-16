@@ -152,7 +152,7 @@
           "rows": 5,
           "cols": 9,
           "mapTexture": "maps/Ancient_Egypt.png",
-          "conveyorInterval": 13.0,
+          "conveyorInterval": 12.0,
           "tombstones": [
             {
               "row": 0,

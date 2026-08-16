@@ -117,15 +117,7 @@ public class GameScreen extends BaseScreen {
     }
 
     private String resolveMissionText() {
-        com.PVZ.model.game.chapter.StageConfig stageConfig = resolveStageConfig();
-        String type = stageConfig != null && stageConfig.getType() != null
-            ? stageConfig.getType().toUpperCase() : "";
-        String special = stageConfig != null && stageConfig.getSpecialLevel() != null
-            ? stageConfig.getSpecialLevel().toUpperCase() : "";
-        if (type.contains("DEADLINE") || special.contains("DEAD_LINE")) {
-            return "Each lane has its own red line — don't let any zombie cross it!";
-        }
-        return "Don't let the zombies reach your house!";
+        return com.PVZ.model.game.chapter.StageRules.summary(resolveStageConfig());
     }
 
     private boolean isSimulationFrozen() {
