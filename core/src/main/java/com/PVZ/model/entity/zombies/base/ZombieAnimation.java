@@ -57,11 +57,16 @@ public final class ZombieAnimation {
         if (zombie == null) {
             return "walk";
         }
-        if (!isActive(zombie)) {
-            return "walk";
+        if (isActive(zombie)) {
+            Object v = zombie.getRuntimeState(STATE_KEY);
+            if (v instanceof String) {
+                return (String) v;
+            }
         }
-        Object v = zombie.getRuntimeState(STATE_KEY);
-        return v instanceof String ? (String) v : "walk";
+        if (!zombie.isMoving()) {
+            return "idle";
+        }
+        return "walk";
     }
 
     public static void tick(Zombie zombie, double deltaTimeSeconds) {

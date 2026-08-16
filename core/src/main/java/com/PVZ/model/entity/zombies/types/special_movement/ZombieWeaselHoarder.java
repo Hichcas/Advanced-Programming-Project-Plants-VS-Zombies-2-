@@ -28,6 +28,7 @@ public class ZombieWeaselHoarder extends AbstractSpecialMovementZombie {
 
     @Override
     public void die(BattleController controller) {
+        com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "weasel_attack", 4.0667);
         for (int i = 0; i < weaselsToRelease; i++) {
             ZombieWeasel weasel = new ZombieWeasel();
             weasel.initPosition(x + (i * 20), y, row);

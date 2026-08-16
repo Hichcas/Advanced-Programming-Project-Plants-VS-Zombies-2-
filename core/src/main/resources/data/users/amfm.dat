@@ -10,10 +10,10 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 4997650,
-    "diamonds" : 4999991,
+    "coins" : 4997550,
+    "diamonds" : 4999993,
     "stagesCompleted" : 0,
-    "highestScore" : 999500,
+    "highestScore" : 14500,
     "dailyQuestsCompleted" : 0,
     "nonDailyQuestsCompleted" : 0,
     "purchasedPlantFood" : 1
@@ -34,8 +34,8 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "CHOMPER", "GIANT_WALLNUT", "ROTOBAGA", "JALAPENO", "PUFF_SHROOM", "THREEPEATER", "PEA_POD", "LILY_PAD", "PEPPER_PULT", "PEASHOOTER", "ARMA_MINT", "GOO_PEASHOOTER", "WINTER_MELON", "EXPLODE_O_NUT", "ELECTRIC_BLUEBERRY", "KERNEL_PULT", "POTATO_MINE", "PRIMAL_POTATO_MINE", "SQUASH", "SPLIT_PEA", "SWEET_POTATO", "ENLIGHTEN_MINT", "CABBAGE_PULT", "GARLIC", "CAT_TAIL_MINT", "WALLNUT_BOWLING", "CAT_TAIL", "BOMBARD_MINT", "SUN_SHROOM", "ENCHANT_MINT", "PIERCE_MINT", "GRAVE_BUSTER", "ICE_SHROOM", "SUNFLOWER", "CACTUS", "MAGNET_SHROOM", "HYPNO_SHROOM", "BONK_CHOY", "PRIMAL_SUNFLOWER", "FUME_SHROOM", "APPEASE_MINT", "CAULIPOWER", "FIRE_PEASHOOTER", "ENFORCE_MINT", "CHERRY_BOMB", "STARFRUIT", "TORCHWOOD", "DOOM_SHROOM", "GRAPESHOT", "PHAT_BEET", "WALL_NUT", "CITRON", "ICEBERG_LETTUCE", "SNOW_PEA", "ENDURIAN", "TANGLE_KELP", "HOT_POTATO", "KIWIBEAST", "TWIN_SUNFLOWER", "MEGA_GATLING_PEA", "REPEATER", "MELON_PULT", "REINFORCE_MINT", "GOLD_BLOOM", "WASABI_WHIP", "IMITATER", "SUN_BEAN", "BOWLING_BULB", "PUMPKIN", "TALL_NUT", "SEA_SHROOM" ],
-    "seenZombies" : [ "RA", "TUTORIAL_FLAG", "PHARAOH", "TOMB_RAISER", "CAMEL", "TUTORIAL_ARMOR1", "MUMMY_DEFAULT", "TUTORIAL_ARMOR4", "MUMMY_ARMOR1", "TUTORIAL_DEFAULT", "ICEAGE_DEFAULT", "EXPLORER", "TUTORIAL_ARMOR2", "MUMMY_ARMOR2", "ICEAGE_HUNTER", "MUMMY_ARMOR4", "GARGANTUAR_ICEAGE", "IMP_ICEAGE" ],
+    "unlockedPlants" : [ "ICE_SHROOM", "WASABI_WHIP", "GARLIC", "ENDURIAN", "FIRE_PEASHOOTER", "KIWIBEAST", "REPEATER", "MELON_PULT", "MAGNET_SHROOM", "WALL_NUT", "ARMA_MINT", "CHOMPER", "GOO_PEASHOOTER", "PRIMAL_SUNFLOWER", "SUN_BEAN", "PUMPKIN", "POTATO_MINE", "CAT_TAIL_MINT", "ENCHANT_MINT", "SWEET_POTATO", "SEA_SHROOM", "CITRON", "MEGA_GATLING_PEA", "ROTOBAGA", "TORCHWOOD", "SUNFLOWER", "ENFORCE_MINT", "PEPPER_PULT", "GOLD_BLOOM", "BONK_CHOY", "BOMBARD_MINT", "SQUASH", "ELECTRIC_BLUEBERRY", "PEASHOOTER", "GRAPESHOT", "HOT_POTATO", "IMITATER", "TWIN_SUNFLOWER", "EXPLODE_O_NUT", "GIANT_WALLNUT", "CAULIPOWER", "WINTER_MELON", "CHERRY_BOMB", "APPEASE_MINT", "THREEPEATER", "DOOM_SHROOM", "REINFORCE_MINT", "TALL_NUT", "HYPNO_SHROOM", "PRIMAL_POTATO_MINE", "SUN_SHROOM", "LILY_PAD", "PUFF_SHROOM", "CAT_TAIL", "BOWLING_BULB", "SPLIT_PEA", "STARFRUIT", "SNOW_PEA", "WALLNUT_BOWLING", "PHAT_BEET", "CACTUS", "ICEBERG_LETTUCE", "PIERCE_MINT", "CABBAGE_PULT", "KERNEL_PULT", "FUME_SHROOM", "JALAPENO", "ENLIGHTEN_MINT", "GRAVE_BUSTER", "PEA_POD", "TANGLE_KELP" ],
+    "seenZombies" : [ "ICEAGE_ARMOR2", "GARGANTUAR_BASIC", "MUMMY_ARMOR1", "RA", "GARGANTUAR_EGYPT", "ICEAGE_DEFAULT", "ICEAGE_ARMOR1", "EXPLORER", "TROGLOBITE", "MUMMY_DEFAULT", "MUMMY_ARMOR2", "ICEAGE_ARMOR3", "MUMMY_ARMOR4", "TUTORIAL_DEFAULT", "TUTORIAL_ARMOR2", "IMP_ICEAGE", "ICEAGE_HUNTER", "ZOMBOSS_EGYPT", "TUTORIAL_FLAG", "PHARAOH", "CAMEL", "IMP_TUTORIAL", "TOMB_RAISER", "TUTORIAL_ARMOR1", "DODO", "IMP_EGYPT", "TUTORIAL_ARMOR4" ],
     "seedPackets" : {
       "SUN_SHROOM" : 5
     },
@@ -93,12 +93,12 @@
       "empty" : true,
       "readyForPlanting" : true
     }, {
-      "unlocked" : true,
+      "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : true
+      "readyForPlanting" : false
     } ], [ {
       "unlocked" : false,
       "plantType" : null,
@@ -128,8 +128,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 4,
-    "numberOfUnlockedPots" : 8
+    "numberOfLockedPots" : 5,
+    "numberOfUnlockedPots" : 7
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -567,18 +567,63 @@
       "timestamp" : 1786779679376,
       "formattedText" : "New zombie spotted: TOMB_RAISER!\n2026/08/15  11:11"
     }, {
-      "text" : "New zombie spotted: GARGANTUAR_ICEAGE!",
+      "text" : "New zombie spotted: GARGANTUAR_EGYPT!",
       "read" : false,
-      "timestamp" : 1786861384951,
-      "formattedText" : "New zombie spotted: GARGANTUAR_ICEAGE!\n2026/08/16  09:53"
+      "timestamp" : 1786816179682,
+      "formattedText" : "New zombie spotted: GARGANTUAR_EGYPT!\n2026/08/15  21:19"
+    }, {
+      "text" : "New zombie spotted: GARGANTUAR_BASIC!",
+      "read" : false,
+      "timestamp" : 1786816179733,
+      "formattedText" : "New zombie spotted: GARGANTUAR_BASIC!\n2026/08/15  21:19"
+    }, {
+      "text" : "New zombie spotted: IMP_EGYPT!",
+      "read" : false,
+      "timestamp" : 1786860834877,
+      "formattedText" : "New zombie spotted: IMP_EGYPT!\n2026/08/16  09:43"
+    }, {
+      "text" : "New zombie spotted: IMP_TUTORIAL!",
+      "read" : false,
+      "timestamp" : 1786860834896,
+      "formattedText" : "New zombie spotted: IMP_TUTORIAL!\n2026/08/16  09:43"
+    }, {
+      "text" : "New zombie spotted: ZOMBOSS_EGYPT!",
+      "read" : false,
+      "timestamp" : 1786861901842,
+      "formattedText" : "New zombie spotted: ZOMBOSS_EGYPT!\n2026/08/16  10:01"
+    }, {
+      "text" : "New zombie spotted: ICEAGE_ARMOR1!",
+      "read" : false,
+      "timestamp" : 1786890690587,
+      "formattedText" : "New zombie spotted: ICEAGE_ARMOR1!\n2026/08/16  18:01"
+    }, {
+      "text" : "New zombie spotted: ICEAGE_ARMOR2!",
+      "read" : false,
+      "timestamp" : 1786890690602,
+      "formattedText" : "New zombie spotted: ICEAGE_ARMOR2!\n2026/08/16  18:01"
+    }, {
+      "text" : "New zombie spotted: ICEAGE_ARMOR3!",
+      "read" : false,
+      "timestamp" : 1786890690607,
+      "formattedText" : "New zombie spotted: ICEAGE_ARMOR3!\n2026/08/16  18:01"
+    }, {
+      "text" : "New zombie spotted: DODO!",
+      "read" : false,
+      "timestamp" : 1786892768230,
+      "formattedText" : "New zombie spotted: DODO!\n2026/08/16  18:36"
+    }, {
+      "text" : "New zombie spotted: TROGLOBITE!",
+      "read" : false,
+      "timestamp" : 1786896110734,
+      "formattedText" : "New zombie spotted: TROGLOBITE!\n2026/08/16  19:31"
     } ]
   },
   "shopDaily" : {
     "offerPlant" : "FIRE_PEASHOOTER",
     "offerDate" : "2026-08-15",
     "purchased" : false,
-    "availableToday" : false,
-    "forToday" : false
+    "forToday" : false,
+    "availableToday" : false
   },
   "stayLoggedIn" : true,
   "questState" : {
@@ -604,8 +649,8 @@
         },
         "active" : false,
         "formattedDescription" : "Win without losing more than 0 plants",
-        "formattedTitle" : "Economic Herbivore",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedTitle" : "Economic Herbivore"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -614,7 +659,7 @@
         "priority" : "MEDIUM",
         "conditionKey" : "speed_kill",
         "targetCount" : 10,
-        "currentCount" : 0,
+        "currentCount" : 2,
         "completed" : false,
         "claimed" : false,
         "reward" : {
@@ -625,10 +670,10 @@
         "parameters" : { },
         "active" : true,
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
-        "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1786895848475
-        }
+          "waveStartTime" : 1786897760161
+        },
+        "formattedTitle" : "Speed Run"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -638,7 +683,7 @@
         "conditionKey" : "zero_sun_end",
         "targetCount" : 0,
         "currentCount" : 0,
-        "completed" : false,
+        "completed" : true,
         "claimed" : false,
         "reward" : {
           "type" : "DIAMONDS",
@@ -646,10 +691,10 @@
           "targetPlant" : null
         },
         "parameters" : { },
-        "active" : true,
+        "active" : false,
         "formattedDescription" : "End a level with exactly 0 sun",
-        "formattedTitle" : "Master of Defense",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedTitle" : "Master of Defense"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -659,7 +704,7 @@
         "conditionKey" : "day_with_mushrooms",
         "targetCount" : 0,
         "currentCount" : 0,
-        "completed" : false,
+        "completed" : true,
         "claimed" : false,
         "reward" : {
           "type" : "DIAMONDS",
@@ -667,10 +712,10 @@
           "targetPlant" : null
         },
         "parameters" : { },
-        "active" : true,
+        "active" : false,
         "formattedDescription" : "Win a day level using only mushrooms",
-        "formattedTitle" : "Day or Night",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedTitle" : "Day or Night"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -692,8 +737,8 @@
         },
         "active" : true,
         "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
-        "formattedTitle" : "Lawnmower Time",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedTitle" : "Lawnmower Time"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -715,15 +760,15 @@
         },
         "active" : false,
         "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
-        "formattedTitle" : "Chapter Hunter",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedTitle" : "Chapter Hunter"
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "FROSTBITE_CAVES",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "4h 31m"
+      "timeUntilReset" : "4h 0m"
     }
   }
 }

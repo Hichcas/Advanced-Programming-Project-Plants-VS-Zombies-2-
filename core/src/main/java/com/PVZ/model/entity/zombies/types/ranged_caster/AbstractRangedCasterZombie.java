@@ -75,16 +75,17 @@ public abstract class AbstractRangedCasterZombie extends Zombie {
         if (plantInFront != null && !plantInFront.isDead()) {
             moving = false;
             attack(plantInFront, delta, ctrl);
-        } else if (rangedTarget != null) {
-            moving = false;
-            rangedCooldown += delta;
-            if (rangedCooldown >= attackCooldown) {
-                shoot(ctrl, rangedTarget);
-                rangedCooldown = 0;
-            }
         } else {
             moving = true;
             move(delta, ctrl);
+
+            if (rangedTarget != null) {
+                rangedCooldown += delta;
+                if (rangedCooldown >= attackCooldown) {
+                    shoot(ctrl, rangedTarget);
+                    rangedCooldown = 0;
+                }
+            }
         }
 
         hitbox.setPosition((float) x, (float) y);
