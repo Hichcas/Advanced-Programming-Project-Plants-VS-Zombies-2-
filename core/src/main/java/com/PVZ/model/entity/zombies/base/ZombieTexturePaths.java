@@ -35,13 +35,18 @@ public class ZombieTexturePaths {
         PAM_PATHS.put("ZombieZombossMechEgypt", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_ZOMBOSS/ZOMBIE_EGYPT_ZOMBOSS.PAM");
         // World-specific PAM skins used by the graphical mini-games.
         PAM_PATHS.put("ZombieIceageDefault", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM");
-        PAM_PATHS.put("ZombieIceageArmor1Default", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC_BRICK/ZOMBIE_ICEAGE_BASIC_BRICK.PAM");
-        PAM_PATHS.put("ZombieIceageArmor2Default", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC_BRICK/ZOMBIE_ICEAGE_BASIC_BRICK.PAM");
+        PAM_PATHS.put("ZombieIceageArmor1Default", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM");
+        PAM_PATHS.put("ZombieIceageArmor2Default", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM");
         PAM_PATHS.put("ZombieIceageArmor3Default", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC_BRICK/ZOMBIE_ICEAGE_BASIC_BRICK.PAM");
+
+        PAM_PATHS.put("ZombieIceageBlockheadDefault", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC_BRICK/ZOMBIE_ICEAGE_BASIC_BRICK.PAM");
         PAM_PATHS.put("ZombieIceageFlagDefault", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_FLAG/ZOMBIE_ICEAGE_FLAG.PAM");
+
         PAM_PATHS.put("ZombieIceAgeHunter", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_HUNTER/ZOMBIE_ICEAGE_HUNTER.PAM");
         PAM_PATHS.put("ZombieIceAgeDodo", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_DODORIDER/ZOMBIE_ICEAGE_DODORIDER.PAM");
         PAM_PATHS.put("ZombieIceAgeTroglobite", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_TROGLOBITE/ZOMBIE_ICEAGE_TROGLOBITE.PAM");
+
+
         PAM_PATHS.put("ZombieWeaselHoarder", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_WEASELHOARDER/ZOMBIE_ICEAGE_WEASELHOARDER.PAM");
         PAM_PATHS.put("ZombieWeaselHoarderDefault", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_WEASELHOARDER/ZOMBIE_ICEAGE_WEASELHOARDER.PAM");
         PAM_PATHS.put("ZombieWeasel", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_WEASEL/ZOMBIE_ICEAGE_WEASEL.PAM");
@@ -100,7 +105,7 @@ public class ZombieTexturePaths {
             if (ratio > 0.666) return "zombie_armor_bucket_norm";
             if (ratio > 0.333) return "zombie_armor_bucket_damage_01";
             return "zombie_armor_bucket_damage_02";
-        } else if (type == ZombieArmor.ArmorType.BRICK) {
+        } else if (type == ZombieArmor.ArmorType.BRICK || type == ZombieArmor.ArmorType.ICE_BLOCK) {
             if (ratio > 0.666) return "zombie_armor_brick_norm";
             if (ratio > 0.333) return "zombie_armor_brick_damage_01";
             return "zombie_armor_brick_damage_02";

@@ -255,7 +255,7 @@ public class BattleController implements BehaviorContext {
         }
 
         TileType type = tile.getType();
-        if (type != TileType.TOMBSTONE && type != TileType.NECROMANCY) {
+        if (type != TileType.TOMBSTONE && type != TileType.NECROMANCY && type != TileType.ICE) {
             return false;
         }
 
