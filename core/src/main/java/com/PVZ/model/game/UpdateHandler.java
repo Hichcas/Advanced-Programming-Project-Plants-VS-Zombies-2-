@@ -72,7 +72,10 @@ public class UpdateHandler {
 
         if (engine.specialLevel != null) {
             engine.specialLevel.onTick(engine, engine.map);
-            if (engine.specialLevel.isLossConditionMet()) {
+            if (engine.specialLevel.isWinConditionMet()) {
+                System.out.println("[SpecialLevel] Win condition met: " + engine.specialLevel.getName());
+                triggerGameOver(engine, true);
+            } else if (engine.specialLevel.isLossConditionMet()) {
                 System.out.println("[SpecialLevel] Loss condition met: " + engine.specialLevel.getName());
                 triggerGameOver(engine, false);
             }
