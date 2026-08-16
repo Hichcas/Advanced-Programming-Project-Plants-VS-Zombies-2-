@@ -73,8 +73,9 @@ public class LevelStartOverlay extends Table {
         }
 
         String type = config.getType() == null ? "" : config.getType().toUpperCase();
-        if (type.contains("DEADLINE")) {
-            objectives.add("Don't let the zombies cross the marked line!");
+        String special = config.getSpecialLevel() == null ? "" : config.getSpecialLevel().toUpperCase();
+        if (type.contains("DEADLINE") || special.contains("DEAD_LINE")) {
+            objectives.add("Each lane has its own red line — don't let any zombie cross it!");
         } else {
             objectives.add("Don't let the zombies reach your house!");
         }
@@ -92,7 +93,7 @@ public class LevelStartOverlay extends Table {
                 + String.join(", ", config.getLockedPlants()));
         }
 
-        if (config.getSpecialLevel() != null && !config.getSpecialLevel().isBlank()) {
+        if (!special.isBlank() && !special.contains("DEAD_LINE")) {
             objectives.add("Special level: " + config.getSpecialLevel());
         }
 
