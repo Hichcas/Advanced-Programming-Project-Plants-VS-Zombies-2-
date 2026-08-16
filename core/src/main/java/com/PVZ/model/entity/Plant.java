@@ -42,6 +42,23 @@ public class Plant {
         return instance;
     }
 
+    /**
+     * Instant-consume plants (explosives, mints, ...) have a NONE plant food
+     * kind in the data file and must not eat a plant food pickup.
+     */
+    public boolean hasPlantFoodEffect() {
+        PlantDefinition definition = instance.getDefinition();
+        if (definition == null) {
+            return false;
+        }
+        com.PVZ.model.entity.plants.AbilitySpec spec = definition.getPlantFoodEffect();
+        if (spec == null) {
+            return false;
+        }
+        String kind = spec.getResolvedBehaviorId();
+        return kind != null && !kind.isBlank() && !"NONE".equalsIgnoreCase(kind.trim());
+    }
+
     public PlantDefinition getDefinition() {
         return instance.getDefinition();
     }

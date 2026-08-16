@@ -19,6 +19,9 @@ public class StageConfig {
     private String specialLevel;
     private int maxPlantDeaths;
     private int deadlineCol;
+    private double timedWarSeconds;
+    private int timedWarZombieKills;
+    private int timedWarSunTarget;
     private List<TombstoneEntry> tombstones;
     private List<TileEntry> tiles;
     private List<WaveEntry> waves;
@@ -262,6 +265,30 @@ public class StageConfig {
 
     public void setDeadlineCol(int deadlineCol) {
         this.deadlineCol = deadlineCol;
+    }
+
+    public double getTimedWarSeconds() {
+        return timedWarSeconds;
+    }
+
+    public void setTimedWarSeconds(double timedWarSeconds) {
+        this.timedWarSeconds = timedWarSeconds;
+    }
+
+    public int getTimedWarZombieKills() {
+        return timedWarZombieKills;
+    }
+
+    public void setTimedWarZombieKills(int timedWarZombieKills) {
+        this.timedWarZombieKills = timedWarZombieKills;
+    }
+
+    public int getTimedWarSunTarget() {
+        return timedWarSunTarget;
+    }
+
+    public void setTimedWarSunTarget(int timedWarSunTarget) {
+        this.timedWarSunTarget = timedWarSunTarget;
     }
 
     public List<TombstoneEntry> getTombstones() {

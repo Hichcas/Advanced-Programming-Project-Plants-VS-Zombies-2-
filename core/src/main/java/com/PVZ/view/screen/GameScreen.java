@@ -16,14 +16,19 @@ import com.PVZ.view.screen.manager.MusicManager;
 import com.PVZ.view.screen.manager.ScreenManager;
 import com.PVZ.model.user.UserRegistry;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import pvz.skin.PvzSkin;
@@ -53,6 +58,9 @@ public class GameScreen extends BaseScreen {
     private boolean plantFoodModeActive = false;
     private ImageButton shovelButton;
     private ImageButton plantFoodButton;
+    private Label timedWarLabel;
+    private Label plantFoodCountLabel;
+    private long plantFoodFlashUntil = 0L;
 
     public GameScreen(String mapPath, String musicPath, GameEngine gameEngine) {
         super();
@@ -99,6 +107,28 @@ public class GameScreen extends BaseScreen {
         shapeDebug = new ShapeRenderer();
         hudFont = FontManager.getInstance().getEnglishMenuFont();
         gameOverFont = FontManager.getInstance().getEnglishMenuFont();
+
+        if (gameEngine instanceof RegularGameEngine regularGameEngine
+            && regularGameEngine.getSpecialLevel()
+            instanceof com.PVZ.model.game.chapter.sepecialLevel.TimedWarLevel) {
+            Label.LabelStyle timerStyle = new Label.LabelStyle(hudFont, Color.WHITE);
+            try {
+                Skin skin = PvzSkin.get();
+                if (skin != null) {
+                    timerStyle = new Label.LabelStyle();
+                    timerStyle.font = skin.getFont("FBUSV8C5EI_1_outline");
+                    timerStyle.fontColor = Color.WHITE;
+                    timerStyle.background = skin.getDrawable("image_ui_powerups_powerup_cost_10");
+                }
+            } catch (Exception ex) {
+                System.err.println("GameScreen: PvzSkin timer style unavailable, using default font.");
+            }
+            timedWarLabel = new Label("", timerStyle);
+            timedWarLabel.setSize(1100f, 90f);
+            timedWarLabel.setPosition(VIRTUAL_WIDTH / 2f - 550f, 26f);
+            timedWarLabel.setAlignment(com.badlogic.gdx.utils.Align.center);
+            stage.addActor(timedWarLabel);
+        }
 
         if (gameEngine instanceof RegularGameEngine regularGameEngine) {
             layoutSeedPacketBar(regularGameEngine);
@@ -156,6 +186,7 @@ public class GameScreen extends BaseScreen {
         Table overlay = new Table();
         overlay.setFillParent(true);
         overlay.top().right();
+        overlay.setTouchable(Touchable.childrenOnly);
 
         ImageButton button;
         try {
@@ -173,29 +204,84 @@ public class GameScreen extends BaseScreen {
         button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!(AppStatus.getGameEngine() instanceof RegularGameEngine engine)) {
-                    return;
-                }
-                if (engine.getPlantFoodManager().getPlantFoodCount() <= 0) {
-                    System.out.println("No plant food available.");
-                    return;
-                }
-                plantFoodModeActive = !plantFoodModeActive;
-                if (plantFoodModeActive) {
-                    pluckModeActive = false;
-                    updateShovelButtonState();
-                }
-                updatePlantFoodButtonState();
+                togglePlantFoodMode();
             }
         });
 
-        overlay.add(button).size(82f, 82f).padTop(20f).padRight(110f);
+        // Live counter badge in the corner of the button.
+        plantFoodCountLabel = new Label("0",
+            new Label.LabelStyle(FontManager.getInstance().getEnglishMenuFont(), Color.YELLOW));
+        plantFoodCountLabel.setFontScale(0.9f);
+
+        Stack stack = new Stack();
+        stack.add(button);
+        Table badgeLayer = new Table();
+        badgeLayer.add(plantFoodCountLabel).expand().bottom().right().padBottom(6f).padRight(8f);
+        stack.add(badgeLayer);
+
+        overlay.add(stack).size(82f, 82f).padTop(20f).padRight(110f);
         return overlay;
+    }
+
+    private void togglePlantFoodMode() {
+        if (!(AppStatus.getGameEngine() instanceof RegularGameEngine engine)) {
+            return;
+        }
+        if (engine.getPlantFoodManager().getPlantFoodCount() <= 0) {
+            // Out of food: flash the button red instead of failing silently.
+            plantFoodFlashUntil = System.currentTimeMillis() + 450;
+            if (plantFoodButton != null) {
+                plantFoodButton.clearActions();
+                plantFoodButton.addAction(Actions.sequence(
+                    Actions.color(Color.RED, 0.08f),
+                    Actions.color(new Color(1f, 1f, 1f, 0.4f), 0.3f)));
+            }
+            System.out.println("No plant food available.");
+            return;
+        }
+        plantFoodModeActive = !plantFoodModeActive;
+        if (plantFoodModeActive) {
+            pluckModeActive = false;
+            updateShovelButtonState();
+            if (plantFoodButton != null) {
+                plantFoodButton.addAction(Actions.sequence(
+                    Actions.scaleTo(1.25f, 1.25f, 0.08f),
+                    Actions.scaleTo(1f, 1f, 0.15f)));
+            }
+        }
+        updatePlantFoodButtonState();
+    }
+
+    private void updatePlantFoodHud() {
+        if (!(AppStatus.getGameEngine() instanceof RegularGameEngine engine)) {
+            return;
+        }
+        int count = engine.getPlantFoodManager().getPlantFoodCount();
+        if (plantFoodCountLabel != null) {
+            String text = String.valueOf(count);
+            if (!text.equals(plantFoodCountLabel.getText().toString())) {
+                plantFoodCountLabel.setText(text);
+                plantFoodCountLabel.addAction(Actions.sequence(
+                    Actions.scaleTo(1.6f, 1.6f, 0.1f),
+                    Actions.scaleTo(1f, 1f, 0.15f)));
+            }
+        }
+        if (count <= 0 && plantFoodModeActive) {
+            plantFoodModeActive = false;
+        }
+        // Don't stomp the red "empty" flash with the per-frame tint.
+        if (plantFoodButton != null && System.currentTimeMillis() >= plantFoodFlashUntil) {
+            float alpha = count <= 0 ? 0.4f : (plantFoodModeActive ? 1f : 0.85f);
+            plantFoodButton.setColor(1f, 1f, 1f, alpha);
+        }
     }
 
     private void updatePlantFoodButtonState() {
         if (plantFoodButton != null) {
-            plantFoodButton.setColor(1f, 1f, 1f, plantFoodModeActive ? 1f : 0.78f);
+            boolean hasFood = !(AppStatus.getGameEngine() instanceof RegularGameEngine engine)
+                || engine.getPlantFoodManager().getPlantFoodCount() > 0;
+            float alpha = hasFood ? (plantFoodModeActive ? 1f : 0.85f) : 0.4f;
+            plantFoodButton.setColor(1f, 1f, 1f, alpha);
         }
     }
 
@@ -428,6 +514,8 @@ public class GameScreen extends BaseScreen {
         drawBackgroundAndEngine(activeEngine, delta);
         drawMapBorders(activeEngine);
         drawDeadline(activeEngine);
+        updateTimedWarLabel(activeEngine);
+        updatePlantFoodHud();
         drawSeedPacketBar(activeEngine);
         drawGameOverOverlay(overState);
         drawTileDebug(activeEngine);
@@ -547,6 +635,37 @@ public class GameScreen extends BaseScreen {
         shapeDebug.begin(ShapeRenderer.ShapeType.Line);
         activeMap.renderBorders(shapeDebug);
         shapeDebug.end();
+    }
+
+    private void updateTimedWarLabel(GameEngine activeEngine) {
+        if (timedWarLabel == null) {
+            return;
+        }
+        if (!(activeEngine instanceof RegularGameEngine regularEngine)) {
+            return;
+        }
+        if (!(regularEngine.getSpecialLevel()
+            instanceof com.PVZ.model.game.chapter.sepecialLevel.TimedWarLevel timedWar)) {
+            return;
+        }
+        double remaining = timedWar.getRemainingSeconds();
+        StringBuilder text = new StringBuilder("TIME: ").append(String.format("%.1fs", remaining));
+        if (timedWar.hasKillGoal() && timedWar.hasSunGoal()) {
+            text.append("  |  ZOMBIES LEFT: ").append(timedWar.getKillsRemaining(regularEngine))
+                .append("  |  SUN LEFT: ").append(timedWar.getSunRemaining(regularEngine));
+        } else if (timedWar.hasKillGoal()) {
+            text.append("  |  ZOMBIES LEFT: ").append(timedWar.getKillsRemaining(regularEngine));
+        } else {
+            text.append("  |  SUN LEFT: ").append(timedWar.getSunRemaining(regularEngine));
+        }
+        timedWarLabel.setText(text.toString());
+        com.badlogic.gdx.graphics.Color color = com.badlogic.gdx.graphics.Color.WHITE;
+        if (remaining <= 15) {
+            color = com.badlogic.gdx.graphics.Color.RED;
+        } else if (remaining <= timedWar.getTimeLimitSeconds() * 0.25) {
+            color = com.badlogic.gdx.graphics.Color.ORANGE;
+        }
+        timedWarLabel.setColor(color);
     }
 
     private void drawDeadline(GameEngine activeEngine) {

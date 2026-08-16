@@ -54,6 +54,9 @@ public class BattleController implements BehaviorContext {
         if (questNotifiedZombies.contains(z)) return;
         questNotifiedZombies.add(z);
 
+        if (engine != null) {
+            engine.totalZombieKills++;
+        }
         if (engine != null && engine.map != null) {
             int col = engine.map.worldToCol((float) z.getX());
             int row = (int) z.getRow();

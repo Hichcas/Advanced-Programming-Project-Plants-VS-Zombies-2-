@@ -50,6 +50,25 @@ public final class StageRules {
         } else if (type.equals("NIGHT_OPS") || special.equals("NIGHT_OPS")) {
             out.add("NIGHT OPS: Night has fallen — no sun drops from the sky.");
             out.add("Only sun produced by your plants (like Sunflower) keeps you alive!");
+        } else if (type.equals("TIMED_WAR") || special.contains("TIMED_WAR")) {
+            double secs = config.getTimedWarSeconds() > 0 ? config.getTimedWarSeconds() : 120;
+            String time = secs == Math.floor(secs)
+                ? String.valueOf((long) secs) + " seconds" : String.valueOf(secs) + " seconds";
+            out.add("TIMED WAR: A timer at the top of the screen is ticking!");
+            boolean anyGoal = false;
+            if (config.getTimedWarZombieKills() > 0) {
+                out.add("Kill " + config.getTimedWarZombieKills() + " zombies before the "
+                    + time + " run out!");
+                anyGoal = true;
+            }
+            if (config.getTimedWarSunTarget() > 0) {
+                out.add("Produce (collect) " + config.getTimedWarSunTarget() + " sun before the "
+                    + time + " run out!");
+                anyGoal = true;
+            }
+            if (!anyGoal) {
+                out.add("Kill 12 zombies before the " + time + " run out!");
+            }
         } else if (type.equals("LOVE_YOUR_PLANTS") || special.equals("LOVE_YOUR_PLANTS")) {
             int q = config.getMaxPlantDeaths() > 0 ? config.getMaxPlantDeaths() : 5;
             out.add("LOVE YOUR PLANTS: If " + q + " of your plants are destroyed or eaten by zombies, you lose!");
