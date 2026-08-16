@@ -28,6 +28,10 @@ public final class PamAnimationCatalog {
         SYNONYMS.put("zombie_idle", new String[]{"idle", "idle1", "groan", "stand", "idle_norm"});
         SYNONYMS.put("smash", new String[]{"smash_left", "smash_right", "attack"});
         SYNONYMS.put("power", new String[]{"power", "power_up", "break_power"});
+        SYNONYMS.put("stomp", new String[]{"stomp", "fire_attack", "charge"});
+        SYNONYMS.put("portal", new String[]{"zombie_portal_start", "summoning", "spawn", "zombie_drop"});
+        SYNONYMS.put("walk_up", new String[]{"walk_up", "float_up"});
+        SYNONYMS.put("walk_down", new String[]{"walk_down", "float_down"});
     }
 
     private static Map<String, Entry> byPath;

@@ -11,7 +11,8 @@ import java.util.stream.Collectors;
 
 public class ChapterLibrary {
     private static final ObjectMapper MAPPER = new ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .configure(com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_COMMENTS, true);
     private static final Map<String, ChapterConfig> CHAPTERS = new HashMap<>();
 
     private ChapterLibrary() {

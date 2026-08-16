@@ -31,6 +31,7 @@
             { "row": 4, "col": 2, "hp": 700 }
           ],
           "waves": [
+            /* Original stage 1 waves commented out for Zomboss testing:
             { "startDelay": 5.0, "entries": [{ "zombie": "ZombieMummyDefault", "count": 4, "spawnDelay": 2.0 }] },
             { "startDelay": 0, "entries": [
               { "zombie": "ZombieMummyDefault", "count": 12, "spawnDelay": 0.7 },
@@ -39,14 +40,9 @@
               { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 2.5 },
               { "zombie": "ZombieExplorerDefault", "count": 2, "spawnDelay": 3.0 }
             ]},
-            { "startDelay": 0, "isFinal": true, "entries": [
-              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 0.6 },
-              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 1.0 },
-              { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 1.5 },
-              { "zombie": "ZombieMummyArmor4Default", "count": 1, "spawnDelay": 2.5 },
-              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 2.0 },
-              { "zombie": "ZombieExplorerDefault", "count": 1, "spawnDelay": 3.0 },
-              { "zombie": "ZombieTombRaiserDefault", "count": 1, "spawnDelay": 3.5 }
+            */
+            { "startDelay": 1.0, "isFinal": true, "entries": [
+              { "zombie": "ZombieZombossMechEgypt", "count": 1, "spawnDelay": 0.5 }
             ]}
           ]
         },

@@ -48,4 +48,9 @@ public class ZombieZombossMechCowboy extends AbstractZomboss {
         System.out.println("[ZombossCowboy] Lasso x" + numLassos
             + " damage=" + damage + " hit=" + hitCount + " plants");
     }
+
+    @Override
+    public void spawnZombieWave(BattleController ctrl) {
+        System.out.println("[ZombossCowboy] Portal Wave spawned cowboy zombies!");
+    }
 }
