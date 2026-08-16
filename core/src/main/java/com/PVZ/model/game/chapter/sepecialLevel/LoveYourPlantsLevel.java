@@ -39,7 +39,7 @@ public class LoveYourPlantsLevel implements SpecialLevel {
 
     @Override
     public boolean isLossConditionMet() {
-        return maxAllowed > 0 && plantDeaths > maxAllowed;
+        return maxAllowed > 0 && plantDeaths >= maxAllowed;
     }
 
     @Override

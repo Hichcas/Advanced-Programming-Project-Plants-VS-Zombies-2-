@@ -16,5 +16,9 @@ public interface SpecialLevel {
 
     boolean isLossConditionMet();
 
+    default boolean isWinConditionMet() {
+        return false;
+    }
+
     String getName();
 }

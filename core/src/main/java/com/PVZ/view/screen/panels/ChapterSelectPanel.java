@@ -1,6 +1,7 @@
 package com.PVZ.view.screen.panels;
 
 import com.PVZ.controller.menuControllers.ChapterAndLevelSelectionMenuController;
+import com.PVZ.model.entity.ChapterMapPaths;
 import com.PVZ.model.enums.ChapterEnum;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.game.chapter.ChapterConfig;
@@ -9,7 +10,9 @@ import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.ChapterAndLevelSelectionInputDTO;
 import com.PVZ.view.output.OutputDTO;
+import com.PVZ.view.screen.GameScreen;
 import com.PVZ.view.screen.manager.MusicManager;
+import com.PVZ.view.screen.manager.ScreenManager;
 import com.PVZ.view.screen.ui.MenuButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -196,6 +199,16 @@ public class ChapterSelectPanel extends BasePanel {
         OutputDTO result = controller.handle(dto);
         if (!result.isSuccess()) {
             showError(result.getMessage());
+            return;
+        }
+        // Conveyor stages launch the engine directly (no plant selection):
+        // nothing else opens the game screen in that case, so do it here.
+        if (AppStatus.currentMenuType == MenuType.IN_GAME) {
+            ScreenManager.getInstance().performTransition(() -> new GameScreen(
+                ChapterMapPaths.resolve(chapter.name()),
+                "music/TitleScreen.mp3",
+                AppStatus.getGameEngine()
+            ));
         }
     }
 

@@ -18,6 +18,7 @@ public class StageConfig {
     private List<FamilyLockEntry> lockedFamilies;
     private String specialLevel;
     private int maxPlantDeaths;
+    private int deadlineCol;
     private List<TombstoneEntry> tombstones;
     private List<TileEntry> tiles;
     private List<WaveEntry> waves;
@@ -253,6 +254,14 @@ public class StageConfig {
 
     public void setMaxPlantDeaths(int maxPlantDeaths) {
         this.maxPlantDeaths = maxPlantDeaths;
+    }
+
+    public int getDeadlineCol() {
+        return deadlineCol;
+    }
+
+    public void setDeadlineCol(int deadlineCol) {
+        this.deadlineCol = deadlineCol;
     }
 
     public List<TombstoneEntry> getTombstones() {

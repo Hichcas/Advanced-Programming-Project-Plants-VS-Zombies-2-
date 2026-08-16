@@ -528,7 +528,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return backgroundOverrideTexture;
     }
 
-    List<Zombie> getZombieList() {
+    public List<Zombie> getZombieList() {
         if (zombieEngine != null && zombieEngine.getZombies() != null) return zombieEngine.getZombies();
         return zombies;
     }
