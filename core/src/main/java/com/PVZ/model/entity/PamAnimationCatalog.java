@@ -32,6 +32,11 @@ public final class PamAnimationCatalog {
         SYNONYMS.put("portal", new String[]{"zombie_portal_start", "summoning", "spawn", "zombie_drop"});
         SYNONYMS.put("walk_up", new String[]{"walk_up", "float_up"});
         SYNONYMS.put("walk_down", new String[]{"walk_down", "float_down"});
+        SYNONYMS.put("throw", new String[]{"throw", "snowball_throw"});
+        SYNONYMS.put("fly", new String[]{"fly_loop", "fly_start", "fly"});
+        SYNONYMS.put("push", new String[]{"push", "push_block"});
+        SYNONYMS.put("weasel_attack", new String[]{"weasel_attack", "release"});
+        SYNONYMS.put("wind", new String[]{"wind_1", "wind_2", "wind_3", "slingshot"});
     }
 
     private static Map<String, Entry> byPath;

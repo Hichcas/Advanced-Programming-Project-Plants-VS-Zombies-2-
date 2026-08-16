@@ -454,6 +454,23 @@ public class EntityRenderer {
         return true;
     }
 
+    public boolean renderPam(SpriteBatch batch, String pamPath, String clipName, float stateTime, float x, float y, float scale) {
+        if (scale == 1.0f || scale <= 0f) {
+            return renderPam(batch, pamPath, clipName, stateTime, x, y);
+        }
+        com.badlogic.gdx.math.Matrix4 oldMatrix = batch.getTransformMatrix().cpy();
+        com.badlogic.gdx.math.Matrix4 transform = batch.getTransformMatrix();
+        transform.translate(x, y, 0);
+        transform.scale(scale, scale, 1.0f);
+        transform.translate(-x, -y, 0);
+        batch.setTransformMatrix(transform);
+
+        boolean res = renderPam(batch, pamPath, clipName, stateTime, x, y);
+
+        batch.setTransformMatrix(oldMatrix);
+        return res;
+    }
+
 
     public boolean renderSun(SpriteBatch batch, com.PVZ.model.entity.Sun.SunType type,
                              float animationTime, boolean falling, boolean reachedGround,
@@ -550,7 +567,7 @@ public class EntityRenderer {
         String trackName = null;
         if (type == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.CONE) trackName = "zombie_armor_cone_damage_02";
         else if (type == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.BUCKET) trackName = "zombie_armor_bucket_damage_02";
-        else if (type == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.BRICK) trackName = "zombie_armor_brick_damage_02";
+        else if (type == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.BRICK || type == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.ICE_BLOCK) trackName = "zombie_armor_brick_damage_02";
         else if (type == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.CROWN) trackName = "zombie_armor_crown_damage_02";
 
         fallingArmors.add(new FallingArmorPiece(x, y, pamAlias, trackName));
