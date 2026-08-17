@@ -291,15 +291,20 @@ public class Plant {
         } else {
             putRuntimeState("plantFoodVisualTime", 0.0);
         }
-        com.PVZ.model.entity.PlantAnimation.tick(instance, deltaTimeSeconds);
-        tickIdleVariant(deltaTimeSeconds);
+
         Object disabled = getRuntimeState("disabledTicks");
         int ticks = disabled instanceof Number ? ((Number) disabled).intValue() : 0;
+
         if (ticks > 0) {
-            putRuntimeState("disabledTicks", Math.max(0, ticks - 1));
+            if (ticks < Integer.MAX_VALUE / 2) {
+                putRuntimeState("disabledTicks", Math.max(0, ticks - 1));
+            }
             instance.tickPlantFood();
             return;
         }
+
+        com.PVZ.model.entity.PlantAnimation.tick(instance, deltaTimeSeconds);
+        tickIdleVariant(deltaTimeSeconds);
         mainBehavior.onUpdate(instance, context, deltaTimeSeconds);
         instance.tickPlantFood();
     }

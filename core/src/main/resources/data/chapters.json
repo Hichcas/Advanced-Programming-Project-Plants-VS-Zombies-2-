@@ -135,6 +135,60 @@
               { "zombie": "ZombieTombRaiserDefault", "count": 2, "spawnDelay": 3.0 }
             ]}
           ]
+        },
+        {
+          "stageNumber": 4,
+          "type": "REGULAR",
+          "specialLevel": "DEAD_LINE",
+          "deadlineCol": 5,
+          "plantLimit": 8,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Ancient_Egypt.png",
+          "tombstones": [
+            { "row": 1, "col": 4, "hp": 700 },
+            { "row": 3, "col": 6, "hp": 700 }
+          ],
+          "waves": [
+            {
+              "startDelay": 8.0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 3, "spawnDelay": 2.0 },
+                { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 6, "spawnDelay": 1.2 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 2, "spawnDelay": 2.0 },
+                { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 3.0 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 8, "spawnDelay": 1.0 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 4, "spawnDelay": 1.5 },
+                { "zombie": "ZombieMummyArmor2Default", "count": 2, "spawnDelay": 2.0 },
+                { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 2.5 },
+                { "zombie": "ZombieTombRaiserDefault", "count": 1, "spawnDelay": 3.5 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "isFinal": true,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 10, "spawnDelay": 0.8 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 4, "spawnDelay": 1.2 },
+                { "zombie": "ZombieMummyArmor2Default", "count": 3, "spawnDelay": 1.5 },
+                { "zombie": "ZombieMummyArmor4Default", "count": 1, "spawnDelay": 2.0 },
+                { "zombie": "ZombieRaDefault", "count": 3, "spawnDelay": 2.0 },
+                { "zombie": "ZombieExplorerDefault", "count": 2, "spawnDelay": 3.0 },
+                { "zombie": "ZombieTombRaiserDefault", "count": 2, "spawnDelay": 3.0 }
+              ]
+            }
+          ]
         }
       ]
     },

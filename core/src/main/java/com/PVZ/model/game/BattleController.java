@@ -209,6 +209,10 @@ public class BattleController implements BehaviorContext {
                 continue;
             }
 
+            if (zp instanceof com.PVZ.model.entity.zombies.types.ranged_caster.OctopusProjectile) {
+                continue;
+            }
+
             int zpCol = getTileColumn(zp.getX());
             Plant p = getPlantAt(zp.getRow(), zpCol);
 
@@ -268,8 +272,11 @@ public class BattleController implements BehaviorContext {
                 if (octoPlant != null) {
                     octoPlant.putRuntimeState("disabledTicks", 0);
                 }
-                System.out.println("Octopus destroyed on tile (" + pRow + "," + pCol
-                    + ") — plant freed!");
+                Plant octoBase = tile.getBasePlant();
+                if (octoBase != null) {
+                    octoBase.putRuntimeState("disabledTicks", 0);
+                }
+                System.out.println("Octopus destroyed on tile (" + pRow + "," + pCol + ") — plant freed!");
             } else {
                 tile.setOctopusHp(newHp);
             }
@@ -641,10 +648,7 @@ public class BattleController implements BehaviorContext {
 
         int[] lanes = {row - 1, row, row + 1};
         for (int r : lanes) {
-            if (r < 0) {
-                continue;
-            }
-
+            if (r < 0 || (map != null && r >= map.getRows())) continue;
             Tile tile0 = map != null ? map.getTile(r, 0) : null;
             float centreX = tile0 != null
                 ? tile0.getX() + lane * tile0.getWidth()
@@ -656,6 +660,26 @@ public class BattleController implements BehaviorContext {
                     double colDist = Math.abs(zombie.getX() - centreX);
                     if (colDist < tileW * 1.6) {
                         zombie.takeDamage(damage);
+                    }
+                }
+            }
+
+            // Also damage and destroy any octopuses on tiles within the blast area
+            if (map != null) {
+                for (int c = Math.max(0, lane - 1); c <= Math.min(map.getCols() - 1, lane + 1); c++) {
+                    Tile t = map.getTile(r, c);
+                    if (t != null && t.getOctopusHp() > 0) {
+                        int newOctoHp = t.getOctopusHp() - damage;
+                        if (newOctoHp <= 0) {
+                            t.setOctopusHp(0);
+                            Plant p = t.getPlant();
+                            if (p != null) p.putRuntimeState("disabledTicks", 0);
+                            Plant bp = t.getBasePlant();
+                            if (bp != null) bp.putRuntimeState("disabledTicks", 0);
+                            System.out.println("Octopus destroyed by explosion at (" + r + "," + c + ") — plant freed!");
+                        } else {
+                            t.setOctopusHp(newOctoHp);
+                        }
                     }
                 }
             }
