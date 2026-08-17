@@ -1,6 +1,7 @@
 package com.PVZ.view.renderer;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -9,7 +10,8 @@ import java.util.Map;
 
 /**
  * Renders seamless, full-resolution stitched world backgrounds for all 4 chapters.
- * Eliminates all edge-to-edge slicing seams and aligns perfectly with the tile grid.
+ * Automatically stitches the official atlas slices in-memory if pre-generated stitched files
+ * are not present, ensuring 100% portability across all team members' computers.
  */
 public class WorldBackgroundRenderer {
 
@@ -23,12 +25,22 @@ public class WorldBackgroundRenderer {
     }
 
     private static class WorldConfig {
-        final String imagePath;
-        final float leftMarginPx;  // horizontal alignment from left edge to lawn grid start
-        final float lawnOffsetYPx; // vertical alignment offset
+        final String preStitchedPath;
+        final String atlasPath;
+        final int[] leftRect;   // [x, y, w, h]
+        final int[] centerRect; // [x, y, w, h]
+        final int[] rightRect;  // [x, y, w, h]
+        final float leftMarginPx;
+        final float lawnOffsetYPx;
 
-        WorldConfig(String imagePath, float leftMarginPx, float lawnOffsetYPx) {
-            this.imagePath = imagePath;
+        WorldConfig(String preStitchedPath, String atlasPath,
+                    int[] leftRect, int[] centerRect, int[] rightRect,
+                    float leftMarginPx, float lawnOffsetYPx) {
+            this.preStitchedPath = preStitchedPath;
+            this.atlasPath = atlasPath;
+            this.leftRect = leftRect;
+            this.centerRect = centerRect;
+            this.rightRect = rightRect;
             this.leftMarginPx = leftMarginPx;
             this.lawnOffsetYPx = lawnOffsetYPx;
         }
@@ -38,17 +50,48 @@ public class WorldBackgroundRenderer {
     private final Map<String, Texture> loadedTextures = new HashMap<>();
 
     private WorldBackgroundRenderer() {
-        // Left margin: 278px (House) + 110px (Lawn left margin) = 388px in 768p coordinates
-        worldConfigs.put("ANCIENT_EGYPT", new WorldConfig("maps/stitched_egypt.png", 390f, 130f));
+        // 1. ANCIENT EGYPT
+        worldConfigs.put("ANCIENT_EGYPT", new WorldConfig(
+            "maps/stitched_egypt.png",
+            "pvz-assets/ATLASES/DELAYLOAD_BACKGROUND_EGYPT_COMPRESSED_768_00.PNG",
+            new int[]{676, 771, 278, 768},
+            new int[]{0, 1, 1024, 768},
+            new int[]{1, 771, 673, 768},
+            390f, 130f
+        ));
         worldConfigs.put("EGYPT", worldConfigs.get("ANCIENT_EGYPT"));
 
-        worldConfigs.put("FROSTBITE_CAVES", new WorldConfig("maps/stitched_iceage.png", 393f, 130f));
+        // 2. FROSTBITE CAVES / ICEAGE
+        worldConfigs.put("FROSTBITE_CAVES", new WorldConfig(
+            "maps/stitched_iceage.png",
+            "pvz-assets/ATLASES/DELAYLOAD_BACKGROUND_ICEAGE_COMPRESSED_768_00.PNG",
+            new int[]{676, 788, 281, 768},
+            new int[]{1, 1, 1022, 785},
+            new int[]{1, 788, 673, 768},
+            393f, 130f
+        ));
         worldConfigs.put("ICEAGE", worldConfigs.get("FROSTBITE_CAVES"));
 
-        worldConfigs.put("BIG_WAVE_BEACH", new WorldConfig("maps/stitched_beach.png", 390f, 130f));
+        // 3. BIG WAVE BEACH
+        worldConfigs.put("BIG_WAVE_BEACH", new WorldConfig(
+            "maps/stitched_beach.png",
+            "pvz-assets/ATLASES/DELAYLOAD_BACKGROUND_BEACH_COMPRESSED_768_00.PNG",
+            new int[]{1702, 1, 278, 768},
+            new int[]{1, 1, 1024, 768},
+            new int[]{1027, 1, 673, 768},
+            390f, 130f
+        ));
         worldConfigs.put("BEACH", worldConfigs.get("BIG_WAVE_BEACH"));
 
-        worldConfigs.put("DARK_AGES", new WorldConfig("maps/stitched_dark.png", 390f, 130f));
+        // 4. DARK AGES
+        worldConfigs.put("DARK_AGES", new WorldConfig(
+            "maps/stitched_dark.png",
+            "pvz-assets/ATLASES/DELAYLOAD_BACKGROUND_DARK_COMPRESSED_768_00.PNG",
+            new int[]{676, 771, 278, 768},
+            new int[]{0, 1, 1024, 768},
+            new int[]{1, 771, 673, 768},
+            390f, 130f
+        ));
         worldConfigs.put("DARK", worldConfigs.get("DARK_AGES"));
     }
 
@@ -58,17 +101,56 @@ public class WorldBackgroundRenderer {
         WorldConfig cfg = worldConfigs.get(key);
         if (cfg == null) return null;
 
-        Texture tex = loadedTextures.get(cfg.imagePath);
-        if (tex == null) {
-            if (!Gdx.files.internal(cfg.imagePath).exists()) {
-                System.err.println("WorldBackgroundRenderer: file not found: " + cfg.imagePath);
-                return null;
-            }
-            tex = new Texture(Gdx.files.internal(cfg.imagePath));
-            tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            loadedTextures.put(cfg.imagePath, tex);
+        if (loadedTextures.containsKey(key)) {
+            return loadedTextures.get(key);
         }
-        return tex;
+
+        // 1. Try loading pre-stitched file if present in assets/maps/
+        if (cfg.preStitchedPath != null && Gdx.files.internal(cfg.preStitchedPath).exists()) {
+            try {
+                Texture tex = new Texture(Gdx.files.internal(cfg.preStitchedPath));
+                tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+                loadedTextures.put(key, tex);
+                return tex;
+            } catch (Exception ex) {
+                System.err.println("WorldBackgroundRenderer: failed to load pre-stitched " + cfg.preStitchedPath + ": " + ex.getMessage());
+            }
+        }
+
+        // 2. Otherwise, auto-stitch dynamically in memory from the official atlas PNG!
+        if (cfg.atlasPath != null && Gdx.files.internal(cfg.atlasPath).exists()) {
+            try {
+                Pixmap atlasPixmap = new Pixmap(Gdx.files.internal(cfg.atlasPath));
+                int totalW = cfg.leftRect[2] + cfg.centerRect[2] + cfg.rightRect[2];
+                int totalH = Math.max(cfg.leftRect[3], Math.max(cfg.centerRect[3], cfg.rightRect[3]));
+
+                Pixmap stitchedPixmap = new Pixmap(totalW, totalH, Pixmap.Format.RGBA8888);
+
+                // Left piece (House)
+                stitchedPixmap.drawPixmap(atlasPixmap, 0, 0,
+                    cfg.leftRect[0], cfg.leftRect[1], cfg.leftRect[2], cfg.leftRect[3]);
+                // Center piece (Lawn)
+                stitchedPixmap.drawPixmap(atlasPixmap, cfg.leftRect[2], 0,
+                    cfg.centerRect[0], cfg.centerRect[1], cfg.centerRect[2], cfg.centerRect[3]);
+                // Right piece (Zombie staging ground)
+                stitchedPixmap.drawPixmap(atlasPixmap, cfg.leftRect[2] + cfg.centerRect[2], 0,
+                    cfg.rightRect[0], cfg.rightRect[1], cfg.rightRect[2], cfg.rightRect[3]);
+
+                Texture tex = new Texture(stitchedPixmap);
+                tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+                atlasPixmap.dispose();
+                stitchedPixmap.dispose();
+
+                loadedTextures.put(key, tex);
+                System.out.println("WorldBackgroundRenderer: dynamically stitched " + key + " in-memory (" + totalW + "x" + totalH + ").");
+                return tex;
+            } catch (Exception ex) {
+                System.err.println("WorldBackgroundRenderer: failed to dynamic-stitch " + cfg.atlasPath + ": " + ex.getMessage());
+            }
+        }
+
+        return null;
     }
 
     /**

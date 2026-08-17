@@ -9,12 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ZombieBeachOctopus extends AbstractRangedCasterZombie {
-    private boolean tentaclesAttached;
 
     public ZombieBeachOctopus() {
         super("ZombieBeachOctopus", 600, 100, 0.185, 800, 4000, defaultScaledProps(),
-            80, 150, 2.5, 3);
-        this.tentaclesAttached = true;
+            80, 150, 6.0, 9);
     }
 
     private static List<ScaledProperty> defaultScaledProps() {
@@ -29,36 +27,22 @@ public class ZombieBeachOctopus extends AbstractRangedCasterZombie {
 
     @Override
     public void shoot(BattleController controller, Plant target) {
-        if (hasTentacles()) {
-            Object r = target.getRuntimeState("row");
-            Object c = target.getRuntimeState("col");
-            int row = r instanceof Number ? ((Number) r).intValue() : (int) this.row;
-            int col = c instanceof Number ? ((Number) c).intValue() : (int) this.col;
-            Tile tile = controller.getMap().getTile(row, col);
-            if (tile != null && tile.getOctopusHp() <= 0) {
-                tile.setOctopusHp(200);
-                target.disableForTicks(Integer.MAX_VALUE);
-                System.out.println(alias +
-                    " stuck an octopus on plant at (" + col + ", " + row + ") — shoot it to free it!");
-            }
-            detachTentacles();
+        if (target == null || target.isDead() || controller == null || controller.getMap() == null) {
+            return;
+        }
+        Object r = target.getRuntimeState("row");
+        Object c = target.getRuntimeState("col");
+        int targetRow = r instanceof Number ? ((Number) r).intValue() : (int) this.row;
+        int targetCol = c instanceof Number ? ((Number) c).intValue() : (int) this.col;
+        Tile tile = controller.getMap().getTile(targetRow, targetCol);
+        if (tile != null && tile.getOctopusHp() <= 0) {
+            tile.setOctopusHp(200);
+            target.disableForTicks(Integer.MAX_VALUE);
+            System.out.println(alias + " threw an octopus on plant at (" + targetCol + ", " + targetRow + ")!");
         }
     }
 
     @Override
     public void onHit(Plant target) {
-    }
-
-    @Override
-    public String getDebugString() {
-        return super.getDebugString() + (hasTentacles() ? "\nTENT" : "\nNOTENT");
-    }
-
-    public boolean hasTentacles() {
-        return tentaclesAttached;
-    }
-
-    public void detachTentacles() {
-        tentaclesAttached = false;
     }
 }

@@ -281,7 +281,7 @@ public class BattleController implements BehaviorContext {
                 continue;
             }
             if (z.isProjectileImmune() && p.getType() != ProjectileType.LOB) {
-                break;
+                continue;
             }
 
             if (hasHitZombie(p, z)) {
