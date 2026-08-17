@@ -104,17 +104,6 @@ public class Plant {
         }
         instance.takeDamage(amount);
         com.PVZ.model.entity.PlantAnimation.trigger(instance, "damage", 0.3);
-        String key = instance.getDefinition() == null ? "" : instance.getDefinition().getPlantKey();
-        if ("garlic".equals(key) && attacker != null && controller != null && !instance.isDead()) {
-            int row = asInt(instance.getRuntimeState("row"), 0);
-            int target = row < 4 ? row + 1 : 0;
-            attacker.setRow(target);
-            if (controller.getMap() != null) {
-                float h = controller.getMap().getTileHeight();
-                attacker.setY(controller.getMap().getStartY() - (target + 1) * h + h * 0.35);
-            }
-            com.PVZ.model.entity.PlantAnimation.trigger(instance, "damage", 1.1);
-        }
         mainBehavior.onDamaged(instance, controller, attacker, amount, instance.isDead());
     }
 
@@ -171,6 +160,13 @@ public class Plant {
 
     public void draw(SpriteBatch batch) {
         if (isDead()) {
+            Object timer = getRuntimeState("deathFxTimer");
+            if (timer instanceof Number n && n.doubleValue() > 0.0) {
+                float[] anchor = getVisualAnchor();
+                com.PVZ.view.renderer.EntityRenderer.getInstance().renderPam(batch,
+                    "768/FULL/EFFECTS/GENERIC_EXPLOSION_FRONT/GENERIC_EXPLOSION_FRONT.PAM",
+                    "animation", (float)(0.9 - n.doubleValue()), anchor[0], anchor[1], 0.75f);
+            }
             return;
         }
         Rectangle box = getHitbox();
@@ -203,8 +199,6 @@ public class Plant {
                 String state = com.PVZ.model.entity.PlantAnimation.getState(instance);
                 drewAnimated = renderer.renderPlant(batch, key, state, animStateTime, ax, ay);
             } else if ("PEA_POD".equals(key)) {
-                // Pea Pod's number of heads is persistent; never fall back to the generic
-                // idle clip just because the short attack/upgrade animation finished.
                 int heads = Math.max(1, Math.min(5, asInt(getRuntimeState("peaPodHeads"), 1)));
                 String idleState = heads <= 1 ? "idle" : "idle" + heads;
                 drewAnimated = renderer.renderPlantExact(batch, key, idleState, animStateTime, ax, ay);

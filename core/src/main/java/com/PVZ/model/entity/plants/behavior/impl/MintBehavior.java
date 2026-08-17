@@ -4,7 +4,6 @@ import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
-import com.PVZ.model.enums.PlantCategory;
 
 
 public class MintBehavior implements PlantBehavior {
@@ -20,10 +19,9 @@ public class MintBehavior implements PlantBehavior {
         }
         plant.putRuntimeState("mintTriggered", Boolean.TRUE);
 
-        PlantCategory family = plant.getDefinition() == null ? null : plant.getDefinition().getCategoryEnum();
-        if (family == null) {
-            return;
-        }
+        com.PVZ.model.enums.PlantType mintType = plant.getType();
+        com.PVZ.model.enums.PlantFamily targetFamily =
+            com.PVZ.model.quest.PlantFamilyMapper.getMintTargetFamily(mintType);
 
         int selfRow = asInt(plant.getRuntimeState().getOrDefault("row", -1), -1);
         int selfCol = asInt(plant.getRuntimeState().getOrDefault("col", -1), -1);
@@ -38,13 +36,25 @@ public class MintBehavior implements PlantBehavior {
             if (isSelf) {
                 continue;
             }
-            if (other.getDefinition().getCategoryEnum() == family) {
+            com.PVZ.model.enums.PlantFamily otherFamily =
+                com.PVZ.model.quest.PlantFamilyMapper.getFamily(other.getType());
+            boolean matches = switch (targetFamily) {
+                case SUN_PRODUCER -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.SUN_PRODUCER;
+                case SHOOTER -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.SHOOTER;
+                case LOBBER -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.LOBBER;
+                case PIERCE_MINT -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.THROUGH_STRIKE;
+                case CAT_TAIL_MINT -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.HOMING;
+                case MODIFIER -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.MODIFIER;
+                case WALL -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.WALL;
+                case MELEE -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.MELEE;
+                case EXPLOSIVE -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.EXPLOSIVE;
+                default -> otherFamily == targetFamily;
+            };
+            if (matches && other.hasPlantFoodEffect()) {
                 other.applyPlantFood(context);
             }
         }
-        if (selfRow >= 0 && selfCol >= 0) {
-            context.removePlant(selfRow, selfCol);
-        }
+        context.removePlant(selfRow, selfCol);
     }
 
     private static int asInt(Object value, int defaultValue) {

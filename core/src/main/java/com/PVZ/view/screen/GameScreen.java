@@ -563,9 +563,9 @@ public class GameScreen extends BaseScreen {
         if (regularGameEngine.isConveyorBeltMode()) {
             regularGameEngine.getSeedPacketBar().layout(loadout, 30f, VIRTUAL_HEIGHT - 260f, false);
         } else if (regularGameEngine.isLockedPlantsMode()) {
-            regularGameEngine.getSeedPacketBar().layoutVertical(loadout, 30f, VIRTUAL_HEIGHT - 150f);
+            regularGameEngine.getSeedPacketBar().layoutVertical(loadout, 30f, VIRTUAL_HEIGHT - 174f);
         } else {
-            regularGameEngine.getSeedPacketBar().layout(loadout, 40f, VIRTUAL_HEIGHT - 150f);
+            regularGameEngine.getSeedPacketBar().layout(loadout, 40f, VIRTUAL_HEIGHT - 174f);
         }
     }
 

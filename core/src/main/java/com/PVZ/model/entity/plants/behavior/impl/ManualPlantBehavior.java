@@ -29,20 +29,6 @@ public class ManualPlantBehavior implements PlantBehavior {
         }
 
         String plantKey = definition == null ? "" : normalize(definition.getPlantKey());
-        if ("imitater".equals(plantKey) && Boolean.TRUE.equals(plant.getRuntimeState().get("copyDone"))) {
-            Object copiedKeyValue = plant.getRuntimeState().get("copiedPlantKey");
-            if (copiedKeyValue != null) {
-                PlantDefinition copiedDef = com.PVZ.model.entity.plants.PlantLibrary.all().stream()
-                    .filter(d -> d.getPlantKey() != null && d.getPlantKey().equalsIgnoreCase(String.valueOf(copiedKeyValue)))
-                    .findFirst().orElse(null);
-                if (copiedDef != null && !"imitater".equalsIgnoreCase(copiedDef.getPlantKey())) {
-                    com.PVZ.model.entity.plants.behavior.PlantBehavior copiedBehavior =
-                        com.PVZ.model.entity.plants.behavior.BehaviorFactory.createMainBehavior(copiedDef);
-                    copiedBehavior.onUpdate(plant, context, deltaTime);
-                    return;
-                }
-            }
-        }
         int row = asInt(plant.getRuntimeState().getOrDefault("row", 0), 0);
         int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
         int lane = asInt(plant.getRuntimeState().getOrDefault("lane", row), row);
@@ -97,6 +83,7 @@ public class ManualPlantBehavior implements PlantBehavior {
                 handleInstantSun(plant, context, row, col);
                 break;
             case "move_zombies":
+            case "garlic":
                 handleMoveZombies(plant, context, lane, deltaTime);
                 break;
             case "magnet_disarm":
@@ -203,14 +190,7 @@ public class ManualPlantBehavior implements PlantBehavior {
             return;
         }
         timer = 0.0;
-        List<Zombie> candidates = new ArrayList<>(context.getZombiesInLane(lane));
-        candidates.removeIf(z -> z == null || z.isDead() || z.getArmor() == null);
-        candidates.sort(java.util.Comparator.comparingDouble(Zombie::getX));
-        if (!candidates.isEmpty()) {
-            candidates.get(0).setArmor(null);
-        }
-        plant.putRuntimeState("magnetVisual", Boolean.TRUE);
-        com.PVZ.model.entity.PlantAnimation.trigger(plant, "special", 0.6667);
+        context.disarmZombiesInLane(lane);
         plant.putRuntimeState("magnetTimer", timer);
     }
 
@@ -263,7 +243,7 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (copiedKey.isEmpty()) {
             return;
         }
-        String originalCopiedKey = copiedKey;
+        plant.getRuntimeState().clear();
         com.PVZ.model.entity.plants.PlantDefinition def =
             com.PVZ.model.entity.plants.PlantLibrary.findByName(copiedKey)
                 .orElse(null);
@@ -278,11 +258,16 @@ public class ManualPlantBehavior implements PlantBehavior {
             }
         }
         if (def != null) {
+            int level = plant.getLevel();
+            com.PVZ.model.entity.plants.PlantInstance newInstance =
+                com.PVZ.model.entity.plants.PlantFactory.create(def, level);
+            for (java.util.Map.Entry<String, Object> e
+                : plant.getRuntimeState().entrySet()) {
+                newInstance.putRuntimeState(e.getKey(), e.getValue());
+            }
+            newInstance.putRuntimeState("copyDone", Boolean.TRUE);
             plant.putRuntimeState("copiedPlantKey", def.getPlantKey());
             plant.putRuntimeState("copyDone", Boolean.TRUE);
-            plant.putRuntimeState("imitaterDisplayState", "copied");
-            plant.putRuntimeState("copiedPlantType", def.getPlantKey());
-            com.PVZ.model.entity.PlantAnimation.trigger(plant, "idle", 0.5);
         }
     }
 
@@ -327,7 +312,6 @@ public class ManualPlantBehavior implements PlantBehavior {
             if (amount <= 0) {
                 amount = 5;
             }
-            plant.putRuntimeState("sunDropScale", 0.70);
             System.out.println("plant " + plant.getDefinition().getName() + " produced a sun at (" + row + ", " + col +
                 ")");
             context.spawnSunAt(row, col, amount);
@@ -399,9 +383,6 @@ public class ManualPlantBehavior implements PlantBehavior {
         float vy = (float) (dist < 1e-6 ? 0.0 : dy / dist * speed);
         projectile.initFreePosition(startX, startY, vx, vy);
         projectile.setHoming(true);
-        if (plant.getDefinition() != null && "cat_tail".equals(plant.getDefinition().getPlantKey())) {
-            projectile.putExtra("visualKey", "CATTAIL_HOMING");
-        }
         context.spawnProjectile(projectile);
     }
 
@@ -578,8 +559,13 @@ public class ManualPlantBehavior implements PlantBehavior {
         com.PVZ.model.entity.PlantAnimation.trigger(plant, attackState, 1.0);
         for (int v = 0; v < volleys; v++) {
             for (int i = 0; i < heads; i++) {
-                double offset = (i - (heads - 1) / 2.0) * 18.0;
-                fireParallel(plant, context, lane, false, offset);
+                double offset = (i - (heads - 1) / 2.0) * 24.0;
+                Projectile shot = fireParallel(plant, context, lane, false, offset);
+                if (shot != null) {
+                    shot.putExtra("peaPodShotIndex", i);
+                    shot.putExtra("peaPodShotCount", heads);
+                    shot.putExtra("launchDelay", i * 0.08);
+                }
             }
         }
     }

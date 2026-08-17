@@ -34,6 +34,10 @@ public class DrawHandler {
         EntityRenderer.getInstance().update();
         batch.begin();
         drawTileOverlays(engine, batch);
+        drawJalapenoLaneEffect(engine, batch);
+        drawGlobalIceEffect(engine, batch);
+        drawIceShroomTileEffect(engine, batch);
+        drawTimedPamEffects(engine, batch);
         drawTombstonesWithHealthBars(engine, batch);
         drawIceBlocksWithHealthBars(engine, batch);
         drawPlantsWithLabels(engine, batch);
@@ -100,6 +104,66 @@ public class DrawHandler {
         }
     }
 
+    private static void drawJalapenoLaneEffect(RegularGameEngine engine, SpriteBatch batch) {
+        if (engine.jalapenoLaneEffectTimer <= 0.0 || engine.map == null || engine.jalapenoLaneEffectRow < 0) return;
+        int row = engine.jalapenoLaneEffectRow;
+        for (int col = 0; col < engine.map.getCols(); col++) {
+            Tile tile = engine.map.getTile(row, col);
+            if (tile == null) continue;
+            EntityRenderer.getInstance().renderPam(batch,
+                "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM",
+                "idle2", (float)(1.35 - engine.jalapenoLaneEffectTimer),
+                tile.getX() + tile.getWidth()/2f, tile.getY() + tile.getHeight()/2f, 0.9f);
+        }
+    }
+
+    private static void drawGlobalIceEffect(RegularGameEngine engine, SpriteBatch batch) {
+        if (engine.getGlobalIceEffectTimer() <= 0.0 || engine.map == null) return;
+        Color c = batch.getColor();
+        batch.setColor(0.45f, 0.75f, 1f, 0.24f);
+        batch.draw(engine.iceOverlayTexture(), engine.map.getStartX(),
+            engine.map.getStartY() - engine.map.getTotalHeight(),
+            engine.map.getTotalWidth(), engine.map.getTotalHeight());
+        batch.setColor(c);
+        float cx = engine.getMapCenterX();
+        float cy = engine.getMapCenterY();
+        EntityRenderer.getInstance().renderPam(batch,
+            "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM",
+            "animation", (float)(1.1333 - engine.getGlobalIceEffectTimer()), cx, cy, 1.55f);
+        for (int row = 0; row < engine.map.getRows(); row++) {
+            for (int col = 0; col < engine.map.getCols(); col++) {
+                Tile tile = engine.map.getTile(row, col);
+                if (tile == null) continue;
+                Color cell = batch.getColor();
+                batch.setColor(0.55f, 0.82f, 1f, 0.18f);
+                batch.draw(engine.iceOverlayTexture(), tile.getX()+2f, tile.getY()+2f, tile.getWidth()-4f, tile.getHeight()-4f);
+                batch.setColor(cell);
+            }
+        }
+    }
+
+    private static void drawIceShroomTileEffect(RegularGameEngine engine, SpriteBatch batch) {
+        if (engine.iceShroomEffectTimer <= 0.0 || engine.map == null || engine.iceShroomEffectRow < 0) return;
+        Tile tile = engine.map.getTile(engine.iceShroomEffectRow, engine.iceShroomEffectCol);
+        if (tile == null) return;
+        float x = tile.getX() + tile.getWidth()/2f;
+        float y = tile.getY() + tile.getHeight()/2f;
+        Color c = batch.getColor();
+        batch.setColor(0.55f, 0.85f, 1f, 0.65f);
+        batch.draw(engine.iceOverlayTexture(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight());
+        batch.setColor(c);
+        EntityRenderer.getInstance().renderPam(batch,
+            "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM", "animation",
+            (float)(1.1333 - engine.iceShroomEffectTimer), x, y, 1.15f);
+    }
+
+    private static void drawTimedPamEffects(RegularGameEngine engine, SpriteBatch batch) {
+        for (RegularGameEngine.TimedPamEffect fx : engine.timedPamEffects) {
+            float elapsed = 1.0f;
+            EntityRenderer.getInstance().renderPam(batch, fx.path, fx.clip, elapsed, fx.x, fx.y, fx.scale);
+        }
+    }
+
     private static void drawBattleProjectiles(RegularGameEngine engine, SpriteBatch batch) {
         if (engine.battleController != null) engine.battleController.drawProjectiles(batch);
         for (Projectile p : engine.projectiles) p.draw(batch);
@@ -127,6 +191,16 @@ public class DrawHandler {
                 Tile tile = engine.map.getTile(row, col);
                 if (tile == null) continue;
                 TileType type = tile.getType();
+                if (type == TileType.CRATER) {
+                    Color c = batch.getColor();
+                    batch.setColor(0.10f, 0.08f, 0.06f, 0.92f);
+                    batch.draw(engine.iceOverlayTexture(), tile.getX() + 5f, tile.getY() + 5f,
+                        tile.getWidth() - 10f, tile.getHeight() - 10f);
+                    batch.setColor(c);
+                    EntityRenderer.getInstance().renderPam(batch,
+                        "768/FULL/EFFECTS/CRATER/CRATER.PAM", "animation", 0f,
+                        tile.getX()+tile.getWidth()/2f, tile.getY()+tile.getHeight()/2f, 0.9f);
+                }
                 // Water and tide graphics are naturally rendered by the background map
             }
         }
@@ -166,12 +240,14 @@ public class DrawHandler {
                 if (base != null && !base.isDead()) {
                     base.draw(batch);
                 }
-                Plant under = engine.map.getTile(row, col).getUnderPlant();
-                if (under != null && !under.isDead()) {
-                    under.draw(batch);
-                }
                 Plant plant = engine.map.getPlantAt(row, col);
                 if (plant == null || plant.isDead()) {
+                    if (plant != null && plant.isDead()) {
+                        Object fx = plant.getRuntimeState("deathFxTimer");
+                        if (fx instanceof Number n && n.doubleValue() > 0.0) {
+                            plant.draw(batch);
+                        }
+                    }
                     if (base != null && !base.isDead()) {
                         Rectangle box = base.getHitbox();
                         HealthBarRenderer.draw(batch, box.x, box.y + box.height + 2, box.width,

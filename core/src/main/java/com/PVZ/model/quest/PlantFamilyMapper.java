@@ -39,6 +39,20 @@ public class PlantFamilyMapper {
         };
     }
 
+    public static PlantFamily getMintTargetFamily(PlantType plantType) {
+        if (plantType == null || plantType.getDefinition() == null) return PlantFamily.GENERAL;
+        if (plantType == PlantType.ENLIGHTEN_MINT) return PlantFamily.SUN_PRODUCER;
+        if (plantType == PlantType.APPEASE_MINT) return PlantFamily.SHOOTER;
+        if (plantType == PlantType.ARMA_MINT) return PlantFamily.LOBBER;
+        if (plantType == PlantType.PIERCE_MINT) return PlantFamily.PIERCE_MINT;
+        if (plantType == PlantType.CAT_TAIL_MINT) return PlantFamily.CAT_TAIL_MINT;
+        if (plantType == PlantType.ENCHANT_MINT) return PlantFamily.MODIFIER;
+        if (plantType == PlantType.REINFORCE_MINT) return PlantFamily.WALL;
+        if (plantType == PlantType.ENFORCE_MINT) return PlantFamily.MELEE;
+        if (plantType == PlantType.BOMBARD_MINT) return PlantFamily.EXPLOSIVE;
+        return PlantFamily.GENERAL;
+    }
+
     private static PlantFamily getMintFamily(PlantType plantType) {
         return switch (plantType) {
             case ENLIGHTEN_MINT -> PlantFamily.ENLIGHTEN_MINT;

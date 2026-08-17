@@ -111,7 +111,7 @@ public class ShooterBehavior implements PlantBehavior {
         } else if ("repeater".equals(plantKey) && count >= 2) {
             // Repeater's two peas are a very tight consecutive pair.  The old 0.16s
             // clamp made them visually look like a single shot.
-            gap = 0.045;
+            gap = 0.09;
         } else {
             gap = count <= 1
                 ? DEFAULT_BURST_GAP_SECONDS
@@ -128,22 +128,18 @@ public class ShooterBehavior implements PlantBehavior {
         if (remaining <= 0) {
             return;
         }
-        double timer = asDouble(plant.getRuntimeState().getOrDefault("burstTimer", 0.0), 0.0) + deltaTime;
+        double timer = asDouble(plant.getRuntimeState().getOrDefault("burstTimer", 0.0), 0.0);
+        timer += deltaTime;
         double gap = asDouble(plant.getRuntimeState().getOrDefault("burstGapSeconds", DEFAULT_BURST_GAP_SECONDS),
             DEFAULT_BURST_GAP_SECONDS);
-        int damage = asInt(plant.getRuntimeState().getOrDefault("burstDamage", 0), 0);
-
-        // The engine advances gameplay in 0.1s ticks. A 0.045s Repeater gap therefore
-        // cannot be represented by a single if-condition: we must consume all elapsed
-        // sub-shot intervals inside this tick so both peas really leave consecutively.
-        int safety = 0;
-        while (remaining > 0 && timer >= gap && safety++ < 8) {
-            fireVolley(plant, context, damage);
-            remaining--;
-            timer -= gap;
+        if (timer < gap) {
+            plant.putRuntimeState("burstTimer", timer);
+            return;
         }
-        plant.putRuntimeState("burstRemaining", remaining);
-        plant.putRuntimeState("burstTimer", timer);
+        int damage = asInt(plant.getRuntimeState().getOrDefault("burstDamage", 0), 0);
+        fireVolley(plant, context, damage);
+        plant.putRuntimeState("burstRemaining", remaining - 1);
+        plant.putRuntimeState("burstTimer", 0.0);
     }
 
     /**

@@ -44,16 +44,7 @@ public interface BehaviorContext {
         spawnSunAt(row, col, amount);
     }
 
-    default void spawnSunAtSmall(int row, int col, int amount, double fallSpeed, float scale) {
-        spawnSunAt(row, col, amount, fallSpeed);
-    }
-
     void damageArea(int lane, int row, int damage);
-
-    /** Correct grid-centered AOE helper: row is vertical lane, col is horizontal tile. */
-    default void damageAreaAt(int row, int col, int damage, int radiusRows, int radiusCols) {
-        damageArea(row, col, damage);
-    }
 
     default void freezeZombiesInLane(int lane, double seconds) {
     }
@@ -89,7 +80,19 @@ public interface BehaviorContext {
     }
 
     default void damageLane(int lane, int damage) {
-        damageArea(lane, 0, damage);
+        damageArea(lane, lane, damage);
+    }
+
+    default void damageEntireLane(int lane, int damage) {
+        damageLane(lane, damage);
+    }
+
+    default void damageAreaAt(int row, int col, int damage, int radius) {
+        damageArea(col, row, damage);
+    }
+
+    default void spawnBouncingProjectilesFrom(int row, int col, int count, int damagePerGrape, double lifespanSeconds) {
+        spawnBouncingProjectiles(col, row, count, damagePerGrape, lifespanSeconds);
     }
 
     default void meltIceInLane(int lane) {
