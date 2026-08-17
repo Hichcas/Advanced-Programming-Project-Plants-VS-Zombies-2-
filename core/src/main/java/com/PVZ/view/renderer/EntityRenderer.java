@@ -183,6 +183,22 @@ public class EntityRenderer {
         renderFallingArmors(batch);
     }
 
+    public void renderZombieAlias(SpriteBatch batch, String alias, String state, float stateTime, float x, float y) {
+        if (alias == null) return;
+        textures.update();
+        String resolvedState = state != null ? state : "idle";
+        ClipRef clip = getZombieClip(alias, resolvedState);
+        if (clip == null) {
+            clip = getZombieClip(alias, "walk");
+        }
+        if (clip == null) {
+            clip = getZombieClip("DEFAULT", "walk");
+        }
+        if (clip != null) {
+            pamPlayer.draw(batch, clip, stateTime, x, y, true);
+        }
+    }
+
     private void renderZombieCamel(SpriteBatch batch, com.PVZ.model.entity.zombies.types.basic.ZombieCamel camel, float stateTime) {
         float x = (float) camel.getX();
         float y = (float) camel.getY();

@@ -1,5 +1,7 @@
 package com.PVZ.view.screen;
 
+import com.PVZ.view.renderer.WorldBackgroundRenderer;
+import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.game.GameEngine;
@@ -62,6 +64,19 @@ public class GameScreen extends BaseScreen {
     private Label plantFoodCountLabel;
     private long plantFoodFlashUntil = 0L;
 
+    private final List<String> previewZombies = new ArrayList<>();
+    private float introTimer = 0f;
+    private static final float INTRO_PAN_RIGHT_DURATION = 0.8f;
+    private static final float INTRO_HOLD_RIGHT_DURATION = 1.4f;
+    private static final float INTRO_PAN_LEFT_DURATION = 1.5f;
+    private static final float MAX_PAN_OFFSET = 950f;
+    private static final float MAX_ZOOM_OUT = 1.15f;
+
+    private float cameraIntroOffsetX = 0f;
+    private float cameraIntroZoom = 1.0f;
+    private boolean introStarted = false;
+    private boolean introFinished = false;
+
     public GameScreen(String mapPath, String musicPath, GameEngine gameEngine) {
         super();
         this.gameBatch = new SpriteBatch();
@@ -80,12 +95,16 @@ public class GameScreen extends BaseScreen {
         this.gameEngine = gameEngine;
         AppStatus.setGameEngine(gameEngine);
 
+        initPreviewZombies();
+
         gameHud = new GameHud();
         stage.addActor(gameHud);
         pauseMenuOverlay = new PauseMenuOverlay(this::handleSaveAndExit, this::handleRestart);
         pauseMenuOverlay.setMissionText(resolveMissionText());
         stage.addActor(pauseMenuOverlay);
         levelStartOverlay = new LevelStartOverlay(resolveStageConfig(), () -> {
+            introStarted = true;
+            introTimer = 0f;
         });
         stage.addActor(levelStartOverlay);
         winLoseOverlay = new WinLoseOverlay(this::handleSaveAndExit, this::handleRestart);
@@ -137,6 +156,56 @@ public class GameScreen extends BaseScreen {
         levelStartOverlay.show();
     }
 
+    private void initPreviewZombies() {
+        com.PVZ.model.game.chapter.StageConfig sc = resolveStageConfig();
+        if (sc != null && sc.getWaves() != null) {
+            java.util.LinkedHashSet<String> seen = new java.util.LinkedHashSet<>();
+            for (com.PVZ.model.game.chapter.StageConfig.WaveEntry we : sc.getWaves()) {
+                if (we.getEntries() != null) {
+                    for (com.PVZ.model.game.chapter.StageConfig.ZombieSpawn zs : we.getEntries()) {
+                        if (zs.getZombie() != null && !zs.getZombie().isBlank()) {
+                            seen.add(zs.getZombie().trim());
+                        }
+                    }
+                }
+            }
+            previewZombies.addAll(seen);
+        }
+    }
+
+    private void updateIntro(float delta) {
+        if (!introStarted) {
+            cameraIntroOffsetX = 0f;
+            cameraIntroZoom = 1.0f;
+            return;
+        }
+        if (!introFinished) {
+            introTimer += delta;
+            if (introTimer < INTRO_PAN_RIGHT_DURATION) {
+                // 1. Pan right & zoom out slightly
+                float t = introTimer / INTRO_PAN_RIGHT_DURATION;
+                float smoothT = t * t * (3f - 2f * t);
+                cameraIntroOffsetX = MAX_PAN_OFFSET * smoothT;
+                cameraIntroZoom = 1.0f + (MAX_ZOOM_OUT - 1.0f) * smoothT;
+            } else if (introTimer < INTRO_PAN_RIGHT_DURATION + INTRO_HOLD_RIGHT_DURATION) {
+                // 2. Hold at right showing incoming zombies
+                cameraIntroOffsetX = MAX_PAN_OFFSET;
+                cameraIntroZoom = MAX_ZOOM_OUT;
+            } else if (introTimer < INTRO_PAN_RIGHT_DURATION + INTRO_HOLD_RIGHT_DURATION + INTRO_PAN_LEFT_DURATION) {
+                // 3. Pan left back to lawn & zoom in
+                float t = (introTimer - (INTRO_PAN_RIGHT_DURATION + INTRO_HOLD_RIGHT_DURATION)) / INTRO_PAN_LEFT_DURATION;
+                float smoothT = t * t * (3f - 2f * t);
+                cameraIntroOffsetX = MAX_PAN_OFFSET * (1f - smoothT);
+                cameraIntroZoom = MAX_ZOOM_OUT - (MAX_ZOOM_OUT - 1.0f) * smoothT;
+            } else {
+                // 4. Lock onto lawn, start gameplay
+                cameraIntroOffsetX = 0f;
+                cameraIntroZoom = 1.0f;
+                introFinished = true;
+            }
+        }
+    }
+
     private com.PVZ.model.game.chapter.StageConfig resolveStageConfig() {
         try {
             return com.PVZ.model.game.chapter.ChapterLibrary
@@ -151,8 +220,9 @@ public class GameScreen extends BaseScreen {
     }
 
     private boolean isSimulationFrozen() {
-        return (pauseMenuOverlay != null && pauseMenuOverlay.isPaused())
-            || (levelStartOverlay != null && levelStartOverlay.isShowing())
+        return (levelStartOverlay != null && levelStartOverlay.isShowing())
+            || (introStarted && !introFinished)
+            || (pauseMenuOverlay != null && pauseMenuOverlay.isPaused())
             || (winLoseOverlay != null && winLoseOverlay.isShowing());
     }
 
@@ -502,6 +572,7 @@ public class GameScreen extends BaseScreen {
 
     @Override
     protected void renderScreen(float delta) {
+        updateIntro(delta);
         applyCameraShake();
 
         refreshSeedPacketBar();
@@ -566,60 +637,69 @@ public class GameScreen extends BaseScreen {
 
     private void drawBackgroundAndEngine(GameEngine activeEngine, float delta) {
         gameBatch.setProjectionMatrix(camera.combined);
-        Texture activeBackground = activeEngine.getBackgroundOverride();
-        Texture activeBackgroundRight = activeEngine.getBackgroundOverrideRight();
-        if (activeBackground == null) {
-            activeBackground = backgroundTexture;
-        }
-
-        // ----- تنظیمات مقیاس و آفست (قابل دریافت از activeEngine یا متغیرهای کلاس) -----
-        float scaleX = 1.20f;
-        float scaleY = 1.30f;
-
-        float offsetX = -100f;    // جابه‌جایی افقی کل عکس بزرگ (به پیکسل)
-        float offsetY = -140f;    // جابه‌جایی عمودی کل عکس بزرگ (به پیکسل)
-
         gameBatch.begin();
 
-        if (activeBackgroundRight != null && activeBackground != null) {
-            // ----- حالت دو تکه (ترکیب دو تصویر به عنوان یک تصویر واحد) -----
-
-            // ۱. محاسبه مقیاس پایه برای فیت شدن عمودی اولیه در VIRTUAL_HEIGHT
-            float baseScale = VIRTUAL_HEIGHT / (float) activeBackground.getHeight();
-
-            // ۲. ابعاد نهایی تصویر چپ بعد از اعمال scaleX و scaleY
-            float leftW = activeBackground.getWidth() * baseScale * scaleX;
-            float leftH = VIRTUAL_HEIGHT * scaleY;
-
-            // ۳. ابعاد نهایی تصویر راست با همان ضریب مقیاس
-            float rightW = activeBackgroundRight.getWidth() * baseScale * scaleX;
-            float rightH = VIRTUAL_HEIGHT * scaleY;
-
-            // ۴. نقطه‌ی مبدا پایین-چپ عکس یکپارچه (با احتساب آفست‌ها)
-            float startX = 0f + offsetX;
-            float startY = 0f + offsetY;
-
-            // ۵. رسم تصویر چپ از نقطه مبدا
-            gameBatch.draw(activeBackground, startX, startY, leftW, leftH);
-
-            // ۶. رسم تصویر راست دقیقاً چسبیده به انتهای تصویر چپ
-            gameBatch.draw(activeBackgroundRight, startX + leftW, startY, rightW, rightH);
-
-        } else if (activeBackground != null) {
-            // ----- حالت تک‌تصویری (مراحل اصلی) -----
-            float finalW = VIRTUAL_WIDTH * scaleX;
-            float finalH = VIRTUAL_HEIGHT * scaleY;
-
-            float startX = 0f + offsetX;
-            float startY = 0f + offsetY;
-
-            gameBatch.draw(activeBackground, startX, startY, finalW, finalH);
+        String chapterName = AppStatus.currentChapterName;
+        Map activeMap = activeEngine.getMap() != null ? activeEngine.getMap() : gameMap;
+        boolean renderedComposite = false;
+        if (chapterName != null && activeMap != null) {
+            renderedComposite = WorldBackgroundRenderer.getInstance().render(
+                gameBatch, chapterName, activeMap.getStartX(), activeMap.getStartY(),
+                activeMap.getTotalWidth(), activeMap.getTotalHeight()
+            );
         }
 
+        if (!renderedComposite) {
+            Texture activeBackground = activeEngine.getBackgroundOverride();
+            Texture activeBackgroundRight = activeEngine.getBackgroundOverrideRight();
+            if (activeBackground == null) {
+                activeBackground = backgroundTexture;
+            }
+
+            float scaleX = 1.20f;
+            float scaleY = 1.30f;
+            float offsetX = -100f;
+            float offsetY = -140f;
+
+            if (activeBackgroundRight != null && activeBackground != null) {
+                float baseScale = VIRTUAL_HEIGHT / (float) activeBackground.getHeight();
+                float leftW = activeBackground.getWidth() * baseScale * scaleX;
+                float leftH = VIRTUAL_HEIGHT * scaleY;
+                float rightW = activeBackgroundRight.getWidth() * baseScale * scaleX;
+                float rightH = VIRTUAL_HEIGHT * scaleY;
+                float startX = 0f + offsetX;
+                float startY = 0f + offsetY;
+                gameBatch.draw(activeBackground, startX, startY, leftW, leftH);
+                gameBatch.draw(activeBackgroundRight, startX + leftW, startY, rightW, rightH);
+            } else if (activeBackground != null) {
+                float finalW = VIRTUAL_WIDTH * scaleX;
+                float finalH = VIRTUAL_HEIGHT * scaleY;
+                float startX = 0f + offsetX;
+                float startY = 0f + offsetY;
+                gameBatch.draw(activeBackground, startX, startY, finalW, finalH);
+            }
+        }
+
+        drawPreviewZombies(gameBatch);
         gameBatch.end();
 
         float renderDelta = isSimulationFrozen() ? 0f : Math.min(delta, 1 / 30f);
         activeEngine.render(renderDelta, gameBatch);
+    }
+
+    private void drawPreviewZombies(SpriteBatch batch) {
+        if (!introFinished && !previewZombies.isEmpty() && gameMap != null) {
+            float baseY = gameMap.getStartY();
+            float startPreviewX = gameMap.getStartX() + gameMap.getTotalWidth() + 120f;
+            for (int i = 0; i < previewZombies.size(); i++) {
+                String alias = previewZombies.get(i);
+                int col = i % 3;
+                int row = i / 3;
+                float zx = startPreviewX + col * 170f;
+                float zy = baseY - 220f - (row * 190f);
+                EntityRenderer.getInstance().renderZombieAlias(batch, alias, "idle", introTimer, zx, zy);
+            }
+        }
     }
 
     private void drawMapBorders(GameEngine activeEngine) {
@@ -856,9 +936,10 @@ public class GameScreen extends BaseScreen {
             shakeOffsetY = (random.nextFloat() * 2f - 1f) * SHAKE_MAGNITUDE * fade;
         }
 
-        // موقعیت پایه‌ی دوربین در این بازی ثابت است (وسط صفحه‌ی مجازی)
+        // موقعیت پایه‌ی دوربین در این بازی شامل افکت‌های شیک و انیمیشن اینترو است
+        camera.zoom = cameraIntroZoom;
         camera.position.set(
-            VIRTUAL_WIDTH / 2f + shakeOffsetX,
+            VIRTUAL_WIDTH / 2f + shakeOffsetX + cameraIntroOffsetX,
             VIRTUAL_HEIGHT / 2f + shakeOffsetY,
             0f
         );
