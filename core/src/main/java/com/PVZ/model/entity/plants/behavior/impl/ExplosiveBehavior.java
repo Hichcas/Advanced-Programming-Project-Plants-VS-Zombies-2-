@@ -50,19 +50,98 @@ public class ExplosiveBehavior implements PlantBehavior {
                 if (!contact) return;
             }
         }
+        if ("potato_mine".equals(key) && requiresContact) {
+            int plantCol = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+            for (Zombie zombie : zombies) {
+                if (zombie != null && !zombie.isDead() && Math.abs(mapColOf(context, zombie) - plantCol) <= 1) {
+                    context.damageSingleTarget(zombie, Math.max(damageFallback(plant, 1800), 1800));
+                }
+            }
+            spawnFx(plant, context, "POTATO_MINE_EXPLOSION", 1.2);
+            plant.takeDamage(plant.getCurrentHp());
+            return;
+        }
+        if ("primal_potato_mine".equals(key) && requiresContact) {
+            int pc = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+            context.damageAreaAt(lane, pc, Math.max(damageFallback(plant, 2400), 2400), 1, 1);
+            spawnFx(plant, context, "PRIMAL_POTATO_MINE_EXPLOSION", 1.5);
+            plant.takeDamage(plant.getCurrentHp());
+            return;
+        }
+        if ("hot_potato".equals(key)) {
+            boolean melted = false;
+            if (context instanceof com.PVZ.model.game.RegularGameEngine engine && engine.getMap() != null) {
+                int pc = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+                com.PVZ.model.entity.Tile tile = engine.getMap().getTile(lane, pc);
+                if (tile != null && tile.getType() == com.PVZ.model.enums.TileType.ICE) {
+                    tile.setType(com.PVZ.model.enums.TileType.NORMAL);
+                    spawnFx(plant, context, "HOTPOTATO_STEAM", 2.0);
+                    melted = true;
+                }
+            }
+            if (melted) {
+                com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 4.6667);
+                plant.takeDamage(plant.getCurrentHp());
+            }
+            return;
+        }
+
+        if ("grave_buster".equals(key)) {
+            if (context instanceof com.PVZ.model.game.RegularGameEngine engine && engine.getMap() != null) {
+                int pc = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+                com.PVZ.model.entity.Tile tile = engine.getMap().getTile(lane, pc);
+                if (tile != null && tile.getType() == com.PVZ.model.enums.TileType.TOMBSTONE) {
+                    tile.setType(com.PVZ.model.enums.TileType.NORMAL);
+                    tile.setHp(0);
+                    spawnFx(plant, context, "GRAVEBUSTER_DIRT", 1.0);
+                    com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 1.0);
+                    plant.takeDamage(plant.getCurrentHp());
+                }
+            }
+            return;
+        }
+
         if ("ice_shroom".equals(key)) {
             context.freezeAllZombies(Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
+            spawnFx(plant, context, "ICESHROOM", 1.35);
             com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
         int damage = plant.getStats().getExplodeDamage() > 0 ? plant.getStats().getExplodeDamage()
             : Math.max(plant.getStats().getDamage(), plant.getStats().getAoeDamage());
+
         if ("jalapeno".equals(key)) {
-            context.damageLane(lane, damage);
-            if (plant.getStats().getBooleanExtra("meltsIce", false))
-                context.meltIceInLane(lane);
-            com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
+            context.damageLane(lane, Math.max(1800, damage));
+            if (plant.getStats().getBooleanExtra("meltsIce", false)) context.meltIceInLane(lane);
+            spawnFx(plant, context, "JALAPENO_FIRE", 1.6);
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 0.6667);
+            plant.takeDamage(plant.getCurrentHp());
+            return;
+        }
+
+        if ("cherry_bomb".equals(key)) {
+            context.damageAreaAt(lane, asInt(plant.getRuntimeState().getOrDefault("col", 0), 0), Math.max(1800, damage), 1, 1);
+            spawnFx(plant, context, "CHERRYBOMB", 1.5);
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 0.7);
+            plant.takeDamage(plant.getCurrentHp());
+            return;
+        }
+
+        if ("doom_shroom".equals(key)) {
+            for (Zombie z : context.getAllZombies()) {
+                if (z != null && !z.isDead()) z.takeDamage(Double.MAX_VALUE);
+            }
+            if (context instanceof com.PVZ.model.game.RegularGameEngine engine && engine.getMap() != null) {
+                for (int rr = Math.max(0, row - 1); rr <= Math.min(engine.getMap().getRows() - 1, row + 1); rr++) {
+                    for (int cc = Math.max(0, asInt(plant.getRuntimeState().getOrDefault("col", 0), 0) - 1);
+                         cc <= Math.min(engine.getMap().getCols() - 1, asInt(plant.getRuntimeState().getOrDefault("col", 0), 0) + 1); cc++) {
+                        engine.getMap().getTile(rr, cc).setType(com.PVZ.model.enums.TileType.CRATER);
+                    }
+                }
+            }
+            spawnFx(plant, context, "DOOMSHROOM", 2.8);
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 3.3333);
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
@@ -87,9 +166,12 @@ public class ExplosiveBehavior implements PlantBehavior {
             plant.putRuntimeState("squashTimer", jumpTimer);
             if (jumpTimer < 0.4) return;
             List<Zombie> targets = context.getZombiesInLane(lane);
+            targets.removeIf(z -> z == null || z.isDead());
             if (!targets.isEmpty()) {
-                Zombie nearest = targets.get(0);
-                context.damageSingleTarget(nearest, damage);
+                int pc = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+                Zombie nearest = targets.stream().min(java.util.Comparator.comparingInt(z -> Math.abs(mapColOf(context, z) - pc))).orElse(targets.get(0));
+                context.damageSingleTarget(nearest, Math.max(damage, Integer.MAX_VALUE / 4));
+                spawnFx(plant, context, "SQUASH", 0.8);
             }
             boolean canCrushTwice = plant.getStats().getBooleanExtra("canCrush2x", false);
             int crushesDone = asInt(plant.getRuntimeState().getOrDefault("squashCrushes", 0), 0) + 1;
@@ -105,19 +187,33 @@ public class ExplosiveBehavior implements PlantBehavior {
         }
 
         if ("iceberg_lettuce".equals(key)) {
-            // Real ability: freezes only the first zombie that steps on it — not the whole lane.
-            if (context instanceof com.PVZ.model.game.BattleController bc) {
-                bc.freezeClosestZombieInLane(lane, Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
-            } else {
-                context.freezeZombiesInLane(lane, Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
+            // Freeze only a zombie actually stepping onto this tile.
+            int pc = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+            Zombie target = null;
+            int best = Integer.MAX_VALUE;
+            for (Zombie z : zombies) {
+                if (z == null || z.isDead()) continue;
+                int zc = mapColOf(context, z);
+                int dist = Math.abs(zc - pc);
+                if (dist <= 1 && dist < best) { best = dist; target = z; }
             }
-            com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
+            if (target == null) return;
+            target.freeze((float) Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
+            spawnFx(plant, context, "ICESHROOM", 1.2);
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 1.1667);
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
         if ("tangle_kelp".equals(key)) {
+            if (context instanceof com.PVZ.model.game.RegularGameEngine engine && engine.getMap() != null) {
+                int pc = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+                com.PVZ.model.entity.Tile tile = engine.getMap().getTile(lane, pc);
+                if (tile != null && tile.getType() != com.PVZ.model.enums.TileType.WATER
+                    && tile.getType() != com.PVZ.model.enums.TileType.TIDE) return;
+            }
             context.killClosestZombieInLane(lane);
-            com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
+            spawnFx(plant, context, "TANGLE_KELP", 2.4);
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 2.4667);
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
@@ -130,9 +226,27 @@ public class ExplosiveBehavior implements PlantBehavior {
             plant.takeDamage(plant.getCurrentHp());
             return;
         }
-        context.damageArea(lane, row, damage);
+        context.damageAreaAt(lane, asInt(plant.getRuntimeState().getOrDefault("col", 0), 0), damage, 1, 1);
         com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 0.6667);
         plant.takeDamage(plant.getCurrentHp());
+    }
+
+    private int damageFallback(PlantInstance plant, int fallback) {
+        int d = plant.getStats().getExplodeDamage();
+        return d > 0 ? d : fallback;
+    }
+
+    private void spawnFx(PlantInstance plant, BehaviorContext context, String visualKey, double fuse) {
+        Projectile fx = new Projectile();
+        fx.setType(ProjectileType.UNKNOWN);
+        fx.setDamage(0);
+        fx.setPierce(0);
+        double x = asDouble(plant.getRuntimeState().getOrDefault("worldX", 0.0), 0.0);
+        double y = asDouble(plant.getRuntimeState().getOrDefault("worldY", 0.0), 0.0);
+        fx.initFreePosition((float) x, (float) (y + 90), 0f, 0f);
+        fx.putExtra("visualKey", visualKey);
+        fx.setFuse(fuse);
+        context.spawnProjectile(fx);
     }
 
     private static int asInt(Object value, int defaultValue) {

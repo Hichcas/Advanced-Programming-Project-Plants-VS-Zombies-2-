@@ -22,6 +22,10 @@ public class SunProducerBehavior implements PlantBehavior {
         int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
         int lane = asInt(plant.getRuntimeState().getOrDefault("lane", row), row);
 
+        String plantKey = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+        if ("sun_bean".equals(plantKey)) {
+            return; // Sun Bean produces 5 Suns per received hit, not periodically.
+        }
         if (plant.getStats().getSunDropAmount() > 0) {
             handleSunBean(plant, context, deltaTime, row, col, lane);
             return;
@@ -49,7 +53,9 @@ public class SunProducerBehavior implements PlantBehavior {
             return;
         }
         int amount = plant.getStats() == null ? 5 : Math.max(5, plant.getStats().getSunDropAmount());
-        context.addSun(amount);
+        int row = asInt(plant.getRuntimeState().getOrDefault("row", 0), 0);
+        int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+        context.spawnSunAtSmall(row, col, amount, 260.0, 0.70f);
     }
 
     private void handleSunBean(PlantInstance plant, BehaviorContext context, double deltaTime,

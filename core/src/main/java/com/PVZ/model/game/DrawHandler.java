@@ -166,6 +166,10 @@ public class DrawHandler {
                 if (base != null && !base.isDead()) {
                     base.draw(batch);
                 }
+                Plant under = engine.map.getTile(row, col).getUnderPlant();
+                if (under != null && !under.isDead()) {
+                    under.draw(batch);
+                }
                 Plant plant = engine.map.getPlantAt(row, col);
                 if (plant == null || plant.isDead()) {
                     if (base != null && !base.isDead()) {

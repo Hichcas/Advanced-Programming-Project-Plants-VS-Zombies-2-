@@ -28,12 +28,14 @@ public class PlantHandler {
         boolean addingPeaPodHead = type == PlantType.PEA_POD
             && existingTop != null
             && existingTop.getType() == PlantType.PEA_POD;
+        boolean addingPumpkinCover = type == PlantType.PUMPKIN && existingTop != null
+            && existingTop.getType() != PlantType.PUMPKIN;
         if (isAquatic && !isWater) return "Aquatic plants must be planted on water tiles.";
         if (isWater && !isAquatic && !isLilyPad && existingBase == null)
             return "Non-aquatic plants need a Lily Pad on water tiles.";
         if (isLilyPad && !isWater) return "Lily Pad must be planted on water tiles.";
         if (isLilyPad && existingBase != null) return "This tile already has a Lily Pad.";
-        if (!addingPeaPodHead) {
+        if (!addingPeaPodHead && !addingPumpkinCover) {
             if (isWater && !isAquatic && !isLilyPad && existingTop != null) return "Tile is occupied.";
             if (!isWater && existingTop != null) return "Tile is occupied.";
         }
@@ -67,7 +69,10 @@ public class PlantHandler {
         }
         if (isLilyPad)
             engine.map.setBasePlant(row, col, plant);
-        else if (isWater && !isAquatic)
+        else if (addingPumpkinCover) {
+            engine.map.getTile(row, col).setUnderPlant(existingTop);
+            engine.map.setPlant(row, col, plant);
+        } else if (isWater && !isAquatic)
             engine.map.setPlant(row, col, plant);
         else
             engine.map.setPlant(row, col, plant);

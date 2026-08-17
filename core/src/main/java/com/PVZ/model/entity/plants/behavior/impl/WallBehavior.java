@@ -1,6 +1,8 @@
 package com.PVZ.model.entity.plants.behavior.impl;
 
 import com.PVZ.model.entity.plants.PlantInstance;
+import com.PVZ.model.entity.plants.behavior.impl.Projectile;
+import com.PVZ.model.entity.plants.behavior.impl.ProjectileType;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 import com.PVZ.model.entity.zombies.base.Zombie;
@@ -8,6 +10,28 @@ import com.PVZ.model.entity.zombies.base.Zombie;
 import java.util.List;
 
 public class WallBehavior implements PlantBehavior {
+
+    @Override
+    public void onDamaged(PlantInstance plant, BehaviorContext context, Zombie attacker, int damageAmount, boolean destroyed) {
+        if (plant == null || context == null || !destroyed) return;
+        String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+        if ("explode_o_nut".equals(key) && !Boolean.TRUE.equals(plant.getRuntimeState().get("deathExplosionDone"))) {
+            int row = asInt(plant.getRuntimeState().getOrDefault("row", 0), 0);
+            int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+            int damage = Math.max(plant.getStats().getExplodeDamage(), Math.max(plant.getStats().getAoeDamage(), 1200));
+            context.damageAreaAt(row, col, damage, 1, 1);
+            Projectile fx = new Projectile();
+            fx.setType(ProjectileType.UNKNOWN);
+            fx.putExtra("visualKey", "EXPLODEONUT");
+            double x = asDouble(plant.getRuntimeState().getOrDefault("worldX", 0.0), 0.0);
+            double y = asDouble(plant.getRuntimeState().getOrDefault("worldY", 0.0), 0.0);
+            fx.initFreePosition((float)x, (float)(y + 90), 0f, 0f);
+            fx.setFuse(1.45);
+            context.spawnProjectile(fx);
+            plant.putRuntimeState("deathExplosionDone", Boolean.TRUE);
+        }
+    }
+
     @Override
     public void onUpdate(PlantInstance plant, BehaviorContext context, double deltaTime) {
         if (plant == null || context == null) {
@@ -21,8 +45,11 @@ public class WallBehavior implements PlantBehavior {
             return;
         }
 
+        String plantKey = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+        double plantX = plant.getRuntimeState().get("worldX") instanceof Number n ? n.doubleValue() : 0.0;
+        double tileW = plant.getRuntimeState().get("tileWidth") instanceof Number n ? n.doubleValue() : 177.0;
         for (Zombie zombie : zombies) {
-            if (zombie != null) {
+            if (zombie != null && ("endurian".equals(plantKey) || Math.abs(zombie.getX() - plantX) <= tileW * 0.85)) {
                 zombie.stopMoving();
             }
         }
@@ -41,7 +68,20 @@ public class WallBehavior implements PlantBehavior {
         }
 
         if (plant.getStats().getReflectDamage() > 0) {
-            context.damageArea(lane, row, plant.getStats().getReflectDamage());
+            String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+            if ("endurian".equals(key)) {
+                double px = plant.getRuntimeState().get("worldX") instanceof Number n ? n.doubleValue() : 0.0;
+                double range = plant.getRuntimeState().get("tileWidth") instanceof Number n ? n.doubleValue() * 0.9 : 160.0;
+                Zombie nearest = null; double best = Double.MAX_VALUE;
+                for (Zombie z : zombies) {
+                    if (z == null || z.isDead()) continue;
+                    double d = Math.abs(z.getX() - px);
+                    if (d <= range && d < best) { best = d; nearest = z; }
+                }
+                if (nearest != null) nearest.takeDamage(plant.getStats().getReflectDamage());
+            } else {
+                context.damageAreaAt(row, asInt(plant.getRuntimeState().getOrDefault("col", 0), 0), plant.getStats().getReflectDamage(), 0, 1);
+            }
         }
     }
 

@@ -44,7 +44,16 @@ public interface BehaviorContext {
         spawnSunAt(row, col, amount);
     }
 
+    default void spawnSunAtSmall(int row, int col, int amount, double fallSpeed, float scale) {
+        spawnSunAt(row, col, amount, fallSpeed);
+    }
+
     void damageArea(int lane, int row, int damage);
+
+    /** Correct grid-centered AOE helper: row is vertical lane, col is horizontal tile. */
+    default void damageAreaAt(int row, int col, int damage, int radiusRows, int radiusCols) {
+        damageArea(row, col, damage);
+    }
 
     default void freezeZombiesInLane(int lane, double seconds) {
     }
