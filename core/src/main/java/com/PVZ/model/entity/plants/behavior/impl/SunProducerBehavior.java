@@ -22,12 +22,8 @@ public class SunProducerBehavior implements PlantBehavior {
         int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
         int lane = asInt(plant.getRuntimeState().getOrDefault("lane", row), row);
 
-        String plantKey = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
-        if ("sun_bean".equals(plantKey)) {
-            return; // Sun Bean produces 5 Suns per received hit, not periodically.
-        }
         if (plant.getStats().getSunDropAmount() > 0) {
-            handleSunBean(plant, context, deltaTime, row, col, lane);
+            // Sun Bean produces its sun on damage, not on a passive timer.
             return;
         }
 
@@ -55,7 +51,8 @@ public class SunProducerBehavior implements PlantBehavior {
         int amount = plant.getStats() == null ? 5 : Math.max(5, plant.getStats().getSunDropAmount());
         int row = asInt(plant.getRuntimeState().getOrDefault("row", 0), 0);
         int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
-        context.spawnSunAtSmall(row, col, amount, 260.0, 0.70f);
+        context.spawnSunAt(row, col, amount, 300.0);
+        com.PVZ.model.entity.PlantAnimation.trigger(plant, "special", 0.7);
     }
 
     private void handleSunBean(PlantInstance plant, BehaviorContext context, double deltaTime,

@@ -462,16 +462,11 @@ public class EntityRenderer {
             case "BOWLING_BULB_1", "BOWLING_BULB_2", "BOWLING_BULB_3" -> "animation";
             case "MEGA_GATLING" -> "animation";
             case "ROTOBAGA_1", "ROTOBAGA_2" -> "animation";
-            case "CHERRYBOMB" -> "explosion";
-            case "JALAPENO_FIRE" -> "idle";
-            case "ICESHROOM" -> "animation";
-            case "PHAT_BEET", "KIWI_BEAST", "TORCHWOOD_HIT", "CATTAIL_HOMING" -> "animation";
-            case "DOOMSHROOM" -> "stage3_explode";
-            case "TANGLE_KELP" -> "attack";
-            case "POTATO_MINE_EXPLOSION", "PRIMAL_POTATO_MINE_EXPLOSION" -> "animation";
-            case "SQUASH" -> "jump_down_right";
-            case "HOTPOTATO_STEAM" -> "animation";
-            case "GRAVEBUSTER_DIRT" -> "gravebuster_dirt_anim";
+            case "GRAPESHOT_FORWARD" -> "animation_forward";
+            case "GRAPESHOT_BACKWARD" -> "animation_backward";
+            case "GRAPESHOT_UP" -> "animation_verticle_up";
+            case "GRAPESHOT_DOWN" -> "animation_verticle_down";
+            case "GRAPESHOT" -> "animation_forward";
             default -> null;
         };
     }
@@ -488,18 +483,7 @@ public class EntityRenderer {
             case "BOWLING_BULB_1", "BOWLING_BULB_2", "BOWLING_BULB_3" -> 1.0f;
             case "MEGA_GATLING" -> 0.95f;
             case "ROTOBAGA_1", "ROTOBAGA_2" -> 1.45f;
-            case "CHERRYBOMB" -> 1.55f;
-            case "JALAPENO_FIRE" -> 1.35f;
-            case "ICESHROOM" -> 1.5f;
-            case "PHAT_BEET", "KIWI_BEAST" -> 1.4f;
-            case "TORCHWOOD_HIT" -> 1.0f;
-            case "CATTAIL_HOMING" -> 1.0f;
-            case "DOOMSHROOM" -> 1.6f;
-            case "TANGLE_KELP" -> 1.25f;
-            case "POTATO_MINE_EXPLOSION", "PRIMAL_POTATO_MINE_EXPLOSION" -> 1.8f;
-            case "SQUASH" -> 1.3f;
-            case "HOTPOTATO_STEAM" -> 1.15f;
-            case "GRAVEBUSTER_DIRT" -> 1.0f;
+            case "GRAPESHOT_FORWARD", "GRAPESHOT_BACKWARD", "GRAPESHOT_UP", "GRAPESHOT_DOWN", "GRAPESHOT" -> 1.25f;
             default -> 1.0f;
         };
     }
@@ -581,12 +565,6 @@ public class EntityRenderer {
     public boolean renderSun(SpriteBatch batch, com.PVZ.model.entity.Sun.SunType type,
                              float animationTime, boolean falling, boolean reachedGround,
                              float x, float y) {
-        return renderSun(batch, type, animationTime, falling, reachedGround, x, y, 1.0f);
-    }
-
-    public boolean renderSun(SpriteBatch batch, com.PVZ.model.entity.Sun.SunType type,
-                             float animationTime, boolean falling, boolean reachedGround,
-                             float x, float y, float scale) {
         String pamPath = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
         String clipName = "animation";
         float localTime = animationTime;
@@ -605,7 +583,7 @@ public class EntityRenderer {
                 localTime = animationTime - 0.5333f;
             }
         }
-        return renderPam(batch, pamPath, clipName, localTime, x, y, scale);
+        return renderPam(batch, pamPath, clipName, localTime, x, y);
     }
 
     public boolean renderLoot(SpriteBatch batch, com.PVZ.model.entity.LootDrop.LootType type,

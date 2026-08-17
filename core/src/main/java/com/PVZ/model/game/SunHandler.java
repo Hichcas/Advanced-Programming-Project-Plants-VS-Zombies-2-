@@ -29,21 +29,6 @@ public class SunHandler {
         engine.sunManager.spawnFalling(x, y, amount, y - 120, Sun.SunType.NORMAL, fallSpeed);
     }
 
-
-    public static void spawnSmallSunAt(RegularGameEngine engine, int row, int col, int amount, double fallSpeed, float scale) {
-        if (amount <= 0) return;
-        double x = 0, y = 0;
-        if (engine.map != null) {
-            Tile tile = engine.map.getTile(row, col);
-            if (tile != null) {
-                x = tile.getX() + tile.getWidth() / 2.0;
-                y = tile.getY() + tile.getHeight() / 2.0;
-            }
-        }
-        Sun sun = engine.sunManager.spawnFalling(x, y, amount, y - 120, Sun.SunType.NORMAL, fallSpeed);
-        sun.setVisualScale(scale);
-    }
-
     public static int collectSunAtWorldPoint(RegularGameEngine engine, float worldX, float worldY) {
         Rectangle pointer = new Rectangle(worldX - 8f, worldY - 8f, 16f, 16f);
         int collected = engine.sunManager.collectAt(pointer);

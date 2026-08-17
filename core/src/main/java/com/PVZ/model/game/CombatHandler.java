@@ -59,11 +59,7 @@ public class CombatHandler {
         if (colState instanceof Number number) col = number.intValue();
 
         float worldX = startX + col * tileWidth + tileWidth * 0.5f;
-        float worldY = startY - (row + 1) * tileHeight + tileHeight * 0.47f;
-        Object spawnYOffset = p.getExtra("spawnYOffset");
-        if (spawnYOffset instanceof Number n) {
-            worldY += n.floatValue();
-        }
+        float worldY = startY - (row + 1) * tileHeight + tileHeight * 0.35f;
         float speedPxPerSec = tileWidth * 1.5f;
         if (p.getType() == com.PVZ.model.entity.plants.behavior.impl.ProjectileType.LOB) {
             speedPxPerSec = tileWidth * 0.9f;
@@ -91,39 +87,32 @@ public class CombatHandler {
         }
     }
 
-    public static void damageAreaAt(RegularGameEngine engine, int centerRow, int centerCol,
-                                    int damage, int radiusRows, int radiusCols) {
-        if (engine == null || engine.map == null || damage <= 0) return;
-        float tileW = engine.map.getTileWidth();
-        float centerX = engine.map.getStartX() + centerCol * tileW + tileW * 0.5f;
-        int minRow = Math.max(0, centerRow - Math.max(0, radiusRows));
-        int maxRow = Math.min(engine.map.getRows() - 1, centerRow + Math.max(0, radiusRows));
+    public static void damageArea(RegularGameEngine engine, int lane, int row, int damage) {
+        damageAreaAt(engine, row, lane, damage, 1);
+    }
+
+    public static void damageAreaAt(RegularGameEngine engine, int row, int col, int damage, int radius) {
+        if (damage <= 0) return;
+        int minRow = Math.max(0, row - radius);
+        int maxRow = Math.min(engine.map != null ? engine.map.getRows() - 1 : 4, row + radius);
+        double centerX = engine.map != null
+            ? engine.map.getStartX() + (col + 0.5f) * engine.map.getTileWidth()
+            : 0.0;
+        double rangeX = engine.map != null ? engine.map.getTileWidth() * (radius + 0.65) : 160.0 * (radius + 1);
         for (int r = minRow; r <= maxRow; r++) {
             for (Zombie zombie : getZombiesInLane(engine, r)) {
                 if (zombie == null || zombie.isDead()) continue;
-                int zCol = engine.getTileColumn((float) zombie.getX());
-                if (Math.abs(zCol - centerCol) <= Math.max(0, radiusCols)) {
+                if (Math.abs(zombie.getX() - centerX) <= rangeX) {
                     zombie.takeDamage(damage);
                 }
             }
         }
     }
 
-    public static void damageArea(RegularGameEngine engine, int lane, int row, int damage) {
+    public static void damageEntireLane(RegularGameEngine engine, int lane, int damage) {
         if (damage <= 0) return;
-        int[] lanes = {row - 1, row, row + 1};
-        for (int r : lanes) {
-            if (r < 0) continue;
-            for (Zombie zombie : getZombiesInLane(engine, r)) {
-                if (zombie != null) {
-                    double colDist = Math.abs(zombie.getX() - (engine.map != null
-                        ? engine.map.getStartX() + lane * engine.map.getTileWidth() : 0));
-                    if (colDist < (engine.map != null
-                        ? engine.map.getTileWidth() * 1.6 : 280.0)) {
-                        zombie.takeDamage(damage);
-                    }
-                }
-            }
+        for (Zombie zombie : getZombiesInLane(engine, lane)) {
+            if (zombie != null && !zombie.isDead()) zombie.takeDamage(damage);
         }
     }
 
@@ -169,10 +158,15 @@ public class CombatHandler {
 
     public static void spawnBouncingProjectiles(RegularGameEngine engine, int lane, int row,
                                                 int count, int damagePerGrape, double lifespanSeconds) {
+        spawnBouncingProjectilesFrom(engine, row, lane, count, damagePerGrape, lifespanSeconds);
+    }
+
+    public static void spawnBouncingProjectilesFrom(RegularGameEngine engine, int row, int col,
+                                                    int count, int damagePerGrape, double lifespanSeconds) {
         if (engine.map == null) return;
         float tileW = engine.map.getTileWidth();
         float tileH = engine.map.getTileHeight();
-        float centreX = engine.map.getStartX() + lane * tileW + tileW * 0.5f;
+        float centreX = engine.map.getStartX() + col * tileW + tileW * 0.5f;
         float centreY = engine.map.getStartY() - (row + 1) * tileH + tileH * 0.5f;
         float minX = engine.map.getStartX();
         float maxX = minX + 9 * tileW;
@@ -187,6 +181,10 @@ public class CombatHandler {
             Projectile grape = new Projectile();
             grape.setType(ProjectileType.GRAPE);
             grape.setDamage(Math.max(1, damagePerGrape));
+            String visual = vx >= 0 && Math.abs(vx) >= Math.abs(vy) ? "GRAPESHOT_FORWARD"
+                : vx < 0 && Math.abs(vx) >= Math.abs(vy) ? "GRAPESHOT_BACKWARD"
+                : vy >= 0 ? "GRAPESHOT_UP" : "GRAPESHOT_DOWN";
+            grape.putExtra("visualKey", visual);
             grape.setPierce(0);
             grape.initFreePosition(centreX, centreY, vx, vy);
             grape.setBouncing(true);

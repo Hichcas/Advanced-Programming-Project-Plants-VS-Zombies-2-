@@ -31,6 +31,7 @@ public final class PlantFactory {
         applyDamageSpec(definition, stats);
         applyPlantTags(definition, stats);
         applySpecialPlantKeys(definition, stats);
+        ensureRuntimeHpForInstantPlants(definition, stats);
     }
 
     private static void applyDamageSpec(PlantDefinition definition, PlantStats stats) {
@@ -130,6 +131,21 @@ public final class PlantFactory {
                 break;
             default:
                 break;
+        }
+    }
+
+
+    /**
+     * Some instant plants are represented in the data with baseHp=0 because they are
+     * consumable.  A zero HP value makes PlantInstance.isDead() true before the behavior
+     * gets a tick, so their main ability can never execute. Keep them alive for the
+     * single runtime tick(s) needed to show/perform the ability, then let the behavior
+     * consume them normally.
+     */
+    private static void ensureRuntimeHpForInstantPlants(PlantDefinition definition, PlantStats stats) {
+        String key = definition.getPlantKey();
+        if (("doom_shroom".equals(key) || "ice_shroom".equals(key)) && stats.getMaxHp() <= 0) {
+            stats.setMaxHp(1);
         }
     }
 

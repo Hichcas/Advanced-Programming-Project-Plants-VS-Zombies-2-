@@ -234,6 +234,10 @@ public class BattleController implements BehaviorContext {
                 steerHoming(p);
             }
 
+            if (p.getLaunchDelay() > 0.0) {
+                continue;
+            }
+
             if (handleTileCollision(p)) {
                 projIt.remove();
                 continue;
@@ -328,6 +332,7 @@ public class BattleController implements BehaviorContext {
             }
 
             applyProjectileEffect(p, z);
+            spawnProjectileHitEffect(p, z);
             markHitZombie(p, z);
 
             SoundManager.getInstance().playSFX(SFX_IMPACT);
@@ -405,6 +410,16 @@ public class BattleController implements BehaviorContext {
             (int) p.getDamage(), 300f, (int) jj.getRow(), jj);
         addZombieProjectile(reflected);
         System.out.println(jj.getAlias() + " reflected a projectile");
+    }
+
+    private void spawnProjectileHitEffect(Projectile p, Zombie z) {
+        RegularGameEngine engine = AppStatus.getGameEngine() instanceof RegularGameEngine re ? re : null;
+        if (engine == null || z == null) return;
+        String path = com.PVZ.model.entity.plants.behavior.impl.ProjectileVisuals.getHitPathForProjectile(p);
+        if (path == null) return;
+        String clip = com.PVZ.model.entity.plants.behavior.impl.ProjectileVisuals.getHitClipForProjectile(p);
+        engine.addTimedPamEffect(path, clip == null ? "animation" : clip, 0.8, 0.7f,
+            (float) z.getX() + 20f, (float) z.getY() + 55f);
     }
 
     private void applyProjectileEffect(Projectile p, Zombie z) {

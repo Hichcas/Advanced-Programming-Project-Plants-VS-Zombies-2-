@@ -66,6 +66,25 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     String backgroundTexturePath;
     com.badlogic.gdx.graphics.Texture backgroundOverrideTexture;
     double skySunTimer = 0.0;
+    double globalIceEffectTimer = 0.0;
+    double jalapenoLaneEffectTimer = 0.0;
+    int jalapenoLaneEffectRow = -1;
+    int iceShroomEffectRow = -1;
+    int iceShroomEffectCol = -1;
+    double iceShroomEffectTimer = 0.0;
+    final List<TimedPamEffect> timedPamEffects = new ArrayList<>();
+
+    public static final class TimedPamEffect {
+        public final String path;
+        public final String clip;
+        public double remaining;
+        public final float scale;
+        public final float x;
+        public final float y;
+        public TimedPamEffect(String path, String clip, double remaining, float scale, float x, float y) {
+            this.path = path; this.clip = clip; this.remaining = remaining; this.scale = scale; this.x = x; this.y = y;
+        }
+    }
     final com.PVZ.model.entity.LawnMower[] lawnMowers = new com.PVZ.model.entity.LawnMower[ROWS];
     com.badlogic.gdx.graphics.Texture iceOverlayTex;
 
@@ -212,18 +231,23 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     }
 
     @Override
-    public void spawnSunAtSmall(int row, int col, int amount, double fallSpeed, float scale) {
-        SunHandler.spawnSmallSunAt(this, row, col, amount, fallSpeed, scale);
-    }
-
-    @Override
     public void damageArea(int lane, int row, int damage) {
         CombatHandler.damageArea(this, lane, row, damage);
     }
 
     @Override
-    public void damageAreaAt(int row, int col, int damage, int radiusRows, int radiusCols) {
-        CombatHandler.damageAreaAt(this, row, col, damage, radiusRows, radiusCols);
+    public void damageEntireLane(int lane, int damage) {
+        CombatHandler.damageEntireLane(this, lane, damage);
+    }
+
+    @Override
+    public void damageAreaAt(int row, int col, int damage, int radius) {
+        CombatHandler.damageAreaAt(this, row, col, damage, radius);
+    }
+
+    @Override
+    public void spawnBouncingProjectilesFrom(int row, int col, int count, int damagePerGrape, double lifespanSeconds) {
+        CombatHandler.spawnBouncingProjectilesFrom(this, row, col, count, damagePerGrape, lifespanSeconds);
     }
 
     @Override
@@ -233,7 +257,47 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     @Override
     public void freezeAllZombies(double seconds) {
+        globalIceEffectTimer = Math.max(globalIceEffectTimer, seconds);
         CombatHandler.freezeAllZombies(this, seconds);
+    }
+
+    public void setGlobalIceEffect(double seconds) {
+        globalIceEffectTimer = Math.max(globalIceEffectTimer, seconds);
+    }
+
+    public void setIceShroomTileEffect(int row, int col, double seconds) {
+        iceShroomEffectRow = Math.max(0, Math.min(4, row));
+        iceShroomEffectCol = Math.max(0, Math.min(8, col));
+        iceShroomEffectTimer = Math.max(iceShroomEffectTimer, seconds);
+    }
+
+    public void addTimedPamEffect(String path, String clip, double seconds, float scale, float x, float y) {
+        if (path == null || clip == null || seconds <= 0) return;
+        timedPamEffects.add(new TimedPamEffect(path, clip, seconds, scale, x, y));
+    }
+
+    public float[] getPlantWorldCenter(int row, int col) {
+        if (map == null) return new float[]{col * 100f + 50f, row * 100f + 50f};
+        com.PVZ.model.entity.Tile tile = map.getTile(row, col);
+        if (tile == null) return new float[]{col * 100f + 50f, row * 100f + 50f};
+        return new float[]{tile.getX() + tile.getWidth()/2f, tile.getY() + tile.getHeight()/2f};
+    }
+
+    public float getMapCenterX() {
+        return map == null ? 450f : map.getStartX() + map.getTotalWidth()/2f;
+    }
+
+    public float getMapCenterY() {
+        return map == null ? 250f : map.getStartY() - map.getTotalHeight()/2f;
+    }
+
+    public double getGlobalIceEffectTimer() {
+        return globalIceEffectTimer;
+    }
+
+    public void triggerJalapenoLaneEffect(int row, double seconds) {
+        jalapenoLaneEffectRow = Math.max(0, Math.min(4, row));
+        jalapenoLaneEffectTimer = Math.max(jalapenoLaneEffectTimer, seconds);
     }
 
     @Override

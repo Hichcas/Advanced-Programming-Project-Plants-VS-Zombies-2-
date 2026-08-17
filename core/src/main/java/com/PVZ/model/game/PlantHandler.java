@@ -20,6 +20,7 @@ public class PlantHandler {
         int col = engine.normalizeIndex(x);
         if (!engine.map.isWithinBounds(row, col)) return "Invalid tile.";
         TileType targetTileType = engine.map.getTile(row, col).getType();
+        if (targetTileType == TileType.CRATER) return "This tile is a permanent Doom-shroom crater and cannot be planted on.";
         boolean isWater = targetTileType == TileType.WATER || targetTileType == TileType.TIDE;
         Plant existingTop = engine.map.getPlantAt(row, col);
         Plant existingBase = engine.map.getBasePlantAt(row, col);
@@ -28,19 +29,24 @@ public class PlantHandler {
         boolean addingPeaPodHead = type == PlantType.PEA_POD
             && existingTop != null
             && existingTop.getType() == PlantType.PEA_POD;
-        boolean addingPumpkinCover = type == PlantType.PUMPKIN && existingTop != null
-            && existingTop.getType() != PlantType.PUMPKIN;
         if (isAquatic && !isWater) return "Aquatic plants must be planted on water tiles.";
         if (isWater && !isAquatic && !isLilyPad && existingBase == null)
             return "Non-aquatic plants need a Lily Pad on water tiles.";
         if (isLilyPad && !isWater) return "Lily Pad must be planted on water tiles.";
         if (isLilyPad && existingBase != null) return "This tile already has a Lily Pad.";
-        if (!addingPeaPodHead && !addingPumpkinCover) {
+        if (!addingPeaPodHead) {
             if (isWater && !isAquatic && !isLilyPad && existingTop != null) return "Tile is occupied.";
             if (!isWater && existingTop != null) return "Tile is occupied.";
         }
         String availabilityError = checkPlantAvailability(engine, type);
         if (availabilityError != null) return availabilityError;
+
+        if (type == PlantType.GRAVE_BUSTER
+            && (targetTileType == TileType.TOMBSTONE || targetTileType == TileType.NECROMANCY)) {
+            engine.map.getTile(row, col).setType(TileType.NORMAL);
+            engine.map.getTile(row, col).setHp(0);
+            return "Grave Buster destroyed the grave at (" + col + ", " + row + ").";
+        }
 
         if (addingPeaPodHead) {
             int heads = 1;
@@ -60,19 +66,38 @@ public class PlantHandler {
             return "Pea Pod grew to " + heads + " heads at (" + col + ", " + row + ").";
         }
 
-        Plant plant = createPlantInstance(engine, type);
+        // Imitater copies a selected plant for the actual board slot so the copied plant
+        // gets the normal behavior/rendering pipeline rather than remaining an inert shell.
+        PlantType plantedType = type;
+        if (type == PlantType.IMITATER) {
+            PlantType copyTarget = null;
+            for (PlantType selected : AppStatus.SELECTED_PLANTS) {
+                if (selected != null && selected != PlantType.IMITATER) {
+                    copyTarget = selected;
+                    break;
+                }
+            }
+            if (copyTarget == null) {
+                return "Select another plant beside Imitater so it can copy that plant.";
+            }
+            plantedType = copyTarget;
+        }
+
+        Plant plant = createPlantInstance(engine, plantedType);
         if (plant == null) return "Cannot create plant.";
+        if (plantedType == PlantType.PEA_POD) {
+            plant.putRuntimeState("peaPodHeads", 1);
+        }
         if (!engine.conveyorBeltMode) {
-            int cost = plant.getStats().getCost();
+            int cost = type == PlantType.IMITATER
+                ? PlantLibrary.getEffectiveCost(PlantType.IMITATER)
+                : plant.getStats().getCost();
             if (engine.getSunCount() < cost) return "Not enough sun.";
             engine.addSun(-cost);
         }
         if (isLilyPad)
             engine.map.setBasePlant(row, col, plant);
-        else if (addingPumpkinCover) {
-            engine.map.getTile(row, col).setUnderPlant(existingTop);
-            engine.map.setPlant(row, col, plant);
-        } else if (isWater && !isAquatic)
+        else if (isWater && !isAquatic)
             engine.map.setPlant(row, col, plant);
         else
             engine.map.setPlant(row, col, plant);
@@ -86,6 +111,10 @@ public class PlantHandler {
         }
         engine.questPlantTypesUsed.add(type);
         engine.questPlantFamiliesUsed.add(PlantFamilyMapper.getFamily(type));
+        if (type == PlantType.IMITATER) {
+            return "Planted Imitater copying " + plantedType.getDisplayName()
+                + " at (" + col + ", " + row + ").";
+        }
         return "Planted " + type.getDisplayName() + " at (" + col + ", " + row + ").";
     }
 

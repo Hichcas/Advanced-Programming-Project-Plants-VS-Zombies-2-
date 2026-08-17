@@ -44,6 +44,7 @@ public class Projectile {
     private boolean fuseExploded = false;
     private double maxTravelDistance = -1.0;
     private double travelDistance = 0.0;
+    private double launchDelay = 0.0;
     private double lastX;
     private double lastY;
 
@@ -238,6 +239,13 @@ public class Projectile {
 
     public void putExtra(String key, Object value) {
         extras.put(key, value);
+        if ("launchDelay".equals(key) && value instanceof Number n) {
+            launchDelay = Math.max(0.0, n.doubleValue());
+        }
+    }
+
+    public double getLaunchDelay() {
+        return launchDelay;
     }
 
     public void update(float delta) {
@@ -245,6 +253,10 @@ public class Projectile {
             return;
         }
         animTime += delta;
+        if (launchDelay > 0.0) {
+            launchDelay -= delta;
+            return;
+        }
         double oldX = positionX;
         double oldY = positionY;
         if (freeMotion) {

@@ -19,6 +19,23 @@ public class UpdateHandler {
     private static final double TICK_SECONDS = 0.1;
 
     public static void update(RegularGameEngine engine, float delta) {
+        if (engine.globalIceEffectTimer > 0.0) {
+            engine.globalIceEffectTimer = Math.max(0.0, engine.globalIceEffectTimer - delta);
+        }
+        if (engine.jalapenoLaneEffectTimer > 0.0) {
+            engine.jalapenoLaneEffectTimer = Math.max(0.0, engine.jalapenoLaneEffectTimer - delta);
+        }
+        if (engine.iceShroomEffectTimer > 0.0) {
+            engine.iceShroomEffectTimer = Math.max(0.0, engine.iceShroomEffectTimer - delta);
+        }
+        if (!engine.timedPamEffects.isEmpty()) {
+            java.util.Iterator<RegularGameEngine.TimedPamEffect> it = engine.timedPamEffects.iterator();
+            while (it.hasNext()) {
+                RegularGameEngine.TimedPamEffect fx = it.next();
+                fx.remaining -= delta;
+                if (fx.remaining <= 0.0) it.remove();
+            }
+        }
         if (engine.gameOverTriggered) {
             updateGameOverTimer(engine, delta);
             return;
@@ -97,9 +114,17 @@ public class UpdateHandler {
                 if (!isFrozen) plant.update(engine, TICK_SECONDS);
 
                 if (plant.isDead()) {
-                    if (plant.getStats().getBooleanExtra("explodeOnDeath", false)) {
-                        CombatHandler.damageArea(engine, row, row,
-                            Math.max(plant.getStats().getExplodeDamage(), plant.getStats().getDamage()));
+                    if (plant.getStats().getBooleanExtra("explodeOnDeath", false)
+                        && !Boolean.TRUE.equals(plant.getRuntimeState("deathFxTriggered"))) {
+                        int deathDamage = Math.max(plant.getStats().getExplodeDamage(), plant.getStats().getDamage());
+                        CombatHandler.damageAreaAt(engine, row, col, deathDamage, 1);
+                        plant.putRuntimeState("deathFxTriggered", Boolean.TRUE);
+                        plant.putRuntimeState("deathFxTimer", 0.9);
+                    }
+                    double deathFxTimer = asDouble(plant.getRuntimeState("deathFxTimer"), 0.0);
+                    if (deathFxTimer > 0.0) {
+                        plant.putRuntimeState("deathFxTimer", Math.max(0.0, deathFxTimer - TICK_SECONDS));
+                        continue;
                     }
                     engine.map.removePlant(row, col);
                     engine.questPlantsLost++;
@@ -271,4 +296,12 @@ public class UpdateHandler {
             update(engine, (float) TICK_SECONDS);
         }
     }
+
+    private static double asDouble(Object value, double defaultValue) {
+        if (value instanceof Number n) return n.doubleValue();
+        if (value == null) return defaultValue;
+        try { return Double.parseDouble(String.valueOf(value)); }
+        catch (NumberFormatException ex) { return defaultValue; }
+    }
+
 }

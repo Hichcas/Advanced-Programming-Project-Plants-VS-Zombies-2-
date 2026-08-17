@@ -5,7 +5,7 @@ import java.util.Map;
 
 public final class ProjectileSpawnOffsets {
     public static final float DEFAULT_DX = 0.5f;
-    public static final float DEFAULT_DY = 0.47f;
+    public static final float DEFAULT_DY = 0.35f;
 
     private static final Map<String, float[]> OFFSETS = new HashMap<>();
 
@@ -14,10 +14,10 @@ public final class ProjectileSpawnOffsets {
         // Pea-family muzzle points. Fractions are relative to the tile size.
         // The slightly higher Y for Snow Pea keeps the shot visibly aligned with
         // the mouth/head rather than the torso.
-        OFFSETS.put("PEASHOOTER", new float[]{0.63f, 0.53f});
-        OFFSETS.put("REPEATER", new float[]{0.63f, 0.53f});
-        OFFSETS.put("THREEPEATER", new float[]{0.63f, 0.53f});
-        OFFSETS.put("SNOW_PEA", new float[]{0.63f, 0.59f});
+        OFFSETS.put("PEASHOOTER", new float[]{0.63f, 0.47f});
+        OFFSETS.put("REPEATER", new float[]{0.63f, 0.47f});
+        OFFSETS.put("THREEPEATER", new float[]{0.63f, 0.47f});
+        OFFSETS.put("SNOW_PEA", new float[]{0.63f, 0.54f});
     }
 
     private ProjectileSpawnOffsets() {
