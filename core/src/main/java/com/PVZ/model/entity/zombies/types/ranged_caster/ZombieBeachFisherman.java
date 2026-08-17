@@ -30,7 +30,6 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
     @Override
     public void onSpawn() {
         super.onSpawn();
-        ZombieAnimation.trigger(this, "intro", 1.6333);
     }
 
     @Override
@@ -70,19 +69,37 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
         Plant plantInFront = ctrl.getPlantAt((int) row, tileCol);
         Plant targetPlant = findFarthestPlantInLane(ctrl);
 
-        Tile currentTile = ctrl.getMap() != null ? ctrl.getMap().getTile((int) row, tileCol) : null;
-        boolean inWater = currentTile != null && (currentTile.getType() == TileType.WATER || currentTile.getType() == TileType.TIDE);
+        boolean inDeepWater = false;
+        boolean nextIsDeepWater = false;
 
-        int nextCol = tileCol - 1;
-        TileType nextTileType = (nextCol >= 0 && ctrl.getMap() != null) ? ctrl.getTileTypeAt((int) row, nextCol) : null;
-        boolean nextIsWater = nextTileType == TileType.WATER || nextTileType == TileType.TIDE;
+        if (ctrl.getMap() != null) {
+            float gridRight = ctrl.getMap().getStartX() + ctrl.getMap().getTotalWidth();
+            if (x >= gridRight - 15f) {
+                inDeepWater = true;
+                nextIsDeepWater = true;
+            } else if (tileCol >= 0 && tileCol < ctrl.getMap().getCols()) {
+                Tile currentTile = ctrl.getMap().getTile((int) row, tileCol);
+                TileType ctType = currentTile != null ? currentTile.getType() : TileType.NORMAL;
+                inDeepWater = (ctType == TileType.WATER || ctType == TileType.TIDE);
+
+                int nextCol = tileCol - 1;
+                if (nextCol >= 0) {
+                    TileType ntType = ctrl.getTileTypeAt((int) row, nextCol);
+                    nextIsDeepWater = (ntType == TileType.WATER || ntType == TileType.TIDE);
+                }
+            }
+        }
 
         boolean canMove = false;
-        if (inWater) {
-            if (nextIsWater) {
+        if (inDeepWater) {
+            if (nextIsDeepWater) {
                 canMove = true;
-            } else if (currentTile != null && x > currentTile.getX() + currentTile.getWidth() * 0.35f) {
-                canMove = true;
+            } else {
+                Tile currentTile = (ctrl.getMap() != null && tileCol >= 0 && tileCol < ctrl.getMap().getCols()) ? ctrl.getMap().getTile((int) row, tileCol) : null;
+                // Never enter LOW_COAST or NORMAL! Stop at right side of the current water tile.
+                if (currentTile != null && x > currentTile.getX() + currentTile.getWidth() * 0.5f) {
+                    canMove = true;
+                }
             }
         }
 

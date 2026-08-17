@@ -11,9 +11,9 @@
   "userStats" : {
     "gamesPlayed" : 0,
     "coins" : 4997550,
-    "diamonds" : 5000194,
+    "diamonds" : 4999993,
     "stagesCompleted" : 0,
-    "highestScore" : 960000,
+    "highestScore" : 14500,
     "dailyQuestsCompleted" : 0,
     "nonDailyQuestsCompleted" : 0,
     "purchasedPlantFood" : 1
@@ -34,12 +34,10 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "IMITATER", "SUN_BEAN", "MEGA_GATLING_PEA", "REINFORCE_MINT", "TANGLE_KELP", "GOO_PEASHOOTER", "ICEBERG_LETTUCE", "CHOMPER", "TWIN_SUNFLOWER", "GOLD_BLOOM", "PEASHOOTER", "CHERRY_BOMB", "GRAVE_BUSTER", "CAULIPOWER", "PEA_POD", "WALL_NUT", "THREEPEATER", "CITRON", "PUFF_SHROOM", "JALAPENO", "SQUASH", "STARFRUIT", "CAT_TAIL", "PRIMAL_SUNFLOWER", "SWEET_POTATO", "CABBAGE_PULT", "GIANT_WALLNUT", "SEA_SHROOM", "APPEASE_MINT", "WASABI_WHIP", "GARLIC", "PIERCE_MINT", "FIRE_PEASHOOTER", "SNOW_PEA", "SPLIT_PEA", "ENDURIAN", "SUN_SHROOM", "TALL_NUT", "BOMBARD_MINT", "PRIMAL_POTATO_MINE", "ICE_SHROOM", "MELON_PULT", "DOOM_SHROOM", "HYPNO_SHROOM", "EXPLODE_O_NUT", "ENCHANT_MINT", "MAGNET_SHROOM", "CAT_TAIL_MINT", "BOWLING_BULB", "REPEATER", "PUMPKIN", "CACTUS", "PEPPER_PULT", "ENLIGHTEN_MINT", "KERNEL_PULT", "FUME_SHROOM", "SUNFLOWER", "GRAPESHOT", "ARMA_MINT", "LILY_PAD", "TORCHWOOD", "ENFORCE_MINT", "PHAT_BEET", "KIWIBEAST", "BONK_CHOY", "HOT_POTATO", "ELECTRIC_BLUEBERRY", "WALLNUT_BOWLING", "WINTER_MELON", "ROTOBAGA", "POTATO_MINE" ],
-    "seenZombies" : [ "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "ICEAGE_ARMOR3", "TOMB_RAISER", "IMP_ICEAGE", "ZOMBOSS_EGYPT", "GARGANTUAR_EGYPT", "IMP_BEACH", "TUTORIAL_DEFAULT", "DARK_JUGGLER", "GARGANTUAR_BASIC", "RA", "IMP_DARK", "BEACH_SNORKEL", "ICEAGE_ARMOR1", "ICEAGE_ARMOR2", "MUMMY_ARMOR2", "CAMEL", "DARK_DEFAULT", "TUTORIAL_ARMOR1", "BEACH_FISHERMAN", "WIZARD", "MUMMY_ARMOR1", "PHARAOH", "GARGANTUAR_DARK", "TROGLOBITE", "IMP_TUTORIAL", "DODO", "BEACH_FAST_SWIMMER", "EXPLORER", "MUMMY_DEFAULT", "BEACH_DEFAULT", "ICEAGE_HUNTER", "ICEAGE_DEFAULT", "TUTORIAL_FLAG", "TUTORIAL_ARMOR2", "IMP_EGYPT" ],
+    "unlockedPlants" : [ "LILY_PAD", "HYPNO_SHROOM", "FUME_SHROOM", "CACTUS", "ARMA_MINT", "GRAVE_BUSTER", "TANGLE_KELP", "PEASHOOTER", "ENFORCE_MINT", "REINFORCE_MINT", "BOWLING_BULB", "REPEATER", "CAT_TAIL", "SUNFLOWER", "MEGA_GATLING_PEA", "CHERRY_BOMB", "CAULIPOWER", "CHOMPER", "CAT_TAIL_MINT", "TORCHWOOD", "GOO_PEASHOOTER", "SPLIT_PEA", "JALAPENO", "SUN_SHROOM", "GOLD_BLOOM", "ENDURIAN", "WASABI_WHIP", "BONK_CHOY", "PIERCE_MINT", "PRIMAL_SUNFLOWER", "GIANT_WALLNUT", "KIWIBEAST", "APPEASE_MINT", "ELECTRIC_BLUEBERRY", "TALL_NUT", "IMITATER", "SQUASH", "POTATO_MINE", "WALLNUT_BOWLING", "ICE_SHROOM", "ENCHANT_MINT", "PRIMAL_POTATO_MINE", "WINTER_MELON", "MELON_PULT", "PUMPKIN", "MAGNET_SHROOM", "THREEPEATER", "PEA_POD", "SEA_SHROOM", "DOOM_SHROOM", "HOT_POTATO", "CITRON", "EXPLODE_O_NUT", "PHAT_BEET", "SNOW_PEA", "TWIN_SUNFLOWER", "PEPPER_PULT", "ICEBERG_LETTUCE", "PUFF_SHROOM", "KERNEL_PULT", "FIRE_PEASHOOTER", "CABBAGE_PULT", "STARFRUIT", "BOMBARD_MINT", "ENLIGHTEN_MINT", "ROTOBAGA", "WALL_NUT", "SWEET_POTATO", "GARLIC", "GRAPESHOT", "SUN_BEAN" ],
+    "seenZombies" : [ "DARK_DEFAULT", "IMP_TUTORIAL", "PHARAOH", "TUTORIAL_ARMOR1", "RA", "IMP_EGYPT", "CAMEL", "TUTORIAL_DEFAULT", "BEACH_DEFAULT", "MUMMY_DEFAULT", "ICEAGE_DEFAULT", "ICEAGE_ARMOR1", "MUMMY_ARMOR2", "EXPLORER", "TUTORIAL_ARMOR4", "ICEAGE_ARMOR2", "GARGANTUAR_EGYPT", "TOMB_RAISER", "ICEAGE_HUNTER", "GARGANTUAR_BASIC", "DODO", "TUTORIAL_FLAG", "BEACH_SNORKEL", "IMP_ICEAGE", "BEACH_OCTOPUS", "ICEAGE_ARMOR3", "BEACH_FAST_SWIMMER", "IMP_BEACH", "MUMMY_ARMOR4", "BEACH_FISHERMAN", "TUTORIAL_ARMOR2", "MUMMY_ARMOR1", "TROGLOBITE", "ZOMBOSS_EGYPT" ],
     "seedPackets" : {
-      "SUN_SHROOM" : 5,
-      "EXPLODE_O_NUT" : 20,
-      "SWEET_POTATO" : 10
+      "SUN_SHROOM" : 5
     },
     "plantLevels" : { },
     "greenhouseBoosts" : [ ]
@@ -95,19 +93,19 @@
       "empty" : true,
       "readyForPlanting" : true
     }, {
-      "unlocked" : true,
+      "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : true
+      "readyForPlanting" : false
     } ], [ {
-      "unlocked" : true,
+      "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : true
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
@@ -130,8 +128,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 5,
-    "numberOfUnlockedPots" : 7
+    "numberOfUnlockedPots" : 7,
+    "numberOfLockedPots" : 5
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -649,33 +647,18 @@
       "timestamp" : 1786951870993,
       "formattedText" : "New zombie spotted: BEACH_FAST_SWIMMER!\n2026/08/17  11:01"
     }, {
-      "text" : "New zombie spotted: IMP_DARK!",
+      "text" : "New zombie spotted: BEACH_OCTOPUS!",
       "read" : false,
-      "timestamp" : 1786964463038,
-      "formattedText" : "New zombie spotted: IMP_DARK!\n2026/08/17  14:31"
-    }, {
-      "text" : "New zombie spotted: WIZARD!",
-      "read" : false,
-      "timestamp" : 1786964489463,
-      "formattedText" : "New zombie spotted: WIZARD!\n2026/08/17  14:31"
-    }, {
-      "text" : "New zombie spotted: DARK_JUGGLER!",
-      "read" : false,
-      "timestamp" : 1786964490961,
-      "formattedText" : "New zombie spotted: DARK_JUGGLER!\n2026/08/17  14:31"
-    }, {
-      "text" : "New zombie spotted: GARGANTUAR_DARK!",
-      "read" : false,
-      "timestamp" : 1786964497478,
-      "formattedText" : "New zombie spotted: GARGANTUAR_DARK!\n2026/08/17  14:31"
+      "timestamp" : 1786971699588,
+      "formattedText" : "New zombie spotted: BEACH_OCTOPUS!\n2026/08/17  16:31"
     } ]
   },
   "shopDaily" : {
     "offerPlant" : "FIRE_PEASHOOTER",
     "offerDate" : "2026-08-15",
     "purchased" : false,
-    "availableToday" : false,
-    "forToday" : false
+    "forToday" : false,
+    "availableToday" : false
   },
   "stayLoggedIn" : true,
   "questState" : {
@@ -690,7 +673,7 @@
         "targetCount" : 0,
         "currentCount" : 0,
         "completed" : true,
-        "claimed" : true,
+        "claimed" : false,
         "reward" : {
           "type" : "SEED_PACKETS",
           "amount" : 20,
@@ -700,9 +683,9 @@
           "n" : 0
         },
         "active" : false,
-        "formattedDescription" : "Win without losing more than 0 plants",
+        "formattedTitle" : "Economic Herbivore",
         "runtimeState" : { },
-        "formattedTitle" : "Economic Herbivore"
+        "formattedDescription" : "Win without losing more than 0 plants"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -711,7 +694,7 @@
         "priority" : "MEDIUM",
         "conditionKey" : "speed_kill",
         "targetCount" : 10,
-        "currentCount" : 0,
+        "currentCount" : 4,
         "completed" : false,
         "claimed" : false,
         "reward" : {
@@ -721,11 +704,11 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
+        "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1786952141820
+          "waveStartTime" : 1786973480161
         },
-        "formattedTitle" : "Speed Run"
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -736,7 +719,7 @@
         "targetCount" : 0,
         "currentCount" : 0,
         "completed" : true,
-        "claimed" : true,
+        "claimed" : false,
         "reward" : {
           "type" : "DIAMONDS",
           "amount" : 200,
@@ -744,9 +727,9 @@
         },
         "parameters" : { },
         "active" : false,
-        "formattedDescription" : "End a level with exactly 0 sun",
+        "formattedTitle" : "Master of Defense",
         "runtimeState" : { },
-        "formattedTitle" : "Master of Defense"
+        "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -765,9 +748,9 @@
         },
         "parameters" : { },
         "active" : false,
-        "formattedDescription" : "Win a day level using only mushrooms",
+        "formattedTitle" : "Day or Night",
         "runtimeState" : { },
-        "formattedTitle" : "Day or Night"
+        "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -788,9 +771,9 @@
           "n" : 20
         },
         "active" : true,
-        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
+        "formattedTitle" : "Lawnmower Time",
         "runtimeState" : { },
-        "formattedTitle" : "Lawnmower Time"
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -801,7 +784,7 @@
         "targetCount" : 50,
         "currentCount" : 50,
         "completed" : true,
-        "claimed" : true,
+        "claimed" : false,
         "reward" : {
           "type" : "SEED_PACKETS",
           "amount" : 10,
@@ -811,16 +794,16 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
+        "formattedTitle" : "Chapter Hunter",
         "runtimeState" : { },
-        "formattedTitle" : "Chapter Hunter"
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
       } ],
-      "lastDailyRefresh" : "2026-08-17",
+      "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
-      "currentChapter" : "ANCIENT_EGYPT",
+      "currentChapter" : "FROSTBITE_CAVES",
       "currentDifficulty" : 3,
-      "isDayLevel" : false,
-      "timeUntilReset" : "12h 54m"
+      "isDayLevel" : true,
+      "timeUntilReset" : "6h 58m"
     }
   }
 }

@@ -6,16 +6,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 public class ZombieProjectile {
-    private float x, y;
-    private float speed;
-    private int damage;
-    private int row;
-    private boolean destroyed;
-    private Rectangle hitbox;
-    private Texture texture;
-    private Zombie owner;
-    private boolean landsToTomb = false;
-    private int targetCol = -1;
+    protected float x, y;
+    protected float speed;
+    protected int damage;
+    protected int row;
+    protected boolean destroyed;
+    protected Rectangle hitbox;
+    protected Texture texture;
+    protected Zombie owner;
+    protected boolean landsToTomb = false;
+    protected int targetCol = -1;
 
     public ZombieProjectile(float x, float y, int damage, float speed, int row, Zombie owner) {
         this(x, y, damage, speed, row, owner, -1, false);
