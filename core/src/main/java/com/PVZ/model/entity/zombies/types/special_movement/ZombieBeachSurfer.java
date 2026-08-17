@@ -1,7 +1,9 @@
 package com.PVZ.model.entity.zombies.types.special_movement;
 
 import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
@@ -26,14 +28,19 @@ public class ZombieBeachSurfer extends AbstractSpecialMovementZombie {
 
     @Override
     public void onMove(BattleController ctrl) {
-        if (!hasSurfboard) return;
-        int targetCol = (int)col - 1;
+        if (!hasSurfboard || ctrl == null || ctrl.getMap() == null) return;
+        int targetCol = (int) col - 1;
         if (targetCol >= 0) {
-            Plant p = ctrl.getPlantAt((int)row, targetCol);
+            Plant p = ctrl.getPlantAt((int) row, targetCol);
             if (p != null && !p.isDead()) {
                 p.takeDamage(9999);
-                ctrl.removePlant((int)row, targetCol);
-                System.out.println(alias + " crushed a plant while surfing!");
+                ctrl.removePlant((int) row, targetCol);
+                Tile t = ctrl.getMap().getTile((int) row, targetCol);
+                if (t != null) {
+                    t.setType(TileType.TOMBSTONE);
+                    t.setHp(400);
+                }
+                System.out.println(alias + " crushed plant and left surfboard obstacle at (" + targetCol + ", " + (int) row + ")!");
                 loseSurfboard();
             }
         }
@@ -48,5 +55,6 @@ public class ZombieBeachSurfer extends AbstractSpecialMovementZombie {
     public void loseSurfboard() {
         hasSurfboard = false;
         speed = 0.185;
+        currentSpeed = 0.185;
     }
 }
