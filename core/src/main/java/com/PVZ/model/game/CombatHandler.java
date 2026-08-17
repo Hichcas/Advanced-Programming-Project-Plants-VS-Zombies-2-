@@ -3,6 +3,7 @@ package com.PVZ.model.game;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.plants.behavior.impl.ProjectileType;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.view.screen.manager.SoundManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +32,7 @@ public class CombatHandler {
         if (projectile instanceof Projectile p) {
             placeProjectileOnMap(engine, p);
             engine.projectiles.add(p);
+            SoundManager.getInstance().playSFX("ui/SFX/1-17. SFX butter.mp3");
         }
     }
 
@@ -38,6 +40,7 @@ public class CombatHandler {
         if (p != null) {
             placeProjectileOnMap(engine, p);
             engine.projectiles.add(p);
+            SoundManager.getInstance().playSFX("ui/SFX/1-17. SFX butter.mp3");
         }
     }
 
@@ -166,6 +169,7 @@ public class CombatHandler {
             grape.setBounds(minX, maxX, minY, maxY);
             grape.setSpeed(0);
             engine.projectiles.add(grape);
+            SoundManager.getInstance().playSFX("ui/SFX/1-17. SFX butter.mp3");
         }
     }
 

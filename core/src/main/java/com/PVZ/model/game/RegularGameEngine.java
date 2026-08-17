@@ -10,6 +10,7 @@ import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.chapter.sepecialLevel.SpecialLevel;
 import com.PVZ.model.status.AppStatus;
+import com.PVZ.view.screen.manager.SoundManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.PVZ.model.game.PlantFoodManager;
 import java.util.ArrayList;
@@ -382,11 +383,20 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     public String pluckPlant(int x, int y) {
         if (map == null) return "Map is not ready.";
+
         int row = normalizeIndex(y);
         int col = normalizeIndex(x);
         Plant plant = map.getPlantAt(row, col);
-        if (plant == null) return "No plant at selected tile.";
+
+        if (plant == null) {
+            return "No plant at selected tile.";
+        }
+
         map.removePlant(row, col);
+
+        // صدای بیل زدن
+        SoundManager.getInstance().playSFX("ui/sfx/shovel.mp3");
+
         return "Plant plucked from (" + col + ", " + row + ")";
     }
 

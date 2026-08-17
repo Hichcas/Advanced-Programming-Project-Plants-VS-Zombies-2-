@@ -12,12 +12,21 @@ import com.PVZ.model.entity.zombies.types.ranged_caster.ZombieDarkJuggler;
 import com.PVZ.model.enums.DamageType;
 import com.PVZ.model.enums.TileType;
 import com.PVZ.model.status.AppStatus;
+import com.PVZ.view.screen.manager.SoundManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.Iterator;
 import java.util.List;
 
 public class BattleController implements BehaviorContext {
+
+    // ======================== آدرس فایل‌های صوتی ========================
+    // همین‌جا مقداردهی کن؛ اگه فایل وجود نداشته باشه بازی کرش نمی‌کنه.
+
+    private static final String SFX_SHOOT = "ui/SFX/1-17. SFX butter.mp3";
+    private static final String SFX_IMPACT = "ui/SFX/1-35. SFX firepea.ogg";
+
+    // ================================================================
 
     private final List<Zombie> zombies;
     private final List<Plant> plants;
@@ -50,18 +59,24 @@ public class BattleController implements BehaviorContext {
         questNotifiedZombies.clear();
     }
 
-    public void notifyZombieKilled(RegularGameEngine engine, Zombie z, com.PVZ.model.enums.PlantType killerPlant) {
-        if (questNotifiedZombies.contains(z)) return;
+    public void notifyZombieKilled(RegularGameEngine engine, Zombie z,
+                                   com.PVZ.model.enums.PlantType killerPlant) {
+        if (questNotifiedZombies.contains(z)) {
+            return;
+        }
         questNotifiedZombies.add(z);
 
         if (engine != null) {
             engine.totalZombieKills++;
         }
+
         if (engine != null && engine.map != null) {
             int col = engine.map.worldToCol((float) z.getX());
             int row = (int) z.getRow();
+
             if (col == 0 && row >= 0 && row < engine.lawnMowers.length
-                && engine.lawnMowers[row] != null && engine.lawnMowers[row].isUsed()) {
+                && engine.lawnMowers[row] != null
+                && engine.lawnMowers[row].isUsed()) {
                 engine.questLawnlessCol1Kills++;
             }
         }
@@ -71,10 +86,6 @@ public class BattleController implements BehaviorContext {
         }
     }
 
-    /**
-     * Spawns a real Plant Food pickup at the glowing zombie's death position.
-     * The food is added to the inventory only when the player collects the pickup.
-     */
     public void grantPlantFoodDrop(double x, double y) {
         if (lootManager == null) {
             if (plantFoodManager != null) {
@@ -82,6 +93,7 @@ public class BattleController implements BehaviorContext {
             }
             return;
         }
+
         lootManager.spawn(x, y, com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
         System.out.println("A glowing zombie dropped Plant Food at ("
             + String.format("%.1f", x) + ", " + String.format("%.1f", y) + ").");
@@ -91,47 +103,44 @@ public class BattleController implements BehaviorContext {
         if (lootManager == null || lootRandom.nextDouble() >= 0.10) {
             return;
         }
-        com.PVZ.model.entity.LootDrop.LootType[] types = com.PVZ.model.entity.LootDrop.LootType.values();
+
+        com.PVZ.model.entity.LootDrop.LootType[] types =
+            com.PVZ.model.entity.LootDrop.LootType.values();
         com.PVZ.model.entity.LootDrop.LootType type = types[lootRandom.nextInt(types.length)];
         lootManager.spawn(x, y, type);
     }
 
     public String applyLootReward(com.PVZ.model.entity.LootDrop drop) {
-        if (drop == null || AppStatus.currentUser == null || AppStatus.currentUser.userStats == null) {
+        if (drop == null || AppStatus.currentUser == null
+            || AppStatus.currentUser.userStats == null) {
             return "";
         }
+
         switch (drop.getType()) {
             case DIAMOND -> {
                 AppStatus.currentUser.userStats.addDiamonds(drop.getType().getAmount());
-                String msg = "A zombie dropped a diamond; you have "
+                return "A zombie dropped a diamond; you have "
                     + AppStatus.currentUser.userStats.getDiamonds() + " diamonds now.";
-                System.out.println(msg);
-                return msg;
             }
             case COIN -> {
                 AppStatus.currentUser.userStats.addCoins(drop.getType().getAmount());
-                String msg = "A zombie dropped a coin; you have "
+                return "A zombie dropped a coin; you have "
                     + AppStatus.currentUser.userStats.getCoins() + " coins now.";
-                System.out.println(msg);
-                return msg;
             }
             case POT -> {
                 if (AppStatus.currentUser.greenhouseState != null) {
-                    AppStatus.currentUser.greenhouseState.unlockPots(drop.getType().getAmount());
+                    AppStatus.currentUser.greenhouseState
+                        .unlockPots(drop.getType().getAmount());
                 }
-                String msg = "A zombie dropped a pot; you have a new greenhouse slot now.";
-                System.out.println(msg);
-                return msg;
+                return "A zombie dropped a pot; you have a new greenhouse slot now.";
             }
             case PLANT_FOOD -> {
                 if (plantFoodManager == null) {
                     return "Plant Food manager is not available.";
                 }
                 plantFoodManager.addPlantFood(drop.getType().getAmount());
-                String msg = "Collected Plant Food! You now have "
+                return "Collected Plant Food! You now have "
                     + plantFoodManager.getPlantFoodCount() + ".";
-                System.out.println(msg);
-                return msg;
             }
             default -> {
                 return "";
@@ -156,13 +165,15 @@ public class BattleController implements BehaviorContext {
     }
 
     private void removeExpiredGrapes() {
-        java.util.Iterator<Projectile> it = projectiles.iterator();
+        Iterator<Projectile> it = projectiles.iterator();
         while (it.hasNext()) {
             Projectile p = it.next();
+
             if (p.isFuseExploded()) {
                 if (map != null) {
                     int gRow = map.worldToRow((float) p.getPositionY());
                     int gCol = map.worldToCol((float) p.getPositionX());
+
                     if (gRow >= 0 && gCol >= 0) {
                         for (Zombie z : getZombiesInLane(gRow)) {
                             double colDist = Math.abs(z.getX() - p.getPositionX());
@@ -172,6 +183,9 @@ public class BattleController implements BehaviorContext {
                         }
                     }
                 }
+
+                SoundManager.getInstance().playSFX(SFX_IMPACT);
+
                 p.consumeFuseExplosion();
                 it.remove();
             }
@@ -189,6 +203,7 @@ public class BattleController implements BehaviorContext {
         while (zpIt.hasNext()) {
             ZombieProjectile zp = zpIt.next();
             zp.update(delta);
+
             if (zp.isDestroyed()) {
                 zpIt.remove();
                 continue;
@@ -196,6 +211,7 @@ public class BattleController implements BehaviorContext {
 
             int zpCol = getTileColumn(zp.getX());
             Plant p = getPlantAt(zp.getRow(), zpCol);
+
             if (p != null && !p.isDead()) {
                 p.takeDamage(zp.getDamage());
                 zp.getOwner().onProjectileHit(p);
@@ -241,24 +257,31 @@ public class BattleController implements BehaviorContext {
             return false;
         }
 
+        // اختاپوس
         if (tile.getOctopusHp() > 0) {
             int dmg = Math.max(1, (int) p.getDamage());
             int newHp = tile.getOctopusHp() - dmg;
+
             if (newHp <= 0) {
                 tile.setOctopusHp(0);
                 Plant octoPlant = tile.getPlant();
                 if (octoPlant != null) {
                     octoPlant.putRuntimeState("disabledTicks", 0);
                 }
-                System.out.println("Octopus destroyed on tile (" + pRow + "," + pCol + ") — plant freed!");
+                System.out.println("Octopus destroyed on tile (" + pRow + "," + pCol
+                    + ") — plant freed!");
             } else {
                 tile.setOctopusHp(newHp);
             }
+
+            SoundManager.getInstance().playSFX(SFX_IMPACT);
             return true;
         }
 
         TileType type = tile.getType();
-        if (type != TileType.TOMBSTONE && type != TileType.NECROMANCY && type != TileType.ICE) {
+        if (type != TileType.TOMBSTONE
+            && type != TileType.NECROMANCY
+            && type != TileType.ICE) {
             return false;
         }
 
@@ -269,6 +292,8 @@ public class BattleController implements BehaviorContext {
         } else {
             tile.setHp(newHp);
         }
+
+        SoundManager.getInstance().playSFX(SFX_IMPACT);
         return true;
     }
 
@@ -277,9 +302,11 @@ public class BattleController implements BehaviorContext {
             if (z.isDead()) {
                 continue;
             }
+
             if (!p.getHitbox().overlaps(z.getHitbox())) {
                 continue;
             }
+
             if (z.isProjectileImmune() && p.getType() != ProjectileType.LOB) {
                 break;
             }
@@ -296,6 +323,8 @@ public class BattleController implements BehaviorContext {
             applyProjectileEffect(p, z);
             markHitZombie(p, z);
 
+            SoundManager.getInstance().playSFX(SFX_IMPACT);
+
             if (p.getPierce() > 1) {
                 p.setPierce(p.getPierce() - 1);
                 continue;
@@ -308,31 +337,39 @@ public class BattleController implements BehaviorContext {
     private void steerHoming(Projectile p) {
         Zombie nearest = null;
         double best = Double.MAX_VALUE;
+
         for (Zombie z : zombies) {
             if (z == null || z.isDead()) {
                 continue;
             }
+
             double dx = z.getX() - p.getPositionX();
             double dy = z.getY() - p.getPositionY();
             double d2 = dx * dx + dy * dy;
+
             if (d2 < best) {
                 best = d2;
                 nearest = z;
             }
         }
+
         if (nearest == null) {
             return;
         }
+
         double dx = nearest.getX() - p.getPositionX();
         double dy = nearest.getY() - p.getPositionY();
         double dist = Math.sqrt(dx * dx + dy * dy);
+
         if (dist < 1e-6) {
             return;
         }
+
         double speed = Math.sqrt(p.getVelX() * p.getVelX() + p.getVelY() * p.getVelY());
         if (speed < 1e-6) {
             speed = 320.0;
         }
+
         p.setVelocity(dx / dist * speed, dy / dist * speed);
     }
 
@@ -341,6 +378,7 @@ public class BattleController implements BehaviorContext {
         if (obj instanceof java.util.Set) {
             return (java.util.Set<Integer>) obj;
         }
+
         java.util.Set<Integer> set = new java.util.HashSet<>();
         p.putExtra("hitZombies", set);
         return set;
@@ -358,7 +396,7 @@ public class BattleController implements BehaviorContext {
         ZombieProjectile reflected = new ZombieProjectile(
             (float) jj.getX(), (float) jj.getY() + 30,
             (int) p.getDamage(), 300f, (int) jj.getRow(), jj);
-        this.addZombieProjectile(reflected);
+        addZombieProjectile(reflected);
         System.out.println(jj.getAlias() + " reflected a projectile");
     }
 
@@ -372,17 +410,21 @@ public class BattleController implements BehaviorContext {
     private void applyAreaSplash(Projectile p, Zombie primaryTarget) {
         int centerRow = (int) primaryTarget.getRow();
         double cx = primaryTarget.getX();
+
         for (Zombie z : zombies) {
             if (z == null || z.isDead() || z == primaryTarget) {
                 continue;
             }
+
             int dr = Math.abs((int) z.getRow() - centerRow);
             if (dr > 1) {
                 continue;
             }
+
             if (Math.abs(z.getX() - cx) > p.getAreaRadiusPx()) {
                 continue;
             }
+
             applySingleHit(p, z);
         }
     }
@@ -414,7 +456,9 @@ public class BattleController implements BehaviorContext {
             if (obj instanceof com.PVZ.model.enums.PlantType pt) {
                 killer = pt;
             }
-            RegularGameEngine regEngine = AppStatus.getGameEngine() instanceof RegularGameEngine re ? re : null;
+
+            RegularGameEngine regEngine =
+                AppStatus.getGameEngine() instanceof RegularGameEngine re ? re : null;
             notifyZombieKilled(regEngine, z, killer);
         }
 
@@ -436,6 +480,7 @@ public class BattleController implements BehaviorContext {
                         if (p != null && p.isDead()) {
                             map.removePlant(r, c);
                         }
+
                         Plant bp = t.getBasePlant();
                         if (bp != null && bp.isDead()) {
                             map.removeBasePlant(r, c);
@@ -444,6 +489,7 @@ public class BattleController implements BehaviorContext {
                 }
             }
         }
+
         plants.removeIf(p -> p == null || p.isDead());
     }
 
@@ -487,6 +533,7 @@ public class BattleController implements BehaviorContext {
         if (map != null) {
             map.removePlant(row, col);
         }
+
         plants.removeIf(p -> p != null && !p.isDead()
             && asInt(p.getRuntimeState("row"), Integer.MIN_VALUE) == row
             && asInt(p.getRuntimeState("col"), Integer.MIN_VALUE) == col);
@@ -497,6 +544,8 @@ public class BattleController implements BehaviorContext {
         if (projectile instanceof Projectile p) {
             placeProjectileOnMap(p);
             projectiles.add(p);
+
+            SoundManager.getInstance().playSFX(SFX_SHOOT);
         }
     }
 
@@ -510,6 +559,7 @@ public class BattleController implements BehaviorContext {
         float tileHeight = 234f;
         float startX = 550f;
         float startY = 1240f;
+
         if (map != null) {
             tileWidth = map.getTileWidth();
             tileHeight = map.getTileHeight();
@@ -530,6 +580,7 @@ public class BattleController implements BehaviorContext {
         if (p.getType() == ProjectileType.LOB) {
             speedPxPerSec = tileWidth * 0.9f;
         }
+
         float speedMultiplier = (float) Math.max(0.1, Math.abs(p.getSpeed()));
         speedPxPerSec *= speedMultiplier;
 
@@ -537,6 +588,7 @@ public class BattleController implements BehaviorContext {
         if (Boolean.TRUE.equals(p.getExtra("reverseDirection"))) {
             horizontalSign = -horizontalSign;
         }
+
         double verticalSpeed = 0.0;
         Object targetLaneState = p.getExtra("targetLane");
         if (targetLaneState instanceof Number number) {
@@ -546,10 +598,13 @@ public class BattleController implements BehaviorContext {
             }
         }
 
-        if (p.getType() == com.PVZ.model.entity.plants.behavior.impl.ProjectileType.LOB) {
-            p.initArcPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec));
+        if (p.getType() == ProjectileType.LOB) {
+            p.initArcPosition(worldX, worldY,
+                (float) (horizontalSign * speedPxPerSec));
         } else {
-            p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
+            p.initWorldPosition(worldX, worldY,
+                (float) (horizontalSign * speedPxPerSec),
+                (float) verticalSpeed);
         }
     }
 
@@ -586,10 +641,16 @@ public class BattleController implements BehaviorContext {
 
         int[] lanes = {row - 1, row, row + 1};
         for (int r : lanes) {
-            if (r < 0) continue;
+            if (r < 0) {
+                continue;
+            }
+
             Tile tile0 = map != null ? map.getTile(r, 0) : null;
-            float centreX = tile0 != null ? tile0.getX() + lane * tile0.getWidth() : 0;
+            float centreX = tile0 != null
+                ? tile0.getX() + lane * tile0.getWidth()
+                : 0;
             float tileW = tile0 != null ? tile0.getWidth() : 177f;
+
             for (Zombie zombie : getZombiesInLane(r)) {
                 if (zombie != null) {
                     double colDist = Math.abs(zombie.getX() - centreX);
@@ -620,16 +681,18 @@ public class BattleController implements BehaviorContext {
     public void freezeClosestZombieInLane(int lane, double seconds) {
         Zombie nearest = null;
         double bestX = Double.MAX_VALUE;
+
         for (Zombie z : getZombiesInLane(lane)) {
             if (z == null || z.isDead()) {
                 continue;
             }
-            double x = z.getX();
-            if (x < bestX) {
-                bestX = x;
+
+            if (z.getX() < bestX) {
+                bestX = z.getX();
                 nearest = z;
             }
         }
+
         if (nearest != null) {
             nearest.freeze((float) seconds);
         }
@@ -648,16 +711,18 @@ public class BattleController implements BehaviorContext {
     public void killClosestZombieInLane(int lane) {
         Zombie nearest = null;
         double bestX = Double.MAX_VALUE;
+
         for (Zombie z : getZombiesInLane(lane)) {
             if (z == null || z.isDead()) {
                 continue;
             }
-            double x = z.getX();
-            if (x < bestX) {
-                bestX = x;
+
+            if (z.getX() < bestX) {
+                bestX = z.getX();
                 nearest = z;
             }
         }
+
         if (nearest != null) {
             nearest.takeDamage(Integer.MAX_VALUE / 2);
         }
@@ -689,6 +754,7 @@ public class BattleController implements BehaviorContext {
                 alive.add(z);
             }
         }
+
         java.util.Collections.shuffle(alive);
         for (int i = 0; i < Math.min(count, alive.size()); i++) {
             alive.get(i).takeDamage(Integer.MAX_VALUE / 2);
@@ -697,8 +763,12 @@ public class BattleController implements BehaviorContext {
 
     @Override
     public void spawnBouncingProjectiles(int lane, int row, int count,
-                                         int damagePerGrape, double lifespanSeconds) {
-        if (map == null) return;
+                                         int damagePerGrape,
+                                         double lifespanSeconds) {
+        if (map == null) {
+            return;
+        }
+
         float tileW = map.getTileWidth();
         float tileH = map.getTileHeight();
         float centreX = map.getStartX() + lane * tileW + tileW * 0.5f;
@@ -707,13 +777,16 @@ public class BattleController implements BehaviorContext {
         float maxX = minX + map.getCols() * tileW;
         float minY = map.getStartY() - map.getRows() * tileH;
         float maxY = map.getStartY();
+
         double fuseSec = Math.max(lifespanSeconds, 4.0);
         double speed = tileW * 0.28;
+
         for (int i = 0; i < Math.max(1, Math.min(count, 20)); i++) {
-            double angle = 2 * Math.PI * i / count +
-                (java.util.concurrent.ThreadLocalRandom.current().nextDouble() - 0.5) * 0.4;
+            double angle = 2 * Math.PI * i / count
+                + (java.util.concurrent.ThreadLocalRandom.current().nextDouble() - 0.5) * 0.4;
             float vx = (float) (Math.cos(angle) * speed);
             float vy = (float) (Math.sin(angle) * speed * 0.6);
+
             Projectile grape = new Projectile();
             grape.setType(ProjectileType.GRAPE);
             grape.setDamage(Math.max(1, damagePerGrape));
@@ -726,7 +799,6 @@ public class BattleController implements BehaviorContext {
         }
     }
 
-
     public int getTileColumn(float worldX) {
         return map != null ? map.worldToCol(worldX) : 0;
     }
@@ -735,6 +807,7 @@ public class BattleController implements BehaviorContext {
         if (gameStatus == null || gameStatus.isGameOver()) {
             return;
         }
+
         System.out.println("GAME OVER — zombie reached the house!");
         gameStatus.setGameOver(true);
         AppStatus.returnToChapterAndLevelSelection("GAME OVER");
@@ -748,6 +821,7 @@ public class BattleController implements BehaviorContext {
         if (p.getType() == ProjectileType.ICE_PEA) {
             return DamageType.ICE;
         }
+
         Object dt = p.getExtra("damageType");
         if (dt instanceof DamageType) {
             return (DamageType) dt;
@@ -806,7 +880,9 @@ public class BattleController implements BehaviorContext {
             return number.intValue();
         }
         try {
-            return value == null ? defaultValue : Integer.parseInt(String.valueOf(value));
+            return value == null
+                ? defaultValue
+                : Integer.parseInt(String.valueOf(value));
         } catch (NumberFormatException ex) {
             return defaultValue;
         }
