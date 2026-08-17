@@ -25,15 +25,39 @@ public class PlantHandler {
         Plant existingBase = engine.map.getBasePlantAt(row, col);
         boolean isLilyPad = type == PlantType.LILY_PAD;
         boolean isAquatic = PlantLibrary.findByType(type).map(def -> def.hasTag(PlantTag.WATER)).orElse(false);
+        boolean addingPeaPodHead = type == PlantType.PEA_POD
+            && existingTop != null
+            && existingTop.getType() == PlantType.PEA_POD;
         if (isAquatic && !isWater) return "Aquatic plants must be planted on water tiles.";
         if (isWater && !isAquatic && !isLilyPad && existingBase == null)
             return "Non-aquatic plants need a Lily Pad on water tiles.";
         if (isLilyPad && !isWater) return "Lily Pad must be planted on water tiles.";
         if (isLilyPad && existingBase != null) return "This tile already has a Lily Pad.";
-        if (isWater && !isAquatic && !isLilyPad && existingTop != null) return "Tile is occupied.";
-        if (!isWater && existingTop != null) return "Tile is occupied.";
+        if (!addingPeaPodHead) {
+            if (isWater && !isAquatic && !isLilyPad && existingTop != null) return "Tile is occupied.";
+            if (!isWater && existingTop != null) return "Tile is occupied.";
+        }
         String availabilityError = checkPlantAvailability(engine, type);
         if (availabilityError != null) return availabilityError;
+
+        if (addingPeaPodHead) {
+            int heads = 1;
+            Object state = existingTop.getRuntimeState("peaPodHeads");
+            if (state instanceof Number n) heads = n.intValue();
+            if (heads >= 5) return "Pea Pod is already at 5 heads.";
+            if (!engine.conveyorBeltMode) {
+                int cost = existingTop.getStats().getCost();
+                if (engine.getSunCount() < cost) return "Not enough sun.";
+                engine.addSun(-cost);
+            }
+            heads++;
+            existingTop.putRuntimeState("peaPodHeads", heads);
+            String idleState = heads == 1 ? "idle" : "idle" + heads;
+            com.PVZ.model.entity.PlantAnimation.trigger(existingTop.getInstance(), idleState, 1.0);
+            handlePostPlanting(engine, type, existingTop);
+            return "Pea Pod grew to " + heads + " heads at (" + col + ", " + row + ").";
+        }
+
         Plant plant = createPlantInstance(engine, type);
         if (plant == null) return "Cannot create plant.";
         if (!engine.conveyorBeltMode) {

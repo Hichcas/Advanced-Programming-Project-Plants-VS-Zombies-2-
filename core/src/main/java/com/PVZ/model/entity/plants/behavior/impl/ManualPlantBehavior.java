@@ -43,6 +43,9 @@ public class ManualPlantBehavior implements PlantBehavior {
     private boolean handleSpecificPlantKey(String plantKey, PlantInstance plant, BehaviorContext context,
                                            int lane, double deltaTime, int row, int col) {
         switch (plantKey) {
+            case "gold_bloom":
+                handleGoldBloom(plant, context, row, col, deltaTime);
+                return true;
             case "rotobaga":
                 handleDiagonalShot(plant, context, lane, deltaTime);
                 return true;
@@ -110,6 +113,39 @@ public class ManualPlantBehavior implements PlantBehavior {
         }
     }
 
+    private void handleGoldBloom(PlantInstance plant, BehaviorContext context, int row, int col, double deltaTime) {
+        String stage = String.valueOf(plant.getRuntimeState().getOrDefault("goldBloomStage", "WAIT"));
+        double timer = asDouble(plant.getRuntimeState().getOrDefault("goldBloomTimer", 0.0), 0.0);
+        timer += deltaTime;
+
+        if ("WAIT".equals(stage)) {
+            // Let Gold Bloom visibly exist on the board before doing anything.
+            if (timer < 2.0) {
+                plant.putRuntimeState("goldBloomTimer", timer);
+                return;
+            }
+
+            int amount = plant.getStats().getSunAmount();
+            if (amount <= 0 && abilitySpec != null) {
+                amount = abilitySpec.getIntParam("sunAmount", 375);
+            }
+            if (amount <= 0) amount = 375;
+
+            com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 2.4);
+            context.spawnSunAt(row, col, amount);
+            plant.putRuntimeState("goldBloomStage", "BURST");
+            plant.putRuntimeState("goldBloomTimer", 0.0);
+            return;
+        }
+
+        // Keep the attack frame visible for a short moment, then remove the plant.
+        if (timer >= 0.35) {
+            context.removePlant(row, col);
+            return;
+        }
+        plant.putRuntimeState("goldBloomTimer", timer);
+    }
+
     private void handleInstantSun(PlantInstance plant, BehaviorContext context, int row, int col) {
         boolean triggered = asBoolean(plant.getRuntimeState().getOrDefault("instantSunTriggered", Boolean.FALSE),
             false);
@@ -175,11 +211,15 @@ public class ManualPlantBehavior implements PlantBehavior {
         if ("caulipower".equals(plantKey)) {
             List<Zombie> zombies = new ArrayList<>(context.getAllZombies());
             Collections.shuffle(zombies);
-            int targets = Math.min(3, zombies.size());
-            for (int i = 0; i < targets; i++) {
-                Zombie zombie = zombies.get(i);
-                if (zombie != null && !zombie.isDead()) {
-                    zombie.hypnotize(5.0f);
+            if (!zombies.isEmpty()) {
+                Zombie target = zombies.get(0);
+                if (target != null && !target.isDead()) {
+                    Projectile magic = ProjectileFactory.createProjectile(plant, 0);
+                    magic.putExtra("visualKey", "CAULIPOWER");
+                    magic.initFreePosition((float) target.getX(), (float) target.getY(), 0f, 0f);
+                    magic.setFuse(0.65);
+                    context.spawnProjectile(magic);
+                    target.hypnotize(5.0f);
                 }
             }
         } else {
@@ -304,6 +344,11 @@ public class ManualPlantBehavior implements PlantBehavior {
     }
 
     private Projectile fireParallel(PlantInstance plant, BehaviorContext context, int targetLane, boolean backward) {
+        return fireParallel(plant, context, targetLane, backward, 0.0);
+    }
+
+    private Projectile fireParallel(PlantInstance plant, BehaviorContext context, int targetLane,
+                                    boolean backward, double spawnXOffset) {
         if (targetLane < 0) {
             return null;
         }
@@ -313,6 +358,9 @@ public class ManualPlantBehavior implements PlantBehavior {
         projectile.setLane(targetLane);
         if (backward) {
             projectile.setSpeed(-Math.abs(projectile.getSpeed()));
+        }
+        if (Math.abs(spawnXOffset) > 0.001) {
+            projectile.putExtra("spawnXOffset", spawnXOffset);
         }
         context.spawnProjectile(projectile);
         return projectile;
@@ -355,18 +403,22 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (!tickCooldown(plant, "triLaneTimer", deltaTime)) {
             return;
         }
-        boolean anyTarget = !context.getZombiesInLane(lane).isEmpty()
-            || !context.getZombiesInLane(lane - 1).isEmpty()
-            || !context.getZombiesInLane(lane + 1).isEmpty();
+        int top = Math.max(0, lane - 1);
+        int bottom = Math.min(4, lane + 1);
+        boolean anyTarget = !context.getZombiesInLane(top).isEmpty()
+            || !context.getZombiesInLane(lane).isEmpty()
+            || !context.getZombiesInLane(bottom).isEmpty();
         if (!anyTarget) {
             return;
         }
 
         int volleys = plant.isPlantFoodActive() ? 2 : 1;
         for (int v = 0; v < volleys; v++) {
-            fireParallel(plant, context, lane, false);
-            fireParallel(plant, context, lane - 1, false);
-            fireParallel(plant, context, lane + 1, false);
+            fireParallel(plant, context, top, false, 0.0);
+            if (lane != top && lane != bottom) {
+                fireParallel(plant, context, lane, false, 0.0);
+            }
+            fireParallel(plant, context, bottom, false, 0.0);
         }
     }
 
@@ -381,7 +433,6 @@ public class ManualPlantBehavior implements PlantBehavior {
         for (int v = 0; v < volleys; v++) {
             fireInto(plant, context, lane, false);
             fireInto(plant, context, lane, true);
-            fireInto(plant, context, lane, true);
         }
     }
 
@@ -391,12 +442,32 @@ public class ManualPlantBehavior implements PlantBehavior {
         }
         int volleys = plant.isPlantFoodActive() ? 2 : 1;
         for (int v = 0; v < volleys; v++) {
-            fireInto(plant, context, lane, false);
-            fireInto(plant, context, lane - 1, false);
-            fireInto(plant, context, lane + 1, false);
-            fireInto(plant, context, lane - 1, true);
-            fireInto(plant, context, lane + 1, true);
+            // Five fixed star directions: right, up-right, down-right, up-left, down-left.
+            fireStarVector(plant, context, 1.0, 0.0);
+            fireStarVector(plant, context, 0.82, 0.82);
+            fireStarVector(plant, context, 0.82, -0.82);
+            fireStarVector(plant, context, -0.82, 0.82);
+            fireStarVector(plant, context, -0.82, -0.82);
         }
+        com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 1.0);
+    }
+
+    private void fireStarVector(PlantInstance plant, BehaviorContext context, double dx, double dy) {
+        int damage = computeDamage(plant);
+        Projectile projectile = ProjectileFactory.createProjectile(plant, damage);
+        double px = asDouble(plant.getRuntimeState().getOrDefault("worldX", 0.0), 0.0);
+        double py = asDouble(plant.getRuntimeState().getOrDefault("worldY", 0.0), 0.0);
+        double tw = asDouble(plant.getRuntimeState().getOrDefault("tileWidth", 177.0), 177.0);
+        double th = asDouble(plant.getRuntimeState().getOrDefault("tileHeight", 234.0), 234.0);
+        double startX = px + tw * 0.63;
+        double startY = py + th * 0.54;
+        double len = Math.sqrt(dx * dx + dy * dy);
+        if (len < 1e-6) return;
+        double speed = tw * 1.7;
+        projectile.initFreePosition((float) startX, (float) startY,
+            (float) (dx / len * speed), (float) (dy / len * speed));
+        projectile.putExtra("starDirection", new double[]{dx, dy});
+        context.spawnProjectile(projectile);
     }
 
     private void handleHomingNearest(PlantInstance plant, BehaviorContext context, int lane, double deltaTime) {
@@ -437,24 +508,40 @@ public class ManualPlantBehavior implements PlantBehavior {
         int blueDamage = tiers.size() > 1 ? tiers.get(1) : computeDamage(plant);
         int orangeDamage = tiers.size() > 2 ? tiers.get(2) : computeDamage(plant);
 
-        launchBulbOnCycle(plant, context, lane, deltaTime, 2.0, "cyanTimer", cyanDamage);
-        launchBulbOnCycle(plant, context, lane, deltaTime, 5.0, "blueTimer", blueDamage);
-        launchBulbOnCycle(plant, context, lane, deltaTime, 10.0, "orangeTimer", orangeDamage);
+        launchBulbOnCycle(plant, context, lane, deltaTime, 2.0, "cyanTimer", cyanDamage, "BOWLING_BULB_1", 0.65);
+        launchBulbOnCycle(plant, context, lane, deltaTime, 5.0, "blueTimer", blueDamage, "BOWLING_BULB_2", -0.72);
+        launchBulbOnCycle(plant, context, lane, deltaTime, 10.0, "orangeTimer", orangeDamage, "BOWLING_BULB_3", 0.82);
     }
 
     private void launchBulbOnCycle(PlantInstance plant, BehaviorContext context, int lane, double deltaTime,
-                                   double periodSeconds, String timerKey, int damage) {
+                                   double periodSeconds, String timerKey, int damage, String visualKey, double verticalSign) {
         double timer = asDouble(plant.getRuntimeState().getOrDefault(timerKey, 0.0), 0.0);
         timer += deltaTime;
         if (timer < periodSeconds) {
             plant.putRuntimeState(timerKey, timer);
             return;
         }
-        plant.putRuntimeState(timerKey, 0.0);
-        int row = asInt(plant.getRuntimeState().getOrDefault("row", 0), 0);
-        context.damageArea(lane, row, damage);
-        context.damageArea(lane - 1, row, damage);
-        context.damageArea(lane + 1, row, damage);
+        plant.putRuntimeState(timerKey, timer - periodSeconds);
+
+        double px = asDouble(plant.getRuntimeState().getOrDefault("worldX", 0.0), 0.0);
+        double py = asDouble(plant.getRuntimeState().getOrDefault("worldY", 0.0), 0.0);
+        double tw = asDouble(plant.getRuntimeState().getOrDefault("tileWidth", 177.0), 177.0);
+        double th = asDouble(plant.getRuntimeState().getOrDefault("tileHeight", 234.0), 234.0);
+        double minX = px;
+        double maxX = px + tw * 6.0;
+        double minY = py - (4 * th) + th * 0.5;
+        double maxY = py + th * 0.5;
+        Projectile projectile = ProjectileFactory.createProjectile(plant, damage);
+        projectile.setType(ProjectileType.LOB);
+        projectile.setPierce(999);
+        projectile.putExtra("visualKey", visualKey);
+        projectile.putExtra("bowlingBulb", Boolean.TRUE);
+        projectile.initFreePosition((float) (px + tw * 0.63), (float) (py + th * 0.42),
+            (float) (tw * 0.9), (float) (verticalSign * th * 0.45));
+        projectile.setBouncing(true);
+        projectile.setBounds(minX, maxX, minY, maxY);
+        projectile.setFuse(14.0);
+        context.spawnProjectile(projectile);
     }
 
     private void handleStackShot(PlantInstance plant, BehaviorContext context, int lane, double deltaTime) {
@@ -465,15 +552,15 @@ public class ManualPlantBehavior implements PlantBehavior {
             return;
         }
 
-        int heads = asInt(plant.getRuntimeState().getOrDefault("peaPodHeads", 5), 5);
+        int heads = asInt(plant.getRuntimeState().getOrDefault("peaPodHeads", 1), 1);
         heads = Math.max(1, Math.min(5, heads));
         int volleys = plant.isPlantFoodActive() ? 2 : 1;
+        String attackState = heads == 1 ? "attack" : "attack " + heads;
+        com.PVZ.model.entity.PlantAnimation.trigger(plant, attackState, 1.0);
         for (int v = 0; v < volleys; v++) {
             for (int i = 0; i < heads; i++) {
-                Projectile pea = fireParallel(plant, context, lane, false);
-                if (pea != null) {
-                    pea.setPositionX(pea.getPositionX() - i * 22.0);
-                }
+                double offset = (i - (heads - 1) / 2.0) * 18.0;
+                fireParallel(plant, context, lane, false, offset);
             }
         }
     }

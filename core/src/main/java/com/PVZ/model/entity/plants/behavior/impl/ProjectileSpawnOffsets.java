@@ -11,7 +11,13 @@ public final class ProjectileSpawnOffsets {
 
     static {
         // PLANT_TYPE_NAME -> {dxFraction, dyFraction}
-        // (empty for now — filled in plant-by-plant on request)
+        // Pea-family muzzle points. Fractions are relative to the tile size.
+        // The slightly higher Y for Snow Pea keeps the shot visibly aligned with
+        // the mouth/head rather than the torso.
+        OFFSETS.put("PEASHOOTER", new float[]{0.63f, 0.47f});
+        OFFSETS.put("REPEATER", new float[]{0.63f, 0.47f});
+        OFFSETS.put("THREEPEATER", new float[]{0.63f, 0.47f});
+        OFFSETS.put("SNOW_PEA", new float[]{0.63f, 0.54f});
     }
 
     private ProjectileSpawnOffsets() {

@@ -196,6 +196,13 @@ public class Plant {
                 if (!drewAnimated) {
                     drewAnimated = renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);
                 }
+            } else if ("PEA_POD".equals(key)) {
+                int heads = asInt(getRuntimeState("peaPodHeads"), 1);
+                String idleState = heads <= 1 ? "idle" : "idle" + Math.min(5, heads);
+                drewAnimated = renderer.renderPlantExact(batch, key, idleState, animStateTime, ax, ay);
+                if (!drewAnimated) {
+                    drewAnimated = renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);
+                }
             } else {
                 drewAnimated = renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);
             }

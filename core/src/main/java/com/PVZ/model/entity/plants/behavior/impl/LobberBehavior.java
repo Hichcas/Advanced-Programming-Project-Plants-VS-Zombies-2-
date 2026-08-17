@@ -14,23 +14,51 @@ public class LobberBehavior implements PlantBehavior {
             return;
         }
 
+        String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+
+        // Release a pult projectile slightly into the attack PAM instead of exactly at the
+        // cooldown boundary. This keeps the visible projectile launch synchronized with the
+        // plant's throwing motion.
+        double pending = asDouble(plant.getRuntimeState().getOrDefault("pendingLobShot", 0.0), 0.0);
+        if (pending > 0.0) {
+            pending -= deltaTime;
+            if (pending <= 0.0) {
+                LobShotParams params = (LobShotParams) plant.getRuntimeState().get("pendingLobParams");
+                if (params != null) {
+                    spawnProjectiles(plant, context, params);
+                }
+                plant.getRuntimeState().remove("pendingLobShot");
+                plant.getRuntimeState().remove("pendingLobParams");
+            } else {
+                plant.putRuntimeState("pendingLobShot", pending);
+            }
+        }
+
         double timer = updateLobTimer(plant, deltaTime);
         double cooldown = getCooldown(plant);
-        if (timer < cooldown) {
+        if (timer < cooldown || pending > 0.0) {
             return;
         }
 
         timer = 0.0;
         plant.putRuntimeState("lobTimer", timer);
 
-        Integer lane = asInt(plant.getRuntimeState().getOrDefault("lane", 0), 0);
+        int lane = asInt(plant.getRuntimeState().getOrDefault("lane", 0), 0);
         List<Zombie> zombies = context.getZombiesInLane(lane);
         if (zombies.isEmpty()) {
             return;
         }
 
         LobShotParams shotParams = calculateShotParams(plant);
-        spawnProjectiles(plant, context, shotParams);
+        double releaseDelay = switch (key) {
+            case "cabbage_pult" -> 0.50;
+            case "kernel_pult" -> 0.52;
+            case "melon_pult" -> 0.56;
+            default -> 0.40;
+        };
+        com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 1.0);
+        plant.putRuntimeState("pendingLobShot", releaseDelay);
+        plant.putRuntimeState("pendingLobParams", shotParams);
     }
 
     private double updateLobTimer(PlantInstance plant, double deltaTime) {
@@ -56,11 +84,16 @@ public class LobberBehavior implements PlantBehavior {
 
         int damage;
         boolean stunShot = false;
-        if (tiers != null && tiers.size() > 1) {
-            int tierIndex = asInt(plant.getRuntimeState().getOrDefault("lobTierIndex", 0), 0);
-            damage = tiers.get(tierIndex % tiers.size());
-            stunShot = (tierIndex % tiers.size()) == tiers.size() - 1;
-            plant.putRuntimeState("lobTierIndex", tierIndex + 1);
+        String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+        if ("kernel_pult".equals(key)) {
+            damage = Math.max(1, plant.getStats().getDamage());
+            double butterChance = 0.25;
+            if (plant.getDefinition().getBaseAbility() != null) {
+                butterChance = plant.getDefinition().getBaseAbility().getDoubleParam("butterChancePercent", 25.0) / 100.0;
+            }
+            stunShot = Math.random() < butterChance;
+        } else if (tiers != null && tiers.size() > 1) {
+            damage = tiers.get(0);
         } else {
             damage = Math.max(0, plant.getStats().getDamage());
         }
@@ -80,17 +113,33 @@ public class LobberBehavior implements PlantBehavior {
     }
 
     private void spawnProjectiles(PlantInstance plant, BehaviorContext context, LobShotParams params) {
-        com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.5);
+        String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
         for (int i = 0; i < params.projectileCount; i++) {
             Projectile projectile = ProjectileFactory.createLobProjectile(plant, params.damage);
-            if (params.freezeAttack) {
-                projectile.setType(ProjectileType.ICE_PEA);
-            }
-            if (params.fireAttack) {
-                projectile.setType(ProjectileType.FIRE_PEA);
-            }
+            if (params.freezeAttack) projectile.setType(ProjectileType.ICE_PEA);
+            if (params.fireAttack) projectile.setType(ProjectileType.FIRE_PEA);
             if (params.stunShot) {
                 projectile.putExtra("stunOnHit", Boolean.TRUE);
+                projectile.putExtra("kernelButter", Boolean.TRUE);
+                projectile.putExtra("butterDurationSeconds", 4.0);
+            } else if ("kernel_pult".equals(key)) {
+                projectile.putExtra("kernelCorn", Boolean.TRUE);
+            }
+
+            if ("cabbage_pult".equals(key)) {
+                projectile.putExtra("lobArcHeight", 310.0);
+                projectile.putExtra("lobArcDuration", 1.15);
+                projectile.putExtra("visualKey", "CABBAGE");
+            } else if ("melon_pult".equals(key)) {
+                projectile.putExtra("lobArcHeight", 340.0);
+                projectile.putExtra("lobArcDuration", 1.20);
+                projectile.putExtra("visualKey", "MELON");
+                projectile.setAreaDamage(true);
+                projectile.setAreaRadiusPx(115f);
+            } else if ("kernel_pult".equals(key)) {
+                projectile.putExtra("lobArcHeight", 300.0);
+                projectile.putExtra("lobArcDuration", 1.15);
+                projectile.putExtra("visualKey", "KERNEL");
             }
             context.spawnProjectile(projectile);
         }
