@@ -209,9 +209,9 @@ public class BattleController implements BehaviorContext {
                 continue;
             }
 
-            if (zp instanceof com.PVZ.model.entity.zombies.types.ranged_caster.OctopusProjectile) {
-                continue;
-            }
+//            if (zp instanceof com.PVZ.model.entity.zombies.types.ranged_caster.OctopusProjectile) {
+//                continue;
+//            }
 
             int zpCol = getTileColumn(zp.getX());
             Plant p = getPlantAt(zp.getRow(), zpCol);

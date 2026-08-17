@@ -128,10 +128,10 @@ public class ZombieBeachOctopus extends AbstractRangedCasterZombie {
             float targetX = targetTile.getX() + targetTile.getWidth() / 2f;
             float targetY = targetTile.getY() + targetTile.getHeight() / 2f;
 
-            OctopusProjectile proj = new OctopusProjectile(
-                spawnX, spawnY, targetX, targetY, targetRow, this, target, targetTile
-            );
-            controller.addZombieProjectile(proj);
+//            OctopusProjectile proj = new OctopusProjectile(
+//                spawnX, spawnY, targetX, targetY, targetRow, this, target, targetTile
+//            );
+         //   controller.addZombieProjectile(proj);
             System.out.println(alias + " tossed octopus projectile from (" + spawnX + ", " + spawnY + ") -> plant at (" + targetCol + ", " + targetRow + ")");
         }
     }

@@ -59,7 +59,11 @@ public class CombatHandler {
         if (colState instanceof Number number) col = number.intValue();
 
         float worldX = startX + col * tileWidth + tileWidth * 0.5f;
-        float worldY = startY - (row + 1) * tileHeight + tileHeight * 0.35f;
+        float worldY = startY - (row + 1) * tileHeight + tileHeight * 0.47f;
+        Object spawnYOffset = p.getExtra("spawnYOffset");
+        if (spawnYOffset instanceof Number n) {
+            worldY += n.floatValue();
+        }
         float speedPxPerSec = tileWidth * 1.5f;
         if (p.getType() == com.PVZ.model.entity.plants.behavior.impl.ProjectileType.LOB) {
             speedPxPerSec = tileWidth * 0.9f;
@@ -84,6 +88,24 @@ public class CombatHandler {
             p.initArcPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec));
         } else {
             p.initWorldPosition(worldX, worldY, (float) (horizontalSign * speedPxPerSec), (float) verticalSpeed);
+        }
+    }
+
+    public static void damageAreaAt(RegularGameEngine engine, int centerRow, int centerCol,
+                                    int damage, int radiusRows, int radiusCols) {
+        if (engine == null || engine.map == null || damage <= 0) return;
+        float tileW = engine.map.getTileWidth();
+        float centerX = engine.map.getStartX() + centerCol * tileW + tileW * 0.5f;
+        int minRow = Math.max(0, centerRow - Math.max(0, radiusRows));
+        int maxRow = Math.min(engine.map.getRows() - 1, centerRow + Math.max(0, radiusRows));
+        for (int r = minRow; r <= maxRow; r++) {
+            for (Zombie zombie : getZombiesInLane(engine, r)) {
+                if (zombie == null || zombie.isDead()) continue;
+                int zCol = engine.getTileColumn((float) zombie.getX());
+                if (Math.abs(zCol - centerCol) <= Math.max(0, radiusCols)) {
+                    zombie.takeDamage(damage);
+                }
+            }
         }
     }
 

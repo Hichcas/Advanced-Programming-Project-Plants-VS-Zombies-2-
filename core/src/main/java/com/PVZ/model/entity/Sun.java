@@ -25,6 +25,7 @@ public class Sun {
     private boolean groundNotified = false;
     private double fallSpeed = 180.0;
     private double groundY = 0.0;
+    private float visualScale = 1.0f;
     private final Rectangle hitbox = new Rectangle();
 
     public enum SunType {NORMAL, SPECIAL, RADIOACTIVE}
@@ -37,6 +38,13 @@ public class Sun {
         this.amount = amount;
         updateHitbox();
     }
+
+    public void setVisualScale(float scale) {
+        this.visualScale = Math.max(0.5f, Math.min(1.0f, scale));
+        updateHitbox();
+    }
+
+    public float getVisualScale() { return visualScale; }
 
     public void configureFalling(double fallSpeed, double groundY) {
         this.falling = true;
@@ -74,7 +82,7 @@ public class Sun {
             return;
         }
         boolean drawn = EntityRenderer.getInstance().renderSun(batch, type, timer, falling, reachedGround,
-                (float) x, (float) y);
+                (float) x, (float) y, visualScale);
         if (!drawn) {
             Texture texture = getOrLoadTexture();
             batch.draw(texture, (float) x, (float) y, hitbox.width, hitbox.height);
@@ -115,7 +123,10 @@ public class Sun {
     }
 
     private void updateHitbox() {
-        hitbox.set((float) x, (float) y, SIZE, SIZE);
+        float size = SIZE * visualScale;
+        float dx = (SIZE - size) * 0.5f;
+        float dy = (SIZE - size) * 0.5f;
+        hitbox.set((float) x + dx, (float) y + dy, size, size);
     }
 
     public float getAnimationTime() {

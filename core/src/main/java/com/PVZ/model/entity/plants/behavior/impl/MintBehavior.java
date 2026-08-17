@@ -42,6 +42,9 @@ public class MintBehavior implements PlantBehavior {
                 other.applyPlantFood(context);
             }
         }
+        if (selfRow >= 0 && selfCol >= 0) {
+            context.removePlant(selfRow, selfCol);
+        }
     }
 
     private static int asInt(Object value, int defaultValue) {

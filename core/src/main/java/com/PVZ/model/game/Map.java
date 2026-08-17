@@ -115,7 +115,14 @@ public class Map {
         if (plant != null) {
             plant.setPlanted(false);
         }
-        tile.setPlant(null);
+        Plant under = tile.getUnderPlant();
+        if (under != null && plant != null && "PUMPKIN".equals(plant.getType().name())) {
+            under.setPlanted(true);
+            tile.setPlant(under);
+            tile.setUnderPlant(null);
+        } else {
+            tile.setPlant(null);
+        }
     }
 
     public void removeBasePlant(int row, int col) {

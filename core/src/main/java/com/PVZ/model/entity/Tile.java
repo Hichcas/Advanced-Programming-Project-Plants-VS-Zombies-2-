@@ -8,6 +8,7 @@ public class Tile {
     private TileType type;
     private Plant plant;
     private Plant basePlant;
+    private Plant underPlant;
     private int octopusHp;
     private int hp;
     private int gridRow, gridCol;
@@ -72,6 +73,9 @@ public class Tile {
     public void setBasePlant(Plant basePlant) {
         this.basePlant = basePlant;
     }
+
+    public Plant getUnderPlant() { return underPlant; }
+    public void setUnderPlant(Plant underPlant) { this.underPlant = underPlant; }
 
     public int getOctopusHp() {
         return octopusHp;

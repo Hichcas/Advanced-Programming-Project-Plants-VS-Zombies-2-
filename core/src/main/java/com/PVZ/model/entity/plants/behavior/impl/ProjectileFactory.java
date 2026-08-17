@@ -92,9 +92,9 @@ public final class ProjectileFactory {
             return ProjectileType.UNKNOWN;
         }
 
-        boolean fireAttack = plant.isPlantFoodActive() && plant.getStats().getBooleanExtra("fireAttack", false)
+        boolean fireAttack = plant.getStats().getBooleanExtra("fireAttack", false)
                 || (plant.getDefinition() != null && plant.getDefinition().hasTag(PlantTag.FIRE));
-        boolean iceAttack = plant.isPlantFoodActive() && plant.getStats().getBooleanExtra("iceAttack", false)
+        boolean iceAttack = plant.getStats().getBooleanExtra("iceAttack", false)
                 || plant.getStats().hasFlag(PlantFlag.CHILL_ON_HIT)
                 || (plant.getDefinition() != null && plant.getDefinition().hasTag(PlantTag.ICE));
         boolean burstShot = plant.getStats().hasFlag(PlantFlag.BURST_SHOT);

@@ -74,22 +74,36 @@ public class MeleeEatBehavior implements PlantBehavior {
             return;
         }
 
+        String meleeKey = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+        if ("kiwibeast".equals(meleeKey)) {
+            performKiwiAttack(plant, context, lane);
+            return;
+        }
+
         boolean isAreaAttack = isAreaMelee(plant);
 
         double tileWidth = asDouble(plant.getRuntimeState().getOrDefault("tileWidth", 177.0),
             177.0);
         double plantX = asDouble(plant.getRuntimeState().getOrDefault("worldX", 0.0), 0.0);
         double range = isAreaAttack ? tileWidth * 1.6 : tileWidth * 1.2;
+        if ("bonk_choy".equals(meleeKey)) range = tileWidth * 1.25;
 
         int damage = computeMeleeDamage(plant);
-        boolean hitAnything = applyDamageToZombies(plant, context, lane, isAreaAttack, plantX, range, damage);
+        boolean hitAnything;
+        int plantCol = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+        if ("phat_beet".equals(meleeKey)) {
+            context.damageAreaAt(lane, plantCol, damage, 1, 1);
+            hitAnything = true;
+        } else {
+            hitAnything = applyDamageToZombies(plant, context, lane, isAreaAttack, plantX, range, damage);
+        }
         if (hitAnything) {
             com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
         }
 
         if (hitAnything && plant.getDefinition() != null
             && "phat_beet".equals(plant.getDefinition().getPlantKey())) {
-            spawnSonicVisual(plant, context, lane, plantX);
+            spawnSonicVisual(plant, context, lane, plantX, "PHAT_BEET", 0.7333);
         }
 
         if (hitAnything && plant.isPlantFoodActive()) {
@@ -112,7 +126,7 @@ public class MeleeEatBehavior implements PlantBehavior {
         context.spawnProjectile(fx);
     }
 
-    private void spawnSonicVisual(PlantInstance plant, BehaviorContext context, int lane, double plantX) {
+    private void spawnSonicVisual(PlantInstance plant, BehaviorContext context, int lane, double plantX, String visualKey, double fuse) {
         double tileW = asDouble(plant.getRuntimeState().getOrDefault("tileWidth", 177.0),
             177.0);
         double tileH = asDouble(plant.getRuntimeState().getOrDefault("tileHeight", 234.0),
@@ -123,7 +137,8 @@ public class MeleeEatBehavior implements PlantBehavior {
         fx.setDamage(0);
         fx.setPierce(0);
         fx.initFreePosition((float) (plantX + tileW * 1.3), (float) (py + tileH * 0.35f), 0f, 0f);
-        fx.setFuse(0.3);
+        fx.putExtra("visualKey", visualKey);
+        fx.setFuse(fuse);
         context.spawnProjectile(fx);
     }
 
@@ -142,11 +157,36 @@ public class MeleeEatBehavior implements PlantBehavior {
             if (z == null || z.isDead()) continue;
             if (java.lang.Math.abs(z.getX() - plantX) <= range) {
                 z.takeDamage(Double.MAX_VALUE);
+                com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 0.9333);
                 plant.putRuntimeState("digesting", Boolean.TRUE);
                 plant.putRuntimeState("digestTimer", 0.0);
                 return;
             }
         }
+    }
+
+    private void performKiwiAttack(PlantInstance plant, BehaviorContext context, int lane) {
+        double timer = asDouble(plant.getRuntimeState().getOrDefault("kiwiStageTimer", 0.0), 0.0) + 0.1;
+        int stage = asInt(plant.getRuntimeState().getOrDefault("kiwiStage", 1), 1);
+        if (stage < 2 && timer >= 24.0) { stage = 2; }
+        if (stage < 3 && timer >= 72.0) { stage = 3; }
+        plant.putRuntimeState("kiwiStageTimer", timer);
+        plant.putRuntimeState("kiwiStage", stage);
+        int damage = stage == 1 ? 15 : stage == 2 ? 30 : 45;
+        double tileW = asDouble(plant.getRuntimeState().getOrDefault("tileWidth", 177.0), 177.0);
+        int pc = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+        int radius = stage;
+        context.damageAreaAt(lane, pc, damage, radius, radius);
+        Projectile fx = new Projectile();
+        fx.setType(com.PVZ.model.entity.plants.behavior.impl.ProjectileType.WHIP);
+        fx.setDamage(0); fx.setPierce(0);
+        double px = asDouble(plant.getRuntimeState().getOrDefault("worldX", 0.0), 0.0);
+        double py = asDouble(plant.getRuntimeState().getOrDefault("worldY", 0.0), 0.0);
+        fx.initFreePosition((float)(px + tileW*0.5), (float)(py + 80), 0, 0);
+        fx.putExtra("visualKey", "KIWI_BEAST");
+        fx.setFuse(0.6667);
+        context.spawnProjectile(fx);
+        com.PVZ.model.entity.PlantAnimation.trigger(plant, stage == 1 ? "attack_stage1" : stage == 2 ? "attack_stage2" : "attack_stage3", 1.5);
     }
 
     private boolean isDigesting(PlantInstance plant) {
