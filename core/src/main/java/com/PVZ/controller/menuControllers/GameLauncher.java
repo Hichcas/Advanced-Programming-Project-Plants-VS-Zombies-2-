@@ -96,12 +96,13 @@ final class GameLauncher {
         gameStatus.setSunflower(initialSun);
         gameStatus.setNoSkySun(stageConfig.isDisableFallingSun());
         RegularGameEngine engine = new RegularGameEngine(gameStatus, waves);
-        engine.setBackgroundTexturePath(stageConfig.getMapTexture());
-        GameEngine oldEngine = AppStatus.getGameEngine();
-        if (oldEngine != null && oldEngine.getMap() != null) {
-            engine.setMap(oldEngine.getMap());
+        if (AppStatus.currentChapterName != null) {
+            AppStatus.currentChapter = com.PVZ.model.game.chapter.ChapterLibrary.getChapter(AppStatus.currentChapterName);
         }
-        AppStatus.currentChapter.applySetup(engine.getMap(), stageConfig);
+        engine.setMap(new com.PVZ.model.game.Map(480, 1235, 1655, 1170, 5, 9));
+        if (AppStatus.currentChapter != null) {
+            AppStatus.currentChapter.applySetup(engine.getMap(), stageConfig);
+        }
         if (isConveyorBeltStage(stageConfig)) {
             engine.enableConveyorBelt(stageConfig.getConveyorInterval());
         }

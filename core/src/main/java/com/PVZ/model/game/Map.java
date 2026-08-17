@@ -101,7 +101,7 @@ public class Map {
             plant.putRuntimeState("tileWidth", tileWidth);
             plant.putRuntimeState("tileHeight", tileHeight);
             TileType tileType = tiles[row][col].getType();
-            if (tileType == TileType.ICE || tileType == TileType.TOMBSTONE) {
+            if (tileType == TileType.ICE) {
                 plant.putRuntimeState("freezeLevel", 3);
                 plant.putRuntimeState("iceHp", 600);
             }

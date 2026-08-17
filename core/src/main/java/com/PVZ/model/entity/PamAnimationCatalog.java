@@ -37,6 +37,9 @@ public final class PamAnimationCatalog {
         SYNONYMS.put("push", new String[]{"push", "push_block"});
         SYNONYMS.put("weasel_attack", new String[]{"weasel_attack", "release"});
         SYNONYMS.put("wind", new String[]{"wind_1", "wind_2", "wind_3", "slingshot"});
+        SYNONYMS.put("cast", new String[]{"cast", "cast_loop", "throw"});
+        SYNONYMS.put("reel", new String[]{"reel", "pull", "idle"});
+        SYNONYMS.put("toss", new String[]{"toss", "throw", "attack"});
     }
 
     private static Map<String, Entry> byPath;

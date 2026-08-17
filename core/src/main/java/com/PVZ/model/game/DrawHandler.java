@@ -32,16 +32,20 @@ public class DrawHandler {
 
     public static void draw(RegularGameEngine engine, SpriteBatch batch) {
         EntityRenderer.getInstance().update();
-        if (engine.zombieEngine != null) engine.zombieEngine.draw(batch);
         batch.begin();
         drawTileOverlays(engine, batch);
         drawTombstonesWithHealthBars(engine, batch);
         drawIceBlocksWithHealthBars(engine, batch);
+        drawPlantsWithLabels(engine, batch);
+        batch.end();
+
+        if (engine.zombieEngine != null) engine.zombieEngine.draw(batch);
+
+        batch.begin();
         drawBattleProjectiles(engine, batch);
         drawSuns(engine, batch);
         drawLootDrops(engine, batch);
         drawLawnMowers(engine, batch);
-        drawPlantsWithLabels(engine, batch);
         drawZombiesWithHealthBars(engine, batch);
         batch.end();
     }
@@ -123,13 +127,7 @@ public class DrawHandler {
                 Tile tile = engine.map.getTile(row, col);
                 if (tile == null) continue;
                 TileType type = tile.getType();
-                if (type == TileType.WATER) {
-                    batch.setColor(0f, 0.3f, 0.8f, 0.35f);
-                    batch.draw(whiteTexture(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight());
-                } else if (type == TileType.TIDE) {
-                    batch.setColor(0f, 0.5f, 1f, 0.5f);
-                    batch.draw(whiteTexture(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight());
-                }
+                // Water and tide graphics are naturally rendered by the background map
             }
         }
         batch.setColor(orig);
