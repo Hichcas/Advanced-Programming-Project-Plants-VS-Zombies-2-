@@ -42,6 +42,10 @@ public class Projectile {
     private double fuse = -1.0;
     private double boundMinX = 0, boundMaxX = 0, boundMinY = 0, boundMaxY = 0;
     private boolean fuseExploded = false;
+    private double maxTravelDistance = -1.0;
+    private double travelDistance = 0.0;
+    private double lastX;
+    private double lastY;
 
     private final Map<String, Object> extras = new HashMap<>();
     private float animTime = 0f;
@@ -61,6 +65,9 @@ public class Projectile {
         this.verticalSpeed = worldVerticalSpeedPxPerSec;
         this.worldPositioned = true;
         this.arcMotion = false;
+        this.lastX = worldX;
+        this.lastY = worldY;
+        this.travelDistance = 0.0;
         this.hitbox.set((float) positionX, (float) positionY, SIZE, SIZE);
     }
 
@@ -72,7 +79,22 @@ public class Projectile {
         this.verticalSpeed = 0.0;
         this.worldPositioned = true;
         this.arcMotion = true;
+        Object customHeight = this.extras.get("lobArcHeight");
+        Object customDuration = this.extras.get("lobArcDuration");
+        if (customHeight instanceof Number n && n.doubleValue() > 0) {
+            this.arcHeight = n.doubleValue();
+        } else {
+            this.arcHeight = 180.0;
+        }
+        if (customDuration instanceof Number n && n.doubleValue() > 0) {
+            this.arcDuration = n.doubleValue();
+        } else {
+            this.arcDuration = 1.0;
+        }
         this.arcElapsed = 0.0;
+        this.lastX = worldX;
+        this.lastY = worldY;
+        this.travelDistance = 0.0;
         this.hitbox.set((float) positionX, (float) positionY, SIZE, SIZE);
     }
 
@@ -87,6 +109,9 @@ public class Projectile {
         this.freeMotion = true;
         this.arcMotion = false;
         this.worldPositioned = true;
+        this.lastX = worldX;
+        this.lastY = worldY;
+        this.travelDistance = 0.0;
         this.hitbox.set(worldX, worldY, SIZE, SIZE);
     }
 
@@ -162,6 +187,18 @@ public class Projectile {
         return verticalSpeed;
     }
 
+    public void setMaxTravelDistance(double maxTravelDistance) {
+        this.maxTravelDistance = maxTravelDistance;
+    }
+
+    public double getMaxTravelDistance() {
+        return maxTravelDistance;
+    }
+
+    public double getTravelDistance() {
+        return travelDistance;
+    }
+
     public void setVerticalSpeed(double verticalSpeed) {
         this.verticalSpeed = verticalSpeed;
     }
@@ -208,8 +245,11 @@ public class Projectile {
             return;
         }
         animTime += delta;
+        double oldX = positionX;
+        double oldY = positionY;
         if (freeMotion) {
             updateFreeMotion(delta);
+            checkTravelLimit(oldX, oldY);
             return;
         }
         positionX += speed * delta;
@@ -221,6 +261,7 @@ public class Projectile {
             positionY += verticalSpeed * delta;
         }
         hitbox.setPosition((float) positionX, (float) positionY);
+        checkTravelLimit(oldX, oldY);
     }
 
     private void updateFreeMotion(float delta) {
@@ -254,6 +295,15 @@ public class Projectile {
             }
         }
         hitbox.setPosition((float) positionX, (float) positionY);
+    }
+
+    private void checkTravelLimit(double oldX, double oldY) {
+        double dx = positionX - oldX;
+        double dy = positionY - oldY;
+        travelDistance += Math.sqrt(dx * dx + dy * dy);
+        if (maxTravelDistance > 0.0 && travelDistance >= maxTravelDistance) {
+            destroyed = true;
+        }
     }
 
     public void draw(SpriteBatch batch) {

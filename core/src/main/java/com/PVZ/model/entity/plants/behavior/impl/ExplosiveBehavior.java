@@ -33,8 +33,23 @@ public class ExplosiveBehavior implements PlantBehavior {
         String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
         boolean requiresContact = key != null && CONTACT_TRIGGERED.contains(key);
         List<Zombie> zombies = context.getZombiesInLane(lane);
-        if (requiresContact && zombies.isEmpty())
-            return;
+        if (requiresContact) {
+            if (zombies.isEmpty()) return;
+            int plantCol = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+            if ("potato_mine".equals(key) || "primal_potato_mine".equals(key)) {
+                boolean contact = false;
+                for (Zombie zombie : zombies) {
+                    if (zombie != null && !zombie.isDead()) {
+                        int zCol = mapColOf(context, zombie);
+                        if (Math.abs(zCol - plantCol) <= 1) {
+                            contact = true;
+                            break;
+                        }
+                    }
+                }
+                if (!contact) return;
+            }
+        }
         if ("ice_shroom".equals(key)) {
             context.freezeAllZombies(Math.max(3.0, plant.getStats().getFreezeTimeSeconds()));
             com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
@@ -116,8 +131,8 @@ public class ExplosiveBehavior implements PlantBehavior {
             return;
         }
         context.damageArea(lane, row, damage);
-        com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
-            plant.takeDamage(plant.getCurrentHp());
+        com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", 0.6667);
+        plant.takeDamage(plant.getCurrentHp());
     }
 
     private static int asInt(Object value, int defaultValue) {

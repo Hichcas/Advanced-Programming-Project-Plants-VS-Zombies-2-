@@ -17,7 +17,11 @@ public final class PlantFactory {
         int safeLevel = Math.max(1, level);
         PlantStats stats = UpgradeResolver.resolveStats(definition, safeLevel);
         applyInnateSpecials(definition, stats);
-        return new PlantInstance(definition, stats, safeLevel);
+        PlantInstance instance = new PlantInstance(definition, stats, safeLevel);
+        if ("pea_pod".equals(definition.getPlantKey())) {
+            instance.putRuntimeState("peaPodHeads", 1);
+        }
+        return instance;
     }
 
     private static void applyInnateSpecials(PlantDefinition definition, PlantStats stats) {
@@ -117,6 +121,11 @@ public final class PlantFactory {
             case "fume_shroom":
                 if (stats.getPierce() <= 0) {
                     stats.setPierce(99);
+                }
+                break;
+            case "puff_shroom":
+                if (stats.getLifespanSeconds() <= 0) {
+                    stats.setLifespanSeconds(60.0);
                 }
                 break;
             default:

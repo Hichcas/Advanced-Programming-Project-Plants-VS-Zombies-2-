@@ -70,7 +70,9 @@ public class ElectricBlueberryBehavior implements PlantBehavior {
         bolt.setDamage(0);
         bolt.setPierce(0);
         bolt.initFreePosition((float) target.getX(), (float) target.getY(), 0f, 0f);
-        bolt.setFuse(0.35);
+        bolt.putExtra("visualKey", "ELECTRIC_BLUEBERRY");
+        bolt.putExtra("plantType", "ELECTRIC_BLUEBERRY");
+        bolt.setFuse(0.55);
         context.spawnProjectile(bolt);
     }
 

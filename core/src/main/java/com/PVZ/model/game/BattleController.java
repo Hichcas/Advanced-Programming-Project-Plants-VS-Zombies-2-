@@ -462,11 +462,11 @@ public class BattleController implements BehaviorContext {
             notifyZombieKilled(regEngine, z, killer);
         }
 
-        boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit"))
-            || (p.getExtra("plantType") instanceof com.PVZ.model.enums.PlantType pt
-            && pt == com.PVZ.model.enums.PlantType.KERNEL_PULT);
+        boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit"));
         if (isButter) {
-            z.freeze(1.5f);
+            Object butterDuration = p.getExtra("butterDurationSeconds");
+            float seconds = butterDuration instanceof Number n ? n.floatValue() : 4.0f;
+            z.freeze(Math.max(0.5f, seconds));
         }
     }
 
@@ -574,6 +574,10 @@ public class BattleController implements BehaviorContext {
         }
 
         float worldX = startX + col * tileWidth + tileWidth * resolveDx(p);
+        Object spawnXOffset = p.getExtra("spawnXOffset");
+        if (spawnXOffset instanceof Number number) {
+            worldX += number.floatValue();
+        }
         float worldY = startY - (row + 1) * tileHeight + tileHeight * resolveDy(p);
 
         float speedPxPerSec = tileWidth * 1.5f;

@@ -5,6 +5,8 @@ import com.PVZ.model.enums.DamageType;
 import com.PVZ.model.enums.PlantFlag;
 import com.PVZ.model.enums.PlantTag;
 
+import static com.PVZ.model.entity.plants.behavior.impl.ManualPlantBehavior.asDouble;
+
 public final class ProjectileFactory {
     private ProjectileFactory() {
     }
@@ -22,6 +24,17 @@ public final class ProjectileFactory {
         projectile.setFromPlantFood(plant != null && plant.isPlantFoodActive());
         projectile.putExtra("visualKey", resolveVisualKey(plant, projectile.getType()));
         projectile.setAreaDamage(hasAreaDamage(plant));
+
+        String plantKey = plant != null && plant.getDefinition() != null
+            ? plant.getDefinition().getPlantKey() : "";
+        double tileWidth = plant != null
+            ? asDouble(plant.getRuntimeState().getOrDefault("tileWidth", 177.0), 177.0)
+            : 177.0;
+        if ("puff_shroom".equals(plantKey)) {
+            projectile.setMaxTravelDistance(tileWidth * 2.0);
+        } else if ("fume_shroom".equals(plantKey)) {
+            projectile.setMaxTravelDistance(tileWidth * 3.0);
+        }
 
         if (plant != null) {
             projectile.setLane(asInt(plant.getRuntimeState().get("lane"), 0));
@@ -136,11 +149,15 @@ public final class ProjectileFactory {
         if (plant == null || plant.getStats() == null) {
             return 1.0;
         }
-
+        String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+        if ("mega_gatling_pea".equals(key)) return 3.25;
+        if ("starfruit".equals(key)) return 1.15;
+        if ("cactus".equals(key)) return 1.25;
+        if ("puff_shroom".equals(key)) return 0.95;
+        if ("fume_shroom".equals(key)) return 0.85;
         if (plant.getStats().hasFlag(PlantFlag.BURST_SHOT)) {
             return 2.0;
         }
-
         return 1.0;
     }
 
@@ -163,11 +180,13 @@ public final class ProjectileFactory {
                 case "melon_pult": return "MELON";
                 case "winter_melon": return "WINTER_MELON";
                 case "pepper_pult": return "PEPPER";
-                case "citron": return "CITRON";
+                case "citron": return plant != null && plant.isPlantFoodActive() ? "CITRON_PF" : "CITRON";
                 case "caulipower": return "CAULIPOWER";
                 case "electric_blueberry": return "ELECTRIC_BLUEBERRY";
                 case "bowling_bulb": return "BOWLING_BULB_1";
-                case "starfruit": return "STARFRUIT";
+                case "cactus": return "CACTUS";
+                case "fume_shroom": return "FUME";
+                case "starfruit": return plant != null && plant.isPlantFoodActive() ? "STARFRUIT_PF" : "STARFRUIT";
                 case "rotobaga": return "ROTOBAGA_1";
                 case "grapeshot": return "GRAPESHOT";
                 case "ice_shroom": return "ICE_SHROOM";

@@ -349,7 +349,7 @@ public class EntityRenderer {
         if (clip == null) {
             return false;
         }
-        pamPlayer.draw(batch, clip, stateTime, x, y, true);
+        drawClipScaled(batch, clip, stateTime, x, y, plantScale(plantTypeName));
         return true;
     }
 
@@ -360,8 +360,34 @@ public class EntityRenderer {
         if (clip == null) {
             return false;
         }
-        pamPlayer.draw(batch, clip, stateTime, x, y, true);
+        drawClipScaled(batch, clip, stateTime, x, y, plantScale(plantTypeName));
         return true;
+    }
+
+    private float plantScale(String plantTypeName) {
+        if ("THREEPEATER".equalsIgnoreCase(plantTypeName)) {
+            return 1.35f;
+        }
+        return 1.0f;
+    }
+
+    private void drawClipScaled(SpriteBatch batch, ClipRef clip, float stateTime,
+                                float x, float y, float scale) {
+        if (scale <= 1.0001f) {
+            pamPlayer.draw(batch, clip, stateTime, x, y, true);
+            return;
+        }
+        com.badlogic.gdx.math.Matrix4 oldMatrix = batch.getTransformMatrix().cpy();
+        com.badlogic.gdx.math.Matrix4 transform = batch.getTransformMatrix();
+        transform.translate(x, y, 0);
+        transform.scale(scale, scale, 1.0f);
+        transform.translate(-x, -y, 0);
+        batch.setTransformMatrix(transform);
+        try {
+            pamPlayer.draw(batch, clip, stateTime, x, y, true);
+        } finally {
+            batch.setTransformMatrix(oldMatrix);
+        }
     }
 
     public boolean renderPlant(SpriteBatch batch, String plantTypeName, float stateTime,
@@ -383,35 +409,77 @@ public class EntityRenderer {
             return false;
         }
         textures.update();
-        ClipRef clip = projectileClips.get(visualKey);
+
+        String clipName = projectileClipName(visualKey);
+        String cacheKey = visualKey + "#" + (clipName == null ? "<first>" : clipName);
+        ClipRef clip = projectileClips.get(cacheKey);
         if (clip == null) {
-            if (Boolean.TRUE.equals(projectilePamFailed.get(visualKey))) {
+            if (Boolean.TRUE.equals(projectilePamFailed.get(cacheKey))) {
                 return false;
             }
             String pamPath = com.PVZ.model.entity.plants.behavior.impl.ProjectileVisuals.getPath(visualKey);
             if (pamPath == null) {
-                projectilePamFailed.put(visualKey, true);
+                projectilePamFailed.put(cacheKey, true);
                 return false;
             }
             try {
                 pamPlayer.loadSync(pamPath);
                 java.util.List<String> available = pamPlayer.clips(pamPath);
-                if (available != null && !available.isEmpty()) {
-                    clip = pamPlayer.getClip(pamPath, available.get(0));
+                String chosen = null;
+                if (clipName != null && available != null && available.contains(clipName)) {
+                    chosen = clipName;
+                } else if (available != null && !available.isEmpty()) {
+                    chosen = available.get(0);
+                }
+                if (chosen != null) {
+                    clip = pamPlayer.getClip(pamPath, chosen);
                 }
                 if (clip == null) {
-                    projectilePamFailed.put(visualKey, true);
+                    projectilePamFailed.put(cacheKey, true);
                     return false;
                 }
-                projectileClips.put(visualKey, clip);
+                projectileClips.put(cacheKey, clip);
             } catch (Exception e) {
                 System.err.println("EntityRenderer: Failed to load projectile PAM " + visualKey + ": " + e.getMessage());
-                projectilePamFailed.put(visualKey, true);
+                projectilePamFailed.put(cacheKey, true);
                 return false;
             }
         }
-        pamPlayer.draw(batch, clip, stateTime, x, y, true);
+
+        drawClipScaled(batch, clip, stateTime, x, y, projectileScale(visualKey));
         return true;
+    }
+
+    private String projectileClipName(String visualKey) {
+        return switch (visualKey) {
+            case "CITRON" -> "Citron_Citrus_Orb";
+            case "CITRON_PF" -> "Plantfood_Citron_Plasma_Orb";
+            case "CAULIPOWER" -> "animation";
+            case "ELECTRIC_BLUEBERRY" -> "attack";
+            case "CACTUS" -> "idle";
+            case "FUME" -> "special";
+            case "STARFRUIT", "STARFRUIT_PF" -> "animation";
+            case "BOWLING_BULB_1", "BOWLING_BULB_2", "BOWLING_BULB_3" -> "animation";
+            case "MEGA_GATLING" -> "animation";
+            case "ROTOBAGA_1", "ROTOBAGA_2" -> "animation";
+            default -> null;
+        };
+    }
+
+    private float projectileScale(String visualKey) {
+        return switch (visualKey) {
+            case "CITRON", "CITRON_PF" -> 1.25f;
+            case "CAULIPOWER" -> 1.20f;
+            case "ELECTRIC_BLUEBERRY" -> 1.25f;
+            case "CACTUS" -> 0.85f;
+            case "FUME" -> 1.10f;
+            case "STARFRUIT" -> 0.95f;
+            case "STARFRUIT_PF" -> 1.05f;
+            case "BOWLING_BULB_1", "BOWLING_BULB_2", "BOWLING_BULB_3" -> 1.0f;
+            case "MEGA_GATLING" -> 0.95f;
+            case "ROTOBAGA_1", "ROTOBAGA_2" -> 1.45f;
+            default -> 1.0f;
+        };
     }
 
     private final Map<String, ClipRef> genericPamClips = new HashMap<>();

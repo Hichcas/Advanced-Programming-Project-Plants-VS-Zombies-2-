@@ -7,10 +7,9 @@ import com.PVZ.model.enums.PlantCategory;
 import com.PVZ.model.enums.PlantTag;
 
 public class ShooterBehavior implements PlantBehavior {
-    private static final double BURST_GAP_SECONDS = 0.12;
-    // How long the "shooting" PAM clip stays selected after a shot is fired.
-    // Tune this to roughly match the real length of each plant's shooting animation.
-    private static final double SHOOT_ANIM_SECONDS = 0.5;
+    private static final double DEFAULT_BURST_GAP_SECONDS = 0.12;
+    private static final double MIN_BURST_GAP_SECONDS = 0.06;
+    private static final double MAX_BURST_GAP_SECONDS = 0.16;
 
     @Override
     public void onUpdate(PlantInstance plant, BehaviorContext context, double deltaTime) {
@@ -18,6 +17,9 @@ public class ShooterBehavior implements PlantBehavior {
             return;
         }
 
+        if (handlePuffLifespan(plant, context, deltaTime)) {
+            return;
+        }
         drainBurst(plant, context, deltaTime);
 
         Double attackTimer = asDouble(plant.getRuntimeState().getOrDefault("attackTimer", 0.0), 0.0);
@@ -52,14 +54,7 @@ public class ShooterBehavior implements PlantBehavior {
     private boolean hasTargets(PlantInstance plant, BehaviorContext context, int lane) {
         String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
         if ("threepeater".equals(key)) {
-            int rows = context.getRowCount();
-            for (int dr = -1; dr <= 1; dr++) {
-                int r = lane + dr;
-                if (r >= 0 && r < rows && !context.getZombiesInLane(r).isEmpty()) {
-                    return true;
-                }
-            }
-            return false;
+            return !context.getZombiesInLane(lane).isEmpty();
         }
         return !context.getZombiesInLane(lane).isEmpty();
     }
@@ -101,9 +96,31 @@ public class ShooterBehavior implements PlantBehavior {
 
 
     private void startBurst(PlantInstance plant, int damage, int projectileCount) {
-        plant.putRuntimeState("burstRemaining", Math.max(1, projectileCount));
+        int count = Math.max(1, projectileCount);
+        plant.putRuntimeState("burstRemaining", count);
         plant.putRuntimeState("burstDamage", damage);
-        plant.putRuntimeState("burstTimer", 999.0);
+
+        // Start the shooting PAM once per volley. The old code restarted it for every
+        // projectile, so a 3/4/5-shot volley could never stay synchronized with the clip.
+        double animationDuration = com.PVZ.model.entity.PlantAnimation
+            .resolveDuration(plant, "shooting", 0.5);
+        double gap;
+        String plantKey = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+        if ("mega_gatling_pea".equals(plantKey)) {
+            gap = 0.06;
+        } else if ("repeater".equals(plantKey) && count >= 2) {
+            // Repeater's two peas are a very tight consecutive pair.  The old 0.16s
+            // clamp made them visually look like a single shot.
+            gap = 0.09;
+        } else {
+            gap = count <= 1
+                ? DEFAULT_BURST_GAP_SECONDS
+                : animationDuration / Math.max(1, count - 1);
+            gap = Math.max(MIN_BURST_GAP_SECONDS, Math.min(MAX_BURST_GAP_SECONDS, gap));
+        }
+        plant.putRuntimeState("burstGapSeconds", gap);
+        plant.putRuntimeState("burstTimer", gap);
+        com.PVZ.model.entity.PlantAnimation.trigger(plant, "attack", animationDuration);
     }
 
     private void drainBurst(PlantInstance plant, BehaviorContext context, double deltaTime) {
@@ -113,7 +130,9 @@ public class ShooterBehavior implements PlantBehavior {
         }
         double timer = asDouble(plant.getRuntimeState().getOrDefault("burstTimer", 0.0), 0.0);
         timer += deltaTime;
-        if (timer < BURST_GAP_SECONDS) {
+        double gap = asDouble(plant.getRuntimeState().getOrDefault("burstGapSeconds", DEFAULT_BURST_GAP_SECONDS),
+            DEFAULT_BURST_GAP_SECONDS);
+        if (timer < gap) {
             plant.putRuntimeState("burstTimer", timer);
             return;
         }
@@ -125,7 +144,7 @@ public class ShooterBehavior implements PlantBehavior {
 
     /**
      * Fires one "volley" for this plant's shot pattern:
-     * - Threepeater: one pea into its own lane plus the lane above and below, simultaneously.
+     * - Threepeater: three peas in its own lane, side-by-side at the muzzle.
      * - Split Pea: one pea forward (its own lane, normal direction) plus two peas backward
      *   (same lane, reversed direction) — per its real ability: "1 shot forward, 2 backward".
      * - Everything else: a single forward pea, same as before.
@@ -133,26 +152,33 @@ public class ShooterBehavior implements PlantBehavior {
     private void fireVolley(PlantInstance plant, BehaviorContext context, int damage) {
         String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
         if ("threepeater".equals(key)) {
-            int lane = asInt(plant.getRuntimeState().getOrDefault("lane", 0), 0);
-            int rows = context.getRowCount();
-            for (int dr = -1; dr <= 1; dr++) {
-                int r = lane + dr;
-                if (r >= 0 && r < rows) {
-                    spawnOne(plant, context, damage, r, false);
-                }
+            int count = 3;
+            for (int i = 0; i < count; i++) {
+                spawnOne(plant, context, damage, null, false, spreadOffset(i, count));
+            }
+        } else if ("mega_gatling_pea".equals(key)) {
+            int count = 4;
+            for (int i = 0; i < count; i++) {
+                spawnOne(plant, context, damage, null, false, 0.0);
             }
         } else if ("split_pea".equals(key)) {
-            spawnOne(plant, context, damage, null, false);
-            spawnOne(plant, context, damage, null, true);
-            spawnOne(plant, context, damage, null, true);
+            // One shot forward + one shot backward.
+            spawnOne(plant, context, damage, null, false, 0.0);
+            spawnOne(plant, context, damage, null, true, 0.0);
         } else {
-            spawnOne(plant, context, damage, null, false);
+            spawnOne(plant, context, damage, null, false, 0.0);
         }
     }
 
+    private double spreadOffset(int index, int count) {
+        if (count <= 1) return 0.0;
+        // Same lane, visually separated at the muzzle. Positive values move the
+        // projectile slightly ahead in world X while preserving its row/lane.
+        return (index - (count - 1) / 2.0) * 18.0;
+    }
 
     private void spawnOne(PlantInstance plant, BehaviorContext context, int damage,
-                           Integer rowOverride, boolean reverse) {
+                           Integer rowOverride, boolean reverse, double spawnXOffset) {
         Projectile projectile = ProjectileFactory.createProjectile(plant, damage);
         if (rowOverride != null) {
             projectile.setRow(rowOverride);
@@ -162,11 +188,9 @@ public class ShooterBehavior implements PlantBehavior {
             projectile.putExtra("reverseDirection", Boolean.TRUE);
         }
 
-        // Mark that a "shooting" animation should play for a short window.
-        // Plant.draw() reads this to pick the "shooting" PAM clip instead of "idle".
-        // Duration comes from the real PAM clip length when known (see PamAnimationCatalog),
-        // falling back to a generic guess otherwise.
-        com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", SHOOT_ANIM_SECONDS);
+        if (Math.abs(spawnXOffset) > 0.001) {
+            projectile.putExtra("spawnXOffset", spawnXOffset);
+        }
 
         if (plant.getStats().getBooleanExtra("fireAttack", false)) {
             projectile.setType(ProjectileType.FIRE_PEA);
@@ -188,6 +212,25 @@ public class ShooterBehavior implements PlantBehavior {
         }
 
         context.spawnProjectile(projectile);
+    }
+
+    private boolean handlePuffLifespan(PlantInstance plant, BehaviorContext context, double deltaTime) {
+        String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
+        if (!"puff_shroom".equals(key)) {
+            return false;
+        }
+        double life = asDouble(plant.getRuntimeState().getOrDefault("lifespanTimer", 0.0), 0.0);
+        life += deltaTime;
+        double maxLife = plant.getStats().getLifespanSeconds();
+        if (maxLife <= 0.0) maxLife = 60.0;
+        plant.putRuntimeState("lifespanTimer", life);
+        if (life >= maxLife) {
+            int row = asInt(plant.getRuntimeState().getOrDefault("row", 0), 0);
+            int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+            context.removePlant(row, col);
+            return true;
+        }
+        return false;
     }
 
     private static int asInt(Object value, int defaultValue) {

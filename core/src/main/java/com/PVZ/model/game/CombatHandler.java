@@ -68,6 +68,9 @@ public class CombatHandler {
         speedPxPerSec *= speedMultiplier;
 
         double horizontalSign = p.getSpeed() < 0 ? -1.0 : 1.0;
+        if (Boolean.TRUE.equals(p.getExtra("reverseDirection"))) {
+            horizontalSign = -horizontalSign;
+        }
         double verticalSpeed = 0.0;
         Object targetLaneState = p.getExtra("targetLane");
         if (targetLaneState instanceof Number number) {
