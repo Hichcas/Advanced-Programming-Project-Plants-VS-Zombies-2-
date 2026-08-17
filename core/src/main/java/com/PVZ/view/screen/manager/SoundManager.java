@@ -4,20 +4,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.ObjectMap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SoundManager {
     private static SoundManager instance;
 
-    // کش داخلی برای متدهایی که با آدرس فایل صدا زده می‌شوند
-    private final ObjectMap<String, Sound> soundCache;
+    // هر مسیر می‌تونه چند نمونه Sound داشته باشه تا صداها با هم اورلپ بشن
+    private final ObjectMap<String, List<Sound>> soundCache;
+    private final ObjectMap<String, Integer> soundIndex;
 
-    // وضعیت مرکزی میوت بودن افکت‌های صوتی
+    // حداکثر تعداد هم‌زمان برای هر افکت
+    private static final int MAX_SIMULTANEOUS = 4;
+
     private boolean isMuted = false;
-
-    // 🌟 متغیر جدید برای ذخیره ولوم اصلی افکت‌ها (پیش‌فرض 0.6)
     private float masterVolume = 1f;
 
     private SoundManager() {
         soundCache = new ObjectMap<>();
+        soundIndex = new ObjectMap<>();
     }
 
     public static SoundManager getInstance() {
@@ -27,51 +32,49 @@ public class SoundManager {
         return instance;
     }
 
-    /**
-     * 🌟 متد کمکی داخلی برای محاسبه ولوم بر اساس قانون توان دو
-     * این متد تغییر اسلایدر را برای گوش انسان بسیار طبیعی‌تر می‌کند.
-     */
     private float getCalculatedVolume() {
         if (isMuted) return 0f;
         return masterVolume * masterVolume;
     }
 
     /**
-     * روش اول: پخش صدا بر اساس مسیر فایل (مدیریت خودکار کش)
+     * پخش صدا با استخر نمونه‌ها.
+     * اگه صدا تکراری و هم‌زمان پخش بشه، منتظر تموم شدن قبلی نمی‌مونه.
      */
     public void playSFX(String filePath) {
-        if (isMuted)
-            return;
+        if (isMuted) return;
 
-        Sound sound = soundCache.get(filePath);
+        List<Sound> sounds = soundCache.get(filePath);
+        if (sounds == null) {
+            sounds = new ArrayList<>();
+            soundCache.put(filePath, sounds);
+            soundIndex.put(filePath, 0);
+        }
 
-        if (sound == null) {
+        Sound sound;
+        if (sounds.size() < MAX_SIMULTANEOUS) {
             try {
                 sound = Gdx.audio.newSound(Gdx.files.internal(filePath));
-                soundCache.put(filePath, sound);
+                sounds.add(sound);
             } catch (Exception e) {
                 Gdx.app.error("SoundManager", "Error loading sound file: " + filePath, e);
                 return;
             }
+        } else {
+            int idx = soundIndex.get(filePath);
+            sound = sounds.get(idx);
+            soundIndex.put(filePath, (idx + 1) % MAX_SIMULTANEOUS);
         }
 
-        // 🌟 پاس دادن ولوم محاسبه‌شده به متد play
         sound.play(getCalculatedVolume());
     }
 
-    /**
-     * روش دوم: پخش مستقیم یک شیء Sound که از قبل لود شده است
-     */
     public void playSound(Sound sound) {
-        if (isMuted || sound == null)
-            return;
-
+        if (isMuted || sound == null) return;
         sound.play(getCalculatedVolume());
     }
 
-    // 🌟 اضافه شدن متدهای مدیریت ولوم مشابه با MusicManager
     public void setVolume(float volume) {
-        // محدود کردن مقدار ورودی بین 0.0 و 1.0 برای امنیت بیشتر
         this.masterVolume = Math.max(0f, Math.min(volume, 1f));
         if (this.masterVolume > 0) isMuted = false;
     }
@@ -92,14 +95,14 @@ public class SoundManager {
         return isMuted;
     }
 
-    /**
-     * آزادسازی حافظه فقط برای صداهایی که توسط خود منیجر کش شده بودند
-     */
     public void dispose() {
-        for (Sound sound : soundCache.values()) {
-            sound.dispose();
+        for (List<Sound> sounds : soundCache.values()) {
+            for (Sound sound : sounds) {
+                sound.dispose();
+            }
         }
         soundCache.clear();
+        soundIndex.clear();
         instance = null;
     }
 }
