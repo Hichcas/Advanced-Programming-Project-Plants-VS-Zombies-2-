@@ -11,9 +11,9 @@
   "userStats" : {
     "gamesPlayed" : 0,
     "coins" : 4997550,
-    "diamonds" : 5000193,
+    "diamonds" : 5000194,
     "stagesCompleted" : 0,
-    "highestScore" : 14500,
+    "highestScore" : 960000,
     "dailyQuestsCompleted" : 0,
     "nonDailyQuestsCompleted" : 0,
     "purchasedPlantFood" : 1
@@ -34,8 +34,8 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "IMITATER", "SUN_BEAN", "MEGA_GATLING_PEA", "REINFORCE_MINT", "TANGLE_KELP", "CHOMPER", "GOO_PEASHOOTER", "TWIN_SUNFLOWER", "ICEBERG_LETTUCE", "GOLD_BLOOM", "PEASHOOTER", "CHERRY_BOMB", "GRAVE_BUSTER", "WALL_NUT", "CAULIPOWER", "PEA_POD", "THREEPEATER", "CITRON", "PUFF_SHROOM", "JALAPENO", "SQUASH", "STARFRUIT", "PRIMAL_SUNFLOWER", "CAT_TAIL", "SWEET_POTATO", "CABBAGE_PULT", "GIANT_WALLNUT", "SEA_SHROOM", "WASABI_WHIP", "APPEASE_MINT", "GARLIC", "FIRE_PEASHOOTER", "SNOW_PEA", "PIERCE_MINT", "SPLIT_PEA", "ENDURIAN", "SUN_SHROOM", "ICE_SHROOM", "BOMBARD_MINT", "TALL_NUT", "PRIMAL_POTATO_MINE", "MELON_PULT", "DOOM_SHROOM", "HYPNO_SHROOM", "EXPLODE_O_NUT", "ENCHANT_MINT", "MAGNET_SHROOM", "CAT_TAIL_MINT", "BOWLING_BULB", "REPEATER", "PUMPKIN", "CACTUS", "PEPPER_PULT", "ENLIGHTEN_MINT", "KERNEL_PULT", "FUME_SHROOM", "SUNFLOWER", "GRAPESHOT", "ARMA_MINT", "TORCHWOOD", "LILY_PAD", "ENFORCE_MINT", "PHAT_BEET", "KIWIBEAST", "BONK_CHOY", "HOT_POTATO", "ELECTRIC_BLUEBERRY", "ROTOBAGA", "WINTER_MELON", "WALLNUT_BOWLING", "POTATO_MINE" ],
-    "seenZombies" : [ "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "ICEAGE_ARMOR3", "TOMB_RAISER", "IMP_ICEAGE", "GARGANTUAR_EGYPT", "ZOMBOSS_EGYPT", "IMP_BEACH", "TUTORIAL_DEFAULT", "GARGANTUAR_BASIC", "RA", "BEACH_SNORKEL", "ICEAGE_ARMOR1", "ICEAGE_ARMOR2", "MUMMY_ARMOR2", "CAMEL", "DARK_DEFAULT", "TUTORIAL_ARMOR1", "BEACH_FISHERMAN", "MUMMY_ARMOR1", "TROGLOBITE", "PHARAOH", "IMP_TUTORIAL", "DODO", "EXPLORER", "BEACH_FAST_SWIMMER", "MUMMY_DEFAULT", "BEACH_DEFAULT", "ICEAGE_DEFAULT", "ICEAGE_HUNTER", "TUTORIAL_FLAG", "TUTORIAL_ARMOR2", "IMP_EGYPT" ],
+    "unlockedPlants" : [ "IMITATER", "SUN_BEAN", "MEGA_GATLING_PEA", "REINFORCE_MINT", "TANGLE_KELP", "GOO_PEASHOOTER", "ICEBERG_LETTUCE", "CHOMPER", "TWIN_SUNFLOWER", "GOLD_BLOOM", "PEASHOOTER", "CHERRY_BOMB", "GRAVE_BUSTER", "CAULIPOWER", "PEA_POD", "WALL_NUT", "THREEPEATER", "CITRON", "PUFF_SHROOM", "JALAPENO", "SQUASH", "STARFRUIT", "CAT_TAIL", "PRIMAL_SUNFLOWER", "SWEET_POTATO", "CABBAGE_PULT", "GIANT_WALLNUT", "SEA_SHROOM", "APPEASE_MINT", "WASABI_WHIP", "GARLIC", "PIERCE_MINT", "FIRE_PEASHOOTER", "SNOW_PEA", "SPLIT_PEA", "ENDURIAN", "SUN_SHROOM", "TALL_NUT", "BOMBARD_MINT", "PRIMAL_POTATO_MINE", "ICE_SHROOM", "MELON_PULT", "DOOM_SHROOM", "HYPNO_SHROOM", "EXPLODE_O_NUT", "ENCHANT_MINT", "MAGNET_SHROOM", "CAT_TAIL_MINT", "BOWLING_BULB", "REPEATER", "PUMPKIN", "CACTUS", "PEPPER_PULT", "ENLIGHTEN_MINT", "KERNEL_PULT", "FUME_SHROOM", "SUNFLOWER", "GRAPESHOT", "ARMA_MINT", "LILY_PAD", "TORCHWOOD", "ENFORCE_MINT", "PHAT_BEET", "KIWIBEAST", "BONK_CHOY", "HOT_POTATO", "ELECTRIC_BLUEBERRY", "WALLNUT_BOWLING", "WINTER_MELON", "ROTOBAGA", "POTATO_MINE" ],
+    "seenZombies" : [ "MUMMY_ARMOR4", "TUTORIAL_ARMOR4", "ICEAGE_ARMOR3", "TOMB_RAISER", "IMP_ICEAGE", "ZOMBOSS_EGYPT", "GARGANTUAR_EGYPT", "IMP_BEACH", "TUTORIAL_DEFAULT", "DARK_JUGGLER", "GARGANTUAR_BASIC", "RA", "IMP_DARK", "BEACH_SNORKEL", "ICEAGE_ARMOR1", "ICEAGE_ARMOR2", "MUMMY_ARMOR2", "CAMEL", "DARK_DEFAULT", "TUTORIAL_ARMOR1", "BEACH_FISHERMAN", "WIZARD", "MUMMY_ARMOR1", "PHARAOH", "GARGANTUAR_DARK", "TROGLOBITE", "IMP_TUTORIAL", "DODO", "BEACH_FAST_SWIMMER", "EXPLORER", "MUMMY_DEFAULT", "BEACH_DEFAULT", "ICEAGE_HUNTER", "ICEAGE_DEFAULT", "TUTORIAL_FLAG", "TUTORIAL_ARMOR2", "IMP_EGYPT" ],
     "seedPackets" : {
       "SUN_SHROOM" : 5,
       "EXPLODE_O_NUT" : 20,
@@ -95,19 +95,19 @@
       "empty" : true,
       "readyForPlanting" : true
     }, {
-      "unlocked" : false,
+      "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : false
+      "readyForPlanting" : true
     } ], [ {
-      "unlocked" : false,
+      "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : false
+      "readyForPlanting" : true
     }, {
       "unlocked" : false,
       "plantType" : null,
@@ -130,8 +130,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 5,
-    "numberOfUnlockedPots" : 7
+    "numberOfLockedPots" : 3,
+    "numberOfUnlockedPots" : 9
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -648,14 +648,34 @@
       "read" : false,
       "timestamp" : 1786951870993,
       "formattedText" : "New zombie spotted: BEACH_FAST_SWIMMER!\n2026/08/17  11:01"
+    }, {
+      "text" : "New zombie spotted: IMP_DARK!",
+      "read" : false,
+      "timestamp" : 1786964463038,
+      "formattedText" : "New zombie spotted: IMP_DARK!\n2026/08/17  14:31"
+    }, {
+      "text" : "New zombie spotted: WIZARD!",
+      "read" : false,
+      "timestamp" : 1786964489463,
+      "formattedText" : "New zombie spotted: WIZARD!\n2026/08/17  14:31"
+    }, {
+      "text" : "New zombie spotted: DARK_JUGGLER!",
+      "read" : false,
+      "timestamp" : 1786964490961,
+      "formattedText" : "New zombie spotted: DARK_JUGGLER!\n2026/08/17  14:31"
+    }, {
+      "text" : "New zombie spotted: GARGANTUAR_DARK!",
+      "read" : false,
+      "timestamp" : 1786964497478,
+      "formattedText" : "New zombie spotted: GARGANTUAR_DARK!\n2026/08/17  14:31"
     } ]
   },
   "shopDaily" : {
     "offerPlant" : "FIRE_PEASHOOTER",
     "offerDate" : "2026-08-15",
     "purchased" : false,
-    "forToday" : false,
-    "availableToday" : false
+    "availableToday" : false,
+    "forToday" : false
   },
   "stayLoggedIn" : true,
   "questState" : {
@@ -691,7 +711,7 @@
         "priority" : "MEDIUM",
         "conditionKey" : "speed_kill",
         "targetCount" : 10,
-        "currentCount" : 3,
+        "currentCount" : 0,
         "completed" : false,
         "claimed" : false,
         "reward" : {
@@ -703,7 +723,7 @@
         "active" : true,
         "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1786957613149
+          "waveStartTime" : 1786964816371
         },
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
@@ -826,7 +846,7 @@
         "conditionKey" : "max_sun_producers",
         "targetCount" : 3,
         "currentCount" : 0,
-        "completed" : false,
+        "completed" : true,
         "claimed" : false,
         "reward" : {
           "type" : "DIAMONDS",
@@ -834,7 +854,7 @@
           "targetPlant" : null
         },
         "parameters" : { },
-        "active" : true,
+        "active" : false,
         "formattedTitle" : "Cloudy Day",
         "runtimeState" : { },
         "formattedDescription" : "Win with at most 3 sun producers"
@@ -887,10 +907,10 @@
       } ],
       "lastDailyRefresh" : "2026-08-17",
       "consecutiveMaxDifficultyWins" : 0,
-      "currentChapter" : "DARK_AGES",
+      "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
-      "isDayLevel" : false,
-      "timeUntilReset" : "11h 22m"
+      "isDayLevel" : true,
+      "timeUntilReset" : "9h 22m"
     }
   }
 }
