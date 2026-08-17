@@ -221,8 +221,28 @@ public enum ZombieType {
       }
 
       public static ZombieType fromAlias(String alias) {
+            if (alias == null) return TUTORIAL_DEFAULT;
             ZombieType zt = BY_ALIAS.get(alias);
-            if (zt == null) throw new IllegalArgumentException("Unknown alias: " + alias);
-            return zt;
+            if (zt != null) return zt;
+
+            // Common aliases and alternate names
+            if ("ZombieBeachSnorkeler".equals(alias) || "ZombieBeachSnorkelDefault".equals(alias)) return BEACH_SNORKEL;
+            if ("ZombieBeachSurferDefault".equals(alias)) return BEACH_SURFER;
+            if ("ZombieBeachOctopusDefault".equals(alias)) return BEACH_OCTOPUS;
+            if ("ZombieBeachFishermanDefault".equals(alias)) return BEACH_FISHERMAN;
+            if ("ZombieBeachImp".equals(alias)) return IMP_BEACH;
+            if ("ZombieBeachFlag".equals(alias)) return BEACH_DEFAULT;
+
+            if (alias.endsWith("Default")) {
+                zt = BY_ALIAS.get(alias.substring(0, alias.length() - 7));
+                if (zt != null) return zt;
+            }
+            if (!alias.endsWith("Default")) {
+                zt = BY_ALIAS.get(alias + "Default");
+                if (zt != null) return zt;
+            }
+
+            System.err.println("Warning: Unknown zombie alias '" + alias + "', falling back to TUTORIAL_DEFAULT");
+            return TUTORIAL_DEFAULT;
       }
 }
