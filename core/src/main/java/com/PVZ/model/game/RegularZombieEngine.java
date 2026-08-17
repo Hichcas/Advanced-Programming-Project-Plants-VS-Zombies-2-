@@ -111,7 +111,12 @@ public class RegularZombieEngine implements ZombieEngine {
         }
         Tile tile = map.getTile(row, col);
         float y = tile.getY() + (tile.getHeight() - 70f) / 2f;
-        float x = tile.getX() + tile.getWidth() / 2f;
+        float x;
+        if (col >= map.getCols() - 1) {
+            x = map.getStartX() + map.getTotalWidth() + 120f + (float)(Math.random() * 80f);
+        } else {
+            x = tile.getX() + tile.getWidth() / 2f;
+        }
         zombie.initPosition(x, y, row);
         zombie.setGlowing(Math.random() < 0.05);
         zombie.setCol(col);
