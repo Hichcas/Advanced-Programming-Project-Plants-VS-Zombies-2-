@@ -1,5 +1,6 @@
 package com.PVZ.view.screen;
 
+import com.PVZ.model.enums.ChapterEnum;
 import com.PVZ.view.renderer.WorldBackgroundRenderer;
 import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.model.enums.MenuType;
@@ -91,7 +92,12 @@ public class GameScreen extends BaseScreen {
             backgroundTexture = null;
         }
 
-        MusicManager.getInstance().playMusic(musicPath);
+        ChapterEnum chapter = AppStatus.getCurrentChapterEnum();
+        String actualMusic = (chapter != null && chapter.getMusicPath() != null)
+            ? chapter.getMusicPath()
+            : musicPath;
+
+        MusicManager.getInstance().playMusic(actualMusic);
         this.gameEngine = gameEngine;
         AppStatus.setGameEngine(gameEngine);
 
