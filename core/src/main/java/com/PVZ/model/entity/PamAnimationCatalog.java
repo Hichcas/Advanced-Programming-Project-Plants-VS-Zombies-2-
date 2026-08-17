@@ -22,7 +22,7 @@ public final class PamAnimationCatalog {
         SYNONYMS.put("damage", new String[]{"damage", "damage2", "damage3", "idle_damage"});
         SYNONYMS.put("planting", new String[]{"plant", "intro"});
         // Zombie states and special abilities
-        SYNONYMS.put("walk", new String[]{"walk", "walk1", "walk2", "walk_stage1", "walk_stage2", "run", "walk_forward"});
+        SYNONYMS.put("walk", new String[]{"walk", "walk1", "walk2", "walk_stage1", "walk_stage2", "run", "walk_forward", "idle"});
         SYNONYMS.put("eat", new String[]{"eat", "eat1", "chew", "attack", "bite", "eat_norm"});
         SYNONYMS.put("die", new String[]{"death", "die", "fall", "burn", "ash"});
         SYNONYMS.put("zombie_idle", new String[]{"idle", "idle1", "groan", "stand", "idle_norm"});
@@ -113,6 +113,9 @@ public final class PamAnimationCatalog {
                     return name;
                 }
             }
+        }
+        if (e.clips.containsKey("idle")) {
+            return "idle";
         }
         return e.clips.keySet().iterator().next();
     }

@@ -183,9 +183,42 @@ public class DrawHandler {
                 HealthBarRenderer.draw(batch, box.x, box.y + box.height + 2, box.width,
                     (float) plant.getCurrentHp() / Math.max(1, plant.getMaxHp()), true);
                 String label = plant.getType() + " (" + plant.getCurrentHp() + "hp)";
-                font.draw(batch, label, box.x, box.y + box.height + 4);
                 drawPlantFreezeOverlay(engine, batch, plant, box);
+                drawPlantOctopusOverlay(engine, batch, row, col, box);
             }
+        }
+    }
+
+    private static void drawPlantOctopusOverlay(RegularGameEngine engine, SpriteBatch batch,
+                                                int row, int col, Rectangle box) {
+        if (engine.map == null) return;
+        Tile tile = engine.map.getTile(row, col);
+        if (tile != null && tile.getOctopusHp() > 0) {
+            float centerX = box.x + box.width / 2f;
+            float centerY = box.y + box.height / 2f;
+            boolean rendered = EntityRenderer.getInstance().renderPam(
+                batch,
+                "768/FULL/EFFECTS/ZOMBIE_OCTOPUS_PROJECTILE/ZOMBIE_OCTOPUS_PROJECTILE.PAM",
+                "animation3",
+                iceBlockStateTime,
+                centerX,
+                centerY,
+                1.0f
+            );
+            if (!rendered) {
+                Color c = batch.getColor();
+                batch.setColor(0.9f, 0.4f, 0.1f, 0.75f);
+                batch.draw(whiteTexture(), box.x + 6f, box.y + 6f, box.width - 12f, box.height - 12f);
+                batch.setColor(c);
+            }
+
+            // Draw Octopus Health Bar
+            float hpPercent = Math.max(0f, Math.min(1.0f, (float) tile.getOctopusHp() / 200f));
+            HealthBarRenderer.draw(batch, box.x, box.y + box.height + 14f, box.width, hpPercent, false);
+            BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
+            font.setColor(Color.ORANGE);
+            font.draw(batch, "Octopus (" + tile.getOctopusHp() + "hp)", box.x, box.y + box.height + 26f);
+            font.setColor(Color.WHITE);
         }
     }
 
