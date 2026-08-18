@@ -15,12 +15,20 @@ public class Tile {
     private float worldX, worldY;
     private float width, height;
 
+    private com.PVZ.model.enums.GraveVariant graveVariant;
+    private int maxHp = 700;
+    private float graveAnimTime = 0f;
+
     public Tile(TileType type, Plant plant, int gridRow, int gridCol,
                 float worldX, float worldY, float width, float height) {
         this.type = type;
         this.plant = plant;
         this.basePlant = null;
         this.octopusHp = 0;
+        this.hp = 0;
+        this.maxHp = 700;
+        this.graveVariant = null;
+        this.graveAnimTime = 0f;
         this.gridRow = gridRow;
         this.gridCol = gridCol;
         this.worldX = worldX;
@@ -30,6 +38,9 @@ public class Tile {
     }
 
     public void update(float delta) {
+        if (isGrave()) {
+            graveAnimTime += delta;
+        }
     }
 
     public void drawBorder(ShapeRenderer sr) {
@@ -111,5 +122,33 @@ public class Tile {
 
     public float getHeight() {
         return height;
+    }
+
+    public boolean isGrave() {
+        return type == TileType.TOMBSTONE || type == TileType.NECROMANCY;
+    }
+
+    public com.PVZ.model.enums.GraveVariant getGraveVariant() {
+        return graveVariant;
+    }
+
+    public void setGraveVariant(com.PVZ.model.enums.GraveVariant graveVariant) {
+        this.graveVariant = graveVariant;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public void setMaxHp(int maxHp) {
+        this.maxHp = maxHp;
+    }
+
+    public float getGraveAnimTime() {
+        return graveAnimTime;
+    }
+
+    public void setGraveAnimTime(float graveAnimTime) {
+        this.graveAnimTime = graveAnimTime;
     }
 }

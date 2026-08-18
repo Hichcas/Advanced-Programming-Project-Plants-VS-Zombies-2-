@@ -50,7 +50,7 @@ public class Chapter {
             for (int r = 0; r < 5; r++) {
                 for (int c = 0; c < 9; c++) {
                     Tile tile = map.getTile(r, c);
-                    if (tile != null && tile.getType() == TileType.TOMBSTONE && tile.getHp() <= 0) {
+                    if (tile != null && (tile.getType() == TileType.TOMBSTONE || tile.getType() == TileType.NECROMANCY) && tile.getHp() <= 0) {
                         tile.setType(TileType.NORMAL);
                         tile.setHp(0);
                     }
@@ -376,14 +376,29 @@ public class Chapter {
             }
             tile.setType(TileType.NECROMANCY);
             tile.setHp(700);
+            tile.setMaxHp(700);
+
+            double roll = random.nextDouble();
+            if (roll < 0.60) {
+                tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_NOOP);
+            } else if (roll < 0.90) {
+                tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_SUN);
+            } else {
+                tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD);
+            }
             placed++;
-            if (random.nextDouble() < 0.3) {
-                engine.addSun(50);
+
+            if (engine != null) {
+                float[] center = engine.getPlantWorldCenter(r, c);
+                engine.addTimedPamEffect(
+                    "768/FULL/EFFECTS/TOMBSTONE_DARK_SPAWN_EFFECT/TOMBSTONE_DARK_SPAWN_EFFECT.PAM",
+                    "animation", 1.3333, 1.0f, center[0], center[1]);
             }
         }
     }
 
     private void spawnFromNecromancyTiles(com.PVZ.model.game.Map map, RegularGameEngine engine) {
+        String[] darkZombies = {"ZombieDarkDefault", "ZombieDarkImpDefault", "ZombieCamelDefault"};
         for (int r = 0; r < 5; r++) {
             for (int c = 0; c < 9; c++) {
                 Tile tile = map.getTile(r, c);
@@ -391,7 +406,14 @@ public class Chapter {
                     continue;
                 }
                 if (random.nextDouble() < 0.50) {
-                    engine.spawnZombie("ZombieDarkDefault", r, c);
+                    String zAlias = darkZombies[random.nextInt(darkZombies.length)];
+                    engine.spawnZombie(zAlias, r, c);
+                    if (engine != null) {
+                        float[] center = engine.getPlantWorldCenter(r, c);
+                        engine.addTimedPamEffect(
+                            "768/FULL/EFFECTS/TOMBSTONE_DARK_BASE_DAMAGE/TOMBSTONE_DARK_BASE_DAMAGE.PAM",
+                            "animation", 1.0, 1.0f, center[0], center[1]);
+                    }
                     tile.setType(TileType.NORMAL);
                     tile.setHp(0);
                 }
@@ -408,7 +430,14 @@ public class Chapter {
                 Tile tile = map.getTile(t.getRow(), t.getCol());
                 if (tile != null) {
                     tile.setType(TileType.TOMBSTONE);
-                    tile.setHp(t.getHp());
+                    int hp = t.getHp() > 0 ? t.getHp() : 700;
+                    tile.setHp(hp);
+                    tile.setMaxHp(hp);
+                    if (config != null && "DARK_AGES".equalsIgnoreCase(config.getName())) {
+                        tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_NOOP);
+                    } else {
+                        tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.EGYPT);
+                    }
                 }
             }
         }
@@ -416,9 +445,12 @@ public class Chapter {
             for (StageConfig.TileEntry te : stage.getTiles()) {
                 Tile tile = map.getTile(te.getRow(), te.getCol());
                 if (tile != null) {
-                    tile.setType(TileType.valueOf(te.getType()));
-                    if ("NECROMANCY".equals(te.getType())) {
+                    TileType tt = TileType.valueOf(te.getType());
+                    tile.setType(tt);
+                    if (tt == TileType.NECROMANCY) {
                         tile.setHp(700);
+                        tile.setMaxHp(700);
+                        tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_NOOP);
                     }
                 }
             }

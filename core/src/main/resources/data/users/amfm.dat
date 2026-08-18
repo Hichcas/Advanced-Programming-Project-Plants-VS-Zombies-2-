@@ -35,7 +35,7 @@
   },
   "collectionState" : {
     "unlockedPlants" : [ "LILY_PAD", "HYPNO_SHROOM", "FUME_SHROOM", "CACTUS", "ARMA_MINT", "GRAVE_BUSTER", "TANGLE_KELP", "PEASHOOTER", "REINFORCE_MINT", "BOWLING_BULB", "ENFORCE_MINT", "REPEATER", "CAT_TAIL", "SUNFLOWER", "MEGA_GATLING_PEA", "CHERRY_BOMB", "CAULIPOWER", "CHOMPER", "CAT_TAIL_MINT", "TORCHWOOD", "GOO_PEASHOOTER", "SPLIT_PEA", "JALAPENO", "SUN_SHROOM", "GOLD_BLOOM", "ENDURIAN", "WASABI_WHIP", "BONK_CHOY", "PIERCE_MINT", "PRIMAL_SUNFLOWER", "GIANT_WALLNUT", "APPEASE_MINT", "KIWIBEAST", "ELECTRIC_BLUEBERRY", "TALL_NUT", "IMITATER", "SQUASH", "POTATO_MINE", "WALLNUT_BOWLING", "ICE_SHROOM", "PRIMAL_POTATO_MINE", "ENCHANT_MINT", "WINTER_MELON", "MELON_PULT", "PUMPKIN", "THREEPEATER", "MAGNET_SHROOM", "PEA_POD", "SEA_SHROOM", "DOOM_SHROOM", "HOT_POTATO", "CITRON", "EXPLODE_O_NUT", "PHAT_BEET", "SNOW_PEA", "TWIN_SUNFLOWER", "ICEBERG_LETTUCE", "PEPPER_PULT", "PUFF_SHROOM", "KERNEL_PULT", "FIRE_PEASHOOTER", "CABBAGE_PULT", "STARFRUIT", "BOMBARD_MINT", "ENLIGHTEN_MINT", "ROTOBAGA", "WALL_NUT", "SWEET_POTATO", "GARLIC", "GRAPESHOT", "SUN_BEAN" ],
-    "seenZombies" : [ "DARK_DEFAULT", "IMP_TUTORIAL", "ZOMBOTANY_PEASHOOTER", "PHARAOH", "TUTORIAL_ARMOR1", "RA", "BEACH_ARMOR2", "IMP_EGYPT", "ZOMBOTANY_SQUASH", "CAMEL", "TUTORIAL_DEFAULT", "BEACH_DEFAULT", "MUMMY_DEFAULT", "ICEAGE_ARMOR1", "MUMMY_ARMOR2", "ICEAGE_DEFAULT", "EXPLORER", "TUTORIAL_ARMOR4", "ICEAGE_ARMOR2", "TOMB_RAISER", "GARGANTUAR_EGYPT", "ICEAGE_HUNTER", "GARGANTUAR_BASIC", "DODO", "TUTORIAL_FLAG", "IMP_ICEAGE", "BEACH_SNORKEL", "BEACH_OCTOPUS", "GARGANTUAR_BEACH", "ICEAGE_ARMOR3", "BEACH_FAST_SWIMMER", "IMP_BEACH", "MUMMY_ARMOR4", "BEACH_ARMOR1", "BEACH_FISHERMAN", "TUTORIAL_ARMOR2", "ZOMBOSS_EGYPT", "MUMMY_ARMOR1", "TROGLOBITE", "BEACH_SURFER" ],
+    "seenZombies" : [ "DARK_DEFAULT", "IMP_TUTORIAL", "ZOMBOTANY_PEASHOOTER", "PHARAOH", "TUTORIAL_ARMOR1", "DARK_ARMOR1", "RA", "BEACH_ARMOR2", "IMP_EGYPT", "ZOMBOTANY_SQUASH", "CAMEL", "TUTORIAL_DEFAULT", "BEACH_DEFAULT", "MUMMY_DEFAULT", "ICEAGE_ARMOR1", "MUMMY_ARMOR2", "ICEAGE_DEFAULT", "EXPLORER", "TUTORIAL_ARMOR4", "ICEAGE_ARMOR2", "TOMB_RAISER", "GARGANTUAR_EGYPT", "IMP_DARK", "ICEAGE_HUNTER", "GARGANTUAR_BASIC", "DODO", "TUTORIAL_FLAG", "IMP_ICEAGE", "BEACH_SNORKEL", "BEACH_OCTOPUS", "GARGANTUAR_BEACH", "ICEAGE_ARMOR3", "BEACH_FAST_SWIMMER", "IMP_BEACH", "MUMMY_ARMOR4", "BEACH_ARMOR1", "BEACH_FISHERMAN", "TUTORIAL_ARMOR2", "ZOMBOSS_EGYPT", "MUMMY_ARMOR1", "TROGLOBITE", "BEACH_SURFER" ],
     "seedPackets" : {
       "SUN_SHROOM" : 5,
       "SUNFLOWER" : 20
@@ -684,6 +684,16 @@
       "read" : false,
       "timestamp" : 1787041706389,
       "formattedText" : "New zombie spotted: BEACH_ARMOR2!\n2026/08/18  11:58"
+    }, {
+      "text" : "New zombie spotted: IMP_DARK!",
+      "read" : false,
+      "timestamp" : 1787046886647,
+      "formattedText" : "New zombie spotted: IMP_DARK!\n2026/08/18  13:24"
+    }, {
+      "text" : "New zombie spotted: DARK_ARMOR1!",
+      "read" : false,
+      "timestamp" : 1787046900046,
+      "formattedText" : "New zombie spotted: DARK_ARMOR1!\n2026/08/18  13:25"
     } ]
   },
   "shopDaily" : {
@@ -716,8 +726,8 @@
           "n" : 0
         },
         "active" : false,
-        "runtimeState" : { },
         "formattedTitle" : "Economic Herbivore",
+        "runtimeState" : { },
         "formattedDescription" : "Win without losing more than 0 plants"
       }, {
         "id" : "story_speed",
@@ -727,8 +737,8 @@
         "priority" : "MEDIUM",
         "conditionKey" : "speed_kill",
         "targetCount" : 10,
-        "currentCount" : 8,
-        "completed" : false,
+        "currentCount" : 10,
+        "completed" : true,
         "claimed" : false,
         "reward" : {
           "type" : "COINS",
@@ -736,11 +746,11 @@
           "targetPlant" : null
         },
         "parameters" : { },
-        "active" : true,
-        "runtimeState" : {
-          "waveStartTime" : 1787046003610
-        },
+        "active" : false,
         "formattedTitle" : "Speed Run",
+        "runtimeState" : {
+          "waveStartTime" : 1787046880465
+        },
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_defense",
@@ -760,8 +770,8 @@
         },
         "parameters" : { },
         "active" : false,
-        "runtimeState" : { },
         "formattedTitle" : "Master of Defense",
+        "runtimeState" : { },
         "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "epic_night_day",
@@ -781,8 +791,8 @@
         },
         "parameters" : { },
         "active" : false,
-        "runtimeState" : { },
         "formattedTitle" : "Day or Night",
+        "runtimeState" : { },
         "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "epic_lawnmower",
@@ -804,8 +814,8 @@
           "n" : 20
         },
         "active" : true,
-        "runtimeState" : { },
         "formattedTitle" : "Lawnmower Time",
+        "runtimeState" : { },
         "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
@@ -827,16 +837,16 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
-        "runtimeState" : { },
         "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { },
         "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
-      "currentChapter" : "BIG_WAVE_BEACH",
+      "currentChapter" : "DARK_AGES",
       "currentDifficulty" : 3,
-      "isDayLevel" : true,
-      "timeUntilReset" : "10h 49m"
+      "isDayLevel" : false,
+      "timeUntilReset" : "10h 34m"
     }
   }
 }

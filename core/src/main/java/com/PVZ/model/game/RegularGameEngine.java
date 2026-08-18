@@ -107,6 +107,7 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         }
         this.zombieEngine = new RegularZombieEngine();
         this.battleController = new BattleController(zombieEngine.getZombies(), plants, projectiles, gameStatus);
+        this.battleController.setEngine(this);
         this.battleController.setPlantFoodManager(plantFoodManager);
         this.battleController.setLootManager(lootManager);
         this.waveManager = new WaveManager(waves);

@@ -269,21 +269,75 @@ public class DrawHandler {
         if (engine.map == null) return;
         BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
         font.setColor(Color.WHITE);
+        float delta = com.badlogic.gdx.Gdx.graphics.getDeltaTime();
+
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 9; col++) {
                 Tile tile = engine.map.getTile(row, col);
-                if (tile != null && tile.getType() == TileType.TOMBSTONE) {
-                    float tileX = tile.getX();
-                    float tileY = tile.getY();
-                    float width = tile.getWidth();
-                    float height = tile.getHeight();
+                if (tile == null) continue;
+                if (tile.getType() != TileType.TOMBSTONE && tile.getType() != TileType.NECROMANCY) {
+                    continue;
+                }
 
-                    float hpPercent = Math.max(0f, (float) tile.getHp() / 700f);
+                tile.update(delta);
+
+                float tileX = tile.getX();
+                float tileY = tile.getY();
+                float width = tile.getWidth();
+                float height = tile.getHeight();
+                float centerX = tileX + width / 2f;
+                float centerY = tileY + height / 2f;
+
+                int maxHp = tile.getMaxHp() > 0 ? tile.getMaxHp() : 700;
+                int currentHp = Math.max(0, tile.getHp() > 0 ? tile.getHp() : maxHp);
+                float hpPercent = Math.max(0f, Math.min(1.0f, (float) currentHp / (float) maxHp));
+
+                // 1. Determine Grave Variant and PAM Path
+                com.PVZ.model.enums.GraveVariant variant = tile.getGraveVariant();
+                if (variant == null) {
+                    String chap = com.PVZ.model.status.AppStatus.currentChapterName;
+                    if ("DARK_AGES".equalsIgnoreCase(chap) || tile.getType() == TileType.NECROMANCY) {
+                        variant = com.PVZ.model.enums.GraveVariant.DARK_NOOP;
+                    } else {
+                        variant = com.PVZ.model.enums.GraveVariant.EGYPT;
+                    }
+                    tile.setGraveVariant(variant);
+                }
+
+                String pamPath = variant.getPamPath();
+                String clipName = com.PVZ.model.enums.GraveVariant.getClipForHpRatio(hpPercent);
+
+                // 2. Render Gravestone PAM animation
+                EntityRenderer.getInstance().renderPam(
+                    batch,
+                    pamPath,
+                    clipName,
+                    tile.getGraveAnimTime(),
+                    centerX,
+                    centerY,
+                    0.95f
+                );
+
+                // 3. If Grave Buster is eating this grave, render Grave Buster dirt effect
+                Plant plantOnGrave = tile.getPlant();
+                if (plantOnGrave != null && plantOnGrave.getType() == com.PVZ.model.enums.PlantType.GRAVE_BUSTER && !plantOnGrave.isDead()) {
+                    EntityRenderer.getInstance().renderPam(
+                        batch,
+                        "768/INITIAL/EFFECTS/GRAVEBUSTER_DIRT/GRAVEBUSTER_DIRT.PAM",
+                        "gravebuster_dirt_anim",
+                        tile.getGraveAnimTime(),
+                        centerX,
+                        centerY - 10f,
+                        0.95f
+                    );
+                }
+
+                // 4. Render Health Bar & Label if damaged or in Dark Ages
+                if (currentHp < maxHp || tile.getType() == TileType.NECROMANCY) {
                     HealthBarRenderer.draw(batch, tileX + 10f, tileY + height - 15f, width - 20f, hpPercent, true);
-
-                    String label = "BIG_WAVE_BEACH".equals(com.PVZ.model.status.AppStatus.currentChapterName)
-                        ? "Surfboard (" + tile.getHp() + "hp)"
-                        : "Tomb (" + tile.getHp() + "hp)";
+                    String label = "DARK_SUN".equals(variant.name()) ? "Sun Tomb (" + currentHp + "hp)"
+                        : "DARK_PLANTFOOD".equals(variant.name()) ? "PF Tomb (" + currentHp + "hp)"
+                        : "Tomb (" + currentHp + "hp)";
                     font.draw(batch, label, tileX + 10f, tileY + height - 2f);
                 }
             }

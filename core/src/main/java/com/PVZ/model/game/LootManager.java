@@ -22,6 +22,10 @@ public class LootManager {
         return drop;
     }
 
+    public LootDrop spawnLootDrop(double x, double y, LootDrop.LootType type) {
+        return spawn(x, y, type);
+    }
+
     public void update(float delta) {
         for (LootDrop drop : drops) {
             drop.update(delta);

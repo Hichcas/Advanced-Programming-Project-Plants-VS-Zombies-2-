@@ -113,14 +113,57 @@ public class ExplosiveBehavior implements PlantBehavior {
         }
 
         if ("grave_buster".equals(key)) {
+            int col = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
             if (context instanceof com.PVZ.model.game.RegularGameEngine rge && rge.map != null) {
-                com.PVZ.model.entity.Tile tile = rge.map.getTile(row, asInt(plant.getRuntimeState().getOrDefault("col", 0), 0));
+                com.PVZ.model.entity.Tile tile = rge.map.getTile(row, col);
                 if (tile != null && (tile.getType() == com.PVZ.model.enums.TileType.TOMBSTONE
                     || tile.getType() == com.PVZ.model.enums.TileType.NECROMANCY)) {
-                    tile.setType(com.PVZ.model.enums.TileType.NORMAL);
-                    tile.setHp(0);
+
+                    double eatDuration = 4.5;
+                    if (plant.getStats() != null && plant.getStats().getExtra("eatTimeReduction") != null) {
+                        eatDuration = Math.max(1.5, 4.5 - asDouble(plant.getStats().getExtra("eatTimeReduction"), 1.0));
+                    }
+
+                    double eatTimer = asDouble(plant.getRuntimeState().getOrDefault("eatTimer", 0.0), 0.0) + deltaTime;
+                    plant.putRuntimeState("eatTimer", eatTimer);
+
                     PlantAnimation.trigger(plant, "attack", 1.0);
-                    context.removePlant(row, asInt(plant.getRuntimeState().getOrDefault("col", 0), 0));
+
+                    int startHp = asInt(plant.getRuntimeState().getOrDefault("initialGraveHp", tile.getMaxHp() > 0 ? tile.getMaxHp() : 700), 700);
+                    plant.putRuntimeState("initialGraveHp", startHp);
+                    double progress = Math.min(1.0, eatTimer / eatDuration);
+                    int remainingHp = (int) (startHp * (1.0 - progress));
+                    tile.setHp(Math.max(1, remainingHp));
+
+                    if (eatTimer >= eatDuration) {
+                        com.PVZ.model.enums.GraveVariant variant = tile.getGraveVariant();
+                        tile.setType(com.PVZ.model.enums.TileType.NORMAL);
+                        tile.setHp(0);
+
+                        float[] center = rge.getPlantWorldCenter(row, col);
+                        String fxPam = (variant != null && variant.getDamageFxPamPath() != null)
+                            ? variant.getDamageFxPamPath()
+                            : "768/INITIAL/EFFECTS/TOMBSTONE_EGYPT_HIEROGLYPH_DAMAGE/TOMBSTONE_EGYPT_HIEROGLYPH_DAMAGE.PAM";
+                        rge.addTimedPamEffect(fxPam, "animation", 1.0, 1.0f, center[0], center[1]);
+
+                        if (variant == com.PVZ.model.enums.GraveVariant.DARK_SUN) {
+                            rge.addSun(100);
+                        } else if (variant == com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD) {
+                            rge.getLootManager().spawnLootDrop(center[0], center[1], com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
+                        }
+
+                        boolean explodeOnFinish = plant.getStats() != null && plant.getStats().getBooleanExtra("explodeOnFinish", false);
+                        if (explodeOnFinish) {
+                            context.damageArea(lane, row, 500);
+                            rge.addTimedPamEffect(
+                                "768/INITIAL/EFFECTS/GRAVEBUSTER_EXPLOSION_POTATOMINE/GRAVEBUSTER_EXPLOSION_POTATOMINE.PAM",
+                                "animation", 1.1667, 1.2f, center[0], center[1]);
+                        }
+
+                        context.removePlant(row, col);
+                    }
+                } else {
+                    context.removePlant(row, col);
                 }
             }
             return;
