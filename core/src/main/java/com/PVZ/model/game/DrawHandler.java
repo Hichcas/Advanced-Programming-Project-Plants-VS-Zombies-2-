@@ -205,15 +205,16 @@ public class DrawHandler {
                 Tile shoreTile = engine.map.getTile(2, minWaterCol);
                 if (shoreTile != null) {
                     float waterX = shoreTile.getX();
+                    float tileW = shoreTile.getWidth();
                     float lawnCenterY = (engine.map.getTile(0, 0).getY() + engine.map.getTile(4, 0).getY() + engine.map.getTile(0, 0).getHeight()) / 2f;
 
-                    // 1. Draw WATER_UNDERLAYER (Aligned so the water edge starts right at the shore tiles)
+                    // 1. Draw WATER_UNDERLAYER (Aligned so the water edge starts right at the L column / 3rd from right)
                     EntityRenderer.getInstance().renderPam(
                         batch,
                         "768/FULL/BACKGROUNDS/WATER_UNDERLAYER/WATER_UNDERLAYER.PAM",
                         "Water",
                         iceBlockStateTime,
-                        waterX + 250f,
+                        waterX + 250f + 2f * tileW,
                         lawnCenterY,
                         1.0f
                     );
@@ -224,18 +225,18 @@ public class DrawHandler {
                         "768/FULL/BACKGROUNDS/WAVE_UPPERLAYER/WAVE_UPPERLAYER.PAM",
                         "water",
                         iceBlockStateTime,
-                        waterX + 250f,
+                        waterX + 250f + 2f * tileW,
                         lawnCenterY,
                         1.0f
                     );
 
-                    // 3. Draw WATER_TIDE_LINE (White foam wave aligned exactly at the shoreline)
+                    // 3. Draw WATER_TIDE_LINE (White foam wave aligned exactly onto the L column)
                     EntityRenderer.getInstance().renderPam(
                         batch,
                         "768/FULL/BACKGROUNDS/WATER_TIDE_LINE/WATER_TIDE_LINE.PAM",
                         "idle",
                         iceBlockStateTime,
-                        waterX + 410f,
+                        waterX + 410f + 2f * tileW,
                         lawnCenterY,
                         1.0f
                     );

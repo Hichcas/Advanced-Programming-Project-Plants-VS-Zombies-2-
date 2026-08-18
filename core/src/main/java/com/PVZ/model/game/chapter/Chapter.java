@@ -330,32 +330,34 @@ public class Chapter {
     }
 
     private void advanceTide(com.PVZ.model.game.Map map) {
-        if (tideFloodedColumn < 0) {
-            return;
-        }
-        int targetCol = tideFloodedColumn;
-        tideFloodedColumn--;
-        for (int r = 0; r < 5; r++) {
-            Tile tile = map.getTile(r, targetCol);
-            if (tile == null) {
-                continue;
+        for (int step = 0; step < 2; step++) {
+            if (tideFloodedColumn < 0) {
+                break;
             }
-            Plant topPlant = map.getPlantAt(r, targetCol);
-            Plant basePlant = map.getBasePlantAt(r, targetCol);
-            boolean protectedByLilyPad = (basePlant != null && isWaterPlant(basePlant));
-
-            if (topPlant != null && !protectedByLilyPad) {
-                if (!isWaterPlant(topPlant)) {
-                    System.out.println("[RisingTide] Water flooded column " + targetCol + "! Non-aquatic plant " + topPlant.getType() + " at (" + targetCol + ", " + r + ") drowned in the rising tide.");
-                    topPlant.takeDamage(99999);
-                    map.removePlant(r, targetCol);
+            int targetCol = tideFloodedColumn;
+            tideFloodedColumn--;
+            for (int r = 0; r < 5; r++) {
+                Tile tile = map.getTile(r, targetCol);
+                if (tile == null) {
+                    continue;
                 }
+                Plant topPlant = map.getPlantAt(r, targetCol);
+                Plant basePlant = map.getBasePlantAt(r, targetCol);
+                boolean protectedByLilyPad = (basePlant != null && isWaterPlant(basePlant));
+
+                if (topPlant != null && !protectedByLilyPad) {
+                    if (!isWaterPlant(topPlant)) {
+                        System.out.println("[RisingTide] Water flooded column " + targetCol + "! Non-aquatic plant " + topPlant.getType() + " at (" + targetCol + ", " + r + ") drowned in the rising tide.");
+                        topPlant.takeDamage(99999);
+                        map.removePlant(r, targetCol);
+                    }
+                }
+                if (basePlant != null && !isWaterPlant(basePlant)) {
+                    basePlant.takeDamage(99999);
+                    map.removeBasePlant(r, targetCol);
+                }
+                tile.setType(TileType.TIDE);
             }
-            if (basePlant != null && !isWaterPlant(basePlant)) {
-                basePlant.takeDamage(99999);
-                map.removeBasePlant(r, targetCol);
-            }
-            tile.setType(TileType.TIDE);
         }
     }
 
