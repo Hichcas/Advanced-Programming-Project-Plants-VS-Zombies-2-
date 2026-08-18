@@ -597,6 +597,41 @@ public class GameScreen extends BaseScreen {
             activeEngine = gameEngine;
         }
 
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.S)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getSandstormManager() != null) {
+                reg.getSandstormManager().triggerSandstorm(reg, 2);
+            }
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.I)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getIceWindManager() != null) {
+                reg.getIceWindManager().triggerIceWind(reg, new int[]{0, 1, 2, 3, 4});
+                if (reg.getMap() != null) {
+                    for (int r = 0; r < 5; r++) {
+                        for (int c = 0; c < 9; c++) {
+                            com.PVZ.model.entity.Plant plant = reg.getMap().getPlantAt(r, c);
+                            if (plant != null && !plant.isDead()) {
+                                boolean isFire = plant.getStats() != null && plant.getStats().getBooleanExtra("freezeImmune", false);
+                                if (!isFire && plant.getDefinition() != null) {
+                                    isFire = plant.getDefinition().hasTag(com.PVZ.model.enums.PlantTag.FIRE);
+                                }
+                                if (!isFire) {
+                                    int lv = ((Number) plant.getRuntimeState().getOrDefault("freezeLevel", 0)).intValue();
+                                    if (lv < 3) {
+                                        lv++;
+                                        plant.putRuntimeState("freezeLevel", lv);
+                                        if (lv >= 3) {
+                                            plant.putRuntimeState("iceHp", 600);
+                                            plant.disableForTicks(5);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         GameOverState overState = updateGameOverState(activeEngine);
         drawBackgroundAndEngine(activeEngine, delta);
         drawMapBorders(activeEngine);

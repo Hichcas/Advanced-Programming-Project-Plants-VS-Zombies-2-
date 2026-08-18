@@ -77,6 +77,20 @@ public enum InGameCommand {
             return new InGameInputDTO(this, null, null, null, null, null, null);
         }
     },
+    CHEAT_SANDSTORM("^\\s*cheat\\s+sandstorm(?:\\s+-n\\s+(?<count>\\d+))?\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            String c = matcher.group("count");
+            int count = (c != null && !c.isEmpty()) ? Integer.parseInt(c) : 2;
+            return new InGameInputDTO(this, null, count, null, null, null, null);
+        }
+    },
+    CHEAT_ICE_WIND("^\\s*cheat\\s+ice-?wind\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            return new InGameInputDTO(this, null, null, null, null, null, null);
+        }
+    },
     PLANT_PLANT(
         "^\\s*plant\\s+plant\\s+-t\\s+(?<plantType>.+?)\\s+-l\\s*\\(" +
             "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {

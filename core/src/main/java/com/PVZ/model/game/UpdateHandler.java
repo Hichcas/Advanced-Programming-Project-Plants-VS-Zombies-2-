@@ -43,6 +43,8 @@ public class UpdateHandler {
         if (engine.gameStatus != null && engine.gameStatus.isGameOver()) return;
         if (engine.waveManager != null) engine.waveManager.update(delta, engine.zombieEngine);
         if (engine.battleController != null) engine.battleController.update(delta);
+        if (engine.sandstormManager != null) engine.sandstormManager.update(delta, engine);
+        if (engine.iceWindManager != null) engine.iceWindManager.update(delta, engine);
 
         engine.tickAccumulator += delta;
         while (engine.tickAccumulator >= TICK_SECONDS) {

@@ -53,6 +53,8 @@ public class InGameMenuController {
             case CHEAT_SET_WATER -> setTileWater(dto);
             case CHEAT_SET_DRY -> setTileDry(dto);
             case CHEAT_RELEASE_NUKE -> nukeAction();
+            case CHEAT_SANDSTORM -> handleCheatSandstorm(dto, engine);
+            case CHEAT_ICE_WIND -> handleCheatIceWind(engine);
             case PLANT_PLANT -> handlePlantPlant(dto, engine);
             case PLUCK_PLANT -> handlePluckPlant(dto, engine);
             case FEED_PLANT -> handleFeedPlant(dto, engine);
@@ -121,6 +123,47 @@ public class InGameMenuController {
 
     private OutputDTO nukeAction() {
         return new OutputDTO(true, "Nuke released.");
+    }
+
+    private OutputDTO handleCheatSandstorm(InGameInputDTO dto, RegularGameEngine engine) {
+        if (engine == null) return new OutputDTO(false, "Game engine is not ready.");
+        int count = dto.getAmount() != null ? dto.getAmount() : 2;
+        if (engine.getSandstormManager() != null) {
+            engine.getSandstormManager().triggerSandstorm(engine, count);
+        }
+        return new OutputDTO(true, "Triggered Sandstorm with " + count + " cyclones!");
+    }
+
+    private OutputDTO handleCheatIceWind(RegularGameEngine engine) {
+        if (engine == null) return new OutputDTO(false, "Game engine is not ready.");
+        if (engine.getIceWindManager() != null) {
+            engine.getIceWindManager().triggerIceWind(engine, new int[]{0, 1, 2, 3, 4});
+        }
+        if (engine.getMap() != null) {
+            for (int r = 0; r < 5; r++) {
+                for (int c = 0; c < 9; c++) {
+                    com.PVZ.model.entity.Plant plant = engine.getMap().getPlantAt(r, c);
+                    if (plant != null && !plant.isDead()) {
+                        boolean isFire = plant.getStats() != null && plant.getStats().getBooleanExtra("freezeImmune", false);
+                        if (!isFire && plant.getDefinition() != null) {
+                            isFire = plant.getDefinition().hasTag(com.PVZ.model.enums.PlantTag.FIRE);
+                        }
+                        if (!isFire) {
+                            int freezeLv = ((Number) plant.getRuntimeState().getOrDefault("freezeLevel", 0)).intValue();
+                            if (freezeLv < 3) {
+                                freezeLv++;
+                                plant.putRuntimeState("freezeLevel", freezeLv);
+                                if (freezeLv >= 3) {
+                                    plant.putRuntimeState("iceHp", 600);
+                                    plant.disableForTicks(5);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return new OutputDTO(true, "Triggered Freezing Ice Wind across all lanes!");
     }
 
     private OutputDTO handlePlantPlant(InGameInputDTO dto, RegularGameEngine engine) {

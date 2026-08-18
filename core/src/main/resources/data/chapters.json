@@ -14,7 +14,8 @@
         { "action": "updateTombstones", "description": "Check tombstone HP, destroy if depleted" },
         { "action": "raZombieStealSun", "description": "Ra zombies pull nearby ground suns toward themselves" },
         { "action": "explorerBurnRow", "description": "Explorer zombies destroy plants ahead in their row" },
-        { "action": "tombraiserSpawnGrave", "description": "Tombraiser zombies create graves on random tiles every few seconds" }
+        { "action": "tombraiserSpawnGrave", "description": "Tombraiser zombies create graves on random tiles every few seconds" },
+        { "action": "sandstormWave", "description": "Sandstorms carry zombies into lawn on waves" }
       ],
       "stages": [
         {

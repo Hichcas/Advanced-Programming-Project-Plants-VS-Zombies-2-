@@ -194,6 +194,10 @@ public class WaveManager {
         return waves.size();
     }
 
+    public boolean isFinalWave() {
+        return !waves.isEmpty() && currentWave >= waves.size() - 1;
+    }
+
     public boolean isFinished() {
         return currentWave >= waves.size();
     }
