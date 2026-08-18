@@ -2,6 +2,7 @@ package com.PVZ.model.entity.zombies.types.special_movement;
 
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
@@ -32,8 +33,22 @@ public class ZombieBeachSnorkel extends AbstractSpecialMovementZombie {
     @Override
     public void update(float delta, BattleController ctrl) {
         updateEffects(delta);
+        com.PVZ.model.entity.zombies.base.ZombieAnimation.tick(this, delta);
+
+        if (isDying()) {
+            animStateTime += delta;
+            if (!com.PVZ.model.entity.zombies.base.ZombieAnimation.isActive(this)) {
+                finishDeath(ctrl);
+            }
+            return;
+        }
+
+        if (!isFrozen()) {
+            animStateTime += delta;
+        }
+
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
-            die(ctrl);
+            startDeath(ctrl);
             return;
         }
         if (hypnotized) {
@@ -42,32 +57,39 @@ public class ZombieBeachSnorkel extends AbstractSpecialMovementZombie {
             onUpdate(delta, ctrl);
             return;
         }
+        if (ctrl == null) {
+            return;
+        }
         int tileCol = ctrl.getTileColumn((float) x);
         col = tileCol;
         Plant plant = ctrl.getPlantAt((int) row, tileCol);
         boolean hasPlant = plant != null && !plant.isDead();
+        TileType currentTileType = ctrl.getTileTypeAt((int) row, tileCol);
+        boolean inWater = (currentTileType == TileType.WATER || currentTileType == TileType.TIDE);
 
-        if (submerged) {
-            moving = true;
-            move(delta, ctrl);
-            if (hasPlant) {
-                surface();
-                surfaceTimer = SURFACE_EAT_TIME;
-                System.out.println(alias + " surfaced!");
-            }
-        } else {
-            surfaceTimer -= delta;
-            if (hasPlant) {
-                moving = false;
-                attack(plant, delta, ctrl);
+        if (!inWater) {
+            submerged = false;
+        }
+
+        if (hasPlant) {
+            surface();
+            surfaceTimer = SURFACE_EAT_TIME;
+            moving = false;
+            attack(plant, delta, ctrl);
+        } else if (inWater) {
+            if (surfaceTimer > 0) {
+                surfaceTimer -= delta;
+                moving = true;
+                move(delta, ctrl);
             } else {
+                dive();
                 moving = true;
                 move(delta, ctrl);
             }
-            if (surfaceTimer <= 0) {
-                dive();
-                System.out.println(alias + " dove!");
-            }
+        } else {
+            submerged = false;
+            moving = true;
+            move(delta, ctrl);
         }
         hitbox.setPosition((float) x, (float) y);
         onUpdate(delta, ctrl);

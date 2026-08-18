@@ -186,6 +186,64 @@ public class DrawHandler {
     private static void drawTileOverlays(RegularGameEngine engine, SpriteBatch batch) {
         if (engine.map == null) return;
         Color orig = batch.getColor();
+
+        // 1. Render chapter-wide Big Wave Beach Ocean layers (UNDER plants and zombies)
+        if ("BIG_WAVE_BEACH".equalsIgnoreCase(com.PVZ.model.status.AppStatus.currentChapterName)
+            || "BEACH".equalsIgnoreCase(com.PVZ.model.status.AppStatus.currentChapterName)) {
+
+            int minWaterCol = 9;
+            for (int r = 0; r < 5; r++) {
+                for (int c = 0; c < 9; c++) {
+                    Tile t = engine.map.getTile(r, c);
+                    if (t != null && (t.getType() == TileType.WATER || t.getType() == TileType.TIDE || t.getType() == TileType.LOW_COAST)) {
+                        if (c < minWaterCol) minWaterCol = c;
+                    }
+                }
+            }
+
+            if (minWaterCol < 9) {
+                Tile shoreTile = engine.map.getTile(2, minWaterCol);
+                if (shoreTile != null) {
+                    float waterX = shoreTile.getX();
+                    float lawnCenterY = (engine.map.getTile(0, 0).getY() + engine.map.getTile(4, 0).getY() + engine.map.getTile(0, 0).getHeight()) / 2f;
+
+                    // 1. Draw WATER_UNDERLAYER (Aligned so the water edge starts right at the shore tiles)
+                    EntityRenderer.getInstance().renderPam(
+                        batch,
+                        "768/FULL/BACKGROUNDS/WATER_UNDERLAYER/WATER_UNDERLAYER.PAM",
+                        "Water",
+                        iceBlockStateTime,
+                        waterX + 250f,
+                        lawnCenterY,
+                        1.0f
+                    );
+
+                    // 2. Draw WAVE_UPPERLAYER (Animated ocean waves)
+                    EntityRenderer.getInstance().renderPam(
+                        batch,
+                        "768/FULL/BACKGROUNDS/WAVE_UPPERLAYER/WAVE_UPPERLAYER.PAM",
+                        "water",
+                        iceBlockStateTime,
+                        waterX + 250f,
+                        lawnCenterY,
+                        1.0f
+                    );
+
+                    // 3. Draw WATER_TIDE_LINE (White foam wave aligned exactly at the shoreline)
+                    EntityRenderer.getInstance().renderPam(
+                        batch,
+                        "768/FULL/BACKGROUNDS/WATER_TIDE_LINE/WATER_TIDE_LINE.PAM",
+                        "idle",
+                        iceBlockStateTime,
+                        waterX + 410f,
+                        lawnCenterY,
+                        1.0f
+                    );
+                }
+            }
+        }
+
+        // 2. Per-tile overlays (Craters, etc.)
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 9; col++) {
                 Tile tile = engine.map.getTile(row, col);
@@ -201,7 +259,6 @@ public class DrawHandler {
                         "768/FULL/EFFECTS/CRATER/CRATER.PAM", "animation", 0f,
                         tile.getX()+tile.getWidth()/2f, tile.getY()+tile.getHeight()/2f, 0.9f);
                 }
-                // Water and tide graphics are naturally rendered by the background map
             }
         }
         batch.setColor(orig);
@@ -223,7 +280,9 @@ public class DrawHandler {
                     float hpPercent = Math.max(0f, (float) tile.getHp() / 700f);
                     HealthBarRenderer.draw(batch, tileX + 10f, tileY + height - 15f, width - 20f, hpPercent, true);
 
-                    String label = "Tomb (" + tile.getHp() + "hp)";
+                    String label = "BIG_WAVE_BEACH".equals(com.PVZ.model.status.AppStatus.currentChapterName)
+                        ? "Surfboard (" + tile.getHp() + "hp)"
+                        : "Tomb (" + tile.getHp() + "hp)";
                     font.draw(batch, label, tileX + 10f, tileY + height - 2f);
                 }
             }

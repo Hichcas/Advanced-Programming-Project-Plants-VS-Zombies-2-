@@ -109,6 +109,28 @@ public class EntityRenderer {
             else if ("eat".equals(state)) state = "eat_norm";
             else if ("idle".equals(state)) state = "idle_norm";
         }
+        if (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieBeachSnorkel snorkel) {
+            if (zombie.isDying()) {
+                state = "die";
+            } else if (snorkel.isSubmerged()) {
+                state = "idle";
+            } else if (!snorkel.isMoving()) {
+                state = "eat";
+            } else {
+                state = "walk";
+            }
+        }
+        if (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieBeachFastSwimmer swimmer) {
+            if (zombie.isDying()) {
+                state = "die";
+            } else if (swimmer.isInWater()) {
+                state = "idle";
+            } else if (!swimmer.isMoving()) {
+                state = "eat";
+            } else {
+                state = "walk";
+            }
+        }
 
         ClipRef clip = getZombieClip(effectiveAlias, state);
         if (clip == null) {
