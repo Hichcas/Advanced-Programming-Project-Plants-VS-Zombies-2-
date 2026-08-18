@@ -58,6 +58,7 @@ public class ElectricBlueberryBehavior implements PlantBehavior {
             target = living.get(ThreadLocalRandom.current().nextInt(living.size()));
         }
 
+        target.setDeathType(com.PVZ.model.enums.DeathType.ELECTRIC);
         spawnLightning(context, target);
         target.takeDamage(Double.MAX_VALUE);
         plant.putRuntimeState("lightningTimer", 0.0);

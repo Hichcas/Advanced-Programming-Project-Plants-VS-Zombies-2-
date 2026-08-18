@@ -113,7 +113,7 @@ public class EntityRenderer {
             if (zombie.isDying()) {
                 state = "die";
             } else if (snorkel.isSubmerged()) {
-                state = "idle";
+                state = "particles";
             } else if (!snorkel.isMoving()) {
                 state = "eat";
             } else {
@@ -124,7 +124,7 @@ public class EntityRenderer {
             if (zombie.isDying()) {
                 state = "die";
             } else if (swimmer.isInWater()) {
-                state = "idle";
+                state = "particles";
             } else if (!swimmer.isMoving()) {
                 state = "eat";
             } else {
@@ -151,6 +151,8 @@ public class EntityRenderer {
                 batch.setColor(1.0f, 0.6f, 0.9f, 1.0f); // Hypnotized (pink)
             } else if (zombie.isGlowing()) {
                 batch.setColor(0.8f, 1.0f, 0.5f, 1.0f); // Plant Food Drop Glow (bright green/gold)
+            } else if (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieBeachSnorkel snorkel && snorkel.isSubmerged()) {
+                batch.setColor(0.75f, 0.90f, 1.0f, 0.90f); // Submerged underwater watery tint
             }
 
             boolean flipX = zombie.isHypnotized();

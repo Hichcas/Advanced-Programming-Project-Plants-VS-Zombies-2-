@@ -248,12 +248,12 @@ public class BattleController implements BehaviorContext {
                 continue;
             }
 
-            if (handleTileCollision(p)) {
+            if (handleZombieCollision(p)) {
                 projIt.remove();
                 continue;
             }
 
-            if (handleZombieCollision(p)) {
+            if (handleTileCollision(p)) {
                 projIt.remove();
             }
         }
@@ -305,8 +305,7 @@ public class BattleController implements BehaviorContext {
 
         TileType type = tile.getType();
         if (type != TileType.TOMBSTONE
-            && type != TileType.NECROMANCY
-            && type != TileType.ICE) {
+            && type != TileType.NECROMANCY) {
             return false;
         }
 
@@ -520,20 +519,14 @@ public class BattleController implements BehaviorContext {
 
         if (type == ProjectileType.FIRE_PEA && z.isFrozen()) {
             z.thaw();
-        } else if (type == ProjectileType.ICE_PEA && z.isFrozen()) {
-            z.setIceHp(z.getIceHp() - damage);
-            if (z.getIceHp() <= 0) {
-                z.thaw();
-            }
-        } else {
-            if (type == ProjectileType.ICE_PEA) {
-                Object cd = p.getExtra("chillDuration");
-                if (cd instanceof Number) {
-                    z.setChillDuration(((Number) cd).floatValue());
-                }
-            }
-            z.takeDamage(damage, resolveDamageType(p));
         }
+        if (type == ProjectileType.ICE_PEA) {
+            Object cd = p.getExtra("chillDuration");
+            if (cd instanceof Number) {
+                z.setChillDuration(((Number) cd).floatValue());
+            }
+        }
+        z.takeDamage(damage, resolveDamageType(p));
 
         if (z.isDead()) {
             com.PVZ.model.enums.PlantType killer = null;
@@ -754,9 +747,10 @@ public class BattleController implements BehaviorContext {
             float tileW = tile0 != null ? tile0.getWidth() : 177f;
 
             for (Zombie zombie : getZombiesInLane(r)) {
-                if (zombie != null) {
+                if (zombie != null && !zombie.isDead()) {
                     double colDist = Math.abs(zombie.getX() - centreX);
                     if (colDist < tileW * 1.6) {
+                        zombie.setDeathType(com.PVZ.model.enums.DeathType.ASH);
                         zombie.takeDamage(damage);
                     }
                 }
@@ -846,6 +840,7 @@ public class BattleController implements BehaviorContext {
         }
 
         if (nearest != null) {
+            nearest.setDeathType(com.PVZ.model.enums.DeathType.ASH);
             nearest.takeDamage(Integer.MAX_VALUE / 2);
         }
     }
@@ -942,6 +937,9 @@ public class BattleController implements BehaviorContext {
     private DamageType resolveDamageType(Projectile p) {
         if (p.getType() == ProjectileType.ICE_PEA) {
             return DamageType.ICE;
+        }
+        if (p.getType() == ProjectileType.FIRE_PEA) {
+            return DamageType.FIRE;
         }
 
         Object dt = p.getExtra("damageType");
