@@ -5,6 +5,9 @@ import com.PVZ.view.renderer.WorldBackgroundRenderer;
 import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
+import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.game.BattleController;
+import com.PVZ.model.game.CombatHandler;
 import com.PVZ.model.game.GameEngine;
 import com.PVZ.model.game.GameHud;
 import com.PVZ.model.game.LevelStartOverlay;
@@ -518,6 +521,34 @@ public class GameScreen extends BaseScreen {
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(new com.badlogic.gdx.InputAdapter() {
             @Override
+            public boolean keyDown(int keycode) {
+                if (keycode == com.badlogic.gdx.Input.Keys.F) {
+                    GameEngine active = AppStatus.getGameEngine();
+                    if (active instanceof RegularGameEngine reg) {
+                        CombatHandler.freezeAllZombies(reg, 5.0);
+                        System.out.println("[Cheat Hotkey F] All zombies frozen for 5.0 seconds!");
+                        return true;
+                    }
+                } else if (keycode == com.badlogic.gdx.Input.Keys.X) {
+                    GameEngine active = AppStatus.getGameEngine();
+                    if (active instanceof RegularGameEngine reg) {
+                        BattleController bc = reg.getBattleController();
+                        List<Zombie> list = reg.getZombieList();
+                        for (int i = list.size() - 1; i >= 0; i--) {
+                            Zombie z = list.get(i);
+                            if (z != null && !z.isDead()) {
+                                z.setDeathType(com.PVZ.model.enums.DeathType.ASH);
+                                z.die(bc);
+                            }
+                        }
+                        System.out.println("[Cheat Hotkey X] All zombies powdered into ash!");
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 if (isSimulationFrozen()) {
                     return false;
@@ -629,6 +660,11 @@ public class GameScreen extends BaseScreen {
                         }
                     }
                 }
+            }
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.F)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                reg.getBattleController().freezeAllZombies(5.0);
             }
         }
 

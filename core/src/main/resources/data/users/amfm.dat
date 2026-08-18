@@ -13,7 +13,7 @@
     "coins" : 4997650,
     "diamonds" : 4999954,
     "stagesCompleted" : 0,
-    "highestScore" : 14500,
+    "highestScore" : 27750,
     "dailyQuestsCompleted" : 0,
     "nonDailyQuestsCompleted" : 0,
     "purchasedPlantFood" : 1
@@ -34,8 +34,8 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "LILY_PAD", "HYPNO_SHROOM", "FUME_SHROOM", "CACTUS", "ARMA_MINT", "GRAVE_BUSTER", "TANGLE_KELP", "PEASHOOTER", "REINFORCE_MINT", "BOWLING_BULB", "ENFORCE_MINT", "REPEATER", "CAT_TAIL", "SUNFLOWER", "MEGA_GATLING_PEA", "CHERRY_BOMB", "CAULIPOWER", "CHOMPER", "CAT_TAIL_MINT", "TORCHWOOD", "GOO_PEASHOOTER", "SPLIT_PEA", "JALAPENO", "SUN_SHROOM", "GOLD_BLOOM", "ENDURIAN", "WASABI_WHIP", "BONK_CHOY", "PIERCE_MINT", "PRIMAL_SUNFLOWER", "GIANT_WALLNUT", "APPEASE_MINT", "KIWIBEAST", "ELECTRIC_BLUEBERRY", "TALL_NUT", "IMITATER", "SQUASH", "POTATO_MINE", "WALLNUT_BOWLING", "ICE_SHROOM", "PRIMAL_POTATO_MINE", "ENCHANT_MINT", "WINTER_MELON", "MELON_PULT", "PUMPKIN", "THREEPEATER", "MAGNET_SHROOM", "PEA_POD", "SEA_SHROOM", "DOOM_SHROOM", "HOT_POTATO", "CITRON", "EXPLODE_O_NUT", "PHAT_BEET", "SNOW_PEA", "TWIN_SUNFLOWER", "ICEBERG_LETTUCE", "PEPPER_PULT", "PUFF_SHROOM", "KERNEL_PULT", "FIRE_PEASHOOTER", "CABBAGE_PULT", "STARFRUIT", "BOMBARD_MINT", "ENLIGHTEN_MINT", "ROTOBAGA", "WALL_NUT", "SWEET_POTATO", "GARLIC", "GRAPESHOT", "SUN_BEAN" ],
-    "seenZombies" : [ "DARK_DEFAULT", "IMP_TUTORIAL", "ZOMBOTANY_PEASHOOTER", "PHARAOH", "TUTORIAL_ARMOR1", "DARK_ARMOR1", "RA", "BEACH_ARMOR2", "IMP_EGYPT", "ZOMBOTANY_SQUASH", "DARK_JUGGLER", "CAMEL", "TUTORIAL_DEFAULT", "BEACH_DEFAULT", "MUMMY_DEFAULT", "ICEAGE_ARMOR1", "MUMMY_ARMOR2", "ICEAGE_DEFAULT", "EXPLORER", "TUTORIAL_ARMOR4", "DARK_ARMOR3", "ICEAGE_ARMOR2", "TOMB_RAISER", "GARGANTUAR_EGYPT", "IMP_DARK", "DARK_ARMOR2", "ICEAGE_HUNTER", "GARGANTUAR_BASIC", "DODO", "TUTORIAL_FLAG", "IMP_ICEAGE", "BEACH_SNORKEL", "BEACH_OCTOPUS", "GARGANTUAR_BEACH", "ICEAGE_ARMOR3", "BEACH_FAST_SWIMMER", "IMP_BEACH", "MUMMY_ARMOR4", "BEACH_ARMOR1", "BEACH_FISHERMAN", "TUTORIAL_ARMOR2", "ZOMBOSS_EGYPT", "MUMMY_ARMOR1", "TROGLOBITE", "BEACH_SURFER", "WIZARD" ],
+    "unlockedPlants" : [ "SUN_SHROOM", "SEA_SHROOM", "TANGLE_KELP", "WALLNUT_BOWLING", "SUN_BEAN", "CAULIPOWER", "SPLIT_PEA", "PEASHOOTER", "ENFORCE_MINT", "JALAPENO", "KIWIBEAST", "REINFORCE_MINT", "PEPPER_PULT", "PUFF_SHROOM", "ENDURIAN", "PEA_POD", "PRIMAL_SUNFLOWER", "CAT_TAIL_MINT", "STARFRUIT", "GOLD_BLOOM", "GARLIC", "LILY_PAD", "SQUASH", "MEGA_GATLING_PEA", "DOOM_SHROOM", "FIRE_PEASHOOTER", "GIANT_WALLNUT", "GRAVE_BUSTER", "REPEATER", "CHERRY_BOMB", "PRIMAL_POTATO_MINE", "MAGNET_SHROOM", "CITRON", "APPEASE_MINT", "GOO_PEASHOOTER", "WALL_NUT", "HYPNO_SHROOM", "ROTOBAGA", "BOWLING_BULB", "SWEET_POTATO", "CABBAGE_PULT", "SUNFLOWER", "BOMBARD_MINT", "ARMA_MINT", "EXPLODE_O_NUT", "WINTER_MELON", "PIERCE_MINT", "BONK_CHOY", "CAT_TAIL", "TORCHWOOD", "ELECTRIC_BLUEBERRY", "ICEBERG_LETTUCE", "PHAT_BEET", "ENLIGHTEN_MINT", "CACTUS", "TWIN_SUNFLOWER", "IMITATER", "KERNEL_PULT", "TALL_NUT", "MELON_PULT", "ENCHANT_MINT", "ICE_SHROOM", "CHOMPER", "HOT_POTATO", "GRAPESHOT", "SNOW_PEA", "POTATO_MINE", "WASABI_WHIP", "PUMPKIN", "THREEPEATER", "FUME_SHROOM" ],
+    "seenZombies" : [ "ZOMBOTANY_SQUASH", "TUTORIAL_ARMOR2", "RA", "ICEAGE_ARMOR1", "IMP_ICEAGE", "BEACH_SNORKEL", "TUTORIAL_FLAG", "CAMEL", "TROGLOBITE", "ZOMBOSS_EGYPT", "MUMMY_ARMOR1", "DODO", "ICEAGE_ARMOR2", "MUMMY_DEFAULT", "IMP_BEACH", "IMP_DARK", "DARK_ARMOR1", "TOMB_RAISER", "MUMMY_ARMOR4", "ALLSTAR", "DARK_ARMOR3", "DARK_ARMOR2", "BEACH_OCTOPUS", "WIZARD", "IMP_EGYPT", "GARGANTUAR_EGYPT", "PHARAOH", "EXPLORER", "FOOTBALL", "ICEAGE_ARMOR3", "ZOMBOTANY_PEASHOOTER", "TUTORIAL_ARMOR1", "DARK_JUGGLER", "TUTORIAL_ARMOR4", "BEACH_ARMOR1", "ICEAGE_DEFAULT", "GARGANTUAR_BEACH", "MUMMY_ARMOR2", "BEACH_FISHERMAN", "IMP_TUTORIAL", "DARK_DEFAULT", "ICEAGE_HUNTER", "BEACH_SURFER", "TUTORIAL_DEFAULT", "BEACH_FAST_SWIMMER", "BEACH_DEFAULT", "BEACH_ARMOR2", "GARGANTUAR_BASIC" ],
     "seedPackets" : {
       "SUN_SHROOM" : 5,
       "SUNFLOWER" : 20
@@ -714,14 +714,24 @@
       "read" : false,
       "timestamp" : 1787054168530,
       "formattedText" : "New zombie spotted: DARK_ARMOR3!\n2026/08/18  15:26"
+    }, {
+      "text" : "New zombie spotted: ALLSTAR!",
+      "read" : false,
+      "timestamp" : 1787073836192,
+      "formattedText" : "New zombie spotted: ALLSTAR!\n2026/08/18  20:53"
+    }, {
+      "text" : "New zombie spotted: FOOTBALL!",
+      "read" : false,
+      "timestamp" : 1787073836432,
+      "formattedText" : "New zombie spotted: FOOTBALL!\n2026/08/18  20:53"
     } ]
   },
   "shopDaily" : {
     "offerPlant" : "FIRE_PEASHOOTER",
     "offerDate" : "2026-08-15",
     "purchased" : false,
-    "availableToday" : false,
-    "forToday" : false
+    "forToday" : false,
+    "availableToday" : false
   },
   "stayLoggedIn" : true,
   "questState" : {
@@ -769,9 +779,7 @@
         "active" : false,
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "formattedTitle" : "Speed Run",
-        "runtimeState" : {
-          "waveStartTime" : 1787046880465
-        }
+        "runtimeState" : { }
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -863,10 +871,10 @@
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
-      "currentChapter" : "FROSTBITE_CAVES",
+      "currentChapter" : "BIG_WAVE_BEACH",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "7h 20m"
+      "timeUntilReset" : "2h 50m"
     }
   }
 }

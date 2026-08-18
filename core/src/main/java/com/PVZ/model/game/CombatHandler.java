@@ -103,6 +103,7 @@ public class CombatHandler {
             for (Zombie zombie : getZombiesInLane(engine, r)) {
                 if (zombie == null || zombie.isDead()) continue;
                 if (Math.abs(zombie.getX() - centerX) <= rangeX) {
+                    zombie.setDeathType(com.PVZ.model.enums.DeathType.ASH);
                     zombie.takeDamage(damage);
                 }
             }
@@ -112,7 +113,10 @@ public class CombatHandler {
     public static void damageEntireLane(RegularGameEngine engine, int lane, int damage) {
         if (damage <= 0) return;
         for (Zombie zombie : getZombiesInLane(engine, lane)) {
-            if (zombie != null && !zombie.isDead()) zombie.takeDamage(damage);
+            if (zombie != null && !zombie.isDead()) {
+                zombie.setDeathType(com.PVZ.model.enums.DeathType.ASH);
+                zombie.takeDamage(damage);
+            }
         }
     }
 

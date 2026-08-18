@@ -203,6 +203,12 @@ public enum ZombieType {
       },
       ZOMBOTANY_SQUASH("ZombotanySquashDefault") {
             public Zombie create() { return new ZombotanySquash(); }
+      },
+      ALLSTAR("ZombieModernAllStar") {
+            public Zombie create() { return new ZombieAllStar(); }
+      },
+      FOOTBALL("ZombieFootball") {
+            public Zombie create() { return new ZombieAllStar("ZombieFootball"); }
       };
 
       public final String alias;

@@ -91,6 +91,12 @@ public enum InGameCommand {
             return new InGameInputDTO(this, null, null, null, null, null, null);
         }
     },
+    CHEAT_FREEZE_ALL("^\\s*cheat\\s+freeze-?all\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            return new InGameInputDTO(this, null, null, null, null, null, null);
+        }
+    },
     PLANT_PLANT(
         "^\\s*plant\\s+plant\\s+-t\\s+(?<plantType>.+?)\\s+-l\\s*\\(" +
             "\\s*(?<x>\\d+)\\s*,\\s*(?<y>\\d+)\\s*\\)\\s*$") {
@@ -201,6 +207,12 @@ public enum InGameCommand {
         }
     },
     KILL_ALL_ZOMBIES("^\\s*kill\\-all\\s+zombies\\s*$") {
+        @Override
+        public InGameInputDTO createDTO(Matcher matcher) {
+            return new InGameInputDTO(this, null, null, null, null, null, null);
+        }
+    },
+    CHEAT_ASH_ALL("^\\s*(cheat\\s+ash-all|cheat\\s+powder-all|powder-all\\s+zombies|ash-all\\s+zombies|cheat\\s+powder|cheat\\s+ash)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, null, null);
