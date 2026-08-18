@@ -65,6 +65,10 @@ public class ZombieGargantuar extends AbstractGargantuar {
             return;
         }
 
+        if (ctrl == null) {
+            return;
+        }
+
         int tileCol = ctrl.getTileColumn((float) x);
         col = tileCol;
 

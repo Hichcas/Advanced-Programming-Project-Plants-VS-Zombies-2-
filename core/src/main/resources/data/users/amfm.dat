@@ -11,7 +11,7 @@
   "userStats" : {
     "gamesPlayed" : 0,
     "coins" : 4997600,
-    "diamonds" : 4999993,
+    "diamonds" : 4999994,
     "stagesCompleted" : 0,
     "highestScore" : 14500,
     "dailyQuestsCompleted" : 0,
@@ -128,8 +128,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 4,
-    "numberOfUnlockedPots" : 8
+    "numberOfUnlockedPots" : 8,
+    "numberOfLockedPots" : 4
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -704,8 +704,8 @@
         },
         "active" : false,
         "runtimeState" : { },
-        "formattedTitle" : "Economic Herbivore",
-        "formattedDescription" : "Win without losing more than 0 plants"
+        "formattedDescription" : "Win without losing more than 0 plants",
+        "formattedTitle" : "Economic Herbivore"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -714,7 +714,7 @@
         "priority" : "MEDIUM",
         "conditionKey" : "speed_kill",
         "targetCount" : 10,
-        "currentCount" : 5,
+        "currentCount" : 8,
         "completed" : false,
         "claimed" : false,
         "reward" : {
@@ -725,10 +725,10 @@
         "parameters" : { },
         "active" : true,
         "runtimeState" : {
-          "waveStartTime" : 1787040251105
+          "waveStartTime" : 1787040860615
         },
-        "formattedTitle" : "Speed Run",
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
+        "formattedTitle" : "Speed Run"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -748,8 +748,8 @@
         "parameters" : { },
         "active" : false,
         "runtimeState" : { },
-        "formattedTitle" : "Master of Defense",
-        "formattedDescription" : "End a level with exactly 0 sun"
+        "formattedDescription" : "End a level with exactly 0 sun",
+        "formattedTitle" : "Master of Defense"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -769,8 +769,8 @@
         "parameters" : { },
         "active" : false,
         "runtimeState" : { },
-        "formattedTitle" : "Day or Night",
-        "formattedDescription" : "Win a day level using only mushrooms"
+        "formattedDescription" : "Win a day level using only mushrooms",
+        "formattedTitle" : "Day or Night"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -792,8 +792,8 @@
         },
         "active" : true,
         "runtimeState" : { },
-        "formattedTitle" : "Lawnmower Time",
-        "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
+        "formattedTitle" : "Lawnmower Time"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -815,15 +815,15 @@
         },
         "active" : false,
         "runtimeState" : { },
-        "formattedTitle" : "Chapter Hunter",
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
+        "formattedTitle" : "Chapter Hunter"
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "BIG_WAVE_BEACH",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "12h 24m"
+      "timeUntilReset" : "12h 13m"
     }
   }
 }
