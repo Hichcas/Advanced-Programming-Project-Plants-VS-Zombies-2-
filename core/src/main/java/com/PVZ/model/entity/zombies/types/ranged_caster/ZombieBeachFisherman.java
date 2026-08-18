@@ -15,7 +15,7 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
 
     public ZombieBeachFisherman() {
         super("ZombieBeachFisherman", 400, 100, 0.185, 600, 3500, defaultScaledProps(),
-              0, 300, 5.5, 9);
+              0, 300, 4.0, 9);
     }
 
     private static List<ScaledProperty> defaultScaledProps() {
@@ -30,6 +30,7 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
     @Override
     public void onSpawn() {
         super.onSpawn();
+        this.rangedCooldown = 2.0f;
     }
 
     @Override
@@ -133,8 +134,7 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
 
     private Plant findFarthestPlantInLane(BattleController ctrl) {
         if (ctrl == null) return null;
-        // Search from leftmost column 0 up to fisherman column - 1
-        for (int c = 0; c < (int) col; c++) {
+        for (int c = 0; c < 9; c++) {
             Plant p = ctrl.getPlantAt((int) row, c);
             if (p != null && !p.isDead()) return p;
         }
@@ -149,11 +149,27 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
             // Hook impact damage
             target.takeDamage(100, this, controller);
 
-            Object r = target.getRuntimeState("row");
-            Object c = target.getRuntimeState("col");
-            int plantRow = r instanceof Number ? ((Number) r).intValue() : (int) this.row;
-            int plantCol = c instanceof Number ? ((Number) c).intValue() : 0;
-            int fisherCol = (int) this.col;
+            // Find current tile row and col of the plant in map
+            int plantRow = (int) this.row;
+            int plantCol = -1;
+            for (int c = 0; c < 9; c++) {
+                if (controller.getPlantAt(plantRow, c) == target) {
+                    plantCol = c;
+                    break;
+                }
+            }
+            if (plantCol == -1) {
+                for (int r = 0; r < 5; r++) {
+                    for (int c = 0; c < 9; c++) {
+                        if (controller.getPlantAt(r, c) == target) {
+                            plantRow = r;
+                            plantCol = c;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (plantCol == -1) return;
 
             if (target.isDead()) {
                 controller.removePlant(plantRow, plantCol);
@@ -163,7 +179,7 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
 
             int newCol = plantCol + 1;
             TileType newTileType = controller.getTileTypeAt(plantRow, newCol);
-            boolean pulledIntoWater = newCol >= fisherCol || newCol >= 8 || newTileType == TileType.WATER || newTileType == TileType.TIDE;
+            boolean pulledIntoWater = newCol >= 8 || newTileType == TileType.WATER || newTileType == TileType.TIDE;
 
             if (pulledIntoWater) {
                 ZombieAnimation.trigger(this, "toss", 2.4333);
@@ -173,16 +189,8 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
             } else {
                 ZombieAnimation.trigger(this, "reel", 1.4667);
                 if (controller.getPlantAt(plantRow, newCol) == null) {
-                    target.putRuntimeState("col", newCol);
-                    Tile newTile = controller.getMap().getTile(plantRow, newCol);
-                    if (newTile != null) {
-                        target.putRuntimeState("worldX", newTile.getX());
-                        target.putRuntimeState("worldY", newTile.getY());
-                        target.putRuntimeState("tileWidth", newTile.getWidth());
-                        target.putRuntimeState("tileHeight", newTile.getHeight());
-                    }
-                    controller.getMap().setPlant(plantRow, newCol, target);
                     controller.getMap().removePlant(plantRow, plantCol);
+                    controller.getMap().setPlant(plantRow, newCol, target);
                     System.out.println("[Fisherman] Hooked plant from col " + plantCol + " to col " + newCol);
                 } else {
                     target.takeDamage(99999, this, controller);

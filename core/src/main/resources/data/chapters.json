@@ -465,19 +465,25 @@
             { "row": 4, "col": 6, "type": "LOW_COAST" }
           ],
           "waves": [
-            { "startDelay": 5.0, "entries": [{ "zombie": "ZombieBeachDefault", "count": 4, "spawnDelay": 2.0 }] },
+            { "startDelay": 5.0, "entries": [
+              { "zombie": "ZombieBeachDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachDefault", "count": 1, "spawnDelay": 4.0 }
+            ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieBeachDefault", "count": 3, "spawnDelay": 0.8 },
-              { "zombie": "ZombieBeachSnorkel", "count": 2, "spawnDelay": 2.0 },
-              { "zombie": "ZombieBeachImpDefault", "count": 3, "spawnDelay": 1.5 },
-              { "zombie": "ZombieBeachFisherman", "count": 1, "spawnDelay": 3.0 }
+              { "zombie": "ZombieBeachSnorkel", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachFastSwimmer", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachDefault", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieBeachImpDefault", "count": 1, "spawnDelay": 3.5 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
-              { "zombie": "ZombieBeachDefault", "count": 1, "spawnDelay": 0.6 },
-              { "zombie": "ZombieBeachFastSwimmer", "count": 2, "spawnDelay": 1.0 },
-              { "zombie": "ZombieBeachSurfer", "count": 1, "spawnDelay": 2.0 },
-              { "zombie": "ZombieBeachOctopus", "count": 1, "spawnDelay": 1.5 },
-              { "zombie": "ZombieBeachGargantuar", "count": 1, "spawnDelay": 3.0 }
+              { "zombie": "ZombieBeachSurfer", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachFisherman", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachArmor2Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachSnorkel", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachOctopus", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachDefault", "count": 1, "spawnDelay": 3.5 }
             ]}
           ]
         },
@@ -508,21 +514,28 @@
             { "row": 4, "col": 6, "type": "LOW_COAST" }
           ],
           "waves": [
-            { "startDelay": 5.0, "entries": [{ "zombie": "ZombieBeachDefault", "count": 5, "spawnDelay": 1.5 }] },
+            { "startDelay": 5.0, "entries": [
+              { "zombie": "ZombieBeachDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachSnorkel", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachFisherman", "count": 1, "spawnDelay": 4.5 }
+            ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieBeachDefault", "count": 5, "spawnDelay": 1.0 },
-              { "zombie": "ZombieBeachSnorkel", "count": 3, "spawnDelay": 2.0 },
-              { "zombie": "ZombieBeachImpDefault", "count": 4, "spawnDelay": 1.2 },
-              { "zombie": "ZombieBeachFisherman", "count": 2, "spawnDelay": 3.0 }
+              { "zombie": "ZombieBeachSurfer", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachFastSwimmer", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieBeachArmor2Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachSnorkel", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachFisherman", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachImpDefault", "count": 1, "spawnDelay": 3.5 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
-              { "zombie": "ZombieBeachDefault", "count": 8, "spawnDelay": 0.8 },
-              { "zombie": "ZombieBeachFastSwimmer", "count": 3, "spawnDelay": 1.0 },
-              { "zombie": "ZombieBeachSnorkel", "count": 4, "spawnDelay": 1.5 },
-              { "zombie": "ZombieBeachSurfer", "count": 2, "spawnDelay": 2.0 },
-              { "zombie": "ZombieBeachOctopus", "count": 2, "spawnDelay": 1.5 },
-              { "zombie": "ZombieBeachFisherman", "count": 1, "spawnDelay": 2.5 },
-              { "zombie": "ZombieBeachGargantuar", "count": 1, "spawnDelay": 3.0 }
+              { "zombie": "ZombieBeachGargantuar", "count": 1, "spawnDelay": 5.5 },
+              { "zombie": "ZombieBeachOctopus", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachSurfer", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachArmor2Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachSnorkel", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachFisherman", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachFastSwimmer", "count": 1, "spawnDelay": 3.5 }
             ]}
           ]
         },
@@ -553,21 +566,30 @@
             { "row": 4, "col": 6, "type": "LOW_COAST" }
           ],
           "waves": [
-            { "startDelay": 5.0, "entries": [{ "zombie": "ZombieBeachDefault", "count": 4, "spawnDelay": 1.8 }] },
+            { "startDelay": 5.0, "entries": [
+              { "zombie": "ZombieBeachDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachFastSwimmer", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachSnorkel", "count": 1, "spawnDelay": 4.0 }
+            ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieBeachDefault", "count": 6, "spawnDelay": 1.0 },
-              { "zombie": "ZombieBeachSnorkel", "count": 3, "spawnDelay": 1.8 },
-              { "zombie": "ZombieBeachImpDefault", "count": 4, "spawnDelay": 1.2 },
-              { "zombie": "ZombieBeachFisherman", "count": 2, "spawnDelay": 2.5 }
+              { "zombie": "ZombieBeachSurfer", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachOctopus", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachArmor2Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachFisherman", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachSnorkel", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachFastSwimmer", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieBeachImpDefault", "count": 1, "spawnDelay": 3.5 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
-              { "zombie": "ZombieBeachDefault", "count": 10, "spawnDelay": 0.7 },
-              { "zombie": "ZombieBeachFastSwimmer", "count": 3, "spawnDelay": 1.0 },
-              { "zombie": "ZombieBeachSnorkel", "count": 4, "spawnDelay": 1.5 },
-              { "zombie": "ZombieBeachSurfer", "count": 2, "spawnDelay": 2.0 },
-              { "zombie": "ZombieBeachOctopus", "count": 3, "spawnDelay": 1.5 },
-              { "zombie": "ZombieBeachFisherman", "count": 2, "spawnDelay": 2.5 },
-              { "zombie": "ZombieBeachGargantuar", "count": 2, "spawnDelay": 2.5 }
+              { "zombie": "ZombieBeachGargantuar", "count": 1, "spawnDelay": 5.5 },
+              { "zombie": "ZombieBeachOctopus", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachSurfer", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachGargantuar", "count": 1, "spawnDelay": 5.5 },
+              { "zombie": "ZombieBeachFisherman", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachOctopus", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieBeachArmor2Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieBeachFastSwimmer", "count": 1, "spawnDelay": 3.5 }
             ]}
           ]
         }
