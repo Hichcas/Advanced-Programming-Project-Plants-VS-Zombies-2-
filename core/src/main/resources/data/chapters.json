@@ -459,7 +459,9 @@
             { "row": 3, "col": 7, "type": "WATER" },
             { "row": 4, "col": 7, "type": "WATER" },
             { "row": 0, "col": 6, "type": "LOW_COAST" },
+            { "row": 1, "col": 6, "type": "LOW_COAST" },
             { "row": 2, "col": 6, "type": "LOW_COAST" },
+            { "row": 3, "col": 6, "type": "LOW_COAST" },
             { "row": 4, "col": 6, "type": "LOW_COAST" }
           ],
           "waves": [
@@ -500,7 +502,9 @@
             { "row": 3, "col": 7, "type": "WATER" },
             { "row": 4, "col": 7, "type": "WATER" },
             { "row": 0, "col": 6, "type": "LOW_COAST" },
+            { "row": 1, "col": 6, "type": "LOW_COAST" },
             { "row": 2, "col": 6, "type": "LOW_COAST" },
+            { "row": 3, "col": 6, "type": "LOW_COAST" },
             { "row": 4, "col": 6, "type": "LOW_COAST" }
           ],
           "waves": [
@@ -543,7 +547,9 @@
             { "row": 3, "col": 7, "type": "WATER" },
             { "row": 4, "col": 7, "type": "WATER" },
             { "row": 0, "col": 6, "type": "LOW_COAST" },
+            { "row": 1, "col": 6, "type": "LOW_COAST" },
             { "row": 2, "col": 6, "type": "LOW_COAST" },
+            { "row": 3, "col": 6, "type": "LOW_COAST" },
             { "row": 4, "col": 6, "type": "LOW_COAST" }
           ],
           "waves": [

@@ -148,8 +148,21 @@ public class Chapter {
                 return;
             }
 
+            if (tideFloodedColumn == 9) {
+                int lowestCoast = 9;
+                for (int r = 0; r < 5; r++) {
+                    for (int c = 0; c < 9; c++) {
+                        Tile t = map.getTile(r, c);
+                        if (t != null && (t.getType() == TileType.LOW_COAST || t.getType() == TileType.WATER || t.getType() == TileType.TIDE)) {
+                            if (c < lowestCoast) lowestCoast = c;
+                        }
+                    }
+                }
+                tideFloodedColumn = lowestCoast;
+            }
+
             int currentWave = wm.getCurrentWave();
-            if (currentWave > lastTideWave) {
+            if (currentWave > lastTideWave && currentWave > 0) {
                 lastTideWave = currentWave;
                 advanceTide(map);
             }
@@ -300,34 +313,49 @@ public class Chapter {
         }
     }
 
+    private boolean isWaterPlant(Plant plant) {
+        if (plant == null) return false;
+        if (plant.getType() != null) {
+            String name = plant.getType().name().toUpperCase();
+            if (name.contains("LILY") || name.contains("KELP") || name.contains("WATER") || name.contains("AQUA") || name.contains("TANGLE")) {
+                return true;
+            }
+        }
+        if (plant.getDefinition() != null) {
+            if (plant.getDefinition().hasTag(PlantTag.WATER)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void advanceTide(com.PVZ.model.game.Map map) {
-        for (int step = 0; step < 2; step++) {
-            if (tideFloodedColumn <= 0) {
-                break;
+        if (tideFloodedColumn < 0) {
+            return;
+        }
+        int targetCol = tideFloodedColumn;
+        tideFloodedColumn--;
+        for (int r = 0; r < 5; r++) {
+            Tile tile = map.getTile(r, targetCol);
+            if (tile == null) {
+                continue;
             }
-            tideFloodedColumn--;
-            for (int r = 0; r < 5; r++) {
-                Tile tile = map.getTile(r, tideFloodedColumn);
-                if (tile == null) {
-                    continue;
+            Plant topPlant = map.getPlantAt(r, targetCol);
+            Plant basePlant = map.getBasePlantAt(r, targetCol);
+            boolean protectedByLilyPad = (basePlant != null && isWaterPlant(basePlant));
+
+            if (topPlant != null && !protectedByLilyPad) {
+                if (!isWaterPlant(topPlant)) {
+                    System.out.println("[RisingTide] Water flooded column " + targetCol + "! Non-aquatic plant " + topPlant.getType() + " at (" + targetCol + ", " + r + ") drowned in the rising tide.");
+                    topPlant.takeDamage(99999);
+                    map.removePlant(r, targetCol);
                 }
-                Plant topPlant = map.getPlantAt(r, tideFloodedColumn);
-                Plant basePlant = map.getBasePlantAt(r, tideFloodedColumn);
-                boolean protectedByLilyPad = basePlant != null && basePlant.getDefinition() != null
-                    && basePlant.getDefinition().hasTag(PlantTag.WATER);
-                if (topPlant != null && !protectedByLilyPad) {
-                    boolean aquatic = topPlant.getDefinition() != null
-                        && topPlant.getDefinition().hasTag(PlantTag.WATER);
-                    if (!aquatic) {
-                        map.removePlant(r, tideFloodedColumn);
-                    }
-                }
-                if (basePlant != null && basePlant.getDefinition() != null
-                    && !basePlant.getDefinition().hasTag(PlantTag.WATER)) {
-                    map.removeBasePlant(r, tideFloodedColumn);
-                }
-                tile.setType(TileType.TIDE);
             }
+            if (basePlant != null && !isWaterPlant(basePlant)) {
+                basePlant.takeDamage(99999);
+                map.removeBasePlant(r, targetCol);
+            }
+            tile.setType(TileType.TIDE);
         }
     }
 
