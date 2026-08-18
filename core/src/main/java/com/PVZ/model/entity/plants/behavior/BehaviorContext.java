@@ -10,6 +10,10 @@ public interface BehaviorContext {
 
     List<Zombie> getZombiesInLane(int lane);
 
+    default boolean hasObstacleAheadInLane(int lane, int fromCol) {
+        return false;
+    }
+
     default int getRowCount() {
         return 5;
     }

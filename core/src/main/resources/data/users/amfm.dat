@@ -843,10 +843,10 @@
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
-      "currentChapter" : "DARK_AGES",
+      "currentChapter" : "FROSTBITE_CAVES",
       "currentDifficulty" : 3,
-      "isDayLevel" : false,
-      "timeUntilReset" : "10h 34m"
+      "isDayLevel" : true,
+      "timeUntilReset" : "8h 46m"
     }
   }
 }

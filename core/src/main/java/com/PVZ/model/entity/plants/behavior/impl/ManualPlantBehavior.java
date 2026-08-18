@@ -548,7 +548,8 @@ public class ManualPlantBehavior implements PlantBehavior {
         if (!tickCooldown(plant, "stackTimer", deltaTime)) {
             return;
         }
-        if (context.getZombiesInLane(lane).isEmpty()) {
+        int plantCol = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+        if (context.getZombiesInLane(lane).isEmpty() && !context.hasObstacleAheadInLane(lane, plantCol)) {
             return;
         }
 

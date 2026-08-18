@@ -1,6 +1,7 @@
 package com.PVZ.model.game;
 
 import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
@@ -156,6 +157,18 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     @Override
     public List<Zombie> getZombiesInLane(int lane) {
         return CombatHandler.getZombiesInLane(this, lane);
+    }
+
+    @Override
+    public boolean hasObstacleAheadInLane(int lane, int fromCol) {
+        if (map == null || !map.isWithinBounds(lane, 0)) return false;
+        for (int c = Math.max(0, fromCol); c < map.getCols(); c++) {
+            Tile t = map.getTile(lane, c);
+            if (t != null && (t.getType() == TileType.TOMBSTONE || t.getType() == TileType.NECROMANCY || t.getType() == TileType.ICE)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

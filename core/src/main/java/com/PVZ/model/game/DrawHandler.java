@@ -259,6 +259,18 @@ public class DrawHandler {
                     EntityRenderer.getInstance().renderPam(batch,
                         "768/FULL/EFFECTS/CRATER/CRATER.PAM", "animation", 0f,
                         tile.getX()+tile.getWidth()/2f, tile.getY()+tile.getHeight()/2f, 0.9f);
+                } else if (type == TileType.SLIPPERY_UP) {
+                    float cx = tile.getX() + tile.getWidth() / 2f;
+                    float cy = tile.getY() + tile.getHeight() / 2f;
+                    EntityRenderer.getInstance().renderPam(batch,
+                        "768/FULL/EFFECTS/TILESLIDER_ICEAGE_UP/TILESLIDER_ICEAGE_UP.PAM", "idle",
+                        iceBlockStateTime, cx, cy, 0.32f);
+                } else if (type == TileType.SLIPPERY_DOWN) {
+                    float cx = tile.getX() + tile.getWidth() / 2f;
+                    float cy = tile.getY() + tile.getHeight() / 2f;
+                    EntityRenderer.getInstance().renderPam(batch,
+                        "768/FULL/EFFECTS/TILESLIDER_ICEAGE_DOWN/TILESLIDER_ICEAGE_DOWN.PAM", "idle",
+                        iceBlockStateTime, cx, cy, 0.32f);
                 }
             }
         }

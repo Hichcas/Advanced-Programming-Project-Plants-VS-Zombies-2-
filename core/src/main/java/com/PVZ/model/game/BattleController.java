@@ -576,6 +576,18 @@ public class BattleController implements BehaviorContext {
     }
 
     @Override
+    public boolean hasObstacleAheadInLane(int lane, int fromCol) {
+        if (map == null || !map.isWithinBounds(lane, 0)) return false;
+        for (int c = Math.max(0, fromCol); c < map.getCols(); c++) {
+            Tile t = map.getTile(lane, c);
+            if (t != null && (t.getType() == TileType.TOMBSTONE || t.getType() == TileType.NECROMANCY || t.getType() == TileType.ICE)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public int getRowCount() {
         return map != null ? map.getRows() : 5;
     }
@@ -608,6 +620,10 @@ public class BattleController implements BehaviorContext {
         plants.removeIf(p -> p != null && !p.isDead()
             && asInt(p.getRuntimeState("row"), Integer.MIN_VALUE) == row
             && asInt(p.getRuntimeState("col"), Integer.MIN_VALUE) == col);
+    }
+
+    public List<Projectile> getProjectiles() {
+        return projectiles;
     }
 
     @Override

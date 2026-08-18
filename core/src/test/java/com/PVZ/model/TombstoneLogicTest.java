@@ -204,4 +204,30 @@ public class TombstoneLogicTest {
         assertEquals(0, tile.getHp());
         assertEquals(sunBefore + 100, engine.getSunCount(), "Sun grave should give 100 sun when destroyed");
     }
+
+    @Test
+    public void testShooterShootsGraveWithoutZombies() {
+        // Place Peashooter at (row 0, col 1)
+        PlantHandler.plantPlant(engine, PlantType.PEASHOOTER, 1, 0);
+        Tile plantTile = map.getTile(0, 1);
+        assertNotNull(plantTile.getPlant(), "Peashooter should be planted");
+
+        // Place Tombstone ahead in row 0 at col 5
+        Tile graveTile = map.getTile(0, 5);
+        graveTile.setType(TileType.TOMBSTONE);
+        graveTile.setHp(700);
+        graveTile.setMaxHp(700);
+        graveTile.setGraveVariant(GraveVariant.EGYPT);
+
+        // Ensure no zombies exist in lane 0
+        assertTrue(engine.getBattleController().getZombiesInLane(0).isEmpty());
+
+        // Update plant for cooldown + burst drain ticks
+        plantTile.getPlant().update(engine.getBattleController(), 2.0);
+        plantTile.getPlant().update(engine.getBattleController(), 0.2);
+
+        // Verify that projectiles were spawned to attack the tombstone
+        assertFalse(engine.getBattleController().getProjectiles().isEmpty(),
+            "Shooter should spawn projectile to attack tombstone ahead");
+    }
 }
