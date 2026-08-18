@@ -176,8 +176,14 @@ public class WaveManager {
         System.out.println("[WaveManager] Advanced to wave " + (currentWave + 1) + "/" + waves.size());
     }
 
+    private int lastSpawnRow = -1;
     private int randomRow() {
-        return (int) (Math.random() * 5);
+        int r = (int) (Math.random() * 5);
+        if (r == lastSpawnRow) {
+            r = (r + 1 + (int) (Math.random() * 4)) % 5;
+        }
+        lastSpawnRow = r;
+        return r;
     }
 
     public int getCurrentWave() {
