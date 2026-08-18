@@ -89,6 +89,17 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     final com.PVZ.model.entity.LawnMower[] lawnMowers = new com.PVZ.model.entity.LawnMower[ROWS];
     com.badlogic.gdx.graphics.Texture iceOverlayTex;
 
+    final com.PVZ.model.game.chapter.SandstormManager sandstormManager = new com.PVZ.model.game.chapter.SandstormManager();
+    final com.PVZ.model.game.chapter.IceWindManager iceWindManager = new com.PVZ.model.game.chapter.IceWindManager();
+
+    public com.PVZ.model.game.chapter.SandstormManager getSandstormManager() {
+        return sandstormManager;
+    }
+
+    public com.PVZ.model.game.chapter.IceWindManager getIceWindManager() {
+        return iceWindManager;
+    }
+
     public int questPlantsLost = 0;
     public int questLawnmowerKills = 0;
     public int questLawnlessCol1Kills = 0;

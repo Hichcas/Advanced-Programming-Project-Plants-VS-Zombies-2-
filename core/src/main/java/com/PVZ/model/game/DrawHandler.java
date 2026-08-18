@@ -32,6 +32,9 @@ public class DrawHandler {
 
     public static void draw(RegularGameEngine engine, SpriteBatch batch) {
         EntityRenderer.getInstance().update();
+        if (com.badlogic.gdx.Gdx.graphics != null) {
+            iceBlockStateTime += com.badlogic.gdx.Gdx.graphics.getDeltaTime();
+        }
         batch.begin();
         drawTileOverlays(engine, batch);
         drawJalapenoLaneEffect(engine, batch);
@@ -51,6 +54,8 @@ public class DrawHandler {
         drawLootDrops(engine, batch);
         drawLawnMowers(engine, batch);
         drawZombiesWithHealthBars(engine, batch);
+        if (engine.getSandstormManager() != null) engine.getSandstormManager().draw(batch);
+        if (engine.getIceWindManager() != null) engine.getIceWindManager().draw(batch, engine);
         batch.end();
     }
 
@@ -430,12 +435,35 @@ public class DrawHandler {
 
     private static void drawPlantFreezeOverlay(RegularGameEngine engine,
                         SpriteBatch batch, Plant plant, Rectangle box) {
+        if (plant == null || box == null) return;
+        float centerX = box.x + box.width / 2f;
+        float centerY = box.y + box.height / 2f;
+
+        boolean isFire = plant.getStats() != null && plant.getStats().getBooleanExtra("freezeImmune", false);
+        if (!isFire && plant.getDefinition() != null) {
+            isFire = plant.getDefinition().hasTag(com.PVZ.model.enums.PlantTag.FIRE);
+        }
+
+        boolean isFrostbite = com.PVZ.model.status.AppStatus.getCurrentChapterEnum() == com.PVZ.model.enums.ChapterEnum.FROSTBITE_CAVES
+            || (com.PVZ.model.status.AppStatus.currentChapterName != null && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("FROSTBITE"));
+
+        if (isFire && isFrostbite) {
+            EntityRenderer.getInstance().renderPam(
+                batch,
+                "768/INITIAL/EFFECTS/FROSTBITE_HEAT_PLANT/FROSTBITE_HEAT_PLANT.PAM",
+                "animation",
+                iceBlockStateTime,
+                centerX,
+                centerY,
+                0.95f
+            );
+            return;
+        }
+
         Object freezeLv = plant.getRuntimeState("freezeLevel");
         if (freezeLv instanceof Number) {
             int lv = ((Number) freezeLv).intValue();
             if (lv >= 3) {
-                float centerX = box.x + box.width / 2f;
-                float centerY = box.y + box.height / 2f;
                 boolean rendered = EntityRenderer.getInstance().renderPam(
                     batch,
                     "768/FULL/EFFECTS/FROSTBITE_ICE_BLOCK_PLANT/FROSTBITE_ICE_BLOCK_PLANT.PAM",
@@ -443,7 +471,7 @@ public class DrawHandler {
                     iceBlockStateTime,
                     centerX,
                     centerY,
-                    0.28f
+                    0.95f
                 );
                 if (!rendered) {
                     Color c = batch.getColor();
@@ -452,10 +480,22 @@ public class DrawHandler {
                     batch.setColor(c);
                 }
             } else if (lv > 0) {
-                Color c = batch.getColor();
-                batch.setColor(0.3f, 0.6f, 1f, 0.25f * lv);
-                batch.draw(engine.iceOverlayTexture(), box.x, box.y, box.width, box.height);
-                batch.setColor(c);
+                String clip = lv == 1 ? "chill_stage1" : "chill_stage2";
+                boolean rendered = EntityRenderer.getInstance().renderPam(
+                    batch,
+                    "768/FULL/EFFECTS/FROSTBITE_CHILL_PLANT/FROSTBITE_CHILL_PLANT.PAM",
+                    clip,
+                    iceBlockStateTime,
+                    centerX,
+                    centerY,
+                    0.95f
+                );
+                if (!rendered) {
+                    Color c = batch.getColor();
+                    batch.setColor(0.3f, 0.6f, 1f, 0.25f * lv);
+                    batch.draw(engine.iceOverlayTexture(), box.x, box.y, box.width, box.height);
+                    batch.setColor(c);
+                }
             }
         }
     }

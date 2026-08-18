@@ -23,6 +23,7 @@ public class Chapter {
     private int lastNecroWave = -1;
     private int lastLowCoastWave = -1;
     private int tideFloodedColumn = 9;
+    private int lastSandstormWave = -1;
 
     public Chapter(ChapterConfig config) {
         this.config = config;
@@ -34,6 +35,7 @@ public class Chapter {
         registerRaZombieStealSun();
         registerExplorerBurnRow();
         registerTombraiserSpawnGrave();
+        registerSandstormWave();
         registerIceWindTick();
         registerMeltIceNearFire();
         registerRisingTide();
@@ -98,22 +100,58 @@ public class Chapter {
         });
     }
 
+    private void registerSandstormWave() {
+        actions.put("sandstormWave", (map, engine) -> {
+            if (map == null || engine == null) {
+                return;
+            }
+            WaveManager wm = engine.getWaveManager();
+            if (wm == null || !wm.isStarted()) {
+                return;
+            }
+            int currentWave = wm.getCurrentWave();
+            if (currentWave <= lastSandstormWave) {
+                return;
+            }
+            lastSandstormWave = currentWave;
+            int count = (wm.isFinalWave() || currentWave % 2 == 0) ? 2 + random.nextInt(2) : 1;
+            if (engine.getSandstormManager() != null) {
+                engine.getSandstormManager().triggerSandstorm(engine, count);
+            }
+        });
+    }
+
+    private float iceWindTimer = 0f;
+    private static final float ICE_WIND_INTERVAL = 12.0f;
+
     private void registerIceWindTick() {
         actions.put("iceWindTick", (map, engine) -> {
             if (map == null || engine == null) {
                 return;
             }
             WaveManager wm = engine.getWaveManager();
-            if (wm == null) {
+            if (wm == null || !wm.isStarted()) {
                 return;
             }
             int currentWave = wm.getCurrentWave();
             boolean waveChanged = currentWave > lastIceWindWave;
 
-            applyIceWindToPlants(map, waveChanged);
+            iceWindTimer += 0.05f;
+            boolean shouldBlow = (waveChanged && lastIceWindWave != -1) || (iceWindTimer >= ICE_WIND_INTERVAL);
 
-            if (waveChanged) {
+            if (lastIceWindWave == -1) {
                 lastIceWindWave = currentWave;
+            }
+
+            if (shouldBlow) {
+                iceWindTimer = 0f;
+                lastIceWindWave = currentWave;
+                applyIceWindToPlants(map, true);
+                if (engine.getIceWindManager() != null) {
+                    engine.getIceWindManager().triggerIceWind(engine, new int[]{0, 1, 2, 3, 4});
+                }
+            } else {
+                applyIceWindToPlants(map, false);
             }
         });
     }
@@ -254,27 +292,18 @@ public class Chapter {
 
                 int freezeLv = asInt(plant.getRuntimeState("freezeLevel"), 0);
 
-                if (waveChanged && freezeLv < 3) {
-                    plant.putRuntimeState("freezeLevel", 3);
-                    Object existingIceHp = plant.getRuntimeState("iceHp");
-                    if (existingIceHp == null || asInt(existingIceHp, 0) <= 0) {
-                        plant.putRuntimeState("iceHp", 600);
+                if (waveChanged) {
+                    if (freezeLv < 3) {
+                        freezeLv++;
+                        plant.putRuntimeState("freezeLevel", freezeLv);
+                        if (freezeLv >= 3) {
+                            plant.putRuntimeState("iceHp", 600);
+                        }
                     }
-                    freezeLv = 3;
                 }
 
                 if (freezeLv >= 3) {
-                    plant.disableForTicks(2);
-                    plant.takeDamage(6);
-                    int hp = asInt(plant.getRuntimeState("iceHp"), 0);
-                    hp -= 60;
-                    if (hp <= 0) {
-                        plant.putRuntimeState("freezeLevel", 0);
-                        plant.putRuntimeState("iceHp", 0);
-                        plant.putRuntimeState("disabledTicks", 0);
-                    } else {
-                        plant.putRuntimeState("iceHp", hp);
-                    }
+                    plant.disableForTicks(5);
                 }
             }
         }
