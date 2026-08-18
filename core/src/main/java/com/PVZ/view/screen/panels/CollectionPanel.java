@@ -993,7 +993,9 @@ public class CollectionPanel extends BasePanel {
             super.act(delta);
             time += delta;
             if (cachedZombie != null) {
-                cachedZombie.update(delta, null);
+                try {
+                    cachedZombie.update(delta, null);
+                } catch (Exception ignored) {}
             }
         }
 
