@@ -131,6 +131,11 @@ public class WaveManager {
 
     private void beginWave() {
         Wave wave = waves.get(currentWave);
+
+        if (currentWave == 0) {
+            com.PVZ.model.status.AppStatus.showAnnouncement("FIRST WAVE, THE ZOMBIES ARE COMING! ...");
+        }
+
         entryIterator = wave.getEntries().iterator();
         spawning = true;
         waveZombies.clear();
@@ -162,6 +167,7 @@ public class WaveManager {
 
     private void advanceWave() {
         currentWave++;
+        com.PVZ.model.status.AppStatus.showAnnouncement("NEXT WAVE!, ZOMBIES ARE COMING! ...");
         waitingForHP = false;
         hpConditionMet = false;
         waveZombies.clear();

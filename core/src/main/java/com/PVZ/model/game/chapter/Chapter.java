@@ -189,6 +189,7 @@ public class Chapter {
                 return;
             }
             lastLowCoastWave = currentWave;
+            com.PVZ.model.status.AppStatus.showAnnouncement("LOW COAST!");
             for (int r = 0; r < 5; r++) {
                 for (int c = 0; c < 9; c++) {
                     Tile tile = map.getTile(r, c);
@@ -222,6 +223,7 @@ public class Chapter {
                 return;
             }
             lastNecroWave = currentWave;
+            com.PVZ.model.status.AppStatus.showAnnouncement("NECROMANCY!");
             spawnFromNecromancyTiles(map, engine);
         });
     }

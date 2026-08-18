@@ -22,6 +22,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -581,6 +582,15 @@ public class GameScreen extends BaseScreen {
         updateIntro(delta);
         applyCameraShake();
 
+        if (AppStatus.announcementTimer > 0f) {
+            AppStatus.announcementTimer -= delta;
+            if (AppStatus.announcementTimer <= 0f) {
+                AppStatus.announcementTimer = 0f;
+                AppStatus.announcementText = null;
+            }
+        }
+
+
         refreshSeedPacketBar();
         GameEngine activeEngine = AppStatus.getGameEngine();
         if (activeEngine == null) {
@@ -595,6 +605,7 @@ public class GameScreen extends BaseScreen {
         updatePlantFoodHud();
         drawSeedPacketBar(activeEngine);
         drawGameOverOverlay(overState);
+        drawAnnouncementOverlay();
         drawTileDebug(activeEngine);
     }
 
@@ -639,6 +650,24 @@ public class GameScreen extends BaseScreen {
             this.isWin = isWin;
             this.isEndOfGame = isEndOfGame;
         }
+    }
+
+    private void drawAnnouncementOverlay() {
+        if (AppStatus.announcementText == null || AppStatus.announcementTimer <= 0f) {
+            return;
+        }
+
+        String text = AppStatus.announcementText;
+        gameBatch.begin();
+        gameOverFont.setColor(1f, 0.15f, 0.15f, 1f);
+
+        GlyphLayout layout = new GlyphLayout(gameOverFont, text);
+        float x = VIRTUAL_WIDTH / 2f - layout.width / 2f;
+        float y = VIRTUAL_HEIGHT * 0.55f;
+
+        gameOverFont.draw(gameBatch, text, x, y);
+        gameOverFont.setColor(Color.WHITE);
+        gameBatch.end();
     }
 
     private void drawBackgroundAndEngine(GameEngine activeEngine, float delta) {
