@@ -92,6 +92,10 @@ public abstract class AbstractZomboss extends Zombie {
             return;
         }
 
+        if (ctrl == null) {
+            return;
+        }
+
         if (ctrl.getMap() != null) {
             com.PVZ.model.entity.Tile t = ctrl.getMap().getTile(targetRow, 8);
             if (t != null) {
