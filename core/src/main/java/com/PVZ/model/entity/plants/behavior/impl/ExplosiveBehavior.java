@@ -148,8 +148,14 @@ public class ExplosiveBehavior implements PlantBehavior {
 
                         if (variant == com.PVZ.model.enums.GraveVariant.DARK_SUN) {
                             rge.addSun(100);
+                            rge.spawnSunAt(row, col, 100);
                         } else if (variant == com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD) {
-                            rge.getLootManager().spawnLootDrop(center[0], center[1], com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
+                            if (rge.getPlantFoodManager() != null) {
+                                rge.getPlantFoodManager().addPlantFood(1);
+                            }
+                            if (rge.getLootManager() != null) {
+                                rge.getLootManager().spawnLootDrop(center[0], center[1], com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
+                            }
                         }
 
                         boolean explodeOnFinish = plant.getStats() != null && plant.getStats().getBooleanExtra("explodeOnFinish", false);

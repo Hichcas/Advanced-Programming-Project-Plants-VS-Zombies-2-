@@ -426,6 +426,7 @@ public class Chapter {
             return;
         }
         if (stage.getTombstones() != null) {
+            int tombIndex = 0;
             for (StageConfig.TombstoneEntry t : stage.getTombstones()) {
                 Tile tile = map.getTile(t.getRow(), t.getCol());
                 if (tile != null) {
@@ -434,7 +435,14 @@ public class Chapter {
                     tile.setHp(hp);
                     tile.setMaxHp(hp);
                     if (config != null && "DARK_AGES".equalsIgnoreCase(config.getName())) {
-                        tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_NOOP);
+                        if (tombIndex % 3 == 0) {
+                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_SUN);
+                        } else if (tombIndex % 3 == 1) {
+                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD);
+                        } else {
+                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_NOOP);
+                        }
+                        tombIndex++;
                     } else {
                         tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.EGYPT);
                     }
@@ -442,15 +450,27 @@ public class Chapter {
             }
         }
         if (stage.getTiles() != null) {
+            int tileIndex = 0;
             for (StageConfig.TileEntry te : stage.getTiles()) {
                 Tile tile = map.getTile(te.getRow(), te.getCol());
                 if (tile != null) {
                     TileType tt = TileType.valueOf(te.getType());
                     tile.setType(tt);
-                    if (tt == TileType.NECROMANCY) {
+                    if (tt == TileType.NECROMANCY || tt == TileType.TOMBSTONE) {
                         tile.setHp(700);
                         tile.setMaxHp(700);
-                        tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_NOOP);
+                        if (config != null && "DARK_AGES".equalsIgnoreCase(config.getName())) {
+                            if (tileIndex % 3 == 0) {
+                                tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_SUN);
+                            } else if (tileIndex % 3 == 1) {
+                                tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD);
+                            } else {
+                                tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_NOOP);
+                            }
+                            tileIndex++;
+                        } else {
+                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.EGYPT);
+                        }
                     }
                 }
             }
