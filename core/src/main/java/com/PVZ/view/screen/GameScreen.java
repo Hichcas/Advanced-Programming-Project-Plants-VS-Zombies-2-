@@ -48,6 +48,7 @@ public class GameScreen extends BaseScreen {
     private PauseMenuOverlay pauseMenuOverlay;
     private LevelStartOverlay levelStartOverlay;
     private WinLoseOverlay winLoseOverlay;
+    private NpcDialogueOverlay npcDialogueOverlay;
     private final GameEngine gameEngine;
     private final String mapPath;
     private final String musicPath;
@@ -78,6 +79,7 @@ public class GameScreen extends BaseScreen {
     private float cameraIntroZoom = 1.0f;
     private boolean introStarted = false;
     private boolean introFinished = false;
+    private boolean npcDialogueStarted = false;
 
     public GameScreen(String mapPath, String musicPath, GameEngine gameEngine) {
         super();
@@ -106,16 +108,24 @@ public class GameScreen extends BaseScreen {
 
         gameHud = new GameHud();
         stage.addActor(gameHud);
+
         pauseMenuOverlay = new PauseMenuOverlay(this::handleSaveAndExit, this::handleRestart);
         pauseMenuOverlay.setMissionText(resolveMissionText());
         stage.addActor(pauseMenuOverlay);
+
         levelStartOverlay = new LevelStartOverlay(resolveStageConfig(), () -> {
             introStarted = true;
             introTimer = 0f;
         });
         stage.addActor(levelStartOverlay);
+
         winLoseOverlay = new WinLoseOverlay(this::handleSaveAndExit, this::handleRestart);
         stage.addActor(winLoseOverlay);
+
+        // NPC sunflower dialogue overlay (added after win/lose, so it appears on top when shown)
+        npcDialogueOverlay = new NpcDialogueOverlay();
+        stage.addActor(npcDialogueOverlay);
+
         stage.addActor(buildPauseButton());
         if (gameEngine instanceof RegularGameEngine) {
             stage.addActor(buildPlantFoodButton());
@@ -208,7 +218,15 @@ public class GameScreen extends BaseScreen {
                 // 4. Lock onto lawn, start gameplay
                 cameraIntroOffsetX = 0f;
                 cameraIntroZoom = 1.0f;
-                introFinished = true;
+                if (!introFinished) {
+                    introFinished = true;
+                    if (!npcDialogueStarted) {
+                        npcDialogueStarted = true;
+                        if (npcDialogueOverlay != null) {
+                            npcDialogueOverlay.showDialogue();
+                        }
+                    }
+                }
             }
         }
     }
@@ -229,6 +247,7 @@ public class GameScreen extends BaseScreen {
     private boolean isSimulationFrozen() {
         return (levelStartOverlay != null && levelStartOverlay.isShowing())
             || (introStarted && !introFinished)
+            || (npcDialogueOverlay != null && npcDialogueOverlay.isShowing())
             || (pauseMenuOverlay != null && pauseMenuOverlay.isPaused())
             || (winLoseOverlay != null && winLoseOverlay.isShowing());
     }
@@ -590,7 +609,6 @@ public class GameScreen extends BaseScreen {
             }
         }
 
-
         refreshSeedPacketBar();
         GameEngine activeEngine = AppStatus.getGameEngine();
         if (activeEngine == null) {
@@ -830,8 +848,6 @@ public class GameScreen extends BaseScreen {
         if (activeMap == null) {
             return;
         }
-        // Each lane gets its own random deadline column; draw one segment per
-        // lane exactly over that lane's tiles (map Y grows downward from startY).
         float tileHeight = activeMap.getTileHeight();
         shapeDebug.setProjectionMatrix(camera.combined);
         shapeDebug.begin(ShapeRenderer.ShapeType.Filled);
@@ -985,16 +1001,11 @@ public class GameScreen extends BaseScreen {
     private static final float SHAKE_MAGNITUDE = 14f;      // شدت لرزش (پیکسل)
     private float shakeTimer = 0f;
     private final Random random = new Random();
-    /**
-     * صدا زدنش یک لرزش کوتاه به دوربین می‌دهد.
-     * مثال استفاده: وقتی باس ضربه می‌زند -> activeCameraShake();
-     */
+
     public void activeCameraShake() {
         shakeTimer = SHAKE_DURATION;
     }
-    /**
-     * اعمال لرزش به دوربین. این متد باید در ابتدای renderScreen صدا زده شود.
-     */
+
     private void applyCameraShake() {
         float shakeOffsetX = 0f;
         float shakeOffsetY = 0f;
@@ -1006,7 +1017,6 @@ public class GameScreen extends BaseScreen {
             shakeOffsetY = (random.nextFloat() * 2f - 1f) * SHAKE_MAGNITUDE * fade;
         }
 
-        // موقعیت پایه‌ی دوربین در این بازی شامل افکت‌های شیک و انیمیشن اینترو است
         camera.zoom = cameraIntroZoom;
         camera.position.set(
             VIRTUAL_WIDTH / 2f + shakeOffsetX + cameraIntroOffsetX,
