@@ -42,7 +42,7 @@ public class SoundManager {
      * اگه صدا تکراری و هم‌زمان پخش بشه، منتظر تموم شدن قبلی نمی‌مونه.
      */
     public void playSFX(String filePath) {
-        if (isMuted) return;
+        if (isMuted || Gdx.audio == null || Gdx.files == null) return;
 
         List<Sound> sounds = soundCache.get(filePath);
         if (sounds == null) {
@@ -57,7 +57,9 @@ public class SoundManager {
                 sound = Gdx.audio.newSound(Gdx.files.internal(filePath));
                 sounds.add(sound);
             } catch (Exception e) {
-                Gdx.app.error("SoundManager", "Error loading sound file: " + filePath, e);
+                if (Gdx.app != null) {
+                    Gdx.app.error("SoundManager", "Error loading sound file: " + filePath, e);
+                }
                 return;
             }
         } else {

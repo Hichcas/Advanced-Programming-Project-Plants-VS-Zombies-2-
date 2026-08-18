@@ -47,6 +47,12 @@ public class BattleController implements BehaviorContext {
         this.gameStatus = gameStatus;
     }
 
+    private RegularGameEngine engine;
+
+    public void setEngine(RegularGameEngine engine) {
+        this.engine = engine;
+    }
+
     public void setPlantFoodManager(PlantFoodManager plantFoodManager) {
         this.plantFoodManager = plantFoodManager;
     }
@@ -249,6 +255,10 @@ public class BattleController implements BehaviorContext {
         }
     }
 
+    public boolean handleTileCollisionForTest(Projectile p) {
+        return handleTileCollision(p);
+    }
+
     private boolean handleTileCollision(Projectile p) {
         if (p.getType() == ProjectileType.LOB || map == null) {
             return false;
@@ -296,12 +306,51 @@ public class BattleController implements BehaviorContext {
             return false;
         }
 
-        int newHp = tile.getHp() - (int) p.getDamage();
-        if (newHp <= 0) {
-            tile.setType(TileType.NORMAL);
-            tile.setHp(0);
+        int dmg = Math.max(1, (int) p.getDamage());
+        int newHp = tile.getHp() - dmg;
+
+        // If it's a grave, trigger damage/break PAM effect
+        if (type == TileType.TOMBSTONE || type == TileType.NECROMANCY) {
+            com.PVZ.model.enums.GraveVariant variant = tile.getGraveVariant();
+            if (variant == null) {
+                String chap = AppStatus.currentChapterName;
+                if ("DARK_AGES".equalsIgnoreCase(chap) || type == TileType.NECROMANCY) {
+                    variant = com.PVZ.model.enums.GraveVariant.DARK_NOOP;
+                } else {
+                    variant = com.PVZ.model.enums.GraveVariant.EGYPT;
+                }
+                tile.setGraveVariant(variant);
+            }
+
+            if (engine != null) {
+                float[] center = engine.getPlantWorldCenter(pRow, pCol);
+                String hitFx = variant.getDamageFxPamPath() != null ? variant.getDamageFxPamPath()
+                    : "768/INITIAL/EFFECTS/TOMBSTONE_EGYPT_HIEROGLYPH_DAMAGE/TOMBSTONE_EGYPT_HIEROGLYPH_DAMAGE.PAM";
+                engine.addTimedPamEffect(hitFx, "animation", 1.0, 1.0f, center[0], center[1]);
+            }
+
+            if (newHp <= 0) {
+                tile.setType(TileType.NORMAL);
+                tile.setHp(0);
+
+                if (engine != null) {
+                    float[] center = engine.getPlantWorldCenter(pRow, pCol);
+                    if (variant == com.PVZ.model.enums.GraveVariant.DARK_SUN) {
+                        engine.addSun(100);
+                    } else if (variant == com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD) {
+                        engine.getLootManager().spawnLootDrop(center[0], center[1], com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
+                    }
+                }
+            } else {
+                tile.setHp(newHp);
+            }
         } else {
-            tile.setHp(newHp);
+            if (newHp <= 0) {
+                tile.setType(TileType.NORMAL);
+                tile.setHp(0);
+            } else {
+                tile.setHp(newHp);
+            }
         }
 
         SoundManager.getInstance().playSFX(SFX_IMPACT);

@@ -34,19 +34,18 @@ public class PlantHandler {
             return "Non-aquatic plants need a Lily Pad on water tiles.";
         if (isLilyPad && !isWater) return "Lily Pad must be planted on water tiles.";
         if (isLilyPad && existingBase != null) return "This tile already has a Lily Pad.";
+        if (type != PlantType.GRAVE_BUSTER && (targetTileType == TileType.TOMBSTONE || targetTileType == TileType.NECROMANCY)) {
+            return "Cannot plant on a grave.";
+        }
+        if (type == PlantType.GRAVE_BUSTER && targetTileType != TileType.TOMBSTONE && targetTileType != TileType.NECROMANCY) {
+            return "Grave Buster can only be planted on graves.";
+        }
         if (!addingPeaPodHead) {
             if (isWater && !isAquatic && !isLilyPad && existingTop != null) return "Tile is occupied.";
             if (!isWater && existingTop != null) return "Tile is occupied.";
         }
         String availabilityError = checkPlantAvailability(engine, type);
         if (availabilityError != null) return availabilityError;
-
-        if (type == PlantType.GRAVE_BUSTER
-            && (targetTileType == TileType.TOMBSTONE || targetTileType == TileType.NECROMANCY)) {
-            engine.map.getTile(row, col).setType(TileType.NORMAL);
-            engine.map.getTile(row, col).setHp(0);
-            return "Grave Buster destroyed the grave at (" + col + ", " + row + ").";
-        }
 
         if (addingPeaPodHead) {
             int heads = 1;

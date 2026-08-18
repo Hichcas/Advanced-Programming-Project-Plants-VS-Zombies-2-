@@ -31,13 +31,17 @@
             { "row": 4, "col": 2, "hp": 700 }
           ],
           "waves": [
-            { "startDelay": 5.0, "entries": [{ "zombie": "ZombieMummyDefault", "count": 4, "spawnDelay": 2.0 }] },
+            { "startDelay": 5.0, "entries": [
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 4.0 }
+            ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieMummyDefault", "count": 12, "spawnDelay": 0.7 },
-              { "zombie": "ZombieMummyArmor1Default", "count": 4, "spawnDelay": 1.2 },
-              { "zombie": "ZombieMummyArmor2Default", "count": 2, "spawnDelay": 1.8 },
-              { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 2.5 },
-              { "zombie": "ZombieExplorerDefault", "count": 2, "spawnDelay": 3.0 }
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieExplorerDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 4.5 }
             ]},
             { "startDelay": 1.0, "isFinal": true, "entries": [
               { "zombie": "ZombieZombossMechEgypt", "count": 1, "spawnDelay": 0.5 }
@@ -59,33 +63,35 @@
           ],
           "waves": [
             { "startDelay": 5.0, "entries": [
-              { "zombie": "ZombieMummyDefault", "count": 4, "spawnDelay": 2.0 },
-              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 3.0 }
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 4.0 }
             ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieMummyDefault", "count": 5, "spawnDelay": 1.5 },
-              { "zombie": "ZombieMummyArmor1Default", "count": 2, "spawnDelay": 2.0 },
-              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.0 }
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 3.5 }
             ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieMummyDefault", "count": 6, "spawnDelay": 1.2 },
-              { "zombie": "ZombieMummyArmor1Default", "count": 3, "spawnDelay": 1.8 },
-              { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 3.0 },
-              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.0 }
+              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieExplorerDefault", "count": 1, "spawnDelay": 4.5 }
             ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieMummyDefault", "count": 8, "spawnDelay": 1.0 },
-              { "zombie": "ZombieMummyArmor1Default", "count": 3, "spawnDelay": 1.5 },
-              { "zombie": "ZombieMummyArmor2Default", "count": 2, "spawnDelay": 2.0 },
-              { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 3.0 }
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 4.5 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
-              { "zombie": "ZombieMummyDefault", "count": 12, "spawnDelay": 0.7 },
-              { "zombie": "ZombieMummyArmor1Default", "count": 4, "spawnDelay": 1.0 },
-              { "zombie": "ZombieMummyArmor2Default", "count": 2, "spawnDelay": 1.5 },
-              { "zombie": "ZombieMummyArmor4Default", "count": 1, "spawnDelay": 2.5 },
-              { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 2.0 },
-              { "zombie": "ZombieExplorerDefault", "count": 2, "spawnDelay": 3.0 }
+              { "zombie": "ZombieMummyArmor4Default", "count": 1, "spawnDelay": 5.0 },
+              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieExplorerDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 3.5 }
             ]}
           ]
         },
@@ -105,34 +111,34 @@
           ],
           "waves": [
             { "startDelay": 5.0, "entries": [
-              { "zombie": "ZombieMummyDefault", "count": 4, "spawnDelay": 1.8 },
-              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 3.0 }
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 4.0 }
             ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieMummyDefault", "count": 5, "spawnDelay": 1.5 },
-              { "zombie": "ZombieMummyArmor1Default", "count": 2, "spawnDelay": 2.0 },
-              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 3.5 }
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 4.0 }
             ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieMummyDefault", "count": 6, "spawnDelay": 1.2 },
-              { "zombie": "ZombieMummyArmor1Default", "count": 3, "spawnDelay": 1.5 },
-              { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 2.5 },
-              { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 3.0 }
+              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieTombRaiserDefault", "count": 1, "spawnDelay": 4.5 }
             ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieMummyDefault", "count": 8, "spawnDelay": 1.0 },
-              { "zombie": "ZombieMummyArmor1Default", "count": 3, "spawnDelay": 1.5 },
-              { "zombie": "ZombieMummyArmor2Default", "count": 2, "spawnDelay": 2.0 },
-              { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 2.5 },
-              { "zombie": "ZombieTombRaiserDefault", "count": 1, "spawnDelay": 4.0 }
+              { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieTombRaiserDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.0 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
-              { "zombie": "ZombieMummyDefault", "count": 12, "spawnDelay": 0.7 },
-              { "zombie": "ZombieMummyArmor1Default", "count": 5, "spawnDelay": 1.0 },
-              { "zombie": "ZombieMummyArmor2Default", "count": 3, "spawnDelay": 1.5 },
-              { "zombie": "ZombieMummyArmor4Default", "count": 1, "spawnDelay": 2.5 },
-              { "zombie": "ZombieRaDefault", "count": 3, "spawnDelay": 2.0 },
-              { "zombie": "ZombieTombRaiserDefault", "count": 2, "spawnDelay": 3.0 }
+              { "zombie": "ZombieMummyArmor4Default", "count": 1, "spawnDelay": 5.0 },
+              { "zombie": "ZombieTombRaiserDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieTombRaiserDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 3.5 }
             ]}
           ]
         },
@@ -153,39 +159,37 @@
             {
               "startDelay": 8.0,
               "entries": [
-                { "zombie": "ZombieMummyDefault", "count": 3, "spawnDelay": 2.0 },
+                { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 4.0 },
+                { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.5 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieMummyDefault", "count": 1, "spawnDelay": 3.5 },
+                { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 4.0 },
+                { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.5 }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
+                { "zombie": "ZombieMummyArmor1Default", "count": 1, "spawnDelay": 4.0 },
+                { "zombie": "ZombieTombRaiserDefault", "count": 1, "spawnDelay": 4.5 },
+                { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 4.0 },
                 { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.0 }
-              ]
-            },
-            {
-              "startDelay": 0,
-              "entries": [
-                { "zombie": "ZombieMummyDefault", "count": 6, "spawnDelay": 1.2 },
-                { "zombie": "ZombieMummyArmor1Default", "count": 2, "spawnDelay": 2.0 },
-                { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 3.0 }
-              ]
-            },
-            {
-              "startDelay": 0,
-              "entries": [
-                { "zombie": "ZombieMummyDefault", "count": 8, "spawnDelay": 1.0 },
-                { "zombie": "ZombieMummyArmor1Default", "count": 4, "spawnDelay": 1.5 },
-                { "zombie": "ZombieMummyArmor2Default", "count": 2, "spawnDelay": 2.0 },
-                { "zombie": "ZombieRaDefault", "count": 2, "spawnDelay": 2.5 },
-                { "zombie": "ZombieTombRaiserDefault", "count": 1, "spawnDelay": 3.5 }
               ]
             },
             {
               "startDelay": 0,
               "isFinal": true,
               "entries": [
-                { "zombie": "ZombieMummyDefault", "count": 10, "spawnDelay": 0.8 },
-                { "zombie": "ZombieMummyArmor1Default", "count": 4, "spawnDelay": 1.2 },
-                { "zombie": "ZombieMummyArmor2Default", "count": 3, "spawnDelay": 1.5 },
-                { "zombie": "ZombieMummyArmor4Default", "count": 1, "spawnDelay": 2.0 },
-                { "zombie": "ZombieRaDefault", "count": 3, "spawnDelay": 2.0 },
-                { "zombie": "ZombieExplorerDefault", "count": 2, "spawnDelay": 3.0 },
-                { "zombie": "ZombieTombRaiserDefault", "count": 2, "spawnDelay": 3.0 }
+                { "zombie": "ZombieMummyArmor4Default", "count": 1, "spawnDelay": 5.0 },
+                { "zombie": "ZombieExplorerDefault", "count": 1, "spawnDelay": 4.5 },
+                { "zombie": "ZombieTombRaiserDefault", "count": 1, "spawnDelay": 4.5 },
+                { "zombie": "ZombieMummyArmor2Default", "count": 1, "spawnDelay": 4.0 },
+                { "zombie": "ZombieRaDefault", "count": 1, "spawnDelay": 4.0 },
+                { "zombie": "ZombieExplorerDefault", "count": 1, "spawnDelay": 4.5 }
               ]
             }
           ]
@@ -222,17 +226,23 @@
             { "row": 4, "col": 5, "type": "SLIPPERY_DOWN" }
           ],
           "waves": [
-            { "startDelay": 5.0, "entries": [{ "zombie": "ZombieIceageDefault", "count": 4, "spawnDelay": 2.0 }] },
+            { "startDelay": 5.0, "entries": [
+              { "zombie": "ZombieIceageDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieIceageArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceageDefault", "count": 1, "spawnDelay": 4.0 }
+            ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieIceageDefault", "count": 3, "spawnDelay": 0.8 },
-              { "zombie": "ZombieIceAgeHunter", "count": 2, "spawnDelay": 2.5 },
-              { "zombie": "ZombieIceageImpDefault", "count": 3, "spawnDelay": 1.5 }
+              { "zombie": "ZombieIceAgeHunter", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceageArmor1Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieIceageImpDefault", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieIceageDefault", "count": 1, "spawnDelay": 3.5 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
-              { "zombie": "ZombieIceageDefault", "count": 1, "spawnDelay": 0.6 },
-              { "zombie": "ZombieIceAgeHunter", "count": 1, "spawnDelay": 2.0 },
-              { "zombie": "ZombieIceageImpDefault", "count": 1, "spawnDelay": 1.5 },
-              { "zombie": "ZombieIceAgeGargantuar", "count": 1, "spawnDelay": 3.0 }
+              { "zombie": "ZombieIceAgeGargantuar", "count": 1, "spawnDelay": 5.5 },
+              { "zombie": "ZombieIceAgeHunter", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceageArmor2Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceageImpDefault", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieIceageDefault", "count": 1, "spawnDelay": 3.5 }
             ]}
           ]
         },
@@ -252,17 +262,23 @@
             { "row": 4, "col": 6, "type": "SLIPPERY_UP" }
           ],
           "waves": [
-            { "startDelay": 5.0, "entries": [{ "zombie": "ZombieIceageDefault", "count": 4, "spawnDelay": 2.0 }] },
+            { "startDelay": 5.0, "entries": [
+              { "zombie": "ZombieIceageDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieIceageArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceageDefault", "count": 1, "spawnDelay": 4.0 }
+            ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieIceageDefault", "count": 4, "spawnDelay": 0.9 },
-              { "zombie": "ZombieIceAgeHunter", "count": 2, "spawnDelay": 2.2 },
-              { "zombie": "ZombieIceageImpDefault", "count": 3, "spawnDelay": 1.4 }
+              { "zombie": "ZombieIceAgeHunter", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceageArmor2Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceageImpDefault", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieIceageArmor1Default", "count": 1, "spawnDelay": 4.0 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
-              { "zombie": "ZombieIceageDefault", "count": 2, "spawnDelay": 0.7 },
-              { "zombie": "ZombieIceAgeHunter", "count": 2, "spawnDelay": 2.0 },
-              { "zombie": "ZombieIceageImpDefault", "count": 2, "spawnDelay": 1.3 },
-              { "zombie": "ZombieIceAgeGargantuar", "count": 1, "spawnDelay": 3.0 }
+              { "zombie": "ZombieIceAgeGargantuar", "count": 1, "spawnDelay": 5.5 },
+              { "zombie": "ZombieIceAgeHunter", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceageArmor2Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieIceageImpDefault", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieIceageDefault", "count": 1, "spawnDelay": 3.5 }
             ]}
           ]
         },
@@ -285,17 +301,24 @@
             { "row": 4, "col": 5, "type": "SLIPPERY_DOWN" }
           ],
           "waves": [
-            { "startDelay": 5.0, "entries": [{ "zombie": "ZombieIceageDefault", "count": 5, "spawnDelay": 1.5 }] },
+            { "startDelay": 5.0, "entries": [
+              { "zombie": "ZombieIceageDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieIceageArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceAgeHunter", "count": 1, "spawnDelay": 4.5 }
+            ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieIceageDefault", "count": 6, "spawnDelay": 1.0 },
-              { "zombie": "ZombieIceAgeHunter", "count": 3, "spawnDelay": 2.0 },
-              { "zombie": "ZombieIceageImpDefault", "count": 4, "spawnDelay": 1.2 }
+              { "zombie": "ZombieIceageArmor1Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieIceAgeHunter", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceageArmor2Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceageImpDefault", "count": 1, "spawnDelay": 3.5 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
-              { "zombie": "ZombieIceageDefault", "count": 10, "spawnDelay": 0.8 },
-              { "zombie": "ZombieIceAgeHunter", "count": 4, "spawnDelay": 1.5 },
-              { "zombie": "ZombieIceageImpDefault", "count": 5, "spawnDelay": 1.0 },
-              { "zombie": "ZombieIceAgeGargantuar", "count": 2, "spawnDelay": 2.5 }
+              { "zombie": "ZombieIceAgeGargantuar", "count": 1, "spawnDelay": 5.5 },
+              { "zombie": "ZombieIceAgeHunter", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceageArmor2Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieIceAgeHunter", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieIceageImpDefault", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieIceageDefault", "count": 1, "spawnDelay": 3.5 }
             ]}
           ]
         },
@@ -352,8 +375,13 @@
               "entries": [
                 {
                   "zombie": "ZombieIceageDefault",
-                  "count": 4,
-                  "spawnDelay": 2.0
+                  "count": 1,
+                  "spawnDelay": 4.0
+                },
+                {
+                  "zombie": "ZombieIceageArmor1Default",
+                  "count": 1,
+                  "spawnDelay": 4.5
                 }
               ]
             },
@@ -361,19 +389,19 @@
               "startDelay": 0,
               "entries": [
                 {
-                  "zombie": "ZombieIceageDefault",
-                  "count": 4,
-                  "spawnDelay": 1.5
+                  "zombie": "ZombieIceAgeHunter",
+                  "count": 1,
+                  "spawnDelay": 4.5
                 },
                 {
-                  "zombie": "ZombieIceAgeHunter",
-                  "count": 2,
-                  "spawnDelay": 2.2
+                  "zombie": "ZombieIceageDefault",
+                  "count": 1,
+                  "spawnDelay": 3.5
                 },
                 {
                   "zombie": "ZombieIceageImpDefault",
-                  "count": 3,
-                  "spawnDelay": 1.8
+                  "count": 1,
+                  "spawnDelay": 3.5
                 }
               ]
             },
@@ -381,44 +409,49 @@
               "startDelay": 0,
               "entries": [
                 {
-                  "zombie": "ZombieIceageDefault",
-                  "count": 4,
-                  "spawnDelay": 1.2
-                },
-                {
-                  "zombie": "ZombieIceAgeHunter",
-                  "count": 2,
-                  "spawnDelay": 2.0
-                },
-                {
-                  "zombie": "ZombieIceageImpDefault",
-                  "count": 3,
-                  "spawnDelay": 1.5
-                }
-              ]
-            },
-            {
-              "startDelay": 0,
-              "entries": [
-                {
-                  "zombie": "ZombieIceageDefault",
-                  "count": 2,
-                  "spawnDelay": 1.0
+                  "zombie": "ZombieIceageArmor2Default",
+                  "count": 1,
+                  "spawnDelay": 4.5
                 },
                 {
                   "zombie": "ZombieIceAgeHunter",
                   "count": 1,
-                  "spawnDelay": 1.5
+                  "spawnDelay": 4.5
                 },
                 {
                   "zombie": "ZombieIceageImpDefault",
-                  "count": 2,
-                  "spawnDelay": 1.2
-                },
+                  "count": 1,
+                  "spawnDelay": 3.5
+                }
+              ]
+            },
+            {
+              "startDelay": 0,
+              "entries": [
                 {
                   "zombie": "ZombieIceAgeGargantuar",
                   "count": 1,
-                  "spawnDelay": 2.5
+                  "spawnDelay": 5.5
+                },
+                {
+                  "zombie": "ZombieIceAgeHunter",
+                  "count": 1,
+                  "spawnDelay": 4.5
+                },
+                {
+                  "zombie": "ZombieIceageArmor2Default",
+                  "count": 1,
+                  "spawnDelay": 4.0
+                },
+                {
+                  "zombie": "ZombieIceageImpDefault",
+                  "count": 1,
+                  "spawnDelay": 3.5
+                },
+                {
+                  "zombie": "ZombieIceageDefault",
+                  "count": 1,
+                  "spawnDelay": 3.5
                 }
               ],
               "isFinal": true
@@ -624,18 +657,24 @@
             { "row": 4, "col": 2, "type": "NECROMANCY" }
           ],
           "waves": [
-            { "startDelay": 5.0, "entries": [{ "zombie": "ZombieDarkDefault", "count": 4, "spawnDelay": 2.0 }] },
+            { "startDelay": 5.0, "entries": [
+              { "zombie": "ZombieDarkDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieDarkArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieDarkDefault", "count": 1, "spawnDelay": 4.0 }
+            ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieDarkDefault", "count": 3, "spawnDelay": 0.8 },
-              { "zombie": "ZombieCamelDefault", "count": 2, "spawnDelay": 2.5 },
-              { "zombie": "ZombieDarkImpDefault", "count": 3, "spawnDelay": 1.5 }
+              { "zombie": "ZombieCamelDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieDarkArmor1Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieDarkImpDefault", "count": 1, "spawnDelay": 3.5 },
+              { "zombie": "ZombieDarkDefault", "count": 1, "spawnDelay": 3.5 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
-              { "zombie": "ZombieDarkDefault", "count": 1, "spawnDelay": 0.6 },
-              { "zombie": "ZombieWizardDefault", "count": 1, "spawnDelay": 2.0 },
-              { "zombie": "ZombieDarkJugglerDefault", "count": 1, "spawnDelay": 1.5 },
-              { "zombie": "ZombiePharaohDefault", "count": 1, "spawnDelay": 3.0 },
-              { "zombie": "ZombieDarkGargantuar", "count": 1, "spawnDelay": 3.5 }
+              { "zombie": "ZombieDarkGargantuar", "count": 1, "spawnDelay": 5.5 },
+              { "zombie": "ZombieWizardDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombiePharaohDefault", "count": 1, "spawnDelay": 5.0 },
+              { "zombie": "ZombieDarkJugglerDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieDarkArmor2Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieDarkDefault", "count": 1, "spawnDelay": 3.5 }
             ]}
           ]
         },
@@ -654,18 +693,24 @@
             { "row": 3, "col": 7, "type": "NECROMANCY" }
           ],
           "waves": [
-            { "startDelay": 5.0, "entries": [{ "zombie": "ZombieDarkDefault", "count": 5, "spawnDelay": 1.5 }] },
+            { "startDelay": 5.0, "entries": [
+              { "zombie": "ZombieDarkDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieDarkArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieDarkImpDefault", "count": 1, "spawnDelay": 3.5 }
+            ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieDarkDefault", "count": 5, "spawnDelay": 1.0 },
-              { "zombie": "ZombieCamelDefault", "count": 3, "spawnDelay": 2.0 },
-              { "zombie": "ZombieDarkImpDefault", "count": 4, "spawnDelay": 1.2 }
+              { "zombie": "ZombieCamelDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieWizardDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieDarkArmor2Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieDarkImpDefault", "count": 1, "spawnDelay": 3.5 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
-              { "zombie": "ZombieDarkDefault", "count": 8, "spawnDelay": 0.8 },
-              { "zombie": "ZombieCamelDefault", "count": 3, "spawnDelay": 1.5 },
-              { "zombie": "ZombieWizardDefault", "count": 2, "spawnDelay": 2.0 },
-              { "zombie": "ZombieDarkJugglerDefault", "count": 2, "spawnDelay": 1.5 },
-              { "zombie": "ZombiePharaohDefault", "count": 1, "spawnDelay": 3.0 }
+              { "zombie": "ZombieWizardDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombiePharaohDefault", "count": 1, "spawnDelay": 5.0 },
+              { "zombie": "ZombieDarkJugglerDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieCamelDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieDarkArmor2Default", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieDarkArmor3Default", "count": 1, "spawnDelay": 5.0 }
             ]}
           ]
         },
@@ -687,19 +732,25 @@
             { "row": 4, "col": 2, "type": "NECROMANCY" }
           ],
           "waves": [
-            { "startDelay": 5.0, "entries": [{ "zombie": "ZombieDarkDefault", "count": 5, "spawnDelay": 1.5 }] },
+            { "startDelay": 5.0, "entries": [
+              { "zombie": "ZombieDarkDefault", "count": 1, "spawnDelay": 4.0 },
+              { "zombie": "ZombieDarkArmor1Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieDarkImpDefault", "count": 1, "spawnDelay": 3.5 }
+            ]},
             { "startDelay": 0, "entries": [
-              { "zombie": "ZombieDarkDefault", "count": 6, "spawnDelay": 1.0 },
-              { "zombie": "ZombieCamelDefault", "count": 3, "spawnDelay": 2.0 },
-              { "zombie": "ZombieDarkImpDefault", "count": 4, "spawnDelay": 1.2 }
+              { "zombie": "ZombieCamelDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieWizardDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieDarkArmor2Default", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieDarkJugglerDefault", "count": 1, "spawnDelay": 4.5 }
             ]},
             { "startDelay": 0, "isFinal": true, "entries": [
-              { "zombie": "ZombieDarkDefault", "count": 10, "spawnDelay": 0.7 },
-              { "zombie": "ZombieCamelDefault", "count": 4, "spawnDelay": 1.5 },
-              { "zombie": "ZombieWizardDefault", "count": 2, "spawnDelay": 2.0 },
-              { "zombie": "ZombieDarkJugglerDefault", "count": 3, "spawnDelay": 1.5 },
-              { "zombie": "ZombiePharaohDefault", "count": 2, "spawnDelay": 2.5 },
-              { "zombie": "ZombieDarkGargantuar", "count": 1, "spawnDelay": 3.0 }
+              { "zombie": "ZombieDarkGargantuar", "count": 1, "spawnDelay": 5.5 },
+              { "zombie": "ZombieWizardDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombiePharaohDefault", "count": 1, "spawnDelay": 5.0 },
+              { "zombie": "ZombieDarkJugglerDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieCamelDefault", "count": 1, "spawnDelay": 4.5 },
+              { "zombie": "ZombieDarkArmor3Default", "count": 1, "spawnDelay": 5.0 },
+              { "zombie": "ZombieDarkArmor2Default", "count": 1, "spawnDelay": 4.0 }
             ]}
           ]
         }

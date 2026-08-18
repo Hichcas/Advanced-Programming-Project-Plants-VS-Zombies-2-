@@ -65,6 +65,8 @@ public class ZombieTombRaiser extends Zombie {
                     if (tile != null && tile.getType() == TileType.NORMAL && tile.getPlant() == null && canRaiseTomb()) {
                         tile.setType(TileType.TOMBSTONE);
                         tile.setHp(700);
+                        tile.setMaxHp(700);
+                        tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.EGYPT);
                         raiseTomb();
                         System.out.println("[ZombieTombRaiser] Bone landed! Raised Tombstone (700 HP) at tile (" + (int) row + ", " + bone.getTargetCol() + ")!");
                     }
