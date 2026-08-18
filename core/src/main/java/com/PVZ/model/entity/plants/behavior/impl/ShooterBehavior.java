@@ -52,11 +52,21 @@ public class ShooterBehavior implements PlantBehavior {
      * accompanies the forward one. Everything else just checks its own lane.
      */
     private boolean hasTargets(PlantInstance plant, BehaviorContext context, int lane) {
+        if (!context.getZombiesInLane(lane).isEmpty()) {
+            return true;
+        }
+        int plantCol = asInt(plant.getRuntimeState().getOrDefault("col", 0), 0);
+        if (context.hasObstacleAheadInLane(lane, plantCol)) {
+            return true;
+        }
         String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
         if ("threepeater".equals(key)) {
-            return !context.getZombiesInLane(lane).isEmpty();
+            int top = Math.max(0, lane - 1);
+            int bottom = Math.min(context.getRowCount() - 1, lane + 1);
+            if (!context.getZombiesInLane(top).isEmpty() || context.hasObstacleAheadInLane(top, plantCol)) return true;
+            if (!context.getZombiesInLane(bottom).isEmpty() || context.hasObstacleAheadInLane(bottom, plantCol)) return true;
         }
-        return !context.getZombiesInLane(lane).isEmpty();
+        return false;
     }
 
 
