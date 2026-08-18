@@ -42,6 +42,15 @@ public final class AppStatus {
     public static boolean lastGameResultWin = false;
     public static MainMenuScreen lastMainMenu;
 
+    // ====================== سیستم اعلان وسط بازی ======================
+    public static String announcementText = null;
+    public static float announcementTimer = 0f;
+
+    public static void showAnnouncement(String text) {
+        announcementText = text;
+        announcementTimer = 3f;
+    }
+
     // ====================== تنظیمات جدید ======================
     public enum Difficulty {
         EASY, NORMAL, HARD
