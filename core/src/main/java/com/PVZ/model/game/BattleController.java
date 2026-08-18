@@ -53,6 +53,10 @@ public class BattleController implements BehaviorContext {
         this.engine = engine;
     }
 
+    public RegularGameEngine getEngine() {
+        return engine;
+    }
+
     public void setPlantFoodManager(PlantFoodManager plantFoodManager) {
         this.plantFoodManager = plantFoodManager;
     }

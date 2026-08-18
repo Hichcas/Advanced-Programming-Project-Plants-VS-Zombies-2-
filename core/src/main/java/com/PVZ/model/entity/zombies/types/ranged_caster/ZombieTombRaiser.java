@@ -68,6 +68,12 @@ public class ZombieTombRaiser extends Zombie {
                         tile.setMaxHp(700);
                         tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.EGYPT);
                         raiseTomb();
+                        if (controller != null && controller.getEngine() != null) {
+                            float[] center = controller.getEngine().getPlantWorldCenter((int) row, bone.getTargetCol());
+                            controller.getEngine().addTimedPamEffect(
+                                "768/INITIAL/EFFECTS/ZOMBIE_EGYPT_TOMBRAISER_BONE_HIT/ZOMBIE_EGYPT_TOMBRAISER_BONE_HIT.PAM",
+                                "animation", 1.3333, 1.0f, center[0], center[1]);
+                        }
                         System.out.println("[ZombieTombRaiser] Bone landed! Raised Tombstone (700 HP) at tile (" + (int) row + ", " + bone.getTargetCol() + ")!");
                     }
                     bone.destroy();

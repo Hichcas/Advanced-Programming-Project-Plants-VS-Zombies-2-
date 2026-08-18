@@ -131,8 +131,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfUnlockedPots" : 9,
-    "numberOfLockedPots" : 3
+    "numberOfLockedPots" : 3,
+    "numberOfUnlockedPots" : 9
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -720,8 +720,8 @@
     "offerPlant" : "FIRE_PEASHOOTER",
     "offerDate" : "2026-08-15",
     "purchased" : false,
-    "forToday" : false,
-    "availableToday" : false
+    "availableToday" : false,
+    "forToday" : false
   },
   "stayLoggedIn" : true,
   "questState" : {
@@ -745,10 +745,10 @@
         "parameters" : {
           "n" : 0
         },
+        "formattedTitle" : "Economic Herbivore",
         "active" : false,
         "formattedDescription" : "Win without losing more than 0 plants",
-        "runtimeState" : { },
-        "formattedTitle" : "Economic Herbivore"
+        "runtimeState" : { }
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -766,12 +766,12 @@
           "targetPlant" : null
         },
         "parameters" : { },
+        "formattedTitle" : "Speed Run",
         "active" : false,
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "runtimeState" : {
           "waveStartTime" : 1787046880465
-        },
-        "formattedTitle" : "Speed Run"
+        }
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -789,10 +789,10 @@
           "targetPlant" : null
         },
         "parameters" : { },
+        "formattedTitle" : "Master of Defense",
         "active" : false,
         "formattedDescription" : "End a level with exactly 0 sun",
-        "runtimeState" : { },
-        "formattedTitle" : "Master of Defense"
+        "runtimeState" : { }
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -810,10 +810,10 @@
           "targetPlant" : null
         },
         "parameters" : { },
+        "formattedTitle" : "Day or Night",
         "active" : false,
         "formattedDescription" : "Win a day level using only mushrooms",
-        "runtimeState" : { },
-        "formattedTitle" : "Day or Night"
+        "runtimeState" : { }
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -833,10 +833,10 @@
         "parameters" : {
           "n" : 20
         },
+        "formattedTitle" : "Lawnmower Time",
         "active" : true,
         "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
-        "runtimeState" : { },
-        "formattedTitle" : "Lawnmower Time"
+        "runtimeState" : { }
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -856,17 +856,17 @@
         "parameters" : {
           "chapter" : "ANCIENT_EGYPT"
         },
+        "formattedTitle" : "Chapter Hunter",
         "active" : false,
         "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
-        "runtimeState" : { },
-        "formattedTitle" : "Chapter Hunter"
+        "runtimeState" : { }
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
-      "currentChapter" : "DARK_AGES",
+      "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
-      "isDayLevel" : false,
-      "timeUntilReset" : "8h 27m"
+      "isDayLevel" : true,
+      "timeUntilReset" : "8h 19m"
     }
   }
 }
