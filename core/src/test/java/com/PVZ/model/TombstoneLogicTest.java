@@ -230,4 +230,31 @@ public class TombstoneLogicTest {
         assertFalse(engine.getBattleController().getProjectiles().isEmpty(),
             "Shooter should spawn projectile to attack tombstone ahead");
     }
+
+    @Test
+    public void testDarkAgesPlantFoodGraveDropReward() {
+        Tile tile = map.getTile(1, 4);
+        tile.setType(TileType.TOMBSTONE);
+        tile.setHp(20);
+        tile.setMaxHp(700);
+        tile.setGraveVariant(GraveVariant.DARK_PLANTFOOD);
+
+        int pfBefore = engine.getPlantFoodManager().getPlantFoodCount();
+
+        // Projectile deals lethal damage
+        float worldX = tile.getX() + 20f;
+        float worldY = tile.getY() + 20f;
+        Projectile pea = new Projectile();
+        pea.setType(ProjectileType.PEA);
+        pea.setDamage(50);
+        pea.initWorldPosition(worldX, worldY, 300f);
+
+        BattleController bc = engine.getBattleController();
+        bc.handleTileCollisionForTest(pea);
+
+        assertEquals(TileType.NORMAL, tile.getType());
+        assertEquals(0, tile.getHp());
+        assertEquals(pfBefore + 1, engine.getPlantFoodManager().getPlantFoodCount(),
+            "Plant food grave should add 1 plant food on destruction");
+    }
 }

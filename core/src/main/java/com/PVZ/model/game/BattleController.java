@@ -337,8 +337,18 @@ public class BattleController implements BehaviorContext {
                     float[] center = engine.getPlantWorldCenter(pRow, pCol);
                     if (variant == com.PVZ.model.enums.GraveVariant.DARK_SUN) {
                         engine.addSun(100);
+                        engine.spawnSunAt(pRow, pCol, 100);
                     } else if (variant == com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD) {
-                        engine.getLootManager().spawnLootDrop(center[0], center[1], com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
+                        if (plantFoodManager != null) {
+                            plantFoodManager.addPlantFood(1);
+                        } else if (engine.getPlantFoodManager() != null) {
+                            engine.getPlantFoodManager().addPlantFood(1);
+                        }
+                        if (lootManager != null) {
+                            lootManager.spawnLootDrop(center[0], center[1], com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
+                        } else if (engine.getLootManager() != null) {
+                            engine.getLootManager().spawnLootDrop(center[0], center[1], com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
+                        }
                     }
                 }
             } else {
