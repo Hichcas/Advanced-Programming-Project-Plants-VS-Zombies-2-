@@ -202,10 +202,21 @@ public class ShooterBehavior implements PlantBehavior {
             projectile.putExtra("spawnXOffset", spawnXOffset);
         }
 
-        if (plant.getStats().getBooleanExtra("fireAttack", false)) {
+        // "fireAttack" / "iceAttack" / "passThrough" / "pierceBoost" are the extras that
+        // Plant Food behaviors (ManualPlantFoodBehavior) stamp onto the plant's stats when
+        // its temporary effect fires - e.g. handleFireBurst, handleCactus, handlePultFamily.
+        // Those calls never clear the extra afterwards; the *only* thing that tells us the
+        // Plant Food window is still open is plant.isPlantFoodActive(). Without gating on
+        // it here, a single Plant Food use permanently mutates the plant (e.g. Cactus would
+        // pierce forever after one use) even though its own idle/attack animation and
+        // ProjectileFactory's type resolution correctly fall back to normal once it expires.
+        // Innately fire/ice plants aren't affected: those come from PlantTag on the
+        // definition, resolved separately in ProjectileFactory.resolveType().
+        boolean plantFoodActive = plant.isPlantFoodActive();
+        if (plantFoodActive && plant.getStats().getBooleanExtra("fireAttack", false)) {
             projectile.setType(ProjectileType.FIRE_PEA);
         }
-        if (plant.getStats().getBooleanExtra("iceAttack", false)) {
+        if (plantFoodActive && plant.getStats().getBooleanExtra("iceAttack", false)) {
             projectile.setType(ProjectileType.ICE_PEA);
         }
 
@@ -213,7 +224,7 @@ public class ShooterBehavior implements PlantBehavior {
         if ("fume_shroom".equals(key)) {
             projectile.setType(ProjectileType.FUME);
         }
-        boolean shouldPierce = plant.getStats().getBooleanExtra("passThrough", false)
+        boolean shouldPierce = (plantFoodActive && plant.getStats().getBooleanExtra("passThrough", false))
             || (plant.getDefinition() != null
             && plant.getDefinition().getCategoryEnum() == PlantCategory.THROUGH_STRIKE);
         if (shouldPierce) {

@@ -4,13 +4,15 @@ import com.PVZ.model.entity.zombies.base.ZombieTexturePaths;
 import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.model.minigame.izombie.IZombieGame;
 import com.PVZ.model.minigame.izombie.ZombieOption;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,13 +22,39 @@ import java.util.Map;
 
 public class ZombiePacketBar {
 
-    private static final float SLOT_SIZE = 78f;
-    private static final float GAP = 10f;
+    private static final float SLOT_SIZE = 130f;
+    private static final float GAP = 3f;
+    private static final float PANEL_PAD = 4f;
 
     private final List<ZombiePacket> packets = new ArrayList<>();
     private final Map<String, Texture> iconCache = new HashMap<>();
     private final Map<String, Boolean> missingLogged = new HashMap<>();
     private Texture darkOverlay;
+    private static Drawable panelBackground;
+    private static Drawable slotBackground;
+    private static boolean skinLookupDone = false;
+    private float previewAnimationTime = 0f;
+
+    private static void ensureSkinBackgrounds() {
+        if (skinLookupDone) {
+            return;
+        }
+        skinLookupDone = true;
+        try {
+            com.badlogic.gdx.scenes.scene2d.ui.Skin skin = PvzSkin.get();
+            if (skin == null) {
+                return;
+            }
+            if (skin.has("image_ui_dialog_asset_inner_bkgd_10", Drawable.class)) {
+                panelBackground = skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10");
+            }
+            if (skin.has("image_ui_if_bundle_reward1_bg_10", Drawable.class)) {
+                slotBackground = skin.getDrawable("image_ui_if_bundle_reward1_bg_10");
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
     public void layout(IZombieGame game, float x, float topY) {
         packets.clear();
         if (game == null) return;
@@ -51,102 +79,81 @@ public class ZombiePacketBar {
     public List<ZombiePacket> getPackets() { return packets; }
 
     public void draw(SpriteBatch batch, BitmapFont font, BitmapFont timerFont, IZombieGame game, String selectedAlias) {
-        if (game == null) return;
+        if (game == null || packets.isEmpty()) return;
+        advancePreviewAnimation();
+        ensureSkinBackgrounds();
         BitmapFont smallFont = timerFont != null ? timerFont : font;
+
+        // One skinned backing panel behind the whole roster column, instead of
+        // icons floating on bare background - matches the rest of the game's UI.
+        Rectangle first = packets.get(0).getBounds();
+        Rectangle last = packets.get(packets.size() - 1).getBounds();
+        float panelX = first.x - PANEL_PAD;
+        float panelY = last.y - PANEL_PAD;
+        float panelW = first.width + PANEL_PAD * 2f;
+        float panelH = (first.y + first.height) - last.y + PANEL_PAD * 2f;
+        if (panelBackground != null) {
+            panelBackground.draw(batch, panelX, panelY, panelW, panelH);
+        } else {
+            batch.setColor(0.05f, 0.05f, 0.05f, 0.55f);
+            batch.draw(darkOverlayPixel(), panelX, panelY, panelW, panelH);
+            batch.setColor(Color.WHITE);
+        }
+
         for (ZombiePacket packet : packets) {
             Rectangle b = packet.getBounds();
             boolean affordable = game.getSun() >= packet.getOption().getCost();
             boolean selected = packet.getOption().getAlias().equalsIgnoreCase(
                     selectedAlias == null ? "" : selectedAlias);
 
+            if (slotBackground != null) {
+                slotBackground.draw(batch, b.x, b.y, b.width, b.height);
+            }
+
             boolean pamDrawn = drawPamIcon(batch, packet.getOption().getAlias(), b);
             if (!pamDrawn) {
-                smallFont.setColor(Color.WHITE);
-                smallFont.draw(batch, packet.getOption().getDisplayName(), b.x + 4, b.y + b.height - 8, b.width - 8, -1,
-                        true);
+                // Keep the slot visually clean even if a PAM cannot be loaded.
+                // No extra text is rendered here by design.
             }
 
             if (!affordable) {
-                batch.setColor(0f, 0f, 0f, 0.55f);
+                batch.setColor(0f, 0f, 0f, 0.50f);
                 batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
                 batch.setColor(Color.WHITE);
-
-                int missing = packet.getOption().getCost() - game.getSun();
-                double rate = game.getCurrentSunRate();
-                String timerText = rate > 0 ? String.valueOf((int) Math.ceil(missing / rate)) : "-";
-                smallFont.setColor(1f, 0.6f, 0.6f, 1f);
-                smallFont.draw(batch, timerText, b.x, b.y + b.height * 0.6f, b.width, 1, true);
-                smallFont.setColor(Color.WHITE);
             } else if (selected) {
-                batch.setColor(1f, 0.85f, 0f, 0.35f);
+                batch.setColor(1f, 0.85f, 0f, 0.28f);
                 batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
                 batch.setColor(Color.WHITE);
             }
-
-            smallFont.setColor(Color.WHITE);
-            smallFont.draw(batch, packet.getOption().getCost() + "", b.x, b.y - 2, b.width, 1, true);
         }
-    }
-
-    private final Map<String, com.PVZ.model.entity.zombies.base.Zombie> cachedPreviewZombies = new HashMap<>();
-
-    private com.PVZ.model.entity.zombies.base.Zombie getPreviewZombie(String alias) {
-        return cachedPreviewZombies.computeIfAbsent(alias, a -> {
-            for (com.PVZ.model.enums.ZombieType t : com.PVZ.model.enums.ZombieType.values()) {
-                if (t.alias.equals(a)) {
-                    com.PVZ.model.entity.zombies.base.Zombie z = t.create();
-                    if (z != null) {
-                        com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(z, "idle", 999999f);
-                    }
-                    return z;
-                }
-            }
-            return null;
-        });
     }
 
     private boolean drawPamIcon(SpriteBatch batch, String alias, Rectangle b) {
-        if (EntityRenderer.getInstance() == null) return false;
-        com.PVZ.model.entity.zombies.base.Zombie previewZombie = getPreviewZombie(alias);
-        if (previewZombie != null) {
-            try {
-                com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(previewZombie, "idle", 999999f);
-                Matrix4 original = new Matrix4(batch.getTransformMatrix());
-                float scale = 0.20f;
-                float cx = b.x + b.width * 0.5f;
-                float cy = b.y + b.height * 0.5f;
-                Matrix4 hud = new Matrix4(original);
-                hud.translate(cx, cy, 0f);
-                hud.scale(scale, scale, 1f);
-                hud.translate(-195f, -195f, 0f);
-                batch.setTransformMatrix(hud);
-                previewZombie.setX(0.0);
-                previewZombie.setY(0.0);
-                EntityRenderer.getInstance().renderZombie(batch, previewZombie, 0f);
-                batch.setTransformMatrix(original);
-                return true;
-            } catch (RuntimeException ex) {
-                return false;
-            }
-        }
-        String pamPath = ZombieTexturePaths.getPamPath(alias);
-        if (pamPath == null) return false;
+        if (EntityRenderer.getInstance() == null || alias == null) return false;
+
+        // Render the actual zombie alias directly from its PAM rather than constructing a
+        // gameplay zombie. This makes the roster preview independent of combat state and
+        // also works for aliases whose gameplay class has custom initialisation.
         try {
-            Matrix4 original = new Matrix4(batch.getTransformMatrix());
-            float scale = 0.20f;
-            float cx = b.x + b.width * 0.5f;
-            float cy = b.y + b.height * 0.5f;
-            Matrix4 hud = new Matrix4(original);
-            hud.translate(cx, cy, 0f);
-            hud.scale(scale, scale, 1f);
-            hud.translate(-195f, -195f, 0f);
-            batch.setTransformMatrix(hud);
-            boolean ok = EntityRenderer.getInstance().renderPam(batch, pamPath, "idle", 0f, 0f, 0f);
-            batch.setTransformMatrix(original);
-            return ok;
+            // Scale the PAM up while keeping its full canvas inside the packet.
+            float scale = 0.48f;
+            float px = b.x + b.width * 0.5f;
+            float py = b.y + b.height * 0.5f;
+            EntityRenderer.getInstance().renderZombieAlias(
+                    batch, alias, "idle", previewAnimationTime, px, py, scale);
+            return true;
         } catch (RuntimeException ex) {
             return false;
         }
+    }
+
+    private void advancePreviewAnimation() {
+        try {
+            previewAnimationTime += Gdx.graphics.getDeltaTime();
+        } catch (Exception ignored) {
+            previewAnimationTime += 0.016f;
+        }
+        if (previewAnimationTime > 60f) previewAnimationTime -= 60f;
     }
 
     private Texture darkOverlayPixel() {

@@ -39,6 +39,17 @@ public class PlantFamilyMapper {
         };
     }
 
+    /**
+     * Family used by stage rules that allow at most one pick from a family.
+     * All mint plants belong to the single MINT bucket for selection/locked-family
+     * rules; their individual mint families remain available to quest/behaviour logic.
+     */
+    public static PlantFamily getExclusivityFamily(PlantType plantType) {
+        if (plantType == null) return PlantFamily.GENERAL;
+        if (getMintFamily(plantType) != null) return PlantFamily.MINT;
+        return getFamily(plantType);
+    }
+
     public static PlantFamily getMintTargetFamily(PlantType plantType) {
         if (plantType == null || plantType.getDefinition() == null) return PlantFamily.GENERAL;
         if (plantType == PlantType.ENLIGHTEN_MINT) return PlantFamily.SUN_PRODUCER;

@@ -16,6 +16,7 @@ public class ZombieProjectile {
     protected Zombie owner;
     protected boolean landsToTomb = false;
     protected int targetCol = -1;
+    protected float animationTime = 0f;
 
     public ZombieProjectile(float x, float y, int damage, float speed, int row, Zombie owner) {
         this(x, y, damage, speed, row, owner, -1, false);
@@ -44,12 +45,26 @@ public class ZombieProjectile {
     }
 
     public void update(float delta) {
+        animationTime += delta;
         x -= speed * delta;
         hitbox.setPosition(x, y);
         if (x < -50) destroyed = true;
     }
 
     public void draw(SpriteBatch batch) {
+        if (owner != null && "ZombotanyPeashooterDefault".equals(owner.getAlias())) {
+            try {
+                com.PVZ.view.renderer.EntityRenderer renderer = com.PVZ.view.renderer.EntityRenderer.getInstance();
+                if (renderer.renderPam(batch,
+                        "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM",
+                        "animation", animationTime, x, y, 0.22f)) {
+                    return;
+                }
+            } catch (RuntimeException ignored) {
+                // Fall through to the procedural fallback below.
+            }
+        }
+
         if (texture == null && com.badlogic.gdx.Gdx.graphics != null && com.badlogic.gdx.Gdx.gl != null) {
             try {
                 Pixmap pixmap = new Pixmap(24, 24, Pixmap.Format.RGBA8888);

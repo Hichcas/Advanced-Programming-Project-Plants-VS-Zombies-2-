@@ -12,6 +12,7 @@ public enum PlantFamily {
     ENCHANT_MINT,
     PIERCE_MINT,
     CAT_TAIL_MINT,
+    MINT,
     EXPLOSIVE,
     SUN_PRODUCER,
     MUSHROOM,

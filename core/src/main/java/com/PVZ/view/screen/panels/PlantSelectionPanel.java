@@ -464,8 +464,12 @@ public class PlantSelectionPanel extends BasePanel {
             boolean owned = user != null && user.collectionState != null
                 && user.collectionState.isPlantUnlocked(type);
             boolean stageLocked = AppStatus.CURRENT_STAGE_LOCKED_PLANTS.contains(type);
-            card.setLocked(!owned || stageLocked);
-            card.setSelected(AppStatus.SELECTED_PLANTS.contains(type));
+            boolean selected = AppStatus.SELECTED_PLANTS.contains(type);
+            // A plant already selected is never locked out by its own family (that check
+            // only blocks *other* members of the family), so it stays tappable to remove.
+            boolean familyLocked = !selected && plantController.isFamilyLockedByOtherPick(type);
+            card.setLocked(!owned || stageLocked || familyLocked);
+            card.setSelected(selected);
         }
         countLabel.setText(AppStatus.SELECTED_PLANTS.size() + " / 8 selected");
         updateSelectedTray();

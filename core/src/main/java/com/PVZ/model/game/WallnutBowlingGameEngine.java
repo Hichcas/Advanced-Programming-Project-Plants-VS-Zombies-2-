@@ -363,26 +363,29 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
 
     private void drawConveyorHud(SpriteBatch batch) {
         if (hudPixel == null || map == null || game == null) return;
-        float x = map.getStartX() + map.getTotalWidth() - 460f;
-        float y = map.getStartY() + 58f;
-        float panelW = 430f;
-        float panelH = 96f;
-        batch.setColor(0.08f, 0.05f, 0.025f, 0.82f);
+
+        // Minimal conveyor strip on the LEFT side of the screen.
+        // Only the randomized nut animation and its name are shown.
+        float panelW = 150f;
+        float panelH = 190f;
+        float x = Math.max(18f, map.getStartX() - panelW - 28f);
+        float y = map.getStartY() - 250f;
+
+        batch.setColor(0.08f, 0.05f, 0.025f, 0.88f);
         batch.draw(hudPixel, x, y, panelW, panelH);
-        batch.setColor(0.9f, 0.72f, 0.3f, 0.9f);
-        batch.draw(hudPixel, x + 3f, y + 3f, panelW - 6f, 4f);
+        batch.setColor(0.90f, 0.72f, 0.30f, 0.95f);
+        batch.draw(hudPixel, x + 4f, y + 4f, panelW - 8f, 4f);
+        batch.draw(hudPixel, x + 4f, y + panelH - 8f, panelW - 8f, 4f);
         batch.setColor(Color.WHITE);
-        font.draw(batch, "CONVEYOR", x + 14f, y + 75f);
+
         NutType held = game.getHeldNut();
         if (held != null) {
-            EntityRenderer.getInstance().renderPam(batch, nutPamPath(held), "idle", nutAnimTime, x + 115f, y + 8f);
-            font.draw(batch, held.name().replace('_',' '), x + 185f, y + 55f);
+            EntityRenderer.getInstance().renderPam(
+                    batch, nutPamPath(held), "idle", nutAnimTime,
+                    x + panelW * 0.5f - 43f, y + 68f);
+            font.draw(batch, held.name().replace('_', ' '),
+                    x + 8f, y + 24f, panelW - 16f, -1, true);
         }
-        String status = game.getCooldownRemaining() > 0.0
-                ? String.format("Reload %.1fs", game.getCooldownRemaining())
-                : "Ready";
-        font.draw(batch, status, x + 185f, y + 30f);
-        font.draw(batch, game.getZombiesSpawned() + "/" + game.getTotalZombies() + " zombies", x + 305f, y + 30f);
     }
 
     private void drawGameOverOverlay(SpriteBatch batch) {

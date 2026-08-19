@@ -80,8 +80,12 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     }
 
     private void layoutZombieBar() {
-        float barX = map.getStartX() + map.getTileWidth() * game.getCols() + 40f;
-        float topY = map.getStartY() - map.getTileHeight() * 0.3f;
+        // I, Zombie roster belongs in the upper-right HUD area.
+        // Keep the lawn unobstructed while giving each animated packet enough room.
+        // Compact vertical roster on the right side, around the lower-middle of the lawn.
+        // Each packet is 130px high; keep a safe right margin and enough vertical room.
+        float barX = 2290f;
+        float topY = 860f;
         zombiePacketBar.layout(game, barX, topY);
     }
 

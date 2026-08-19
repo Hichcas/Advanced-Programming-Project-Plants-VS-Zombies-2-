@@ -131,8 +131,7 @@ public class GameScreen extends BaseScreen {
             stage.addActor(buildPlantFoodButton());
             stage.addActor(buildShovelButton());
         }
-        com.PVZ.view.screen.panels.CheatPanel.attachToggleButton(stage, dto ->
-            new com.PVZ.controller.menuControllers.InGameMenuController().handle(dto));
+        com.PVZ.view.screen.panels.CheatPanel.attachToggleButton(stage, this::handleCheatAcrossGameModes);
 
         if (gameEngine.getMap() != null) {
             gameMap = gameEngine.getMap();
@@ -581,8 +580,8 @@ public class GameScreen extends BaseScreen {
     private void layoutSeedPacketBar(RegularGameEngine regularGameEngine) {
         List<PlantType> loadout = seedBarLoadout(regularGameEngine);
         if (regularGameEngine.isConveyorBeltMode()) {
-            regularGameEngine.getSeedPacketBar().layout(loadout, 30f, VIRTUAL_HEIGHT - 260f, false);
-        } else if (regularGameEngine.isLockedPlantsMode()) {
+            // Conveyor belt: a vertical strip down the left side showing the
+            // upcoming plants one at a time, not the normal pick-your-loadout bar.
             regularGameEngine.getSeedPacketBar().layoutVertical(loadout, 30f, VIRTUAL_HEIGHT - 174f);
         } else {
             regularGameEngine.getSeedPacketBar().layout(loadout, 40f, VIRTUAL_HEIGHT - 174f);
@@ -594,6 +593,69 @@ public class GameScreen extends BaseScreen {
             return new ArrayList<>(regularGameEngine.getConveyorBeltQueue());
         }
         return new ArrayList<>(AppStatus.SELECTED_PLANTS);
+    }
+
+    private com.PVZ.view.output.OutputDTO handleCheatAcrossGameModes(
+            com.PVZ.view.input.DTO.InGameInputDTO dto) {
+        if (gameEngine instanceof com.PVZ.model.game.RegularGameEngine) {
+            return new com.PVZ.controller.menuControllers.InGameMenuController().handle(dto);
+        }
+
+        if (!(gameEngine instanceof com.PVZ.model.game.ZombieEngine zombieEngine)) {
+            return new com.PVZ.view.output.OutputDTO(false, "Cheats are unavailable in this game mode.");
+        }
+
+        try {
+            return switch (dto.getCommand()) {
+                case CHEAT_ADD_SUNS -> {
+                    int amount = dto.getAmount() == null ? 0 : dto.getAmount();
+                    zombieEngine.addSun(amount);
+                    yield new com.PVZ.view.output.OutputDTO(true, "Added " + amount + " sun.");
+                }
+                case CHEAT_SPAWN_ZOMBIE -> {
+                    String alias = dto.getZombieType();
+                    int row = dto.getY() == null ? 2 : dto.getY();
+                    int col = dto.getX() == null ? 8 : dto.getX();
+                    com.PVZ.model.entity.zombies.base.Zombie z =
+                        zombieEngine.spawnZombie(alias, row, col);
+                    yield new com.PVZ.view.output.OutputDTO(z != null,
+                        z != null ? "Zombie spawned: " + alias : "Could not spawn zombie.");
+                }
+                case CHEAT_RELEASE_NUKE, KILL_ALL_ZOMBIES -> {
+                    java.util.List<com.PVZ.model.entity.zombies.base.Zombie> zombies =
+                        zombieEngine.getZombiesInLane(-1);
+                    // Some engines do not support a synthetic lane (-1); fall back to all rows.
+                    if (zombies == null || zombies.isEmpty()) {
+                        zombies = new java.util.ArrayList<>();
+                        for (int r = 0; r < 5; r++) {
+                            java.util.List<com.PVZ.model.entity.zombies.base.Zombie> lane = zombieEngine.getZombiesInLane(r);
+                            if (lane != null) zombies.addAll(lane);
+                        }
+                    }
+                    for (com.PVZ.model.entity.zombies.base.Zombie z : zombies) {
+                        if (z != null && !z.isDead()) zombieEngine.kill(z);
+                    }
+                    yield new com.PVZ.view.output.OutputDTO(true, "All zombies killed.");
+                }
+                case CHEAT_REMOVE_COOLDOWN -> {
+                    if (gameEngine instanceof com.PVZ.model.game.ZombotanyGameEngine z) {
+                        z.clearPlantCooldowns();
+                        yield new com.PVZ.view.output.OutputDTO(true, "Plant cooldowns removed.");
+                    }
+                    yield new com.PVZ.view.output.OutputDTO(true, "No plant cooldowns in this minigame.");
+                }
+                case CHEAT_ADD_PLANT_FOOD ->
+                    new com.PVZ.view.output.OutputDTO(true, "Plant Food is not used by this minigame.");
+                case CHEAT_SET_WATER, CHEAT_SET_DRY -> {
+                    yield new com.PVZ.view.output.OutputDTO(false,
+                        "Tile water/dry cheats are not supported by this minigame.");
+                }
+                default -> new com.PVZ.view.output.OutputDTO(false,
+                    "Cheat is not supported by this minigame.");
+            };
+        } catch (RuntimeException ex) {
+            return new com.PVZ.view.output.OutputDTO(false, "Cheat failed: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -768,7 +830,11 @@ public class GameScreen extends BaseScreen {
             }
         }
 
-        drawPreviewZombies(gameBatch);
+        // I, Zombie renders its complete animated roster through IZombieGameEngine's
+        // dedicated left-side HUD. Do not draw a second ad-hoc preview strip here.
+        if (!(activeEngine instanceof com.PVZ.model.game.IZombieGameEngine)) {
+            drawPreviewZombies(gameBatch);
+        }
         gameBatch.end();
 
         float renderDelta = isSimulationFrozen() ? 0f : Math.min(delta, 1 / 30f);

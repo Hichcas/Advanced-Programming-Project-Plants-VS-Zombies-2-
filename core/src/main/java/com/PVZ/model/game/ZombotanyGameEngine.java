@@ -279,6 +279,10 @@ public class ZombotanyGameEngine extends GameEngine implements ZombieEngine, See
         return rechargeRemaining.getOrDefault(type, 0.0);
     }
 
+    public void clearPlantCooldowns() {
+        rechargeRemaining.clear();
+    }
+
     public String plantSelectedAt(int col, int row) {
         if (selectedPlantType == null) return "No seed selected.";
         String result = plantPlant(selectedPlantType, col, row);

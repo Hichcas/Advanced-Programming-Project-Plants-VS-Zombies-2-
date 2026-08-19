@@ -47,6 +47,7 @@ public class GameHud extends Group {
     private int plantFoodCount = 0;
     private int zombieWavePercent = 0;
     private List<Float> waveMarkerRatios = List.of();
+    private boolean conveyorBeltMode = false;
     private String beltLine = null;
 
     private static final float LOCKED_ICON_SIZE = 32f;
@@ -110,8 +111,13 @@ public class GameHud extends Group {
         }
 
         if (engine instanceof RegularGameEngine regularEngine && regularEngine.isConveyorBeltMode()) {
-            beltLine = "Belt: " + formatBelt(regularEngine.getConveyorBeltQueue());
+            conveyorBeltMode = true;
+            // The vertical belt bar (left side) already shows the upcoming queue
+            // visually now, so the old text line would just be a redundant
+            // overlap - skip it.
+            beltLine = null;
         } else {
+            conveyorBeltMode = false;
             beltLine = null;
         }
 
@@ -158,12 +164,23 @@ public class GameHud extends Group {
         super.draw(batch, parentAlpha);
 
         float top = BaseScreen.VIRTUAL_HEIGHT - PANEL_TOP_MARGIN;
-        float sunPanelY = top - PANEL_HEIGHT;
-        float sunPanelX = PANEL_LEFT_MARGIN;
+        float sunPanelY;
+        float sunPanelX;
+        if (conveyorBeltMode) {
+            // Conveyor belt levels get a vertical plant bar down the left side, so
+            // push sun/plant-food down to the bottom-right instead of their usual
+            // top-left spot - nothing to collide with there.
+            float panelWidthGuess = PANEL_ICON_SIZE + 90f;
+            sunPanelX = BaseScreen.VIRTUAL_WIDTH - panelWidthGuess - PANEL_LEFT_MARGIN;
+            sunPanelY = PANEL_TOP_MARGIN + PANEL_HEIGHT + PANEL_GAP;
+        } else {
+            sunPanelY = top - PANEL_HEIGHT;
+            sunPanelX = PANEL_LEFT_MARGIN;
+        }
 
         drawCounterPanel(batch, parentAlpha, SUN_PAM, sunflowerCount, sunPanelX, sunPanelY, Color.GOLD);
 
-        float plantFoodPanelY = sunPanelY - PANEL_HEIGHT - PANEL_GAP;
+        float plantFoodPanelY = conveyorBeltMode ? PANEL_TOP_MARGIN : sunPanelY - PANEL_HEIGHT - PANEL_GAP;
         drawCounterPanel(batch, parentAlpha, PLANTFOOD_PAM, plantFoodCount, sunPanelX, plantFoodPanelY, Color.LIME);
 
         drawWaveBar(batch, parentAlpha, top);
