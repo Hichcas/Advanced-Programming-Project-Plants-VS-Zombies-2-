@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +34,11 @@ public class SeedPacketBar {
         layout(unlockedPlants, startX, startY, true);
     }
 
+    private boolean lastLayoutWasVertical = false;
+
     public void layout(List<PlantType> unlockedPlants, float startX, float startY, boolean applyDefaultOffset) {
         packets.clear();
+        lastLayoutWasVertical = false;
         float x = applyDefaultOffset ? startX + X_OFFSET : startX;
         for (PlantType type : unlockedPlants) {
             Rectangle bounds = new Rectangle(x, startY, SLOT_SIZE, SLOT_SIZE);
@@ -46,6 +51,7 @@ public class SeedPacketBar {
 
     public void layoutVertical(List<PlantType> unlockedPlants, float startX, float startY) {
         packets.clear();
+        lastLayoutWasVertical = true;
         float y = startY;
         for (PlantType type : unlockedPlants) {
             Rectangle bounds = new Rectangle(startX, y, VERTICAL_SLOT_SIZE, VERTICAL_SLOT_SIZE);
@@ -137,6 +143,11 @@ public class SeedPacketBar {
 
     public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font, SeedBarEngine engine) {
         animTime += Gdx.graphics.getDeltaTime();
+
+        if (lastLayoutWasVertical && !packets.isEmpty()) {
+            drawVerticalBarBackground(batch);
+        }
+
         for (SeedPacket packet : packets) {
             Rectangle b = packet.getBounds();
             float centerX = b.x + b.width / 2f;
@@ -174,6 +185,44 @@ public class SeedPacketBar {
     }
 
     private com.badlogic.gdx.graphics.Texture darkOverlayTexture;
+
+    private static Drawable verticalBarBackground;
+    private static boolean verticalBarSkinLookupDone = false;
+
+    /**
+     * Thin skinned panel behind the conveyor-belt's vertical plant bar so it reads
+     * as a proper belt/tray, not icons floating loose over the lawn. Same skin key
+     * used for every other panel background in the game, with a plain dark
+     * fallback if the skin isn't loaded for some reason.
+     */
+    private void drawVerticalBarBackground(SpriteBatch batch) {
+        if (!verticalBarSkinLookupDone) {
+            verticalBarSkinLookupDone = true;
+            try {
+                com.badlogic.gdx.scenes.scene2d.ui.Skin skin = PvzSkin.get();
+                if (skin != null && skin.has("image_ui_dialog_asset_inner_bkgd_10", Drawable.class)) {
+                    verticalBarBackground = skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10");
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        Rectangle first = packets.get(0).getBounds();
+        Rectangle last = packets.get(packets.size() - 1).getBounds();
+        float pad = 10f;
+        float panelX = first.x - pad;
+        float panelY = last.y - pad;
+        float panelW = first.width + pad * 2f;
+        float panelH = (first.y + first.height) - last.y + pad * 2f;
+
+        if (verticalBarBackground != null) {
+            verticalBarBackground.draw(batch, panelX, panelY, panelW, panelH);
+        } else {
+            batch.setColor(0.05f, 0.05f, 0.05f, 0.55f);
+            batch.draw(darkOverlayPixel(), panelX, panelY, panelW, panelH);
+            batch.setColor(Color.WHITE);
+        }
+    }
 
     private com.badlogic.gdx.graphics.Texture darkOverlayPixel() {
         if (darkOverlayTexture == null) {

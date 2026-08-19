@@ -4,6 +4,7 @@ import com.PVZ.model.entity.plants.PlantInstance;
 import com.PVZ.model.entity.plants.behavior.BehaviorContext;
 import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.PlantTag;
 
 import java.util.List;
 
@@ -107,7 +108,13 @@ public class LobberBehavior implements PlantBehavior {
 
         int projectileCount = Math.max(1, plant.getStats().getIntExtra("projectileCount", 1));
         boolean freezeAttack = plant.getStats().getBooleanExtra("freezeAttack", false);
-        boolean fireAttack = plant.getStats().getBooleanExtra("fireAttack", false);
+        // Same fix as ShooterBehavior: "fireAttack" doubles as both the permanent flag for
+        // innately-fire plants (stamped once at creation from PlantTag.FIRE) and the
+        // temporary flag Plant Food behaviors stamp on non-fire pults (e.g. Winter Melon /
+        // Pepper-pult's handlePultFamily). Without also requiring Plant Food to still be
+        // active for the latter case, one Plant Food use would make that pult fire forever.
+        boolean fireAttack = (plant.isPlantFoodActive() && plant.getStats().getBooleanExtra("fireAttack", false))
+            || (plant.getDefinition() != null && plant.getDefinition().hasTag(PlantTag.FIRE));
 
         return new LobShotParams(damage, projectileCount, stunShot, freezeAttack, fireAttack);
     }

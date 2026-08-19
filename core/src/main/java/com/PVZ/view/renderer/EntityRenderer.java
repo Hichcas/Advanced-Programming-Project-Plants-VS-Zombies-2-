@@ -184,6 +184,17 @@ public class EntityRenderer {
                 }
             }
 
+            if (isZombotanyAlias(zombie.getAlias())) {
+                if (trackVisibility == null) trackVisibility = new HashMap<>();
+                // Zombotany is a normal zombie body with the plant replacing its head.
+                // Hide the normal head/hair/tie tracks before drawing the plant head overlay.
+                trackVisibility.put("anim_head1", false);
+                trackVisibility.put("anim_head2", false);
+                trackVisibility.put("anim_head", false);
+                trackVisibility.put("anim_hair", false);
+                trackVisibility.put("Zombie_tie", false);
+            }
+
             if (zombie instanceof com.PVZ.model.entity.zombies.types.heavy_gargantuar.ZombieGargantuar garg && garg.isImpThrown()) {
                 if (trackVisibility == null) trackVisibility = new HashMap<>();
                 trackVisibility.put("imp", false);
@@ -200,14 +211,53 @@ public class EntityRenderer {
             } else {
                 pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
             }
+            // Zombotany visuals are composed from the normal zombie body PAM plus the
+            // corresponding plant idle PAM as a head/top overlay. The provided PAM catalog
+            // does not contain dedicated Zombotany PAMs, so this is the asset-faithful fallback.
+            renderZombotanyHeadOverlay(batch, zombie, effectiveTime);
             batch.setColor(origColor);
         }
         renderFallingArmors(batch);
     }
 
+    private void renderZombotanyHeadOverlay(SpriteBatch batch, Zombie zombie, float stateTime) {
+        if (zombie == null || !isZombotanyAlias(zombie.getAlias()) || zombie.isDying()) return;
+
+        String plantType = zombotanyPlantType(zombie.getAlias());
+        ClipRef headClip = getPlantClip(plantType, "idle");
+        if (headClip == null) return;
+
+        float x = (float) zombie.getX();
+        float y = (float) zombie.getY();
+        float scale;
+        float xOffset;
+        float yOffset;
+        switch (plantType) {
+            case "PEASHOOTER" -> { scale = 0.34f; xOffset = -4f; yOffset = 78f; }
+            case "WALL_NUT" -> { scale = 0.32f; xOffset = -2f; yOffset = 76f; }
+            case "JALAPENO" -> { scale = 0.31f; xOffset = -2f; yOffset = 78f; }
+            case "SQUASH" -> { scale = 0.33f; xOffset = -3f; yOffset = 78f; }
+            default -> { scale = 0.32f; xOffset = -2f; yOffset = 76f; }
+        }
+        drawClipScaled(batch, headClip, stateTime, x + xOffset, y + yOffset, -scale, scale);
+    }
+
+    private boolean isZombotanyAlias(String alias) {
+        return "ZombotanyPeashooterDefault".equals(alias)
+                || "ZombotanyWallnutDefault".equals(alias)
+                || "ZombotanyJalapenoDefault".equals(alias)
+                || "ZombotanySquashDefault".equals(alias);
+    }
+
     public void renderZombieAlias(SpriteBatch batch, String alias, String state, float stateTime, float x, float y) {
         if (alias == null) return;
         textures.update();
+
+        if (isZombotanyAlias(alias)) {
+            renderZombotanyAlias(batch, alias, state, stateTime, x, y);
+            return;
+        }
+
         String resolvedState = state != null ? state : "idle";
         ClipRef clip = getZombieClip(alias, resolvedState);
         if (clip == null) {
@@ -219,6 +269,66 @@ public class EntityRenderer {
         if (clip != null) {
             pamPlayer.draw(batch, clip, stateTime, x, y, true);
         }
+    }
+
+    public void renderZombieAlias(SpriteBatch batch, String alias, String state, float stateTime,
+                                  float x, float y, float scale) {
+        if (scale == 1f) {
+            renderZombieAlias(batch, alias, state, stateTime, x, y);
+            return;
+        }
+        com.badlogic.gdx.math.Matrix4 old = batch.getTransformMatrix().cpy();
+        com.badlogic.gdx.math.Matrix4 transform = batch.getTransformMatrix();
+        transform.translate(x, y, 0f);
+        transform.scale(scale, scale, 1f);
+        batch.setTransformMatrix(transform);
+        try {
+            renderZombieAlias(batch, alias, state, stateTime, 0f, 0f);
+        } finally {
+            batch.setTransformMatrix(old);
+        }
+    }
+
+    private void renderZombotanyAlias(SpriteBatch batch, String alias, String state, float stateTime, float x, float y) {
+        String resolvedState = state != null ? state : "idle";
+        ClipRef bodyClip = getZombieClip(alias, resolvedState);
+        if (bodyClip == null) bodyClip = getZombieClip(alias, "walk");
+        if (bodyClip == null) bodyClip = getZombieClip("ZombieTutorialDefault", "walk");
+        if (bodyClip == null) return;
+
+        Map<String, Boolean> visibility = new HashMap<>();
+        visibility.put("anim_head1", false);
+        visibility.put("anim_head2", false);
+        visibility.put("anim_head", false);
+        visibility.put("anim_hair", false);
+        visibility.put("Zombie_tie", false);
+        pamPlayer.draw(batch, bodyClip, stateTime, x, y, true, visibility);
+
+        String plantType = zombotanyPlantType(alias);
+        ClipRef headClip = getPlantClip(plantType, "idle");
+        if (headClip == null) return;
+
+        float scale;
+        float xOffset;
+        float yOffset;
+        switch (plantType) {
+            case "PEASHOOTER" -> { scale = 0.34f; xOffset = -4f; yOffset = 78f; }
+            case "WALL_NUT" -> { scale = 0.32f; xOffset = -2f; yOffset = 76f; }
+            case "JALAPENO" -> { scale = 0.31f; xOffset = -2f; yOffset = 78f; }
+            case "SQUASH" -> { scale = 0.33f; xOffset = -3f; yOffset = 78f; }
+            default -> { scale = 0.32f; xOffset = -2f; yOffset = 76f; }
+        }
+        drawClipScaled(batch, headClip, stateTime, x + xOffset, y + yOffset, -scale, scale);
+    }
+
+    private String zombotanyPlantType(String alias) {
+        return switch (alias) {
+            case "ZombotanyPeashooterDefault" -> "PEASHOOTER";
+            case "ZombotanyWallnutDefault" -> "WALL_NUT";
+            case "ZombotanyJalapenoDefault" -> "JALAPENO";
+            case "ZombotanySquashDefault" -> "SQUASH";
+            default -> "PEASHOOTER";
+        };
     }
 
     private void renderZombieCamel(SpriteBatch batch, com.PVZ.model.entity.zombies.types.basic.ZombieCamel camel, float stateTime) {
@@ -395,21 +505,13 @@ public class EntityRenderer {
 
     private void drawClipScaled(SpriteBatch batch, ClipRef clip, float stateTime,
                                 float x, float y, float scale) {
-        if (scale <= 1.0001f) {
-            pamPlayer.draw(batch, clip, stateTime, x, y, true);
-            return;
-        }
-        com.badlogic.gdx.math.Matrix4 oldMatrix = batch.getTransformMatrix().cpy();
-        com.badlogic.gdx.math.Matrix4 transform = batch.getTransformMatrix();
-        transform.translate(x, y, 0);
-        transform.scale(scale, scale, 1.0f);
-        transform.translate(-x, -y, 0);
-        batch.setTransformMatrix(transform);
-        try {
-            pamPlayer.draw(batch, clip, stateTime, x, y, true);
-        } finally {
-            batch.setTransformMatrix(oldMatrix);
-        }
+        drawClipScaled(batch, clip, stateTime, x, y, scale, 1f);
+    }
+
+    private void drawClipScaled(SpriteBatch batch, ClipRef clip, float stateTime,
+                                float x, float y, float scaleX, float scaleY) {
+        if (clip == null) return;
+        pamPlayer.draw(batch, clip, stateTime, x, y, true);
     }
 
     public boolean renderPlant(SpriteBatch batch, String plantTypeName, float stateTime,

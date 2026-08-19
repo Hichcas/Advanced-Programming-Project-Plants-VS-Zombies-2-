@@ -12,6 +12,8 @@ import com.PVZ.model.game.chapter.StageConfig;
 import com.PVZ.model.game.chapter.sepecialLevel.SpecialLevelLauncher;
 import com.PVZ.model.quest.PlantFamilyMapper;
 import com.PVZ.model.quest.QuestManager;
+import com.PVZ.model.entity.plants.PlantDefinition;
+import com.PVZ.model.entity.plants.PlantLibrary;
 import com.PVZ.model.status.AppStatus;
 
 import java.util.ArrayList;
@@ -63,7 +65,9 @@ final class GameLauncher {
                 continue;
             }
             try {
-                families.add(PlantFamily.valueOf(entry.getFamily().trim().toUpperCase()));
+                String raw = entry.getFamily().trim().toUpperCase();
+                if (raw.equals("MINTS") || raw.equals("MINT_FAMILIES")) raw = "MINT";
+                families.add(PlantFamily.valueOf(raw));
             } catch (Exception ignored) {
             }
         }
@@ -78,12 +82,38 @@ final class GameLauncher {
         }
         Set<PlantFamily> seen = new LinkedHashSet<>();
         for (PlantType type : selectedPlants) {
-            PlantFamily family = PlantFamilyMapper.getFamily(type);
+            PlantFamily family = PlantFamilyMapper.getExclusivityFamily(type);
             if (!exclusiveFamilies.contains(family)) {
                 continue;
             }
             if (!seen.add(family)) {
                 toRemove.add(type);
+            }
+        }
+        return toRemove;
+    }
+
+    static Set<PlantType> resolveExtraTagPicks(Set<PlantType> selectedPlants) {
+        Set<PlantType> toRemove = new LinkedHashSet<>();
+        if (selectedPlants == null || selectedPlants.isEmpty()) return toRemove;
+
+        Set<String> seenTags = new java.util.LinkedHashSet<>();
+        for (PlantType type : selectedPlants) {
+            PlantDefinition def = PlantLibrary.findByType(type).orElse(null);
+            if (def == null || def.getTags() == null) continue;
+            boolean conflicts = false;
+            for (String raw : def.getTags()) {
+                String tag = raw == null ? "" : raw.trim().toLowerCase();
+                if (tag.isEmpty() || "-".equals(tag)) continue;
+                if (seenTags.contains(tag)) { conflicts = true; break; }
+            }
+            if (conflicts) {
+                toRemove.add(type);
+            } else {
+                for (String raw : def.getTags()) {
+                    String tag = raw == null ? "" : raw.trim().toLowerCase();
+                    if (!tag.isEmpty() && !"-".equals(tag)) seenTags.add(tag);
+                }
             }
         }
         return toRemove;
@@ -113,6 +143,10 @@ final class GameLauncher {
                 AppStatus.SELECTED_PLANTS, AppStatus.CURRENT_STAGE_EXCLUSIVE_FAMILIES);
             AppStatus.SELECTED_PLANTS.removeAll(extraFamilyPicks);
             locked.addAll(extraFamilyPicks);
+
+            Set<PlantType> extraTagPicks = resolveExtraTagPicks(AppStatus.SELECTED_PLANTS);
+            AppStatus.SELECTED_PLANTS.removeAll(extraTagPicks);
+            locked.addAll(extraTagPicks);
             engine.enableLockedPlants(locked);
         }
         SpecialLevelLauncher.launch(engine, stageConfig);

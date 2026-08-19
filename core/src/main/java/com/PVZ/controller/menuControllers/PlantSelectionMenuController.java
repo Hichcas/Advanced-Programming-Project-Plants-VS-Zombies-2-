@@ -7,6 +7,7 @@ import com.PVZ.model.game.chapter.ChapterLibrary;
 import com.PVZ.model.game.chapter.StageConfig;
 import com.PVZ.model.quest.PlantFamilyMapper;
 import com.PVZ.model.status.AppStatus;
+import com.PVZ.model.entity.plants.PlantDefinition;
 import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.PlantSelectionInputDTO;
 import com.PVZ.view.input.InputDTO;
@@ -76,17 +77,71 @@ public class PlantSelectionMenuController {
         return new OutputDTO(true, joiner.toString());
     }
 
-    private boolean isFamilyLockedByOtherPick(PlantType type) {
-        PlantFamily family = PlantFamilyMapper.getFamily(type);
+    /**
+     * Public so graphical panels (which don't go through the text ADD_PLANT command to
+     * find out) can grey out / lock-icon a card before the player even taps it, instead of
+     * only surfacing the restriction after a failed click.
+     */
+    public boolean isFamilyLockedByOtherPick(PlantType type) {
+        // LOCKED_PLANTS stages use the spreadsheet's Tags column as the real
+        // exclusivity key: once a plant is chosen, no other plant sharing one
+        // of its tags may be chosen in the same loadout.
+        if (isTagLockedByOtherPick(type)) {
+            return true;
+        }
+
+        PlantFamily family = PlantFamilyMapper.getExclusivityFamily(type);
         if (!AppStatus.CURRENT_STAGE_EXCLUSIVE_FAMILIES.contains(family)) {
             return false;
         }
         for (PlantType selected : AppStatus.SELECTED_PLANTS) {
-            if (selected != type && PlantFamilyMapper.getFamily(selected) == family) {
+            if (selected != type && PlantFamilyMapper.getExclusivityFamily(selected) == family) {
                 return true;
             }
         }
         return false;
+    }
+
+    private boolean isTagLockedByOtherPick(PlantType type) {
+        if (type == null || AppStatus.CURRENT_STAGE_LOCKED_PLANTS.isEmpty()) {
+            return false;
+        }
+        PlantDefinition candidate = PlantDefinitionHolder.find(type);
+        if (candidate == null || candidate.getTags() == null) {
+            return false;
+        }
+        java.util.Set<String> candidateTags = normalizedTags(candidate);
+        if (candidateTags.isEmpty()) {
+            return false;
+        }
+        for (PlantType selected : AppStatus.SELECTED_PLANTS) {
+            if (selected == type) continue;
+            PlantDefinition selectedDef = PlantDefinitionHolder.find(selected);
+            if (selectedDef == null) continue;
+            java.util.Set<String> selectedTags = normalizedTags(selectedDef);
+            for (String tag : candidateTags) {
+                if (selectedTags.contains(tag)) return true;
+            }
+        }
+        return false;
+    }
+
+    private static java.util.Set<String> normalizedTags(PlantDefinition def) {
+        java.util.Set<String> result = new java.util.LinkedHashSet<>();
+        if (def == null || def.getTags() == null) return result;
+        for (String raw : def.getTags()) {
+            if (raw == null) continue;
+            String tag = raw.trim().toLowerCase();
+            if (tag.isEmpty() || "-".equals(tag)) continue;
+            result.add(tag);
+        }
+        return result;
+    }
+
+    private static final class PlantDefinitionHolder {
+        static PlantDefinition find(PlantType type) {
+            return com.PVZ.model.entity.plants.PlantLibrary.findByType(type).orElse(null);
+        }
     }
 
     private String lockedTag() {

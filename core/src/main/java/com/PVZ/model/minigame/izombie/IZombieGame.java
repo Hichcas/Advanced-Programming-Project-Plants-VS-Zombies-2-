@@ -1,6 +1,7 @@
 package com.PVZ.model.minigame.izombie;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,12 +30,55 @@ public class IZombieGame {
     private boolean won = false;
     private boolean lost = false;
 
+    /**
+     * Every walking, non-boss, non-gargantuar zombie the renderer already knows how
+     * to animate reliably (matches com.PVZ.model.enums.ZombieType). Costs are a
+     * simple tier heuristic (armor pieces = pricier) so a freshly-randomized roster
+     * still feels balanced without needing 40 hand-tuned numbers.
+     */
+    private static final ZombieOption[] RANDOM_POOL = {
+        new ZombieOption("ZombieTutorialDefault", 50, "Basic Zombie"),
+        new ZombieOption("ZombieTutorialArmor1Default", 75, "Conehead Zombie"),
+        new ZombieOption("ZombieTutorialArmor2Default", 125, "Buckethead Zombie"),
+        new ZombieOption("ZombieMummyDefault", 50, "Mummy Zombie"),
+        new ZombieOption("ZombieMummyArmor1Default", 75, "Mummy Conehead"),
+        new ZombieOption("ZombieMummyArmor2Default", 125, "Mummy Buckethead"),
+        new ZombieOption("ZombieIceageDefault", 50, "Iceage Zombie"),
+        new ZombieOption("ZombieIceageArmor1Default", 75, "Iceage Conehead"),
+        new ZombieOption("ZombieIceageArmor2Default", 125, "Iceage Buckethead"),
+        new ZombieOption("ZombieBeachDefault", 60, "Beach Zombie"),
+        new ZombieOption("ZombieBeachArmor1Default", 90, "Beach Conehead"),
+        new ZombieOption("ZombieBeachArmor2Default", 150, "Beach Buckethead"),
+        new ZombieOption("ZombieDarkDefault", 60, "Dark Zombie"),
+        new ZombieOption("ZombieDarkArmor1Default", 90, "Dark Conehead"),
+        new ZombieOption("ZombieDarkArmor2Default", 150, "Dark Buckethead"),
+        new ZombieOption("ZombiePharaohDefault", 80, "Pharaoh Zombie"),
+        new ZombieOption("ZombieCamelDefault", 175, "Camel Zombie"),
+        new ZombieOption("ZombieTutorialImpDefault", 25, "Imp"),
+        new ZombieOption("ZombieEgyptImpDefault", 25, "Egypt Imp"),
+        new ZombieOption("ZombieIceageImpDefault", 25, "Iceage Imp"),
+        new ZombieOption("ZombieBeachImpDefault", 25, "Beach Imp"),
+        new ZombieOption("ZombieDarkImpDefault", 25, "Dark Imp"),
+    };
+
+    /** Picks a fresh, distinct-alias, randomly-ordered roster of `count` options every call. */
+    public static List<ZombieOption> randomRoster(int count, java.util.Random random) {
+        List<ZombieOption> pool = new ArrayList<>(List.of(RANDOM_POOL));
+        Collections.shuffle(pool, random != null ? random : new java.util.Random());
+        int size = Math.max(1, Math.min(count, pool.size()));
+        return new ArrayList<>(pool.subList(0, size));
+    }
+
     public IZombieGame(IZombieLevelDefinition level) {
         this.rows = level.getRows();
         this.cols = level.getCols();
         this.redLineCol = Math.max(0, Math.min(level.getRedLineCol(), cols - 1));
         this.sun = level.getStartingSun();
-        this.roster = level.getZombieRoster() != null ? new ArrayList<>(level.getZombieRoster()) : new ArrayList<>();
+        // Roster is always freshly randomized per playthrough (not the level's
+        // hand-authored JSON list), per design - same economy/board otherwise.
+        int rosterSize = level.getZombieRoster() != null && !level.getZombieRoster().isEmpty()
+            ? level.getZombieRoster().size() : 5;
+        this.roster = randomRoster(rosterSize, new java.util.Random());
         this.sunZombieAlias = level.getSunZombieAlias();
         this.sunProductionBase = level.getSunProductionBase();
         this.sunProductionGrowthPerTick = level.getSunProductionGrowthPerTick();

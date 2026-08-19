@@ -40,6 +40,9 @@ public class ZombotanyJalapeno extends AbstractBasicZombie {
         if (fuseTimer >= FUSE_SECONDS) {
             exploded = true;
             burnRow(controller);
+            // The plant-like zombie detonates after its fuse, just like the source
+            // behaviour described for the Zombotany variant.
+            setHitpoints(0);
         }
     }
 

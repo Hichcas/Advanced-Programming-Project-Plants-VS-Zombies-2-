@@ -454,7 +454,7 @@
             "startDelay": 8.0,
             "entries": [
               {
-                "zombie": "ZombieTutorialDefault",
+                "zombie": "ZombotanyPeashooterDefault",
                 "count": 4,
                 "spawnDelay": 2.5
               }
@@ -464,7 +464,7 @@
             "startDelay": 18.0,
             "entries": [
               {
-                "zombie": "ZombieTutorialArmor1Default",
+                "zombie": "ZombotanyWallnutDefault",
                 "count": 3,
                 "spawnDelay": 2.5
               },
@@ -479,7 +479,7 @@
             "startDelay": 30.0,
             "entries": [
               {
-                "zombie": "ZombieTutorialDefault",
+                "zombie": "ZombotanyJalapenoDefault",
                 "count": 4,
                 "spawnDelay": 2.0
               },
@@ -494,7 +494,7 @@
             "startDelay": 42.0,
             "entries": [
               {
-                "zombie": "ZombieTutorialArmor1Default",
+                "zombie": "ZombotanySquashDefault",
                 "count": 3,
                 "spawnDelay": 2.0
               },
@@ -525,7 +525,7 @@
             "startDelay": 7.0,
             "entries": [
               {
-                "zombie": "ZombieTutorialDefault",
+                "zombie": "ZombotanyPeashooterDefault",
                 "count": 4,
                 "spawnDelay": 2.0
               }
@@ -540,7 +540,7 @@
                 "spawnDelay": 2.5
               },
               {
-                "zombie": "ZombieTutorialArmor1Default",
+                "zombie": "ZombotanyWallnutDefault",
                 "count": 3,
                 "spawnDelay": 2.5
               }
@@ -555,7 +555,7 @@
                 "spawnDelay": 2.0
               },
               {
-                "zombie": "ZombieMummyDefault",
+                "zombie": "ZombotanyJalapenoDefault",
                 "count": 3,
                 "spawnDelay": 2.5
               }
@@ -580,7 +580,7 @@
             "startDelay": 48.0,
             "entries": [
               {
-                "zombie": "ZombieTutorialArmor2Default",
+                "zombie": "ZombotanySquashDefault",
                 "count": 3,
                 "spawnDelay": 2.0
               },
@@ -612,7 +612,7 @@
             "startDelay": 6.0,
             "entries": [
               {
-                "zombie": "ZombieMummyDefault",
+                "zombie": "ZombotanyPeashooterDefault",
                 "count": 4,
                 "spawnDelay": 1.8
               }
@@ -642,7 +642,7 @@
                 "spawnDelay": 2.5
               },
               {
-                "zombie": "ZombieIceageDefault",
+                "zombie": "ZombotanyWallnutDefault",
                 "count": 4,
                 "spawnDelay": 2.0
               }
@@ -672,7 +672,7 @@
                 "spawnDelay": 1.8
               },
               {
-                "zombie": "ZombieBeachDefault",
+                "zombie": "ZombotanyJalapenoDefault",
                 "count": 4,
                 "spawnDelay": 2.0
               }
@@ -692,7 +692,7 @@
                 "spawnDelay": 2.5
               },
               {
-                "zombie": "ZombieTutorialArmor2Default",
+                "zombie": "ZombotanySquashDefault",
                 "count": 4,
                 "spawnDelay": 1.8
               }

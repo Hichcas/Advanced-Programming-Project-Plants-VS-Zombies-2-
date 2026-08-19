@@ -14,7 +14,7 @@ public class ZombotanyPeashooter extends AbstractRangedCasterZombie {
     public ZombotanyPeashooter() {
 
         super("ZombotanyPeashooterDefault", 220, 100, 0.185, 150, 1500, defaultScaledProps(),
-                45, 260, 2.5, 6);
+                45, 260, 1.5, 9);
     }
 
     private static List<ScaledProperty> defaultScaledProps() {
@@ -31,7 +31,7 @@ public class ZombotanyPeashooter extends AbstractRangedCasterZombie {
     public void shoot(BattleController controller, Plant target) {
 
         controller.addZombieProjectile(new ZombieProjectile(
-                (float) x, (float) y + 30, (int) projectileDamage, (float) projectileSpeed, (int) row, this));
+                (float) x - 14f, (float) y + 100f, (int) projectileDamage, (float) projectileSpeed, (int) row, this));
     }
 
     @Override

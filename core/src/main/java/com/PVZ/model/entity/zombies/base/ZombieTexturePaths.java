@@ -33,6 +33,12 @@ public class ZombieTexturePaths {
         PAM_PATHS.put("ZombieEgyptImpDefault", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_IMP/ZOMBIE_EGYPT_IMP.PAM");
         PAM_PATHS.put("ZombieTutorialImpDefault", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_IMP/ZOMBIE_TUTORIAL_IMP.PAM");
         PAM_PATHS.put("ZombieZombossMechEgypt", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_ZOMBOSS/ZOMBIE_EGYPT_ZOMBOSS.PAM");
+        // Zombotany has no dedicated PAM entry in the supplied animation catalog;
+        // compose the plant head over the authentic tutorial zombie body.
+        PAM_PATHS.put("ZombotanyPeashooterDefault", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM");
+        PAM_PATHS.put("ZombotanyWallnutDefault", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM");
+        PAM_PATHS.put("ZombotanyJalapenoDefault", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM");
+        PAM_PATHS.put("ZombotanySquashDefault", "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM");
         // World-specific PAM skins used by the graphical mini-games.
         PAM_PATHS.put("ZombieIceageDefault", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM");
         PAM_PATHS.put("ZombieIceageArmor1Default", "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM");

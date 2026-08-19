@@ -93,11 +93,13 @@ public abstract class AbstractRangedCasterZombie extends Zombie {
     }
 
     private Plant findNearestPlantInRange(BattleController ctrl) {
-        int startCol = (int) col - 1;
-        int endCol = Math.max(0, (int) col - attackRange);
+        int startCol = Math.max(0, (int) col - 1);
+        int endCol = 0;
         for (int c = startCol; c >= endCol; c--) {
             Plant p = ctrl.getPlantAt((int) row, c);
-            if (p != null && !p.isDead()) return p;
+            if (p != null && !p.isDead()) {
+                return p;
+            }
         }
         return null;
     }
