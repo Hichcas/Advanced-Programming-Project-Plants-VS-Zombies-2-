@@ -2,7 +2,7 @@ package com.PVZ.model.entity.zombies.base;
 
 public class ZombieArmor {
     public enum ArmorType {
-        CONE, BUCKET, BRICK, ICE_BLOCK, SARCOPHAGUS, SHOULDER_ARMOR, CROWN
+        CONE, BUCKET, BRICK, ICE_BLOCK, SARCOPHAGUS, SHOULDER_ARMOR, CROWN, FOOTBALL_HELMET, NEWSPAPER
     }
 
     private ArmorType type;

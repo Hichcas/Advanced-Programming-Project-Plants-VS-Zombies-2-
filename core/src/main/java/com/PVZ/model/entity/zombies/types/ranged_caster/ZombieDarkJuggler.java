@@ -2,21 +2,20 @@ package com.PVZ.model.entity.zombies.types.ranged_caster;
 
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
-import com.PVZ.model.entity.zombies.base.ZombieProjectile;
+import com.PVZ.model.entity.zombies.base.ZombieAnimation;
 import com.PVZ.model.game.BattleController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ZombieDarkJuggler extends AbstractRangedCasterZombie {
-    private boolean isReflecting;
-    private int reflectableProjectiles;
+
+    private float spinDuration = 0f;
+    private static final float SPIN_TIME_PER_HIT = 1.2f;
 
     public ZombieDarkJuggler() {
         super("ZombieDarkJuggler", 420, 100, 0.185, 700, 3500, defaultScaledProps(),
               120, 180, 2.0, 3);
-        this.isReflecting = true;
-        this.reflectableProjectiles = 5;
     }
 
     private static List<ScaledProperty> defaultScaledProps() {
@@ -30,28 +29,87 @@ public class ZombieDarkJuggler extends AbstractRangedCasterZombie {
     }
 
     @Override
+    public void update(float delta, BattleController ctrl) {
+        updateEffects(delta);
+        ZombieAnimation.tick(this, delta);
+
+        if (isDying()) {
+            animStateTime += delta;
+            if (!ZombieAnimation.isActive(this)) {
+                finishDeath(ctrl);
+            }
+            return;
+        }
+
+        if (!isFrozen()) {
+            animStateTime += delta;
+        }
+
+        if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
+            startDeath(ctrl);
+            return;
+        }
+
+        if (hypnotized) {
+            updateHypnotized(delta, ctrl);
+            hitbox.setPosition((float) x, (float) y);
+            onUpdate(delta, ctrl);
+            return;
+        }
+
+        // If spinning to deflect projectiles -> Pause movement and play spin animation
+        if (spinDuration > 0) {
+            spinDuration -= delta;
+            moving = false;
+            ZombieAnimation.trigger(this, "spin", 1.2);
+            hitbox.setPosition((float) x, (float) y);
+            if (ctrl != null) {
+                onUpdate(delta, ctrl);
+            }
+            return;
+        }
+
+        if (ctrl == null) {
+            return;
+        }
+
+        int tileCol = ctrl.getTileColumn((float) x);
+        col = tileCol;
+
+        Plant plantInFront = ctrl.getPlantAt((int) row, tileCol);
+        if (plantInFront != null && !plantInFront.isDead()) {
+            moving = false;
+            attack(plantInFront, delta, ctrl);
+        } else {
+            moving = true;
+            move(delta, ctrl);
+        }
+
+        hitbox.setPosition((float) x, (float) y);
+        onUpdate(delta, ctrl);
+    }
+
+    @Override
     public void shoot(BattleController controller, Plant target) {
-        controller.addZombieProjectile(new ZombieProjectile(
-            (float) x, (float) y, (int) projectileDamage, (float) projectileSpeed, (int) row, this));
+        // Jester does not shoot projectiles; he only reflects incoming projectiles!
     }
 
     @Override
     public void onHit(Plant target) {}
 
-    @Override
-    public String getDebugString() {
-        return super.getDebugString() + (isReflecting ? "\nREFL" : "") + " PROJ:" + reflectableProjectiles;
+    public boolean isSpinning() {
+        return spinDuration > 0;
     }
 
-    public boolean isReflecting() { return isReflecting; }
-    public void startReflecting() { this.isReflecting = true; }
-    public void stopReflecting() { this.isReflecting = false; }
-    public int getReflectableProjectiles() { return reflectableProjectiles; }
     public boolean reflectProjectile() {
-        if (isReflecting && reflectableProjectiles > 0) {
-            reflectableProjectiles--;
-            return true;
-        }
-        return false;
+        if (isDead() || isFrozen()) return false;
+        // Trigger / refresh spin state whenever a projectile reaches him
+        this.spinDuration = SPIN_TIME_PER_HIT;
+        ZombieAnimation.trigger(this, "spin", 1.2);
+        return true;
+    }
+
+    public boolean isReflecting() {
+        return spinDuration > 0;
     }
 }

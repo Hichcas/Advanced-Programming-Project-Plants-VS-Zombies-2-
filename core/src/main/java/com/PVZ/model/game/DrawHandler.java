@@ -164,7 +164,7 @@ public class DrawHandler {
 
     private static void drawTimedPamEffects(RegularGameEngine engine, SpriteBatch batch) {
         for (RegularGameEngine.TimedPamEffect fx : engine.timedPamEffects) {
-            float elapsed = 1.0f;
+            float elapsed = (float) Math.max(0.0, fx.totalDuration - fx.remaining);
             EntityRenderer.getInstance().renderPam(batch, fx.path, fx.clip, elapsed, fx.x, fx.y, fx.scale);
         }
     }
@@ -507,12 +507,6 @@ public class DrawHandler {
             if (z == null || z.isDead()) continue;
             HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
                 (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
-            if (z.isFrozen()) {
-                Color c = batch.getColor();
-                batch.setColor(0.3f, 0.6f, 1f, 0.45f);
-                batch.draw(engine.iceOverlayTexture(), (float) z.getX(), (float) z.getY(), 100, 120);
-                batch.setColor(c);
-            }
         }
         font.setColor(Color.WHITE);
     }

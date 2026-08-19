@@ -2,6 +2,7 @@ package com.PVZ.model.entity.zombies.types.ranged_caster;
 
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
+import com.PVZ.model.entity.zombies.base.ZombieAnimation;
 import com.PVZ.model.entity.zombies.base.ZombieProjectile;
 import com.PVZ.model.game.BattleController;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class ZombieWizard extends AbstractRangedCasterZombie {
     private boolean hasMagicStaff;
+    private final List<Plant> transformedPlants = new ArrayList<>();
 
     public ZombieWizard() {
         super("ZombieWizard", 480, 100, 0.185, 900, 4000, defaultScaledProps(),
@@ -30,6 +32,7 @@ public class ZombieWizard extends AbstractRangedCasterZombie {
     @Override
     public void shoot(BattleController controller, Plant target) {
         if (!hasMagicStaff) return;
+        ZombieAnimation.trigger(this, "sheep", 2.3);
         controller.addZombieProjectile(new ZombieProjectile(
             (float) x, (float) y, (int) projectileDamage, (float) projectileSpeed, (int) row, this));
     }
@@ -38,8 +41,23 @@ public class ZombieWizard extends AbstractRangedCasterZombie {
     public void onHit(Plant target) {
         if (target != null && !target.isDead()) {
             target.disableForTicks(100000);
-            System.out.println(alias + " turned a plant into a sheep");
+            target.putRuntimeState("isSheep", true);
+            transformedPlants.add(target);
+            System.out.println(alias + " turned " + target.getType() + " into a sheep!");
         }
+    }
+
+    @Override
+    public void finishDeath(BattleController ctrl) {
+        // Free all transformed sheep plants when Wizard dies!
+        for (Plant p : transformedPlants) {
+            if (p != null && !p.isDead()) {
+                p.putRuntimeState("isSheep", false);
+                p.putRuntimeState("disabledTicks", 0);
+            }
+        }
+        transformedPlants.clear();
+        super.finishDeath(ctrl);
     }
 
     @Override

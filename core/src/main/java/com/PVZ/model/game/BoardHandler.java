@@ -32,7 +32,7 @@ public class BoardHandler {
             if (mower == null) continue;
             if (!mower.isTriggered() && !mower.isUsed()) {
                 for (Zombie z : engine.getZombiesInLane(mower.getRow())) {
-                    if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
+                    if (z != null && !z.isDead() && !(z instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieProspector zp && zp.isFlewToLeft()) && z.getX() <= mower.getFrontX()) {
                         mower.trigger();
                         engine.questLawnmowerKills++;
                         engine.getBattleController().notifyZombieKilled(engine, z, null);
@@ -53,7 +53,7 @@ public class BoardHandler {
             }
             if (mower.isUsed() && engine.gameStatus != null && !engine.gameStatus.isGameOver()) {
                 for (Zombie z : engine.getZombiesInLane(mower.getRow())) {
-                    if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
+                    if (z != null && !z.isDead() && !(z instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieProspector zp && zp.isFlewToLeft()) && z.getX() <= mower.getFrontX()) {
                         System.out.println("The zombie ate your brain; LOSER!!!");
                         engine.triggerGameOver(false);
                         return;

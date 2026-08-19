@@ -156,7 +156,7 @@ public final class ZombieFactory {
             case "ZombieEgyptImpDefault" -> new ZombieImp(alias, ZombieImp.Theme.EGYPT);
             case "ZombieIceageImpDefault" -> new ZombieImp(alias, ZombieImp.Theme.ICEAGE);
             case "ZombieBeachImpDefault" -> new ZombieImp(alias, ZombieImp.Theme.BEACH);
-            case "ZombieDarkImpDefault" -> new ZombieImp(alias, ZombieImp.Theme.DARK);
+            case "ZombieDarkImpDefault", "ZombieDarkImpDragon", "ZombieDarkImpDragonDefault" -> new ZombieImp(alias, ZombieImp.Theme.DARK);
             default -> null;
         };
     }
@@ -172,6 +172,12 @@ public final class ZombieFactory {
             case "ZombieBeachSnorkel" -> new ZombieBeachSnorkel();
             case "ZombieBeachSurfer" -> new ZombieBeachSurfer();
             case "ZombieBeachFastSwimmer" -> new ZombieBeachFastSwimmer();
+            case "ZombieModernAllStar", "ZombieFootball", "ZombieAllStar" -> new ZombieAllStar(alias);
+            case "Zombie80sArcade", "ZombieArcade" -> new ZombieArcade(alias);
+            case "ZombieLostCityJane", "ZombieJane" -> new ZombieLostCityJane(alias);
+            case "ZombieProspector", "ZombieWestProspector" -> new ZombieProspector(alias);
+            case "ZombiePiano", "ZombieWestPiano" -> new ZombiePiano(alias);
+            case "ZombieModernNewspaper", "ZombieNewspaper" -> new ZombieNewspaper(alias);
             default -> null;
         };
     }
@@ -184,9 +190,10 @@ public final class ZombieFactory {
             case "ZombieIceAgeHunter" -> new ZombieIceAgeHunter();
             case "ZombieBeachFisherman" -> new ZombieBeachFisherman();
             case "ZombieBeachOctopus" -> new ZombieBeachOctopus();
-            case "ZombieWizardDefault" -> new ZombieWizard();
-            case "ZombieDarkJugglerDefault" -> new ZombieDarkJuggler();
-            case "ZombieDarkKing" -> new ZombieDarkKing();
+            case "ZombieWizardDefault", "ZombieWizard", "ZombieDarkWizard" -> new ZombieWizard();
+            case "ZombieDarkJugglerDefault", "ZombieDarkJuggler", "ZombieDarkJester" -> new ZombieDarkJuggler();
+            case "ZombieDarkKing", "ZombieDarkKingDefault" -> new ZombieDarkKing();
+            case "ZombieLostCityCrystalSkull", "ZombieCrystalSkull" -> new ZombieCrystalSkull(alias);
             default -> null;
         };
     }

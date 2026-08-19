@@ -16,13 +16,27 @@ public class ZombieProjectile {
     protected Zombie owner;
     protected boolean landsToTomb = false;
     protected int targetCol = -1;
+    protected String visualKey;
+    protected float animTime = 0f;
+    protected com.PVZ.model.entity.plants.behavior.impl.Projectile sourceProjectile;
 
     public ZombieProjectile(float x, float y, int damage, float speed, int row, Zombie owner) {
-        this(x, y, damage, speed, row, owner, -1, false);
+        this(x, y, damage, speed, row, owner, -1, false, null, null);
     }
 
     public ZombieProjectile(float x, float y, int damage, float speed, int row, Zombie owner,
                             int targetCol, boolean landsToTomb) {
+        this(x, y, damage, speed, row, owner, targetCol, landsToTomb, null, null);
+    }
+
+    public ZombieProjectile(float x, float y, int damage, float speed, int row, Zombie owner,
+                            String visualKey, com.PVZ.model.entity.plants.behavior.impl.Projectile sourceProjectile) {
+        this(x, y, damage, speed, row, owner, -1, false, visualKey, sourceProjectile);
+    }
+
+    public ZombieProjectile(float x, float y, int damage, float speed, int row, Zombie owner,
+                            int targetCol, boolean landsToTomb,
+                            String visualKey, com.PVZ.model.entity.plants.behavior.impl.Projectile sourceProjectile) {
         this.x = x;
         this.y = y;
         this.damage = damage;
@@ -33,6 +47,8 @@ public class ZombieProjectile {
         this.owner = owner;
         this.targetCol = targetCol;
         this.landsToTomb = landsToTomb;
+        this.visualKey = visualKey;
+        this.sourceProjectile = sourceProjectile;
     }
 
     public boolean isLandsToTomb() {
@@ -43,13 +59,32 @@ public class ZombieProjectile {
         return targetCol;
     }
 
+    public String getVisualKey() {
+        return visualKey;
+    }
+
+    public void setVisualKey(String visualKey) {
+        this.visualKey = visualKey;
+    }
+
     public void update(float delta) {
+        animTime += delta;
         x -= speed * delta;
         hitbox.setPosition(x, y);
         if (x < -50) destroyed = true;
     }
 
     public void draw(SpriteBatch batch) {
+        if (visualKey != null && batch != null) {
+            boolean drewAnimated = com.PVZ.view.renderer.EntityRenderer.getInstance()
+                .renderProjectile(batch, visualKey, animTime, x, y);
+            if (drewAnimated) return;
+        }
+        if (sourceProjectile != null && batch != null) {
+            sourceProjectile.initWorldPosition(x, y, 0);
+            sourceProjectile.draw(batch);
+            return;
+        }
         if (texture == null && com.badlogic.gdx.Gdx.graphics != null && com.badlogic.gdx.Gdx.gl != null) {
             try {
                 Pixmap pixmap = new Pixmap(24, 24, Pixmap.Format.RGBA8888);
@@ -95,6 +130,10 @@ public class ZombieProjectile {
 
     public float getX() {
         return x;
+    }
+
+    public float getY() {
+        return y;
     }
 
     public Zombie getOwner() {
