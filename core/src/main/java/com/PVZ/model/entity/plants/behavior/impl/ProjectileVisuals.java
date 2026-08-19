@@ -70,7 +70,15 @@ public final class ProjectileVisuals {
     public static String getHitClipForProjectile(Projectile p) {
         if (p == null) return "animation";
         Object key = p.getExtra("visualKey");
-        return key instanceof String ? HIT_CLIPS.getOrDefault((String) key, "animation") : "animation";
+        return key instanceof String ? getHitClipForVisualKey((String) key) : "animation";
+    }
+
+    public static String getHitPathForVisualKey(String visualKey) {
+        return visualKey == null ? null : HIT_PATHS.get(visualKey);
+    }
+
+    public static String getHitClipForVisualKey(String visualKey) {
+        return visualKey == null ? "animation" : HIT_CLIPS.getOrDefault(visualKey, "animation");
     }
 
     private ProjectileVisuals() {

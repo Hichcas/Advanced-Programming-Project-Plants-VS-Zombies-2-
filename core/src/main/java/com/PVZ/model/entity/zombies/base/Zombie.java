@@ -290,6 +290,9 @@ public abstract class Zombie {
             return;
         }
         if (type == DamageType.FIRE) {
+            if (isFireImmune()) {
+                return;
+            }
             if (isFrozen()) {
                 thaw();
             }
@@ -497,6 +500,10 @@ public abstract class Zombie {
         return false;
     }
 
+    public boolean isFireImmune() {
+        return alias != null && (alias.toLowerCase().contains("dragon") || alias.toLowerCase().contains("impdragon"));
+    }
+
     public void onProjectileHit(Plant target) {
     }
 
@@ -544,6 +551,10 @@ public abstract class Zombie {
 
     public String getAlias() {
         return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public double getHitpoints() {
