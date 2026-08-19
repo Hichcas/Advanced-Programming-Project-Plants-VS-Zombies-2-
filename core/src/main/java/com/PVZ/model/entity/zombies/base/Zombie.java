@@ -2,10 +2,13 @@ package com.PVZ.model.entity.zombies.base;
 
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.enums.DamageType;
+import com.PVZ.model.enums.DeathType;
 import com.PVZ.model.enums.TileType;
 import com.PVZ.model.game.BattleController;
 import com.PVZ.model.game.Map;
+import com.PVZ.model.game.RegularGameEngine;
 import com.PVZ.model.game.SunManager;
+import com.PVZ.model.status.AppStatus;
 import com.PVZ.view.renderer.EntityRenderer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -37,6 +40,7 @@ public abstract class Zombie {
     protected boolean hypnotized = false;
     protected int icingLevel = 0;
     protected int iceHp = 0;
+    protected float freezeTimer = 0f;
     protected float animStateTime = 0f;
     private final java.util.Map<String, Object> runtimeState = new java.util.HashMap<>();
 
@@ -250,6 +254,10 @@ public abstract class Zombie {
     }
 
     public void freeze(float duration) {
+        this.freezeTimer = Math.max(this.freezeTimer, duration);
+        this.icingLevel = 3;
+        this.iceHp = Math.max(this.iceHp, 600);
+        this.stopMoving();
         applyEffect(new StatusEffect(DamageType.ICE, duration));
     }
 
@@ -281,6 +289,17 @@ public abstract class Zombie {
             hitpoints -= amount;
             return;
         }
+        if (type == DamageType.FIRE) {
+            if (isFireImmune()) {
+                return;
+            }
+            if (isFrozen()) {
+                thaw();
+            }
+            if (hitpoints - amount <= 0) {
+                deathType = DeathType.ASH;
+            }
+        }
         if (type == DamageType.ICE) {
             StatusEffect existing = findEffect(DamageType.ICE);
             if (existing != null) {
@@ -305,7 +324,11 @@ public abstract class Zombie {
         } else {
             hitpoints -= amount;
             if (hitpoints <= 0) {
-                ZombieAnimation.trigger(this, "die", 2.8333);
+                if (deathType == DeathType.ASH || deathType == DeathType.ELECTRIC) {
+                    ZombieAnimation.trigger(this, "die", 0.05);
+                } else {
+                    ZombieAnimation.trigger(this, "die", 2.8333);
+                }
             }
         }
     }
@@ -314,12 +337,50 @@ public abstract class Zombie {
         takeDamage((int) damage, DamageType.NORMAL);
     }
 
+    protected DeathType deathType = DeathType.NORMAL;
+
+    public DeathType getDeathType() {
+        return deathType;
+    }
+
+    public void setDeathType(DeathType deathType) {
+        this.deathType = deathType;
+    }
+
+    public String getAshPamPath(boolean isElectric) {
+        String lower = alias == null ? "" : alias.toLowerCase();
+        boolean isImp = lower.contains("imp");
+        boolean isGarg = lower.contains("gargantuar");
+        boolean isBalloon = lower.contains("balloon");
+
+        if (isElectric) {
+            if (isImp) return "768/INITIAL/EFFECTS/ZOMBIE_IMP_SHOCK/ZOMBIE_IMP_SHOCK.PAM";
+            if (isGarg) return "768/INITIAL/EFFECTS/ZOMBIE_GARGANTUAR_SHOCK/ZOMBIE_GARGANTUAR_SHOCK.PAM";
+            if (isBalloon) return "768/INITIAL/EFFECTS/ZOMBIE_MODERN_BALLOON_SHOCK/ZOMBIE_MODERN_BALLOON_SHOCK.PAM";
+            return "768/INITIAL/EFFECTS/ZOMBIE_SHOCK/ZOMBIE_SHOCK.PAM";
+        } else {
+            if (isImp) return "768/INITIAL/EFFECTS/ZOMBIE_IMP_ASH/ZOMBIE_IMP_ASH.PAM";
+            if (isGarg) return "768/INITIAL/EFFECTS/ZOMBIE_GARGANTUAR_ASH/ZOMBIE_GARGANTUAR_ASH.PAM";
+            if (isBalloon) return "768/INITIAL/EFFECTS/ZOMBIE_MODERN_BALLOON_ASH/ZOMBIE_MODERN_BALLOON_ASH.PAM";
+            return "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM";
+        }
+    }
+
     public void updateEffects(float delta) {
         Iterator<StatusEffect> it = activeEffects.iterator();
         while (it.hasNext()) {
             StatusEffect e = it.next();
             if (e.update(delta)) {
                 it.remove();
+            }
+        }
+        if (freezeTimer > 0f) {
+            freezeTimer -= delta;
+            if (freezeTimer <= 0f) {
+                freezeTimer = 0f;
+                if (icingLevel >= 3) {
+                    thaw();
+                }
             }
         }
         // Only clear the slow/hypnosis once nothing of that type remains active -
@@ -337,9 +398,11 @@ public abstract class Zombie {
             }
         }
         if (isFrozen()) {
-            iceHp -= (int) (delta * 60);
-            if (iceHp <= 0) {
-                thaw();
+            if (iceHp > 0) {
+                iceHp -= (int) (delta * 60);
+                if (iceHp <= 0 && freezeTimer <= 0f) {
+                    thaw();
+                }
             }
         }
     }
@@ -350,7 +413,20 @@ public abstract class Zombie {
         hitpoints = 0;
         armor = null;
         animStateTime = 0.0f;
-        ZombieAnimation.trigger(this, "die", 2.8333);
+
+        if (deathType == DeathType.ASH || deathType == DeathType.ELECTRIC) {
+            boolean isElectric = (deathType == DeathType.ELECTRIC);
+            String ashPam = getAshPamPath(isElectric);
+            float duration = isElectric ? 1.33f : 3.5f;
+            RegularGameEngine reg = AppStatus.getGameEngine() instanceof RegularGameEngine re ? re : null;
+            if (reg != null && ashPam != null) {
+                reg.addTimedPamEffect(ashPam, "animation", duration, 1.0f, (float) x, (float) y);
+            }
+            ZombieAnimation.trigger(this, "die", 0.05);
+        } else {
+            ZombieAnimation.trigger(this, "die", 2.8333);
+        }
+
         if (isGlowing) {
             controller.grantPlantFoodDrop(x, y);
         }
@@ -424,6 +500,10 @@ public abstract class Zombie {
         return false;
     }
 
+    public boolean isFireImmune() {
+        return alias != null && (alias.toLowerCase().contains("dragon") || alias.toLowerCase().contains("impdragon"));
+    }
+
     public void onProjectileHit(Plant target) {
     }
 
@@ -473,6 +553,10 @@ public abstract class Zombie {
         return alias;
     }
 
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
     public double getHitpoints() {
         return hitpoints;
     }
@@ -494,6 +578,9 @@ public abstract class Zombie {
     }
 
     public double getCurrentSpeed() {
+        if (isFrozen()) {
+            return 0.0;
+        }
         return currentSpeed;
     }
 
@@ -571,16 +658,18 @@ public abstract class Zombie {
     }
 
     public boolean isFrozen() {
-        return icingLevel >= 3;
+        return freezeTimer > 0f || icingLevel >= 3;
     }
 
     public void freezeSolid() {
+        this.freezeTimer = 5.0f;
         this.icingLevel = 3;
         this.iceHp = 600;
         this.stopMoving();
     }
 
     public void thaw() {
+        this.freezeTimer = 0f;
         this.icingLevel = 0;
         this.iceHp = 0;
         this.startMoving();

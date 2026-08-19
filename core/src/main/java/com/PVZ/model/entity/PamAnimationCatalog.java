@@ -40,6 +40,17 @@ public final class PamAnimationCatalog {
         SYNONYMS.put("cast", new String[]{"cast", "cast_loop", "throw"});
         SYNONYMS.put("reel", new String[]{"reel", "pull", "idle"});
         SYNONYMS.put("toss", new String[]{"toss", "throw", "attack"});
+        SYNONYMS.put("kick", new String[]{"kick", "tackle", "attack", "smash"});
+        SYNONYMS.put("run", new String[]{"run", "charge", "walk_fast", "walk"});
+        SYNONYMS.put("tackle", new String[]{"tackle", "kick", "attack"});
+        SYNONYMS.put("particles", new String[]{"particles", "particle", "idle"});
+        SYNONYMS.put("play", new String[]{"play", "play2", "idle"});
+        SYNONYMS.put("blastoff", new String[]{"blastoff", "fly", "land", "walk"});
+        SYNONYMS.put("newspaper_defeat", new String[]{"newspaper_defeat", "roar", "walk"});
+        SYNONYMS.put("walk_newspaper", new String[]{"walk_newspaper", "walk"});
+        SYNONYMS.put("eat_newspaper", new String[]{"eat_newspaper", "eat"});
+        SYNONYMS.put("spin", new String[]{"spin", "spin_walk", "spinup", "walk"});
+        SYNONYMS.put("sheep", new String[]{"sheep", "cast", "attack"});
     }
 
     private static Map<String, Entry> byPath;

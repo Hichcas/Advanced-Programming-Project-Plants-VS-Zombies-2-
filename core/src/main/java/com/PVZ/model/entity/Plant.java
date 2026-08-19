@@ -172,11 +172,21 @@ public class Plant {
         Rectangle box = getHitbox();
 
         String key = getType() != null ? getType().name() : null;
-        if (key != null) {
-            com.PVZ.view.renderer.EntityRenderer renderer = com.PVZ.view.renderer.EntityRenderer.getInstance();
+        com.PVZ.view.renderer.EntityRenderer renderer = com.PVZ.view.renderer.EntityRenderer.getInstance();
+        if (renderer != null && key != null) {
             float[] anchor = getVisualAnchor();
             float ax = anchor[0];
             float ay = anchor[1];
+
+            if (Boolean.TRUE.equals(getRuntimeState("isSheep"))) {
+                boolean drewSheep = renderer.renderPam(batch,
+                    "768/FULL/EFFECTS/DARK_WIZARD_SHEEPENING/DARK_WIZARD_SHEEPENING.PAM",
+                    "idle", animStateTime, ax, ay);
+                if (drewSheep) {
+                    return;
+                }
+            }
+
             boolean drewAnimated;
             if (isPlantFoodActive()) {
                 double pfVisualTime = asDouble(getRuntimeState("plantFoodVisualTime"), 0.0);

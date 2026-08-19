@@ -78,12 +78,13 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     public static final class TimedPamEffect {
         public final String path;
         public final String clip;
+        public final double totalDuration;
         public double remaining;
         public final float scale;
         public final float x;
         public final float y;
         public TimedPamEffect(String path, String clip, double remaining, float scale, float x, float y) {
-            this.path = path; this.clip = clip; this.remaining = remaining; this.scale = scale; this.x = x; this.y = y;
+            this.path = path; this.clip = clip; this.totalDuration = remaining; this.remaining = remaining; this.scale = scale; this.x = x; this.y = y;
         }
     }
     final com.PVZ.model.entity.LawnMower[] lawnMowers = new com.PVZ.model.entity.LawnMower[ROWS];
