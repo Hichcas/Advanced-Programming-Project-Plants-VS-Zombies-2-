@@ -1,5 +1,6 @@
 package com.PVZ.view.screen;
 
+import com.PVZ.view.screen.manager.SoundManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -248,6 +249,7 @@ public class NpcDialogueOverlay extends Actor {
 
         if (lines.get(lineIndex).equals(SHOUT_LINE_TEXT)) {
             state = State.SHOUT;
+            SoundManager.getInstance().playSFX("ui/SFX/haaaa.wav");
             // متن شات از ابتدا کامل نمایش داده می‌شود
             visibleChars = lines.get(lineIndex).length();
         } else {
