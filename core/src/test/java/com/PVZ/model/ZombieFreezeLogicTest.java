@@ -142,4 +142,57 @@ public class ZombieFreezeLogicTest {
         assertTrue(s.isSubmerged());
         assertTrue(s.isProjectileImmune());
     }
+
+    @Test
+    public void testAllElevenZombiesExistAndHaveValidPamPaths() {
+        String[] aliases = {
+            "ZombieDarkJuggler",
+            "ZombieWizard",
+            "ZombieDarkKing",
+            "ZombieDarkImpDragon",
+            "ZombieModernAllStar",
+            "ZombieArcade",
+            "ZombieLostCityJane",
+            "ZombieCrystalSkull",
+            "ZombieProspector",
+            "ZombiePiano",
+            "ZombieNewspaper"
+        };
+
+        for (String alias : aliases) {
+            ZombieType zt = ZombieType.fromAlias(alias);
+            assertNotNull(zt, "ZombieType for " + alias + " must not be null");
+            Zombie z = zt.create();
+            assertNotNull(z, "Created zombie for " + alias + " must not be null");
+
+            String pamPath = com.PVZ.model.entity.zombies.base.ZombieTexturePaths.getPamPath(alias);
+            assertNotNull(pamPath, "PAM path for " + alias + " must not be null");
+            assertNotEquals("768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM", pamPath,
+                "PAM path for " + alias + " must not fall back to default Egypt Basic!");
+        }
+    }
+
+    @Test
+    public void testDarkJugglerSpinAndReflectionMechanic() {
+        Zombie juggler = ZombieType.DARK_JUGGLER.create();
+        assertTrue(juggler instanceof com.PVZ.model.entity.zombies.types.ranged_caster.ZombieDarkJuggler);
+        com.PVZ.model.entity.zombies.types.ranged_caster.ZombieDarkJuggler jj =
+            (com.PVZ.model.entity.zombies.types.ranged_caster.ZombieDarkJuggler) juggler;
+
+        assertFalse(jj.isSpinning());
+
+        // Reflecting multiple projectiles (unlimited)
+        for (int i = 0; i < 20; i++) {
+            assertTrue(jj.reflectProjectile(), "Jester must reflect projectile #" + i);
+        }
+        assertTrue(jj.isSpinning(), "Jester must be in spinning state");
+
+        // Simulation update while spinning: stays spinning and pauses movement
+        jj.update(0.5f, null);
+        assertTrue(jj.isSpinning());
+
+        // After spin time expires without new hits: stops spinning and resumes walking
+        jj.update(1.5f, null);
+        assertFalse(jj.isSpinning());
+    }
 }
