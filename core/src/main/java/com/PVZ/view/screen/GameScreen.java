@@ -44,6 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import pvz.libpvz.textures.TextureBank;
+
 public class GameScreen extends BaseScreen {
 
     private final SpriteBatch gameBatch;
@@ -83,6 +86,55 @@ public class GameScreen extends BaseScreen {
     private boolean introStarted = false;
     private boolean introFinished = false;
     private boolean npcDialogueStarted = false;
+
+    // ══════════════ پس‌زمینه‌های چپتر ══════════════
+    private static final java.util.Map<ChapterEnum, String> CHAPTER_BG_LEFT = new java.util.HashMap<>();
+    private static final java.util.Map<ChapterEnum, String> CHAPTER_BG_RIGHT = new java.util.HashMap<>();
+
+    static {
+        CHAPTER_BG_LEFT.put(ChapterEnum.ANCIENT_EGYPT, "IMAGE_BACKGROUNDS_EGYPT_TEXTURE");
+        CHAPTER_BG_RIGHT.put(ChapterEnum.ANCIENT_EGYPT, "IMAGE_BACKGROUNDS_EGYPT_TEXTURE_RIGHT");
+
+        CHAPTER_BG_LEFT.put(ChapterEnum.FROSTBITE_CAVES, "IMAGE_BACKGROUNDS_ICEAGE_TEXTURE");
+        CHAPTER_BG_RIGHT.put(ChapterEnum.FROSTBITE_CAVES, "IMAGE_BACKGROUNDS_ICEAGE_TEXTURE_RIGHT");
+
+        CHAPTER_BG_LEFT.put(ChapterEnum.BIG_WAVE_BEACH, "IMAGE_BACKGROUNDS_BEACH_TEXTURE");
+        CHAPTER_BG_RIGHT.put(ChapterEnum.BIG_WAVE_BEACH, "IMAGE_BACKGROUNDS_BEACH_TEXTURE_RIGHT");
+
+        CHAPTER_BG_LEFT.put(ChapterEnum.DARK_AGES, "IMAGE_BACKGROUNDS_DARK_TEXTURE");
+        CHAPTER_BG_RIGHT.put(ChapterEnum.DARK_AGES, "IMAGE_BACKGROUNDS_DARK_TEXTURE_RIGHT");
+    }
+
+    // ══════════════ تنظیمات پس‌زمینه هر چپتر ══════════════
+    private static final class BackgroundSettings {
+        final float scaleX;
+        final float scaleY;
+        final float offsetX;
+        final float offsetY;
+
+        BackgroundSettings(float scaleX, float scaleY, float offsetX, float offsetY) {
+            this.scaleX = scaleX;
+            this.scaleY = scaleY;
+            this.offsetX = offsetX;
+            this.offsetY = offsetY;
+        }
+    }
+
+    private static final java.util.Map<ChapterEnum, BackgroundSettings> CHAPTER_BG_SETTINGS =
+        new java.util.HashMap<>();
+
+    static {
+        // مقادیر پیش‌فرض برای همه فصل‌ها (همون چیزی که الان کار می‌کنه)
+        CHAPTER_BG_SETTINGS.put(ChapterEnum.ANCIENT_EGYPT,
+            new BackgroundSettings(1.20f, 1.30f, -100f, -140f));
+        CHAPTER_BG_SETTINGS.put(ChapterEnum.BIG_WAVE_BEACH,
+            new BackgroundSettings(1.20f, 1.30f, -100f, -140f));
+        CHAPTER_BG_SETTINGS.put(ChapterEnum.DARK_AGES,
+            new BackgroundSettings(1.20f, 1.30f, -100f, -140f));
+
+        CHAPTER_BG_SETTINGS.put(ChapterEnum.FROSTBITE_CAVES,
+            new BackgroundSettings(1.23f, 1.32f, -100f, -170f));
+    }
 
     public GameScreen(String mapPath, String musicPath, GameEngine gameEngine) {
         super();
@@ -759,21 +811,76 @@ public class GameScreen extends BaseScreen {
         gameBatch.end();
     }
 
+    /**
+     * رسم پس‌زمینه‌ی چپتر با استفاده از TextureBank و همون مقیاس/آفست مینی‌گیم‌ها.
+     *
+     * @return true اگه پس‌زمینه چپتر رسم شد، false اگه چپتر مشخص نبود یا ID اشتباه بود
+     */
+    private boolean drawChapterBackground(SpriteBatch batch, Map activeMap) {
+        ChapterEnum chapter = AppStatus.getCurrentChapterEnum();
+        if (chapter == null) {
+            return false;
+        }
+
+        String leftId = CHAPTER_BG_LEFT.get(chapter);
+        String rightId = CHAPTER_BG_RIGHT.get(chapter);
+        if (leftId == null) {
+            return false;
+        }
+
+        TextureBank bank = EntityRenderer.getInstance().getTextures();
+        if (bank == null) {
+            return false;
+        }
+
+        TextureRegion leftRegion = bank.region(leftId);
+        TextureRegion rightRegion = bank.region(rightId);
+
+        if (leftRegion == null) {
+            return false;
+        }
+
+        // گرفتن تنظیمات مخصوص چپتر
+        BackgroundSettings settings = CHAPTER_BG_SETTINGS.get(chapter);
+        if (settings == null) {
+            // اگر تنظیمی نبود، از پیش‌فرض استفاده کن
+            settings = new BackgroundSettings(1.20f, 1.30f, -100f, -140f);
+        }
+
+        float scaleX = settings.scaleX;
+        float scaleY = settings.scaleY;
+        float offsetX = settings.offsetX;
+        float offsetY = settings.offsetY;
+
+        float baseScale = VIRTUAL_HEIGHT / (float) leftRegion.getRegionHeight();
+        float leftW = leftRegion.getRegionWidth() * baseScale * scaleX;
+        float leftH = VIRTUAL_HEIGHT * scaleY;
+
+        float startX = offsetX;
+        float startY = offsetY;
+
+        batch.draw(leftRegion, startX, startY, leftW, leftH);
+
+        if (rightRegion != null) {
+            float rightW = rightRegion.getRegionWidth() * baseScale * scaleX;
+            float rightH = VIRTUAL_HEIGHT * scaleY;
+            batch.draw(rightRegion, startX + leftW, startY, rightW, rightH);
+        }
+
+        return true;
+    }
+
     private void drawBackgroundAndEngine(GameEngine activeEngine, float delta) {
         gameBatch.setProjectionMatrix(camera.combined);
         gameBatch.begin();
 
-        String chapterName = AppStatus.currentChapterName;
         Map activeMap = activeEngine.getMap() != null ? activeEngine.getMap() : gameMap;
-        boolean renderedComposite = false;
-        if (chapterName != null && activeMap != null) {
-            renderedComposite = WorldBackgroundRenderer.getInstance().render(
-                gameBatch, chapterName, activeMap.getStartX(), activeMap.getStartY(),
-                activeMap.getTotalWidth(), activeMap.getTotalHeight()
-            );
-        }
 
-        if (!renderedComposite) {
+        // رسم پس‌زمینه‌ی چپتر با همون مقیاس/آفست مینی‌گیم‌ها
+        boolean chapterBackgroundDrawn = drawChapterBackground(gameBatch, activeMap);
+
+        if (!chapterBackgroundDrawn) {
+            // فل‌بک برای مینی‌گیم‌ها یا وقتی چپتر مشخص نیست
             Texture activeBackground = activeEngine.getBackgroundOverride();
             Texture activeBackgroundRight = activeEngine.getBackgroundOverrideRight();
             if (activeBackground == null) {
@@ -791,15 +898,15 @@ public class GameScreen extends BaseScreen {
                 float leftH = VIRTUAL_HEIGHT * scaleY;
                 float rightW = activeBackgroundRight.getWidth() * baseScale * scaleX;
                 float rightH = VIRTUAL_HEIGHT * scaleY;
-                float startX = 0f + offsetX;
-                float startY = 0f + offsetY;
+                float startX = offsetX;
+                float startY = offsetY;
                 gameBatch.draw(activeBackground, startX, startY, leftW, leftH);
                 gameBatch.draw(activeBackgroundRight, startX + leftW, startY, rightW, rightH);
             } else if (activeBackground != null) {
                 float finalW = VIRTUAL_WIDTH * scaleX;
                 float finalH = VIRTUAL_HEIGHT * scaleY;
-                float startX = 0f + offsetX;
-                float startY = 0f + offsetY;
+                float startX = offsetX;
+                float startY = offsetY;
                 gameBatch.draw(activeBackground, startX, startY, finalW, finalH);
             }
         }
