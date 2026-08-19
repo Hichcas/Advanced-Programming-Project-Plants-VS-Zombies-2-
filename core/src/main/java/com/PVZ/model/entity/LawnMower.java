@@ -1,6 +1,7 @@
 package com.PVZ.model.entity;
 
 import com.PVZ.model.enums.ChapterEnum;
+import com.PVZ.model.game.RegularGameEngine;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.view.renderer.EntityRenderer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -93,12 +94,21 @@ public class LawnMower {
         if (used) {
             return;
         }
-        String pamPath = CHAPTER_MOWER_PAM.getOrDefault(AppStatus.getCurrentChapterEnum(), DEFAULT_MOWER_PAM);
+
+        ChapterEnum chapter = null;
+        if (AppStatus.getGameEngine() instanceof RegularGameEngine) {
+            chapter = AppStatus.getCurrentChapterEnum();
+        }
+
+        String pamPath = CHAPTER_MOWER_PAM.getOrDefault(chapter, DEFAULT_MOWER_PAM);
         // "idle" وقتی پارک شده، "attack" وقتی فعال شده و در حال حرکت روی زامبی‌هاست — همان دو
         // کلیپی که توی pam_animations.json برای همه‌ی MOWER_* تعریف شده.
         String clip = triggered ? "attack" : "idle";
+
         boolean drew = EntityRenderer.getInstance()
-            .renderPam(batch, pamPath, clip, animTime, (float) x + SIZE / 2f, (float) y + SIZE / 2f);
+            .renderPam(batch, pamPath, clip, animTime,
+                (float) x + SIZE / 2f, (float) y + SIZE / 2f);
+
         if (!drew) {
             // اگر asset لود نشد (مثلاً پوشه‌ی asset ها کنار پروژه نیست)، حداقل یه بلوک قرمز
             // جایگزین نشون داده بشه تا هیچ سطری بدون چمن‌زن قابل‌مشاهده نمونه.

@@ -113,7 +113,7 @@ public class EntityRenderer {
             if (zombie.isDying()) {
                 state = "die";
             } else if (snorkel.isSubmerged()) {
-                state = "idle";
+                state = "particles";
             } else if (!snorkel.isMoving()) {
                 state = "eat";
             } else {
@@ -124,11 +124,42 @@ public class EntityRenderer {
             if (zombie.isDying()) {
                 state = "die";
             } else if (swimmer.isInWater()) {
-                state = "idle";
+                state = "particles";
             } else if (!swimmer.isMoving()) {
                 state = "eat";
             } else {
                 state = "walk";
+            }
+        }
+        if (zombie instanceof com.PVZ.model.entity.zombies.types.ranged_caster.ZombieDarkJuggler juggler) {
+            if (zombie.isDying()) {
+                state = "die";
+            } else if (juggler.isSpinning()) {
+                state = "spin";
+            } else if (!juggler.isMoving()) {
+                state = "eat";
+            } else {
+                state = "walk";
+            }
+        }
+
+        if (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieProspector prospector) {
+            if (zombie.isDying()) {
+                state = "die";
+            } else if (!prospector.isMoving()) {
+                state = "eat";
+            } else {
+                state = "walk";
+            }
+        }
+
+        if (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieArcade arcade) {
+            if (zombie.isDying()) {
+                state = "die";
+            } else if (!arcade.isMoving()) {
+                state = "idle";
+            } else {
+                state = "push";
             }
         }
 
@@ -151,9 +182,12 @@ public class EntityRenderer {
                 batch.setColor(1.0f, 0.6f, 0.9f, 1.0f); // Hypnotized (pink)
             } else if (zombie.isGlowing()) {
                 batch.setColor(0.8f, 1.0f, 0.5f, 1.0f); // Plant Food Drop Glow (bright green/gold)
+            } else if (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieBeachSnorkel snorkel && snorkel.isSubmerged()) {
+                batch.setColor(0.75f, 0.90f, 1.0f, 0.90f); // Submerged underwater watery tint
+            } else if (zombie.getArmor() != null && !zombie.getArmor().isDestroyed() && zombie.getArmor().getType() == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.CROWN) {
+                batch.setColor(1.0f, 0.92f, 0.60f, 1.0f); // Royal Knight Golden Aura
             }
 
-            boolean flipX = zombie.isHypnotized();
             float effectiveTime = zombie.isFrozen() ? 0.0f : stateTime;
 
             Map<String, Boolean> trackVisibility = null;
@@ -169,6 +203,9 @@ public class EntityRenderer {
                 trackVisibility.put("zombie_armor_brick_norm", false);
                 trackVisibility.put("zombie_armor_brick_damage_01", false);
                 trackVisibility.put("zombie_armor_brick_damage_02", false);
+                trackVisibility.put("zombie_armor_crown_norm", false);
+                trackVisibility.put("zombie_armor_crown_damage_01", false);
+                trackVisibility.put("zombie_armor_crown_damage_02", false);
                 trackVisibility.put("_zombie_egypt_armor1_states", false);
                 trackVisibility.put("_zombie_egypt_armor2_states", false);
 
@@ -206,10 +243,39 @@ public class EntityRenderer {
                 trackVisibility.put("imp_arm", false);
             }
 
-            if (trackVisibility != null) {
-                pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true, trackVisibility);
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombiePiano piano) {
+                String pianoClipName = zombie.isDying() ? "die" : "play";
+                renderPam(batch, "768/FULL/ZOMBIE/PIANO/PIANO.PAM", pianoClipName, effectiveTime, (float) zombie.getX() - 35f, (float) zombie.getY());
+            }
+
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieArcade arcade) {
+                String cabinetClip = zombie.isDying() ? "death" : (arcade.isCabinetActive() ? "active" : "idle");
+                renderPam(batch, "768/FULL/EFFECTS/80S_ARCADE_CABINET/80S_ARCADE_CABINET.PAM", cabinetClip, effectiveTime, (float) zombie.getX() - 110f, (float) zombie.getY());
+            }
+
+            boolean shouldFlip = zombie.isHypnotized() || (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieProspector zp && zp.isFlewToLeft());
+            if (shouldFlip) {
+                com.badlogic.gdx.math.Matrix4 oldTransform = batch.getTransformMatrix().cpy();
+                com.badlogic.gdx.math.Matrix4 flipped = oldTransform.cpy();
+                float cx = (float) zombie.getX() + 60f;
+                flipped.translate(cx, 0, 0);
+                flipped.scale(-1f, 1f, 1f);
+                flipped.translate(-cx, 0, 0);
+                batch.setTransformMatrix(flipped);
+
+                if (trackVisibility != null) {
+                    pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true, trackVisibility);
+                } else {
+                    pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
+                }
+
+                batch.setTransformMatrix(oldTransform);
             } else {
-                pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
+                if (trackVisibility != null) {
+                    pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true, trackVisibility);
+                } else {
+                    pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
+                }
             }
             // Zombotany visuals are composed from the normal zombie body PAM plus the
             // corresponding plant idle PAM as a head/top overlay. The provided PAM catalog

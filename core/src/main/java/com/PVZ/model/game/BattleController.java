@@ -188,7 +188,7 @@ public class BattleController implements BehaviorContext {
                         for (Zombie z : getZombiesInLane(gRow)) {
                             double colDist = Math.abs(z.getX() - p.getPositionX());
                             if (colDist < map.getTileWidth() * 1.2) {
-                                z.takeDamage(p.getDamage());
+                                z.takeDamage((int) p.getDamage(), resolveDamageType(p));
                             }
                         }
                     }
@@ -228,7 +228,17 @@ public class BattleController implements BehaviorContext {
 
             if (p != null && !p.isDead()) {
                 p.takeDamage(zp.getDamage());
-                zp.getOwner().onProjectileHit(p);
+                if (zp.getOwner() != null) {
+                    zp.getOwner().onProjectileHit(p);
+                }
+                if (zp.getVisualKey() != null && engine != null) {
+                    String hitFx = com.PVZ.model.entity.plants.behavior.impl.ProjectileVisuals.getHitPathForVisualKey(zp.getVisualKey());
+                    if (hitFx != null) {
+                        String hitClip = com.PVZ.model.entity.plants.behavior.impl.ProjectileVisuals.getHitClipForVisualKey(zp.getVisualKey());
+                        engine.addTimedPamEffect(hitFx, hitClip == null ? "animation" : hitClip, 0.8, 0.7f,
+                            zp.getX(), zp.getY());
+                    }
+                }
                 zp.destroy();
                 zpIt.remove();
             }
@@ -248,12 +258,12 @@ public class BattleController implements BehaviorContext {
                 continue;
             }
 
-            if (handleTileCollision(p)) {
+            if (handleZombieCollision(p)) {
                 projIt.remove();
                 continue;
             }
 
-            if (handleZombieCollision(p)) {
+            if (handleTileCollision(p)) {
                 projIt.remove();
             }
         }
@@ -305,8 +315,7 @@ public class BattleController implements BehaviorContext {
 
         TileType type = tile.getType();
         if (type != TileType.TOMBSTONE
-            && type != TileType.NECROMANCY
-            && type != TileType.ICE) {
+            && type != TileType.NECROMANCY) {
             return false;
         }
 
@@ -468,11 +477,18 @@ public class BattleController implements BehaviorContext {
     }
 
     private void reflectProjectile(Projectile p, ZombieDarkJuggler jj) {
+        Object vKeyObj = p.getExtra("visualKey");
+        String visualKey = vKeyObj instanceof String s ? s : null;
+
+        // Trigger Juggler spin animation
+        com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(jj, "spin", 0.8667);
+
         ZombieProjectile reflected = new ZombieProjectile(
-            (float) jj.getX(), (float) jj.getY() + 30,
-            (int) p.getDamage(), 300f, (int) jj.getRow(), jj);
+            (float) jj.getX(), (float) p.getPositionY(),
+            (int) p.getDamage(), (float) Math.max(300.0, p.getSpeed()), (int) jj.getRow(), jj,
+            visualKey, p);
         addZombieProjectile(reflected);
-        System.out.println(jj.getAlias() + " reflected a projectile");
+        System.out.println(jj.getAlias() + " reflected [" + (visualKey != null ? visualKey : "projectile") + "] back towards plants!");
     }
 
     private void spawnProjectileHitEffect(Projectile p, Zombie z) {
@@ -520,20 +536,14 @@ public class BattleController implements BehaviorContext {
 
         if (type == ProjectileType.FIRE_PEA && z.isFrozen()) {
             z.thaw();
-        } else if (type == ProjectileType.ICE_PEA && z.isFrozen()) {
-            z.setIceHp(z.getIceHp() - damage);
-            if (z.getIceHp() <= 0) {
-                z.thaw();
-            }
-        } else {
-            if (type == ProjectileType.ICE_PEA) {
-                Object cd = p.getExtra("chillDuration");
-                if (cd instanceof Number) {
-                    z.setChillDuration(((Number) cd).floatValue());
-                }
-            }
-            z.takeDamage(damage, resolveDamageType(p));
         }
+        if (type == ProjectileType.ICE_PEA) {
+            Object cd = p.getExtra("chillDuration");
+            if (cd instanceof Number) {
+                z.setChillDuration(((Number) cd).floatValue());
+            }
+        }
+        z.takeDamage(damage, resolveDamageType(p));
 
         if (z.isDead()) {
             com.PVZ.model.enums.PlantType killer = null;
@@ -754,10 +764,11 @@ public class BattleController implements BehaviorContext {
             float tileW = tile0 != null ? tile0.getWidth() : 177f;
 
             for (Zombie zombie : getZombiesInLane(r)) {
-                if (zombie != null) {
+                if (zombie != null && !zombie.isDead()) {
                     double colDist = Math.abs(zombie.getX() - centreX);
                     if (colDist < tileW * 1.6) {
-                        zombie.takeDamage(damage);
+                        zombie.setDeathType(com.PVZ.model.enums.DeathType.ASH);
+                        zombie.takeDamage(damage, DamageType.FIRE);
                     }
                 }
             }
@@ -846,6 +857,7 @@ public class BattleController implements BehaviorContext {
         }
 
         if (nearest != null) {
+            nearest.setDeathType(com.PVZ.model.enums.DeathType.ASH);
             nearest.takeDamage(Integer.MAX_VALUE / 2);
         }
     }
@@ -940,13 +952,28 @@ public class BattleController implements BehaviorContext {
     }
 
     private DamageType resolveDamageType(Projectile p) {
+        if (p == null) return DamageType.NORMAL;
         if (p.getType() == ProjectileType.ICE_PEA) {
             return DamageType.ICE;
+        }
+        if (p.getType() == ProjectileType.FIRE_PEA) {
+            return DamageType.FIRE;
         }
 
         Object dt = p.getExtra("damageType");
         if (dt instanceof DamageType) {
             return (DamageType) dt;
+        }
+        Object pt = p.getExtra("plantType");
+        if (pt == com.PVZ.model.enums.PlantType.FIRE_PEASHOOTER
+            || pt == com.PVZ.model.enums.PlantType.PEPPER_PULT
+            || pt == com.PVZ.model.enums.PlantType.JALAPENO
+            || pt == com.PVZ.model.enums.PlantType.WASABI_WHIP) {
+            return DamageType.FIRE;
+        }
+        String vk = (String) p.getExtra("visualKey");
+        if (vk != null && (vk.contains("FIRE") || vk.contains("PEPPER") || vk.contains("JALAPENO") || vk.contains("WASABI") || vk.contains("BLAZING"))) {
+            return DamageType.FIRE;
         }
         return DamageType.NORMAL;
     }

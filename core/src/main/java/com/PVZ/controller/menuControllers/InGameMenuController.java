@@ -55,6 +55,8 @@ public class InGameMenuController {
             case CHEAT_RELEASE_NUKE -> nukeAction();
             case CHEAT_SANDSTORM -> handleCheatSandstorm(dto, engine);
             case CHEAT_ICE_WIND -> handleCheatIceWind(engine);
+            case CHEAT_FREEZE_ALL -> handleCheatFreezeAll(engine);
+            case CHEAT_ASH_ALL -> handleCheatAshAll(engine);
             case PLANT_PLANT -> handlePlantPlant(dto, engine);
             case PLUCK_PLANT -> handlePluckPlant(dto, engine);
             case FEED_PLANT -> handleFeedPlant(dto, engine);
@@ -164,6 +166,14 @@ public class InGameMenuController {
             }
         }
         return new OutputDTO(true, "Triggered Freezing Ice Wind across all lanes!");
+    }
+
+    private OutputDTO handleCheatFreezeAll(RegularGameEngine engine) {
+        if (engine == null) return new OutputDTO(false, "Game engine is not ready.");
+        if (engine.getBattleController() != null) {
+            engine.getBattleController().freezeAllZombies(5.0);
+        }
+        return new OutputDTO(true, "All active zombies frozen solid for 5 seconds!");
     }
 
     private OutputDTO handlePlantPlant(InGameInputDTO dto, RegularGameEngine engine) {
@@ -370,6 +380,22 @@ public class InGameMenuController {
             list.get(i).die(bc);
         }
         return new OutputDTO(true, "All zombies killed.");
+    }
+
+    private OutputDTO handleCheatAshAll(RegularGameEngine engine) {
+        if (engine == null) {
+            return new OutputDTO(false, "Not in a regular game.");
+        }
+        BattleController bc = engine.getBattleController();
+        List<Zombie> list = engine.getZombieList();
+        for (int i = list.size() - 1; i >= 0; i--) {
+            Zombie z = list.get(i);
+            if (z != null && !z.isDead()) {
+                z.setDeathType(com.PVZ.model.enums.DeathType.ASH);
+                z.die(bc);
+            }
+        }
+        return new OutputDTO(true, "All zombies turned to ash / powdered.");
     }
 
     private OutputDTO exitToGameMenu() {

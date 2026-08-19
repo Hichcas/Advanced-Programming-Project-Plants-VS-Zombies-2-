@@ -2,6 +2,7 @@ package com.PVZ.model.entity.zombies.types.heavy_gargantuar;
 
 import com.PVZ.model.entity.zombies.base.ScaledProperty;
 import com.PVZ.model.entity.zombies.base.Zombie;
+import com.PVZ.model.enums.DamageType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +27,21 @@ public class ZombieImp extends Zombie {
     }
 
     @Override
-    public void onSpawn() {}
+    public boolean isFireImmune() {
+        return theme == Theme.DARK || super.isFireImmune();
+    }
 
-//    @Override
-//    public void onUpdate(double deltaTime) {}
+    @Override
+    public void takeDamage(int amount, DamageType type) {
+        if (type == DamageType.FIRE && isFireImmune()) {
+            System.out.println(alias + " is completely immune to fire damage!");
+            return;
+        }
+        super.takeDamage(amount, type);
+    }
+
+    @Override
+    public void onSpawn() {}
 
     @Override
     public void onDestroy() {}

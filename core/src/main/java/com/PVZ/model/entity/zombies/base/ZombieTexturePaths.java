@@ -87,7 +87,55 @@ public class ZombieTexturePaths {
         PAM_PATHS.put("ZombieDarkArmor1Default", "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM");
         PAM_PATHS.put("ZombieDarkArmor2Default", "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM");
         PAM_PATHS.put("ZombieDarkArmor3Default", "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM");
-        PAM_PATHS.put("ZombieDarkArmor4Default", "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM");
+        PAM_PATHS.put("ZombieModernAllStar", "768/FULL/ZOMBIE/ZOMBIE_MODERN_ALLSTAR/ZOMBIE_MODERN_ALLSTAR.PAM");
+        PAM_PATHS.put("ZombieModernAllStarDefault", "768/FULL/ZOMBIE/ZOMBIE_MODERN_ALLSTAR/ZOMBIE_MODERN_ALLSTAR.PAM");
+        PAM_PATHS.put("ZombieBigHeadAllStar", "768/FULL/ZOMBIE/ZOMBIE_BIGHEAD_ALLSTAR/ZOMBIE_BIGHEAD_ALLSTAR.PAM");
+        PAM_PATHS.put("ZombieBigHeadAllStarDefault", "768/FULL/ZOMBIE/ZOMBIE_BIGHEAD_ALLSTAR/ZOMBIE_BIGHEAD_ALLSTAR.PAM");
+        PAM_PATHS.put("ZombieFootball", "768/FULL/ZOMBIE/ZOMBIE_MODERN_ALLSTAR/ZOMBIE_MODERN_ALLSTAR.PAM");
+        PAM_PATHS.put("ZombieFootballDefault", "768/FULL/ZOMBIE/ZOMBIE_MODERN_ALLSTAR/ZOMBIE_MODERN_ALLSTAR.PAM");
+        PAM_PATHS.put("ZombieAllStar", "768/FULL/ZOMBIE/ZOMBIE_MODERN_ALLSTAR/ZOMBIE_MODERN_ALLSTAR.PAM");
+
+        PAM_PATHS.put("ZombieDarkJuggler", "768/FULL/ZOMBIE/ZOMBIE_DARK_JESTER/ZOMBIE_DARK_JESTER.PAM");
+        PAM_PATHS.put("ZombieDarkJugglerDefault", "768/FULL/ZOMBIE/ZOMBIE_DARK_JESTER/ZOMBIE_DARK_JESTER.PAM");
+        PAM_PATHS.put("ZombieDarkJester", "768/FULL/ZOMBIE/ZOMBIE_DARK_JESTER/ZOMBIE_DARK_JESTER.PAM");
+        PAM_PATHS.put("ZombieDarkJesterDefault", "768/FULL/ZOMBIE/ZOMBIE_DARK_JESTER/ZOMBIE_DARK_JESTER.PAM");
+
+        PAM_PATHS.put("ZombieWizard", "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD/ZOMBIE_DARK_WIZARD.PAM");
+        PAM_PATHS.put("ZombieWizardDefault", "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD/ZOMBIE_DARK_WIZARD.PAM");
+        PAM_PATHS.put("ZombieDarkWizard", "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD/ZOMBIE_DARK_WIZARD.PAM");
+        PAM_PATHS.put("ZombieDarkWizardDefault", "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD/ZOMBIE_DARK_WIZARD.PAM");
+
+        PAM_PATHS.put("ZombieDarkKing", "768/FULL/ZOMBIE/ZOMBIE_DARK_KING/ZOMBIE_DARK_KING.PAM");
+        PAM_PATHS.put("ZombieDarkKingDefault", "768/FULL/ZOMBIE/ZOMBIE_DARK_KING/ZOMBIE_DARK_KING.PAM");
+
+        PAM_PATHS.put("ZombieDarkImpDragon", "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_DRAGON/ZOMBIE_DARK_IMP_DRAGON.PAM");
+        PAM_PATHS.put("ZombieDarkImpDragonDefault", "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_DRAGON/ZOMBIE_DARK_IMP_DRAGON.PAM");
+        PAM_PATHS.put("ZombieImpDragon", "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_DRAGON/ZOMBIE_DARK_IMP_DRAGON.PAM");
+
+        PAM_PATHS.put("ZombieArcade", "768/FULL/ZOMBIE/ZOMBIE_80S_ARCADE/ZOMBIE_80S_ARCADE.PAM");
+        PAM_PATHS.put("ZombieArcadeDefault", "768/FULL/ZOMBIE/ZOMBIE_80S_ARCADE/ZOMBIE_80S_ARCADE.PAM");
+        PAM_PATHS.put("Zombie80sArcade", "768/FULL/ZOMBIE/ZOMBIE_80S_ARCADE/ZOMBIE_80S_ARCADE.PAM");
+
+        PAM_PATHS.put("ZombieLostCityJane", "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_JANE/ZOMBIE_LOSTCITY_JANE.PAM");
+        PAM_PATHS.put("ZombieLostCityJaneDefault", "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_JANE/ZOMBIE_LOSTCITY_JANE.PAM");
+        PAM_PATHS.put("ZombieJane", "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_JANE/ZOMBIE_LOSTCITY_JANE.PAM");
+
+        PAM_PATHS.put("ZombieCrystalSkull", "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_CRYSTALSKULL/ZOMBIE_LOSTCITY_CRYSTALSKULL.PAM");
+        PAM_PATHS.put("ZombieCrystalSkullDefault", "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_CRYSTALSKULL/ZOMBIE_LOSTCITY_CRYSTALSKULL.PAM");
+        PAM_PATHS.put("ZombieLostCityCrystalSkull", "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_CRYSTALSKULL/ZOMBIE_LOSTCITY_CRYSTALSKULL.PAM");
+
+        PAM_PATHS.put("ZombieProspector", "768/FULL/ZOMBIE/ZOMBIE_PROSPECTOR/ZOMBIE_PROSPECTOR.PAM");
+        PAM_PATHS.put("ZombieProspectorDefault", "768/FULL/ZOMBIE/ZOMBIE_PROSPECTOR/ZOMBIE_PROSPECTOR.PAM");
+        PAM_PATHS.put("ZombieWestProspector", "768/FULL/ZOMBIE/ZOMBIE_PROSPECTOR/ZOMBIE_PROSPECTOR.PAM");
+
+        PAM_PATHS.put("ZombiePiano", "768/FULL/ZOMBIE/ZOMBIE_PIANO/ZOMBIE_PIANO.PAM");
+        PAM_PATHS.put("ZombiePianoDefault", "768/FULL/ZOMBIE/ZOMBIE_PIANO/ZOMBIE_PIANO.PAM");
+        PAM_PATHS.put("ZombieWestPiano", "768/FULL/ZOMBIE/ZOMBIE_PIANO/ZOMBIE_PIANO.PAM");
+
+        PAM_PATHS.put("ZombieNewspaper", "768/FULL/ZOMBIE/ZOMBIE_MODERN_NEWSPAPER/ZOMBIE_MODERN_NEWSPAPER.PAM");
+        PAM_PATHS.put("ZombieNewspaperDefault", "768/FULL/ZOMBIE/ZOMBIE_MODERN_NEWSPAPER/ZOMBIE_MODERN_NEWSPAPER.PAM");
+        PAM_PATHS.put("ZombieModernNewspaper", "768/FULL/ZOMBIE/ZOMBIE_MODERN_NEWSPAPER/ZOMBIE_MODERN_NEWSPAPER.PAM");
+
         PAM_PATHS.put("DEFAULT", "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM");
     }
 
@@ -146,6 +194,17 @@ public class ZombieTexturePaths {
         }
         String alias = zombie.getAlias();
         ZombieArmor armor = zombie.getArmor();
+        if (armor != null && !armor.isDestroyed()) {
+            if (armor.getType() == ZombieArmor.ArmorType.CROWN) {
+                return "ZombieDarkArmor3Default";
+            }
+            if (armor.getType() == ZombieArmor.ArmorType.FOOTBALL_HELMET) {
+                return "ZombieModernAllStar";
+            }
+            if (armor.getType() == ZombieArmor.ArmorType.NEWSPAPER) {
+                return "ZombieModernNewspaper";
+            }
+        }
         if (armor == null || armor.isDestroyed()) {
             if (alias != null && alias.contains("Armor")) {
                 if (alias.startsWith("ZombieTutorialArmor")) return "ZombieTutorialDefault";
