@@ -876,8 +876,12 @@ public class GameScreen extends BaseScreen {
 
         Map activeMap = activeEngine.getMap() != null ? activeEngine.getMap() : gameMap;
 
-        // رسم پس‌زمینه‌ی چپتر با همون مقیاس/آفست مینی‌گیم‌ها
-        boolean chapterBackgroundDrawn = drawChapterBackground(gameBatch, activeMap);
+        boolean chapterBackgroundDrawn = false;
+
+        // فقط برای مراحل اصلی (RegularGameEngine) پس‌زمینه‌ی چپتر را رسم کن
+        if (activeEngine instanceof RegularGameEngine) {
+            chapterBackgroundDrawn = drawChapterBackground(gameBatch, activeMap);
+        }
 
         if (!chapterBackgroundDrawn) {
             // فل‌بک برای مینی‌گیم‌ها یا وقتی چپتر مشخص نیست
