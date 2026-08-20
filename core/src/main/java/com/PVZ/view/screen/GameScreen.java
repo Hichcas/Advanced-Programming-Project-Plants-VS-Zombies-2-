@@ -804,9 +804,13 @@ public class GameScreen extends BaseScreen {
                 com.PVZ.model.enums.ChapterEnum currentChap = com.PVZ.model.status.AppStatus.getCurrentChapterEnum();
                 boolean isDark = currentChap == com.PVZ.model.enums.ChapterEnum.DARK_AGES
                     || (com.PVZ.model.status.AppStatus.currentChapterName != null && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("DARK"));
+                boolean isBeach = currentChap == com.PVZ.model.enums.ChapterEnum.BIG_WAVE_BEACH
+                    || (com.PVZ.model.status.AppStatus.currentChapterName != null && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("BEACH"));
                 com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss;
                 if (isDark) {
                     boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark();
+                } else if (isBeach) {
+                    boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach();
                 } else {
                     boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt();
                 }
@@ -828,6 +832,10 @@ public class GameScreen extends BaseScreen {
                         darkBoss.triggerFireballAttack(reg.getBattleController());
                         System.out.println("[CHEAT M/G] Triggered Dragon Fireball Attack!");
                         break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                        beachBoss.triggerSmallSharksAttack(reg.getBattleController());
+                        System.out.println("[CHEAT M/G] Triggered Beach Zomboss Small Sharks Attack!");
+                        break;
                     }
                 }
             }
@@ -843,6 +851,10 @@ public class GameScreen extends BaseScreen {
                         darkBoss.triggerFireBreath(reg.getBattleController());
                         System.out.println("[CHEAT C/R] Triggered Dragon Fire Breath Attack!");
                         break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                        beachBoss.triggerTurbineSuction(reg.getBattleController());
+                        System.out.println("[CHEAT C/R] Triggered Beach Zomboss Turbine Suction Attack!");
+                        break;
                     }
                 }
             }
@@ -857,6 +869,10 @@ public class GameScreen extends BaseScreen {
                     } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
                         darkBoss.triggerSummonWave(reg.getBattleController());
                         System.out.println("[CHEAT P] Triggered Dark Zomboss Summon Wave!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                        beachBoss.triggerSummonWave(reg.getBattleController());
+                        System.out.println("[CHEAT P] Triggered Beach Zomboss Summon Wave!");
                         break;
                     }
                 }
