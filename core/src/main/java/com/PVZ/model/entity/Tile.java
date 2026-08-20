@@ -19,6 +19,8 @@ public class Tile {
     private int maxHp = 700;
     private float graveAnimTime = 0f;
 
+    private float hitFlashTimer = 0f;
+
     public Tile(TileType type, Plant plant, int gridRow, int gridCol,
                 float worldX, float worldY, float width, float height) {
         this.type = type;
@@ -29,6 +31,7 @@ public class Tile {
         this.maxHp = 700;
         this.graveVariant = null;
         this.graveAnimTime = 0f;
+        this.hitFlashTimer = 0f;
         this.gridRow = gridRow;
         this.gridCol = gridCol;
         this.worldX = worldX;
@@ -40,6 +43,10 @@ public class Tile {
     public void update(float delta) {
         if (isGrave()) {
             graveAnimTime += delta;
+        }
+        if (hitFlashTimer > 0f) {
+            hitFlashTimer -= delta;
+            if (hitFlashTimer < 0f) hitFlashTimer = 0f;
         }
     }
 
@@ -89,6 +96,9 @@ public class Tile {
     }
 
     public void setOctopusHp(int octopusHp) {
+        if (octopusHp < this.octopusHp && octopusHp > 0) {
+            this.hitFlashTimer = 0.18f;
+        }
         this.octopusHp = octopusHp;
     }
 
@@ -105,7 +115,18 @@ public class Tile {
     }
 
     public void setHp(int hp) {
+        if (hp < this.hp && hp > 0) {
+            this.hitFlashTimer = 0.18f;
+        }
         this.hp = hp;
+    }
+
+    public void triggerHitFlash() {
+        this.hitFlashTimer = 0.18f;
+    }
+
+    public boolean isHitFlashing() {
+        return hitFlashTimer > 0f;
     }
 
     public float getX() {

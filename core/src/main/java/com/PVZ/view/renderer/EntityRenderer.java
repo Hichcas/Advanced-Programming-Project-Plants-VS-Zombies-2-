@@ -288,12 +288,34 @@ public class EntityRenderer {
                     pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
                 }
 
+                if (zombie.isHitFlashing()) {
+                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                    batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+                    if (trackVisibility != null) {
+                        pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true, trackVisibility);
+                    } else {
+                        pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
+                    }
+                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+                }
+
                 batch.setTransformMatrix(oldTransform);
             } else {
                 if (trackVisibility != null) {
                     pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true, trackVisibility);
                 } else {
                     pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
+                }
+
+                if (zombie.isHitFlashing()) {
+                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                    batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+                    if (trackVisibility != null) {
+                        pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true, trackVisibility);
+                    } else {
+                        pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
+                    }
+                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
                 }
             }
             if (zombie.isButtered()) {
