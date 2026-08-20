@@ -79,6 +79,13 @@ public class DrawHandler {
                     float centerX = tileX + width / 2f;
                     float centerY = tileY + height / 2f;
                     float scale = 0.28f;
+                    Color origIceColor = batch.getColor().cpy();
+                    if (tile.isHitFlashing()) {
+                        batch.setColor(Math.min(2.0f, origIceColor.r * 1.5f + 0.4f),
+                                       Math.min(2.0f, origIceColor.g * 1.5f + 0.4f),
+                                       Math.min(2.0f, origIceColor.b * 1.5f + 0.4f),
+                                       origIceColor.a);
+                    }
                     boolean rendered = EntityRenderer.getInstance().renderPam(
                         batch,
                         "768/FULL/WORLDMAP/DANGER_NODE_ICEAGE/DANGER_NODE_ICEAGE.PAM",
@@ -88,6 +95,20 @@ public class DrawHandler {
                         centerY,
                         scale
                     );
+                    if (tile.isHitFlashing()) {
+                        batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                        batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+                        EntityRenderer.getInstance().renderPam(
+                            batch,
+                            "768/FULL/WORLDMAP/DANGER_NODE_ICEAGE/DANGER_NODE_ICEAGE.PAM",
+                            "locked_idle",
+                            iceBlockStateTime,
+                            centerX,
+                            centerY,
+                            scale
+                        );
+                        batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+                    }
 
                     if (!rendered) {
                         // Fallback overlay
@@ -96,6 +117,7 @@ public class DrawHandler {
                         batch.draw(whiteTexture(), tileX + 4f, tileY + 4f, width - 8f, height - 8f);
                         batch.setColor(c);
                     }
+                    batch.setColor(origIceColor);
 
                     // Draw Health Bar (Slider Bar)
                     int currentHp = Math.max(0, tile.getHp() > 0 ? tile.getHp() : 1800);
@@ -324,6 +346,14 @@ public class DrawHandler {
                 String pamPath = variant.getPamPath();
                 String clipName = com.PVZ.model.enums.GraveVariant.getClipForHpRatio(hpPercent);
 
+                Color origGraveColor = batch.getColor().cpy();
+                if (tile.isHitFlashing()) {
+                    batch.setColor(Math.min(2.0f, origGraveColor.r * 1.5f + 0.4f),
+                                   Math.min(2.0f, origGraveColor.g * 1.5f + 0.4f),
+                                   Math.min(2.0f, origGraveColor.b * 1.5f + 0.4f),
+                                   origGraveColor.a);
+                }
+
                 // 2. Render Gravestone PAM animation
                 EntityRenderer.getInstance().renderPam(
                     batch,
@@ -334,6 +364,21 @@ public class DrawHandler {
                     centerY,
                     0.95f
                 );
+                if (tile.isHitFlashing()) {
+                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                    batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+                    EntityRenderer.getInstance().renderPam(
+                        batch,
+                        pamPath,
+                        clipName,
+                        tile.getGraveAnimTime(),
+                        centerX,
+                        centerY,
+                        0.95f
+                    );
+                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+                }
+                batch.setColor(origGraveColor);
 
                 // 3. If Grave Buster is eating this grave, render Grave Buster dirt effect
                 Plant plantOnGrave = tile.getPlant();
@@ -407,6 +452,13 @@ public class DrawHandler {
         if (tile != null && tile.getOctopusHp() > 0) {
             float centerX = box.x + box.width / 2f;
             float centerY = box.y + box.height / 2f;
+            Color origOctColor = batch.getColor().cpy();
+            if (tile.isHitFlashing()) {
+                batch.setColor(Math.min(2.0f, origOctColor.r * 1.5f + 0.4f),
+                               Math.min(2.0f, origOctColor.g * 1.5f + 0.4f),
+                               Math.min(2.0f, origOctColor.b * 1.5f + 0.4f),
+                               origOctColor.a);
+            }
             boolean rendered = EntityRenderer.getInstance().renderPam(
                 batch,
                 "768/FULL/EFFECTS/ZOMBIE_OCTOPUS_PROJECTILE/ZOMBIE_OCTOPUS_PROJECTILE.PAM",
@@ -416,12 +468,27 @@ public class DrawHandler {
                 centerY,
                 1.0f
             );
+            if (tile.isHitFlashing()) {
+                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+                EntityRenderer.getInstance().renderPam(
+                    batch,
+                    "768/FULL/EFFECTS/ZOMBIE_OCTOPUS_PROJECTILE/ZOMBIE_OCTOPUS_PROJECTILE.PAM",
+                    "animation3",
+                    iceBlockStateTime,
+                    centerX,
+                    centerY,
+                    1.0f
+                );
+                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+            }
             if (!rendered) {
                 Color c = batch.getColor();
                 batch.setColor(0.9f, 0.4f, 0.1f, 0.75f);
                 batch.draw(whiteTexture(), box.x + 6f, box.y + 6f, box.width - 12f, box.height - 12f);
                 batch.setColor(c);
             }
+            batch.setColor(origOctColor);
 
             // Draw Octopus Health Bar
             float hpPercent = Math.max(0f, Math.min(1.0f, (float) tile.getOctopusHp() / 200f));

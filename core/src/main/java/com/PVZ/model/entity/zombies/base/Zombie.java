@@ -43,6 +43,7 @@ public abstract class Zombie {
     protected float freezeTimer = 0f;
     protected float butterTimer = 0f;
     protected float animStateTime = 0f;
+    protected float damageFlashTimer = 0f;
     private final java.util.Map<String, Object> runtimeState = new java.util.HashMap<>();
 
     public Object getRuntimeState(String key) { return runtimeState.get(key); }
@@ -276,6 +277,16 @@ public abstract class Zombie {
         return butterTimer;
     }
 
+    protected float hitFlashTimer = 0f;
+
+    public boolean isHitFlashing() {
+        return hitFlashTimer > 0f;
+    }
+
+    public void triggerHitFlash() {
+        this.hitFlashTimer = 0.18f;
+    }
+
     public void poison(float duration, float dps) {
         poisonDps = dps;
         activeEffects.add(new StatusEffect(DamageType.POISON, duration));
@@ -330,6 +341,7 @@ public abstract class Zombie {
                 currentSpeed = speed * 0.5;
             }
         }
+        hitFlashTimer = 0.18f;
         if (armor != null && !armor.isDestroyed()) {
             armor.takeDamage(amount);
             if (armor.isDestroyed() && armor.isDroppable()) {
@@ -402,6 +414,12 @@ public abstract class Zombie {
             butterTimer -= delta;
             if (butterTimer < 0f) {
                 butterTimer = 0f;
+            }
+        }
+        if (hitFlashTimer > 0f) {
+            hitFlashTimer -= delta;
+            if (hitFlashTimer < 0f) {
+                hitFlashTimer = 0f;
             }
         }
         // Only clear the slow/hypnosis once nothing of that type remains active -
