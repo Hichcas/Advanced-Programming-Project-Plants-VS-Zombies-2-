@@ -190,8 +190,8 @@ public final class ZombieFactory {
             case "ZombieIceAgeHunter" -> new ZombieIceAgeHunter();
             case "ZombieBeachFisherman" -> new ZombieBeachFisherman();
             case "ZombieBeachOctopus" -> new ZombieBeachOctopus();
-            case "ZombieWizardDefault", "ZombieWizard", "ZombieDarkWizard" -> new ZombieWizard();
-            case "ZombieDarkJugglerDefault", "ZombieDarkJuggler", "ZombieDarkJester" -> new ZombieDarkJuggler();
+            case "ZombieWizardDefault", "ZombieWizard", "ZombieDarkWizard", "ZombieDarkWizardDefault" -> new ZombieWizard();
+            case "ZombieDarkJugglerDefault", "ZombieDarkJuggler", "ZombieDarkJester", "ZombieDarkJesterDefault" -> new ZombieDarkJuggler();
             case "ZombieDarkKing", "ZombieDarkKingDefault" -> new ZombieDarkKing();
             case "ZombieLostCityCrystalSkull", "ZombieCrystalSkull" -> new ZombieCrystalSkull(alias);
             default -> null;

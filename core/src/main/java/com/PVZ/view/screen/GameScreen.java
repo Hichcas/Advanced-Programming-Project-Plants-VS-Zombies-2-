@@ -799,33 +799,49 @@ public class GameScreen extends BaseScreen {
                 reg.getBattleController().freezeAllZombies(5.0);
             }
         }
-        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.B)) {
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.B) || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.D)) {
             if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
-                com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt();
+                com.PVZ.model.enums.ChapterEnum currentChap = com.PVZ.model.status.AppStatus.getCurrentChapterEnum();
+                boolean isDark = currentChap == com.PVZ.model.enums.ChapterEnum.DARK_AGES
+                    || (com.PVZ.model.status.AppStatus.currentChapterName != null && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("DARK"));
+                com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss;
+                if (isDark) {
+                    boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark();
+                } else {
+                    boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt();
+                }
                 boss.initPosition(1750f, 400f, 1);
                 boss.setRow(1);
                 boss.setCol(8);
                 reg.getBattleController().addZombie(boss);
-                System.out.println("[CHEAT B] Spawned Egypt Zomboss Mech!");
+                System.out.println("[CHEAT B/D] Spawned " + boss.getAlias() + " for current world!");
             }
         }
-        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.M)) {
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.M) || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.G)) {
             if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
                 for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
                     if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
                         boss.triggerMissileAttack(reg.getBattleController());
-                        System.out.println("[CHEAT M] Triggered Zomboss Missile Attack!");
+                        System.out.println("[CHEAT M/G] Triggered Egypt Zomboss Missile Attack!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
+                        darkBoss.triggerFireballAttack(reg.getBattleController());
+                        System.out.println("[CHEAT M/G] Triggered Dragon Fireball Attack!");
                         break;
                     }
                 }
             }
         }
-        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.C)) {
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.C) || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
             if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
                 for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
                     if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
                         boss.triggerChargeAttack(reg.getBattleController());
-                        System.out.println("[CHEAT C] Triggered Zomboss Charge Attack!");
+                        System.out.println("[CHEAT C/R] Triggered Egypt Zomboss Charge Attack!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
+                        darkBoss.triggerFireBreath(reg.getBattleController());
+                        System.out.println("[CHEAT C/R] Triggered Dragon Fire Breath Attack!");
                         break;
                     }
                 }
@@ -836,7 +852,11 @@ public class GameScreen extends BaseScreen {
                 for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
                     if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
                         boss.triggerPortalSpawn(reg.getBattleController());
-                        System.out.println("[CHEAT P] Triggered Zomboss Portal Wave!");
+                        System.out.println("[CHEAT P] Triggered Egypt Zomboss Portal Wave!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
+                        darkBoss.triggerSummonWave(reg.getBattleController());
+                        System.out.println("[CHEAT P] Triggered Dark Zomboss Summon Wave!");
                         break;
                     }
                 }

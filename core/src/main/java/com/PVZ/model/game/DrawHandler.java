@@ -37,6 +37,7 @@ public class DrawHandler {
         }
         batch.begin();
         drawTileOverlays(engine, batch);
+        drawScorchedTiles(engine, batch);
         drawJalapenoLaneEffect(engine, batch);
         drawGlobalIceEffect(engine, batch);
         drawIceShroomTileEffect(engine, batch);
@@ -183,6 +184,23 @@ public class DrawHandler {
         EntityRenderer.getInstance().renderPam(batch,
             "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM", "animation",
             (float)(1.1333 - engine.iceShroomEffectTimer), x, y, 1.15f);
+    }
+
+    private static void drawScorchedTiles(RegularGameEngine engine, SpriteBatch batch) {
+        if (engine.map == null) return;
+        for (int r = 0; r < engine.map.getRows(); r++) {
+            for (int c = 0; c < engine.map.getCols(); c++) {
+                Tile tile = engine.map.getTile(r, c);
+                if (tile != null && tile.isScorched()) {
+                    float x = tile.getX() + tile.getWidth() / 2f;
+                    float y = tile.getY() + tile.getHeight() / 2f;
+                    float time = 6.0f - tile.getScorchTimer();
+                    EntityRenderer.getInstance().renderPam(batch,
+                        "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM",
+                        "idle2", time, x, y, 0.85f);
+                }
+            }
+        }
     }
 
     private static void drawTimedPamEffects(RegularGameEngine engine, SpriteBatch batch) {

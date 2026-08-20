@@ -36,6 +36,16 @@ public class UpdateHandler {
                 if (fx.remaining <= 0.0) it.remove();
             }
         }
+        if (engine.map != null) {
+            for (int r = 0; r < engine.map.getRows(); r++) {
+                for (int c = 0; c < engine.map.getCols(); c++) {
+                    Tile tile = engine.map.getTile(r, c);
+                    if (tile != null) {
+                        tile.update(delta);
+                    }
+                }
+            }
+        }
         if (engine.gameOverTriggered) {
             updateGameOverTimer(engine, delta);
             return;
