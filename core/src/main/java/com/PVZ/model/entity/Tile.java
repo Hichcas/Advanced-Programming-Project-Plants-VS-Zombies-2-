@@ -21,6 +21,7 @@ public class Tile {
 
     private float hitFlashTimer = 0f;
     private float scorchTimer = 0f;
+    private String encasedZombieType = null;
 
     public Tile(TileType type, Plant plant, int gridRow, int gridCol,
                 float worldX, float worldY, float width, float height) {
@@ -34,12 +35,21 @@ public class Tile {
         this.graveAnimTime = 0f;
         this.hitFlashTimer = 0f;
         this.scorchTimer = 0f;
+        this.encasedZombieType = null;
         this.gridRow = gridRow;
         this.gridCol = gridCol;
         this.worldX = worldX;
         this.worldY = worldY;
         this.width = width;
         this.height = height;
+    }
+
+    public String getEncasedZombieType() {
+        return encasedZombieType;
+    }
+
+    public void setEncasedZombieType(String encasedZombieType) {
+        this.encasedZombieType = encasedZombieType;
     }
 
     public void update(float delta) {

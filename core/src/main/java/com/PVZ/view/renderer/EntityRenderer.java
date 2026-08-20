@@ -282,6 +282,12 @@ public class EntityRenderer {
                 renderPam(batch, "768/FULL/EFFECTS/80S_ARCADE_CABINET/80S_ARCADE_CABINET.PAM", cabinetClip, effectiveTime, (float) zombie.getX() - 110f, (float) zombie.getY());
             }
 
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.basic.ZombieIceage iceZ && iceZ.isEncasedInIce()) {
+                float zx = (float) zombie.getX() + 35f;
+                float zy = (float) zombie.getY() + 45f;
+                renderPam(batch, "768/FULL/WORLDMAP/DANGER_NODE_ICEAGE/DANGER_NODE_ICEAGE.PAM", "locked_idle", effectiveTime, zx, zy, 0.36f);
+            }
+
             if (zombie instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt egyptBoss && egyptBoss.isMissileActive()) {
                 // 1. Render target reticle on ground
                 renderPam(batch, "768/INITIAL/EFFECTS/MISSILE_TOE_RETICLE/MISSILE_TOE_RETICLE.PAM", "animation", egyptBoss.getMissileAnimTime(), egyptBoss.getMissileTargetX(), egyptBoss.getMissileTargetY(), 1.0f);
@@ -316,6 +322,21 @@ public class EntityRenderer {
                     float vx = (float) zombie.getX() - 120f;
                     float vy = (float) zombie.getY() + 30f;
                     renderPam(batch, "768/FULL/EFFECTS/WATER_FOAM/WATER_FOAM.PAM", "animation", beachBoss.getTurbineTimer(), vx, vy, 1.3f);
+                }
+            }
+
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                // 1. Render active ice missiles
+                for (com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge.IceMissile im : iceBoss.getActiveMissiles()) {
+                    renderPam(batch, "768/FULL/EFFECTS/ZOMBOSS_GLACIER_BLOCK/ZOMBOSS_GLACIER_BLOCK.PAM", "animation", iceBoss.getMissileAnimTimer(), im.currentX, im.currentY, 0.9f);
+                }
+                // 2. Render ice wind blizzard breath along the 2 rows
+                if (iceBoss.isIceWindActive()) {
+                    float wx = (float) zombie.getX() - 100f;
+                    float wy = (float) zombie.getY() + 40f;
+                    renderPam(batch, "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM", "animation", iceBoss.getIceWindTimer(), wx, wy, 1.4f);
+                    renderPam(batch, "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM", "animation", iceBoss.getIceWindTimer(), wx - 220f, wy, 1.4f);
+                    renderPam(batch, "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM", "animation", iceBoss.getIceWindTimer(), wx - 440f, wy, 1.4f);
                 }
             }
 
