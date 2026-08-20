@@ -163,6 +163,16 @@ public class EntityRenderer {
             }
         }
 
+        if (zombie instanceof com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+            if (zombie.isDying()) {
+                state = "die";
+            } else if (boss.isStunned()) {
+                state = "stun_loop";
+            } else if (!ZombieAnimation.isActive(zombie)) {
+                state = "idle";
+            }
+        }
+
         ClipRef clip = getZombieClip(effectiveAlias, state);
         if (clip == null) {
             clip = getZombieClip("DEFAULT", "walk");
@@ -270,6 +280,15 @@ public class EntityRenderer {
             if (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieArcade arcade) {
                 String cabinetClip = zombie.isDying() ? "death" : (arcade.isCabinetActive() ? "active" : "idle");
                 renderPam(batch, "768/FULL/EFFECTS/80S_ARCADE_CABINET/80S_ARCADE_CABINET.PAM", cabinetClip, effectiveTime, (float) zombie.getX() - 110f, (float) zombie.getY());
+            }
+
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt egyptBoss && egyptBoss.isMissileActive()) {
+                // 1. Render target reticle on ground
+                renderPam(batch, "768/INITIAL/EFFECTS/MISSILE_TOE_RETICLE/MISSILE_TOE_RETICLE.PAM", "animation", egyptBoss.getMissileAnimTime(), egyptBoss.getMissileTargetX(), egyptBoss.getMissileTargetY(), 1.0f);
+                // 2. Render vertical falling missile
+                if (egyptBoss.getMissileCurrentY() > egyptBoss.getMissileTargetY()) {
+                    renderPam(batch, "768/INITIAL/EFFECTS/T_MISSILE_TOE_PROJECTILE/T_MISSILE_TOE_PROJECTILE.PAM", "animation", egyptBoss.getMissileAnimTime(), egyptBoss.getMissileTargetX(), egyptBoss.getMissileCurrentY(), 1.2f);
+                }
             }
 
             boolean shouldFlip = zombie.isHypnotized() || (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieProspector zp && zp.isFlewToLeft());

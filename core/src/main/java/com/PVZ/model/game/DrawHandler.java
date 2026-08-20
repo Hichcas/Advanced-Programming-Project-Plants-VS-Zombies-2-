@@ -56,6 +56,7 @@ public class DrawHandler {
         drawZombiesWithHealthBars(engine, batch);
         if (engine.getSandstormManager() != null) engine.getSandstormManager().draw(batch);
         if (engine.getIceWindManager() != null) engine.getIceWindManager().draw(batch, engine);
+        batch.setColor(Color.WHITE);
         batch.end();
     }
 
@@ -570,11 +571,63 @@ public class DrawHandler {
     private static void drawZombiesWithHealthBars(RegularGameEngine engine, SpriteBatch batch) {
         BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
         font.setColor(Color.BLACK);
+        com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss activeBoss = null;
         for (Zombie z : engine.getZombieList()) {
             if (z == null || z.isDead()) continue;
+            if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+                activeBoss = boss;
+                continue; // Draw boss bar separately at top of screen
+            }
             HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
                 (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
         }
         font.setColor(Color.WHITE);
+
+        if (activeBoss != null) {
+            drawBossHealthBar(engine, batch, activeBoss);
+        }
+    }
+
+    private static void drawBossHealthBar(RegularGameEngine engine, SpriteBatch batch, com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+        float barX = 580f;
+        float barY = 1010f;
+        float barW = 760f;
+        float barH = 28f;
+
+        Color origColor = batch.getColor() != null ? batch.getColor().cpy() : new Color(Color.WHITE);
+        try {
+            // Background shadow & border
+            batch.setColor(0f, 0f, 0f, 0.85f);
+            batch.draw(whiteTexture(), barX - 4f, barY - 4f, barW + 8f, barH + 8f);
+
+            // Gray empty bar
+            batch.setColor(0.2f, 0.2f, 0.2f, 0.9f);
+            batch.draw(whiteTexture(), barX, barY, barW, barH);
+
+            // Health Fill
+            float hpRatio = (float) Math.max(0.0, Math.min(1.0, boss.getHitpoints() / Math.max(1.0, boss.getMaxHitpoints())));
+            if (boss.getCurrentPhase() == 3) {
+                batch.setColor(0.95f, 0.15f, 0.15f, 1.0f); // Bright red for final phase
+            } else if (boss.getCurrentPhase() == 2) {
+                batch.setColor(1.0f, 0.55f, 0.1f, 1.0f);  // Orange for phase 2
+            } else {
+                batch.setColor(0.95f, 0.85f, 0.2f, 1.0f);  // Gold for phase 1
+            }
+            batch.draw(whiteTexture(), barX, barY, barW * hpRatio, barH);
+
+            // Phase Dividers (at 1/3 and 2/3)
+            batch.setColor(0f, 0f, 0f, 0.9f);
+            batch.draw(whiteTexture(), barX + barW * 0.333f - 1.5f, barY, 3f, barH);
+            batch.draw(whiteTexture(), barX + barW * 0.666f - 1.5f, barY, 3f, barH);
+
+            // Boss Title & Status Text
+            BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
+            font.setColor(Color.WHITE);
+            String status = boss.isStunned() ? " [STUNNED!]" : "";
+            String title = "DR. ZOMBOSS - PHASE " + boss.getCurrentPhase() + "/3" + status + " (" + (int)(hpRatio * 100) + "%)";
+            font.draw(batch, title, barX + 15f, barY + barH - 7f);
+        } finally {
+            batch.setColor(origColor);
+        }
     }
 }
