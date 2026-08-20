@@ -82,6 +82,20 @@ public class DrawHandler {
                     float centerY = tileY + height / 2f;
                     float scale = 0.28f;
                     Color origIceColor = batch.getColor().cpy();
+
+                    // If a zombie is encased inside, render frozen zombie inside the ice block
+                    if (tile.getEncasedZombieType() != null) {
+                        EntityRenderer.getInstance().renderPam(
+                            batch,
+                            "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM",
+                            "idle",
+                            0f,
+                            centerX - 25f,
+                            centerY - 25f,
+                            0.75f
+                        );
+                    }
+
                     if (tile.isHitFlashing()) {
                         batch.setColor(Math.min(2.0f, origIceColor.r * 1.5f + 0.4f),
                                        Math.min(2.0f, origIceColor.g * 1.5f + 0.4f),

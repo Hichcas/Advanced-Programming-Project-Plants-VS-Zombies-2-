@@ -806,11 +806,15 @@ public class GameScreen extends BaseScreen {
                     || (com.PVZ.model.status.AppStatus.currentChapterName != null && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("DARK"));
                 boolean isBeach = currentChap == com.PVZ.model.enums.ChapterEnum.BIG_WAVE_BEACH
                     || (com.PVZ.model.status.AppStatus.currentChapterName != null && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("BEACH"));
+                boolean isIce = currentChap == com.PVZ.model.enums.ChapterEnum.FROSTBITE_CAVES
+                    || (com.PVZ.model.status.AppStatus.currentChapterName != null && (com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("ICE") || com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("FROST")));
                 com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss;
                 if (isDark) {
                     boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark();
                 } else if (isBeach) {
                     boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach();
+                } else if (isIce) {
+                    boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge();
                 } else {
                     boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt();
                 }
@@ -836,6 +840,10 @@ public class GameScreen extends BaseScreen {
                         beachBoss.triggerSmallSharksAttack(reg.getBattleController());
                         System.out.println("[CHEAT M/G] Triggered Beach Zomboss Small Sharks Attack!");
                         break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                        iceBoss.triggerIceMissileAttack(reg.getBattleController());
+                        System.out.println("[CHEAT M/G] Triggered Mammoth Ice Missile Attack!");
+                        break;
                     }
                 }
             }
@@ -855,6 +863,10 @@ public class GameScreen extends BaseScreen {
                         beachBoss.triggerTurbineSuction(reg.getBattleController());
                         System.out.println("[CHEAT C/R] Triggered Beach Zomboss Turbine Suction Attack!");
                         break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                        iceBoss.triggerIceWindBreath(reg.getBattleController());
+                        System.out.println("[CHEAT C/R] Triggered Mammoth Ice Wind Breath!");
+                        break;
                     }
                 }
             }
@@ -873,6 +885,10 @@ public class GameScreen extends BaseScreen {
                     } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
                         beachBoss.triggerSummonWave(reg.getBattleController());
                         System.out.println("[CHEAT P] Triggered Beach Zomboss Summon Wave!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                        iceBoss.triggerGlacierSummon(reg.getBattleController());
+                        System.out.println("[CHEAT P] Triggered Mammoth Glacier Encased Summon!");
                         break;
                     }
                 }
