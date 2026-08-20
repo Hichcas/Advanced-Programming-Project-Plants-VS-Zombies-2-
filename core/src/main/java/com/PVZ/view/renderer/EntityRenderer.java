@@ -186,9 +186,15 @@ public class EntityRenderer {
                 batch.setColor(0.75f, 0.90f, 1.0f, 0.90f); // Submerged underwater watery tint
             } else if (zombie.getArmor() != null && !zombie.getArmor().isDestroyed() && zombie.getArmor().getType() == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.CROWN) {
                 batch.setColor(1.0f, 0.92f, 0.60f, 1.0f); // Royal Knight Golden Aura
-            } else if (zombie.getX() < 350.0 && !zombie.isHypnotized()) {
-                float dangerFactor = Math.min(1.0f, Math.max(0.0f, (350.0f - (float) zombie.getX()) / 200.0f));
-                batch.setColor(1.0f, 1.0f - 0.40f * dangerFactor, 1.0f - 0.40f * dangerFactor, 1.0f); // Danger red tint near finish line
+            } else if (zombie.getX() < 950.0 && !zombie.isHypnotized()) {
+                boolean isFlew = zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieProspector zp && zp.isFlewToLeft();
+                if (!isFlew) {
+                    float dangerFactor = Math.min(1.0f, Math.max(0.0f, (950.0f - (float) zombie.getX()) / 450.0f));
+                    // Flashing emergency warning light (sine pulse at ~10 rad/s):
+                    float pulse = 0.5f + 0.5f * (float) Math.sin(stateTime * 10.0f);
+                    float redIntensity = dangerFactor * (0.30f + 0.65f * pulse);
+                    batch.setColor(1.0f, 1.0f - 0.75f * redIntensity, 1.0f - 0.75f * redIntensity, 1.0f); // Flashing danger red strobe
+                }
             }
 
             float effectiveTime = (zombie.isFrozen() || zombie.isButtered()) ? 0.0f : stateTime;
