@@ -69,14 +69,6 @@ public class ZombieSelectionPanel extends BasePanel {
             return;
         }
 
-        // Nothing picked yet -> default to the whole roster, exactly like walking in
-        // with the level's normal loadout. The player can then deselect some of them.
-        if (AppStatus.SELECTED_ZOMBIES.isEmpty()) {
-            for (ZombieOption option : roster) {
-                AppStatus.SELECTED_ZOMBIES.add(option.getAlias());
-            }
-        }
-
         buildPicker();
     }
 

@@ -47,4 +47,31 @@ public class IZombieInputProcessor extends InputAdapter {
         System.out.println("[IZombie] " + result);
         return true;
     }
+
+    // Sun is collected by sweeping the mouse over it (matches the classic PvZ feel
+    // more closely than click-to-collect), not by clicking - mouseMoved fires
+    // continuously while the button is up, and touchDragged covers the touchscreen/
+    // button-held-down case, so both routes call the same collection point.
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        tryCollectSunAt(screenX, screenY);
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        tryCollectSunAt(screenX, screenY);
+        return false;
+    }
+
+    private void tryCollectSunAt(int screenX, int screenY) {
+        if (engine == null || engine.getGame() == null) return;
+        OrthographicCamera camera = AppStatus.getCamera();
+        if (camera == null) return;
+        Vector3 world = camera.unproject(new Vector3(screenX, screenY, 0));
+        int collected = engine.collectSunAtWorldPoint(world.x, world.y);
+        if (collected > 0) {
+            System.out.println("[IZombie] collected " + collected + " sun");
+        }
+    }
 }

@@ -37,6 +37,19 @@ public abstract class Zombie {
     private float chillDuration = 3.0f;
     protected Rectangle hitbox;
     protected boolean moving = true;
+    // True for zombies that must hold their tile permanently (e.g. the I,Zombie
+    // sun-producing zombie): they never walk toward the brain and never attack a
+    // plant, they just idle in place until killed. Distinct from isFrozen(), which
+    // is the temporary ice-plant effect and carries its own visual/HP side effects.
+    private boolean stationary = false;
+
+    public boolean isStationary() {
+        return stationary;
+    }
+
+    public void setStationary(boolean stationary) {
+        this.stationary = stationary;
+    }
     protected boolean hypnotized = false;
     protected int icingLevel = 0;
     protected int iceHp = 0;
@@ -129,6 +142,13 @@ public abstract class Zombie {
             return;
         }
         if (controller == null) {
+            return;
+        }
+        if (stationary) {
+            moving = false;
+            ZombieAnimation.trigger(this, "idle", 1.0);
+            hitbox.setPosition((float) x, (float) y);
+            onUpdate(delta, controller);
             return;
         }
         int tileCol = controller.getTileColumn((float) x);
@@ -505,6 +525,17 @@ public abstract class Zombie {
     }
 
     public void onProjectileHit(Plant target) {
+    }
+
+    /**
+     * Scales both current and max HP by a flat multiplier, independent of the
+     * difficulty-level scaling table (used e.g. to make the I,Zombie sun-producing
+     * zombie a tanky, hard-to-kill fixture rather than a normal disposable unit).
+     */
+    public void buffHitpoints(double multiplier) {
+        if (multiplier <= 0) return;
+        hitpoints *= multiplier;
+        maxHitpoints *= multiplier;
     }
 
     public void applyDifficultyScaling(int level) {

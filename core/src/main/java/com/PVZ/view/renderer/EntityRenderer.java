@@ -253,6 +253,16 @@ public class EntityRenderer {
                 renderPam(batch, "768/FULL/EFFECTS/80S_ARCADE_CABINET/80S_ARCADE_CABINET.PAM", cabinetClip, effectiveTime, (float) zombie.getX() - 110f, (float) zombie.getY());
             }
 
+            // I,Zombie's sun-producing zombie is marked stationary (see Zombie#isStationary):
+            // it never walks or attacks, it just stands there generating sun for the row.
+            // Layer the game's actual "generating sun" particle effect on top of its idle
+            // pose so it visibly reads as the special sun-producer, not a normal zombie
+            // caught standing still.
+            if (zombie.isStationary() && !zombie.isDying()) {
+                renderPam(batch, "768/INITIAL/EFFECTS/ZOMBIE_SUN_EFFECT/ZOMBIE_SUN_EFFECT.PAM", "animation",
+                        effectiveTime, (float) zombie.getX(), (float) zombie.getY() + 40f);
+            }
+
             boolean shouldFlip = zombie.isHypnotized() || (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieProspector zp && zp.isFlewToLeft());
             if (shouldFlip) {
                 com.badlogic.gdx.math.Matrix4 oldTransform = batch.getTransformMatrix().cpy();

@@ -1,6 +1,7 @@
 package com.PVZ.model.game;
 
 import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.Sun;
 import com.PVZ.model.entity.plants.PlantFactory;
 import com.PVZ.model.entity.plants.behavior.impl.Projectile;
 import com.PVZ.model.entity.zombies.base.Zombie;
@@ -45,6 +46,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     private float tickAccumulator = 0f;
 
     private final HashMap<Integer, Zombie> sunZombiesByRow = new HashMap<>();
+    private final SunManager sunManager = new SunManager();
 
     private IZombieGame game;
     private Texture background;
@@ -110,9 +112,26 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
 
     private void spawnSunZombies() {
         String alias = game.getSunZombieAlias();
+        // Truly the rightmost tile (cols-1), not one tile in - RegularZombieEngine.spawnZombie
+        // special-cases col >= cols-1 as an "enter from off the right edge of the board"
+        // spawn point (x lands past the board entirely), so the position is corrected
+        // right after spawning to the real tile center for that column/row.
+        int spawnCol = game.getCols() - 1;
         for (int row = 0; row < game.getRows(); row++) {
-            Zombie z = zombieEngine.spawnZombie(alias, row, game.getCols() - 1);
-            if (z != null) sunZombiesByRow.put(row, z);
+            Zombie z = zombieEngine.spawnZombie(alias, row, spawnCol);
+            if (z != null) {
+                if (map != null) {
+                    com.PVZ.model.entity.Tile tile = map.getTile(row, spawnCol);
+                    if (tile != null) {
+                        z.setX(tile.getX() + tile.getWidth() / 2f);
+                        z.setY(tile.getY() + (tile.getHeight() - 70f) / 2f);
+                    }
+                }
+                z.setStationary(true);
+                z.setGlowing(true);
+                z.buffHitpoints(6.0);
+                sunZombiesByRow.put(row, z);
+            }
         }
     }
 
@@ -158,7 +177,8 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         updatePlants(delta);
         updateProjectiles(delta);
         updateSunZombies();
-        game.tickSunProduction(delta);
+        spawnSunDrops(delta);
+        sunManager.update(delta);
         checkBrains();
         for (Zombie z : zombieEngine.getZombies()) {
             if (!z.isDead()) z.updateEffects(delta);
@@ -205,6 +225,46 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
                 game.markSunZombieDead(row);
             }
         }
+    }
+
+    /**
+     * Turns each row's accruing sun-production tick into an actual, tappable Sun
+     * pickup dropped near that row's sun zombie (like SunManager everywhere else
+     * in the game), instead of silently crediting the player. If the zombie has
+     * since died, its row no longer drops anything (matches
+     * IZombieGame#tickSunProductionPerRow only reporting alive rows).
+     */
+    private void spawnSunDrops(float delta) {
+        java.util.Map<Integer, Integer> perRow = game.tickSunProductionPerRow(delta);
+        if (perRow.isEmpty() || map == null) return;
+        for (java.util.Map.Entry<Integer, Integer> e : perRow.entrySet()) {
+            int row = e.getKey();
+            int amount = e.getValue();
+            Zombie z = sunZombiesByRow.get(row);
+            if (z == null || amount <= 0) continue;
+            // The sun zombie is stationary, so without this jitter every drop for a
+            // row lands on the EXACT same pixel as the previous one. An unclaimed
+            // sun sitting there then gets a fresh, identical-looking sun stacked
+            // right on top of it - visually indistinguishable from a single sun -
+            // so the player collects the top one and never notices the other one
+            // was still under it, quietly expiring later with no credit given at
+            // all ("empty drop" from their point of view). Small random x/y offset
+            // per drop keeps stacked suns visually separated, like real sunflowers.
+            double dropX = z.getX() + (random.nextDouble() - 0.5) * 50.0;
+            double dropY = z.getY() + 90.0 + random.nextDouble() * 20.0;
+            double groundY = z.getY() + 20.0;
+            // Slower, gentler fall (classic-PvZ-sunflower pace) instead of the fast
+            // default drop speed, and each row's sun rounds start at a slightly
+            // different point so five rows worth don't all thud down in lockstep.
+            sunManager.spawnFalling(dropX, dropY, amount, groundY, Sun.SunType.NORMAL, 60.0);
+        }
+    }
+
+    public int collectSunAtWorldPoint(float worldX, float worldY) {
+        Rectangle pointer = new Rectangle(worldX - 8f, worldY - 8f, 16f, 16f);
+        int collected = sunManager.collectAt(pointer);
+        if (collected > 0) game.addSun(collected);
+        return collected;
     }
 
     private void checkBrains() {
@@ -287,6 +347,9 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         }
         for (Projectile p : projectiles) {
             if (p != null) p.draw(batch);
+        }
+        for (Sun sun : sunManager.getSuns()) {
+            sun.draw(batch);
         }
         batch.end();
         drawHud(batch);
@@ -375,6 +438,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     @Override
     public void dispose() {
         zombieEngine.dispose();
+        sunManager.clear();
         battleController.dispose();
         zombiePacketBar.dispose();
         if (background != null) background.dispose();
