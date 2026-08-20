@@ -186,9 +186,12 @@ public class EntityRenderer {
                 batch.setColor(0.75f, 0.90f, 1.0f, 0.90f); // Submerged underwater watery tint
             } else if (zombie.getArmor() != null && !zombie.getArmor().isDestroyed() && zombie.getArmor().getType() == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.CROWN) {
                 batch.setColor(1.0f, 0.92f, 0.60f, 1.0f); // Royal Knight Golden Aura
+            } else if (zombie.getX() < 350.0 && !zombie.isHypnotized()) {
+                float dangerFactor = Math.min(1.0f, Math.max(0.0f, (350.0f - (float) zombie.getX()) / 200.0f));
+                batch.setColor(1.0f, 1.0f - 0.40f * dangerFactor, 1.0f - 0.40f * dangerFactor, 1.0f); // Danger red tint near finish line
             }
 
-            float effectiveTime = zombie.isFrozen() ? 0.0f : stateTime;
+            float effectiveTime = (zombie.isFrozen() || zombie.isButtered()) ? 0.0f : stateTime;
 
             Map<String, Boolean> trackVisibility = null;
             String activeArmorTrack = ZombieTexturePaths.getArmorSubBranchTrack(zombie);
@@ -219,6 +222,16 @@ public class EntityRenderer {
                         trackVisibility.put("_zombie_egypt_armor2_states", true);
                     }
                 }
+            }
+
+            if (trackVisibility == null && zombie.isButtered()) {
+                trackVisibility = new HashMap<>();
+            }
+            if (trackVisibility != null) {
+                trackVisibility.put("butter", zombie.isButtered());
+                trackVisibility.put("_butter", zombie.isButtered());
+                trackVisibility.put("head_butter", zombie.isButtered());
+                trackVisibility.put("_bull_head_butter", zombie.isButtered());
             }
 
             if (isZombotanyAlias(zombie.getAlias())) {
@@ -277,6 +290,10 @@ public class EntityRenderer {
                     pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
                 }
             }
+            if (zombie.isButtered()) {
+                renderPam(batch, "768/INITIAL/EFFECTS/SPLAT_KERNALPULT_BUTTER/SPLAT_KERNALPULT_BUTTER.PAM", "animation", effectiveTime, (float) zombie.getX() + 15f, (float) zombie.getY() + 75f);
+            }
+
             // Zombotany visuals are composed from the normal zombie body PAM plus the
             // corresponding plant idle PAM as a head/top overlay. The provided PAM catalog
             // does not contain dedicated Zombotany PAMs, so this is the asset-faithful fallback.

@@ -146,7 +146,7 @@ public class LobberBehavior implements PlantBehavior {
             } else if ("kernel_pult".equals(key)) {
                 projectile.putExtra("lobArcHeight", 300.0);
                 projectile.putExtra("lobArcDuration", 1.15);
-                projectile.putExtra("visualKey", "KERNEL");
+                projectile.putExtra("visualKey", params.stunShot ? "KERNEL_BUTTER" : "KERNEL");
             }
             context.spawnProjectile(projectile);
         }
