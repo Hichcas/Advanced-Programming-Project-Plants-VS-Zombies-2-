@@ -38,6 +38,7 @@ public abstract class AbstractZomboss extends Zombie {
     protected boolean usePortalNext;
     protected int targetRow;
     protected float moveTimer;
+    protected float stunTimer = 0f;
 
     public AbstractZomboss(String alias, double hitpoints, double eatDPS, double speed,
                            int wavePointCost, int weight, List<ScaledProperty> scaledProps,
@@ -52,16 +53,32 @@ public abstract class AbstractZomboss extends Zombie {
         this.abilityCooldown = abilityCooldown;
         this.abilityTimer = abilityCooldown;
         this.usePortalNext = false;
-        this.targetRow = 2;
+        this.targetRow = 1;
         this.moveTimer = 0f;
         this.moving = false;
+        this.hitbox.setSize(220f, 240f);
     }
 
     @Override
-    public void onSpawn() {}
+    public void onSpawn() {
+        this.hitbox.setSize(220f, 240f);
+    }
 
     @Override
     public void onDestroy() {}
+
+    public void triggerStun(float duration) {
+        this.stunTimer = duration;
+        ZombieAnimation.trigger(this, "stun_start", 1.5);
+    }
+
+    public boolean isStunned() {
+        return stunTimer > 0f;
+    }
+
+    public float getStunTimer() {
+        return stunTimer;
+    }
 
     @Override
     public void update(float delta, BattleController ctrl) {
@@ -96,11 +113,30 @@ public abstract class AbstractZomboss extends Zombie {
             return;
         }
 
+        if (isStunned()) {
+            stunTimer -= delta;
+            if (stunTimer <= 0f) {
+                stunTimer = 0f;
+                ZombieAnimation.trigger(this, "stun_end", 1.0);
+            }
+            onUpdate(delta, ctrl);
+            return;
+        }
+
         if (ctrl.getMap() != null) {
+            // Occupies 2 rows (targetRow and targetRow + 1)
+            targetRow = Math.max(0, Math.min(3, targetRow));
             com.PVZ.model.entity.Tile t = ctrl.getMap().getTile(targetRow, 8);
             if (t != null) {
-                x = t.getX();
-                y = t.getY() + (t.getHeight() - 70f) / 2f;
+                if (x == 0 || x < 500) {
+                    x = t.getX();
+                }
+                float targetY = t.getY();
+                if (Math.abs(y - targetY) > 2.0f) {
+                    y += (targetY - y) * Math.min(1.0f, delta * 4.0f);
+                } else {
+                    y = targetY;
+                }
                 row = targetRow;
             }
         }
@@ -114,29 +150,29 @@ public abstract class AbstractZomboss extends Zombie {
                 currentPhase++;
                 System.out.println("[" + alias + "] advanced to PHASE " + currentPhase + " (HP ratio=" + String.format(
                         "%.2f", hpRatio) + ")");
-                ZombieAnimation.trigger(this, "stun_start", 1.5);
+                triggerStun(4.0f);
                 onPhaseTransition(ctrl);
-                abilityTimer = Math.max(abilityTimer, 1.5f);
+                abilityTimer = Math.max(abilityTimer, 4.0f);
             }
         }
 
         abilityTimer -= delta;
         if (abilityTimer <= 0) {
             if (usePortalNext) {
-                ZombieAnimation.trigger(this, "portal", 2.2667);
                 spawnZombieWave(ctrl);
                 usePortalNext = false;
             } else {
                 useSpecialAbility(ctrl);
                 usePortalNext = true;
             }
-            abilityTimer = Math.max(2.0, abilityCooldown - (currentPhase - 1) * 1.0);
+            abilityTimer = Math.max(3.0, abilityCooldown - (currentPhase - 1) * 1.0);
 
-            int newRow = (int) (Math.random() * 5);
+            // Switch to a new 2-row span (0..3)
+            int newRow = (int) (Math.random() * 4);
             if (newRow < targetRow) {
-                ZombieAnimation.trigger(this, "walk_up", 1.2333);
+                ZombieAnimation.trigger(this, "walk_up", 1.5);
             } else if (newRow > targetRow) {
-                ZombieAnimation.trigger(this, "walk_down", 1.2333);
+                ZombieAnimation.trigger(this, "walk_down", 1.5);
             }
             targetRow = newRow;
         }
@@ -160,4 +196,6 @@ public abstract class AbstractZomboss extends Zombie {
     public List<ZombossStage> getStages() { return stages; }
     public void addStage(ZombossStage stage) { stages.add(stage); }
     public double getMaxHitpoints() { return maxHitpoints; }
+    public int getTargetRow() { return targetRow; }
+    public void setTargetRow(int row) { this.targetRow = row; }
 }

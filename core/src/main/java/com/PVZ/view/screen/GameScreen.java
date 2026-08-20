@@ -858,6 +858,123 @@ public class GameScreen extends BaseScreen {
                 reg.getBattleController().freezeAllZombies(5.0);
             }
         }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.B) || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.D)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                com.PVZ.model.enums.ChapterEnum currentChap = com.PVZ.model.status.AppStatus.getCurrentChapterEnum();
+                boolean isDark = currentChap == com.PVZ.model.enums.ChapterEnum.DARK_AGES
+                    || (com.PVZ.model.status.AppStatus.currentChapterName != null && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("DARK"));
+                boolean isBeach = currentChap == com.PVZ.model.enums.ChapterEnum.BIG_WAVE_BEACH
+                    || (com.PVZ.model.status.AppStatus.currentChapterName != null && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("BEACH"));
+                boolean isIce = currentChap == com.PVZ.model.enums.ChapterEnum.FROSTBITE_CAVES
+                    || (com.PVZ.model.status.AppStatus.currentChapterName != null && (com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("ICE") || com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("FROST")));
+                com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss;
+                if (isDark) {
+                    boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark();
+                } else if (isBeach) {
+                    boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach();
+                } else if (isIce) {
+                    boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge();
+                } else {
+                    boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt();
+                }
+                boss.initPosition(1750f, 400f, 1);
+                boss.setRow(1);
+                boss.setCol(8);
+                reg.getBattleController().addZombie(boss);
+                System.out.println("[CHEAT B/D] Spawned " + boss.getAlias() + " for current world!");
+            }
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.M) || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.G)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
+                        boss.triggerMissileAttack(reg.getBattleController());
+                        System.out.println("[CHEAT M/G] Triggered Egypt Zomboss Missile Attack!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
+                        darkBoss.triggerFireballAttack(reg.getBattleController());
+                        System.out.println("[CHEAT M/G] Triggered Dragon Fireball Attack!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                        beachBoss.triggerSmallSharksAttack(reg.getBattleController());
+                        System.out.println("[CHEAT M/G] Triggered Beach Zomboss Small Sharks Attack!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                        iceBoss.triggerIceMissileAttack(reg.getBattleController());
+                        System.out.println("[CHEAT M/G] Triggered Mammoth Ice Missile Attack!");
+                        break;
+                    }
+                }
+            }
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.C) || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
+                        boss.triggerChargeAttack(reg.getBattleController());
+                        System.out.println("[CHEAT C/R] Triggered Egypt Zomboss Charge Attack!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
+                        darkBoss.triggerFireBreath(reg.getBattleController());
+                        System.out.println("[CHEAT C/R] Triggered Dragon Fire Breath Attack!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                        beachBoss.triggerTurbineSuction(reg.getBattleController());
+                        System.out.println("[CHEAT C/R] Triggered Beach Zomboss Turbine Suction Attack!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                        iceBoss.triggerIceWindBreath(reg.getBattleController());
+                        System.out.println("[CHEAT C/R] Triggered Mammoth Ice Wind Breath!");
+                        break;
+                    }
+                }
+            }
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.P)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
+                        boss.triggerPortalSpawn(reg.getBattleController());
+                        System.out.println("[CHEAT P] Triggered Egypt Zomboss Portal Wave!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
+                        darkBoss.triggerSummonWave(reg.getBattleController());
+                        System.out.println("[CHEAT P] Triggered Dark Zomboss Summon Wave!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                        beachBoss.triggerSummonWave(reg.getBattleController());
+                        System.out.println("[CHEAT P] Triggered Beach Zomboss Summon Wave!");
+                        break;
+                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                        iceBoss.triggerGlacierSummon(reg.getBattleController());
+                        System.out.println("[CHEAT P] Triggered Mammoth Glacier Encased Summon!");
+                        break;
+                    }
+                }
+            }
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.K)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+                        boss.takeDamage(99999999);
+                        System.out.println("[CHEAT K] Triggered Boss Death Animation!");
+                        break;
+                    }
+                }
+            }
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.T)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+                        boss.triggerStun(4.0f);
+                        System.out.println("[CHEAT T] Triggered Boss Stun (4s)!");
+                        break;
+                    }
+                }
+            }
+        }
 
         GameOverState overState = updateGameOverState(activeEngine);
         drawBackgroundAndEngine(activeEngine, delta);
