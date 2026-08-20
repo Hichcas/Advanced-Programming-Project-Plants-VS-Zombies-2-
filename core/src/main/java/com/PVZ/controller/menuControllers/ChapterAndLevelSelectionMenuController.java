@@ -75,6 +75,7 @@ public class ChapterAndLevelSelectionMenuController {
         AppStatus.BOOSTED_PLANTS.clear();
         AppStatus.CURRENT_STAGE_LOCKED_PLANTS.clear();
         AppStatus.CURRENT_STAGE_EXCLUSIVE_FAMILIES.clear();
+        AppStatus.CURRENT_STAGE_TAG_EXCLUSIVITY_ENABLED = false;
 
         StageConfig stageConfig = ChapterLibrary.getStageConfig(
             AppStatus.currentChapterName, AppStatus.currentStageNumber);
@@ -87,6 +88,14 @@ public class ChapterAndLevelSelectionMenuController {
         if (GameLauncher.isLockedPlantsStage(stageConfig)) {
             AppStatus.CURRENT_STAGE_LOCKED_PLANTS.addAll(GameLauncher.resolveLockedPlants(stageConfig));
             AppStatus.CURRENT_STAGE_EXCLUSIVE_FAMILIES.addAll(GameLauncher.resolveExclusiveFamilies(stageConfig));
+            // Only LOCKED_PLANTS stages use the Tags column for "picking one plant locks
+            // every other plant sharing a tag" - other stage types must never trigger this.
+            AppStatus.CURRENT_STAGE_TAG_EXCLUSIVITY_ENABLED = true;
+        }
+        if (GameLauncher.isPlantWhatYouGetStage(stageConfig)) {
+            // Sun income is fixed at level start, so sun-producing plants are locked out -
+            // but this must NOT enable the tag-exclusivity side effect above.
+            AppStatus.CURRENT_STAGE_LOCKED_PLANTS.addAll(GameLauncher.resolveSunProducerPlants());
         }
         AppStatus.currentMenuType = MenuType.PLANT_SELECTION;
         return new OutputDTO(true, "Entered Plant Selection Menu.");

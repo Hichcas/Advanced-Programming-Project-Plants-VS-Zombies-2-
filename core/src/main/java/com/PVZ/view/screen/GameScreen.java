@@ -20,6 +20,7 @@ import com.PVZ.model.status.AppStatus;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.screen.manager.MusicManager;
 import com.PVZ.view.screen.manager.ScreenManager;
+import com.PVZ.view.screen.ui.MenuButton;
 import com.PVZ.model.user.UserRegistry;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -38,6 +39,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
@@ -69,6 +71,8 @@ public class GameScreen extends BaseScreen {
     private boolean plantFoodModeActive = false;
     private ImageButton shovelButton;
     private ImageButton plantFoodButton;
+    private MenuButton startWaveButton;
+    private Table startWaveButtonRoot;
     private Label timedWarLabel;
     private Label plantFoodCountLabel;
     private long plantFoodFlashUntil = 0L;
@@ -185,6 +189,10 @@ public class GameScreen extends BaseScreen {
         if (gameEngine instanceof RegularGameEngine) {
             stage.addActor(buildPlantFoodButton());
             stage.addActor(buildShovelButton());
+        }
+        if (gameEngine instanceof RegularGameEngine rge && rge.isPlantWhatYouGetMode()) {
+            startWaveButtonRoot = buildStartWaveButton();
+            stage.addActor(startWaveButtonRoot);
         }
         com.PVZ.view.screen.panels.CheatPanel.attachToggleButton(stage, this::handleCheatAcrossGameModes);
 
@@ -330,6 +338,57 @@ public class GameScreen extends BaseScreen {
         });
         overlay.add(pauseButton).size(70f, 70f).padTop(20f).padRight(20f);
         return overlay;
+    }
+
+    /**
+     * PLANT WHAT YOU GET: a big "Start Wave" button that lets the player begin the
+     * zombie waves whenever they choose. Uses the same green-button drawable as the
+     * pause menu's RESTART button (image_ui_generic_greenbutton_10 /
+     * _down_10 from pvz-skin) - those keys are already proven to exist, unlike the
+     * ingame_start_wave/button_green guesses this used to fall back from (which don't
+     * exist in the atlas and silently rendered a blank button). Hidden automatically
+     * the moment the waves have started.
+     */
+    private Table buildStartWaveButton() {
+        Table overlay = new Table();
+        overlay.setFillParent(true);
+        overlay.bottom();
+        overlay.setTouchable(Touchable.childrenOnly);
+
+        BitmapFont font = FontManager.getInstance().getEnglishMenuFont();
+        MenuButton button;
+        try {
+            Skin skin = PvzSkin.get();
+            Drawable greenUp = skin.getDrawable("image_ui_generic_greenbutton_10");
+            Drawable greenDown = skin.getDrawable("image_ui_generic_greenbutton_down_10");
+            button = new MenuButton(greenUp, "START WAVE!", font, greenDown, null, null,
+                this::startPlantWhatYouGetWaves);
+        } catch (Exception ex) {
+            System.err.println("GameScreen: PvzSkin start-wave button unavailable, using plain button.");
+            button = new MenuButton("START WAVE!", font, this::startPlantWhatYouGetWaves);
+        }
+        button.setSize(320f, 100f);
+        startWaveButton = button;
+
+        overlay.add(button).size(320f, 100f).padBottom(40f);
+        return overlay;
+    }
+
+    private void startPlantWhatYouGetWaves() {
+        if (AppStatus.getGameEngine() instanceof RegularGameEngine rge
+            && rge.isPlantWhatYouGetMode() && !rge.isZombieWavesStarted()) {
+            rge.startWaves();
+        }
+    }
+
+    private void updateStartWaveButtonVisibility() {
+        if (startWaveButtonRoot == null) {
+            return;
+        }
+        boolean shouldShow = AppStatus.getGameEngine() instanceof RegularGameEngine rge
+            && rge.isPlantWhatYouGetMode() && !rge.isZombieWavesStarted();
+        startWaveButtonRoot.setVisible(shouldShow);
+        startWaveButtonRoot.setTouchable(shouldShow ? Touchable.childrenOnly : Touchable.disabled);
     }
 
     private Table buildPlantFoodButton() {
@@ -806,6 +865,7 @@ public class GameScreen extends BaseScreen {
         drawDeadline(activeEngine);
         updateTimedWarLabel(activeEngine);
         updatePlantFoodHud();
+        updateStartWaveButtonVisibility();
         drawSeedPacketBar(activeEngine);
         drawGameOverOverlay(overState);
         drawAnnouncementOverlay();
@@ -1202,6 +1262,8 @@ public class GameScreen extends BaseScreen {
         }
         pluckModeActive = false;
         shovelButton = null;
+        startWaveButton = null;
+        startWaveButtonRoot = null;
         if (backgroundTexture != null) {
             backgroundTexture.dispose();
         }

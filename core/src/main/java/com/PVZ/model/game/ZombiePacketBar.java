@@ -23,8 +23,12 @@ import java.util.Map;
 public class ZombiePacketBar {
 
     private static final float SLOT_SIZE = 130f;
-    private static final float GAP = 3f;
+    private static final float GAP = 14f;
     private static final float PANEL_PAD = 4f;
+    // Zombie PAM animations run much bigger than the plant/seed art the rest of the UI
+    // was tuned for, so the roster preview needs a smaller scale and, correspondingly,
+    // wider slot spacing (GAP above) than a plant-selection bar would.
+    private static final float PREVIEW_SCALE = 0.40f;
 
     private final List<ZombiePacket> packets = new ArrayList<>();
     private final Map<String, Texture> iconCache = new HashMap<>();
@@ -55,17 +59,22 @@ public class ZombiePacketBar {
         }
     }
 
+    /**
+     * Lays the roster out as a horizontal bar (like the plant-selection seed-packet
+     * bar), starting at (x, topY) and growing rightwards - one slot per zombie the
+     * player brought into the level.
+     */
     public void layout(IZombieGame game, float x, float topY) {
         packets.clear();
         if (game == null) return;
-        float y = topY;
+        float slotX = x;
         for (ZombieOption option : game.getRoster()) {
-            Rectangle bounds = new Rectangle(x, y, SLOT_SIZE, SLOT_SIZE);
+            Rectangle bounds = new Rectangle(slotX, topY, SLOT_SIZE, SLOT_SIZE);
             ZombiePacket packet = new ZombiePacket(option, bounds);
             // The icon is a PAM animation, not a Texture/PNG. EntityRenderer draws it below.
             packet.setIcon(null);
             packets.add(packet);
-            y -= (SLOT_SIZE + GAP);
+            slotX += (SLOT_SIZE + GAP);
         }
     }
 

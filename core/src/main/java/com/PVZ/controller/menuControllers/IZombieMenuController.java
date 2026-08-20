@@ -45,6 +45,7 @@ public class IZombieMenuController {
         IZombieLevelDefinition level = levelLoader.loadLevel(levelId);
         currentEngine = new IZombieGameEngine();
         currentGame = new IZombieGame(level);
+        currentGame.restrictRosterTo(AppStatus.SELECTED_ZOMBIES);
         currentEngine.setGame(currentGame);
 
         Map map = new Map(480, 1235, 1655, 1170, currentGame.getRows(), currentGame.getCols());

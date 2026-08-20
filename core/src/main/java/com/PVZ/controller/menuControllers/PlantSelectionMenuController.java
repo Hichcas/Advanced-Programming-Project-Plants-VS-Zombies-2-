@@ -103,7 +103,7 @@ public class PlantSelectionMenuController {
     }
 
     private boolean isTagLockedByOtherPick(PlantType type) {
-        if (type == null || AppStatus.CURRENT_STAGE_LOCKED_PLANTS.isEmpty()) {
+        if (type == null || !AppStatus.CURRENT_STAGE_TAG_EXCLUSIVITY_ENABLED) {
             return false;
         }
         PlantDefinition candidate = PlantDefinitionHolder.find(type);
