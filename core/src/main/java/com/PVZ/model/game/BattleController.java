@@ -557,11 +557,11 @@ public class BattleController implements BehaviorContext {
             notifyZombieKilled(regEngine, z, killer);
         }
 
-        boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit"));
+        boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit")) || Boolean.TRUE.equals(p.getExtra("kernelButter"));
         if (isButter) {
             Object butterDuration = p.getExtra("butterDurationSeconds");
             float seconds = butterDuration instanceof Number n ? n.floatValue() : 4.0f;
-            z.freeze(Math.max(0.5f, seconds));
+            z.butter(Math.max(0.5f, seconds));
         }
     }
 

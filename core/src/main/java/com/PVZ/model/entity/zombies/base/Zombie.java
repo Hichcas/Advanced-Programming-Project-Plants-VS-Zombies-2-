@@ -41,6 +41,7 @@ public abstract class Zombie {
     protected int icingLevel = 0;
     protected int iceHp = 0;
     protected float freezeTimer = 0f;
+    protected float butterTimer = 0f;
     protected float animStateTime = 0f;
     private final java.util.Map<String, Object> runtimeState = new java.util.HashMap<>();
 
@@ -117,7 +118,7 @@ public abstract class Zombie {
             startDeath(controller);
             return;
         }
-        if (isFrozen()) {
+        if (isFrozen() || isButtered()) {
             hitbox.setPosition((float) x, (float) y);
             onUpdate(delta, controller);
             return;
@@ -261,6 +262,20 @@ public abstract class Zombie {
         applyEffect(new StatusEffect(DamageType.ICE, duration));
     }
 
+    public void butter(float duration) {
+        this.butterTimer = Math.max(this.butterTimer, duration);
+        this.moving = false;
+        this.stopMoving();
+    }
+
+    public boolean isButtered() {
+        return butterTimer > 0f;
+    }
+
+    public float getButterTimer() {
+        return butterTimer;
+    }
+
     public void poison(float duration, float dps) {
         poisonDps = dps;
         activeEffects.add(new StatusEffect(DamageType.POISON, duration));
@@ -381,6 +396,12 @@ public abstract class Zombie {
                 if (icingLevel >= 3) {
                     thaw();
                 }
+            }
+        }
+        if (butterTimer > 0f) {
+            butterTimer -= delta;
+            if (butterTimer < 0f) {
+                butterTimer = 0f;
             }
         }
         // Only clear the slow/hypnosis once nothing of that type remains active -

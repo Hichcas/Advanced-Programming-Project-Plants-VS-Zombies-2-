@@ -165,16 +165,11 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
     }
 
     private void handleKernelPult(BehaviorContext context, AbilitySpec spec) {
-        // The current zombie model has no persistent "buttered" state, so the closest
-        // supported gameplay primitive is a temporary stun on every zombie.
         double duration = spec == null ? 8.0 : spec.getDoubleParam("butterDurationSeconds", 8.0);
         for (Zombie zombie : context.getAllZombies()) {
             if (zombie != null && !zombie.isDead()) {
-                zombie.stunOnHit();
+                zombie.butter((float) duration);
             }
-        }
-        if (context instanceof com.PVZ.model.game.RegularGameEngine) {
-            context.freezeAllZombies(Math.max(0.5, Math.min(duration, 8.0)));
         }
     }
 
