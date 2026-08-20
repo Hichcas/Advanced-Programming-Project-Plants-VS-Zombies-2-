@@ -30,8 +30,23 @@ public class RegularZombieEngine implements ZombieEngine {
 
     public void draw(SpriteBatch batch) {
         batch.begin();
-        for (Zombie z : zombies) {
-            if (!z.isDead() || com.PVZ.model.entity.zombies.base.ZombieAnimation.isActive(z)) {
+        List<Zombie> sorted = new ArrayList<>(zombies);
+        // Sort zombies:
+        // 1. Primary: row ascending (0 -> 1 -> 2 -> 3 -> 4) so back lanes (top) are drawn before front lanes (bottom).
+        // 2. Secondary: Y descending (higher Y / further back drawn first).
+        // 3. Tertiary: X descending (zombies further back / to the right drawn first).
+        sorted.sort((a, b) -> {
+            if (a == null && b == null) return 0;
+            if (a == null) return -1;
+            if (b == null) return 1;
+            int rowComp = Double.compare(a.getRow(), b.getRow());
+            if (rowComp != 0) return rowComp;
+            int yComp = Double.compare(b.getY(), a.getY());
+            if (yComp != 0) return yComp;
+            return Double.compare(b.getX(), a.getX());
+        });
+        for (Zombie z : sorted) {
+            if (z != null && (!z.isDead() || com.PVZ.model.entity.zombies.base.ZombieAnimation.isActive(z))) {
                 z.draw(batch);
             }
         }
