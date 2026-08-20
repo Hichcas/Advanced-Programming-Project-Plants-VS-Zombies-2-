@@ -862,6 +862,28 @@ public class GameScreen extends BaseScreen {
                 }
             }
         }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.K)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+                        boss.takeDamage(99999999);
+                        System.out.println("[CHEAT K] Triggered Boss Death Animation!");
+                        break;
+                    }
+                }
+            }
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.T)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+                        boss.triggerStun(4.0f);
+                        System.out.println("[CHEAT T] Triggered Boss Stun (4s)!");
+                        break;
+                    }
+                }
+            }
+        }
 
         GameOverState overState = updateGameOverState(activeEngine);
         drawBackgroundAndEngine(activeEngine, delta);
