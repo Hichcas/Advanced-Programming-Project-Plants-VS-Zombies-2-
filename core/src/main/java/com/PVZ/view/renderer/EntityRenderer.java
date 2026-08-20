@@ -306,6 +306,19 @@ public class EntityRenderer {
                 }
             }
 
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                // 1. Render active small sharks
+                for (com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach.SmallShark shark : beachBoss.getActiveSharks()) {
+                    renderPam(batch, "768/FULL/EFFECTS/ZOMBOSS_SHARK_PROJECTILE/ZOMBOSS_SHARK_PROJECTILE.PAM", "animation", shark.animTime, shark.x, shark.y, 1.1f);
+                }
+                // 2. Render water foam and splashes during turbine suction
+                if (beachBoss.isTurbineActive()) {
+                    float vx = (float) zombie.getX() - 120f;
+                    float vy = (float) zombie.getY() + 30f;
+                    renderPam(batch, "768/FULL/EFFECTS/WATER_FOAM/WATER_FOAM.PAM", "animation", beachBoss.getTurbineTimer(), vx, vy, 1.3f);
+                }
+            }
+
             boolean shouldFlip = zombie.isHypnotized() || (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieProspector zp && zp.isFlewToLeft());
             if (shouldFlip) {
                 com.badlogic.gdx.math.Matrix4 oldTransform = batch.getTransformMatrix().cpy();
