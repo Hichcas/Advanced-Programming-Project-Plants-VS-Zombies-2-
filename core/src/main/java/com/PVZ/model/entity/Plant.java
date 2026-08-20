@@ -87,6 +87,16 @@ public class Plant {
         instance.setCurrentHp(currentHp);
     }
 
+    private float hitFlashTimer = 0f;
+
+    public boolean isHitFlashing() {
+        return hitFlashTimer > 0f;
+    }
+
+    public void triggerHitFlash() {
+        this.hitFlashTimer = 0.18f;
+    }
+
     public boolean isDead() {
         return instance.isDead();
     }
@@ -94,6 +104,7 @@ public class Plant {
     public void takeDamage(int amount) {
         instance.takeDamage(amount);
         if (amount > 0) {
+            this.hitFlashTimer = 0.18f;
             com.PVZ.model.entity.PlantAnimation.trigger(instance, "damage", 0.3);
         }
     }
@@ -102,6 +113,7 @@ public class Plant {
         if (amount <= 0) {
             return;
         }
+        this.hitFlashTimer = 0.18f;
         instance.takeDamage(amount);
         com.PVZ.model.entity.PlantAnimation.trigger(instance, "damage", 0.3);
         mainBehavior.onDamaged(instance, controller, attacker, amount, instance.isDead());
@@ -159,6 +171,21 @@ public class Plant {
     private double idleVariantTimer = 0.0;
 
     public void draw(SpriteBatch batch) {
+        com.badlogic.gdx.graphics.Color origColor = batch.getColor().cpy();
+        try {
+            drawPlantInternal(batch);
+            if (isHitFlashing()) {
+                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+                drawPlantInternal(batch);
+                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+            }
+        } finally {
+            batch.setColor(origColor);
+        }
+    }
+
+    private void drawPlantInternal(SpriteBatch batch) {
         if (isDead()) {
             Object timer = getRuntimeState("deathFxTimer");
             if (timer instanceof Number n && n.doubleValue() > 0.0) {
@@ -309,6 +336,12 @@ public class Plant {
 
     public void update(BehaviorContext context, double deltaTimeSeconds) {
         animStateTime += (float) deltaTimeSeconds;
+        if (hitFlashTimer > 0f) {
+            hitFlashTimer -= (float) deltaTimeSeconds;
+            if (hitFlashTimer < 0f) {
+                hitFlashTimer = 0f;
+            }
+        }
         if (isPlantFoodActive()) {
             double visualTime = asDouble(getRuntimeState("plantFoodVisualTime"), 0.0);
             putRuntimeState("plantFoodVisualTime", visualTime + deltaTimeSeconds);

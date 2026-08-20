@@ -315,15 +315,45 @@ public class BattleController implements BehaviorContext {
 
         TileType type = tile.getType();
         if (type != TileType.TOMBSTONE
-            && type != TileType.NECROMANCY) {
+            && type != TileType.NECROMANCY
+            && type != TileType.ICE) {
             return false;
         }
 
         int dmg = Math.max(1, (int) p.getDamage());
         int newHp = tile.getHp() - dmg;
 
-        // If it's a grave, trigger damage/break PAM effect
-        if (type == TileType.TOMBSTONE || type == TileType.NECROMANCY) {
+        // If it's an ice obstacle tile
+        if (type == TileType.ICE) {
+            tile.triggerHitFlash();
+            if (newHp <= 0) {
+                tile.setType(TileType.NORMAL);
+                tile.setHp(0);
+                if (engine != null) {
+                    float[] center = engine.getPlantWorldCenter(pRow, pCol);
+                    engine.addTimedPamEffect(
+                        "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM",
+                        "animation", 1.0, 1.1f, center[0], center[1]
+                    );
+                }
+                String encased = tile.getEncasedZombieType();
+                if (encased != null) {
+                    tile.setEncasedZombieType(null);
+                    Zombie z = com.PVZ.model.entity.zombies.factory.ZombieFactory.createZombie(encased);
+                    if (z != null) {
+                        float posX = tile.getX() + (tile.getWidth() - 70f) / 2f;
+                        float posY = tile.getY() + (tile.getHeight() - 70f) / 2f;
+                        z.initPosition(posX, posY, pRow);
+                        z.setRow(pRow);
+                        z.setCol(pCol);
+                        this.addZombie(z);
+                        System.out.println("[ICE BREAK] Ice block shattered! Released " + encased + " at (" + pRow + ", " + pCol + ")!");
+                    }
+                }
+            } else {
+                tile.setHp(newHp);
+            }
+        } else if (type == TileType.TOMBSTONE || type == TileType.NECROMANCY) {
             com.PVZ.model.enums.GraveVariant variant = tile.getGraveVariant();
             if (variant == null) {
                 String chap = AppStatus.currentChapterName;
@@ -364,13 +394,6 @@ public class BattleController implements BehaviorContext {
                         }
                     }
                 }
-            } else {
-                tile.setHp(newHp);
-            }
-        } else {
-            if (newHp <= 0) {
-                tile.setType(TileType.NORMAL);
-                tile.setHp(0);
             } else {
                 tile.setHp(newHp);
             }
@@ -557,11 +580,11 @@ public class BattleController implements BehaviorContext {
             notifyZombieKilled(regEngine, z, killer);
         }
 
-        boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit"));
+        boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit")) || Boolean.TRUE.equals(p.getExtra("kernelButter"));
         if (isButter) {
             Object butterDuration = p.getExtra("butterDurationSeconds");
             float seconds = butterDuration instanceof Number n ? n.floatValue() : 4.0f;
-            z.freeze(Math.max(0.5f, seconds));
+            z.butter(Math.max(0.5f, seconds));
         }
     }
 

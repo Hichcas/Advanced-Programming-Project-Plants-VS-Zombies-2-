@@ -37,6 +37,7 @@ public class DrawHandler {
         }
         batch.begin();
         drawTileOverlays(engine, batch);
+        drawScorchedTiles(engine, batch);
         drawJalapenoLaneEffect(engine, batch);
         drawGlobalIceEffect(engine, batch);
         drawIceShroomTileEffect(engine, batch);
@@ -56,6 +57,7 @@ public class DrawHandler {
         drawZombiesWithHealthBars(engine, batch);
         if (engine.getSandstormManager() != null) engine.getSandstormManager().draw(batch);
         if (engine.getIceWindManager() != null) engine.getIceWindManager().draw(batch, engine);
+        batch.setColor(Color.WHITE);
         batch.end();
     }
 
@@ -79,6 +81,27 @@ public class DrawHandler {
                     float centerX = tileX + width / 2f;
                     float centerY = tileY + height / 2f;
                     float scale = 0.28f;
+                    Color origIceColor = batch.getColor().cpy();
+
+                    // If a zombie is encased inside, render frozen zombie inside the ice block
+                    if (tile.getEncasedZombieType() != null) {
+                        EntityRenderer.getInstance().renderPam(
+                            batch,
+                            "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM",
+                            "idle",
+                            0f,
+                            centerX - 25f,
+                            centerY - 25f,
+                            0.75f
+                        );
+                    }
+
+                    if (tile.isHitFlashing()) {
+                        batch.setColor(Math.min(2.0f, origIceColor.r * 1.5f + 0.4f),
+                                       Math.min(2.0f, origIceColor.g * 1.5f + 0.4f),
+                                       Math.min(2.0f, origIceColor.b * 1.5f + 0.4f),
+                                       origIceColor.a);
+                    }
                     boolean rendered = EntityRenderer.getInstance().renderPam(
                         batch,
                         "768/FULL/WORLDMAP/DANGER_NODE_ICEAGE/DANGER_NODE_ICEAGE.PAM",
@@ -88,6 +111,20 @@ public class DrawHandler {
                         centerY,
                         scale
                     );
+                    if (tile.isHitFlashing()) {
+                        batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                        batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+                        EntityRenderer.getInstance().renderPam(
+                            batch,
+                            "768/FULL/WORLDMAP/DANGER_NODE_ICEAGE/DANGER_NODE_ICEAGE.PAM",
+                            "locked_idle",
+                            iceBlockStateTime,
+                            centerX,
+                            centerY,
+                            scale
+                        );
+                        batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+                    }
 
                     if (!rendered) {
                         // Fallback overlay
@@ -96,6 +133,7 @@ public class DrawHandler {
                         batch.draw(whiteTexture(), tileX + 4f, tileY + 4f, width - 8f, height - 8f);
                         batch.setColor(c);
                     }
+                    batch.setColor(origIceColor);
 
                     // Draw Health Bar (Slider Bar)
                     int currentHp = Math.max(0, tile.getHp() > 0 ? tile.getHp() : 1800);
@@ -160,6 +198,23 @@ public class DrawHandler {
         EntityRenderer.getInstance().renderPam(batch,
             "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM", "animation",
             (float)(1.1333 - engine.iceShroomEffectTimer), x, y, 1.15f);
+    }
+
+    private static void drawScorchedTiles(RegularGameEngine engine, SpriteBatch batch) {
+        if (engine.map == null) return;
+        for (int r = 0; r < engine.map.getRows(); r++) {
+            for (int c = 0; c < engine.map.getCols(); c++) {
+                Tile tile = engine.map.getTile(r, c);
+                if (tile != null && tile.isScorched()) {
+                    float x = tile.getX() + tile.getWidth() / 2f;
+                    float y = tile.getY() + tile.getHeight() / 2f;
+                    float time = 6.0f - tile.getScorchTimer();
+                    EntityRenderer.getInstance().renderPam(batch,
+                        "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM",
+                        "idle2", time, x, y, 0.85f);
+                }
+            }
+        }
     }
 
     private static void drawTimedPamEffects(RegularGameEngine engine, SpriteBatch batch) {
@@ -324,6 +379,14 @@ public class DrawHandler {
                 String pamPath = variant.getPamPath();
                 String clipName = com.PVZ.model.enums.GraveVariant.getClipForHpRatio(hpPercent);
 
+                Color origGraveColor = batch.getColor().cpy();
+                if (tile.isHitFlashing()) {
+                    batch.setColor(Math.min(2.0f, origGraveColor.r * 1.5f + 0.4f),
+                                   Math.min(2.0f, origGraveColor.g * 1.5f + 0.4f),
+                                   Math.min(2.0f, origGraveColor.b * 1.5f + 0.4f),
+                                   origGraveColor.a);
+                }
+
                 // 2. Render Gravestone PAM animation
                 EntityRenderer.getInstance().renderPam(
                     batch,
@@ -334,6 +397,21 @@ public class DrawHandler {
                     centerY,
                     0.95f
                 );
+                if (tile.isHitFlashing()) {
+                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                    batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+                    EntityRenderer.getInstance().renderPam(
+                        batch,
+                        pamPath,
+                        clipName,
+                        tile.getGraveAnimTime(),
+                        centerX,
+                        centerY,
+                        0.95f
+                    );
+                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+                }
+                batch.setColor(origGraveColor);
 
                 // 3. If Grave Buster is eating this grave, render Grave Buster dirt effect
                 Plant plantOnGrave = tile.getPlant();
@@ -407,6 +485,13 @@ public class DrawHandler {
         if (tile != null && tile.getOctopusHp() > 0) {
             float centerX = box.x + box.width / 2f;
             float centerY = box.y + box.height / 2f;
+            Color origOctColor = batch.getColor().cpy();
+            if (tile.isHitFlashing()) {
+                batch.setColor(Math.min(2.0f, origOctColor.r * 1.5f + 0.4f),
+                               Math.min(2.0f, origOctColor.g * 1.5f + 0.4f),
+                               Math.min(2.0f, origOctColor.b * 1.5f + 0.4f),
+                               origOctColor.a);
+            }
             boolean rendered = EntityRenderer.getInstance().renderPam(
                 batch,
                 "768/FULL/EFFECTS/ZOMBIE_OCTOPUS_PROJECTILE/ZOMBIE_OCTOPUS_PROJECTILE.PAM",
@@ -416,12 +501,27 @@ public class DrawHandler {
                 centerY,
                 1.0f
             );
+            if (tile.isHitFlashing()) {
+                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+                EntityRenderer.getInstance().renderPam(
+                    batch,
+                    "768/FULL/EFFECTS/ZOMBIE_OCTOPUS_PROJECTILE/ZOMBIE_OCTOPUS_PROJECTILE.PAM",
+                    "animation3",
+                    iceBlockStateTime,
+                    centerX,
+                    centerY,
+                    1.0f
+                );
+                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+            }
             if (!rendered) {
                 Color c = batch.getColor();
                 batch.setColor(0.9f, 0.4f, 0.1f, 0.75f);
                 batch.draw(whiteTexture(), box.x + 6f, box.y + 6f, box.width - 12f, box.height - 12f);
                 batch.setColor(c);
             }
+            batch.setColor(origOctColor);
 
             // Draw Octopus Health Bar
             float hpPercent = Math.max(0f, Math.min(1.0f, (float) tile.getOctopusHp() / 200f));
@@ -503,11 +603,63 @@ public class DrawHandler {
     private static void drawZombiesWithHealthBars(RegularGameEngine engine, SpriteBatch batch) {
         BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
         font.setColor(Color.BLACK);
+        com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss activeBoss = null;
         for (Zombie z : engine.getZombieList()) {
             if (z == null || z.isDead()) continue;
+            if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+                activeBoss = boss;
+                continue; // Draw boss bar separately at top of screen
+            }
             HealthBarRenderer.draw(batch, (float) z.getX(), (float) z.getY() + 120 + 2, 100,
                 (float) z.getHitpoints() / (float) Math.max(1.0, z.getMaxHitpoints()), false);
         }
         font.setColor(Color.WHITE);
+
+        if (activeBoss != null) {
+            drawBossHealthBar(engine, batch, activeBoss);
+        }
+    }
+
+    private static void drawBossHealthBar(RegularGameEngine engine, SpriteBatch batch, com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+        float barX = 580f;
+        float barY = 1010f;
+        float barW = 760f;
+        float barH = 28f;
+
+        Color origColor = batch.getColor() != null ? batch.getColor().cpy() : new Color(Color.WHITE);
+        try {
+            // Background shadow & border
+            batch.setColor(0f, 0f, 0f, 0.85f);
+            batch.draw(whiteTexture(), barX - 4f, barY - 4f, barW + 8f, barH + 8f);
+
+            // Gray empty bar
+            batch.setColor(0.2f, 0.2f, 0.2f, 0.9f);
+            batch.draw(whiteTexture(), barX, barY, barW, barH);
+
+            // Health Fill
+            float hpRatio = (float) Math.max(0.0, Math.min(1.0, boss.getHitpoints() / Math.max(1.0, boss.getMaxHitpoints())));
+            if (boss.getCurrentPhase() == 3) {
+                batch.setColor(0.95f, 0.15f, 0.15f, 1.0f); // Bright red for final phase
+            } else if (boss.getCurrentPhase() == 2) {
+                batch.setColor(1.0f, 0.55f, 0.1f, 1.0f);  // Orange for phase 2
+            } else {
+                batch.setColor(0.95f, 0.85f, 0.2f, 1.0f);  // Gold for phase 1
+            }
+            batch.draw(whiteTexture(), barX, barY, barW * hpRatio, barH);
+
+            // Phase Dividers (at 1/3 and 2/3)
+            batch.setColor(0f, 0f, 0f, 0.9f);
+            batch.draw(whiteTexture(), barX + barW * 0.333f - 1.5f, barY, 3f, barH);
+            batch.draw(whiteTexture(), barX + barW * 0.666f - 1.5f, barY, 3f, barH);
+
+            // Boss Title & Status Text
+            BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
+            font.setColor(Color.WHITE);
+            String status = boss.isStunned() ? " [STUNNED!]" : "";
+            String title = "DR. ZOMBOSS - PHASE " + boss.getCurrentPhase() + "/3" + status + " (" + (int)(hpRatio * 100) + "%)";
+            font.draw(batch, title, barX + 15f, barY + barH - 7f);
+        } finally {
+            batch.setColor(origColor);
+        }
     }
 }

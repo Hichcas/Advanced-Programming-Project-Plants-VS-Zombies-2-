@@ -15,6 +15,18 @@ public class ZombieIceage extends AbstractBasicZombie {
         this.blockChillsAttackers = armor != null && armor.getType() == ZombieArmor.ArmorType.ICE_BLOCK;
     }
 
+    @Override
+    public double getCurrentSpeed() {
+        if (armor != null && armor.getType() == ZombieArmor.ArmorType.ICE_BLOCK && !armor.isDestroyed()) {
+            return 0.0;
+        }
+        return super.getCurrentSpeed();
+    }
+
+    public boolean isEncasedInIce() {
+        return armor != null && armor.getType() == ZombieArmor.ArmorType.ICE_BLOCK && !armor.isDestroyed();
+    }
+
     private static List<ScaledProperty> defaultScaledProps() {
         List<ScaledProperty> list = new ArrayList<>();
         list.add(new ScaledProperty("Hitpoints", ScaledProperty.Formula.STANDARD, 1.3, 0.05));

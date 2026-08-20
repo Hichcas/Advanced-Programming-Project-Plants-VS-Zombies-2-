@@ -163,6 +163,16 @@ public class EntityRenderer {
             }
         }
 
+        if (zombie instanceof com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+            if (zombie.isDying()) {
+                state = "die";
+            } else if (boss.isStunned()) {
+                state = "stun_loop";
+            } else if (!ZombieAnimation.isActive(zombie)) {
+                state = "idle";
+            }
+        }
+
         ClipRef clip = getZombieClip(effectiveAlias, state);
         if (clip == null) {
             clip = getZombieClip("DEFAULT", "walk");
@@ -186,9 +196,18 @@ public class EntityRenderer {
                 batch.setColor(0.75f, 0.90f, 1.0f, 0.90f); // Submerged underwater watery tint
             } else if (zombie.getArmor() != null && !zombie.getArmor().isDestroyed() && zombie.getArmor().getType() == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.CROWN) {
                 batch.setColor(1.0f, 0.92f, 0.60f, 1.0f); // Royal Knight Golden Aura
+            } else if (zombie.getX() < 950.0 && !zombie.isHypnotized()) {
+                boolean isFlew = zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieProspector zp && zp.isFlewToLeft();
+                if (!isFlew) {
+                    float dangerFactor = Math.min(1.0f, Math.max(0.0f, (950.0f - (float) zombie.getX()) / 450.0f));
+                    // Flashing emergency warning light (sine pulse at ~10 rad/s):
+                    float pulse = 0.5f + 0.5f * (float) Math.sin(stateTime * 10.0f);
+                    float redIntensity = dangerFactor * (0.30f + 0.65f * pulse);
+                    batch.setColor(1.0f, 1.0f - 0.75f * redIntensity, 1.0f - 0.75f * redIntensity, 1.0f); // Flashing danger red strobe
+                }
             }
 
-            float effectiveTime = zombie.isFrozen() ? 0.0f : stateTime;
+            float effectiveTime = (zombie.isFrozen() || zombie.isButtered()) ? 0.0f : stateTime;
 
             Map<String, Boolean> trackVisibility = null;
             String activeArmorTrack = ZombieTexturePaths.getArmorSubBranchTrack(zombie);
@@ -219,6 +238,16 @@ public class EntityRenderer {
                         trackVisibility.put("_zombie_egypt_armor2_states", true);
                     }
                 }
+            }
+
+            if (trackVisibility == null && zombie.isButtered()) {
+                trackVisibility = new HashMap<>();
+            }
+            if (trackVisibility != null) {
+                trackVisibility.put("butter", zombie.isButtered());
+                trackVisibility.put("_butter", zombie.isButtered());
+                trackVisibility.put("head_butter", zombie.isButtered());
+                trackVisibility.put("_bull_head_butter", zombie.isButtered());
             }
 
             if (isZombotanyAlias(zombie.getAlias())) {
@@ -253,14 +282,62 @@ public class EntityRenderer {
                 renderPam(batch, "768/FULL/EFFECTS/80S_ARCADE_CABINET/80S_ARCADE_CABINET.PAM", cabinetClip, effectiveTime, (float) zombie.getX() - 110f, (float) zombie.getY());
             }
 
-            // I,Zombie's sun-producing zombie is marked stationary (see Zombie#isStationary):
-            // it never walks or attacks, it just stands there generating sun for the row.
-            // Layer the game's actual "generating sun" particle effect on top of its idle
-            // pose so it visibly reads as the special sun-producer, not a normal zombie
-            // caught standing still.
-            if (zombie.isStationary() && !zombie.isDying()) {
-                renderPam(batch, "768/INITIAL/EFFECTS/ZOMBIE_SUN_EFFECT/ZOMBIE_SUN_EFFECT.PAM", "animation",
-                        effectiveTime, (float) zombie.getX(), (float) zombie.getY() + 40f);
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.basic.ZombieIceage iceZ && iceZ.isEncasedInIce()) {
+                float zx = (float) zombie.getX() + 35f;
+                float zy = (float) zombie.getY() + 45f;
+                renderPam(batch, "768/FULL/WORLDMAP/DANGER_NODE_ICEAGE/DANGER_NODE_ICEAGE.PAM", "locked_idle", effectiveTime, zx, zy, 0.36f);
+            }
+
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt egyptBoss && egyptBoss.isMissileActive()) {
+                // 1. Render target reticle on ground
+                renderPam(batch, "768/INITIAL/EFFECTS/MISSILE_TOE_RETICLE/MISSILE_TOE_RETICLE.PAM", "animation", egyptBoss.getMissileAnimTime(), egyptBoss.getMissileTargetX(), egyptBoss.getMissileTargetY(), 1.0f);
+                // 2. Render vertical falling missile
+                if (egyptBoss.getMissileCurrentY() > egyptBoss.getMissileTargetY()) {
+                    renderPam(batch, "768/INITIAL/EFFECTS/T_MISSILE_TOE_PROJECTILE/T_MISSILE_TOE_PROJECTILE.PAM", "animation", egyptBoss.getMissileAnimTime(), egyptBoss.getMissileTargetX(), egyptBoss.getMissileCurrentY(), 1.2f);
+                }
+            }
+
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
+                // 1. Render flying fireballs
+                for (com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark.DarkFireball fb : darkBoss.getActiveFireballs()) {
+                    renderPam(batch, "768/FULL/EFFECTS/ZOMBOSS_DARK_FIREBALL/ZOMBOSS_DARK_FIREBALL.PAM", "fireball", darkBoss.getFireballAnimTimer(), fb.currentX, fb.currentY, 1.2f);
+                }
+                // 2. Render fire breath stream along the 2 rows
+                if (darkBoss.isFireBreathActive()) {
+                    float fx = (float) zombie.getX() - 100f;
+                    float fy = (float) zombie.getY() + 40f;
+                    renderPam(batch, "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM", "idle2", darkBoss.getFireBreathTimer(), fx, fy, 1.4f);
+                    renderPam(batch, "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM", "idle2", darkBoss.getFireBreathTimer(), fx - 220f, fy, 1.4f);
+                    renderPam(batch, "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM", "idle2", darkBoss.getFireBreathTimer(), fx - 440f, fy, 1.4f);
+                }
+            }
+
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                // 1. Render active small sharks
+                for (com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach.SmallShark shark : beachBoss.getActiveSharks()) {
+                    renderPam(batch, "768/FULL/EFFECTS/ZOMBOSS_SHARK_PROJECTILE/ZOMBOSS_SHARK_PROJECTILE.PAM", "animation", shark.animTime, shark.x, shark.y, 1.1f);
+                }
+                // 2. Render water foam and splashes during turbine suction
+                if (beachBoss.isTurbineActive()) {
+                    float vx = (float) zombie.getX() - 120f;
+                    float vy = (float) zombie.getY() + 30f;
+                    renderPam(batch, "768/FULL/EFFECTS/WATER_FOAM/WATER_FOAM.PAM", "animation", beachBoss.getTurbineTimer(), vx, vy, 1.3f);
+                }
+            }
+
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                // 1. Render active ice missiles
+                for (com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge.IceMissile im : iceBoss.getActiveMissiles()) {
+                    renderPam(batch, "768/FULL/EFFECTS/ZOMBOSS_GLACIER_BLOCK/ZOMBOSS_GLACIER_BLOCK.PAM", "animation", iceBoss.getMissileAnimTimer(), im.currentX, im.currentY, 0.9f);
+                }
+                // 2. Render ice wind blizzard breath along the 2 rows
+                if (iceBoss.isIceWindActive()) {
+                    float wx = (float) zombie.getX() - 100f;
+                    float wy = (float) zombie.getY() + 40f;
+                    renderPam(batch, "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM", "animation", iceBoss.getIceWindTimer(), wx, wy, 1.4f);
+                    renderPam(batch, "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM", "animation", iceBoss.getIceWindTimer(), wx - 220f, wy, 1.4f);
+                    renderPam(batch, "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM", "animation", iceBoss.getIceWindTimer(), wx - 440f, wy, 1.4f);
+                }
             }
 
             boolean shouldFlip = zombie.isHypnotized() || (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieProspector zp && zp.isFlewToLeft());
@@ -279,6 +356,17 @@ public class EntityRenderer {
                     pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
                 }
 
+                if (zombie.isHitFlashing()) {
+                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                    batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+                    if (trackVisibility != null) {
+                        pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true, trackVisibility);
+                    } else {
+                        pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
+                    }
+                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+                }
+
                 batch.setTransformMatrix(oldTransform);
             } else {
                 if (trackVisibility != null) {
@@ -286,7 +374,22 @@ public class EntityRenderer {
                 } else {
                     pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
                 }
+
+                if (zombie.isHitFlashing()) {
+                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                    batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+                    if (trackVisibility != null) {
+                        pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true, trackVisibility);
+                    } else {
+                        pamPlayer.draw(batch, clip, effectiveTime, (float) zombie.getX(), (float) zombie.getY(), true);
+                    }
+                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+                }
             }
+            if (zombie.isButtered()) {
+                renderPam(batch, "768/INITIAL/EFFECTS/SPLAT_KERNALPULT_BUTTER/SPLAT_KERNALPULT_BUTTER.PAM", "animation", effectiveTime, (float) zombie.getX() + 15f, (float) zombie.getY() + 75f);
+            }
+
             // Zombotany visuals are composed from the normal zombie body PAM plus the
             // corresponding plant idle PAM as a head/top overlay. The provided PAM catalog
             // does not contain dedicated Zombotany PAMs, so this is the asset-faithful fallback.
@@ -320,9 +423,9 @@ public class EntityRenderer {
 
     private boolean isZombotanyAlias(String alias) {
         return "ZombotanyPeashooterDefault".equals(alias)
-                || "ZombotanyWallnutDefault".equals(alias)
-                || "ZombotanyJalapenoDefault".equals(alias)
-                || "ZombotanySquashDefault".equals(alias);
+            || "ZombotanyWallnutDefault".equals(alias)
+            || "ZombotanyJalapenoDefault".equals(alias)
+            || "ZombotanySquashDefault".equals(alias);
     }
 
     public void renderZombieAlias(SpriteBatch batch, String alias, String state, float stateTime, float x, float y) {
@@ -551,7 +654,7 @@ public class EntityRenderer {
     }
 
     public boolean renderPlantExact(SpriteBatch batch, String plantTypeName, String exactClipName,
-                                     float stateTime, float x, float y) {
+                                    float stateTime, float x, float y) {
         textures.update();
         ClipRef clip = getPlantClipExact(plantTypeName, exactClipName);
         if (clip == null) {
@@ -562,7 +665,7 @@ public class EntityRenderer {
     }
 
     public boolean renderPlant(SpriteBatch batch, String plantTypeName, String state, float stateTime,
-                                float x, float y) {
+                               float x, float y) {
         textures.update();
         ClipRef clip = getPlantClip(plantTypeName, state);
         if (clip == null) {
@@ -591,7 +694,7 @@ public class EntityRenderer {
     }
 
     public boolean renderPlant(SpriteBatch batch, String plantTypeName, float stateTime,
-                                float x, float y) {
+                               float x, float y) {
         return renderPlant(batch, plantTypeName, "idle", stateTime, x, y);
     }
 

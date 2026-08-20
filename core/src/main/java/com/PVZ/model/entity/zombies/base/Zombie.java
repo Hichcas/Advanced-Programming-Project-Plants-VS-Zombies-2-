@@ -54,7 +54,9 @@ public abstract class Zombie {
     protected int icingLevel = 0;
     protected int iceHp = 0;
     protected float freezeTimer = 0f;
+    protected float butterTimer = 0f;
     protected float animStateTime = 0f;
+    protected float damageFlashTimer = 0f;
     private final java.util.Map<String, Object> runtimeState = new java.util.HashMap<>();
 
     public Object getRuntimeState(String key) { return runtimeState.get(key); }
@@ -130,7 +132,7 @@ public abstract class Zombie {
             startDeath(controller);
             return;
         }
-        if (isFrozen()) {
+        if (isFrozen() || isButtered()) {
             hitbox.setPosition((float) x, (float) y);
             onUpdate(delta, controller);
             return;
@@ -281,6 +283,30 @@ public abstract class Zombie {
         applyEffect(new StatusEffect(DamageType.ICE, duration));
     }
 
+    public void butter(float duration) {
+        this.butterTimer = Math.max(this.butterTimer, duration);
+        this.moving = false;
+        this.stopMoving();
+    }
+
+    public boolean isButtered() {
+        return butterTimer > 0f;
+    }
+
+    public float getButterTimer() {
+        return butterTimer;
+    }
+
+    protected float hitFlashTimer = 0f;
+
+    public boolean isHitFlashing() {
+        return hitFlashTimer > 0f;
+    }
+
+    public void triggerHitFlash() {
+        this.hitFlashTimer = 0.18f;
+    }
+
     public void poison(float duration, float dps) {
         poisonDps = dps;
         activeEffects.add(new StatusEffect(DamageType.POISON, duration));
@@ -335,6 +361,7 @@ public abstract class Zombie {
                 currentSpeed = speed * 0.5;
             }
         }
+        hitFlashTimer = 0.18f;
         if (armor != null && !armor.isDestroyed()) {
             armor.takeDamage(amount);
             if (armor.isDestroyed() && armor.isDroppable()) {
@@ -401,6 +428,18 @@ public abstract class Zombie {
                 if (icingLevel >= 3) {
                     thaw();
                 }
+            }
+        }
+        if (butterTimer > 0f) {
+            butterTimer -= delta;
+            if (butterTimer < 0f) {
+                butterTimer = 0f;
+            }
+        }
+        if (hitFlashTimer > 0f) {
+            hitFlashTimer -= delta;
+            if (hitFlashTimer < 0f) {
+                hitFlashTimer = 0f;
             }
         }
         // Only clear the slow/hypnosis once nothing of that type remains active -
