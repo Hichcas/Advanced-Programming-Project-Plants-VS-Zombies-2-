@@ -20,6 +20,7 @@ public class Sun {
     private float timer = 0f;
     private static final float LIFETIME = 10f;
     private boolean collected = false;
+    private boolean timedOut = false;
     private boolean falling = false;
     private boolean reachedGround = false;
     private boolean groundNotified = false;
@@ -45,13 +46,17 @@ public class Sun {
     }
 
     public void update(float delta) {
-        if (collected) {
+        if (collected || timedOut) {
             return;
         }
 
         timer += delta;
         if (timer >= LIFETIME) {
-            collected = true;
+            // Expiring (never tapped in time) is NOT the same thing as the player
+            // collecting it - it must NOT reuse the "collected" flag, or a sun that
+            // simply times out silently counts as "picked up" with zero credit, and
+            // any collect attempt that arrives in the same instant is dropped too.
+            timedOut = true;
             return;
         }
 
@@ -70,7 +75,7 @@ public class Sun {
     }
 
     public void draw(SpriteBatch batch) {
-        if (collected) {
+        if (collected || timedOut) {
             return;
         }
         boolean drawn = EntityRenderer.getInstance().renderSun(batch, type, timer, falling, reachedGround,
@@ -144,6 +149,11 @@ public class Sun {
 
     public boolean isCollected() {
         return collected;
+    }
+
+    /** True once the sun expired (lifetime ran out) without ever being tapped. */
+    public boolean isTimedOut() {
+        return timedOut;
     }
 
     public void collect() {

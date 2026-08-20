@@ -21,6 +21,7 @@ public class IZombieGame {
     private final double sunProductionIntervalSeconds;
     private final double sunProductionCap;
     private double sunProductionTimer;
+    private double[] sunProductionTimerByRow;
     private double currentSunRate;
     private final double plantDensity;
     private final boolean[] sunZombieAlive;
@@ -132,6 +133,13 @@ public class IZombieGame {
         this.plantDensity = level.getPlantDensity();
         this.sunZombieAlive = new boolean[rows];
         java.util.Arrays.fill(sunZombieAlive, true);
+        // Stagger each row's first sun tick evenly across the interval so all five
+        // rows don't thud down sun in lockstep every cycle - it fans out over time
+        // instead of arriving as one big simultaneous pile.
+        this.sunProductionTimerByRow = new double[rows];
+        for (int r = 0; r < rows; r++) {
+            sunProductionTimerByRow[r] = sunProductionIntervalSeconds * (r + 1) / (double) Math.max(1, rows);
+        }
     }
 
     public int getRows() { return rows; }
@@ -185,6 +193,37 @@ public class IZombieGame {
 
     public void markSunZombieDead(int row) {
         if (row >= 0 && row < rows) sunZombieAlive[row] = false;
+    }
+
+    /**
+     * Advances the production timer/ramp and reports, per alive row, how much sun
+     * that row's sun zombie generated this tick - without crediting it to the
+     * player directly. The caller (IZombieGameEngine) is expected to drop an
+     * actual collectible Sun near that row's zombie instead, matching how sun
+     * works everywhere else in the game (tap to collect), rather than silently
+     * incrementing the counter.
+     */
+    public java.util.Map<Integer, Integer> tickSunProductionPerRow(float delta) {
+        // Rate still ramps up on the shared clock (matches sunProductionTimer/
+        // currentSunRate used by the legacy tickSunProduction below), but each row
+        // fires its own drop independently once its own staggered timer elapses.
+        sunProductionTimer -= delta;
+        if (sunProductionTimer <= 0) {
+            sunProductionTimer += sunProductionIntervalSeconds;
+            currentSunRate = Math.min(sunProductionCap, currentSunRate + sunProductionGrowthPerTick);
+        }
+
+        java.util.Map<Integer, Integer> perRow = new java.util.LinkedHashMap<>();
+        int amount = (int) Math.round(currentSunRate);
+        for (int r = 0; r < rows; r++) {
+            if (!sunZombieAlive[r]) continue;
+            sunProductionTimerByRow[r] -= delta;
+            if (sunProductionTimerByRow[r] <= 0) {
+                sunProductionTimerByRow[r] += sunProductionIntervalSeconds;
+                perRow.put(r, amount);
+            }
+        }
+        return perRow;
     }
 
     public int tickSunProduction(float delta) {

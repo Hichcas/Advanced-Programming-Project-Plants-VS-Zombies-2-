@@ -68,7 +68,7 @@ public class SunManager {
         Iterator<Sun> iterator = suns.iterator();
         while (iterator.hasNext()) {
             Sun sun = iterator.next();
-            if (sun.isCollected()) {
+            if (sun.isCollected() || sun.isTimedOut()) {
                 iterator.remove();
             }
         }
@@ -81,7 +81,7 @@ public class SunManager {
 
         int collectedAmount = 0;
         for (Sun sun : suns) {
-            if (!sun.isCollected() && area.overlaps(sun.getHitbox())) {
+            if (!sun.isCollected() && !sun.isTimedOut() && area.overlaps(sun.getHitbox())) {
                 if (sun.getType() == Sun.SunType.RADIOACTIVE && sun.isFalling() && !sun.hasReachedGround()) {
                     sun.collect();
                     explodedSuns.add(sun);

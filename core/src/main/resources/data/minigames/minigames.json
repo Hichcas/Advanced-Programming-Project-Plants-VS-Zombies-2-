@@ -155,12 +155,12 @@
         "rows": 5,
         "cols": 9,
         "redLineCol": 5,
-        "startingSun": 180,
+        "startingSun": 200,
         "plantDensity": 0.45,
-        "sunZombieAlias": "ZombieTutorialArmor2Default",
+        "sunZombieAlias": "ZombieRaDefault",
         "sunProductionBase": 5.0,
         "sunProductionGrowthPerTick": 0.4,
-        "sunProductionIntervalSeconds": 5.0,
+        "sunProductionIntervalSeconds": 10.0,
         "sunProductionCap": 20.0,
         "zombieRoster": [
           {
@@ -275,12 +275,12 @@
         "rows": 5,
         "cols": 9,
         "redLineCol": 4,
-        "startingSun": 150,
+        "startingSun": 200,
         "plantDensity": 0.55,
-        "sunZombieAlias": "ZombieMummyArmor2Default",
+        "sunZombieAlias": "ZombieRaDefault",
         "sunProductionBase": 6.0,
         "sunProductionGrowthPerTick": 0.5,
-        "sunProductionIntervalSeconds": 4.5,
+        "sunProductionIntervalSeconds": 9.0,
         "sunProductionCap": 24.0,
         "zombieRoster": [
           {
@@ -369,9 +369,9 @@
             "displayName": "Tomb Raiser"
           },
           {
-            "alias": "ZombieWizardDefault",
-            "cost": 200,
-            "displayName": "Wizard Zombie"
+            "alias": "ZombieDarkKing",
+            "cost": 260,
+            "displayName": "Dark King"
           },
           {
             "alias": "ZombieLostCityCrystalSkull",
@@ -395,12 +395,12 @@
         "rows": 5,
         "cols": 9,
         "redLineCol": 4,
-        "startingSun": 175,
+        "startingSun": 200,
         "plantDensity": 0.65,
-        "sunZombieAlias": "ZombieDarkArmor2Default",
+        "sunZombieAlias": "ZombieRaDefault",
         "sunProductionBase": 7.0,
         "sunProductionGrowthPerTick": 0.6,
-        "sunProductionIntervalSeconds": 4.0,
+        "sunProductionIntervalSeconds": 8.0,
         "sunProductionCap": 28.0,
         "zombieRoster": [
           {
@@ -479,9 +479,9 @@
             "displayName": "Screen Door Zombie"
           },
           {
-            "alias": "ZombieRaDefault",
-            "cost": 180,
-            "displayName": "Ra Zombie"
+            "alias": "ZombieWizardDefault",
+            "cost": 200,
+            "displayName": "Wizard Zombie"
           },
           {
             "alias": "ZombiePiano",

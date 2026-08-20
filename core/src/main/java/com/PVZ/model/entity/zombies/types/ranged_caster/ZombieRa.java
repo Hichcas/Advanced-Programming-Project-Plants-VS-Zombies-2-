@@ -63,7 +63,7 @@ public class ZombieRa extends AbstractRangedCasterZombie {
         double range = 400.0;
         List<Sun> nearbySuns = new ArrayList<>();
         for (Sun sun : sunManager.getSuns()) {
-            if (sun != null && !sun.isCollected()) {
+            if (sun != null && !sun.isCollected() && !sun.isTimedOut()) {
                 double dx = sun.getX() - x;
                 double dy = sun.getY() - y;
                 double dist = Math.sqrt(dx * dx + dy * dy);

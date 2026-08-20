@@ -66,6 +66,13 @@ public abstract class AbstractRangedCasterZombie extends Zombie {
         if (ctrl == null) {
             return;
         }
+        if (isStationary()) {
+            moving = false;
+            com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "idle", 1.0);
+            hitbox.setPosition((float) x, (float) y);
+            onUpdate(delta, ctrl);
+            return;
+        }
         int tileCol = ctrl.getTileColumn((float) x);
         col = tileCol;
 
