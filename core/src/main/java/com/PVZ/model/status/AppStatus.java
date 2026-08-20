@@ -30,8 +30,21 @@ public final class AppStatus {
     public static final Scanner SCANNER = new Scanner(System.in);
     public static final Set<PlantType> SELECTED_PLANTS = new LinkedHashSet<>();
     public static final Set<PlantType> BOOSTED_PLANTS = new LinkedHashSet<>();
+    /** Zombies the player picked on the I, Zombie roster-selection screen for the level about to start. */
+    public static final Set<String> SELECTED_ZOMBIES = new LinkedHashSet<>();
+    /** The I, Zombie level the roster-selection screen is currently choosing zombies for. */
+    public static int pendingIZombieLevelId = 1;
     public static final Set<PlantType> CURRENT_STAGE_LOCKED_PLANTS = new LinkedHashSet<>();
     public static final Set<PlantFamily> CURRENT_STAGE_EXCLUSIVE_FAMILIES = new LinkedHashSet<>();
+    /**
+     * Only true for LOCKED_PLANTS-type stages. A handful of other stage types (like
+     * PLANT_WHAT_YOU_GET) also populate CURRENT_STAGE_LOCKED_PLANTS with a fixed,
+     * explicit list of plants to grey out, without wanting the "picking one plant
+     * locks every other plant sharing a tag with it" side effect that LOCKED_PLANTS
+     * stages use their Tags column for - hence a separate flag instead of just
+     * checking whether the locked set is non-empty.
+     */
+    public static boolean CURRENT_STAGE_TAG_EXCLUSIVITY_ENABLED = false;
     public static PVZ PVZ;
     public static MenuType currentMenuType = MenuType.REGISTER;
     public static User currentUser = null;

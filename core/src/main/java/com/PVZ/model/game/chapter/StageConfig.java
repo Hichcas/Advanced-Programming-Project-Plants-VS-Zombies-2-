@@ -13,6 +13,8 @@ public class StageConfig {
     private int cols;
     private String mapTexture;
     private boolean disableFallingSun;
+    private int initialSun;
+    private boolean manualWaveStart;
     private double conveyorInterval;
     private List<String> lockedPlants;
     private List<FamilyLockEntry> lockedFamilies;
@@ -217,6 +219,22 @@ public class StageConfig {
 
     public void setDisableFallingSun(boolean disableFallingSun) {
         this.disableFallingSun = disableFallingSun;
+    }
+
+    public int getInitialSun() {
+        return initialSun;
+    }
+
+    public void setInitialSun(int initialSun) {
+        this.initialSun = initialSun;
+    }
+
+    public boolean isManualWaveStart() {
+        return manualWaveStart;
+    }
+
+    public void setManualWaveStart(boolean manualWaveStart) {
+        this.manualWaveStart = manualWaveStart;
     }
 
     public double getConveyorInterval() {

@@ -164,19 +164,19 @@
         "sunProductionCap": 20.0,
         "zombieRoster": [
           {
+            "alias": "ZombieTutorialImpDefault",
+            "cost": 25,
+            "displayName": "Imp"
+          },
+          {
+            "alias": "ZombieBeachImpDefault",
+            "cost": 25,
+            "displayName": "Beach Imp"
+          },
+          {
             "alias": "ZombieTutorialDefault",
             "cost": 50,
             "displayName": "Basic Zombie"
-          },
-          {
-            "alias": "ZombieTutorialArmor1Default",
-            "cost": 75,
-            "displayName": "Conehead Zombie"
-          },
-          {
-            "alias": "ZombieMummyDefault",
-            "cost": 50,
-            "displayName": "Mummy Zombie"
           },
           {
             "alias": "ZombieIceageDefault",
@@ -184,9 +184,89 @@
             "displayName": "Iceage Zombie"
           },
           {
-            "alias": "ZombieBeachDefault",
-            "cost": 60,
-            "displayName": "Beach Zombie"
+            "alias": "ZombieWeaselDefault",
+            "cost": 70,
+            "displayName": "Weasel"
+          },
+          {
+            "alias": "ZombieIceageArmor1Default",
+            "cost": 75,
+            "displayName": "Iceage Conehead"
+          },
+          {
+            "alias": "ZombieDarkArmor1Default",
+            "cost": 90,
+            "displayName": "Dark Conehead"
+          },
+          {
+            "alias": "ZombieModernNewspaper",
+            "cost": 100,
+            "displayName": "Newspaper Zombie"
+          },
+          {
+            "alias": "ZombotanyPeashooterDefault",
+            "cost": 120,
+            "displayName": "Zombotany Peashooter"
+          },
+          {
+            "alias": "ZombieIceageArmor2Default",
+            "cost": 125,
+            "displayName": "Iceage Buckethead"
+          },
+          {
+            "alias": "ZombieLostCityJane",
+            "cost": 130,
+            "displayName": "Jane Zombie"
+          },
+          {
+            "alias": "ZombieBeachSurfer",
+            "cost": 140,
+            "displayName": "Surfer Zombie"
+          },
+          {
+            "alias": "ZombieBeachArmor2Default",
+            "cost": 150,
+            "displayName": "Beach Buckethead"
+          },
+          {
+            "alias": "ZombotanyJalapenoDefault",
+            "cost": 150,
+            "displayName": "Zombotany Jalapeno"
+          },
+          {
+            "alias": "ZombieDarkJugglerDefault",
+            "cost": 170,
+            "displayName": "Dark Juggler"
+          },
+          {
+            "alias": "ZombieMummyArmor4Default",
+            "cost": 175,
+            "displayName": "Mummy Screen Door"
+          },
+          {
+            "alias": "ZombieDarkArmor3Default",
+            "cost": 190,
+            "displayName": "Dark Crowned"
+          },
+          {
+            "alias": "ZombieIceAgeDodo",
+            "cost": 200,
+            "displayName": "Dodo Rider"
+          },
+          {
+            "alias": "ZombieFootball",
+            "cost": 220,
+            "displayName": "Football Zombie"
+          },
+          {
+            "alias": "ZombieGargantuarBasic",
+            "cost": 400,
+            "displayName": "Gargantuar"
+          },
+          {
+            "alias": "ZombieBeachGargantuar",
+            "cost": 420,
+            "displayName": "Beach Gargantuar"
           }
         ]
       },
@@ -197,36 +277,116 @@
         "redLineCol": 4,
         "startingSun": 150,
         "plantDensity": 0.55,
-        "sunZombieAlias": "ZombieTutorialArmor2Default",
+        "sunZombieAlias": "ZombieMummyArmor2Default",
         "sunProductionBase": 6.0,
         "sunProductionGrowthPerTick": 0.5,
         "sunProductionIntervalSeconds": 4.5,
         "sunProductionCap": 24.0,
         "zombieRoster": [
           {
+            "alias": "ZombieEgyptImpDefault",
+            "cost": 25,
+            "displayName": "Egypt Imp"
+          },
+          {
+            "alias": "ZombieDarkImpDefault",
+            "cost": 25,
+            "displayName": "Dark Imp"
+          },
+          {
+            "alias": "ZombieTutorialFlagDefault",
+            "cost": 50,
+            "displayName": "Flag Zombie"
+          },
+          {
+            "alias": "ZombieBeachDefault",
+            "cost": 60,
+            "displayName": "Beach Zombie"
+          },
+          {
+            "alias": "ZombieTutorialArmor1Default",
+            "cost": 75,
+            "displayName": "Conehead Zombie"
+          },
+          {
+            "alias": "ZombiePharaohDefault",
+            "cost": 80,
+            "displayName": "Pharaoh Zombie"
+          },
+          {
+            "alias": "ZombieBeachSnorkel",
+            "cost": 90,
+            "displayName": "Snorkel Zombie"
+          },
+          {
+            "alias": "ZombieBeachFisherman",
+            "cost": 110,
+            "displayName": "Fisherman Zombie"
+          },
+          {
             "alias": "ZombieTutorialArmor2Default",
             "cost": 125,
             "displayName": "Buckethead Zombie"
           },
           {
-            "alias": "ZombieMummyArmor1Default",
-            "cost": 75,
-            "displayName": "Mummy Conehead"
+            "alias": "ZombieWeaselHoarderDefault",
+            "cost": 130,
+            "displayName": "Weasel Hoarder"
           },
           {
-            "alias": "ZombieDarkDefault",
-            "cost": 60,
-            "displayName": "Dark Zombie"
+            "alias": "ZombotanyWallnutDefault",
+            "cost": 130,
+            "displayName": "Zombotany Wall-nut"
           },
           {
-            "alias": "ZombieIceageArmor1Default",
-            "cost": 75,
-            "displayName": "Iceage Conehead"
+            "alias": "ZombotanySquashDefault",
+            "cost": 140,
+            "displayName": "Zombotany Squash"
           },
           {
-            "alias": "ZombieBeachArmor1Default",
-            "cost": 75,
-            "displayName": "Beach Conehead"
+            "alias": "ZombieDarkArmor2Default",
+            "cost": 150,
+            "displayName": "Dark Buckethead"
+          },
+          {
+            "alias": "ZombieBeachOctopus",
+            "cost": 160,
+            "displayName": "Octopus Zombie"
+          },
+          {
+            "alias": "Zombie80sArcade",
+            "cost": 170,
+            "displayName": "Arcade Zombie"
+          },
+          {
+            "alias": "ZombieCamelDefault",
+            "cost": 175,
+            "displayName": "Camel Zombie"
+          },
+          {
+            "alias": "ZombieTombRaiserDefault",
+            "cost": 190,
+            "displayName": "Tomb Raiser"
+          },
+          {
+            "alias": "ZombieWizardDefault",
+            "cost": 200,
+            "displayName": "Wizard Zombie"
+          },
+          {
+            "alias": "ZombieLostCityCrystalSkull",
+            "cost": 240,
+            "displayName": "Crystal Skull Zombie"
+          },
+          {
+            "alias": "ZombieEgyptGargantuar",
+            "cost": 420,
+            "displayName": "Egypt Gargantuar"
+          },
+          {
+            "alias": "ZombieDarkGargantuar",
+            "cost": 440,
+            "displayName": "Dark Gargantuar"
           }
         ]
       },
@@ -237,16 +397,31 @@
         "redLineCol": 4,
         "startingSun": 175,
         "plantDensity": 0.65,
-        "sunZombieAlias": "ZombieMummyArmor2Default",
+        "sunZombieAlias": "ZombieDarkArmor2Default",
         "sunProductionBase": 7.0,
         "sunProductionGrowthPerTick": 0.6,
         "sunProductionIntervalSeconds": 4.0,
         "sunProductionCap": 28.0,
         "zombieRoster": [
           {
-            "alias": "ZombieTutorialDefault",
+            "alias": "ZombieIceageImpDefault",
+            "cost": 25,
+            "displayName": "Iceage Imp"
+          },
+          {
+            "alias": "ZombieDarkImpDragon",
+            "cost": 45,
+            "displayName": "Imp Dragon"
+          },
+          {
+            "alias": "ZombieMummyDefault",
             "cost": 50,
-            "displayName": "Basic Zombie"
+            "displayName": "Mummy Zombie"
+          },
+          {
+            "alias": "ZombieDarkDefault",
+            "cost": 60,
+            "displayName": "Dark Zombie"
           },
           {
             "alias": "ZombieMummyArmor1Default",
@@ -254,19 +429,79 @@
             "displayName": "Mummy Conehead"
           },
           {
-            "alias": "ZombieDarkArmor1Default",
+            "alias": "ZombieBeachArmor1Default",
             "cost": 90,
-            "displayName": "Dark Conehead"
+            "displayName": "Beach Conehead"
           },
           {
-            "alias": "ZombieBeachArmor2Default",
-            "cost": 150,
-            "displayName": "Beach Buckethead"
+            "alias": "ZombieBeachFastSwimmer",
+            "cost": 100,
+            "displayName": "Fast Swimmer"
           },
           {
-            "alias": "ZombieIceageArmor2Default",
+            "alias": "ZombieProspector",
+            "cost": 110,
+            "displayName": "Prospector Zombie"
+          },
+          {
+            "alias": "ZombieMummyArmor2Default",
+            "cost": 125,
+            "displayName": "Mummy Buckethead"
+          },
+          {
+            "alias": "ZombieExplorerDefault",
+            "cost": 130,
+            "displayName": "Explorer Zombie"
+          },
+          {
+            "alias": "ZombieIceAgeTroglobite",
+            "cost": 140,
+            "displayName": "Troglobite"
+          },
+          {
+            "alias": "ZombieIceageArmor3Default",
             "cost": 150,
-            "displayName": "Iceage Buckethead"
+            "displayName": "Iceage Ice Block"
+          },
+          {
+            "alias": "ZombieModernAllStar",
+            "cost": 150,
+            "displayName": "All-Star Zombie"
+          },
+          {
+            "alias": "ZombieIceAgeHunter",
+            "cost": 160,
+            "displayName": "Iceage Hunter"
+          },
+          {
+            "alias": "ZombieTutorialArmor4Default",
+            "cost": 175,
+            "displayName": "Screen Door Zombie"
+          },
+          {
+            "alias": "ZombieRaDefault",
+            "cost": 180,
+            "displayName": "Ra Zombie"
+          },
+          {
+            "alias": "ZombiePiano",
+            "cost": 190,
+            "displayName": "Piano Zombie"
+          },
+          {
+            "alias": "ZombieDarkArmor4Default",
+            "cost": 210,
+            "displayName": "Dark Screen Door"
+          },
+          {
+            "alias": "ZombieDarkKing",
+            "cost": 260,
+            "displayName": "Dark King"
+          },
+          {
+            "alias": "ZombieIceAgeGargantuar",
+            "cost": 420,
+            "displayName": "Iceage Gargantuar"
           }
         ]
       }

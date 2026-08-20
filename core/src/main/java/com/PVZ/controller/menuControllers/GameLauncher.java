@@ -26,6 +26,8 @@ final class GameLauncher {
 
     private static final String STAGE_TYPE_CONVEYOR_BELT = "CONVEYOR_BELT";
     private static final String STAGE_TYPE_LOCKED_PLANTS = "LOCKED_PLANTS";
+    private static final String STAGE_TYPE_PLANT_WHAT_YOU_GET = "PLANT_WHAT_YOU_GET";
+    private static final int DEFAULT_PLANT_WHAT_YOU_GET_SUN = 500;
 
     private GameLauncher() {
     }
@@ -36,6 +38,24 @@ final class GameLauncher {
 
     static boolean isLockedPlantsStage(StageConfig stageConfig) {
         return stageConfig != null && STAGE_TYPE_LOCKED_PLANTS.equalsIgnoreCase(stageConfig.getType());
+    }
+
+    static boolean isPlantWhatYouGetStage(StageConfig stageConfig) {
+        return stageConfig != null && STAGE_TYPE_PLANT_WHAT_YOU_GET.equalsIgnoreCase(stageConfig.getType());
+    }
+
+    /**
+     * PLANT WHAT YOU GET forbids picking any sun-producing plant (Sunflower, Twin Sunflower,
+     * Sun-shroom, Enlighten-mint, ...) since no extra sun can ever be earned mid-level.
+     */
+    static Set<PlantType> resolveSunProducerPlants() {
+        Set<PlantType> locked = new LinkedHashSet<>();
+        for (PlantType type : PlantType.values()) {
+            if (PlantFamilyMapper.getFamily(type) == PlantFamily.SUN_PRODUCER) {
+                locked.add(type);
+            }
+        }
+        return locked;
     }
 
     static Set<PlantType> resolveLockedPlants(StageConfig stageConfig) {
@@ -121,7 +141,14 @@ final class GameLauncher {
 
     static RegularGameEngine launch(StageConfig stageConfig) {
         List<Wave> waves = buildWaves(stageConfig);
-        int initialSun = stageConfig.isDisableFallingSun() ? 150 : 200;
+        boolean plantWhatYouGet = isPlantWhatYouGetStage(stageConfig);
+        int initialSun;
+        if (plantWhatYouGet) {
+            initialSun = stageConfig.getInitialSun() > 0
+                ? stageConfig.getInitialSun() : DEFAULT_PLANT_WHAT_YOU_GET_SUN;
+        } else {
+            initialSun = stageConfig.isDisableFallingSun() ? 150 : 200;
+        }
         GameStatus gameStatus = new GameStatus();
         gameStatus.setSunflower(initialSun);
         gameStatus.setNoSkySun(stageConfig.isDisableFallingSun());
@@ -135,6 +162,11 @@ final class GameLauncher {
         }
         if (isConveyorBeltStage(stageConfig)) {
             engine.enableConveyorBelt(stageConfig.getConveyorInterval());
+        }
+        if (plantWhatYouGet) {
+            engine.enablePlantWhatYouGetMode();
+            AppStatus.SELECTED_PLANTS.removeAll(resolveSunProducerPlants());
+            engine.enableLockedPlants(resolveSunProducerPlants());
         }
         if (isLockedPlantsStage(stageConfig)) {
             Set<PlantType> locked = resolveLockedPlants(stageConfig);
@@ -167,7 +199,10 @@ final class GameLauncher {
         }
         AppStatus.setGameEngine(engine);
         AppStatus.currentMenuType = MenuType.IN_GAME;
-        engine.startWaves();
+        if (!plantWhatYouGet) {
+            // PLANT WHAT YOU GET waits for the player to press the "start waves" button instead.
+            engine.startWaves();
+        }
         return engine;
     }
 

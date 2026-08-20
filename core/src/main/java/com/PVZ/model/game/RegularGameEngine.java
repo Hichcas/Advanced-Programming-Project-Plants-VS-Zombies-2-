@@ -51,6 +51,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     final List<PlantType> conveyorBeltQueue = new ArrayList<>();
     boolean lockedPlantsMode = false;
     final java.util.Set<PlantType> lockedPlantsForStage = new java.util.LinkedHashSet<>();
+    /** PLANT WHAT YOU GET: fixed starting sun, no sky sun, unlimited free planting until the player starts the waves. */
+    boolean plantWhatYouGetMode = false;
 
     final SeedPacketBar seedPacketBar = new SeedPacketBar();
     final RegularZombieEngine zombieEngine;
@@ -395,6 +397,23 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     @Override
     public int getTileColumn(float worldX) {
         return map != null ? map.worldToCol(worldX) : 0;
+    }
+
+    public void enablePlantWhatYouGetMode() {
+        this.plantWhatYouGetMode = true;
+    }
+
+    public boolean isPlantWhatYouGetMode() {
+        return plantWhatYouGetMode;
+    }
+
+    public boolean isZombieWavesStarted() {
+        return zombieWavesStarted;
+    }
+
+    /** True while the player may still plant freely, with no cost to recharge timers (pre-wave planning phase). */
+    public boolean isFreePlantingPhase() {
+        return plantWhatYouGetMode && !zombieWavesStarted;
     }
 
     @Override

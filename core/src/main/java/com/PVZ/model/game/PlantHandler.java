@@ -121,6 +121,8 @@ public class PlantHandler {
         if (engine.conveyorBeltMode) {
             if (!engine.conveyorBeltQueue.contains(type))
                 return "No " + type.getDisplayName() + " seed packet is available on the belt.";
+        } else if (engine.isFreePlantingPhase()) {
+            // PLANT WHAT YOU GET: before the player starts the zombie waves, planting never recharges.
         } else if (engine.isOnCooldown(type)) {
             return type.getDisplayName() + " is still recharging.";
         }
@@ -152,6 +154,8 @@ public class PlantHandler {
     private static void handlePostPlanting(RegularGameEngine engine, PlantType type, Plant plant) {
         if (engine.conveyorBeltMode) {
             engine.conveyorBeltQueue.remove(type);
+        } else if (engine.isFreePlantingPhase()) {
+            // No recharge timer is started while the player is still freely planting before the waves begin.
         } else {
             double recharge = plant.getStats().getRechargeSeconds();
             if (recharge > 0) engine.rechargeRemaining.put(type, recharge);

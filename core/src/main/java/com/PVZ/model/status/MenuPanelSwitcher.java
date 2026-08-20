@@ -49,6 +49,10 @@ public class MenuPanelSwitcher {
                 PanelManager.getInstance().performPanelTransition(
                     new PlantSelectionPanel(AppStatus.currentChapterName, AppStatus.currentStageNumber));
                 break;
+            case I_ZOMBIE_SELECTION:
+                PanelManager.getInstance().performPanelTransition(
+                    new ZombieSelectionPanel(AppStatus.pendingIZombieLevelId));
+                break;
             case MINIGAME_SELECTION:
                 PanelManager.getInstance().performPanelTransition(new MinigameSelectionPanel());
                 break;

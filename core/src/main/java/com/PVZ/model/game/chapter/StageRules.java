@@ -72,6 +72,13 @@ public final class StageRules {
         } else if (type.equals("LOVE_YOUR_PLANTS") || special.equals("LOVE_YOUR_PLANTS")) {
             int q = config.getMaxPlantDeaths() > 0 ? config.getMaxPlantDeaths() : 5;
             out.add("LOVE YOUR PLANTS: If " + q + " of your plants are destroyed or eaten by zombies, you lose!");
+        } else if (type.equals("PLANT_WHAT_YOU_GET")) {
+            int startingSun = config.getInitialSun() > 0 ? config.getInitialSun() : 500;
+            out.add("PLANT WHAT YOU GET: You start with " + startingSun
+                + " sun and no more sun will ever fall from the sky.");
+            out.add("No zombies enter the lawn until you're ready — plant freely and instantly, "
+                + "with no recharge wait, for as long as you like.");
+            out.add("Press the Start Wave button whenever you want to begin — you decide when each wave arrives!");
         }
 
         if (out.isEmpty()) {
@@ -80,7 +87,8 @@ public final class StageRules {
             out.add("Clear all waves — don't let the zombies reach your house!");
         }
 
-        if (config.isDisableFallingSun() && !type.equals("NIGHT_OPS") && !special.equals("NIGHT_OPS")) {
+        if (config.isDisableFallingSun() && !type.equals("NIGHT_OPS") && !special.equals("NIGHT_OPS")
+            && !type.equals("PLANT_WHAT_YOU_GET")) {
             out.add("No sun falls from the sky this level!");
         }
         if (config.getPlantLimit() > 0) {

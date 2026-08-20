@@ -264,6 +264,14 @@ public class MinigameSelectionPanel extends BasePanel {
     }
 
     private void launchMinigame(MinigameInfo info, int levelId) {
+        if (info.displayName == MinigameEnum.I_ZOMBIE) {
+            // I, Zombie gets its own roster-selection screen (like Plant Selection)
+            // instead of jumping straight into the level with a random loadout.
+            AppStatus.pendingIZombieLevelId = levelId;
+            AppStatus.SELECTED_ZOMBIES.clear();
+            AppStatus.currentMenuType = MenuType.I_ZOMBIE_SELECTION;
+            return;
+        }
         OutputDTO result;
         switch (info.displayName) {
             case VASEBREAKER -> result = new VasebreakerMenuController().handle(
