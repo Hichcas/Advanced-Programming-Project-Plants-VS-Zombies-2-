@@ -799,6 +799,49 @@ public class GameScreen extends BaseScreen {
                 reg.getBattleController().freezeAllZombies(5.0);
             }
         }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.B)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt();
+                boss.initPosition(1750f, 400f, 1);
+                boss.setRow(1);
+                boss.setCol(8);
+                reg.getBattleController().addZombie(boss);
+                System.out.println("[CHEAT B] Spawned Egypt Zomboss Mech!");
+            }
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.M)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
+                        boss.triggerMissileAttack(reg.getBattleController());
+                        System.out.println("[CHEAT M] Triggered Zomboss Missile Attack!");
+                        break;
+                    }
+                }
+            }
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.C)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
+                        boss.triggerChargeAttack(reg.getBattleController());
+                        System.out.println("[CHEAT C] Triggered Zomboss Charge Attack!");
+                        break;
+                    }
+                }
+            }
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.P)) {
+            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
+                        boss.triggerPortalSpawn(reg.getBattleController());
+                        System.out.println("[CHEAT P] Triggered Zomboss Portal Wave!");
+                        break;
+                    }
+                }
+            }
+        }
 
         GameOverState overState = updateGameOverState(activeEngine);
         drawBackgroundAndEngine(activeEngine, delta);
