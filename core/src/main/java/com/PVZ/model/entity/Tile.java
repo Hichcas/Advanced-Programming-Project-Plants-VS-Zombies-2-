@@ -20,6 +20,7 @@ public class Tile {
     private float graveAnimTime = 0f;
 
     private float hitFlashTimer = 0f;
+    private float scorchTimer = 0f;
 
     public Tile(TileType type, Plant plant, int gridRow, int gridCol,
                 float worldX, float worldY, float width, float height) {
@@ -32,6 +33,7 @@ public class Tile {
         this.graveVariant = null;
         this.graveAnimTime = 0f;
         this.hitFlashTimer = 0f;
+        this.scorchTimer = 0f;
         this.gridRow = gridRow;
         this.gridCol = gridCol;
         this.worldX = worldX;
@@ -48,6 +50,22 @@ public class Tile {
             hitFlashTimer -= delta;
             if (hitFlashTimer < 0f) hitFlashTimer = 0f;
         }
+        if (scorchTimer > 0f) {
+            scorchTimer -= delta;
+            if (scorchTimer < 0f) scorchTimer = 0f;
+        }
+    }
+
+    public boolean isScorched() {
+        return scorchTimer > 0f;
+    }
+
+    public float getScorchTimer() {
+        return scorchTimer;
+    }
+
+    public void setScorchTimer(float scorchTimer) {
+        this.scorchTimer = scorchTimer;
     }
 
     public void drawBorder(ShapeRenderer sr) {

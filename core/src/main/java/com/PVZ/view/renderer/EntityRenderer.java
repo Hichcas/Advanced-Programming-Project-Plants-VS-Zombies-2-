@@ -291,6 +291,21 @@ public class EntityRenderer {
                 }
             }
 
+            if (zombie instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
+                // 1. Render flying fireballs
+                for (com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark.DarkFireball fb : darkBoss.getActiveFireballs()) {
+                    renderPam(batch, "768/FULL/EFFECTS/ZOMBOSS_DARK_FIREBALL/ZOMBOSS_DARK_FIREBALL.PAM", "fireball", darkBoss.getFireballAnimTimer(), fb.currentX, fb.currentY, 1.2f);
+                }
+                // 2. Render fire breath stream along the 2 rows
+                if (darkBoss.isFireBreathActive()) {
+                    float fx = (float) zombie.getX() - 100f;
+                    float fy = (float) zombie.getY() + 40f;
+                    renderPam(batch, "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM", "idle2", darkBoss.getFireBreathTimer(), fx, fy, 1.4f);
+                    renderPam(batch, "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM", "idle2", darkBoss.getFireBreathTimer(), fx - 220f, fy, 1.4f);
+                    renderPam(batch, "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM", "idle2", darkBoss.getFireBreathTimer(), fx - 440f, fy, 1.4f);
+                }
+            }
+
             boolean shouldFlip = zombie.isHypnotized() || (zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieProspector zp && zp.isFlewToLeft());
             if (shouldFlip) {
                 com.badlogic.gdx.math.Matrix4 oldTransform = batch.getTransformMatrix().cpy();

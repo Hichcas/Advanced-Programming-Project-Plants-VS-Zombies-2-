@@ -1,6 +1,7 @@
 package com.PVZ.model.game;
 
 import com.PVZ.model.entity.Plant;
+import com.PVZ.model.entity.Tile;
 import com.PVZ.model.entity.plants.PlantFactory;
 import com.PVZ.model.entity.plants.PlantLibrary;
 import com.PVZ.model.enums.PlantTag;
@@ -19,7 +20,11 @@ public class PlantHandler {
         int row = engine.normalizeIndex(y);
         int col = engine.normalizeIndex(x);
         if (!engine.map.isWithinBounds(row, col)) return "Invalid tile.";
-        TileType targetTileType = engine.map.getTile(row, col).getType();
+        Tile targetTile = engine.map.getTile(row, col);
+        if (targetTile != null && targetTile.isScorched()) {
+            return "Cannot plant on a tile while it is on fire!";
+        }
+        TileType targetTileType = targetTile != null ? targetTile.getType() : TileType.NORMAL;
         if (targetTileType == TileType.CRATER) return "This tile is a permanent Doom-shroom crater and cannot be planted on.";
         boolean isWater = targetTileType == TileType.WATER || targetTileType == TileType.TIDE;
         Plant existingTop = engine.map.getPlantAt(row, col);
