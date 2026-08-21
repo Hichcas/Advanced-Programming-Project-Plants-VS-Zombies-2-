@@ -5,6 +5,7 @@ import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.model.user.UserRegistry;
+import com.PVZ.network.client.NetworkSession;
 import com.PVZ.view.input.DTO.LoginInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
@@ -47,6 +48,34 @@ public class LoginMenuController {
             return new OutputDTO(false, "Username and password are required.");
         }
 
+        // فاز شبکه: احراز هویت باید سمت سرور انجام شود (سند فاز سوم -
+        // "سیستم ورود، ثبت‌نام و پروفایل باید کامل با سرور هماهنگ باشد").
+        // اگر اتصال به سرور برقرار است از همان مسیر استفاده می‌کنیم؛ اگر
+        // نه (مثلا هنگام توسعه/تست بدون سرور در حال اجرا)، به همان منطق
+        // محلی قبلی برمی‌گردیم تا بقیه‌ی بخش‌های آفلاین بازی خراب نشوند.
+        if (NetworkSession.isConnected()) {
+            return loginOverNetwork(username, password, input.isStayLoggedIn());
+        }
+        return loginLocally(username, password, input.isStayLoggedIn());
+    }
+
+    private OutputDTO loginOverNetwork(String username, String password, boolean stayLoggedIn) {
+        NetworkSession.AuthResult result = NetworkSession.login(username, password);
+        if (!result.success()) {
+            return new OutputDTO(false, result.message());
+        }
+
+        User user = result.user();
+        user.setStayLoggedIn(stayLoggedIn);
+        AppStatus.currentUser = user;
+        AppStatus.currentMenuType = MenuType.MAIN;
+        resetState = ResetState.NONE;
+        pendingResetUser = null;
+
+        return new OutputDTO(true, "Logged in successfully.\nEntered Main Menu.");
+    }
+
+    private OutputDTO loginLocally(String username, String password, boolean stayLoggedIn) {
         User user = UserRegistry.loginUser(username);
 
         if (user == null) {
@@ -61,7 +90,7 @@ public class LoginMenuController {
             return new OutputDTO(false, "Failed to verify password.");
         }
 
-        user.setStayLoggedIn(input.isStayLoggedIn());
+        user.setStayLoggedIn(stayLoggedIn);
         UserRegistry.touch(username);
         AppStatus.currentUser = user;
         AppStatus.currentMenuType = MenuType.MAIN;
