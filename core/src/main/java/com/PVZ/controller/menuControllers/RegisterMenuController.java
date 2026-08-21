@@ -5,6 +5,7 @@ import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.model.user.UserRegistry;
+import com.PVZ.network.client.NetworkSession;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.input.DTO.RegisterInputDTO;
 import com.PVZ.view.output.OutputDTO;
@@ -55,10 +56,6 @@ public class RegisterMenuController {
             return new OutputDTO(false, error);
         }
 
-        if (UserRegistry.containsUsername(username)) {
-            return new OutputDTO(false, "This username is already taken.");
-        }
-
         // ----- ۲. اعتبارسنجی سؤال امنیتی -----
         Integer questionNumber = input.getQuestionNumber();
         String answer = input.getAnswer();
@@ -70,12 +67,40 @@ public class RegisterMenuController {
         if (answer == null || answerConfirm == null || !answer.equals(answerConfirm)) {
             return new OutputDTO(false, "Security answer confirmation doesn't match.");
         }
+        String question = SECURITY_QUESTIONS[questionNumber - 1];
 
-        // ----- ۳. هش کردن رمز و پاسخ و ایجاد کاربر -----
+        // فاز شبکه: یکتایی username و ذخیره‌سازی نهایی باید سمت سرور
+        // انجام شود (سند فاز سوم). اگر به سرور وصلیم از همان مسیر
+        // می‌رویم؛ در غیر این صورت (تست/توسعه‌ی آفلاین) به منطق محلی
+        // قبلی برمی‌گردیم.
+        if (NetworkSession.isConnected()) {
+            return registerOverNetwork(username, password, nickname, email, gender, question, answer);
+        }
+        return registerLocally(username, password, nickname, email, gender, question, answer);
+    }
+
+    private OutputDTO registerOverNetwork(String username, String password, String nickname,
+                                           String email, String gender,
+                                           String question, String answer) {
+        NetworkSession.AuthResult result = NetworkSession.register(
+                username, password, nickname, email, gender, question, answer);
+        if (!result.success()) {
+            return new OutputDTO(false, result.message());
+        }
+        AppStatus.currentUser = result.user();
+        AppStatus.currentMenuType = MenuType.MAIN;
+        return new OutputDTO(true, "Registration successful. Welcome, " + nickname + "!");
+    }
+
+    private OutputDTO registerLocally(String username, String password, String nickname,
+                                       String email, String gender,
+                                       String question, String answer) {
+        if (UserRegistry.containsUsername(username)) {
+            return new OutputDTO(false, "This username is already taken.");
+        }
         try {
             String passwordHash = EncryptionEngine.hash(password);
             String answerHash = EncryptionEngine.hash(answer);
-            String question = SECURITY_QUESTIONS[questionNumber - 1];
 
             User createdUser = User.createNewUser(
                 username, passwordHash, nickname, email, gender,
@@ -87,7 +112,6 @@ public class RegisterMenuController {
                 return new OutputDTO(false, "Registration failed. See logs.");
             }
 
-            // ورود خودکار کاربر جدید
             AppStatus.currentUser = createdUser;
             AppStatus.currentMenuType = MenuType.MAIN;
 
