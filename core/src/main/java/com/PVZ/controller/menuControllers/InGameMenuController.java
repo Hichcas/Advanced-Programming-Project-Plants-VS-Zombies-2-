@@ -6,6 +6,7 @@ import com.PVZ.model.enums.ZombieType;
 import com.PVZ.model.game.BattleController;
 import com.PVZ.model.game.GameEngine;
 import com.PVZ.model.game.RegularGameEngine;
+import com.PVZ.model.game.ZombieEngine;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.InGameInputDTO;
@@ -103,10 +104,26 @@ public class InGameMenuController {
     }
 
     private OutputDTO handleCheatAddSuns(InGameInputDTO dto, RegularGameEngine engine) {
-        if (engine == null) {
-            return new OutputDTO(false, "Game engine is not ready.");
+        if (engine != null) {
+            return new OutputDTO(true, engine.addSunsCheat(dto.getAmount()));
         }
-        return new OutputDTO(true, engine.addSunsCheat(dto.getAmount()));
+        GameEngine ge = AppStatus.getGameEngine();
+        if (ge instanceof ZombieEngine ze) {
+            int amount = dto.getAmount() == null ? 0 : dto.getAmount();
+            ze.addSun(amount);
+            return new OutputDTO(true, "Added " + amount + " sun.");
+        }
+        if (ge instanceof com.PVZ.model.game.BeghouledGameEngine bge) {
+            int amount = dto.getAmount() == null ? 0 : dto.getAmount();
+            bge.addSun(amount);
+            return new OutputDTO(true, "Added " + amount + " sun.");
+        }
+        if (ge instanceof com.PVZ.model.game.VasebreakerGameEngine vge) {
+            int amount = dto.getAmount() == null ? 0 : dto.getAmount();
+            vge.addSun(amount);
+            return new OutputDTO(true, "Added " + amount + " sun.");
+        }
+        return new OutputDTO(false, "Game engine is not ready.");
     }
 
     private OutputDTO handleCheatRemoveCooldown(RegularGameEngine engine) {
