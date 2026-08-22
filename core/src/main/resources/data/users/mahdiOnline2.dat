@@ -1,8 +1,8 @@
 {
   "profile" : {
-    "username" : "mahdiQuest2",
-    "nickname" : "mahdi",
-    "email" : "mahdi@example.com",
+    "username" : "mahdiOnline2",
+    "nickname" : "mahdiOnline2",
+    "email" : "mahdimahdi@gmail.com",
     "gender" : "male",
     "passwordHash" : "6239b479b97a15a5a494351afcc22b5b85627f37250649713c0d6f4d1d10100a",
     "securityQuestion" : "What is your favorite color?",
@@ -20,21 +20,21 @@
   },
   "progressState" : {
     "completedLevels" : {
-      "ANCIENT_EGYPT" : 0,
-      "DARK_AGES" : 0,
-      "FROSTBITE_CAVES" : 0,
-      "BIG_WAVE_BEACH" : 0
+      "FROSTBITE_CAVES" : -1,
+      "BIG_WAVE_BEACH" : -1,
+      "ANCIENT_EGYPT" : 1,
+      "DARK_AGES" : -1
     },
     "minigameClearedCounts" : {
       "VASEBREAKER" : 0,
       "ZOMBOTANY" : 0,
-      "BEGHOULED" : 0,
       "I_ZOMBIE" : 0,
+      "BEGHOULED" : 0,
       "WALLNUT_BOWLING" : 0
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ ],
+    "unlockedPlants" : [ "SUNFLOWER", "PEASHOOTER" ],
     "seenZombies" : [ ],
     "seedPackets" : { },
     "plantLevels" : { },
@@ -69,13 +69,6 @@
       "marigold" : false,
       "empty" : true,
       "readyForPlanting" : true
-    }, {
-      "unlocked" : true,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
-      "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : true
     } ], [ {
       "unlocked" : false,
       "plantType" : null,
@@ -104,56 +97,7 @@
       "marigold" : false,
       "empty" : true,
       "readyForPlanting" : false
-    }, {
-      "unlocked" : false,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
-      "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : false
     } ], [ {
-      "unlocked" : false,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
-      "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : false
-    }, {
-      "unlocked" : false,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
-      "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : false
-    }, {
-      "unlocked" : false,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
-      "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : false
-    }, {
-      "unlocked" : false,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
-      "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : false
-    }, {
-      "unlocked" : false,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
-      "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : false
-    } ], [ {
-      "unlocked" : false,
-      "plantType" : null,
-      "plantedTimeMillis" : 0,
-      "marigold" : false,
-      "empty" : true,
-      "readyForPlanting" : false
-    }, {
       "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
@@ -182,8 +126,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 7,
-    "numberOfUnlockedPots" : 5
+    "numberOfLockedPots" : 8,
+    "numberOfUnlockedPots" : 4
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -203,29 +147,6 @@
   "questState" : {
     "questManager" : {
       "activeQuests" : [ {
-        "id" : "story_chapter_hunt",
-        "title" : "Chapter Hunter",
-        "descriptionTemplate" : "Defeat 50 zombies from {chapter}",
-        "type" : "STORY",
-        "priority" : "HIGH",
-        "conditionKey" : "chapter_zombie_kill",
-        "targetCount" : 50,
-        "currentCount" : 0,
-        "completed" : false,
-        "claimed" : false,
-        "reward" : {
-          "type" : "SEED_PACKETS",
-          "amount" : 10,
-          "targetPlant" : null
-        },
-        "parameters" : {
-          "chapter" : "BIG_WAVE_BEACH"
-        },
-        "active" : true,
-        "formattedTitle" : "Chapter Hunter",
-        "runtimeState" : { },
-        "formattedDescription" : "Defeat 50 zombies from BIG_WAVE_BEACH"
-      }, {
         "id" : "story_economy",
         "title" : "Economic Herbivore",
         "descriptionTemplate" : "Win without losing more than {n} plants",
@@ -238,16 +159,16 @@
         "claimed" : false,
         "reward" : {
           "type" : "SEED_PACKETS",
-          "amount" : 20,
+          "amount" : 17,
           "targetPlant" : null
         },
         "parameters" : {
-          "n" : 1
+          "n" : 3
         },
         "active" : true,
         "formattedTitle" : "Economic Herbivore",
         "runtimeState" : { },
-        "formattedDescription" : "Win without losing more than 1 plants"
+        "formattedDescription" : "Win without losing more than 3 plants"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -318,29 +239,52 @@
         "type" : "EPIC",
         "priority" : "MEDIUM",
         "conditionKey" : "lawnmower_kill",
-        "targetCount" : 40,
+        "targetCount" : 50,
         "currentCount" : 0,
         "completed" : false,
         "claimed" : false,
         "reward" : {
           "type" : "DIAMONDS",
-          "amount" : 40,
+          "amount" : 50,
           "targetPlant" : null
         },
         "parameters" : {
-          "n" : 40
+          "n" : 50
         },
         "active" : true,
         "formattedTitle" : "Lawnmower Time",
         "runtimeState" : { },
-        "formattedDescription" : "Kill at least 40 zombies with lawnmowers"
+        "formattedDescription" : "Kill at least 50 zombies with lawnmowers"
+      }, {
+        "id" : "story_chapter_hunt_ANCIENT_EGYPT",
+        "title" : "Chapter Hunter",
+        "descriptionTemplate" : "Defeat 50 zombies from {chapter}",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "chapter_zombie_kill",
+        "targetCount" : 50,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "chapter" : "ANCIENT_EGYPT"
+        },
+        "active" : true,
+        "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { },
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 1,
       "isDayLevel" : true,
-      "timeUntilReset" : "8h 19m"
+      "timeUntilReset" : "8h 35m"
     }
   }
 }

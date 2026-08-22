@@ -9,6 +9,7 @@ import com.PVZ.model.game.chapter.ChapterLibrary;
 import com.PVZ.model.user.UserRegistry;
 import com.PVZ.model.user.User;
 import com.PVZ.network.client.NetworkSession;
+import com.PVZ.view.screen.GlobalInvitationManager;
 import com.PVZ.view.screen.MainMenuScreen;
 import com.PVZ.view.input.CommandParser;
 import com.PVZ.view.screen.manager.*;
@@ -68,6 +69,7 @@ public class PVZ extends Game {
 //                new RegularGameEngine(new GameStatus())));
 
         ScreenManager.getInstance().startWithFadeIn(new MainMenuScreen());
+        GlobalInvitationManager.getInstance().install();
     }
     @Override
     public void render() {
