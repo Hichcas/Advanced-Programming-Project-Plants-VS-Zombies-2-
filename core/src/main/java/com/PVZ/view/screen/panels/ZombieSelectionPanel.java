@@ -223,6 +223,29 @@ public class ZombieSelectionPanel extends BasePanel {
     }
 
     private void onLetsRock() {
+        if (AppStatus.isMultiplayerMatch) {
+            if (AppStatus.SELECTED_ZOMBIES.isEmpty()) {
+                statusLabel.setText("Please select at least 1 zombie.");
+                return;
+            }
+            AppStatus.currentMenuType = MenuType.IN_GAME;
+            com.PVZ.model.game.IZombieMultiplayerGameEngine engine = new com.PVZ.model.game.IZombieMultiplayerGameEngine(
+                "ZOMBIE",
+                AppStatus.multiplayerOpponent,
+                AppStatus.multiplayerRoomId,
+                AppStatus.multiplayerLevelId,
+                null,
+                new ArrayList<>(AppStatus.SELECTED_ZOMBIES)
+            );
+            AppStatus.setGameEngine(engine);
+            ScreenManager.getInstance().performTransition(() -> new GameScreen(
+                "maps/Frontyard.jpg",
+                "music/TitleScreen.mp3",
+                engine
+            ));
+            return;
+        }
+
         OutputDTO result = new IZombieMenuController().handle(
             new IZombieInputDTO(IZombieCommand.START_LEVEL, levelId, -1, -1, null));
         if (!result.isSuccess()) {

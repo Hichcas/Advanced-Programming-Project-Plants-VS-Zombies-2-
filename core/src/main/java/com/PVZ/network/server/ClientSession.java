@@ -26,6 +26,9 @@ public class ClientSession implements Runnable {
     private final List<Runnable> disconnectListeners = new CopyOnWriteArrayList<>();
 
     private volatile boolean inGame = false;
+    private volatile ClientSession opponentSession;
+    private volatile String currentRoomId;
+    private volatile String currentRole;
 
     public boolean isInGame() {
         return inGame;
@@ -33,6 +36,30 @@ public class ClientSession implements Runnable {
 
     public void setInGame(boolean inGame) {
         this.inGame = inGame;
+    }
+
+    public ClientSession getOpponentSession() {
+        return opponentSession;
+    }
+
+    public void setOpponentSession(ClientSession opponentSession) {
+        this.opponentSession = opponentSession;
+    }
+
+    public String getCurrentRoomId() {
+        return currentRoomId;
+    }
+
+    public void setCurrentRoomId(String currentRoomId) {
+        this.currentRoomId = currentRoomId;
+    }
+
+    public String getCurrentRole() {
+        return currentRole;
+    }
+
+    public void setCurrentRole(String currentRole) {
+        this.currentRole = currentRole;
     }
 
     public ClientSession(Socket socket, RequestDispatcher dispatcher) throws IOException {

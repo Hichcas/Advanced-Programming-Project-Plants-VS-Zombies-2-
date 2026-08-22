@@ -24,7 +24,9 @@ public final class MatchmakingHandlers {
         }
 
         String targetUsername = request.getString("username");
-        String result = MatchmakingManager.getInstance().challenge(session, targetUsername);
+        String role = request.getString("role");
+        int levelId = request.getInt("levelId", 1);
+        String result = MatchmakingManager.getInstance().challenge(session, targetUsername, role, levelId);
         if (result != null) {
             return error(request, result);
         }

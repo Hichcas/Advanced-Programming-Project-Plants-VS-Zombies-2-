@@ -44,7 +44,36 @@ public class GlobalInvitationManager {
     public void install() {
         NetworkSession.client().on(MessageType.CHALLENGE_INVITATION, msg -> {
             final String from = msg.getString("from");
-            Gdx.app.postRunnable(() -> showInvitation(from));
+            final String targetRole = msg.getString("targetRole", "ZOMBIE");
+            final int levelId = msg.getInt("levelId", 1);
+            Gdx.app.postRunnable(() -> showInvitation(from, targetRole, levelId));
+        });
+
+        NetworkSession.client().on(MessageType.MATCH_FOUND, msg -> {
+            Gdx.app.postRunnable(() -> {
+                hideInvitation();
+                String opponent = msg.getString("opponent", "Opponent");
+                String roomId = msg.getString("roomId", "");
+                String role = msg.getString("role", "ZOMBIE");
+                int levelId = msg.getInt("levelId", 1);
+
+                com.PVZ.model.status.AppStatus.isMultiplayerMatch = true;
+                com.PVZ.model.status.AppStatus.multiplayerRole = role;
+                com.PVZ.model.status.AppStatus.multiplayerOpponent = opponent;
+                com.PVZ.model.status.AppStatus.multiplayerRoomId = roomId;
+                com.PVZ.model.status.AppStatus.multiplayerLevelId = levelId;
+                com.PVZ.model.status.AppStatus.pendingIZombieLevelId = levelId;
+
+                if ("PLANT".equalsIgnoreCase(role)) {
+                    com.PVZ.model.status.AppStatus.currentChapterName = "Frontyard";
+                    com.PVZ.model.status.AppStatus.currentStageNumber = 1;
+                    com.PVZ.model.status.AppStatus.SELECTED_PLANTS.clear();
+                    com.PVZ.model.status.AppStatus.setCurrentMenuType(com.PVZ.model.enums.MenuType.PLANT_SELECTION);
+                } else {
+                    com.PVZ.model.status.AppStatus.SELECTED_ZOMBIES.clear();
+                    com.PVZ.model.status.AppStatus.setCurrentMenuType(com.PVZ.model.enums.MenuType.I_ZOMBIE_SELECTION);
+                }
+            });
         });
     }
 
@@ -59,6 +88,14 @@ public class GlobalInvitationManager {
 
     /** نمایش popup دعوت روی Stage فعلی. */
     public void showInvitation(String from) {
+        showInvitation(from, "ZOMBIE", 1);
+    }
+
+    public void showInvitation(String from, String targetRole) {
+        showInvitation(from, targetRole, 1);
+    }
+
+    public void showInvitation(String from, String targetRole, int levelId) {
         if (stage == null) {
             return;
         }
@@ -74,17 +111,18 @@ public class GlobalInvitationManager {
         Drawable greenDown = skin.getDrawable("image_ui_generic_greenbutton_down_10");
 
         overlay = new Table();
-        overlay.setSize(600f, 260f);
+        overlay.setSize(620f, 280f);
         overlay.setPosition(
-            (BaseScreen.VIRTUAL_WIDTH - 600f) / 2f,
-            (BaseScreen.VIRTUAL_HEIGHT - 260f) / 2f
+            (BaseScreen.VIRTUAL_WIDTH - 620f) / 2f,
+            (BaseScreen.VIRTUAL_HEIGHT - 280f) / 2f
         );
         overlay.setBackground(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
         overlay.pad(25f);
         overlay.setTouchable(Touchable.enabled);
 
+        String prompt = from + " invited you to play!\nRole: " + targetRole + " | Level: " + levelId;
         Label invitationLabel = new Label(
-            from + " has invited you to play!",
+            prompt,
             new Label.LabelStyle(font, Color.WHITE)
         );
         invitationLabel.setWrap(true);

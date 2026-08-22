@@ -13,7 +13,8 @@ public class MatchmakingManager {
     private static final MatchmakingManager INSTANCE = new MatchmakingManager();
 
     private final Queue<ClientSession> randomQueue = new ConcurrentLinkedQueue<>();
-    private final Map<String, ClientSession> pendingInvitations = new ConcurrentHashMap<>();
+    private record PendingChallenge(ClientSession challenger, String challengerRole, int levelId) {}
+    private final Map<String, PendingChallenge> pendingInvitations = new ConcurrentHashMap<>();
 
     private MatchmakingManager() {
     }
@@ -32,7 +33,11 @@ public class MatchmakingManager {
             ClientSession a = randomQueue.poll();
             ClientSession b = randomQueue.poll();
             if (a != null && b != null) {
-                startMatch(a, b);
+                boolean aIsPlant = new java.util.Random().nextBoolean();
+                String roleA = aIsPlant ? "PLANT" : "ZOMBIE";
+                String roleB = aIsPlant ? "ZOMBIE" : "PLANT";
+                int levelId = new java.util.Random().nextInt(3) + 1; // 1, 2, or 3
+                startMatchWithRoles(a, roleA, b, roleB, levelId);
             }
         }
     }
@@ -43,7 +48,7 @@ public class MatchmakingManager {
 
     // ===================== Challenge =====================
 
-    public synchronized String challenge(ClientSession challenger, String targetUsername) {
+    public synchronized String challenge(ClientSession challenger, String targetUsername, String requestedRole, int levelId) {
         if (!challenger.isAuthenticated()) {
             return "You must be logged in.";
         }
@@ -69,10 +74,17 @@ public class MatchmakingManager {
             return "User is in a game and cannot play now.";
         }
 
-        pendingInvitations.put(targetUsername, challenger);
+        String role = (requestedRole != null && requestedRole.equalsIgnoreCase("ZOMBIE")) ? "ZOMBIE" : "PLANT";
+        String targetRole = role.equals("PLANT") ? "ZOMBIE" : "PLANT";
+        int validLevelId = (levelId >= 1 && levelId <= 3) ? levelId : 1;
+
+        pendingInvitations.put(targetUsername, new PendingChallenge(challenger, role, validLevelId));
 
         NetworkMessage invitation = NetworkMessage.push(MessageType.CHALLENGE_INVITATION)
-            .with("from", challenger.getUsername());
+            .with("from", challenger.getUsername())
+            .with("challengerRole", role)
+            .with("targetRole", targetRole)
+            .with("levelId", validLevelId);
         targetSession.send(invitation);
 
         return null;
@@ -80,36 +92,50 @@ public class MatchmakingManager {
 
     public synchronized String respondToInvitation(ClientSession target, boolean accept) {
         String targetUsername = target.getUsername();
-        ClientSession challenger = pendingInvitations.remove(targetUsername);
-        if (challenger == null) {
+        PendingChallenge pending = pendingInvitations.remove(targetUsername);
+        if (pending == null) {
             return "No invitation found.";
         }
 
         if (accept) {
-            startMatch(challenger, target);
+            String challengerRole = pending.challengerRole();
+            String targetRole = challengerRole.equals("PLANT") ? "ZOMBIE" : "PLANT";
+            startMatchWithRoles(pending.challenger(), challengerRole, target, targetRole, pending.levelId());
         }
         return null;
     }
 
     // ===================== Match =====================
 
-    private void startMatch(ClientSession a, ClientSession b) {
+    private void startMatchWithRoles(ClientSession a, String roleA, ClientSession b, String roleB, int levelId) {
         a.setInGame(true);
+        a.setOpponentSession(b);
+        a.setCurrentRole(roleA);
+
         b.setInGame(true);
+        b.setOpponentSession(a);
+        b.setCurrentRole(roleB);
 
         String roomId = a.getUsername() + "-" + b.getUsername() + "-" + System.currentTimeMillis();
+        a.setCurrentRoomId(roomId);
+        b.setCurrentRoomId(roomId);
 
         NetworkMessage matchFoundA = NetworkMessage.push(MessageType.MATCH_FOUND)
             .with("opponent", b.getUsername())
-            .with("roomId", roomId);
+            .with("roomId", roomId)
+            .with("role", roleA)
+            .with("levelId", levelId);
 
         NetworkMessage matchFoundB = NetworkMessage.push(MessageType.MATCH_FOUND)
             .with("opponent", a.getUsername())
-            .with("roomId", roomId);
+            .with("roomId", roomId)
+            .with("role", roleB)
+            .with("levelId", levelId);
 
         a.send(matchFoundA);
         b.send(matchFoundB);
 
-        System.out.println("[Matchmaking] Match found: " + a.getUsername() + " vs " + b.getUsername());
+        System.out.println("[Matchmaking] Match started: " + a.getUsername() + " (" + roleA + ") vs "
+                + b.getUsername() + " (" + roleB + ") in room " + roomId + " at level " + levelId);
     }
 }
