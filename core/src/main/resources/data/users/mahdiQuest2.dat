@@ -15,7 +15,8 @@
     "stagesCompleted" : 0,
     "highestScore" : 0,
     "dailyQuestsCompleted" : 0,
-    "nonDailyQuestsCompleted" : 0
+    "nonDailyQuestsCompleted" : 0,
+    "purchasedPlantFood" : 0
   },
   "progressState" : {
     "completedLevels" : {
@@ -181,7 +182,7 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 15,
+    "numberOfLockedPots" : 7,
     "numberOfUnlockedPots" : 5
   },
   "appStats" : {
@@ -195,8 +196,8 @@
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "forToday" : false,
-    "availableToday" : false
+    "availableToday" : false,
+    "forToday" : false
   },
   "stayLoggedIn" : false,
   "questState" : {
@@ -221,9 +222,9 @@
           "chapter" : "BIG_WAVE_BEACH"
         },
         "active" : true,
-        "runtimeState" : { },
         "formattedTitle" : "Chapter Hunter",
-        "formattedDescription" : "Defeat 50 zombies from Big Wave Beach"
+        "runtimeState" : { },
+        "formattedDescription" : "Defeat 50 zombies from BIG_WAVE_BEACH"
       }, {
         "id" : "story_economy",
         "title" : "Economic Herbivore",
@@ -244,8 +245,8 @@
           "n" : 1
         },
         "active" : true,
-        "runtimeState" : { },
         "formattedTitle" : "Economic Herbivore",
+        "runtimeState" : { },
         "formattedDescription" : "Win without losing more than 1 plants"
       }, {
         "id" : "story_speed",
@@ -265,8 +266,8 @@
         },
         "parameters" : { },
         "active" : true,
-        "runtimeState" : { },
         "formattedTitle" : "Speed Run",
+        "runtimeState" : { },
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_defense",
@@ -286,8 +287,8 @@
         },
         "parameters" : { },
         "active" : true,
-        "runtimeState" : { },
         "formattedTitle" : "Master of Defense",
+        "runtimeState" : { },
         "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "epic_night_day",
@@ -307,8 +308,8 @@
         },
         "parameters" : { },
         "active" : true,
-        "runtimeState" : { },
         "formattedTitle" : "Day or Night",
+        "runtimeState" : { },
         "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "epic_lawnmower",
@@ -330,13 +331,16 @@
           "n" : 40
         },
         "active" : true,
-        "runtimeState" : { },
         "formattedTitle" : "Lawnmower Time",
+        "runtimeState" : { },
         "formattedDescription" : "Kill at least 40 zombies with lawnmowers"
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
-      "timeUntilReset" : "3h 44m"
+      "currentChapter" : "ANCIENT_EGYPT",
+      "currentDifficulty" : 1,
+      "isDayLevel" : true,
+      "timeUntilReset" : "8h 19m"
     }
   }
 }
