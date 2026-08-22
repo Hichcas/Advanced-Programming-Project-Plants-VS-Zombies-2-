@@ -61,6 +61,12 @@ public class NetworkMessage {
         return v == null ? null : String.valueOf(v);
     }
 
+    /** نسخه‌ی راحت‌تر که اگر کلید وجود نداشت، مقدار پیش‌فرض را برمی‌گرداند. */
+    public String getString(String key, String defaultValue) {
+        Object v = payload.get(key);
+        return v == null ? defaultValue : String.valueOf(v);
+    }
+
     public int getInt(String key, int defaultValue) {
         Object v = payload.get(key);
         if (v instanceof Number n) return n.intValue();

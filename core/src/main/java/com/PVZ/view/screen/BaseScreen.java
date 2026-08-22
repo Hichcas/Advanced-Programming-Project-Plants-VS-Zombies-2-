@@ -47,6 +47,7 @@ public abstract class BaseScreen implements Screen {
 
     @Override
     public void show() {
+        GlobalInvitationManager.getInstance().setStage(stage);
         Gdx.input.setInputProcessor(multiplexer);
     }
 

@@ -63,8 +63,6 @@ public class EntityRenderer {
             if (loggedPams.add(pamPath)) {
                 java.util.Set<String> catalogClips = PamAnimationCatalog.clipNames(pamPath);
                 java.util.List<String> runtimeClips = pamPlayer.clips(pamPath);
-                System.out.println("[EntityRenderer] Zombie " + effectiveAlias + " (" + pamPath
-                    + ") catalog clips: " + catalogClips + " | runtime clips: " + runtimeClips);
             }
 
             String resolvedName = PamAnimationCatalog.resolveClip(pamPath, state);
@@ -591,8 +589,6 @@ public class EntityRenderer {
             if (loggedPams.add(pamPath)) {
                 java.util.Set<String> catalogClips = PamAnimationCatalog.clipNames(pamPath);
                 java.util.List<String> runtimeClips = pamPlayer.clips(pamPath);
-                System.out.println("[EntityRenderer] " + plantTypeName + " (" + pamPath
-                    + ") catalog clips: " + catalogClips + " | runtime clips: " + runtimeClips);
             }
 
             String resolvedName = PamAnimationCatalog.resolveClip(pamPath, state);

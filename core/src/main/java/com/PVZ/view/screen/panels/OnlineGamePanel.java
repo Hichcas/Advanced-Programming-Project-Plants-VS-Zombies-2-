@@ -1,0 +1,261 @@
+package com.PVZ.view.screen.panels;
+
+import com.PVZ.model.enums.MenuType;
+import com.PVZ.model.status.AppStatus;
+import com.PVZ.network.client.NetworkSession;
+import com.PVZ.network.common.MessageType;
+import com.PVZ.network.common.NetworkMessage;
+import com.PVZ.view.screen.ui.MenuButton;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
+import pvz.skin.PvzSkin;
+
+import java.io.IOException;
+
+public class OnlineGamePanel extends BasePanel {
+
+    private TextField usernameField;
+    private Label statusLabel;
+    private MenuButton randomButton;
+    private MenuButton challengeButton;
+    private MenuButton backButton;
+
+    private boolean inQueue = false;
+
+    private final BitmapFont bigFont;
+    private final Texture purpleUp, purpleDown, greenUp, greenDown, marker;
+    private final Label.LabelStyle labelStyle;
+    private final TextField.TextFieldStyle fieldStyle;
+
+    private final float FIELD_WIDTH;
+    private final float BUTTON_HEIGHT;
+    private final float SCREEN_H;
+
+    public OnlineGamePanel() {
+        setFillParent(true);
+
+        float screenW = Gdx.graphics.getWidth();
+        SCREEN_H = Gdx.graphics.getHeight();
+        FIELD_WIDTH = screenW * 0.25f;
+        BUTTON_HEIGHT = SCREEN_H * 0.08f;
+
+        purpleUp   = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON");
+        purpleDown = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON_DOWN");
+        greenUp    = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON");
+        greenDown  = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON_DOWN");
+        marker     = new Texture(Gdx.files.internal("global/button_marker.png"));
+
+        Skin skin = PvzSkin.get();
+        bigFont   = skin.getFont("FBUSV8C5EI_1_outline");
+
+        labelStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        labelStyle.font = bigFont;
+        labelStyle.fontColor = Color.WHITE;
+
+        fieldStyle = new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
+        fieldStyle.font = bigFont;
+        fieldStyle.fontColor = new Color(0.8f, 0.6f, 0.0f, 1f);
+        fieldStyle.messageFont = bigFont;
+
+        buildUi();
+        connectToServer();
+        registerPushListeners();
+    }
+
+    private void buildUi() {
+        Table mainTable = new Table();
+        mainTable.defaults().pad(8f);
+        mainTable.align(Align.center);
+
+        MenuButton title = createTitleButton("ONLINE GAME");
+        mainTable.add(title).padBottom(SCREEN_H * 0.02f).row();
+
+        randomButton = createButton("RANDOM MATCH", this::onRandomMatch, greenUp, greenDown);
+        mainTable.add(randomButton).padBottom(15f).row();
+
+        Label userLabel = new Label("Opponent Username:", labelStyle);
+        mainTable.add(userLabel).center().padBottom(6f).row();
+
+        usernameField = createField("Enter username");
+        mainTable.add(usernameField).width(FIELD_WIDTH).height(BUTTON_HEIGHT).center().row();
+
+        challengeButton = createButton("CHALLENGE", this::onChallengeUser, purpleUp, purpleDown);
+        mainTable.add(challengeButton).padTop(10f).padBottom(20f).row();
+
+        statusLabel = new Label("", labelStyle);
+        statusLabel.setAlignment(Align.center);
+        statusLabel.setWrap(true);
+        mainTable.add(statusLabel).width(FIELD_WIDTH * 1.5f).height(80f).padBottom(15f).row();
+
+        backButton = createButton("BACK", this::onBack, purpleUp, purpleDown);
+        mainTable.add(backButton).padTop(10f).row();
+
+        ScrollPane scrollPane = new ScrollPane(mainTable, PvzSkin.get());
+        scrollPane.setFillParent(true);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(false, false);
+        scrollPane.setOverscroll(false, true);
+        addActor(scrollPane);
+    }
+
+    private void connectToServer() {
+        try {
+            if (!NetworkSession.isConnected()) {
+                NetworkSession.connect("localhost");
+            }
+            setStatus("Connected to server.", Color.GREEN);
+        } catch (IOException e) {
+            setStatus("Could not connect to server: " + e.getMessage(), Color.SALMON);
+            setButtonsEnabled(false);
+        }
+    }
+
+    private void registerPushListeners() {
+        NetworkSession.client().on(MessageType.MATCH_FOUND, msg -> {
+            Gdx.app.postRunnable(() -> onMatchFound(msg));
+        });
+    }
+
+    private void setButtonsEnabled(boolean enabled) {
+        randomButton.setDisabled(!enabled);
+        challengeButton.setDisabled(!enabled);
+        usernameField.setDisabled(!enabled);
+        backButton.setDisabled(!enabled);
+    }
+
+    private void setButtonsForQueue(boolean queueActive) {
+        randomButton.setDisabled(false);
+        challengeButton.setDisabled(queueActive);
+        usernameField.setDisabled(queueActive);
+        backButton.setDisabled(queueActive);
+    }
+
+    private void setStatus(String text, Color color) {
+        statusLabel.setText(text);
+        statusLabel.setColor(color);
+    }
+
+    private void setStatus(String text) {
+        setStatus(text, Color.WHITE);
+    }
+
+    private void onRandomMatch() {
+        if (!NetworkSession.isConnected()) {
+            setStatus("Not connected to server.", Color.SALMON);
+            return;
+        }
+
+        if (inQueue) {
+            NetworkSession.client().sendFireAndForget(
+                NetworkMessage.push(MessageType.LEAVE_RANDOM_QUEUE));
+            inQueue = false;
+            setButtonsForQueue(false);
+            randomButton.setText("RANDOM MATCH");
+            setStatus("Left random queue.", Color.WHITE);
+            return;
+        }
+
+        inQueue = true;
+        setButtonsForQueue(true);
+        randomButton.setText("CANCEL");
+        setStatus("Searching for an opponent...", Color.GOLD);
+
+        NetworkMessage request = NetworkMessage.request(MessageType.JOIN_RANDOM_QUEUE);
+        NetworkSession.client().sendRequest(request).thenAccept(response -> {
+            Gdx.app.postRunnable(() -> {
+                if (response.getBoolean("success", true)) {
+                    setStatus("Waiting in random queue...", Color.GOLD);
+                } else {
+                    setStatus(response.getString("message", "Failed to join queue."), Color.SALMON);
+                    inQueue = false;
+                    setButtonsForQueue(false);
+                    randomButton.setText("RANDOM MATCH");
+                }
+            });
+        }).exceptionally(ex -> {
+            Gdx.app.postRunnable(() -> {
+                setStatus("Connection error: " + ex.getMessage(), Color.SALMON);
+                inQueue = false;
+                setButtonsForQueue(false);
+                randomButton.setText("RANDOM MATCH");
+            });
+            return null;
+        });
+    }
+
+    private void onChallengeUser() {
+        String username = usernameField.getText().trim();
+        if (username.isEmpty()) {
+            setStatus("Please enter a username.", Color.SALMON);
+            return;
+        }
+        if (!NetworkSession.isConnected()) {
+            setStatus("Not connected to server.", Color.SALMON);
+            return;
+        }
+
+        setStatus("Sending challenge...", Color.GOLD);
+
+        NetworkMessage request = NetworkMessage.request(MessageType.CHALLENGE_USER)
+            .with("username", username);
+
+        NetworkSession.client().sendRequest(request).thenAccept(response -> {
+            Gdx.app.postRunnable(() -> {
+                if (response.getBoolean("success", false)) {
+                    setStatus("Invitation sent to " + username + ".", Color.GREEN);
+                } else {
+                    setStatus(response.getString("message", "Challenge failed."), Color.SALMON);
+                }
+            });
+        }).exceptionally(ex -> {
+            Gdx.app.postRunnable(() ->
+                setStatus("Connection error: " + ex.getMessage(), Color.SALMON));
+            return null;
+        });
+    }
+
+    private void onBack() {
+        if (inQueue) {
+            setStatus("Please cancel the queue first.", Color.GOLD);
+            return;
+        }
+        AppStatus.setCurrentMenuType(MenuType.MAIN);
+    }
+
+    private void onMatchFound(NetworkMessage msg) {
+        setStatus("Match found! Starting game...", Color.GREEN);
+        // TODO: شروع بازی آنلاین
+    }
+
+    private MenuButton createTitleButton(String text) {
+        MenuButton btn = new MenuButton(purpleUp, text, bigFont, purpleDown, null, marker, () -> {});
+        btn.setDisabled(true);
+        btn.setSize(Math.max(btn.getTextWidth() + 60f, 250f), BUTTON_HEIGHT * 1.2f);
+        return btn;
+    }
+
+    private MenuButton createButton(String text, Runnable action, Texture up, Texture down) {
+        MenuButton btn = new MenuButton(up, text, bigFont, down, null, marker, action);
+        btn.setSize(Math.max(btn.getTextWidth() + 60f, 200f), BUTTON_HEIGHT);
+        return btn;
+    }
+
+    private TextField createField(String placeholder) {
+        TextField f = new TextField("", fieldStyle);
+        f.setMessageText(placeholder);
+        return f;
+    }
+
+    @Override
+    public void dispose() {
+        if (inQueue) {
+            NetworkSession.client().sendFireAndForget(
+                NetworkMessage.push(MessageType.LEAVE_RANDOM_QUEUE));
+        }
+        super.dispose();
+    }
+}

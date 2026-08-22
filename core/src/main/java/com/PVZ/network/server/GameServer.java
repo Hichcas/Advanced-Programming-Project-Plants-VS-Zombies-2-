@@ -2,6 +2,7 @@ package com.PVZ.network.server;
 
 import com.PVZ.database.UserDatabase;
 import com.PVZ.network.server.handlers.AuthHandlers;
+import com.PVZ.network.server.handlers.MatchmakingHandlers;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -37,7 +38,7 @@ public class GameServer {
         this.port = port;
         AuthHandlers.registerAll(dispatcher);
         // نفرات دیگر تیم اینجا Handlerهای خودشان را ثبت می‌کنند، مثلا:
-        //   MatchmakingHandlers.registerAll(dispatcher);
+           MatchmakingHandlers.registerAll(dispatcher);
         //   GameSyncHandlers.registerAll(dispatcher);
         //   ReactionHandlers.registerAll(dispatcher);
         //   LeaderboardHandlers.registerAll(dispatcher);

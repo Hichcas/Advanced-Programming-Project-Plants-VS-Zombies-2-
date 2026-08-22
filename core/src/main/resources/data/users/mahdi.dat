@@ -15,7 +15,8 @@
     "stagesCompleted" : 0,
     "highestScore" : 0,
     "dailyQuestsCompleted" : 0,
-    "nonDailyQuestsCompleted" : 0
+    "nonDailyQuestsCompleted" : 0,
+    "purchasedPlantFood" : 0
   },
   "progressState" : {
     "completedLevels" : {
@@ -181,8 +182,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfUnlockedPots" : 5,
-    "numberOfLockedPots" : 15
+    "numberOfLockedPots" : 7,
+    "numberOfUnlockedPots" : 5
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -195,15 +196,19 @@
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "forToday" : false,
-    "availableToday" : false
+    "availableToday" : false,
+    "forToday" : false
   },
   "stayLoggedIn" : false,
   "questState" : {
     "questManager" : {
       "activeQuests" : [ ],
       "lastDailyRefresh" : null,
-      "timeUntilReset" : "11h 18m"
+      "consecutiveMaxDifficultyWins" : 0,
+      "currentChapter" : "ANCIENT_EGYPT",
+      "currentDifficulty" : 1,
+      "isDayLevel" : true,
+      "timeUntilReset" : "8h 16m"
     }
   }
 }
