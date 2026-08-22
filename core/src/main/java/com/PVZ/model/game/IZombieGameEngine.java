@@ -76,6 +76,9 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
 
     public void initializeBoard() {
         if (map == null || game == null) return;
+        if (gameStatus != null) {
+            gameStatus.setSunflower(game.getSun());
+        }
         seedRandomPlants();
         spawnSunZombies();
         layoutZombieBar();
@@ -158,6 +161,9 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     @Override
     public void update(float delta) {
         hudAnimTime += delta;
+        if (game != null && gameStatus != null) {
+            gameStatus.setSunflower(game.getSun());
+        }
         if (gameOverTriggered) {
             updateGameOverTimer(delta);
             return;
@@ -461,7 +467,14 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     public int getSunCount() { return game != null ? game.getSun() : 0; }
 
     @Override
-    public void addSun(int amount) { if (game != null) game.addSun(amount); }
+    public void addSun(int amount) {
+        if (game != null) {
+            game.addSun(amount);
+            if (gameStatus != null) {
+                gameStatus.setSunflower(game.getSun());
+            }
+        }
+    }
 
     @Override
     public void spawnProjectile(Projectile p) { projectiles.add(p); }

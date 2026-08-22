@@ -38,7 +38,16 @@ public class IZombieMenuController {
             case SHOW_ROSTER -> showRoster();
             case SHOW_BOARD -> showBoard();
             case EXIT -> exit();
+            case CHEAT_ADD_SUNS -> handleCheatAddSuns(dto.getAmount());
         };
+    }
+
+    private OutputDTO handleCheatAddSuns(int amount) {
+        if (currentGame == null || currentEngine == null) {
+            return new OutputDTO(false, "No active I, Zombie game.");
+        }
+        currentEngine.addSun(amount);
+        return new OutputDTO(true, "Added " + amount + " suns. Total sun: " + currentGame.getSun());
     }
 
     private OutputDTO startLevel(int levelId) {

@@ -10,17 +10,23 @@ public class IZombieInputDTO implements InputDTO {
     private final int row;
     private final int col;
     private final String zombieAlias;
+    private final int amount;
 
     public IZombieInputDTO(IZombieCommand command, int levelId, int row, int col, String zombieAlias) {
+        this(command, levelId, row, col, zombieAlias, 0);
+    }
+
+    public IZombieInputDTO(IZombieCommand command, int levelId, int row, int col, String zombieAlias, int amount) {
         this.command = command;
         this.levelId = levelId;
         this.row = row;
         this.col = col;
         this.zombieAlias = zombieAlias;
+        this.amount = amount;
     }
 
     public static IZombieInputDTO invalid() {
-        return new IZombieInputDTO(null, -1, -1, -1, null);
+        return new IZombieInputDTO(null, -1, -1, -1, null, 0);
     }
 
     public IZombieCommand getCommand() { return command; }
@@ -28,4 +34,5 @@ public class IZombieInputDTO implements InputDTO {
     public int getRow() { return row; }
     public int getCol() { return col; }
     public String getZombieAlias() { return zombieAlias; }
+    public int getAmount() { return amount; }
 }
