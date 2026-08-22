@@ -25,6 +25,16 @@ public class ClientSession implements Runnable {
     private volatile String username; // null تا وقتی لاگین موفق انجام نشده
     private final List<Runnable> disconnectListeners = new CopyOnWriteArrayList<>();
 
+    private volatile boolean inGame = false;
+
+    public boolean isInGame() {
+        return inGame;
+    }
+
+    public void setInGame(boolean inGame) {
+        this.inGame = inGame;
+    }
+
     public ClientSession(Socket socket, RequestDispatcher dispatcher) throws IOException {
         this.channel = new MessageChannel(socket);
         this.dispatcher = dispatcher;

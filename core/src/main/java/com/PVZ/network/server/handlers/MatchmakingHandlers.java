@@ -39,7 +39,6 @@ public final class MatchmakingHandlers {
             return error(request, "Not logged in.");
         }
 
-        // اگر در صف است، ورود مجدد بی‌اثر باشد
         MatchmakingManager.getInstance().joinRandomQueue(session);
         return NetworkMessage.reply(request.getRequestId(), MessageType.JOIN_RANDOM_QUEUE)
             .with("success", true)

@@ -1,8 +1,8 @@
 {
   "profile" : {
-    "username" : "mahdiOnline2",
-    "nickname" : "mahdiOnline2",
-    "email" : "mahdimahdi@gmail.com",
+    "username" : "mahdiOnline1",
+    "nickname" : "mahdiOnline1",
+    "email" : "mahdiOnline1@gmail.com",
     "gender" : "male",
     "passwordHash" : "6239b479b97a15a5a494351afcc22b5b85627f37250649713c0d6f4d1d10100a",
     "securityQuestion" : "What is your favorite color?",
@@ -20,21 +20,21 @@
   },
   "progressState" : {
     "completedLevels" : {
+      "DARK_AGES" : -1,
       "FROSTBITE_CAVES" : -1,
       "BIG_WAVE_BEACH" : -1,
-      "ANCIENT_EGYPT" : 1,
-      "DARK_AGES" : -1
+      "ANCIENT_EGYPT" : 1
     },
     "minigameClearedCounts" : {
-      "VASEBREAKER" : 0,
-      "ZOMBOTANY" : 0,
-      "I_ZOMBIE" : 0,
       "BEGHOULED" : 0,
-      "WALLNUT_BOWLING" : 0
+      "WALLNUT_BOWLING" : 0,
+      "I_ZOMBIE" : 0,
+      "VASEBREAKER" : 0,
+      "ZOMBOTANY" : 0
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "SUNFLOWER", "PEASHOOTER" ],
+    "unlockedPlants" : [ "PEASHOOTER", "SUNFLOWER" ],
     "seenZombies" : [ ],
     "seedPackets" : { },
     "plantLevels" : { },
@@ -140,8 +140,8 @@
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "availableToday" : false,
-    "forToday" : false
+    "forToday" : false,
+    "availableToday" : false
   },
   "stayLoggedIn" : false,
   "questState" : {
@@ -167,8 +167,8 @@
         },
         "active" : true,
         "formattedTitle" : "Economic Herbivore",
-        "runtimeState" : { },
-        "formattedDescription" : "Win without losing more than 3 plants"
+        "formattedDescription" : "Win without losing more than 3 plants",
+        "runtimeState" : { }
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -188,8 +188,8 @@
         "parameters" : { },
         "active" : true,
         "formattedTitle" : "Speed Run",
-        "runtimeState" : { },
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
+        "runtimeState" : { }
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -209,8 +209,8 @@
         "parameters" : { },
         "active" : true,
         "formattedTitle" : "Master of Defense",
-        "runtimeState" : { },
-        "formattedDescription" : "End a level with exactly 0 sun"
+        "formattedDescription" : "End a level with exactly 0 sun",
+        "runtimeState" : { }
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -230,8 +230,8 @@
         "parameters" : { },
         "active" : true,
         "formattedTitle" : "Day or Night",
-        "runtimeState" : { },
-        "formattedDescription" : "Win a day level using only mushrooms"
+        "formattedDescription" : "Win a day level using only mushrooms",
+        "runtimeState" : { }
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -239,22 +239,22 @@
         "type" : "EPIC",
         "priority" : "MEDIUM",
         "conditionKey" : "lawnmower_kill",
-        "targetCount" : 50,
+        "targetCount" : 10,
         "currentCount" : 0,
         "completed" : false,
         "claimed" : false,
         "reward" : {
           "type" : "DIAMONDS",
-          "amount" : 50,
+          "amount" : 10,
           "targetPlant" : null
         },
         "parameters" : {
-          "n" : 50
+          "n" : 10
         },
         "active" : true,
         "formattedTitle" : "Lawnmower Time",
-        "runtimeState" : { },
-        "formattedDescription" : "Kill at least 50 zombies with lawnmowers"
+        "formattedDescription" : "Kill at least 10 zombies with lawnmowers",
+        "runtimeState" : { }
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -276,15 +276,15 @@
         },
         "active" : true,
         "formattedTitle" : "Chapter Hunter",
-        "runtimeState" : { },
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
+        "formattedDescription" : "Defeat 50 zombies from Ancient Egypt",
+        "runtimeState" : { }
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 1,
       "isDayLevel" : true,
-      "timeUntilReset" : "8h 35m"
+      "timeUntilReset" : "8h 44m"
     }
   }
 }
