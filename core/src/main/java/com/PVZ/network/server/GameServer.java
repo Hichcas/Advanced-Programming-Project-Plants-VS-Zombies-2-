@@ -49,7 +49,16 @@ public class GameServer {
     }
 
     public void start() throws IOException {
-        UserDatabase.init();
+        try {
+            UserDatabase.init();
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            // UserDatabase.init با throws Exception تعریف شده؛ اینجا به IOException
+            // تبدیلش می‌کنیم تا امضای start() تمیز بماند و خطای راه‌اندازی دیتابیس
+            // همان اول (fail-fast) با پیام روش گزارش شود.
+            throw new IOException("Failed to initialize user database: " + e.getMessage(), e);
+        }
         UserRegistryWarmup.loadExistingUsers();
 
         serverSocket = new ServerSocket(port);
