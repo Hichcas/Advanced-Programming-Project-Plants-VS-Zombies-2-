@@ -76,6 +76,9 @@ public class MenuPanelSwitcher {
             case LEADERBOARD:
                 PanelManager.getInstance().performPanelTransition(new LeaderboardPanel());
                 break;
+            case NETWORK:
+                PanelManager.getInstance().performPanelTransition(new OnlineGamePanel());
+                break;
             default:
                 System.err.println("No UI panel mapped for menu: " + menuType);
                 break;
