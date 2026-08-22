@@ -336,4 +336,8 @@ public class MenuButton extends Actor {
         if (hoverSound != null) { hoverSound.dispose(); hoverSound = null; }
         if (clickSound != null) { clickSound.dispose(); clickSound = null; }
     }
+
+    public void setClickAction(Runnable clickAction) {
+        this.clickAction = clickAction;
+    }
 }
