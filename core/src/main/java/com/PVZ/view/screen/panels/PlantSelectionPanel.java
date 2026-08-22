@@ -442,6 +442,29 @@ public class PlantSelectionPanel extends BasePanel {
     }
 
     private void onLetsRock() {
+        if (AppStatus.isMultiplayerMatch) {
+            if (AppStatus.SELECTED_PLANTS.isEmpty()) {
+                statusLabel.setText("Please select at least 1 plant.");
+                return;
+            }
+            AppStatus.currentMenuType = MenuType.IN_GAME;
+            com.PVZ.model.game.IZombieMultiplayerGameEngine engine = new com.PVZ.model.game.IZombieMultiplayerGameEngine(
+                "PLANT",
+                AppStatus.multiplayerOpponent,
+                AppStatus.multiplayerRoomId,
+                AppStatus.multiplayerLevelId,
+                new ArrayList<>(AppStatus.SELECTED_PLANTS),
+                null
+            );
+            AppStatus.setGameEngine(engine);
+            ScreenManager.getInstance().performTransition(() -> new GameScreen(
+                "maps/Frontyard.jpg",
+                "music/TitleScreen.mp3",
+                engine
+            ));
+            return;
+        }
+
         OutputDTO result = plantController.handle(new PlantSelectionInputDTO(PlantSelectionCommand.START_GAME, null));
         if (!result.isSuccess()) {
             statusLabel.setText(stripColorCodes(result.getMessage()));

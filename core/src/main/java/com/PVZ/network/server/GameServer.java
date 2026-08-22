@@ -37,9 +37,8 @@ public class GameServer {
     public GameServer(int port) {
         this.port = port;
         AuthHandlers.registerAll(dispatcher);
-        // نفرات دیگر تیم اینجا Handlerهای خودشان را ثبت می‌کنند، مثلا:
-           MatchmakingHandlers.registerAll(dispatcher);
-        //   GameSyncHandlers.registerAll(dispatcher);
+        MatchmakingHandlers.registerAll(dispatcher);
+        com.PVZ.network.server.handlers.GameSyncHandlers.registerAll(dispatcher);
         //   ReactionHandlers.registerAll(dispatcher);
         //   LeaderboardHandlers.registerAll(dispatcher);
     }

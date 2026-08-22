@@ -21,9 +21,13 @@ public class OnlineGamePanel extends BasePanel {
     private TextField usernameField;
     private Label statusLabel;
     private MenuButton randomButton;
+    private MenuButton roleButton;
+    private MenuButton levelButton;
     private MenuButton challengeButton;
     private MenuButton backButton;
 
+    private String selectedRole = "PLANT";
+    private int selectedLevel = 1;
     private boolean inQueue = false;
 
     private final BitmapFont bigFont;
@@ -83,8 +87,14 @@ public class OnlineGamePanel extends BasePanel {
         usernameField = createField("Enter username");
         mainTable.add(usernameField).width(FIELD_WIDTH).height(BUTTON_HEIGHT).center().row();
 
+        roleButton = createButton("PLAY AS: " + selectedRole, this::onToggleRole, greenUp, greenDown);
+        mainTable.add(roleButton).padTop(10f).padBottom(5f).row();
+
+        levelButton = createButton("LEVEL: " + selectedLevel, this::onToggleLevel, purpleUp, purpleDown);
+        mainTable.add(levelButton).padTop(5f).padBottom(5f).row();
+
         challengeButton = createButton("CHALLENGE", this::onChallengeUser, purpleUp, purpleDown);
-        mainTable.add(challengeButton).padTop(10f).padBottom(20f).row();
+        mainTable.add(challengeButton).padTop(5f).padBottom(20f).row();
 
         statusLabel = new Label("", labelStyle);
         statusLabel.setAlignment(Align.center);
@@ -122,6 +132,8 @@ public class OnlineGamePanel extends BasePanel {
 
     private void setButtonsEnabled(boolean enabled) {
         randomButton.setDisabled(!enabled);
+        roleButton.setDisabled(!enabled);
+        levelButton.setDisabled(!enabled);
         challengeButton.setDisabled(!enabled);
         usernameField.setDisabled(!enabled);
         backButton.setDisabled(!enabled);
@@ -129,6 +141,8 @@ public class OnlineGamePanel extends BasePanel {
 
     private void setButtonsForQueue(boolean queueActive) {
         randomButton.setDisabled(false);
+        roleButton.setDisabled(queueActive);
+        levelButton.setDisabled(queueActive);
         challengeButton.setDisabled(queueActive);
         usernameField.setDisabled(queueActive);
         backButton.setDisabled(queueActive);
@@ -187,6 +201,16 @@ public class OnlineGamePanel extends BasePanel {
         });
     }
 
+    private void onToggleRole() {
+        selectedRole = selectedRole.equals("PLANT") ? "ZOMBIE" : "PLANT";
+        roleButton.setText("PLAY AS: " + selectedRole);
+    }
+
+    private void onToggleLevel() {
+        selectedLevel = (selectedLevel % 3) + 1;
+        levelButton.setText("LEVEL: " + selectedLevel);
+    }
+
     private void onChallengeUser() {
         String username = usernameField.getText().trim();
         if (username.isEmpty()) {
@@ -201,7 +225,9 @@ public class OnlineGamePanel extends BasePanel {
         setStatus("Sending challenge...", Color.GOLD);
 
         NetworkMessage request = NetworkMessage.request(MessageType.CHALLENGE_USER)
-            .with("username", username);
+            .with("username", username)
+            .with("role", selectedRole)
+            .with("levelId", selectedLevel);
 
         NetworkSession.client().sendRequest(request).thenAccept(response -> {
             Gdx.app.postRunnable(() -> {
@@ -227,8 +253,32 @@ public class OnlineGamePanel extends BasePanel {
     }
 
     private void onMatchFound(NetworkMessage msg) {
-        setStatus("Match found! Starting game...", Color.GREEN);
-        // TODO: شروع بازی آنلاین
+        setStatus("Match found! Directing to selection...", Color.GREEN);
+        String opponent = msg.getString("opponent", "Opponent");
+        String roomId = msg.getString("roomId", "");
+        String role = msg.getString("role", "ZOMBIE");
+        int levelId = msg.getInt("levelId", 1);
+
+        inQueue = false;
+        setButtonsForQueue(false);
+        randomButton.setText("RANDOM MATCH");
+
+        AppStatus.isMultiplayerMatch = true;
+        AppStatus.multiplayerRole = role;
+        AppStatus.multiplayerOpponent = opponent;
+        AppStatus.multiplayerRoomId = roomId;
+        AppStatus.multiplayerLevelId = levelId;
+        AppStatus.pendingIZombieLevelId = levelId;
+
+        if ("PLANT".equalsIgnoreCase(role)) {
+            AppStatus.currentChapterName = "Frontyard";
+            AppStatus.currentStageNumber = 1;
+            AppStatus.SELECTED_PLANTS.clear();
+            AppStatus.setCurrentMenuType(MenuType.PLANT_SELECTION);
+        } else {
+            AppStatus.SELECTED_ZOMBIES.clear();
+            AppStatus.setCurrentMenuType(MenuType.I_ZOMBIE_SELECTION);
+        }
     }
 
     private MenuButton createTitleButton(String text) {

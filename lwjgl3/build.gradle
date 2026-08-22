@@ -61,6 +61,11 @@ run {
   standardInput = System.in
 }
 
+processResources {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  exclude('pvz-assets/**')
+}
+
 jar {
 // sets the name of the .jar file this produces to the name of the game or app, with the version after.
   archiveFileName.set("${appName}-${projectVersion}.jar")

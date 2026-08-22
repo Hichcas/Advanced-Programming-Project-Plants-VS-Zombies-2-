@@ -59,6 +59,13 @@ public final class AppStatus {
     public static String announcementText = null;
     public static float announcementTimer = 0f;
 
+    // ====================== وضعیت بازی آنلاین دونفره ======================
+    public static boolean isMultiplayerMatch = false;
+    public static String multiplayerRole = "ZOMBIE";
+    public static String multiplayerOpponent = "";
+    public static String multiplayerRoomId = "";
+    public static int multiplayerLevelId = 1;
+
     public static void showAnnouncement(String text) {
         announcementText = text;
         announcementTimer = 3f;
