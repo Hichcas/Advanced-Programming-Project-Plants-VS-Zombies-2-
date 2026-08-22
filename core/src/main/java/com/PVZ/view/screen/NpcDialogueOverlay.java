@@ -100,8 +100,6 @@ public class NpcDialogueOverlay extends Actor {
                 if (duration != null) {
                     resolvedDurations.put(stateName, duration.floatValue());
                 }
-            } else {
-                System.err.println("[NPC] Clip not resolved for state: " + stateName);
             }
         }
 
@@ -111,8 +109,6 @@ public class NpcDialogueOverlay extends Actor {
             exitDuration = exitDur;
         }
 
-        System.out.println("[NPC] Resolved clips: " + resolvedClips);
-        System.out.println("[NPC] Exit duration: " + exitDuration);
     }
 
     public void showDialogue() {
@@ -127,7 +123,6 @@ public class NpcDialogueOverlay extends Actor {
         toFront();
 
         state = State.ENTER;
-        System.out.println("[NPC] Dialogue started, state=ENTER, lines=" + lines.size());
     }
 
     public boolean isShowing() {
@@ -255,7 +250,6 @@ public class NpcDialogueOverlay extends Actor {
         } else {
             state = State.TALK;
         }
-        System.out.println("[NPC] beginLine index=" + lineIndex + " state=" + state);
     }
 
     private void advanceDialogue() {
@@ -322,7 +316,6 @@ public class NpcDialogueOverlay extends Actor {
                 if (visibleChars >= lines.get(lineIndex).length()) {
                     state = State.WAIT;
                     stateTimer = 0f;
-                    System.out.println("[NPC] Typing complete, WAIT");
                 }
             }
             case WAIT -> {
@@ -344,7 +337,6 @@ public class NpcDialogueOverlay extends Actor {
                     showing = false;
                     setVisible(false);
                     state = State.HIDDEN;
-                    System.out.println("[NPC] Overlay hidden");
                 }
             }
             default -> {

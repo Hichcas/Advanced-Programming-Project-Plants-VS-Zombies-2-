@@ -237,7 +237,6 @@ public class MainMenuPanel extends BasePanel {
     private void startOnlineGame() {
         // TODO: بعداً پنل بازی آنلاین واقعی را جایگزین کنید
         AppStatus.setCurrentMenuType(MenuType.NETWORK); // موقتاً
-        System.out.println("Online game panel is not implemented yet. (Placeholder)");
     }
 
     private void onSettings() {
