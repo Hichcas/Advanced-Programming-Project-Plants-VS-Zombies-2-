@@ -8,6 +8,7 @@ import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.game.chapter.ChapterLibrary;
 import com.PVZ.model.user.UserRegistry;
 import com.PVZ.model.user.User;
+import com.PVZ.network.client.NetworkSession;
 import com.PVZ.view.screen.MainMenuScreen;
 import com.PVZ.view.input.CommandParser;
 import com.PVZ.view.screen.manager.*;
@@ -43,11 +44,17 @@ public class PVZ extends Game {
         ChapterLibrary.load();
 
         UserRegistry.loadAllFromDatabase();
+        // فاز شبکه: تا وقتی سرور در دسترس است، ورود باید از مسیر احراز هویت
+        // سرور انجام شود (سند فاز ۳) - وگرنه کاربر stayLoggedIn بدون اطلاع
+        // سرور وارد می‌شد و SessionRegistry او را آنلاین نمی‌دید. auto-login
+        // محلی فقط برای حالت آفلاین (سرور خاموش) نگه داشته شده است.
         User autoUser = null;
-        for (User u : UserRegistry.allUsers()) {
-            if (u.isStayLoggedIn()) {
-                autoUser = u;
-                break;
+        if (!NetworkSession.isConnected()) {
+            for (User u : UserRegistry.allUsers()) {
+                if (u.isStayLoggedIn()) {
+                    autoUser = u;
+                    break;
+                }
             }
         }
         if (autoUser != null) {
