@@ -10,20 +10,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import pvz.skin.PvzSkin;
 
 import java.io.IOException;
 
-/**
- * پنل بازی آنلاین – انتخاب رقیب (تصادفی یا با یوزرنیم مشخص).
- * شامل رفتارهای کامل: چالش با کاربر مشخص، صف تصادفی با قابلیت انصراف،
- * و نمایش خطاهای مناسب (یوزر موجود نیست / خودتی / آفلاین و غیره).
- */
 public class OnlineGamePanel extends BasePanel {
 
     private TextField usernameField;
@@ -31,10 +23,6 @@ public class OnlineGamePanel extends BasePanel {
     private MenuButton randomButton;
     private MenuButton challengeButton;
     private MenuButton backButton;
-
-    private Table invitationPopup;
-    private Label invitationLabel;
-    private String pendingInviter;
 
     private boolean inQueue = false;
 
@@ -83,82 +71,35 @@ public class OnlineGamePanel extends BasePanel {
         mainTable.defaults().pad(8f);
         mainTable.align(Align.center);
 
-        // عنوان
         MenuButton title = createTitleButton("ONLINE GAME");
         mainTable.add(title).padBottom(SCREEN_H * 0.02f).row();
 
-        // دکمه Random Match
         randomButton = createButton("RANDOM MATCH", this::onRandomMatch, greenUp, greenDown);
         mainTable.add(randomButton).padBottom(15f).row();
 
-        // فاصله
-        mainTable.add(new Label("", labelStyle)).row();
-
-        // فیلد یوزرنیم
         Label userLabel = new Label("Opponent Username:", labelStyle);
         mainTable.add(userLabel).center().padBottom(6f).row();
 
         usernameField = createField("Enter username");
         mainTable.add(usernameField).width(FIELD_WIDTH).height(BUTTON_HEIGHT).center().row();
 
-        // دکمه Challenge
         challengeButton = createButton("CHALLENGE", this::onChallengeUser, purpleUp, purpleDown);
         mainTable.add(challengeButton).padTop(10f).padBottom(20f).row();
 
-        // وضعیت / پیام خطا
         statusLabel = new Label("", labelStyle);
         statusLabel.setAlignment(Align.center);
         statusLabel.setWrap(true);
         mainTable.add(statusLabel).width(FIELD_WIDTH * 1.5f).height(80f).padBottom(15f).row();
 
-        // دکمه بازگشت
         backButton = createButton("BACK", this::onBack, purpleUp, purpleDown);
         mainTable.add(backButton).padTop(10f).row();
 
-        // اسکرول برای کل محتوا
         ScrollPane scrollPane = new ScrollPane(mainTable, PvzSkin.get());
         scrollPane.setFillParent(true);
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollingDisabled(false, false);
         scrollPane.setOverscroll(false, true);
         addActor(scrollPane);
-
-        // Popup دعوت
-        invitationPopup = buildInvitationPopup();
-        invitationPopup.setVisible(false);
-        addActor(invitationPopup);
-    }
-
-    private Table buildInvitationPopup() {
-        Table popup = new Table();
-        popup.setSize(600f, 260f);
-        popup.setPosition((Gdx.graphics.getWidth() - 600f) / 2f,
-            (Gdx.graphics.getHeight() - 260f) / 2f);
-        popup.setBackground(PvzSkin.get().getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
-        popup.pad(25f);
-
-        invitationLabel = new Label("", labelStyle);
-        invitationLabel.setWrap(true);
-        invitationLabel.setAlignment(Align.center);
-        popup.add(invitationLabel).colspan(2).width(500f).padBottom(20f).row();
-
-        MenuButton acceptBtn = createButton("ACCEPT", () -> respondToInvitation(true), greenUp, greenDown);
-        acceptBtn.setSize(160f, 60f);
-
-        MenuButton declineBtn = createButton("DECLINE", () -> respondToInvitation(false), purpleUp, purpleDown);
-        declineBtn.setSize(160f, 60f);
-
-        popup.add(acceptBtn).size(160f, 60f).padRight(30f);
-        popup.add(declineBtn).size(160f, 60f);
-
-        popup.setTouchable(Touchable.enabled); // جلوگیری از کلیک پس‌زمینه
-        popup.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true; // جلوگیری از بستن تصادفی پاپ‌آپ
-            }
-        });
-        return popup;
     }
 
     private void connectToServer() {
@@ -174,13 +115,6 @@ public class OnlineGamePanel extends BasePanel {
     }
 
     private void registerPushListeners() {
-        // دعوت‌نامه از طرف کاربر دیگر
-        NetworkSession.client().on(MessageType.CHALLENGE_INVITATION, msg -> {
-            String from = msg.getString("from");
-            Gdx.app.postRunnable(() -> showInvitation(from));
-        });
-
-        // شروع بازی وقتی حریف پیدا شد
         NetworkSession.client().on(MessageType.MATCH_FOUND, msg -> {
             Gdx.app.postRunnable(() -> onMatchFound(msg));
         });
@@ -193,12 +127,8 @@ public class OnlineGamePanel extends BasePanel {
         backButton.setDisabled(!enabled);
     }
 
-    /**
-     * در حالت صف فقط دکمه‌ی Random (که به Cancel تبدیل شده) فعال است؛
-     * بقیه‌ی دکمه‌ها و فیلد یوزرنیم غیرفعال می‌شوند.
-     */
     private void setButtonsForQueue(boolean queueActive) {
-        randomButton.setDisabled(false); // همیشه فعال: یا RANDOM MATCH یا CANCEL
+        randomButton.setDisabled(false);
         challengeButton.setDisabled(queueActive);
         usernameField.setDisabled(queueActive);
         backButton.setDisabled(queueActive);
@@ -213,8 +143,6 @@ public class OnlineGamePanel extends BasePanel {
         setStatus(text, Color.WHITE);
     }
 
-    // ======================== اکشن‌ها ========================
-
     private void onRandomMatch() {
         if (!NetworkSession.isConnected()) {
             setStatus("Not connected to server.", Color.SALMON);
@@ -222,7 +150,6 @@ public class OnlineGamePanel extends BasePanel {
         }
 
         if (inQueue) {
-            // خروج از صف
             NetworkSession.client().sendFireAndForget(
                 NetworkMessage.push(MessageType.LEAVE_RANDOM_QUEUE));
             inQueue = false;
@@ -232,7 +159,6 @@ public class OnlineGamePanel extends BasePanel {
             return;
         }
 
-        // ورود به صف
         inQueue = true;
         setButtonsForQueue(true);
         randomButton.setText("CANCEL");
@@ -294,59 +220,16 @@ public class OnlineGamePanel extends BasePanel {
 
     private void onBack() {
         if (inQueue) {
-            // اگر در صف است، فقط پیام بده و اجازه‌ی خروج نده
             setStatus("Please cancel the queue first.", Color.GOLD);
             return;
         }
         AppStatus.setCurrentMenuType(MenuType.MAIN);
     }
 
-    // ======================== پاپ‌آپ دعوت ========================
-
-    private void showInvitation(String from) {
-        pendingInviter = from;
-        invitationLabel.setText(from + " has invited you to play!");
-        invitationPopup.setVisible(true);
-        invitationPopup.toFront();
-    }
-
-    private void respondToInvitation(boolean accept) {
-        if (pendingInviter == null) {
-            return;
-        }
-
-        NetworkMessage response = NetworkMessage.request(MessageType.CHALLENGE_RESPONSE)
-            .with("accept", accept)
-            .with("inviter", pendingInviter);
-
-        NetworkSession.client().sendRequest(response).thenAccept(resp -> {
-            Gdx.app.postRunnable(() -> {
-                invitationPopup.setVisible(false);
-                pendingInviter = null;
-                if (resp.getBoolean("success", false)) {
-                    setStatus("Invitation accepted. Waiting for game start...", Color.GREEN);
-                } else {
-                    setStatus(resp.getString("message", "Invitation declined."), Color.SALMON);
-                }
-            });
-        }).exceptionally(ex -> {
-            Gdx.app.postRunnable(() -> {
-                invitationPopup.setVisible(false);
-                pendingInviter = null;
-                setStatus("Connection error: " + ex.getMessage(), Color.SALMON);
-            });
-            return null;
-        });
-    }
-
     private void onMatchFound(NetworkMessage msg) {
-        // TODO: بعداً به بازی آنلاین منتقل شوید
         setStatus("Match found! Starting game...", Color.GREEN);
-        // اینجا می‌توانید GameScreen آنلاین را راه‌اندازی کنید
-        // برای مثال: AppStatus.setGameEngine(...);
+        // TODO: شروع بازی آنلاین
     }
-
-    // ======================== متدهای کمکی ساخت UI ========================
 
     private MenuButton createTitleButton(String text) {
         MenuButton btn = new MenuButton(purpleUp, text, bigFont, purpleDown, null, marker, () -> {});
