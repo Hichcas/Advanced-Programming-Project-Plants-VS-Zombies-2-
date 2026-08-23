@@ -135,7 +135,7 @@ public class ProfileMenuController {
         builder.append("Coins: ").append(currentUser.userStats.getCoins()).append('\n');
         builder.append("Diamonds: ").append(currentUser.userStats.getDiamonds()).append('\n');
         builder.append("Stages completed: ").append(currentUser.userStats.getStagesCompleted()).append('\n');
-        builder.append("Highest score: ").append(currentUser.userStats.getHighestScore());
+        builder.append("MyoPoint: ").append(currentUser.userStats.getHighestScore());
 
         return new OutputDTO(true, builder.toString());
     }

@@ -88,7 +88,7 @@ public class ProfilePanel extends BasePanel {
         coinsLabel    = addInfoRow(mainTable, "Coins:", "");
         diamondsLabel = addInfoRow(mainTable, "Diamonds:", "");
         stagesLabel   = addInfoRow(mainTable, "Stages completed:", "");
-        scoreLabel    = addInfoRow(mainTable, "Highest score:", "");
+        scoreLabel    = addInfoRow(mainTable, "MyoPoint:", "");
 
         mainTable.row().padTop(10f);
         mainTable.add(new Label("", labelStyle)).row();

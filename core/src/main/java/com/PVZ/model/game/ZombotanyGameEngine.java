@@ -25,7 +25,8 @@ import java.util.Random;
 public class ZombotanyGameEngine extends GameEngine implements ZombieEngine, SeedBarEngine {
 
     private static final double TICK_SECONDS = 0.1;
-    private static final double SKY_SUN_INTERVAL_SECONDS = 10.0;
+    /** فاصله‌ی بین دو ریزش خورشید از آسمان (به درخواست تیم نصف شد: 10 -> 5 ثانیه). */
+    private static final double SKY_SUN_INTERVAL_SECONDS = 5.0;
     private static final float GAME_OVER_DISPLAY_DURATION = 3.0f;
 
     private final List<Plant> plants = new ArrayList<>();

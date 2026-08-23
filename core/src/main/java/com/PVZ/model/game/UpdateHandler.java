@@ -51,6 +51,9 @@ public class UpdateHandler {
             return;
         }
         if (engine.gameStatus != null && engine.gameStatus.isGameOver()) return;
+        if (engine.survivalScoreMode) {
+            engine.survivalElapsedSeconds += delta;
+        }
         if (engine.waveManager != null) engine.waveManager.update(delta, engine.zombieEngine);
         if (engine.battleController != null) engine.battleController.update(delta);
         if (engine.sandstormManager != null) engine.sandstormManager.update(delta, engine);
@@ -161,7 +164,7 @@ public class UpdateHandler {
         if (engine.map == null || !engine.zombieWavesStarted) return;
         if (engine.gameStatus != null && engine.gameStatus.isNoSkySun()) return;
         engine.skySunTimer += delta;
-        if (engine.skySunTimer < 10.0) return;
+        if (engine.skySunTimer < RegularGameEngine.SKY_SUN_INTERVAL_SECONDS) return;
         engine.skySunTimer = 0.0;
 
         int row = engine.random.nextInt(5);
@@ -216,7 +219,16 @@ public class UpdateHandler {
             engine.gameStatus.setGameOver(true);
             engine.gameStatus.setWon(win);
         }
-        if (win && AppStatus.currentUser != null && AppStatus.currentUser.userStats != null) {
+        if (engine.survivalScoreMode) {
+            // بازی امتیازی: امتیاز («میوپوینت») در لحظه‌ی پایان بازی ثبت می‌شود -
+            // چه کاربر برنده شده باشد چه بازنده، طبق سند («آنچه اهمیت دارد امتیازاتی
+            // است که در لحظه‌ی اتمام بازی به‌دست آورده است»)، نه صرفا شرط برد.
+            if (AppStatus.currentUser != null && AppStatus.currentUser.userStats != null) {
+                int score = engine.myoPointScorer.getTotalScore();
+                AppStatus.currentUser.userStats.updateHighestScore(score);
+                AppStatus.showAnnouncement("Game Over! Final MyoPoint score: " + score);
+            }
+        } else if (win && AppStatus.currentUser != null && AppStatus.currentUser.userStats != null) {
             int score = engine.getSunCount() * 10;
             AppStatus.currentUser.userStats.updateHighestScore(score);
         }

@@ -27,6 +27,7 @@ final class GameLauncher {
     private static final String STAGE_TYPE_CONVEYOR_BELT = "CONVEYOR_BELT";
     private static final String STAGE_TYPE_LOCKED_PLANTS = "LOCKED_PLANTS";
     private static final String STAGE_TYPE_PLANT_WHAT_YOU_GET = "PLANT_WHAT_YOU_GET";
+    private static final String STAGE_TYPE_SURVIVAL_SCORE = "SURVIVAL_SCORE";
     private static final int DEFAULT_PLANT_WHAT_YOU_GET_SUN = 500;
 
     private GameLauncher() {
@@ -42,6 +43,11 @@ final class GameLauncher {
 
     static boolean isPlantWhatYouGetStage(StageConfig stageConfig) {
         return stageConfig != null && STAGE_TYPE_PLANT_WHAT_YOU_GET.equalsIgnoreCase(stageConfig.getType());
+    }
+
+    /** بازی امتیازی («میوپوینت») - استیج ۴، فصل ۴ (Dark Ages). */
+    static boolean isSurvivalScoreStage(StageConfig stageConfig) {
+        return stageConfig != null && STAGE_TYPE_SURVIVAL_SCORE.equalsIgnoreCase(stageConfig.getType());
     }
 
     /**
@@ -140,7 +146,13 @@ final class GameLauncher {
     }
 
     static RegularGameEngine launch(StageConfig stageConfig) {
-        List<Wave> waves = buildWaves(stageConfig);
+        boolean survivalScore = isSurvivalScoreStage(stageConfig);
+        // بازی امتیازی موج‌هایش را از JSON نمی‌خواند - رویه‌ای و بر اساس تاریخ روز
+        // تولید می‌شوند (نگاه کنید به SurvivalHandler) تا طبق سند، همه‌ی کاربران در
+        // یک روز مشخص، دقیقا همان دنباله‌ی زامبی‌ها را بگیرند.
+        List<Wave> waves = survivalScore
+            ? com.PVZ.model.game.survival.SurvivalHandler.generateDailyWaves()
+            : buildWaves(stageConfig);
         boolean plantWhatYouGet = isPlantWhatYouGetStage(stageConfig);
         int initialSun;
         if (plantWhatYouGet) {
@@ -153,6 +165,9 @@ final class GameLauncher {
         gameStatus.setSunflower(initialSun);
         gameStatus.setNoSkySun(stageConfig.isDisableFallingSun());
         RegularGameEngine engine = new RegularGameEngine(gameStatus, waves);
+        if (survivalScore) {
+            engine.enableSurvivalScoreMode();
+        }
         if (AppStatus.currentChapterName != null) {
             AppStatus.currentChapter = com.PVZ.model.game.chapter.ChapterLibrary.getChapter(AppStatus.currentChapterName);
         }
