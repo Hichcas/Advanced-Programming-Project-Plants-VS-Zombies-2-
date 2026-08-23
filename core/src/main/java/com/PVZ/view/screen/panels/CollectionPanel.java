@@ -983,6 +983,7 @@ public class CollectionPanel extends BasePanel {
                 this.time = 0f;
                 this.cachedZombie = type != null ? type.create() : null;
                 if (this.cachedZombie != null) {
+                    this.cachedZombie.setStationary(true);
                     com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this.cachedZombie, "idle", 999999f);
                 }
             }
@@ -992,11 +993,6 @@ public class CollectionPanel extends BasePanel {
         public void act(float delta) {
             super.act(delta);
             time += delta;
-            if (cachedZombie != null) {
-                try {
-                    cachedZombie.update(delta, null);
-                } catch (Exception ignored) {}
-            }
         }
 
         @Override
@@ -1005,6 +1001,7 @@ public class CollectionPanel extends BasePanel {
             float renderX = getX() + getWidth() / 2f;
             float renderY = getY() + getHeight() / 2f;
             if (cachedZombie != null) {
+                cachedZombie.setStationary(true);
                 com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(cachedZombie, "idle", 999999f);
                 cachedZombie.setX(renderX);
                 cachedZombie.setY(renderY);

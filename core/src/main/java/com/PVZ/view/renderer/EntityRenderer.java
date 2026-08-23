@@ -171,7 +171,14 @@ public class EntityRenderer {
             }
         }
 
+        if (zombie.isStationary() && "walk".equals(state)) {
+            state = "idle";
+        }
+
         ClipRef clip = getZombieClip(effectiveAlias, state);
+        if (clip == null && "idle".equals(state)) {
+            clip = getZombieClip(effectiveAlias, "walk");
+        }
         if (clip == null) {
             clip = getZombieClip("DEFAULT", "walk");
         }
@@ -194,7 +201,7 @@ public class EntityRenderer {
                 batch.setColor(0.75f, 0.90f, 1.0f, 0.90f); // Submerged underwater watery tint
             } else if (zombie.getArmor() != null && !zombie.getArmor().isDestroyed() && zombie.getArmor().getType() == com.PVZ.model.entity.zombies.base.ZombieArmor.ArmorType.CROWN) {
                 batch.setColor(1.0f, 0.92f, 0.60f, 1.0f); // Royal Knight Golden Aura
-            } else if (zombie.getX() < 950.0 && !zombie.isHypnotized()) {
+            } else if (zombie.getX() < 950.0 && !zombie.isHypnotized() && !zombie.isStationary()) {
                 boolean isFlew = zombie instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieProspector zp && zp.isFlewToLeft();
                 if (!isFlew) {
                     float dangerFactor = Math.min(1.0f, Math.max(0.0f, (950.0f - (float) zombie.getX()) / 450.0f));

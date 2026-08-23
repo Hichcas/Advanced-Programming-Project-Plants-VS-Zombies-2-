@@ -3,9 +3,11 @@ package com.PVZ.model.game;
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.plants.PlantFactory;
 import com.PVZ.model.enums.PlantType;
+import com.PVZ.model.enums.ZombieType;
 import com.PVZ.model.minigame.izombie.IZombieGame;
 import com.PVZ.model.minigame.izombie.IZombieLevelDefinition;
 import com.PVZ.model.minigame.izombie.IZombieLevelLoader;
+import com.PVZ.model.minigame.izombie.ZombieOption;
 import com.PVZ.network.client.NetworkSession;
 import com.PVZ.network.common.MessageType;
 import com.PVZ.network.common.NetworkMessage;
@@ -15,6 +17,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
@@ -57,13 +60,48 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
 
     private void setupLevel() {
         IZombieLevelDefinition def = new IZombieLevelLoader().loadLevel(levelId);
-        if (selectedZombies != null && !selectedZombies.isEmpty() && def.getZombieRoster() != null) {
-            def.setZombieRoster(def.getZombieRoster().stream()
-                .filter(opt -> selectedZombies.contains(opt.getAlias()))
-                .toList());
+        if (selectedZombies != null && !selectedZombies.isEmpty()) {
+            List<ZombieOption> customRoster = new ArrayList<>();
+            for (String alias : selectedZombies) {
+                ZombieType zt = null;
+                for (ZombieType t : ZombieType.values()) {
+                    if (t.alias.equalsIgnoreCase(alias)) {
+                        zt = t;
+                        break;
+                    }
+                }
+                int cost = calculateZombieCost(zt);
+                String name = formatZombieDisplayName(zt);
+                customRoster.add(new ZombieOption(alias, cost, name));
+            }
+            def.setZombieRoster(customRoster);
         }
         IZombieGame izGame = new IZombieGame(def);
         setGame(izGame);
+    }
+
+    private static int calculateZombieCost(ZombieType type) {
+        if (type == null) return 50;
+        String name = type.name().toUpperCase();
+        if (name.contains("GARGANTUAR") || name.contains("ZOMBOSS")) return 300;
+        if (name.contains("BRICK") || name.contains("KNIGHT") || name.contains("ARMOR2") || name.contains("CENTURION")) return 150;
+        if (name.contains("BUCKET") || name.contains("BARREL") || name.contains("JALAPENO") || name.contains("SQUASH")) return 125;
+        if (name.contains("CONE") || name.contains("ARMOR1") || name.contains("HELMET") || name.contains("FLAG")) return 75;
+        if (name.contains("IMP")) return 25;
+        if (name.contains("ZOMBOTANY")) return 100;
+        return 50;
+    }
+
+    private static String formatZombieDisplayName(ZombieType type) {
+        if (type == null) return "Zombie";
+        String name = type.name().replace("ZOMBOTANY_", "Zombotany ").replace('_', ' ').toLowerCase();
+        StringBuilder sb = new StringBuilder();
+        for (String part : name.split(" ")) {
+            if (!part.isEmpty()) {
+                sb.append(Character.toUpperCase(part.charAt(0))).append(part.substring(1)).append(" ");
+            }
+        }
+        return sb.toString().trim();
     }
 
     @Override
