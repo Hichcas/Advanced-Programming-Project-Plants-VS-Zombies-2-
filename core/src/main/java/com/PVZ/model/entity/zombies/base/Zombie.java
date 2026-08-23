@@ -196,10 +196,25 @@ public abstract class Zombie {
         attackCooldownTimer += delta;
         if (attackCooldownTimer >= 1.0f) {
             targetPlant.takeDamage((int) eatDPS, this, controller);
+            spawnBiteEffect(targetPlant);
             if (targetPlant.isDead()) {
             }
             attackCooldownTimer = 0;
         }
+    }
+
+    /** یه جرقه‌ی گاز کوچیک روی گیاه، هر بار که زامبی واقعا یه گاز می‌زند - نه هر فریم. */
+    private void spawnBiteEffect(Plant targetPlant) {
+        Object engineObj = com.PVZ.model.status.AppStatus.getGameEngine();
+        if (!(engineObj instanceof com.PVZ.model.game.RegularGameEngine engine) || targetPlant == null) return;
+        Object wx = targetPlant.getRuntimeState("worldX");
+        Object wy = targetPlant.getRuntimeState("worldY");
+        if (!(wx instanceof Number) || !(wy instanceof Number)) return;
+        float fxX = ((Number) wx).floatValue() + 60f;
+        float fxY = ((Number) wy).floatValue() + 60f;
+        engine.addTimedPamEffect(
+            "768/FULL/EFFECTS/PHATBEETS_TILE_HIT_SMALL/PHATBEETS_TILE_HIT_SMALL.PAM", "animation",
+            0.3, 0.7f, fxX, fxY);
     }
 
     public boolean isHypnotized() {

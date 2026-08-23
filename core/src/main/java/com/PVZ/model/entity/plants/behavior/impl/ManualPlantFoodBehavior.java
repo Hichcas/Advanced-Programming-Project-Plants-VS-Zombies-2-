@@ -74,7 +74,7 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
 
     private void handleFreezeBurst(PlantInstance plant, BehaviorContext context) {
         context.freezeAllZombies(3.0);
-        plant.getStats().putExtra("iceAttack", Boolean.TRUE);
+        plant.getStats().putExtra("pfIceAttack", Boolean.TRUE);
     }
 
     private void handlePlasmaBurst(PlantInstance plant, BehaviorContext context, int lane, int row) {
@@ -87,7 +87,7 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
     }
 
     private void handleFireBurst(PlantInstance plant) {
-        plant.getStats().putExtra("fireAttack", Boolean.TRUE);
+        plant.getStats().putExtra("pfFireAttack", Boolean.TRUE);
         plant.getStats().putExtra("plantFoodDamageMultiplier", 2.0);
         plant.getStats().putExtra("plantFoodProjectileCount", 5);
     }
@@ -212,10 +212,10 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
         plant.getStats().putExtra("plantFoodProjectileCount", 3);
         plant.getStats().putExtra("plantFoodDamageMultiplier", 3.0);
         if (plantKey.contains("winter")) {
-            plant.getStats().putExtra("iceAttack", Boolean.TRUE);
+            plant.getStats().putExtra("pfIceAttack", Boolean.TRUE);
         }
         if (plantKey.contains("pepper")) {
-            plant.getStats().putExtra("fireAttack", Boolean.TRUE);
+            plant.getStats().putExtra("pfFireAttack", Boolean.TRUE);
         }
     }
 
@@ -294,10 +294,10 @@ public class ManualPlantFoodBehavior implements PlantFoodBehavior {
             context.freezeZombiesInLane(lane, 3.0);
         }
         if (behaviorId.contains("fire")) {
-            plant.getStats().putExtra("fireAttack", Boolean.TRUE);
+            plant.getStats().putExtra("pfFireAttack", Boolean.TRUE);
         }
         if (behaviorId.contains("ice")) {
-            plant.getStats().putExtra("iceAttack", Boolean.TRUE);
+            plant.getStats().putExtra("pfIceAttack", Boolean.TRUE);
         }
     }
     

@@ -109,6 +109,18 @@ public class PlantHandler {
         plant.putRuntimeState("row", row);
         plant.putRuntimeState("col", col);
         plant.putRuntimeState("lane", row);
+        if (targetTile != null) {
+            float fxX = targetTile.getX() + targetTile.getWidth() / 2f;
+            float fxY = targetTile.getY() + targetTile.getHeight() / 2f;
+            // افکت کاشتن: خاک زیر گیاه پخش می‌شود + یک پاف کوچیک وقتی گیاه سبز می‌شود -
+            // دقیقا همون دو تا اسپلاین آماده‌ای که خود بازی رسمی برای این لحظه استفاده می‌کند.
+            engine.addTimedPamEffect(
+                "768/INITIAL/EFFECTS/DIRT_SPAWN_GRASS/DIRT_SPAWN_GRASS.PAM", "tomb_dirt_anim",
+                0.5, 1f, fxX, fxY);
+            engine.addTimedPamEffect(
+                "768/INITIAL/ZEN_GARDEN/PLANT_POOF/PLANT_POOF.PAM", "animation",
+                0.6, 1f, fxX, fxY);
+        }
         handlePostPlanting(engine, type, plant);
         if (AppStatus.currentUser != null && AppStatus.currentUser.questState != null) {
             AppStatus.currentUser.questState.getQuestManager().onPlantPlaced(type);

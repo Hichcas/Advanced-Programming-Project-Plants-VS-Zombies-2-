@@ -92,9 +92,15 @@ public final class ProjectileFactory {
             return ProjectileType.UNKNOWN;
         }
 
-        boolean fireAttack = plant.isPlantFoodActive() && plant.getStats().getBooleanExtra("fireAttack", false)
+        // "fireAttack"/"iceAttack" اکنون فقط برای اثر دائمی (مثل آئورای Torchwood یا
+        // توانایی ذاتی) استفاده می‌شوند و بدون گیت خوانده می‌شوند؛ اثر موقتیِ Plant Food
+        // در کلید جدای "pfFireAttack"/"pfIceAttack" است که خودش در لحظه‌ی پایان Plant
+        // Food پاک می‌شود (نگاه کنید به PlantInstance.clearTemporaryPlantFoodExtras).
+        boolean fireAttack = plant.getStats().getBooleanExtra("fireAttack", false)
+                || plant.getStats().getBooleanExtra("pfFireAttack", false)
                 || (plant.getDefinition() != null && plant.getDefinition().hasTag(PlantTag.FIRE));
-        boolean iceAttack = plant.isPlantFoodActive() && plant.getStats().getBooleanExtra("iceAttack", false)
+        boolean iceAttack = plant.getStats().getBooleanExtra("iceAttack", false)
+                || plant.getStats().getBooleanExtra("pfIceAttack", false)
                 || plant.getStats().hasFlag(PlantFlag.CHILL_ON_HIT)
                 || (plant.getDefinition() != null && plant.getDefinition().hasTag(PlantTag.ICE));
         boolean burstShot = plant.getStats().hasFlag(PlantFlag.BURST_SHOT);

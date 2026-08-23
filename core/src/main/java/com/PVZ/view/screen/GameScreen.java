@@ -805,12 +805,12 @@ public class GameScreen extends BaseScreen {
         updateIntro(delta);
         applyCameraShake();
 
-        if (AppStatus.announcementTimer > 0f) {
-            AppStatus.announcementTimer -= delta;
-            if (AppStatus.announcementTimer <= 0f) {
-                AppStatus.announcementTimer = 0f;
-                AppStatus.announcementText = null;
-            }
+        String pendingAnnouncement = AppStatus.pollAnnouncement();
+        if (pendingAnnouncement != null) {
+            com.PVZ.view.screen.ui.AnnouncementPopup.show(stage, pendingAnnouncement,
+                pendingAnnouncement.startsWith("MyoPoint") || pendingAnnouncement.startsWith("Game Over! Final MyoPoint")
+                    ? com.badlogic.gdx.graphics.Color.GOLD
+                    : com.badlogic.gdx.graphics.Color.WHITE);
         }
 
         refreshSeedPacketBar();
@@ -985,7 +985,8 @@ public class GameScreen extends BaseScreen {
         updateStartWaveButtonVisibility();
         drawSeedPacketBar(activeEngine);
         drawGameOverOverlay(overState);
-        drawAnnouncementOverlay();
+        // اعلان‌ها دیگر اینجا رسم نمی‌شوند - به AnnouncementPopup (پاپ‌آپ استکی
+        // با اسکین بازی) در renderScreen() منتقل شده‌اند.
         drawTileDebug(activeEngine);
     }
 
@@ -1032,23 +1033,7 @@ public class GameScreen extends BaseScreen {
         }
     }
 
-    private void drawAnnouncementOverlay() {
-        if (AppStatus.announcementText == null || AppStatus.announcementTimer <= 0f) {
-            return;
-        }
 
-        String text = AppStatus.announcementText;
-        gameBatch.begin();
-        gameOverFont.setColor(1f, 0.15f, 0.15f, 1f);
-
-        GlyphLayout layout = new GlyphLayout(gameOverFont, text);
-        float x = VIRTUAL_WIDTH / 2f - layout.width / 2f;
-        float y = VIRTUAL_HEIGHT * 0.55f;
-
-        gameOverFont.draw(gameBatch, text, x, y);
-        gameOverFont.setColor(Color.WHITE);
-        gameBatch.end();
-    }
 
     /**
      * رسم پس‌زمینه‌ی چپتر با استفاده از TextureBank و همون مقیاس/آفست مینی‌گیم‌ها.

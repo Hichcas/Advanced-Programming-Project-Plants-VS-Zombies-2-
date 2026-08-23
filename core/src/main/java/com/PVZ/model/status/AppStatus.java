@@ -56,8 +56,24 @@ public final class AppStatus {
     public static MainMenuScreen lastMainMenu;
 
     // ====================== سیستم اعلان وسط بازی ======================
-    public static String announcementText = null;
-    public static float announcementTimer = 0f;
+    /**
+     * صف اعلان‌های در انتظار نمایش. چون بازی امتیازی می‌تواند در یک لحظه
+     * چند بونوس بدهد (مثلا Quick Kill + Combo با هم)، دیگر یک اسلات تنها
+     * کافی نیست - هر {@link #showAnnouncement} یک آیتم به صف اضافه می‌کند
+     * و لایه‌ی View (GameScreen) هر فریم یکی را برمی‌دارد و به‌صورت
+     * پاپ‌آپ نشان می‌دهد (نگاه کنید به AnnouncementPopup).
+     */
+    private static final java.util.Queue<String> announcementQueue = new java.util.ArrayDeque<>();
+
+    public static void showAnnouncement(String text) {
+        if (text == null || text.isBlank()) return;
+        announcementQueue.add(text);
+    }
+
+    /** توسط GameScreen هر فریم صدا زده می‌شود - اگر اعلانی در صف باشد آن را برمی‌دارد، وگرنه null. */
+    public static String pollAnnouncement() {
+        return announcementQueue.poll();
+    }
 
     // ====================== وضعیت بازی آنلاین دونفره ======================
     public static boolean isMultiplayerMatch = false;
@@ -65,11 +81,6 @@ public final class AppStatus {
     public static String multiplayerOpponent = "";
     public static String multiplayerRoomId = "";
     public static int multiplayerLevelId = 1;
-
-    public static void showAnnouncement(String text) {
-        announcementText = text;
-        announcementTimer = 3f;
-    }
 
     // ====================== تنظیمات جدید ======================
     public enum Difficulty {

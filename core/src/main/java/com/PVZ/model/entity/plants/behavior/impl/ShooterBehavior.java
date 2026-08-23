@@ -202,21 +202,19 @@ public class ShooterBehavior implements PlantBehavior {
             projectile.putExtra("spawnXOffset", spawnXOffset);
         }
 
-        // "fireAttack" / "iceAttack" / "passThrough" / "pierceBoost" are the extras that
-        // Plant Food behaviors (ManualPlantFoodBehavior) stamp onto the plant's stats when
-        // its temporary effect fires - e.g. handleFireBurst, handleCactus, handlePultFamily.
-        // Those calls never clear the extra afterwards; the *only* thing that tells us the
-        // Plant Food window is still open is plant.isPlantFoodActive(). Without gating on
-        // it here, a single Plant Food use permanently mutates the plant (e.g. Cactus would
-        // pierce forever after one use) even though its own idle/attack animation and
-        // ProjectileFactory's type resolution correctly fall back to normal once it expires.
-        // Innately fire/ice plants aren't affected: those come from PlantTag on the
-        // definition, resolved separately in ProjectileFactory.resolveType().
-        boolean plantFoodActive = plant.isPlantFoodActive();
-        if (plantFoodActive && plant.getStats().getBooleanExtra("fireAttack", false)) {
+        // "pfFireAttack" / "pfIceAttack" / "passThrough" / "pierceBoost" کلیدهای موقتی‌ای
+        // هستند که Plant Food behaviorها هنگام فعال شدن روی stats می‌گذارند (مثلا
+        // handleFireBurst, handleCactus). این کلیدها دیگر ابدی نمی‌مانند: هم اینجا با
+        // نام pf-prefixed جدا از "fireAttack"/"iceAttack" دائمی نگه داشته می‌شوند، هم
+        // PlantInstance.clearTemporaryPlantFoodExtras در لحظه‌ی پایان Plant Food صریحا
+        // صفرشان می‌کند - پس دیگر نیازی به گیت isPlantFoodActive() هم اینجا نیست (دو لایه
+        // محافظت به‌جای تکیه به یادآوری هر مصرف‌کننده).
+        if (plant.getStats().getBooleanExtra("fireAttack", false)
+                || plant.getStats().getBooleanExtra("pfFireAttack", false)) {
             projectile.setType(ProjectileType.FIRE_PEA);
         }
-        if (plantFoodActive && plant.getStats().getBooleanExtra("iceAttack", false)) {
+        if (plant.getStats().getBooleanExtra("iceAttack", false)
+                || plant.getStats().getBooleanExtra("pfIceAttack", false)) {
             projectile.setType(ProjectileType.ICE_PEA);
         }
 
@@ -224,7 +222,7 @@ public class ShooterBehavior implements PlantBehavior {
         if ("fume_shroom".equals(key)) {
             projectile.setType(ProjectileType.FUME);
         }
-        boolean shouldPierce = (plantFoodActive && plant.getStats().getBooleanExtra("passThrough", false))
+        boolean shouldPierce = plant.getStats().getBooleanExtra("passThrough", false)
             || (plant.getDefinition() != null
             && plant.getDefinition().getCategoryEnum() == PlantCategory.THROUGH_STRIKE);
         if (shouldPierce) {
@@ -232,7 +230,23 @@ public class ShooterBehavior implements PlantBehavior {
             projectile.setPierce(Math.max(projectile.getPierce(), pierceBoost));
         }
 
+        spawnMuzzleEffect(plant);
         context.spawnProjectile(projectile);
+    }
+
+    /** یه فلاش کوچیک دهانه‌ی شلیک - همون لحظه‌ای که پرتابه از گیاه بیرون می‌آید، شیک‌تر دیده شود. */
+    private void spawnMuzzleEffect(PlantInstance plant) {
+        Object engineObj = com.PVZ.model.status.AppStatus.getGameEngine();
+        if (!(engineObj instanceof com.PVZ.model.game.RegularGameEngine engine)) return;
+        double worldX = asDouble(plant.getRuntimeState().get("worldX"), 0.0);
+        double worldY = asDouble(plant.getRuntimeState().get("worldY"), 0.0);
+        double tileWidth = asDouble(plant.getRuntimeState().getOrDefault("tileWidth", 177.0), 177.0);
+        double tileHeight = asDouble(plant.getRuntimeState().getOrDefault("tileHeight", 177.0), 177.0);
+        float fxX = (float) (worldX + tileWidth * 0.75);
+        float fxY = (float) (worldY + tileHeight / 2.0);
+        engine.addTimedPamEffect(
+            "768/FULL/EFFECTS/ROTORUTABAGA_MUZZLE_BURST/ROTORUTABAGA_MUZZLE_BURST.PAM", "animation",
+            0.25, 0.8f, fxX, fxY);
     }
 
     private boolean handlePuffLifespan(PlantInstance plant, BehaviorContext context, double deltaTime) {
