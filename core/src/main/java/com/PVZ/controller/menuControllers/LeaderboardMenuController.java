@@ -36,7 +36,7 @@ public class LeaderboardMenuController {
         }
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("%-15s %-25s %-10s %-8s %-10s %-10s%n",
-            "Username", "Last Stage", "Minigames", "Daily", "Non-Daily", "Score"));
+            "Username", "Last Stage", "Minigames", "Daily", "Non-Daily", "MyoPoint"));
         sb.append("-".repeat(80)).append("\n");
         for (LeaderboardEntry e : entries) {
             sb.append(String.format("%-15s %-25s %-10d %-8d %-10d %-10d%n",

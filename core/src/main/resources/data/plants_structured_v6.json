@@ -32,10 +32,10 @@
       },
       "baseAbility": {
         "kind": "SUN_PRODUCTION",
-        "raw": "تولید ۵۰ خورشید هر ۲۴ ثانیه.",
+        "raw": "تولید ۵۰ خورشید هر ۱۲ ثانیه.",
         "params": {
           "sunAmount": 50,
-          "intervalSeconds": 24
+          "intervalSeconds": 12
         }
       },
       "plantFoodEffect": {
@@ -71,7 +71,7 @@
           "level": 4
         }
       ],
-      "actionIntervalSeconds": 24.0,
+      "actionIntervalSeconds": 12.0,
       "rechargeSeconds": 5.0
     },
     {

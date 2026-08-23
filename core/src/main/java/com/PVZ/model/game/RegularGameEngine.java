@@ -27,7 +27,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     private static final int COLS = 9;
     private static final float GAME_OVER_DISPLAY_DURATION = 3.0f;
     private static final double DEFAULT_CONVEYOR_INTERVAL_SECONDS = 12.0;
-    private static final double SKY_SUN_INTERVAL_SECONDS = 10.0;
+    /** فاصله‌ی بین دو ریزش خورشید از آسمان (به درخواست تیم نصف شد: 10 -> 5 ثانیه). */
+    static final double SKY_SUN_INTERVAL_SECONDS = 5.0;
     final List<Projectile> projectiles = new ArrayList<>();
     final List<Zombie> zombies = new ArrayList<>();
     final SunManager sunManager = new SunManager();
@@ -109,6 +110,23 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     public int totalZombieKills = 0;
     public final java.util.List<PlantType> questPlantTypesUsed = new java.util.ArrayList<>();
     public final java.util.Set<PlantFamily> questPlantFamiliesUsed = new java.util.HashSet<>();
+
+    /**
+     * بازی امتیازی («میوپوینت» - استیج ۴، فصل ۴). طبق سند فاز سه، این حالت
+     * مثل یک مرحله‌ی معمولی Adventure است (همان WaveManager/win-lose)،
+     * فقط علاوه بر آن، طی بازی امتیاز محاسبه می‌شود و در پایان (چه برد چه
+     * باخت) روی رکورد کاربر می‌نشیند. نگاه کنید به:
+     * {@link com.PVZ.model.game.survival.MyoPointScorer},
+     * {@link com.PVZ.model.game.survival.SurvivalHandler}.
+     */
+    public boolean survivalScoreMode = false;
+    public double survivalElapsedSeconds = 0.0;
+    public final com.PVZ.model.game.survival.MyoPointScorer myoPointScorer =
+        new com.PVZ.model.game.survival.MyoPointScorer();
+
+    public void enableSurvivalScoreMode() {
+        survivalScoreMode = true;
+    }
 
     public RegularGameEngine(GameStatus gameStatus) {
         this(gameStatus, createDefaultWaves());
@@ -200,7 +218,11 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
 
     @Override
     public Zombie spawnZombie(String alias, int row, int x) {
-        return CombatHandler.spawnZombie(this, alias, row, x);
+        Zombie zombie = CombatHandler.spawnZombie(this, alias, row, x);
+        if (zombie != null && survivalScoreMode) {
+            myoPointScorer.registerSpawn(zombie, survivalElapsedSeconds);
+        }
+        return zombie;
     }
 
     @Override

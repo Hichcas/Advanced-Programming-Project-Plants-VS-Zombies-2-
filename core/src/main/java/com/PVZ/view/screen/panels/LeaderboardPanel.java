@@ -106,7 +106,7 @@ public class LeaderboardPanel extends BasePanel {
             "Minigames",
             "Daily Quests",
             "Non-Daily Quests",
-            "Highest Score"
+            "MyoPoint"
         );
         sortBox.setAlignment(Align.center);
         sortBox.getStyle().font = bodyFont;
@@ -183,7 +183,7 @@ public class LeaderboardPanel extends BasePanel {
             case "Minigames" -> LeaderboardSortField.MINIGAMES;
             case "Daily Quests" -> LeaderboardSortField.DAILY_QUESTS;
             case "Non-Daily Quests" -> LeaderboardSortField.NON_DAILY_QUESTS;
-            case "Highest Score" -> LeaderboardSortField.HIGHEST_SCORE;
+            case "MyoPoint" -> LeaderboardSortField.HIGHEST_SCORE;
             default -> LeaderboardSortField.USERNAME;
         };
     }
@@ -205,7 +205,7 @@ public class LeaderboardPanel extends BasePanel {
         addHeaderCell(entriesTable, "Mini", COLOR_MINIGAMES, 2);
         addHeaderCell(entriesTable, "Daily", COLOR_DAILY, 3);
         addHeaderCell(entriesTable, "Non-D", COLOR_NON_DAILY, 4);
-        addHeaderCell(entriesTable, "Score", COLOR_SCORE, 5);
+        addHeaderCell(entriesTable, "MyoPoint", COLOR_SCORE, 5);
         entriesTable.row();
 
 // خط جداکننده طلایی تمام‌عرض

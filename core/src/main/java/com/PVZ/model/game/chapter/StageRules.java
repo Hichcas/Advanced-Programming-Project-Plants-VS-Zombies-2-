@@ -72,6 +72,11 @@ public final class StageRules {
         } else if (type.equals("LOVE_YOUR_PLANTS") || special.equals("LOVE_YOUR_PLANTS")) {
             int q = config.getMaxPlantDeaths() > 0 ? config.getMaxPlantDeaths() : 5;
             out.add("LOVE YOUR PLANTS: If " + q + " of your plants are destroyed or eaten by zombies, you lose!");
+        } else if (type.equals("SURVIVAL_SCORE")) {
+            out.add("MYOPOINT: This is a score-attack level! Surviving isn't enough - how you fight matters.");
+            out.add("Quick kills, multi-lane kills, kill combos, and last-second saves near your house all earn bonus MyoPoints.");
+            out.add("The zombie lineup is the same for everyone today, but changes again tomorrow.");
+            out.add("Your best MyoPoint score is saved to your profile and shown on the leaderboard, win or lose!");
         } else if (type.equals("PLANT_WHAT_YOU_GET")) {
             int startingSun = config.getInitialSun() > 0 ? config.getInitialSun() : 500;
             out.add("PLANT WHAT YOU GET: You start with " + startingSun

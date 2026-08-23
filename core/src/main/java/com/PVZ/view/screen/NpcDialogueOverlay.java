@@ -188,6 +188,10 @@ public class NpcDialogueOverlay extends Actor {
                 result.add("Locked Plants! Some plants are unavailable in this level.");
                 return;
             }
+            if (upper.contains("SURVIVAL_SCORE")) {
+                result.add("MyoPoint time! Quick kills, multi-kills, and clutch saves earn extra points - meow!");
+                return;
+            }
         }
 
         ChapterEnum chapter = AppStatus.getCurrentChapterEnum();

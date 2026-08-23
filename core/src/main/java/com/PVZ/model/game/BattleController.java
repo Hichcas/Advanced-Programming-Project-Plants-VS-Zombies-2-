@@ -89,6 +89,13 @@ public class BattleController implements BehaviorContext {
                 && engine.lawnMowers[row].isUsed()) {
                 engine.questLawnlessCol1Kills++;
             }
+
+            if (engine.survivalScoreMode) {
+                com.PVZ.model.entity.Tile tile = engine.map.getTile(row, Math.max(0, col));
+                float worldX = tile != null ? tile.getX() + tile.getWidth() / 2f : (float) z.getX();
+                float worldY = tile != null ? tile.getY() + tile.getHeight() / 2f : 0f;
+                engine.myoPointScorer.recordKill(engine, z, row, col, worldX, worldY, engine.survivalElapsedSeconds);
+            }
         }
 
         if (AppStatus.currentUser != null && AppStatus.currentUser.questState != null) {

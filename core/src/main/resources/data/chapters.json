@@ -2278,6 +2278,17 @@
               ]
             }
           ]
+        },
+        {
+          "stageNumber": 4,
+          "type": "SURVIVAL_SCORE",
+          "plantLimit": 9,
+          "rows": 5,
+          "cols": 9,
+          "mapTexture": "maps/Dark_Ages.png",
+          "disableFallingSun": false,
+          "tiles": [],
+          "waves": []
         }
       ]
     }
