@@ -38,7 +38,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     private boolean gameOverWin = false;
     private float gameOverTimer = 0f;
 
-    private final List<Plant> plants = new ArrayList<>();
+    protected final List<Plant> plants = new ArrayList<>();
     private final List<Projectile> projectiles = new ArrayList<>();
     private final RegularZombieEngine zombieEngine = new RegularZombieEngine();
     private final BattleController battleController;
@@ -51,10 +51,10 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     private IZombieGame game;
     private Texture background;
     private Texture backgroundRight;
-    private BitmapFont font;
-    private BitmapFont tinyFont;
-    private final ZombiePacketBar zombiePacketBar = new ZombiePacketBar();
-    private Texture hudPixel;
+    protected BitmapFont font;
+    protected BitmapFont tinyFont;
+    protected final ZombiePacketBar zombiePacketBar = new ZombiePacketBar();
+    protected Texture hudPixel;
     private float hudAnimTime = 0f;
 
     public IZombieGameEngine() {
@@ -72,6 +72,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         super.setMap(map);
         zombieEngine.bindMap(map);
         battleController.setMap(map);
+        initializeBoard();
     }
 
     public void initializeBoard() {
@@ -388,12 +389,39 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         }
     }
 
-    private void drawHud(SpriteBatch batch) {
+    protected void drawHud(SpriteBatch batch) {
         if (game == null || map == null) return;
         ensureTexturesLoaded();
         batch.begin();
-        String selectedAlias = ((IZombieInputProcessor) inputProcessor).getSelectedAlias();
+        IZombieInputProcessor izInput = (inputProcessor instanceof IZombieInputProcessor inp) ? inp : null;
+        String selectedAlias = izInput != null ? izInput.getSelectedAlias() : null;
         zombiePacketBar.draw(batch, font, tinyFont, game, selectedAlias);
+
+        if (izInput != null && hudPixel != null) {
+            hudAnimTime += com.badlogic.gdx.Gdx.graphics.getDeltaTime();
+            int row = izInput.getSelectedRow();
+            int minZombieCol = game.getRedLineCol() + 1;
+            int maxZombieCol = game.getCols() - 1;
+            int col = Math.max(minZombieCol, Math.min(maxZombieCol, izInput.getSelectedCol()));
+            float th = map.getTileHeight();
+            float tw = map.getTileWidth();
+            float rowY = map.getStartY() - (row + 1) * th;
+            float deployX = map.getStartX() + col * tw;
+
+            // Soft brightness boost on the selected tile
+            float pulse = (float) (Math.sin(hudAnimTime * 4.0) * 0.06 + 0.22);
+            batch.setColor(1f, 1f, 1f, pulse);
+            batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, th - 4f);
+
+            // Elegant subtle border outline (2px)
+            batch.setColor(1f, 0.92f, 0.5f, 0.75f);
+            batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, 2f);
+            batch.draw(hudPixel, deployX + 2f, rowY + th - 4f, tw - 4f, 2f);
+            batch.draw(hudPixel, deployX + 2f, rowY + 2f, 2f, th - 4f);
+            batch.draw(hudPixel, deployX + tw - 4f, rowY + 2f, 2f, th - 4f);
+            batch.setColor(Color.WHITE);
+        }
+
         if (!gameOverTriggered) {
             String label = String.format("Sun: %d | Brains left: %d/%d | Sun rate: %.1f",
                     game.getSun(), game.getBrainsRemaining(), game.getRows(), game.getCurrentSunRate());
@@ -425,7 +453,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         batch.end();
     }
 
-    private void ensureTexturesLoaded() {
+    protected void ensureTexturesLoaded() {
         if (font != null) return;
         background = new Texture(IZombieTexturePaths.BACKGROUND_LEFT);
         backgroundRight = new Texture(IZombieTexturePaths.BACKGROUND_RIGHT);
