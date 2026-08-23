@@ -107,6 +107,15 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     @Override
     public void initializeBoard() {
         super.initializeBoard();
+        // In multiplayer, clear local random seeds so both sides start with an identical empty/synced lawn
+        plants.clear();
+        if (map != null && getGame() != null) {
+            for (int r = 0; r < getGame().getRows(); r++) {
+                for (int c = 0; c < getGame().getRedLineCol(); c++) {
+                    map.setPlant(r, c, null);
+                }
+            }
+        }
         if (myRole.equals("PLANT")) {
             List<PlantType> plantOptions = (selectedPlants != null && !selectedPlants.isEmpty())
                 ? selectedPlants
@@ -118,7 +127,19 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
                     PlantType.REPEATER,
                     PlantType.POTATO_MINE
                 );
-            plantBar.layout(plantOptions, 400f, 1440f - 160f);
+            float slotSize = 110f;
+            float gap = 12f;
+            int count = plantOptions.size();
+            float barWidth = count * slotSize + (count - 1) * gap;
+            float barX = (2560f - barWidth) / 2f;
+            float topY = 1440f - 40f - slotSize;
+            plantBar.layout(plantOptions, barX, topY, false);
+        }
+        if (getGame() != null && getGame().getSun() < 300) {
+            getGame().addSun(300 - getGame().getSun());
+            if (gameStatus != null) {
+                gameStatus.setSunflower(getGame().getSun());
+            }
         }
     }
 
@@ -155,6 +176,7 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
             Plant p = PlantFactory.createPlant(type, 1);
             if (p != null) {
                 map.setPlant(row, col, p);
+                plants.add(p);
             }
         } catch (Exception ignored) {
         }
@@ -208,7 +230,19 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         Plant plant = PlantFactory.createPlant(type, 1);
         if (plant == null) return false;
 
+        int cost = (plant.getInstance() != null && plant.getInstance().getDefinition() != null)
+            ? plant.getInstance().getDefinition().getCost()
+            : 100;
+        if (getGame().getSun() < cost) {
+            return false;
+        }
+        getGame().addSun(-cost);
+        if (gameStatus != null) {
+            gameStatus.setSunflower(getGame().getSun());
+        }
+
         map.setPlant(row, col, plant);
+        plants.add(plant);
         NetworkMessage msg = NetworkMessage.push(MessageType.GAME_PLANT_INPUT)
             .with("plantType", type.name())
             .with("row", row)
@@ -216,6 +250,11 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         NetworkSession.client().sendFireAndForget(msg);
         return true;
     }
+
+    public String getMyRole() { return myRole; }
+    public SeedPacketBar getPlantBar() { return plantBar; }
+    public PlantType getSelectedPlantType() { return selectedPlantType; }
+    public void setSelectedPlantType(PlantType selectedPlantType) { this.selectedPlantType = selectedPlantType; }
 
     @Override
     public void update(float delta) {
@@ -252,6 +291,45 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     }
 
     @Override
+    protected void drawHud(SpriteBatch batch) {
+        if (getGame() == null || map == null) return;
+        ensureTexturesLoaded();
+        batch.begin();
+        if (myRole.equals("ZOMBIE")) {
+            IZombieInputProcessor izInput = (inputProcessor instanceof IZombieInputProcessor inp) ? inp : null;
+            String selectedAlias = izInput != null ? izInput.getSelectedAlias() : null;
+            zombiePacketBar.draw(batch, font, tinyFont, getGame(), selectedAlias);
+
+            if (izInput != null && hudPixel != null) {
+                int row = izInput.getSelectedRow();
+                int minZombieCol = getGame().getRedLineCol() + 1;
+                int maxZombieCol = getGame().getCols() - 1;
+                int col = Math.max(minZombieCol, Math.min(maxZombieCol, izInput.getSelectedCol()));
+                float th = map.getTileHeight();
+                float tw = map.getTileWidth();
+                float rowY = map.getStartY() - (row + 1) * th;
+                float deployX = map.getStartX() + col * tw;
+
+                // Soft brightness boost on the selected tile
+                float pulse = (float) (Math.sin(System.currentTimeMillis() * 0.004) * 0.06 + 0.22);
+                batch.setColor(1f, 1f, 1f, pulse);
+                batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, th - 4f);
+
+                // Elegant subtle border outline (2px)
+                batch.setColor(1f, 0.92f, 0.5f, 0.75f);
+                batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, 2f);
+                batch.draw(hudPixel, deployX + 2f, rowY + th - 4f, tw - 4f, 2f);
+                batch.draw(hudPixel, deployX + 2f, rowY + 2f, 2f, th - 4f);
+                batch.draw(hudPixel, deployX + tw - 4f, rowY + 2f, 2f, th - 4f);
+                batch.setColor(Color.WHITE);
+            }
+        } else if (myRole.equals("PLANT")) {
+            plantBar.drawIconsAndLabels(batch, FontManager.getInstance().getEnglishMenuFont(), null, selectedPlantType);
+        }
+        batch.end();
+    }
+
+    @Override
     public void draw(SpriteBatch batch) {
         super.draw(batch);
         renderMultiplayerHud(batch);
@@ -269,11 +347,6 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
             myRole, opponentName, timeStr, levelId);
         font.setColor(Color.YELLOW);
         font.draw(batch, info, 100f, 1400f);
-
-        if (activeReaction != null) {
-            font.setColor(Color.CYAN);
-            font.draw(batch, "Reaction: " + activeReaction, 100f, 1340f);
-        }
 
         if (matchFinished) {
             font.setColor(wonMatch ? Color.GREEN : Color.RED);

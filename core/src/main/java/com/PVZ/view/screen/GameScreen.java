@@ -674,6 +674,25 @@ public class GameScreen extends BaseScreen {
                         return true;
                     }
                 }
+                if (activeInputProcessor() != null && activeInputProcessor().keyDown(keycode)) {
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean keyUp(int keycode) {
+                if (activeInputProcessor() != null && activeInputProcessor().keyUp(keycode)) {
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean keyTyped(char character) {
+                if (activeInputProcessor() != null && activeInputProcessor().keyTyped(character)) {
+                    return true;
+                }
                 return false;
             }
 
@@ -691,7 +710,17 @@ public class GameScreen extends BaseScreen {
                 if (pluckModeActive && handlePluckAtScreenPoint(screenX, screenY)) {
                     return true;
                 }
-                return activeInputProcessor().touchDown(screenX, screenY, pointer, button);
+                return activeInputProcessor() != null && activeInputProcessor().touchDown(screenX, screenY, pointer, button);
+            }
+
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                return activeInputProcessor() != null && activeInputProcessor().touchUp(screenX, screenY, pointer, button);
+            }
+
+            @Override
+            public boolean touchDragged(int screenX, int screenY, int pointer) {
+                return activeInputProcessor() != null && activeInputProcessor().touchDragged(screenX, screenY, pointer);
             }
 
             @Override
@@ -699,7 +728,12 @@ public class GameScreen extends BaseScreen {
                 if (isSimulationFrozen()) {
                     return false;
                 }
-                return activeInputProcessor().mouseMoved(screenX, screenY);
+                return activeInputProcessor() != null && activeInputProcessor().mouseMoved(screenX, screenY);
+            }
+
+            @Override
+            public boolean scrolled(float amountX, float amountY) {
+                return activeInputProcessor() != null && activeInputProcessor().scrolled(amountX, amountY);
             }
         });
         super.show();
