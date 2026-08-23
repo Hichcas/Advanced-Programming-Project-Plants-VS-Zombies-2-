@@ -2,10 +2,8 @@ package com.PVZ.model.minigame.izombie;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 
@@ -163,19 +161,13 @@ public class IZombieGame {
      */
     public void restrictRosterTo(java.util.Collection<String> selectedAliases) {
         if (selectedAliases == null || selectedAliases.isEmpty()) return;
-        Map<String, ZombieOption> allKnown = new HashMap<>();
-        for (ZombieOption opt : RANDOM_POOL) allKnown.put(opt.getAlias().toLowerCase(), opt);
-        for (ZombieOption opt : roster) allKnown.put(opt.getAlias().toLowerCase(), opt);
-
-        List<ZombieOption> filtered = new ArrayList<>();
+        Set<String> wanted = new HashSet<>();
         for (String alias : selectedAliases) {
-            if (alias == null) continue;
-            ZombieOption opt = allKnown.get(alias.toLowerCase());
-            if (opt != null) {
-                filtered.add(opt);
-            } else {
-                filtered.add(new ZombieOption(alias, 75, alias));
-            }
+            if (alias != null) wanted.add(alias.toLowerCase());
+        }
+        List<ZombieOption> filtered = new ArrayList<>();
+        for (ZombieOption option : roster) {
+            if (wanted.contains(option.getAlias().toLowerCase())) filtered.add(option);
         }
         if (!filtered.isEmpty()) this.roster = filtered;
     }

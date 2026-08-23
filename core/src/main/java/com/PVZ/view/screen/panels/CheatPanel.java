@@ -220,15 +220,6 @@ public class CheatPanel extends BasePanel {
         col = addCurrencyCard(col, "DIAMONDS", DIAMOND_PAM, "diamond");
         col = addActionCard(col, "UNLOCK ALL CHAPTERS", "Every chapter and stage becomes playable.",
             () -> runEconomy(ChapterAndLevelSelectionCommand.CHEAT_UNLOCK_ALL, null, null, null, null));
-        col = addActionCard(col, "UNLOCK ALL ZOMBIES", "Reveals all zombies in the Collection Almanac.",
-            () -> {
-                User u = AppStatus.getCurrentUser();
-                if (u != null) {
-                    u.collectionState.unlockAllZombies();
-                    statusLabel.setText("All zombies unlocked in Collection!");
-                    statusLabel.setColor(Color.GREEN);
-                }
-            });
         col = addActionCard(col, "LOCK ALL CHAPTERS", "Resets progress back to locked (for testing).",
             () -> runEconomy(ChapterAndLevelSelectionCommand.CHEAT_LOCK_ALL, null, null, null, null));
     }
