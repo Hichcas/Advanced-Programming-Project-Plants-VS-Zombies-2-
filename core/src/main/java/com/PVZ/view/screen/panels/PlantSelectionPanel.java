@@ -64,26 +64,27 @@ public class PlantSelectionPanel extends BasePanel {
     private MenuButton boostButton;
 
     public PlantSelectionPanel(String chapterName, int stage) {
-        this.chapterName = chapterName;
-        OutputDTO enterResult = new ChapterAndLevelSelectionMenuController().handle(
-            new ChapterAndLevelSelectionInputDTO(ChapterAndLevelSelectionCommand.ENTER_CHAPTER,
-                chapterName, null, null, stage));
+        this.chapterName = chapterName != null ? chapterName : "Frontyard";
+        if (!AppStatus.isMultiplayerMatch) {
+            OutputDTO enterResult = new ChapterAndLevelSelectionMenuController().handle(
+                new ChapterAndLevelSelectionInputDTO(ChapterAndLevelSelectionCommand.ENTER_CHAPTER,
+                    chapterName, null, null, stage));
 
-        if (!enterResult.isSuccess()) {
-            buildErrorOnly(stripColorCodes(enterResult.getMessage()));
-            return;
+            if (!enterResult.isSuccess()) {
+                buildErrorOnly(stripColorCodes(enterResult.getMessage()));
+                return;
+            }
+            if (AppStatus.currentMenuType != MenuType.PLANT_SELECTION) {
+                readyToShow = false;
+                ScreenManager.getInstance().performTransition(() -> new GameScreen(
+                    ChapterMapPaths.resolve(chapterName),
+                    "music/TitleScreen.mp3",
+                    AppStatus.getGameEngine()
+                ));
+                return;
+            }
         }
-        if (AppStatus.currentMenuType != MenuType.PLANT_SELECTION) {
-            readyToShow = false;
-            ScreenManager.getInstance().performTransition(() -> new GameScreen(
-                ChapterMapPaths.resolve(chapterName),
-                "music/TitleScreen.mp3",
-                AppStatus.getGameEngine()
-            ));
-            return;
-        }
-
-        buildPicker(chapterName);
+        buildPicker(this.chapterName);
     }
 
     private void buildErrorOnly(String message) {
@@ -432,6 +433,24 @@ public class PlantSelectionPanel extends BasePanel {
     private void onCardClicked(PlantCardActor card) {
         PlantType type = card.getPlantType();
         boolean currentlySelected = AppStatus.SELECTED_PLANTS.contains(type);
+
+        if (AppStatus.isMultiplayerMatch) {
+            if (currentlySelected) {
+                AppStatus.SELECTED_PLANTS.remove(type);
+                statusLabel.setText("");
+            } else {
+                if (AppStatus.SELECTED_PLANTS.size() < MAX_SELECTED_SLOTS) {
+                    AppStatus.SELECTED_PLANTS.add(type);
+                    statusLabel.setText("");
+                } else {
+                    statusLabel.setText("You can select up to " + MAX_SELECTED_SLOTS + " plants.");
+                }
+            }
+            showDetailFor(type);
+            refresh();
+            return;
+        }
+
         PlantSelectionCommand command = currentlySelected
             ? PlantSelectionCommand.REMOVE_PLANT
             : PlantSelectionCommand.ADD_PLANT;
@@ -486,11 +505,9 @@ public class PlantSelectionPanel extends BasePanel {
             PlantType type = card.getPlantType();
             boolean owned = user != null && user.collectionState != null
                 && user.collectionState.isPlantUnlocked(type);
-            boolean stageLocked = AppStatus.CURRENT_STAGE_LOCKED_PLANTS.contains(type);
+            boolean stageLocked = !AppStatus.isMultiplayerMatch && AppStatus.CURRENT_STAGE_LOCKED_PLANTS.contains(type);
             boolean selected = AppStatus.SELECTED_PLANTS.contains(type);
-            // A plant already selected is never locked out by its own family (that check
-            // only blocks *other* members of the family), so it stays tappable to remove.
-            boolean familyLocked = !selected && plantController.isFamilyLockedByOtherPick(type);
+            boolean familyLocked = !AppStatus.isMultiplayerMatch && !selected && plantController.isFamilyLockedByOtherPick(type);
             card.setLocked(!owned || stageLocked || familyLocked);
             card.setSelected(selected);
         }

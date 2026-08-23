@@ -192,6 +192,12 @@ public enum ZombieType {
       ZOMBOSS_DARK("ZombieZombossMechDark") {
             public Zombie create() { return new ZombieZombossMechDark(); }
       },
+      ZOMBOSS_BEACH("ZombieZombossMechBeach") {
+            public Zombie create() { return new ZombieZombossMechBeach(); }
+      },
+      ZOMBOSS_ICEAGE("ZombieZombossMechIceAge") {
+            public Zombie create() { return new ZombieZombossMechIceAge(); }
+      },
       ZOMBOTANY_PEASHOOTER("ZombotanyPeashooterDefault") {
             public Zombie create() { return new ZombotanyPeashooter(); }
       },
