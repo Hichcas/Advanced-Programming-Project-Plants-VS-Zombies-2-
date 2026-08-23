@@ -1,19 +1,19 @@
 {
   "profile" : {
-    "username" : "test3",
-    "nickname" : "tT1234$%",
-    "email" : "test@test.test",
+    "username" : "username",
+    "nickname" : "Nickname",
+    "email" : "Email@domain.com",
     "gender" : "male",
-    "passwordHash" : "5baa3145da2d632519d69e7c24be1c1d85cb0d354f6b984849a4a78e7b0b8a60",
+    "passwordHash" : "21221d8309bcc4a04dc5d734cb7044acb45288807c80186b0107b771dbbdd23d",
     "securityQuestion" : "What is your favorite color?",
-    "securityAnswerHash" : "5baa3145da2d632519d69e7c24be1c1d85cb0d354f6b984849a4a78e7b0b8a60"
+    "securityAnswerHash" : "b2a3aa602762a782e47a4f8e93bb5ae1b8819d1b92b7e6ceb3ef46a3c7077eb0"
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 250,
-    "diamonds" : 1,
+    "coins" : 100,
+    "diamonds" : 2,
     "stagesCompleted" : 0,
-    "highestScore" : 1160,
+    "highestScore" : 1275,
     "dailyQuestsCompleted" : 0,
     "nonDailyQuestsCompleted" : 0,
     "purchasedPlantFood" : 0
@@ -77,12 +77,12 @@
       "empty" : true,
       "readyForPlanting" : true
     }, {
-      "unlocked" : false,
+      "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
       "empty" : true,
-      "readyForPlanting" : false
+      "readyForPlanting" : true
     }, {
       "unlocked" : false,
       "plantType" : null,
@@ -126,8 +126,8 @@
       "empty" : true,
       "readyForPlanting" : false
     } ] ],
-    "numberOfUnlockedPots" : 5,
-    "numberOfLockedPots" : 7
+    "numberOfLockedPots" : 6,
+    "numberOfUnlockedPots" : 6
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -136,54 +136,54 @@
   "newsState" : {
     "news" : [ {
       "text" : "New zombie spotted: DARK_DEFAULT!",
-      "read" : false,
-      "timestamp" : 1787464343981,
-      "formattedText" : "New zombie spotted: DARK_DEFAULT!\n2026/08/23  09:22"
+      "read" : true,
+      "timestamp" : 1787489079984,
+      "formattedText" : "New zombie spotted: DARK_DEFAULT!\n2026/08/23  16:14"
     }, {
       "text" : "New zombie spotted: DARK_ARMOR1!",
-      "read" : false,
-      "timestamp" : 1787464354383,
-      "formattedText" : "New zombie spotted: DARK_ARMOR1!\n2026/08/23  09:22"
+      "read" : true,
+      "timestamp" : 1787489090553,
+      "formattedText" : "New zombie spotted: DARK_ARMOR1!\n2026/08/23  16:14"
     }, {
       "text" : "New zombie spotted: IMP_DARK!",
-      "read" : false,
-      "timestamp" : 1787464356806,
-      "formattedText" : "New zombie spotted: IMP_DARK!\n2026/08/23  09:22"
+      "read" : true,
+      "timestamp" : 1787489092994,
+      "formattedText" : "New zombie spotted: IMP_DARK!\n2026/08/23  16:14"
     }, {
       "text" : "New zombie spotted: CAMEL!",
-      "read" : false,
-      "timestamp" : 1787464432943,
-      "formattedText" : "New zombie spotted: CAMEL!\n2026/08/23  09:23"
+      "read" : true,
+      "timestamp" : 1787489164656,
+      "formattedText" : "New zombie spotted: CAMEL!\n2026/08/23  16:16"
     }, {
       "text" : "New zombie spotted: WIZARD!",
-      "read" : false,
-      "timestamp" : 1787464488515,
-      "formattedText" : "New zombie spotted: WIZARD!\n2026/08/23  09:24"
+      "read" : true,
+      "timestamp" : 1787489232656,
+      "formattedText" : "New zombie spotted: WIZARD!\n2026/08/23  16:17"
     }, {
       "text" : "New zombie spotted: DARK_ARMOR3!",
-      "read" : false,
-      "timestamp" : 1787464531728,
-      "formattedText" : "New zombie spotted: DARK_ARMOR3!\n2026/08/23  09:25"
+      "read" : true,
+      "timestamp" : 1787489276303,
+      "formattedText" : "New zombie spotted: DARK_ARMOR3!\n2026/08/23  16:17"
     }, {
       "text" : "New zombie spotted: DARK_JUGGLER!",
-      "read" : false,
-      "timestamp" : 1787464536713,
-      "formattedText" : "New zombie spotted: DARK_JUGGLER!\n2026/08/23  09:25"
+      "read" : true,
+      "timestamp" : 1787489281284,
+      "formattedText" : "New zombie spotted: DARK_JUGGLER!\n2026/08/23  16:18"
     }, {
       "text" : "New zombie spotted: PHARAOH!",
-      "read" : false,
-      "timestamp" : 1787464625529,
-      "formattedText" : "New zombie spotted: PHARAOH!\n2026/08/23  09:27"
+      "read" : true,
+      "timestamp" : 1787489449481,
+      "formattedText" : "New zombie spotted: PHARAOH!\n2026/08/23  16:20"
     }, {
       "text" : "New zombie spotted: DARK_ARMOR2!",
-      "read" : false,
-      "timestamp" : 1787464628357,
-      "formattedText" : "New zombie spotted: DARK_ARMOR2!\n2026/08/23  09:27"
+      "read" : true,
+      "timestamp" : 1787489452297,
+      "formattedText" : "New zombie spotted: DARK_ARMOR2!\n2026/08/23  16:20"
     }, {
       "text" : "New zombie spotted: GARGANTUAR_DARK!",
-      "read" : false,
-      "timestamp" : 1787464718072,
-      "formattedText" : "New zombie spotted: GARGANTUAR_DARK!\n2026/08/23  09:28"
+      "read" : true,
+      "timestamp" : 1787489517883,
+      "formattedText" : "New zombie spotted: GARGANTUAR_DARK!\n2026/08/23  16:21"
     } ]
   },
   "shopDaily" : {
@@ -209,16 +209,16 @@
         "claimed" : false,
         "reward" : {
           "type" : "SEED_PACKETS",
-          "amount" : 18,
+          "amount" : 20,
           "targetPlant" : null
         },
         "parameters" : {
-          "n" : 2
+          "n" : 0
         },
         "active" : false,
-        "formattedDescription" : "Win without losing more than 2 plants",
         "formattedTitle" : "Economic Herbivore",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedDescription" : "Win without losing more than 0 plants"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -237,9 +237,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "formattedTitle" : "Speed Run",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -258,9 +258,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "End a level with exactly 0 sun",
         "formattedTitle" : "Master of Defense",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -279,9 +279,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "formattedDescription" : "Win a day level using only mushrooms",
         "formattedTitle" : "Day or Night",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -289,22 +289,22 @@
         "type" : "EPIC",
         "priority" : "MEDIUM",
         "conditionKey" : "lawnmower_kill",
-        "targetCount" : 50,
-        "currentCount" : 9,
+        "targetCount" : 20,
+        "currentCount" : 11,
         "completed" : false,
         "claimed" : false,
         "reward" : {
           "type" : "DIAMONDS",
-          "amount" : 50,
+          "amount" : 20,
           "targetPlant" : null
         },
         "parameters" : {
-          "n" : 50
+          "n" : 20
         },
         "active" : true,
-        "formattedDescription" : "Kill at least 50 zombies with lawnmowers",
         "formattedTitle" : "Lawnmower Time",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -325,16 +325,16 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : true,
-        "formattedDescription" : "Defeat 50 zombies from Ancient Egypt",
         "formattedTitle" : "Chapter Hunter",
-        "runtimeState" : { }
+        "runtimeState" : { },
+        "formattedDescription" : "Defeat 50 zombies from Ancient Egypt"
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "DARK_AGES",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "14h 30m"
+      "timeUntilReset" : "7h 36m"
     }
   }
 }

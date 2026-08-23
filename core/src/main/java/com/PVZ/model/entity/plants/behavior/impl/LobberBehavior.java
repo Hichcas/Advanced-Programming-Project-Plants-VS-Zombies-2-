@@ -107,13 +107,17 @@ public class LobberBehavior implements PlantBehavior {
         damage = (int) Math.round(damage * damageMultiplier);
 
         int projectileCount = Math.max(1, plant.getStats().getIntExtra("projectileCount", 1));
+        if (plant.isPlantFoodActive()) {
+            int pfCount = plant.getStats().getIntExtra("plantFoodProjectileCount", projectileCount);
+            projectileCount = Math.max(projectileCount, pfCount);
+        }
         boolean freezeAttack = plant.getStats().getBooleanExtra("freezeAttack", false);
-        // Same fix as ShooterBehavior: "fireAttack" doubles as both the permanent flag for
-        // innately-fire plants (stamped once at creation from PlantTag.FIRE) and the
-        // temporary flag Plant Food behaviors stamp on non-fire pults (e.g. Winter Melon /
-        // Pepper-pult's handlePultFamily). Without also requiring Plant Food to still be
-        // active for the latter case, one Plant Food use would make that pult fire forever.
-        boolean fireAttack = (plant.isPlantFoodActive() && plant.getStats().getBooleanExtra("fireAttack", false))
+        // "fireAttack" اکنون فقط اثر دائمی است (innate یا Torchwood)؛ اثر موقتیِ Plant Food
+        // (مثلا handlePultFamily برای Pepper-pult) در کلید جدای "pfFireAttack" است که در
+        // لحظه‌ی پایان Plant Food خودش پاک می‌شود - نگاه کنید به
+        // PlantInstance.clearTemporaryPlantFoodExtras و توضیح مشابه در ShooterBehavior.
+        boolean fireAttack = plant.getStats().getBooleanExtra("fireAttack", false)
+            || plant.getStats().getBooleanExtra("pfFireAttack", false)
             || (plant.getDefinition() != null && plant.getDefinition().hasTag(PlantTag.FIRE));
 
         return new LobShotParams(damage, projectileCount, stunShot, freezeAttack, fireAttack);

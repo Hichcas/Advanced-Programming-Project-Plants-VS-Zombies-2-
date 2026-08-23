@@ -105,8 +105,12 @@ public class PlantInstance {
     }
 
     public void setPlantFoodTicksRemaining(int plantFoodTicksRemaining) {
+        boolean wasActive = this.plantFoodActive;
         this.plantFoodTicksRemaining = Math.max(0, plantFoodTicksRemaining);
         this.plantFoodActive = this.plantFoodTicksRemaining > 0;
+        if (wasActive && !this.plantFoodActive) {
+            clearTemporaryPlantFoodExtras();
+        }
     }
 
     public void tickPlantFood() {
@@ -114,8 +118,34 @@ public class PlantInstance {
             plantFoodTicksRemaining--;
             if (plantFoodTicksRemaining == 0) {
                 plantFoodActive = false;
+                clearTemporaryPlantFoodExtras();
             }
         }
+    }
+
+    /**
+     * پاک‌سازی تمام «extra»های موقتی‌ای که Plant Food behaviorها روی
+     * {@code stats} می‌گذارند (مثل pfFireAttack، passThrough، ...) درست
+     * در لحظه‌ای که اثر Plant Food تمام می‌شود.
+     *
+     * چرا این متد لازم بود: قبلا این extraها هیچ‌وقت پاک نمی‌شدند - تنها
+     * چیزی که مانع دائمی‌شدنشان می‌شد، این بود که هر جای مصرف‌کننده حتما
+     * یادش باشد قبل از خواندنشان {@code isPlantFoodActive()} را هم چک
+     * کند. این یک طراحی شکننده بود (یک جای فراموش‌شده کافی بود تا اثر
+     * Plant Food برای همیشه روی گیاه بماند - دقیقا همون باگی که با
+     * پروجکتایل‌های Plant-Food-دار دیده می‌شد). حالا به‌جای تکیه به یادآوری
+     * هر مصرف‌کننده، خودِ منبع را در لحظه‌ی انقضا صفر می‌کنیم - قطعی و
+     * غیرقابل فراموشی.
+     */
+    private void clearTemporaryPlantFoodExtras() {
+        if (stats == null) return;
+        stats.putExtra("pfFireAttack", Boolean.FALSE);
+        stats.putExtra("pfIceAttack", Boolean.FALSE);
+        stats.putExtra("passThrough", Boolean.FALSE);
+        stats.putExtra("pierceBoost", 0);
+        stats.putExtra("plantFoodProjectileCount", 0);
+        stats.putExtra("plantFoodDamageMultiplier", 1.0);
+        stats.putExtra("burstAttack", Boolean.FALSE);
     }
 
     public String getMainBehaviorId() {

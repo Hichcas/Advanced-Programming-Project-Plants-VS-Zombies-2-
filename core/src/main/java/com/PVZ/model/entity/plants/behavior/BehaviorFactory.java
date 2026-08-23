@@ -181,9 +181,15 @@ public final class BehaviorFactory {
 
             plant.setPlantFoodActive(true);
             plant.setPlantFoodSeconds(Math.max(1, duration));
-            plant.getStats().putExtra("projectileCount", projectiles);
+            // مهم: فقط extraهای pf-prefixed (موقتی) نوشته می‌شوند، نه "projectileCount"/
+            // "damageMultiplier" پایه - آن دو بدون هیچ گیتی در همه‌جا خوانده می‌شوند، پس
+            // نوشتن مستقیم رویشان یعنی این بونوس برای همیشه روی گیاه می‌ماند (باگ اصلی
+            // «پروجکتایل که بعد از تمام شدن Plant Food به حالت عادی برنمی‌گردد»).
+            // نگاه کنید به ShooterBehavior.calculateDamage/calculateProjectileCount که
+            // این دو کلید pf-prefixed را فقط وقتی plant.isPlantFoodActive() است می‌خوانند،
+            // و به PlantInstance.clearTemporaryPlantFoodExtras که تضمین می‌کند حتی اگر
+            // جایی این گیت را فراموش کند، مقدار در لحظه‌ی انقضا صفر می‌شود.
             plant.getStats().putExtra("plantFoodProjectileCount", projectiles);
-            plant.getStats().putExtra("damageMultiplier", damageMultiplier);
             plant.getStats().putExtra("plantFoodDamageMultiplier", damageMultiplier);
         };
     }
@@ -227,7 +233,7 @@ public final class BehaviorFactory {
             plant.setPlantFoodActive(true);
             plant.setPlantFoodSeconds(3);
             context.freezeAllZombies(3.0);
-            plant.getStats().putExtra("iceAttack", Boolean.TRUE);
+            plant.getStats().putExtra("pfIceAttack", Boolean.TRUE);
             plant.getStats().putExtra("plantFoodProjectileCount", 5);
         };
     }
@@ -272,10 +278,13 @@ public final class BehaviorFactory {
         return (plant, context) -> {
             plant.setPlantFoodActive(true);
             plant.setPlantFoodSeconds(5);
-            plant.getStats().putExtra("fireAttack", Boolean.TRUE);
-            plant.getStats().putExtra("damageMultiplier", 2.0);
+            // (نگاه کنید به توضیح در createBurstShotFoodBehavior) فقط کلیدهای موقتی
+            // pf-prefixed نوشته می‌شوند - نه "fireAttack"/"damageMultiplier"/
+            // "projectileCount" پایه، که بدون گیت در همه‌جا خوانده می‌شوند و نوشتن
+            // مستقیم رویشان یعنی این بونوس هرگز از بین نمی‌رود.
+            plant.getStats().putExtra("pfFireAttack", Boolean.TRUE);
             plant.getStats().putExtra("plantFoodDamageMultiplier", 2.0);
-            plant.getStats().putExtra("projectileCount", 5);
+            plant.getStats().putExtra("plantFoodProjectileCount", 5);
         };
     }
 
@@ -297,8 +306,7 @@ public final class BehaviorFactory {
 
             switch (plantKey) {
                 case "torchwood" -> {
-                    plant.getStats().putExtra("fireAttack", Boolean.TRUE);
-                    plant.getStats().putExtra("damageMultiplier", 3.0);
+                    plant.getStats().putExtra("pfFireAttack", Boolean.TRUE);
                     plant.getStats().putExtra("plantFoodDamageMultiplier", 3.0);
                     plant.getStats().putExtra("torchwoodBoost", Boolean.TRUE);
                 }

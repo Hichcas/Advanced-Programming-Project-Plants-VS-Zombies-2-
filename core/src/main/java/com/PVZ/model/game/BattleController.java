@@ -90,10 +90,20 @@ public class BattleController implements BehaviorContext {
                 engine.questLawnlessCol1Kills++;
             }
 
+            com.PVZ.model.entity.Tile tile = engine.map.getTile(row, Math.max(0, col));
+            float worldX = tile != null ? tile.getX() + tile.getWidth() / 2f : (float) z.getX();
+            float worldY = tile != null ? tile.getY() + tile.getHeight() / 2f : 0f;
+
+            // یه پاف خاکستری کوچیک روی هر مرگ عادی - برای مرگ‌های آتشین/الکتریکی چیزی
+            // اضافه نمی‌کنیم چون Zombie.startDeath از قبل افکت اختصاصی خودشان را دارد.
+            if (z.getDeathType() != com.PVZ.model.enums.DeathType.ASH
+                && z.getDeathType() != com.PVZ.model.enums.DeathType.ELECTRIC) {
+                engine.addTimedPamEffect(
+                    "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM", "animation",
+                    0.8, 1f, worldX, worldY);
+            }
+
             if (engine.survivalScoreMode) {
-                com.PVZ.model.entity.Tile tile = engine.map.getTile(row, Math.max(0, col));
-                float worldX = tile != null ? tile.getX() + tile.getWidth() / 2f : (float) z.getX();
-                float worldY = tile != null ? tile.getY() + tile.getHeight() / 2f : 0f;
                 engine.myoPointScorer.recordKill(engine, z, row, col, worldX, worldY, engine.survivalElapsedSeconds);
             }
         }
