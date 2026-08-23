@@ -19,14 +19,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.PVZ.controller.menuControllers.IZombieMenuController;
 import com.PVZ.model.enums.MenuType;
-import com.PVZ.model.enums.ZombieType;
 import com.PVZ.model.enums.commands.IZombieCommand;
 import com.PVZ.model.minigame.izombie.IZombieLevelDefinition;
 import com.PVZ.model.minigame.izombie.IZombieLevelLoader;
 import com.PVZ.model.minigame.izombie.IZombieTexturePaths;
 import com.PVZ.model.minigame.izombie.ZombieOption;
 import com.PVZ.model.status.AppStatus;
-import com.PVZ.model.user.User;
 import com.PVZ.view.input.DTO.IZombieInputDTO;
 import com.PVZ.view.output.OutputDTO;
 import com.PVZ.view.renderer.EntityRenderer;
@@ -62,49 +60,16 @@ public class ZombieSelectionPanel extends BasePanel {
     public ZombieSelectionPanel(int levelId) {
         this.levelId = levelId;
 
-        User user = AppStatus.getCurrentUser();
-        if (user != null && user.collectionState != null && !user.collectionState.getSeenZombies().isEmpty()) {
-            for (ZombieType zt : user.collectionState.getSeenZombies()) {
-                int cost = calculateZombieCost(zt);
-                roster.add(new ZombieOption(zt.alias, cost, formatZombieDisplayName(zt)));
-            }
-        } else {
-            for (ZombieType zt : ZombieType.values()) {
-                int cost = calculateZombieCost(zt);
-                roster.add(new ZombieOption(zt.alias, cost, formatZombieDisplayName(zt)));
-            }
+        IZombieLevelDefinition level = new IZombieLevelLoader().loadLevel(levelId);
+        if (level.getZombieRoster() != null) {
+            roster.addAll(level.getZombieRoster());
         }
-
         if (roster.isEmpty()) {
             buildErrorOnly("This I, Zombie level has no zombie roster configured.");
             return;
         }
 
         buildPicker();
-    }
-
-    private static int calculateZombieCost(ZombieType type) {
-        if (type == null) return 50;
-        String name = type.name().toUpperCase();
-        if (name.contains("GARGANTUAR") || name.contains("ZOMBOSS")) return 300;
-        if (name.contains("BRICK") || name.contains("KNIGHT") || name.contains("ARMOR2") || name.contains("CENTURION")) return 150;
-        if (name.contains("BUCKET") || name.contains("BARREL") || name.contains("JALAPENO") || name.contains("SQUASH")) return 125;
-        if (name.contains("CONE") || name.contains("ARMOR1") || name.contains("HELMET") || name.contains("FLAG")) return 75;
-        if (name.contains("IMP")) return 25;
-        if (name.contains("ZOMBOTANY")) return 100;
-        return 50;
-    }
-
-    private static String formatZombieDisplayName(ZombieType type) {
-        if (type == null) return "Zombie";
-        String name = type.name().replace("ZOMBOTANY_", "Zombotany ").replace('_', ' ').toLowerCase();
-        StringBuilder sb = new StringBuilder();
-        for (String part : name.split(" ")) {
-            if (!part.isEmpty()) {
-                sb.append(Character.toUpperCase(part.charAt(0))).append(part.substring(1)).append(" ");
-            }
-        }
-        return sb.toString().trim();
     }
 
     private void buildErrorOnly(String message) {

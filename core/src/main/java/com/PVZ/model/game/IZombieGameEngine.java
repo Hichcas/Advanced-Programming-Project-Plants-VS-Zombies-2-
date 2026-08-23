@@ -38,7 +38,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     private boolean gameOverWin = false;
     private float gameOverTimer = 0f;
 
-    protected final List<Plant> plants = new ArrayList<>();
+    private final List<Plant> plants = new ArrayList<>();
     private final List<Projectile> projectiles = new ArrayList<>();
     private final RegularZombieEngine zombieEngine = new RegularZombieEngine();
     private final BattleController battleController;
@@ -51,10 +51,10 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     private IZombieGame game;
     private Texture background;
     private Texture backgroundRight;
-    protected BitmapFont font;
-    protected BitmapFont tinyFont;
-    protected final ZombiePacketBar zombiePacketBar = new ZombiePacketBar();
-    protected Texture hudPixel;
+    private BitmapFont font;
+    private BitmapFont tinyFont;
+    private final ZombiePacketBar zombiePacketBar = new ZombiePacketBar();
+    private Texture hudPixel;
     private float hudAnimTime = 0f;
 
     public IZombieGameEngine() {
@@ -72,7 +72,6 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         super.setMap(map);
         zombieEngine.bindMap(map);
         battleController.setMap(map);
-        initializeBoard();
     }
 
     public void initializeBoard() {
@@ -133,16 +132,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
                 }
                 z.setStationary(true);
                 z.setGlowing(true);
-                // زامبی خورشیدساز از قبل دقیقا همون زره BUCKET (۱۱۰۰ سلامتی) و بدنه‌ی
-                // پایه (۱۹۰ سلامتی) هر زامبی سطلی معمولی رو داره - یعنی «مثل زامبی
-                // سطلی» همین الان هم برقراره، بدون هیچ ضریب اضافه‌ای.
-                // ضریب buffHitpoints(6.0) قبلی اینجا حذف شد چون بدون هیچ توضیحی این
-                // زامبی رو به‌جای «هم‌سطح زامبی سطلی»، خیلی جونسخت‌تر از یک زامبی
-                // سطلی معمولی می‌کرد (که با درخواست «باید مثل جون زامبی سطلی باشه»
-                // در تناقض بود) - و ظاهرا هنوز هم کافی نبوده. اگه بعد از این تغییر
-                // هنوز خیلی زود می‌میره، احتمالا مشکل از سمت DPS گیاهانِ اون لاین
-                // است نه HP این زامبی - در اون صورت باید rate آسیب گیاهان رو بررسی
-                // کنیم، نه اینکه HP این زامبی رو باز هم بیشتر از حد یک زامبی سطلی کنیم.
+                z.buffHitpoints(6.0);
                 sunZombiesByRow.put(row, z);
             }
         }
@@ -389,39 +379,12 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         }
     }
 
-    protected void drawHud(SpriteBatch batch) {
+    private void drawHud(SpriteBatch batch) {
         if (game == null || map == null) return;
         ensureTexturesLoaded();
         batch.begin();
-        IZombieInputProcessor izInput = (inputProcessor instanceof IZombieInputProcessor inp) ? inp : null;
-        String selectedAlias = izInput != null ? izInput.getSelectedAlias() : null;
+        String selectedAlias = ((IZombieInputProcessor) inputProcessor).getSelectedAlias();
         zombiePacketBar.draw(batch, font, tinyFont, game, selectedAlias);
-
-        if (izInput != null && hudPixel != null) {
-            hudAnimTime += com.badlogic.gdx.Gdx.graphics.getDeltaTime();
-            int row = izInput.getSelectedRow();
-            int minZombieCol = game.getRedLineCol() + 1;
-            int maxZombieCol = game.getCols() - 1;
-            int col = Math.max(minZombieCol, Math.min(maxZombieCol, izInput.getSelectedCol()));
-            float th = map.getTileHeight();
-            float tw = map.getTileWidth();
-            float rowY = map.getStartY() - (row + 1) * th;
-            float deployX = map.getStartX() + col * tw;
-
-            // Soft brightness boost on the selected tile
-            float pulse = (float) (Math.sin(hudAnimTime * 4.0) * 0.06 + 0.22);
-            batch.setColor(1f, 1f, 1f, pulse);
-            batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, th - 4f);
-
-            // Elegant subtle border outline (2px)
-            batch.setColor(1f, 0.92f, 0.5f, 0.75f);
-            batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, 2f);
-            batch.draw(hudPixel, deployX + 2f, rowY + th - 4f, tw - 4f, 2f);
-            batch.draw(hudPixel, deployX + 2f, rowY + 2f, 2f, th - 4f);
-            batch.draw(hudPixel, deployX + tw - 4f, rowY + 2f, 2f, th - 4f);
-            batch.setColor(Color.WHITE);
-        }
-
         if (!gameOverTriggered) {
             String label = String.format("Sun: %d | Brains left: %d/%d | Sun rate: %.1f",
                     game.getSun(), game.getBrainsRemaining(), game.getRows(), game.getCurrentSunRate());
@@ -453,7 +416,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         batch.end();
     }
 
-    protected void ensureTexturesLoaded() {
+    private void ensureTexturesLoaded() {
         if (font != null) return;
         background = new Texture(IZombieTexturePaths.BACKGROUND_LEFT);
         backgroundRight = new Texture(IZombieTexturePaths.BACKGROUND_RIGHT);

@@ -134,17 +134,14 @@ public class SeedPacketBar {
         }
     }
 
+    public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font) {
+        drawIconsAndLabels(batch, font, null);
+    }
+
+    /** Advances once per draw call so every packet's idle animation plays in sync. */
     private float animTime = 0f;
 
-    public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font) {
-        drawIconsAndLabels(batch, font, null, null);
-    }
-
     public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font, SeedBarEngine engine) {
-        drawIconsAndLabels(batch, font, engine, null);
-    }
-
-    public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font, SeedBarEngine engine, PlantType selectedPlant) {
         animTime += Gdx.graphics.getDeltaTime();
 
         if (lastLayoutWasVertical && !packets.isEmpty()) {
@@ -153,24 +150,13 @@ public class SeedPacketBar {
 
         for (SeedPacket packet : packets) {
             Rectangle b = packet.getBounds();
-            // Draw backing slot frame
-            batch.setColor(0.1f, 0.1f, 0.1f, 0.6f);
-            batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
-            if (packet.getPlantType() == selectedPlant) {
-                batch.setColor(1f, 0.85f, 0.2f, 0.9f);
-                // Draw 3px border
-                batch.draw(darkOverlayPixel(), b.x - 3f, b.y - 3f, b.width + 6f, 3f);
-                batch.draw(darkOverlayPixel(), b.x - 3f, b.y + b.height, b.width + 6f, 3f);
-                batch.draw(darkOverlayPixel(), b.x - 3f, b.y, 3f, b.height);
-                batch.draw(darkOverlayPixel(), b.x + b.width, b.y, 3f, b.height);
-            }
-            batch.setColor(Color.WHITE);
-
             float centerX = b.x + b.width / 2f;
             float centerY = b.y + b.height * 0.55f;
             boolean drewAnimated = EntityRenderer.getInstance()
                 .renderPlant(batch, packet.getPlantType().name(), animTime, centerX, centerY);
             if (!drewAnimated) {
+                // Fall back to the static icon (or the plain label if even that is missing)
+                // so nothing on the bar ever silently disappears.
                 if (packet.getIcon() != null) {
                     batch.draw(packet.getIcon(), b.x, b.y, b.width, b.height);
                 } else {
@@ -180,18 +166,21 @@ public class SeedPacketBar {
                 }
             }
 
-            if (engine != null) {
-                double remaining = engine.getRechargeRemainingSeconds(packet.getPlantType());
-                if (remaining > 0) {
-                    batch.setColor(0f, 0f, 0f, 0.55f);
-                    batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
-                    batch.setColor(Color.WHITE);
-
-                    font.setColor(Color.WHITE);
-                    String countdown = (Math.ceil(remaining * 10) / 10.0) + "s";
-                    font.draw(batch, countdown, b.x, b.y + b.height / 2f + 8, b.width, 1, true);
-                }
+            if (engine == null) {
+                continue;
             }
+            double remaining = engine.getRechargeRemainingSeconds(packet.getPlantType());
+            if (remaining <= 0) {
+                continue;
+            }
+
+            batch.setColor(0f, 0f, 0f, 0.55f);
+            batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
+            batch.setColor(Color.WHITE);
+
+            font.setColor(Color.WHITE);
+            String countdown = (Math.ceil(remaining * 10) / 10.0) + "s";
+            font.draw(batch, countdown, b.x, b.y + b.height / 2f + 8, b.width, 1, true);
         }
     }
 
