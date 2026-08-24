@@ -38,7 +38,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     private boolean gameOverWin = false;
     private float gameOverTimer = 0f;
 
-    private final List<Plant> plants = new ArrayList<>();
+    protected final List<Plant> plants = new ArrayList<>();
     private final List<Projectile> projectiles = new ArrayList<>();
     private final RegularZombieEngine zombieEngine = new RegularZombieEngine();
     private final BattleController battleController;
@@ -51,10 +51,10 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     private IZombieGame game;
     private Texture background;
     private Texture backgroundRight;
-    private BitmapFont font;
-    private BitmapFont tinyFont;
-    private final ZombiePacketBar zombiePacketBar = new ZombiePacketBar();
-    private Texture hudPixel;
+    protected BitmapFont font;
+    protected BitmapFont tinyFont;
+    protected final ZombiePacketBar zombiePacketBar = new ZombiePacketBar();
+    protected Texture hudPixel;
     private float hudAnimTime = 0f;
 
     public IZombieGameEngine() {
@@ -72,6 +72,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         super.setMap(map);
         zombieEngine.bindMap(map);
         battleController.setMap(map);
+        initializeBoard();
     }
 
     public void initializeBoard() {
@@ -379,7 +380,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         }
     }
 
-    private void drawHud(SpriteBatch batch) {
+    protected void drawHud(SpriteBatch batch) {
         if (game == null || map == null) return;
         ensureTexturesLoaded();
         batch.begin();
@@ -416,7 +417,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         batch.end();
     }
 
-    private void ensureTexturesLoaded() {
+    protected void ensureTexturesLoaded() {
         if (font != null) return;
         background = new Texture(IZombieTexturePaths.BACKGROUND_LEFT);
         backgroundRight = new Texture(IZombieTexturePaths.BACKGROUND_RIGHT);

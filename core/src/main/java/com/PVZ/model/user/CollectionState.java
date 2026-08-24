@@ -132,6 +132,12 @@ public class CollectionState {
         }
     }
 
+    public void unlockAllZombies() {
+        for (com.PVZ.model.enums.ZombieType type : com.PVZ.model.enums.ZombieType.values()) {
+            seeZombie(type);
+        }
+    }
+
     public boolean hasGreenhouseBoost(PlantType plant) {
         return greenhouseBoosts.contains(plant);
     }

@@ -142,6 +142,10 @@ public class SeedPacketBar {
     private float animTime = 0f;
 
     public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font, SeedBarEngine engine) {
+        drawIconsAndLabels(batch, font, engine, null);
+    }
+
+    public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font, SeedBarEngine engine, PlantType selectedPlant) {
         animTime += Gdx.graphics.getDeltaTime();
 
         if (lastLayoutWasVertical && !packets.isEmpty()) {
@@ -150,6 +154,19 @@ public class SeedPacketBar {
 
         for (SeedPacket packet : packets) {
             Rectangle b = packet.getBounds();
+            // Draw backing slot frame
+            batch.setColor(0.1f, 0.1f, 0.1f, 0.6f);
+            batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
+            if (packet.getPlantType() == selectedPlant) {
+                batch.setColor(1f, 0.85f, 0.2f, 0.9f);
+                // Draw 3px border
+                batch.draw(darkOverlayPixel(), b.x - 3f, b.y - 3f, b.width + 6f, 3f);
+                batch.draw(darkOverlayPixel(), b.x - 3f, b.y + b.height, b.width + 6f, 3f);
+                batch.draw(darkOverlayPixel(), b.x - 3f, b.y, 3f, b.height);
+                batch.draw(darkOverlayPixel(), b.x + b.width, b.y, 3f, b.height);
+            }
+            batch.setColor(Color.WHITE);
+
             float centerX = b.x + b.width / 2f;
             float centerY = b.y + b.height * 0.55f;
             boolean drewAnimated = EntityRenderer.getInstance()

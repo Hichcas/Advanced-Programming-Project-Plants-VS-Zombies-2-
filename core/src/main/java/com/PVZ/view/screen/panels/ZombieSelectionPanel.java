@@ -60,16 +60,56 @@ public class ZombieSelectionPanel extends BasePanel {
     public ZombieSelectionPanel(int levelId) {
         this.levelId = levelId;
 
-        IZombieLevelDefinition level = new IZombieLevelLoader().loadLevel(levelId);
-        if (level.getZombieRoster() != null) {
-            roster.addAll(level.getZombieRoster());
+        com.PVZ.model.user.User user = AppStatus.getCurrentUser();
+        if (user != null && user.collectionState != null && !user.collectionState.getSeenZombies().isEmpty()) {
+            for (com.PVZ.model.enums.ZombieType zt : user.collectionState.getSeenZombies()) {
+                int cost = calculateZombieCost(zt);
+                roster.add(new ZombieOption(zt.alias, cost, formatZombieDisplayName(zt)));
+            }
+        } else {
+            for (com.PVZ.model.enums.ZombieType zt : com.PVZ.model.enums.ZombieType.values()) {
+                int cost = calculateZombieCost(zt);
+                roster.add(new ZombieOption(zt.alias, cost, formatZombieDisplayName(zt)));
+            }
         }
+
+        if (roster.isEmpty()) {
+            IZombieLevelDefinition level = new IZombieLevelLoader().loadLevel(levelId);
+            if (level != null && level.getZombieRoster() != null) {
+                roster.addAll(level.getZombieRoster());
+            }
+        }
+
         if (roster.isEmpty()) {
             buildErrorOnly("This I, Zombie level has no zombie roster configured.");
             return;
         }
 
         buildPicker();
+    }
+
+    private static int calculateZombieCost(com.PVZ.model.enums.ZombieType type) {
+        if (type == null) return 50;
+        String name = type.name().toUpperCase();
+        if (name.contains("GARGANTUAR") || name.contains("ZOMBOSS")) return 300;
+        if (name.contains("BRICK") || name.contains("KNIGHT") || name.contains("ARMOR2") || name.contains("CENTURION")) return 150;
+        if (name.contains("BUCKET") || name.contains("BARREL") || name.contains("JALAPENO") || name.contains("SQUASH")) return 125;
+        if (name.contains("CONE") || name.contains("ARMOR1") || name.contains("HELMET") || name.contains("FLAG")) return 75;
+        if (name.contains("IMP")) return 25;
+        if (name.contains("ZOMBOTANY")) return 100;
+        return 50;
+    }
+
+    private static String formatZombieDisplayName(com.PVZ.model.enums.ZombieType type) {
+        if (type == null) return "Zombie";
+        String name = type.name().replace("ZOMBOTANY_", "Zombotany ").replace('_', ' ').toLowerCase();
+        StringBuilder sb = new StringBuilder();
+        for (String part : name.split(" ")) {
+            if (!part.isEmpty()) {
+                sb.append(Character.toUpperCase(part.charAt(0))).append(part.substring(1)).append(" ");
+            }
+        }
+        return sb.toString().trim();
     }
 
     private void buildErrorOnly(String message) {
