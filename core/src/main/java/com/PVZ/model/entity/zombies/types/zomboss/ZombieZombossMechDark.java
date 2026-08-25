@@ -127,6 +127,7 @@ public class ZombieZombossMechDark extends AbstractZomboss {
         fireBreathActive = true;
         fireBreathTimer = 0f;
         ZombieAnimation.trigger(this, "fire_attack", 3.2);
+        com.PVZ.model.status.AppStatus.triggerCameraShake();
 
         int r1 = Math.max(0, Math.min(3, (int) this.getRow()));
         int r2 = r1 + 1;
@@ -240,6 +241,7 @@ public class ZombieZombossMechDark extends AbstractZomboss {
     private void onFireballImpact(DarkFireball fb, BattleController ctrl) {
         if (fb.exploded) return;
         fb.exploded = true;
+        com.PVZ.model.status.AppStatus.triggerCameraShake();
 
         if (ctrl.getEngine() != null) {
             ctrl.getEngine().addTimedPamEffect(

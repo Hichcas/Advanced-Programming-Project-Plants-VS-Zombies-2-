@@ -70,6 +70,7 @@ public abstract class AbstractZomboss extends Zombie {
     public void triggerStun(float duration) {
         this.stunTimer = duration;
         ZombieAnimation.trigger(this, "stun_start", 1.5);
+        com.PVZ.model.status.AppStatus.triggerCameraShake();
     }
 
     public boolean isStunned() {

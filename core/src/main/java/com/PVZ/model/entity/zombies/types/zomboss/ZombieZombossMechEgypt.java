@@ -174,6 +174,7 @@ public class ZombieZombossMechEgypt extends AbstractZomboss {
     private void onMissileImpact(BattleController ctrl) {
         if (missileExploded) return;
         missileExploded = true;
+        com.PVZ.model.status.AppStatus.triggerCameraShake();
 
         if (ctrl.getEngine() != null) {
             ctrl.getEngine().addTimedPamEffect(
@@ -224,6 +225,7 @@ public class ZombieZombossMechEgypt extends AbstractZomboss {
         chargeTimer = 0f;
         homeX = (float) this.x;
         ZombieAnimation.trigger(this, "jump_start", 1.0);
+        com.PVZ.model.status.AppStatus.triggerCameraShake();
         System.out.println("[ZombossEgypt] Starting Charge / Dash Forward attack in lane " + this.getRow() + "!");
     }
 

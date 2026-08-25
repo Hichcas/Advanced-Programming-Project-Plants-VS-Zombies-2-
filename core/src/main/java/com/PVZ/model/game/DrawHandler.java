@@ -387,12 +387,12 @@ public class DrawHandler {
                                    origGraveColor.a);
                 }
 
-                // 2. Render Gravestone PAM animation
+                // 2. Render Gravestone PAM animation (static damage frame, time=0 to avoid looping/flashing)
                 EntityRenderer.getInstance().renderPam(
                     batch,
                     pamPath,
                     clipName,
-                    tile.getGraveAnimTime(),
+                    0f,
                     centerX,
                     centerY,
                     0.95f
@@ -404,7 +404,7 @@ public class DrawHandler {
                         batch,
                         pamPath,
                         clipName,
-                        tile.getGraveAnimTime(),
+                        0f,
                         centerX,
                         centerY,
                         0.95f
