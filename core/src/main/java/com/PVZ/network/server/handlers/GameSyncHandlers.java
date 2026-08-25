@@ -54,6 +54,15 @@ public final class GameSyncHandlers {
                 .with("reason", request.getString("reason", ""));
             opponent.send(forward);
         }
+
+        // پاک‌سازی session مربوطه
+        String roomId = session.getCurrentRoomId();
+        if (roomId != null) {
+            OnlineMatchSession matchSession = MatchmakingManager.getInstance().getSession(roomId);
+            if (matchSession != null) {
+                matchSession.markGameFinished();
+            }
+        }
         return null;
     }
 

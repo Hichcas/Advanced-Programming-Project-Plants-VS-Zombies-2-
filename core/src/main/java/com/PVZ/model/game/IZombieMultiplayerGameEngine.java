@@ -157,13 +157,30 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
 
         NetworkSession.client().on(MessageType.GAME_OVER, msg -> {
             String winner = msg.getString("winner");
-            Gdx.app.postRunnable(() -> handleRemoteGameOver(winner));
+            String reason = msg.getString("reason", "");
+            Gdx.app.postRunnable(() -> handleRemoteGameOver(winner, reason));
         });
 
         NetworkSession.client().on(MessageType.REACTION_RECEIVED, msg -> {
             String reaction = msg.getString("reaction");
             Gdx.app.postRunnable(() -> showReaction(reaction));
         });
+    }
+
+    private void handleRemoteGameOver(String winner, String reason) {
+        if (matchFinished) return;
+        matchFinished = true;
+        wonMatch = myRole.equalsIgnoreCase(winner);
+
+        if ("OPPONENT_DISCONNECTED".equals(reason)) {
+            matchResultText = wonMatch
+                ? "VICTORY! Opponent disconnected."
+                : "DEFEAT! You disconnected.";
+        } else {
+            matchResultText = wonMatch
+                ? "VICTORY! YOU WIN!"
+                : "DEFEAT! YOU LOSE!";
+        }
     }
 
     private void handleRemotePlant(String typeName, int row, int col) {
@@ -188,7 +205,9 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         if (matchFinished) return;
         matchFinished = true;
         wonMatch = myRole.equalsIgnoreCase(winner);
-        matchResultText = wonMatch ? "VICTORY! YOU WIN!" : "DEFEAT! YOU LOSE!";
+        matchResultText = wonMatch
+            ? "VICTORY! YOU WIN!"
+            : "DEFEAT! YOU LOSE!";
     }
 
     public void sendReaction(String reaction) {
@@ -358,4 +377,17 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         font.setColor(Color.WHITE);
         batch.end();
     }
+
+    public boolean isMatchFinished() {
+        return matchFinished;
+    }
+
+    public boolean isWonMatch() {
+        return wonMatch;
+    }
+
+    public String getMatchResultText() {
+        return matchResultText;
+    }
+
 }

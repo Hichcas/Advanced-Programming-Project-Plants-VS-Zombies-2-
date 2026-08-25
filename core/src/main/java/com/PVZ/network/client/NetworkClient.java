@@ -53,10 +53,39 @@ public class NetworkClient {
         socket = new Socket(host, port);
         channel = new MessageChannel(socket);
         connected = true;
+        startHeartbeat();
 
         listenerThread = new Thread(this::listenLoop, "NetworkClient-Listener");
         listenerThread.setDaemon(true);
         listenerThread.start();
+    }
+
+    private Thread heartbeatThread;
+    private volatile boolean heartbeatRunning = false;
+
+    private void startHeartbeat() {
+        heartbeatRunning = true;
+        heartbeatThread = new Thread(() -> {
+            while (connected && heartbeatRunning) {
+                try {
+                    Thread.sleep(2000);
+                    if (connected) {
+                        channel.send(NetworkMessage.push(MessageType.PING));
+                    }
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        });
+        heartbeatThread.setDaemon(true);
+        heartbeatThread.start();
+    }
+
+    private void stopHeartbeat() {
+        heartbeatRunning = false;
+        if (heartbeatThread != null) {
+            heartbeatThread.interrupt();
+        }
     }
 
     private void listenLoop() {
@@ -95,6 +124,7 @@ public class NetworkClient {
 
     private void handleDisconnect() {
         connected = false;
+        stopHeartbeat();
         // به تمام درخواست‌های معلق خطا بده تا کسی برای همیشه منتظر نماند
         for (CompletableFuture<NetworkMessage> future : pendingRequests.values()) {
             future.completeExceptionally(new IOException("Connection to server lost."));
