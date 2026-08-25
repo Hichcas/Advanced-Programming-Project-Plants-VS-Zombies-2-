@@ -114,7 +114,7 @@ public class GlobalInvitationManager {
         AppStatus.setCurrentMenuType(MenuType.IN_GAME);
         ScreenManager.getInstance().performTransition(() -> new GameScreen(
             "maps/Frontyard.jpg",
-            "music/Title Screen.mp3",
+            "music/TitleScreen.mp3",
             engine
         ));
     }
