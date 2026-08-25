@@ -49,6 +49,8 @@ public enum MessageType {
     SERVER_ERROR,
 
     SURRENDER,
+    DRAW_OFFER,
+    DRAW_RESPONSE,
 
     // ===== Matchmaking / انتخاب رقیب (برای هم‌تیمی که این بخش را می‌زند) =====
     CHALLENGE_USER,

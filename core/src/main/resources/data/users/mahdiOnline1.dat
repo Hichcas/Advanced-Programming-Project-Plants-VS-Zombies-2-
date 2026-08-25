@@ -166,9 +166,9 @@
           "n" : 3
         },
         "active" : true,
-        "runtimeState" : { },
         "formattedDescription" : "Win without losing more than 3 plants",
-        "formattedTitle" : "Economic Herbivore"
+        "formattedTitle" : "Economic Herbivore",
+        "runtimeState" : { }
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -187,9 +187,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "runtimeState" : { },
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
-        "formattedTitle" : "Speed Run"
+        "formattedTitle" : "Speed Run",
+        "runtimeState" : { }
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -208,9 +208,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "runtimeState" : { },
         "formattedDescription" : "End a level with exactly 0 sun",
-        "formattedTitle" : "Master of Defense"
+        "formattedTitle" : "Master of Defense",
+        "runtimeState" : { }
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -229,9 +229,9 @@
         },
         "parameters" : { },
         "active" : true,
-        "runtimeState" : { },
         "formattedDescription" : "Win a day level using only mushrooms",
-        "formattedTitle" : "Day or Night"
+        "formattedTitle" : "Day or Night",
+        "runtimeState" : { }
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -252,9 +252,9 @@
           "n" : 10
         },
         "active" : true,
-        "runtimeState" : { },
         "formattedDescription" : "Kill at least 10 zombies with lawnmowers",
-        "formattedTitle" : "Lawnmower Time"
+        "formattedTitle" : "Lawnmower Time",
+        "runtimeState" : { }
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -275,16 +275,16 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : true,
-        "runtimeState" : { },
         "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
-        "formattedTitle" : "Chapter Hunter"
+        "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { }
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 1,
       "isDayLevel" : true,
-      "timeUntilReset" : "5h 20m"
+      "timeUntilReset" : "4h 26m"
     }
   }
 }

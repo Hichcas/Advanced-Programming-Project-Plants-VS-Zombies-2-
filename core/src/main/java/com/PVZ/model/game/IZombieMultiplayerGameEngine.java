@@ -6,6 +6,7 @@ import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.minigame.izombie.IZombieGame;
 import com.PVZ.model.minigame.izombie.IZombieLevelDefinition;
 import com.PVZ.model.minigame.izombie.IZombieLevelLoader;
+import com.PVZ.model.minigame.izombie.ZombieOption;
 import com.PVZ.network.client.NetworkSession;
 import com.PVZ.network.common.MessageType;
 import com.PVZ.network.common.NetworkMessage;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
@@ -24,10 +26,11 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     private final String roomId;
     private final int levelId;
 
-    private float matchTimeRemaining = 600.0f; // 2 minutes
+    private float matchTimeRemaining = 600.0f; // 10 minutes
     private boolean matchFinished = false;
     private String matchResultText = "";
     private boolean wonMatch = false;
+    private boolean drawResult = false;
 
     private final SeedPacketBar plantBar = new SeedPacketBar();
     private PlantType selectedPlantType = null;
@@ -36,6 +39,26 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
 
     private final List<PlantType> selectedPlants;
     private final List<String> selectedZombies;
+
+    public boolean isDrawResult() { return drawResult; }
+
+    public void offerDraw() {
+        if (matchFinished) return;
+        NetworkMessage msg = NetworkMessage.push(MessageType.DRAW_OFFER);
+        NetworkSession.client().sendFireAndForget(msg);
+    }
+
+    public void respondDrawOffer(boolean accept) {
+        NetworkMessage msg = NetworkMessage.push(MessageType.DRAW_RESPONSE)
+            .with("accept", accept);
+        NetworkSession.client().sendFireAndForget(msg);
+
+        if (accept && !matchFinished) {
+            matchFinished = true;
+            drawResult = true;
+            matchResultText = "DRAW! BOTH PLAYERS AGREED TO END THE GAME";
+        }
+    }
 
     public IZombieMultiplayerGameEngine(String myRole, String opponentName, String roomId, int levelId) {
         this(myRole, opponentName, roomId, levelId, null, null);
@@ -114,7 +137,7 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     @Override
     public void initializeBoard() {
         super.initializeBoard();
-        // In multiplayer, clear local random seeds so both sides start with an identical empty/synced lawn
+        // Clear random seeds so both sides start identical
         plants.clear();
         if (map != null && getGame() != null) {
             for (int r = 0; r < getGame().getRows(); r++) {
@@ -127,13 +150,13 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
             List<PlantType> plantOptions = (selectedPlants != null && !selectedPlants.isEmpty())
                 ? selectedPlants
                 : List.of(
-                    PlantType.PEASHOOTER,
-                    PlantType.SUNFLOWER,
-                    PlantType.WALL_NUT,
-                    PlantType.SNOW_PEA,
-                    PlantType.REPEATER,
-                    PlantType.POTATO_MINE
-                );
+                PlantType.PEASHOOTER,
+                PlantType.SUNFLOWER,
+                PlantType.WALL_NUT,
+                PlantType.SNOW_PEA,
+                PlantType.REPEATER,
+                PlantType.POTATO_MINE
+            );
             float slotSize = 110f;
             float gap = 12f;
             int count = plantOptions.size();
@@ -156,6 +179,17 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
             int row = msg.getInt("row", -1);
             int col = msg.getInt("col", -1);
             Gdx.app.postRunnable(() -> handleRemotePlant(typeName, row, col));
+        });
+
+        NetworkSession.client().on(MessageType.DRAW_RESPONSE, msg -> {
+            boolean accept = msg.getBoolean("accept", false);
+            Gdx.app.postRunnable(() -> {
+                if (!matchFinished && accept) {
+                    matchFinished = true;
+                    drawResult = true;
+                    matchResultText = "DRAW! BOTH PLAYERS AGREED TO END THE GAME";
+                }
+            });
         });
 
         NetworkSession.client().on(MessageType.GAME_DEPLOY_INPUT, msg -> {
@@ -186,6 +220,10 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
             matchResultText = wonMatch
                 ? "VICTORY! Opponent disconnected."
                 : "DEFEAT! You disconnected.";
+        } else if ("SURRENDER".equals(reason)) {
+            matchResultText = wonMatch
+                ? "VICTORY! Opponent surrendered."
+                : "DEFEAT! You surrendered.";
         } else {
             matchResultText = wonMatch
                 ? "VICTORY! YOU WIN!"
@@ -209,15 +247,6 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     private void handleRemoteDeploy(String alias, int row, int col) {
         if (alias == null || row < 0 || col < 0) return;
         spawnZombie(alias, row, col);
-    }
-
-    private void handleRemoteGameOver(String winner) {
-        if (matchFinished) return;
-        matchFinished = true;
-        wonMatch = myRole.equalsIgnoreCase(winner);
-        matchResultText = wonMatch
-            ? "VICTORY! YOU WIN!"
-            : "DEFEAT! YOU LOSE!";
     }
 
     public void sendReaction(String reaction) {
@@ -336,12 +365,10 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
                 float rowY = map.getStartY() - (row + 1) * th;
                 float deployX = map.getStartX() + col * tw;
 
-                // Soft brightness boost on the selected tile
                 float pulse = (float) (Math.sin(System.currentTimeMillis() * 0.004) * 0.06 + 0.22);
                 batch.setColor(1f, 1f, 1f, pulse);
                 batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, th - 4f);
 
-                // Elegant subtle border outline (2px)
                 batch.setColor(1f, 0.92f, 0.5f, 0.75f);
                 batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, 2f);
                 batch.draw(hudPixel, deployX + 2f, rowY + th - 4f, tw - 4f, 2f);
@@ -399,5 +426,4 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     public String getMatchResultText() {
         return matchResultText;
     }
-
 }
