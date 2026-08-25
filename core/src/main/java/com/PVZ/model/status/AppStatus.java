@@ -90,9 +90,9 @@ public final class AppStatus {
 
     // ====================== وضعیت بازی آنلاین دونفره ======================
     public static boolean isMultiplayerMatch = false;
-    public static String multiplayerRole = "ZOMBIE";
-    public static String multiplayerOpponent = "";
-    public static String multiplayerRoomId = "";
+    public static String multiplayerRole = null;
+    public static String multiplayerOpponent = null;
+    public static String multiplayerRoomId = null;
     public static int multiplayerLevelId = 1;
 
     // ====================== تنظیمات جدید ======================
