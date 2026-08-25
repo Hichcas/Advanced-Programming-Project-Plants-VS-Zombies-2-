@@ -128,6 +128,7 @@ public class ZombieZombossMechIceAge extends AbstractZomboss {
         iceWindActive = true;
         iceWindTimer = 0f;
         ZombieAnimation.trigger(this, "wind_1", 3.2);
+        com.PVZ.model.status.AppStatus.triggerCameraShake();
 
         int r1 = Math.max(0, Math.min(3, (int) this.getRow()));
         int r2 = r1 + 1;
@@ -236,6 +237,7 @@ public class ZombieZombossMechIceAge extends AbstractZomboss {
     private void onIceMissileImpact(IceMissile im, BattleController ctrl) {
         if (im.exploded) return;
         im.exploded = true;
+        com.PVZ.model.status.AppStatus.triggerCameraShake();
 
         if (ctrl.getEngine() != null) {
             ctrl.getEngine().addTimedPamEffect(

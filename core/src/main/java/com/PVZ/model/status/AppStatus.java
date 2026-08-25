@@ -75,6 +75,19 @@ public final class AppStatus {
         return announcementQueue.poll();
     }
 
+    // ====================== سیستم لرزش دوربین ======================
+    private static Runnable cameraShakeTrigger;
+
+    public static void registerCameraShakeTrigger(Runnable trigger) {
+        cameraShakeTrigger = trigger;
+    }
+
+    public static void triggerCameraShake() {
+        if (cameraShakeTrigger != null) {
+            cameraShakeTrigger.run();
+        }
+    }
+
     // ====================== وضعیت بازی آنلاین دونفره ======================
     public static boolean isMultiplayerMatch = false;
     public static String multiplayerRole = "ZOMBIE";

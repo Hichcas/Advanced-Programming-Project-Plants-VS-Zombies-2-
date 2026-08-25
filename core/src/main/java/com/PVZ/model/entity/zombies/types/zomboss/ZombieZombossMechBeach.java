@@ -118,6 +118,7 @@ public class ZombieZombossMechBeach extends AbstractZomboss {
         turbineActive = true;
         turbineTimer = 0f;
         ZombieAnimation.trigger(this, "suction_loop", 3.5);
+        com.PVZ.model.status.AppStatus.triggerCameraShake();
 
         System.out.println("[ZombossBeach] Shark Submarine activated Turbine Suction!");
     }

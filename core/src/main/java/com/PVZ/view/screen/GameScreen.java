@@ -646,6 +646,8 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void show() {
+        super.show();
+        AppStatus.registerCameraShakeTrigger(this::activeCameraShake);
         multiplexer.clear();
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(new com.badlogic.gdx.InputAdapter() {
@@ -1403,6 +1405,7 @@ public class GameScreen extends BaseScreen {
         if (backgroundTexture != null) {
             backgroundTexture.dispose();
         }
+        AppStatus.registerCameraShakeTrigger(null);
         System.out.println("[GameScreen] PVZ resources disposed cleanly.");
     }
 
