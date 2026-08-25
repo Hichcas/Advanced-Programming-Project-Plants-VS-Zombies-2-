@@ -48,6 +48,8 @@ public enum MessageType {
     /** Server -> Client: خطای عمومی که به هیچ درخواست خاصی مرتبط نیست (مثلا قطعی داخلی). */
     SERVER_ERROR,
 
+    SURRENDER,
+
     // ===== Matchmaking / انتخاب رقیب (برای هم‌تیمی که این بخش را می‌زند) =====
     CHALLENGE_USER,
     CHALLENGE_INVITATION,

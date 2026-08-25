@@ -24,7 +24,7 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     private final String roomId;
     private final int levelId;
 
-    private float matchTimeRemaining = 120.0f; // 2 minutes
+    private float matchTimeRemaining = 600.0f; // 2 minutes
     private boolean matchFinished = false;
     private String matchResultText = "";
     private boolean wonMatch = false;
@@ -39,6 +39,16 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
 
     public IZombieMultiplayerGameEngine(String myRole, String opponentName, String roomId, int levelId) {
         this(myRole, opponentName, roomId, levelId, null, null);
+    }
+
+    public void surrender() {
+        if (matchFinished) return;
+        matchFinished = true;
+        wonMatch = false;
+        matchResultText = "DEFEAT! YOU SURRENDERED!";
+
+        NetworkMessage msg = NetworkMessage.push(MessageType.SURRENDER);
+        NetworkSession.client().sendFireAndForget(msg);
     }
 
     public IZombieMultiplayerGameEngine(String myRole, String opponentName, String roomId, int levelId,

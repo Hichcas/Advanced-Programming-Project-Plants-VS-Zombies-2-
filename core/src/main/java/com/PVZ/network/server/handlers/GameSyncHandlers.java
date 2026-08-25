@@ -18,6 +18,7 @@ public final class GameSyncHandlers {
         dispatcher.register(MessageType.GAME_OVER, GameSyncHandlers::handleGameOver);
         dispatcher.register(MessageType.SEND_REACTION, GameSyncHandlers::handleSendReaction);
         dispatcher.register(MessageType.SELECTION_READY, GameSyncHandlers::handleSelectionReady);
+        dispatcher.register(MessageType.SURRENDER, GameSyncHandlers::handleSurrender);
     }
 
     private static NetworkMessage handlePlantInput(ClientSession session, NetworkMessage request) {
@@ -83,6 +84,28 @@ public final class GameSyncHandlers {
             OnlineMatchSession matchSession = MatchmakingManager.getInstance().getSession(roomId);
             if (matchSession != null) {
                 matchSession.markReady(session.getUsername());
+            }
+        }
+        return null;
+    }
+
+    private static NetworkMessage handleSurrender(ClientSession session, NetworkMessage request) {
+        ClientSession opponent = session.getOpponentSession();
+        if (opponent != null && opponent.isInGame()) {
+            opponent.setInGame(false);
+            NetworkMessage gameOver = NetworkMessage.push(MessageType.GAME_OVER)
+                .with("winner", opponent.getCurrentRole())
+                .with("reason", "SURRENDER");
+            opponent.send(gameOver);
+        }
+
+        session.setInGame(false);
+        // پاک‌سازی session
+        String roomId = session.getCurrentRoomId();
+        if (roomId != null) {
+            OnlineMatchSession matchSession = MatchmakingManager.getInstance().getSession(roomId);
+            if (matchSession != null) {
+                matchSession.markGameFinished();
             }
         }
         return null;
