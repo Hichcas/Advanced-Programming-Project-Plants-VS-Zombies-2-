@@ -19,6 +19,27 @@ public final class GameSyncHandlers {
         dispatcher.register(MessageType.SEND_REACTION, GameSyncHandlers::handleSendReaction);
         dispatcher.register(MessageType.SELECTION_READY, GameSyncHandlers::handleSelectionReady);
         dispatcher.register(MessageType.SURRENDER, GameSyncHandlers::handleSurrender);
+        dispatcher.register(MessageType.DRAW_OFFER, GameSyncHandlers::handleDrawOffer);
+        dispatcher.register(MessageType.DRAW_RESPONSE, GameSyncHandlers::handleDrawResponse);
+    }
+
+    private static NetworkMessage handleDrawOffer(ClientSession session, NetworkMessage request) {
+        ClientSession opponent = session.getOpponentSession();
+        if (opponent != null && opponent.isInGame()) {
+            NetworkMessage forward = NetworkMessage.push(MessageType.DRAW_OFFER);
+            opponent.send(forward);
+        }
+        return null;
+    }
+
+    private static NetworkMessage handleDrawResponse(ClientSession session, NetworkMessage request) {
+        ClientSession opponent = session.getOpponentSession();
+        if (opponent != null && opponent.isInGame()) {
+            NetworkMessage forward = NetworkMessage.push(MessageType.DRAW_RESPONSE)
+                .with("accept", request.getBoolean("accept", false));
+            opponent.send(forward);
+        }
+        return null;
     }
 
     private static NetworkMessage handlePlantInput(ClientSession session, NetworkMessage request) {

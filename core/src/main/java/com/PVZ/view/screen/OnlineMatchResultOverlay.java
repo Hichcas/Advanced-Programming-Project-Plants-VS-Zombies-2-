@@ -18,6 +18,16 @@ public class OnlineMatchResultOverlay extends Table {
     private final Label messageLabel;
     private boolean showing = false;
 
+    public void showDraw(String reason) {
+        titleLabel.setText("DRAW!");
+        titleLabel.setColor(Color.GRAY);
+        messageLabel.setText(reason != null ? reason : "The game ended in a draw.");
+        showing = true;
+        setVisible(true);
+        setTouchable(Touchable.enabled);
+        toFront();
+    }
+
     public OnlineMatchResultOverlay(Runnable onExit) {
         setFillParent(true);
         setVisible(false);
