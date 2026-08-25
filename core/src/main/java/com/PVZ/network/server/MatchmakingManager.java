@@ -15,12 +15,17 @@ public class MatchmakingManager {
     private final Queue<ClientSession> randomQueue = new ConcurrentLinkedQueue<>();
     private record PendingChallenge(ClientSession challenger, String challengerRole, int levelId) {}
     private final Map<String, PendingChallenge> pendingInvitations = new ConcurrentHashMap<>();
+    private final Map<String, OnlineMatchSession> activeSessions = new ConcurrentHashMap<>();
 
     private MatchmakingManager() {
     }
 
     public static MatchmakingManager getInstance() {
         return INSTANCE;
+    }
+
+    public OnlineMatchSession getSession(String roomId) {
+        return activeSessions.get(roomId);
     }
 
     // ===================== Random Match =====================
@@ -36,7 +41,7 @@ public class MatchmakingManager {
                 boolean aIsPlant = new java.util.Random().nextBoolean();
                 String roleA = aIsPlant ? "PLANT" : "ZOMBIE";
                 String roleB = aIsPlant ? "ZOMBIE" : "PLANT";
-                int levelId = new java.util.Random().nextInt(3) + 1; // 1, 2, or 3
+                int levelId = new java.util.Random().nextInt(3) + 1;
                 startMatchWithRoles(a, roleA, b, roleB, levelId);
             }
         }
@@ -49,30 +54,16 @@ public class MatchmakingManager {
     // ===================== Challenge =====================
 
     public synchronized String challenge(ClientSession challenger, String targetUsername, String requestedRole, int levelId) {
-        if (!challenger.isAuthenticated()) {
-            return "You must be logged in.";
-        }
-        if (targetUsername == null || targetUsername.isBlank()) {
-            return "Please enter a username.";
-        }
-        if (targetUsername.equals(challenger.getUsername())) {
-            return "You cannot challenge yourself.";
-        }
+        if (!challenger.isAuthenticated()) return "You must be logged in.";
+        if (targetUsername == null || targetUsername.isBlank()) return "Please enter a username.";
+        if (targetUsername.equals(challenger.getUsername())) return "You cannot challenge yourself.";
 
-        com.PVZ.model.user.User targetUser =
-            com.PVZ.model.user.UserRegistry.getUser(targetUsername);
-        if (targetUser == null) {
-            return "User does not exist.";
-        }
+        com.PVZ.model.user.User targetUser = com.PVZ.model.user.UserRegistry.getUser(targetUsername);
+        if (targetUser == null) return "User does not exist.";
 
         ClientSession targetSession = SessionRegistry.get(targetUsername);
-        if (targetSession == null) {
-            return "User is offline.";
-        }
-
-        if (targetSession.isInGame()) {
-            return "User is in a game and cannot play now.";
-        }
+        if (targetSession == null) return "User is offline.";
+        if (targetSession.isInGame()) return "User is in a game and cannot play now.";
 
         String role = (requestedRole != null && requestedRole.equalsIgnoreCase("ZOMBIE")) ? "ZOMBIE" : "PLANT";
         String targetRole = role.equals("PLANT") ? "ZOMBIE" : "PLANT";
@@ -93,9 +84,7 @@ public class MatchmakingManager {
     public synchronized String respondToInvitation(ClientSession target, boolean accept) {
         String targetUsername = target.getUsername();
         PendingChallenge pending = pendingInvitations.remove(targetUsername);
-        if (pending == null) {
-            return "No invitation found.";
-        }
+        if (pending == null) return "No invitation found.";
 
         if (accept) {
             String challengerRole = pending.challengerRole();
@@ -120,22 +109,30 @@ public class MatchmakingManager {
         a.setCurrentRoomId(roomId);
         b.setCurrentRoomId(roomId);
 
+        long startAt = System.currentTimeMillis() + 5000L; // This will be replaced by OnlineMatchSession countdown
+
         NetworkMessage matchFoundA = NetworkMessage.push(MessageType.MATCH_FOUND)
             .with("opponent", b.getUsername())
             .with("roomId", roomId)
             .with("role", roleA)
-            .with("levelId", levelId);
+            .with("levelId", levelId)
+            .with("startAt", startAt); // not used directly now
 
         NetworkMessage matchFoundB = NetworkMessage.push(MessageType.MATCH_FOUND)
             .with("opponent", a.getUsername())
             .with("roomId", roomId)
             .with("role", roleB)
-            .with("levelId", levelId);
+            .with("levelId", levelId)
+            .with("startAt", startAt);
 
         a.send(matchFoundA);
         b.send(matchFoundB);
 
+        // ساخت session جدید برای همگام‌سازی selection و countdown
+        OnlineMatchSession matchSession = new OnlineMatchSession(a, b, levelId, roomId);
+        activeSessions.put(roomId, matchSession);
+
         System.out.println("[Matchmaking] Match started: " + a.getUsername() + " (" + roleA + ") vs "
-                + b.getUsername() + " (" + roleB + ") in room " + roomId + " at level " + levelId);
+            + b.getUsername() + " (" + roleB + ") in room " + roomId + " at level " + levelId);
     }
 }

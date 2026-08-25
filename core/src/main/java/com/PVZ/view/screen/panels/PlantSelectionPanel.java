@@ -40,6 +40,9 @@ import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.screen.manager.ScreenManager;
 import com.PVZ.view.screen.ui.MenuButton;
 import com.PVZ.view.screen.ui.PlantCardActor;
+import com.PVZ.network.client.NetworkSession;
+import com.PVZ.network.common.MessageType;
+import com.PVZ.network.common.NetworkMessage;
 import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
@@ -62,6 +65,7 @@ public class PlantSelectionPanel extends BasePanel {
     private PlantType detailPlantType;
     private MenuButton upgradeButton;
     private MenuButton boostButton;
+    private MenuButton letsRockButton; // اضافه شد
 
     public PlantSelectionPanel(String chapterName, int stage) {
         this.chapterName = chapterName != null ? chapterName : "Frontyard";
@@ -145,11 +149,11 @@ public class PlantSelectionPanel extends BasePanel {
         countLabel = new Label("0 / 8 selected", new Label.LabelStyle(font, Color.WHITE));
         statusLabel = new Label("", new Label.LabelStyle(font, Color.SALMON));
 
-        // دکمه LET'S ROCK (جایگزین با MenuButton)
         Texture greenUp   = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON");
         Texture greenDown = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON_DOWN");
         MenuButton letsRock = new MenuButton(greenUp, "LET'S ROCK", font, greenDown, null, null, this::onLetsRock);
         letsRock.setSize(240f, 64f);
+        this.letsRockButton = letsRock; // ذخیره دکمه
 
         Table window = new Table();
         window.pad(24f);
@@ -160,10 +164,6 @@ public class PlantSelectionPanel extends BasePanel {
         window.add(statusLabel).padTop(4f).row();
         window.add(letsRock).padTop(12f).size(240f, 64f).row();
 
-        // The dialog texture is a separate, semi-transparent layer BEHIND the
-        // window's actual content (rather than an opaque Table background), so
-        // the level's own background image loaded above stays visible through
-        // it instead of always looking like the same flat backdrop everywhere.
         Image windowBackdrop = new Image(resolveWindowBackground());
         windowBackdrop.setColor(1f, 1f, 1f, 0.6f);
 
@@ -183,13 +183,6 @@ public class PlantSelectionPanel extends BasePanel {
         refresh();
     }
 
-    /**
-     * 8 fixed seed-packet slots showing the currently selected plants in
-     * order, each with the same small animated plant preview used in the
-     * detail panel. Slot background is just the almanac card-frame drawable
-     * (semi-transparent, no fill) so the level's own background stays visible
-     * behind/around it instead of a flat fixed backdrop.
-     */
     private Table buildSelectedTray() {
         Table tray = new Table();
         tray.defaults().pad(6f);
@@ -250,7 +243,6 @@ public class PlantSelectionPanel extends BasePanel {
         infoColumn.add(costRow).left().padTop(6f).row();
         infoColumn.add(detailStatusLabel).left().padTop(4f).row();
 
-        // دکمه‌های UPGRADE و BOOST با MenuButton سفارشی
         Texture purpleUp   = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON");
         Texture purpleDown = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON_DOWN");
         Texture marker = null;
@@ -300,7 +292,6 @@ public class PlantSelectionPanel extends BasePanel {
         updateDetailStatus(type);
     }
 
-    /** Shows the plant's current level (1-based, capped by its real JSON tier count) and boost state. */
     private void updateDetailStatus(PlantType type) {
         User user = AppStatus.currentUser;
         boolean owned = user != null && user.collectionState != null
@@ -345,9 +336,7 @@ public class PlantSelectionPanel extends BasePanel {
     }
 
     private void onUpgradeClicked() {
-        if (detailPlantType == null) {
-            return;
-        }
+        if (detailPlantType == null) return;
         OutputDTO result = new CollectionMenuController().handle(
             new CollectionInputDTO(CollectionCommand.UPGRADE_PLANT, detailPlantType.name(), null));
         statusLabel.setText(stripColorCodes(result.getMessage()));
@@ -356,17 +345,13 @@ public class PlantSelectionPanel extends BasePanel {
     }
 
     private void onBoostClicked() {
-        if (detailPlantType == null) {
-            return;
-        }
+        if (detailPlantType == null) return;
         OutputDTO result = plantController.handle(
             new PlantSelectionInputDTO(PlantSelectionCommand.BOOST_PLANT, detailPlantType.name()));
         statusLabel.setText(stripColorCodes(result.getMessage()));
         updateDetailStatus(detailPlantType);
         refresh();
     }
-
-    // --- متدهای قدیمی ساخت دکمه حذف شده‌اند و دیگر استفاده نمی‌شوند ---
 
     private Drawable resolveCardSlotBackground() {
         try {
@@ -467,21 +452,17 @@ public class PlantSelectionPanel extends BasePanel {
                 statusLabel.setText("Please select at least 1 plant.");
                 return;
             }
-            AppStatus.currentMenuType = MenuType.IN_GAME;
-            com.PVZ.model.game.IZombieMultiplayerGameEngine engine = new com.PVZ.model.game.IZombieMultiplayerGameEngine(
-                "PLANT",
-                AppStatus.multiplayerOpponent,
-                AppStatus.multiplayerRoomId,
-                AppStatus.multiplayerLevelId,
-                new ArrayList<>(AppStatus.SELECTED_PLANTS),
-                null
-            );
-            AppStatus.setGameEngine(engine);
-            ScreenManager.getInstance().performTransition(() -> new GameScreen(
-                "maps/Frontyard.jpg",
-                "music/TitleScreen.mp3",
-                engine
-            ));
+
+            // غیرفعال‌کردن دکمه‌ها
+            if (letsRockButton != null) letsRockButton.setDisabled(true);
+            for (PlantCardActor card : cards) card.setLocked(true);
+
+            // ارسال آمادگی به سرور
+            NetworkMessage msg = NetworkMessage.request(MessageType.SELECTION_READY)
+                .with("roomId", AppStatus.multiplayerRoomId)
+                .with("role", "PLANT");
+            NetworkSession.client().sendFireAndForget(msg);
+            statusLabel.setText("Waiting for opponent...");
             return;
         }
 
@@ -498,9 +479,7 @@ public class PlantSelectionPanel extends BasePanel {
     }
 
     public void refresh() {
-        if (!readyToShow || cards.isEmpty()) {
-            return;
-        }
+        if (!readyToShow || cards.isEmpty()) return;
         User user = AppStatus.currentUser;
         for (PlantCardActor card : cards) {
             PlantType type = card.getPlantType();
@@ -508,8 +487,6 @@ public class PlantSelectionPanel extends BasePanel {
                 && user.collectionState.isPlantUnlocked(type);
             boolean stageLocked = !AppStatus.isMultiplayerMatch && AppStatus.CURRENT_STAGE_LOCKED_PLANTS.contains(type);
             boolean selected = AppStatus.SELECTED_PLANTS.contains(type);
-            // A plant already selected is never locked out by its own family (that check
-            // only blocks *other* members of the family), so it stays tappable to remove.
             boolean familyLocked = !AppStatus.isMultiplayerMatch && !selected && plantController.isFamilyLockedByOtherPick(type);
             card.setLocked(!owned || stageLocked || familyLocked);
             card.setSelected(selected);
@@ -525,23 +502,10 @@ public class PlantSelectionPanel extends BasePanel {
     private static final class DetailPreviewActor extends com.badlogic.gdx.scenes.scene2d.Actor {
         private PlantType type;
         private float animTime;
-
-        void setPlantType(PlantType type) {
-            this.type = type;
-            this.animTime = 0f;
-        }
-
-        @Override
-        public void act(float delta) {
-            super.act(delta);
-            animTime += delta;
-        }
-
-        @Override
-        public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
-            if (type == null) {
-                return;
-            }
+        void setPlantType(PlantType type) { this.type = type; this.animTime = 0f; }
+        @Override public void act(float delta) { super.act(delta); animTime += delta; }
+        @Override public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
+            if (type == null) return;
             float cx = getX() + getWidth() / 2f;
             float cy = getY() + getHeight() / 2f;
             batch.setColor(1f, 1f, 1f, parentAlpha);
@@ -554,20 +518,12 @@ public class PlantSelectionPanel extends BasePanel {
     private static final class SunIconActor extends com.badlogic.gdx.scenes.scene2d.Actor {
         private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
         private float animTime;
-
-        @Override
-        public void act(float delta) {
-            super.act(delta);
-            animTime += delta;
-        }
-
-        @Override
-        public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
+        @Override public void act(float delta) { super.act(delta); animTime += delta; }
+        @Override public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
             float cx = getX() + getWidth() / 2f;
             float cy = getY() + getHeight() / 2f;
             batch.setColor(1f, 1f, 1f, parentAlpha);
-            EntityRenderer.getInstance().renderPam(
-                (com.badlogic.gdx.graphics.g2d.SpriteBatch) batch, SUN_PAM, animTime, cx, cy);
+            EntityRenderer.getInstance().renderPam((com.badlogic.gdx.graphics.g2d.SpriteBatch) batch, SUN_PAM, animTime, cx, cy);
             batch.setColor(Color.WHITE);
         }
     }

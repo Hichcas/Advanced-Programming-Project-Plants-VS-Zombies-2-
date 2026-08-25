@@ -282,7 +282,7 @@ public class GameScreen extends BaseScreen {
                 cameraIntroZoom = 1.0f;
                 if (!introFinished) {
                     introFinished = true;
-                    if (!npcDialogueStarted) {
+                    if (!npcDialogueStarted && !AppStatus.isMultiplayerMatch) {
                         npcDialogueStarted = true;
                         if (npcDialogueOverlay != null) {
                             npcDialogueOverlay.showDialogue();

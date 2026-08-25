@@ -3,6 +3,8 @@ package com.PVZ.network.server.handlers;
 import com.PVZ.network.common.MessageType;
 import com.PVZ.network.common.NetworkMessage;
 import com.PVZ.network.server.ClientSession;
+import com.PVZ.network.server.MatchmakingManager;
+import com.PVZ.network.server.OnlineMatchSession;
 import com.PVZ.network.server.RequestDispatcher;
 
 public final class GameSyncHandlers {
@@ -15,6 +17,7 @@ public final class GameSyncHandlers {
         dispatcher.register(MessageType.GAME_DEPLOY_INPUT, GameSyncHandlers::handleDeployInput);
         dispatcher.register(MessageType.GAME_OVER, GameSyncHandlers::handleGameOver);
         dispatcher.register(MessageType.SEND_REACTION, GameSyncHandlers::handleSendReaction);
+        dispatcher.register(MessageType.SELECTION_READY, GameSyncHandlers::handleSelectionReady);
     }
 
     private static NetworkMessage handlePlantInput(ClientSession session, NetworkMessage request) {
@@ -61,6 +64,17 @@ public final class GameSyncHandlers {
                 .with("reaction", request.getString("reaction", "THUMBS_UP"))
                 .with("from", session.getUsername());
             opponent.send(forward);
+        }
+        return null;
+    }
+
+    private static NetworkMessage handleSelectionReady(ClientSession session, NetworkMessage request) {
+        String roomId = session.getCurrentRoomId();
+        if (roomId != null) {
+            OnlineMatchSession matchSession = MatchmakingManager.getInstance().getSession(roomId);
+            if (matchSession != null) {
+                matchSession.markReady(session.getUsername());
+            }
         }
         return null;
     }

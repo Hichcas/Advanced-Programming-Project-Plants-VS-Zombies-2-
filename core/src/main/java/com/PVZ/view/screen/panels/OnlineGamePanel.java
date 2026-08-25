@@ -67,7 +67,6 @@ public class OnlineGamePanel extends BasePanel {
 
         buildUi();
         connectToServer();
-        registerPushListeners();
     }
 
     private void buildUi() {
@@ -124,11 +123,6 @@ public class OnlineGamePanel extends BasePanel {
         }
     }
 
-    private void registerPushListeners() {
-        NetworkSession.client().on(MessageType.MATCH_FOUND, msg -> {
-            Gdx.app.postRunnable(() -> onMatchFound(msg));
-        });
-    }
 
     private void setButtonsEnabled(boolean enabled) {
         randomButton.setDisabled(!enabled);

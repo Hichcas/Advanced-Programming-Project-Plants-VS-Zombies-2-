@@ -8,11 +8,11 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
@@ -32,19 +32,14 @@ import com.PVZ.view.screen.GameScreen;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.screen.manager.ScreenManager;
 import com.PVZ.view.screen.ui.MenuButton;
+import com.PVZ.network.client.NetworkSession;
+import com.PVZ.network.common.MessageType;
+import com.PVZ.network.common.NetworkMessage;
 import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * "Choose your zombies" screen for I, Zombie, shown before the level starts - same
- * look and flow as {@link PlantSelectionPanel}, but for the level's fixed 5-zombie
- * roster instead of the player's whole plant collection. Up to
- * {@link #MAX_SELECTED_SLOTS} zombies can be brought into the level (the roster
- * itself only ever has 5 entries per level, same slot cap as plant selection for a
- * consistent look).
- */
 public class ZombieSelectionPanel extends BasePanel {
 
     private static final int MAX_SELECTED_SLOTS = 8;
@@ -56,6 +51,7 @@ public class ZombieSelectionPanel extends BasePanel {
     private Label countLabel;
     private Label statusLabel;
     private boolean readyToShow = true;
+    private MenuButton letsRockButton; // اضافه شد
 
     public ZombieSelectionPanel(int levelId) {
         this.levelId = levelId;
@@ -166,8 +162,7 @@ public class ZombieSelectionPanel extends BasePanel {
             }
         }
 
-        com.badlogic.gdx.scenes.scene2d.ui.ScrollPane scrollPane =
-            new com.badlogic.gdx.scenes.scene2d.ui.ScrollPane(grid);
+        ScrollPane scrollPane = new ScrollPane(grid);
         scrollPane.setScrollingDisabled(true, false);
         scrollPane.setFadeScrollBars(false);
 
@@ -184,6 +179,7 @@ public class ZombieSelectionPanel extends BasePanel {
             letsRock = new MenuButton("LET'S ROCK", font, this::onLetsRock);
         }
         letsRock.setSize(240f, 64f);
+        this.letsRockButton = letsRock; // ذخیره دکمه
 
         Table window = new Table();
         window.pad(24f);
@@ -206,7 +202,6 @@ public class ZombieSelectionPanel extends BasePanel {
         refresh();
     }
 
-    /** Up to 8 slots showing the currently selected zombies, same tray style as plant selection. */
     private Table buildSelectedTray() {
         Table tray = new Table();
         tray.defaults().pad(6f);
@@ -246,7 +241,6 @@ public class ZombieSelectionPanel extends BasePanel {
         String alias = card.getOption().getAlias();
         boolean currentlySelected = AppStatus.SELECTED_ZOMBIES.contains(alias);
         if (currentlySelected) {
-            // Keep at least one zombie selected - an empty roster can never start a level.
             if (AppStatus.SELECTED_ZOMBIES.size() <= 1) {
                 statusLabel.setText("You need at least one zombie!");
                 return;
@@ -268,21 +262,18 @@ public class ZombieSelectionPanel extends BasePanel {
                 statusLabel.setText("Please select at least 1 zombie.");
                 return;
             }
-            AppStatus.currentMenuType = MenuType.IN_GAME;
-            com.PVZ.model.game.IZombieMultiplayerGameEngine engine = new com.PVZ.model.game.IZombieMultiplayerGameEngine(
-                "ZOMBIE",
-                AppStatus.multiplayerOpponent,
-                AppStatus.multiplayerRoomId,
-                AppStatus.multiplayerLevelId,
-                null,
-                new ArrayList<>(AppStatus.SELECTED_ZOMBIES)
-            );
-            AppStatus.setGameEngine(engine);
-            ScreenManager.getInstance().performTransition(() -> new GameScreen(
-                "maps/Frontyard.jpg",
-                "music/TitleScreen.mp3",
-                engine
-            ));
+
+            // غیرفعال‌کردن دکمه‌ها
+            if (letsRockButton != null) letsRockButton.setDisabled(true);
+            for (ZombieCardActor card : cards) {
+                card.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.disabled);
+            }
+
+            NetworkMessage msg = NetworkMessage.request(MessageType.SELECTION_READY)
+                .with("roomId", AppStatus.multiplayerRoomId)
+                .with("role", "ZOMBIE");
+            NetworkSession.client().sendFireAndForget(msg);
+            statusLabel.setText("Waiting for opponent...");
             return;
         }
 
@@ -301,9 +292,7 @@ public class ZombieSelectionPanel extends BasePanel {
     }
 
     public void refresh() {
-        if (!readyToShow || cards.isEmpty()) {
-            return;
-        }
+        if (!readyToShow || cards.isEmpty()) return;
         for (ZombieCardActor card : cards) {
             boolean selected = AppStatus.SELECTED_ZOMBIES.contains(card.getOption().getAlias());
             card.setSelected(selected);
@@ -352,21 +341,9 @@ public class ZombieSelectionPanel extends BasePanel {
         return s == null ? "" : s.replaceAll("\u001B\\[[;\\d]*m", "");
     }
 
-    /**
-     * A single roster card: animated zombie preview (rendered small, since full-size
-     * zombie PAMs are much bigger than a plant seed packet and would spill out of the
-     * slot), name, and cost. Tap to toggle selection.
-     *
-     * Draws everything itself in draw() (like PlantCardActor) instead of nesting child
-     * Actors, since a plain (untransformed) Group does not auto-offset manually
-     * positioned children by its own stage position - only Table's layout pass does
-     * that arithmetic. Flat, self-drawing Actors sidestep the issue entirely.
-     */
     private static final class ZombieCardActor extends com.badlogic.gdx.scenes.scene2d.Actor {
         private static final float WIDTH = 150f;
         private static final float HEIGHT = 170f;
-        // Zombie PAMs render far larger than plant seed packets; scale way down so the
-        // whole animation fits inside the card instead of being clipped.
         private static final float PREVIEW_SCALE = 0.32f;
 
         private final ZombieOption option;
@@ -399,30 +376,17 @@ public class ZombieSelectionPanel extends BasePanel {
             });
         }
 
-        void setOnClick(Runnable onClick) {
-            this.onClick = onClick;
-        }
+        void setOnClick(Runnable onClick) { this.onClick = onClick; }
+        ZombieOption getOption() { return option; }
+        void setSelected(boolean selected) { this.selected = selected; }
+        boolean isSelected() { return selected; }
 
-        ZombieOption getOption() {
-            return option;
-        }
-
-        void setSelected(boolean selected) {
-            this.selected = selected;
-        }
-
-        boolean isSelected() {
-            return selected;
-        }
-
-        @Override
-        public void act(float delta) {
+        @Override public void act(float delta) {
             super.act(delta);
             animTime += delta;
         }
 
-        @Override
-        public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
+        @Override public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
             float x = getX();
             float y = getY();
             float w = getWidth();
@@ -438,9 +402,7 @@ public class ZombieSelectionPanel extends BasePanel {
                 EntityRenderer.getInstance().renderZombieAlias(
                     (com.badlogic.gdx.graphics.g2d.SpriteBatch) batch, option.getAlias(), "idle",
                     animTime, cx, cy, PREVIEW_SCALE);
-            } catch (RuntimeException ignored) {
-                // Leave the slot blank rather than crash if this alias has no clip.
-            }
+            } catch (RuntimeException ignored) {}
 
             if (font != null) {
                 float prevScale = font.getData().scaleX;
@@ -462,7 +424,6 @@ public class ZombieSelectionPanel extends BasePanel {
         }
     }
 
-    /** Renders a small, looping idle animation of the given zombie alias from its PAM. */
     private static final class ZombiePreviewActor extends com.badlogic.gdx.scenes.scene2d.Actor {
         private String alias;
         private float scale = 1f;
@@ -472,22 +433,12 @@ public class ZombieSelectionPanel extends BasePanel {
             this.alias = alias;
             this.animTime = 0f;
         }
+        public void setScale(float scale) { this.scale = scale; }
 
-        public void setScale(float scale) {
-            this.scale = scale;
-        }
+        @Override public void act(float delta) { super.act(delta); animTime += delta; }
 
-        @Override
-        public void act(float delta) {
-            super.act(delta);
-            animTime += delta;
-        }
-
-        @Override
-        public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
-            if (alias == null) {
-                return;
-            }
+        @Override public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
+            if (alias == null) return;
             float cx = getX() + getWidth() / 2f;
             float cy = getY() + getHeight() / 2f;
             Color prev = batch.getColor().cpy();
@@ -495,9 +446,7 @@ public class ZombieSelectionPanel extends BasePanel {
             try {
                 EntityRenderer.getInstance().renderZombieAlias(
                     (com.badlogic.gdx.graphics.g2d.SpriteBatch) batch, alias, "idle", animTime, cx, cy, scale);
-            } catch (RuntimeException ignored) {
-                // Some aliases may not resolve to a clip; leave the slot blank rather than crash.
-            }
+            } catch (RuntimeException ignored) {}
             batch.setColor(prev);
         }
     }

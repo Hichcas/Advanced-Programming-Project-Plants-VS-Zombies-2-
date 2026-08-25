@@ -66,7 +66,11 @@ public enum MessageType {
     SEND_REACTION,
     REACTION_RECEIVED,
 
+    SELECTION_READY,
+    GAME_START_SYNC,
+
     // ===== لیدربورد =====
     FETCH_LEADERBOARD,
     FETCH_LEADERBOARD_RESULT
+
 }
