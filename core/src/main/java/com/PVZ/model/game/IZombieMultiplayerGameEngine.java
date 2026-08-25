@@ -3,6 +3,8 @@ package com.PVZ.model.game;
 import com.PVZ.model.entity.Plant;
 import com.PVZ.model.entity.plants.PlantFactory;
 import com.PVZ.model.enums.PlantType;
+import com.PVZ.model.game.reaction.ReactionCatalog;
+import com.PVZ.model.game.reaction.ReactionEvent;
 import com.PVZ.model.minigame.izombie.IZombieGame;
 import com.PVZ.model.minigame.izombie.IZombieLevelDefinition;
 import com.PVZ.model.minigame.izombie.IZombieLevelLoader;
@@ -14,8 +16,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.PVZ.view.renderer.EntityRenderer;
 
+import java.util.ArrayDeque;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Queue;
 
 public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
 
@@ -33,6 +39,29 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     private PlantType selectedPlantType = null;
     private String activeReaction = null;
     private float reactionDisplayTimer = 0f;
+
+    /** واکنش‌های در انتظار نمایش به‌صورت حباب (نگاه کنید به GameScreen که این را poll می‌کند). */
+    private final Queue<ReactionEvent> pendingReactionEvents = new ArrayDeque<>();
+    /** استیکرهای متحرک فعال روی زمین بازی (انیمیشن PAM واقعی). */
+    private final List<StickerEffect> activeStickers = new java.util.ArrayList<>();
+    private float reactionCooldown = 0f;
+    private static final float REACTION_COOLDOWN_SECONDS = 0.75f;
+    private static final float STICKER_LIFETIME_SECONDS = 1.4f;
+
+    private static final class StickerEffect {
+        final String path;
+        final String clip;
+        final float x;
+        final float y;
+        float elapsed = 0f;
+
+        StickerEffect(String path, String clip, float x, float y) {
+            this.path = path;
+            this.clip = clip;
+            this.x = x;
+            this.y = y;
+        }
+    }
 
     private final List<PlantType> selectedPlants;
     private final List<String> selectedZombies;
@@ -161,8 +190,8 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         });
 
         NetworkSession.client().on(MessageType.REACTION_RECEIVED, msg -> {
-            String reaction = msg.getString("reaction");
-            Gdx.app.postRunnable(() -> showReaction(reaction));
+            String reactionId = msg.getString("reaction");
+            Gdx.app.postRunnable(() -> handleReaction(reactionId, false));
         });
     }
 
@@ -191,16 +220,42 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         matchResultText = wonMatch ? "VICTORY! YOU WIN!" : "DEFEAT! YOU LOSE!";
     }
 
-    public void sendReaction(String reaction) {
+    /**
+     * ارسال یک واکنش به حریف (شناسه از {@link ReactionCatalog}). یک کول‌داون کوتاه
+     * دارد تا کسی نتواند با اسپم کلیک، شبکه یا صفحه‌ی حریف را پر کند.
+     */
+    public void sendReaction(String reactionId) {
+        if (ReactionCatalog.findById(reactionId) == null) return;
+        if (reactionCooldown > 0f) return;
+        reactionCooldown = REACTION_COOLDOWN_SECONDS;
+
         NetworkMessage msg = NetworkMessage.push(MessageType.SEND_REACTION)
-            .with("reaction", reaction);
+            .with("reaction", reactionId);
         NetworkSession.client().sendFireAndForget(msg);
-        showReaction("You: " + reaction);
+        handleReaction(reactionId, true);
     }
 
-    private void showReaction(String text) {
-        activeReaction = text;
+    private void handleReaction(String reactionId, boolean mine) {
+        ReactionCatalog.Reaction reaction = ReactionCatalog.findById(reactionId);
+        if (reaction == null) return;
+
+        activeReaction = (mine ? "You: " : opponentName + ": ") + reaction.label();
         reactionDisplayTimer = 3.0f;
+        pendingReactionEvents.offer(new ReactionEvent(reactionId, mine));
+
+        if (reaction.kind() == ReactionCatalog.Kind.STICKER && reaction.pamPath() != null && map != null) {
+            float centerX = map.getStartX() + (map.getCols() > 0 ? map.getCols() : 9) * map.getTileWidth() / 2f;
+            float centerY = map.getStartY() - (map.getRows() > 0 ? map.getRows() : 5) * map.getTileHeight() / 2f;
+            activeStickers.add(new StickerEffect(reaction.pamPath(), reaction.pamClip(), centerX, centerY));
+        }
+    }
+
+    /**
+     * یک واکنشِ در صف را برای نمایش به‌صورت حباب (ReactionBubble در GameScreen)
+     * برمی‌دارد؛ اگر چیزی در صف نباشد null برمی‌گرداند.
+     */
+    public ReactionEvent pollReactionEvent() {
+        return pendingReactionEvents.poll();
     }
 
     @Override
@@ -285,6 +340,19 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
                 activeReaction = null;
             }
         }
+        if (reactionCooldown > 0f) {
+            reactionCooldown -= delta;
+        }
+        if (!activeStickers.isEmpty()) {
+            Iterator<StickerEffect> it = activeStickers.iterator();
+            while (it.hasNext()) {
+                StickerEffect fx = it.next();
+                fx.elapsed += delta;
+                if (fx.elapsed >= STICKER_LIFETIME_SECONDS) {
+                    it.remove();
+                }
+            }
+        }
     }
 
     @Override
@@ -356,6 +424,18 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         }
 
         font.setColor(Color.WHITE);
+        batch.end();
+
+        drawActiveStickers(batch);
+    }
+
+    /** استیکرهای متحرک فعال را (انیمیشن PAM واقعی) روی وسط زمین بازی پخش می‌کند. */
+    private void drawActiveStickers(SpriteBatch batch) {
+        if (activeStickers.isEmpty()) return;
+        batch.begin();
+        for (StickerEffect fx : activeStickers) {
+            EntityRenderer.getInstance().renderPam(batch, fx.path, fx.clip, fx.elapsed, fx.x - 128f, fx.y - 128f);
+        }
         batch.end();
     }
 }
