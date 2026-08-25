@@ -135,4 +135,8 @@ public class MatchmakingManager {
         System.out.println("[Matchmaking] Match started: " + a.getUsername() + " (" + roleA + ") vs "
             + b.getUsername() + " (" + roleB + ") in room " + roomId + " at level " + levelId);
     }
+
+    public void removeSession(String roomId) {
+        activeSessions.remove(roomId);
+    }
 }

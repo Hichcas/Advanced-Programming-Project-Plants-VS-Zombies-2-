@@ -7,10 +7,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- * مدیریت یک مسابقه‌ی آنلاین بعد از Matchmaking.
- * فاز انتخاب (۳۰ ثانیه) و سپس فاز شمارش معکوس (۳ ثانیه) و شروع بازی.
- */
 public class OnlineMatchSession {
 
     private static final long SELECTION_TIMEOUT_MS = 30_000L;
@@ -24,6 +20,7 @@ public class OnlineMatchSession {
     private boolean plantReady = false;
     private boolean zombieReady = false;
     private boolean countdownStarted = false;
+    private boolean finished = false;
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -33,19 +30,41 @@ public class OnlineMatchSession {
         this.levelId = levelId;
         this.roomId = roomId;
 
-        // شروع تایمر ۳۰ ثانیه‌ای برای انتخاب
+        // اگر یکی از بازیکن‌ها قطع شود، به دیگری اعلام برد
+        plantSession.onDisconnect(() -> handlePlayerDisconnect(plantSession));
+        zombieSession.onDisconnect(() -> handlePlayerDisconnect(zombieSession));
+
+        // تایمر ۳۰ ثانیه‌ای برای انتخاب
         scheduler.schedule(this::forceReady, SELECTION_TIMEOUT_MS, TimeUnit.MILLISECONDS);
     }
 
-    private void forceReady() {
-        // اگر بعد از ۳۰ ثانیه یکی آماده نشد، به‌عنوان ready علامت بزن
+    private synchronized void handlePlayerDisconnect(ClientSession disconnected) {
+        if (finished) return;
+        finished = true;
+
+        ClientSession winner = (disconnected == plantSession) ? zombieSession : plantSession;
+        if (winner != null && winner.isInGame()) {
+            winner.setInGame(false);
+            NetworkMessage gameOver = NetworkMessage.push(MessageType.GAME_OVER)
+                .with("winner", winner.getCurrentRole())
+                .with("reason", "OPPONENT_DISCONNECTED");
+            winner.send(gameOver);
+        }
+
+        if (disconnected != null) {
+            disconnected.setInGame(false);
+        }
+        cleanup();
+    }
+
+    private synchronized void forceReady() {
         if (!plantReady) plantReady = true;
         if (!zombieReady) zombieReady = true;
         checkStartCountdown();
     }
 
-    /** وقتی بازیکن دکمه‌ی LET'S ROCK را زد صدا زده می‌شود. */
     public synchronized void markReady(String username) {
+        if (finished) return;
         if (username.equals(plantSession.getUsername())) {
             plantReady = true;
         } else if (username.equals(zombieSession.getUsername())) {
@@ -55,7 +74,7 @@ public class OnlineMatchSession {
     }
 
     private void checkStartCountdown() {
-        if (countdownStarted) return;
+        if (countdownStarted || finished) return;
         if (plantReady && zombieReady) {
             countdownStarted = true;
             long startAt = System.currentTimeMillis() + COUNTDOWN_MS;
@@ -70,5 +89,18 @@ public class OnlineMatchSession {
 
             scheduler.shutdown();
         }
+    }
+
+    public void markGameFinished() {
+        if (finished) return;
+        finished = true;
+        plantSession.setInGame(false);
+        zombieSession.setInGame(false);
+        cleanup();
+    }
+
+    private void cleanup() {
+        scheduler.shutdownNow();
+        MatchmakingManager.getInstance().removeSession(roomId);
     }
 }

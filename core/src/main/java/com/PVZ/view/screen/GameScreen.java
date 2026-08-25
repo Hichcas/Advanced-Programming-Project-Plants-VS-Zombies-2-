@@ -1,21 +1,12 @@
 package com.PVZ.view.screen;
 
 import com.PVZ.model.enums.ChapterEnum;
+import com.PVZ.model.game.*;
 import com.PVZ.view.renderer.WorldBackgroundRenderer;
 import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.enums.PlantType;
 import com.PVZ.model.entity.zombies.base.Zombie;
-import com.PVZ.model.game.BattleController;
-import com.PVZ.model.game.CombatHandler;
-import com.PVZ.model.game.GameEngine;
-import com.PVZ.model.game.GameHud;
-import com.PVZ.model.game.LevelStartOverlay;
-import com.PVZ.model.game.Map;
-import com.PVZ.model.game.PauseMenuOverlay;
-import com.PVZ.model.game.RegularGameEngine;
-import com.PVZ.model.game.SeedPacketBar;
-import com.PVZ.model.game.WinLoseOverlay;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.view.screen.manager.FontManager;
 import com.PVZ.view.screen.manager.MusicManager;
@@ -91,6 +82,9 @@ public class GameScreen extends BaseScreen {
     private boolean introFinished = false;
     private boolean npcDialogueStarted = false;
 
+    private OnlineMatchResultOverlay onlineMatchResultOverlay;
+    private boolean onlineMatchExitRequested = false;
+
     // ══════════════ پس‌زمینه‌های چپتر ══════════════
     private static final java.util.Map<ChapterEnum, String> CHAPTER_BG_LEFT = new java.util.HashMap<>();
     private static final java.util.Map<ChapterEnum, String> CHAPTER_BG_RIGHT = new java.util.HashMap<>();
@@ -145,6 +139,15 @@ public class GameScreen extends BaseScreen {
         this.gameBatch = new SpriteBatch();
         this.mapPath = mapPath;
         this.musicPath = musicPath;
+
+        if (!AppStatus.isMultiplayerMatch) {
+            levelStartOverlay = new LevelStartOverlay(resolveStageConfig(), () -> {
+                introStarted = true;
+                introTimer = 0f;
+            });
+            stage.addActor(levelStartOverlay);
+            levelStartOverlay.show();
+        }
 
         String bgInternal = mapPath;
         if (com.badlogic.gdx.Gdx.files.internal(bgInternal).exists()) {
@@ -232,7 +235,28 @@ public class GameScreen extends BaseScreen {
             layoutSeedPacketBar(regularGameEngine);
         }
 
+        onlineMatchResultOverlay = new OnlineMatchResultOverlay(this::exitOnlineMatch);
+        stage.addActor(onlineMatchResultOverlay);
+
         levelStartOverlay.show();
+    }
+
+    private void exitOnlineMatch() {
+        onlineMatchExitRequested = true;
+        if (onlineMatchResultOverlay != null) {
+            onlineMatchResultOverlay.hide();
+        }
+        // پاک‌سازی state چندنفره
+        AppStatus.isMultiplayerMatch = false;
+        AppStatus.multiplayerRole = null;
+        AppStatus.multiplayerOpponent = null;
+        AppStatus.multiplayerRoomId = null;
+        AppStatus.multiplayerLevelId = 1;
+        AppStatus.SELECTED_PLANTS.clear();
+        AppStatus.SELECTED_ZOMBIES.clear();
+
+        ScreenManager.getInstance().performTransition(MainMenuScreen::new);
+        AppStatus.setCurrentMenuType(MenuType.NETWORK);
     }
 
     private void initPreviewZombies() {
@@ -307,13 +331,15 @@ public class GameScreen extends BaseScreen {
     }
 
     private boolean isSimulationFrozen() {
+        if (AppStatus.isMultiplayerMatch) {
+            return onlineMatchResultOverlay != null && onlineMatchResultOverlay.isShowing();
+        }
         return (levelStartOverlay != null && levelStartOverlay.isShowing())
             || (introStarted && !introFinished)
             || (npcDialogueOverlay != null && npcDialogueOverlay.isShowing())
             || (pauseMenuOverlay != null && pauseMenuOverlay.isPaused())
             || (winLoseOverlay != null && winLoseOverlay.isShowing());
     }
-
     private Table buildPauseButton() {
         Table overlay = new Table();
         overlay.setFillParent(true);
@@ -1027,6 +1053,20 @@ public class GameScreen extends BaseScreen {
     }
 
     private GameOverState updateGameOverState(GameEngine activeEngine) {
+
+        // حالت چندنفره آنلاین
+        if (activeEngine instanceof IZombieMultiplayerGameEngine onlineEngine) {
+            if (!onlineMatchExitRequested && onlineEngine.isMatchFinished() && !onlineMatchResultOverlay.isShowing()) {
+                onlineMatchResultOverlay.showResult(
+                    onlineEngine.isWonMatch(),
+                    onlineEngine.getMatchResultText()
+                );
+            } else if (!onlineEngine.isMatchFinished()) {
+                onlineMatchResultOverlay.hide();
+            }
+            return new GameOverState(false, false, false);
+        }
+
         if (activeEngine instanceof RegularGameEngine regularGameEngine) {
             if (regularGameEngine.isGameOverTriggered()) {
                 if (!gameOverShown) {
