@@ -51,7 +51,12 @@ public class ZombieSelectionPanel extends BasePanel {
     private Label countLabel;
     private Label statusLabel;
     private boolean readyToShow = true;
-    private MenuButton letsRockButton; // اضافه شد
+    private MenuButton letsRockButton;
+
+    // Timer fields for multiplayer selection
+    private Label timerLabel;
+    private float remainingSelectionSeconds = 30f;
+    private boolean selectionLocked = false;
 
     public ZombieSelectionPanel(int levelId) {
         this.levelId = levelId;
@@ -168,6 +173,8 @@ public class ZombieSelectionPanel extends BasePanel {
 
         countLabel = new Label("0 / " + MAX_SELECTED_SLOTS + " selected", new Label.LabelStyle(font, Color.WHITE));
         statusLabel = new Label("", new Label.LabelStyle(font, Color.SALMON));
+        timerLabel = new Label("30", new Label.LabelStyle(font, Color.YELLOW));
+        timerLabel.setFontScale(1.2f);
 
         MenuButton letsRock;
         try {
@@ -179,7 +186,7 @@ public class ZombieSelectionPanel extends BasePanel {
             letsRock = new MenuButton("LET'S ROCK", font, this::onLetsRock);
         }
         letsRock.setSize(240f, 64f);
-        this.letsRockButton = letsRock; // ذخیره دکمه
+        this.letsRockButton = letsRock;
 
         Table window = new Table();
         window.pad(24f);
@@ -187,6 +194,7 @@ public class ZombieSelectionPanel extends BasePanel {
         window.add(selectedTray).padBottom(10f).row();
         window.add(scrollPane).size(1400f, 620f).padBottom(14f).row();
         window.add(countLabel).padTop(8f).row();
+        window.add(timerLabel).padTop(4f).row();
         window.add(statusLabel).padTop(4f).row();
         window.add(letsRock).padTop(12f).size(240f, 64f).row();
 
@@ -238,6 +246,7 @@ public class ZombieSelectionPanel extends BasePanel {
     }
 
     private void onCardClicked(ZombieCardActor card) {
+        if (selectionLocked) return;
         String alias = card.getOption().getAlias();
         boolean currentlySelected = AppStatus.SELECTED_ZOMBIES.contains(alias);
         if (currentlySelected) {
@@ -258,17 +267,19 @@ public class ZombieSelectionPanel extends BasePanel {
 
     private void onLetsRock() {
         if (AppStatus.isMultiplayerMatch) {
+            selectionLocked = true;
             if (AppStatus.SELECTED_ZOMBIES.isEmpty()) {
                 statusLabel.setText("Please select at least 1 zombie.");
                 return;
             }
 
-            // غیرفعال‌کردن دکمه‌ها
+            // Disable UI
             if (letsRockButton != null) letsRockButton.setDisabled(true);
             for (ZombieCardActor card : cards) {
                 card.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.disabled);
             }
 
+            // Send readiness to server
             NetworkMessage msg = NetworkMessage.request(MessageType.SELECTION_READY)
                 .with("roomId", AppStatus.multiplayerRoomId)
                 .with("role", "ZOMBIE");
@@ -289,6 +300,35 @@ public class ZombieSelectionPanel extends BasePanel {
             "music/TitleScreen.mp3",
             AppStatus.getGameEngine()
         ));
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if (AppStatus.isMultiplayerMatch && !selectionLocked && remainingSelectionSeconds > 0) {
+            remainingSelectionSeconds -= delta;
+            if (remainingSelectionSeconds <= 0) {
+                remainingSelectionSeconds = 0;
+                onSelectionTimeout();
+            }
+            if (timerLabel != null) {
+                timerLabel.setText(String.valueOf((int) Math.ceil(remainingSelectionSeconds)));
+            }
+        }
+    }
+
+    private void onSelectionTimeout() {
+        selectionLocked = true;
+        // Send readiness with whatever selections have been made so far
+        NetworkMessage msg = NetworkMessage.request(MessageType.SELECTION_READY)
+            .with("roomId", AppStatus.multiplayerRoomId)
+            .with("role", "ZOMBIE");
+        NetworkSession.client().sendFireAndForget(msg);
+        statusLabel.setText("Time is up! Waiting for opponent...");
+        if (letsRockButton != null) letsRockButton.setDisabled(true);
+        for (ZombieCardActor card : cards) {
+            card.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.disabled);
+        }
     }
 
     public void refresh() {
