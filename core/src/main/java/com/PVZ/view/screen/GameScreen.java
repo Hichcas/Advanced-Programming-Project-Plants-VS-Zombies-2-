@@ -63,6 +63,7 @@ public class GameScreen extends BaseScreen {
     private ImageButton shovelButton;
     private ImageButton plantFoodButton;
     private MenuButton startWaveButton;
+    private MenuButton surrenderButton;
     private Table startWaveButtonRoot;
     private Label timedWarLabel;
     private Label plantFoodCountLabel;
@@ -175,6 +176,10 @@ public class GameScreen extends BaseScreen {
         pauseMenuOverlay.setMissionText(resolveMissionText());
         stage.addActor(pauseMenuOverlay);
 
+        if (gameEngine instanceof IZombieMultiplayerGameEngine) {
+            stage.addActor(buildSurrenderButton());
+        }
+
         levelStartOverlay = new LevelStartOverlay(resolveStageConfig(), () -> {
             introStarted = true;
             introTimer = 0f;
@@ -256,7 +261,45 @@ public class GameScreen extends BaseScreen {
         AppStatus.SELECTED_ZOMBIES.clear();
 
         ScreenManager.getInstance().performTransition(MainMenuScreen::new);
-        AppStatus.setCurrentMenuType(MenuType.NETWORK);
+    }
+
+    private Table buildSurrenderButton() {
+        Table overlay = new Table();
+        overlay.setFillParent(true);
+        overlay.top().right();
+        overlay.setTouchable(Touchable.childrenOnly);
+
+        BitmapFont font = FontManager.getInstance().getEnglishMenuFont();
+
+        // گرفتن تکسچرها از TextureBank
+        com.badlogic.gdx.graphics.g2d.TextureRegion upRegion =
+            EntityRenderer.getInstance().getTextures().region("IMAGE_UI_POWERUPS_POWER_FLAMETHROWER");
+        com.badlogic.gdx.graphics.g2d.TextureRegion downRegion =
+            EntityRenderer.getInstance().getTextures().region("IMAGE_UI_POWERUPS_POWER_FLAMETHROWER_DOWN");
+
+        MenuButton button;
+        if (upRegion != null && downRegion != null) {
+            button = new MenuButton(
+                upRegion, "SURRENDER", font,
+                downRegion, null, null,
+                this::onSurrender
+            );
+        } else {
+            // Fallback امن اگر تکسچر پیدا نشد
+            button = new MenuButton("SURRENDER", font, this::onSurrender);
+        }
+
+        button.setSize(180f, 60f);
+        surrenderButton = button;
+
+        overlay.add(button).size(180f, 60f).padTop(200f).padRight(20f);
+        return overlay;
+    }
+
+    private void onSurrender() {
+        if (gameEngine instanceof IZombieMultiplayerGameEngine onlineEngine) {
+            onlineEngine.surrender();
+        }
     }
 
     private void initPreviewZombies() {
@@ -636,6 +679,11 @@ public class GameScreen extends BaseScreen {
         if (AppStatus.currentUser != null && AppStatus.currentUser.profile != null) {
             UserRegistry.saveUserToDatabase(AppStatus.currentUser.profile.getUsername());
         }
+
+        if (gameEngine instanceof IZombieMultiplayerGameEngine onlineEngine && !onlineEngine.isMatchFinished()) {
+            onlineEngine.surrender();
+        }
+
         if (gameEngine instanceof RegularGameEngine) {
             AppStatus.returnToChapterAndLevelSelection(null);
         } else {
