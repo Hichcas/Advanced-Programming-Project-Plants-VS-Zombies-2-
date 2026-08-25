@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * یک اتصال Client روی سرور. هر Client یک Thread اختصاصی دارد که در حلقه
@@ -42,6 +45,26 @@ public class ClientSession implements Runnable {
         return opponentSession;
     }
 
+    private volatile long lastActivity = System.currentTimeMillis();
+    private final ScheduledExecutorService heartbeatChecker = Executors.newSingleThreadScheduledExecutor();
+    private static final long HEARTBEAT_TIMEOUT_MS = 5000; // 5 ثانیه
+
+    private void startHeartbeatChecker() {
+        heartbeatChecker.scheduleAtFixedRate(() -> {
+            long now = System.currentTimeMillis();
+            if (now - lastActivity > HEARTBEAT_TIMEOUT_MS) {
+                // قطع شده است
+                try {
+                    channel.close();
+                } catch (Exception ignored) {}
+            }
+        }, HEARTBEAT_TIMEOUT_MS, HEARTBEAT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+    }
+
+    public void updateLastActivity() {
+        lastActivity = System.currentTimeMillis();
+    }
+
     public void setOpponentSession(ClientSession opponentSession) {
         this.opponentSession = opponentSession;
     }
@@ -72,6 +95,7 @@ public class ClientSession implements Runnable {
         try {
             NetworkMessage message;
             while ((message = channel.receive()) != null) {
+                updateLastActivity(); // ← این خط اضافه شود
                 dispatcher.dispatch(this, message);
             }
         } catch (IOException e) {
@@ -93,6 +117,7 @@ public class ClientSession implements Runnable {
             }
         }
         channel.close();
+        heartbeatChecker.shutdownNow();
     }
 
     /**

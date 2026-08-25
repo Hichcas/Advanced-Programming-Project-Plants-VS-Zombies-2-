@@ -42,6 +42,7 @@ public class RequestDispatcher {
 
     /** توسط ClientSession برای هر پیام دریافتی صدا زده می‌شود. */
     public void dispatch(ClientSession session, NetworkMessage request) {
+        session.updateLastActivity(); // ← این خط را اضافه کن
         RequestHandler handler = handlers.get(request.getType());
         if (handler == null) {
             session.send(NetworkMessage.reply(request.getRequestId(), MessageType.SERVER_ERROR)
