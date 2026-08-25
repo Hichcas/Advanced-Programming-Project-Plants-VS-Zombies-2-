@@ -196,6 +196,12 @@ public class GameScreen extends BaseScreen {
         }
         com.PVZ.view.screen.panels.CheatPanel.attachToggleButton(stage, this::handleCheatAcrossGameModes);
 
+        // پنل واکنش (فقط برای بازی دونفره‌ی «من، زامبی» در فاز شبکه) - دقیقا مثل
+        // ری‌اکشن بین دو بازیکن در کلش‌آف‌کلنز.
+        if (gameEngine instanceof com.PVZ.model.game.IZombieMultiplayerGameEngine mpEngine) {
+            stage.addActor(new com.PVZ.view.screen.ui.ReactionPanel(mpEngine::sendReaction));
+        }
+
         if (gameEngine.getMap() != null) {
             gameMap = gameEngine.getMap();
         } else {
@@ -853,6 +859,19 @@ public class GameScreen extends BaseScreen {
         GameEngine activeEngine = AppStatus.getGameEngine();
         if (activeEngine == null) {
             activeEngine = gameEngine;
+        }
+
+        if (activeEngine instanceof com.PVZ.model.game.IZombieMultiplayerGameEngine mpEngine) {
+            com.PVZ.model.game.reaction.ReactionEvent event = mpEngine.pollReactionEvent();
+            if (event != null) {
+                var reaction = com.PVZ.model.game.reaction.ReactionCatalog.findById(event.reactionId());
+                if (reaction != null) {
+                    com.PVZ.view.screen.ui.ReactionBubble bubble =
+                        new com.PVZ.view.screen.ui.ReactionBubble(reaction, event.mine());
+                    bubble.setPosition(VIRTUAL_WIDTH / 2f - 90f, VIRTUAL_HEIGHT - 220f);
+                    stage.addActor(bubble);
+                }
+            }
         }
 
         if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.S)) {
