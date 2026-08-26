@@ -67,6 +67,10 @@ public class PlantSelectionPanel extends BasePanel {
     private MenuButton boostButton;
     private MenuButton letsRockButton; // اضافه شد
 
+    private Label timerLabel;
+    private float remainingSelectionSeconds = 30f;
+    private boolean selectionLocked = false;
+
     public PlantSelectionPanel(String chapterName, int stage) {
         this.chapterName = chapterName != null ? chapterName : "Frontyard";
         if (!AppStatus.isMultiplayerMatch) {
@@ -148,6 +152,8 @@ public class PlantSelectionPanel extends BasePanel {
 
         countLabel = new Label("0 / 8 selected", new Label.LabelStyle(font, Color.WHITE));
         statusLabel = new Label("", new Label.LabelStyle(font, Color.SALMON));
+        timerLabel = new Label("30", new Label.LabelStyle(font, Color.YELLOW));
+        timerLabel.setFontScale(1.2f);
 
         Texture greenUp   = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON");
         Texture greenDown = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON_DOWN");
@@ -161,6 +167,7 @@ public class PlantSelectionPanel extends BasePanel {
         window.add(detailPanel).width(6 * 150f).padBottom(14f).row();
         window.add(scrollPane).size(6 * 150f, 4 * 175f).row();
         window.add(countLabel).padTop(8f).row();
+        window.add(timerLabel).padTop(4f).row();
         window.add(statusLabel).padTop(4f).row();
         window.add(letsRock).padTop(12f).size(240f, 64f).row();
 
@@ -448,6 +455,7 @@ public class PlantSelectionPanel extends BasePanel {
 
     private void onLetsRock() {
         if (AppStatus.isMultiplayerMatch) {
+            selectionLocked = true;
             if (AppStatus.SELECTED_PLANTS.isEmpty()) {
                 statusLabel.setText("Please select at least 1 plant.");
                 return;
@@ -526,5 +534,30 @@ public class PlantSelectionPanel extends BasePanel {
             EntityRenderer.getInstance().renderPam((com.badlogic.gdx.graphics.g2d.SpriteBatch) batch, SUN_PAM, animTime, cx, cy);
             batch.setColor(Color.WHITE);
         }
+    }
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if (AppStatus.isMultiplayerMatch && !selectionLocked && remainingSelectionSeconds > 0) {
+            remainingSelectionSeconds -= delta;
+            if (remainingSelectionSeconds <= 0) {
+                remainingSelectionSeconds = 0;
+                onSelectionTimeout();
+            }
+            if (timerLabel != null) {
+                timerLabel.setText(String.valueOf((int) Math.ceil(remainingSelectionSeconds)));
+            }
+        }
+    }
+    private void onSelectionTimeout() {
+        selectionLocked = true;
+        // ارسال آمادگی با انتخاب‌های فعلی
+        NetworkMessage msg = NetworkMessage.request(MessageType.SELECTION_READY)
+            .with("roomId", AppStatus.multiplayerRoomId)
+            .with("role", "PLANT");
+        NetworkSession.client().sendFireAndForget(msg);
+        statusLabel.setText("Time is up! Waiting for opponent...");
+        if (letsRockButton != null) letsRockButton.setDisabled(true);
+        for (PlantCardActor card : cards) card.setLocked(true);
     }
 }
