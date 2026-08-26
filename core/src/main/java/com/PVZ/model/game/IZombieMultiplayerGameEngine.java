@@ -8,6 +8,7 @@ import com.PVZ.model.game.reaction.ReactionEvent;
 import com.PVZ.model.minigame.izombie.IZombieGame;
 import com.PVZ.model.minigame.izombie.IZombieLevelDefinition;
 import com.PVZ.model.minigame.izombie.IZombieLevelLoader;
+import com.PVZ.model.minigame.izombie.ZombieOption;
 import com.PVZ.network.client.NetworkSession;
 import com.PVZ.network.common.MessageType;
 import com.PVZ.network.common.NetworkMessage;
@@ -20,6 +21,7 @@ import com.PVZ.view.renderer.EntityRenderer;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
@@ -30,17 +32,21 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     private final String roomId;
     private final int levelId;
 
-    private float matchTimeRemaining = 120.0f; // 2 minutes
+    private float matchTimeRemaining = 600.0f; // 10 minutes
     private boolean matchFinished = false;
     private String matchResultText = "";
     private boolean wonMatch = false;
+    private boolean drawResult = false;
 
     private final SeedPacketBar plantBar = new SeedPacketBar();
     private PlantType selectedPlantType = null;
     private String activeReaction = null;
     private float reactionDisplayTimer = 0f;
 
-    /** واکنش‌های در انتظار نمایش به‌صورت حباب (نگاه کنید به GameScreen که این را poll می‌کند). */
+    /**
+     * واکنش‌های در انتظار نمایش به‌صورت حباب (نگاه کنید به GameScreen که این را
+     * poll می‌کند).
+     */
     private final Queue<ReactionEvent> pendingReactionEvents = new ArrayDeque<>();
     /** استیکرهای متحرک فعال روی زمین بازی (انیمیشن PAM واقعی). */
     private final List<StickerEffect> activeStickers = new java.util.ArrayList<>();
@@ -66,12 +72,46 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     private final List<PlantType> selectedPlants;
     private final List<String> selectedZombies;
 
+    public boolean isDrawResult() {
+        return drawResult;
+    }
+
+    public void offerDraw() {
+        if (matchFinished)
+            return;
+        NetworkMessage msg = NetworkMessage.push(MessageType.DRAW_OFFER);
+        NetworkSession.client().sendFireAndForget(msg);
+    }
+
+    public void respondDrawOffer(boolean accept) {
+        NetworkMessage msg = NetworkMessage.push(MessageType.DRAW_RESPONSE)
+                .with("accept", accept);
+        NetworkSession.client().sendFireAndForget(msg);
+
+        if (accept && !matchFinished) {
+            matchFinished = true;
+            drawResult = true;
+            matchResultText = "DRAW! BOTH PLAYERS AGREED TO END THE GAME";
+        }
+    }
+
     public IZombieMultiplayerGameEngine(String myRole, String opponentName, String roomId, int levelId) {
         this(myRole, opponentName, roomId, levelId, null, null);
     }
 
+    public void surrender() {
+        if (matchFinished)
+            return;
+        matchFinished = true;
+        wonMatch = false;
+        matchResultText = "DEFEAT! YOU SURRENDERED!";
+
+        NetworkMessage msg = NetworkMessage.push(MessageType.SURRENDER);
+        NetworkSession.client().sendFireAndForget(msg);
+    }
+
     public IZombieMultiplayerGameEngine(String myRole, String opponentName, String roomId, int levelId,
-                                        List<PlantType> selectedPlants, List<String> selectedZombies) {
+            List<PlantType> selectedPlants, List<String> selectedZombies) {
         super();
         this.myRole = (myRole != null && myRole.equalsIgnoreCase("PLANT")) ? "PLANT" : "ZOMBIE";
         this.opponentName = opponentName != null ? opponentName : "Opponent";
@@ -107,19 +147,27 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     }
 
     private static int calculateZombieCost(com.PVZ.model.enums.ZombieType type) {
-        if (type == null) return 50;
+        if (type == null)
+            return 50;
         String name = type.name().toUpperCase();
-        if (name.contains("GARGANTUAR") || name.contains("ZOMBOSS")) return 300;
-        if (name.contains("BRICK") || name.contains("KNIGHT") || name.contains("ARMOR2") || name.contains("CENTURION")) return 150;
-        if (name.contains("BUCKET") || name.contains("BARREL") || name.contains("JALAPENO") || name.contains("SQUASH")) return 125;
-        if (name.contains("CONE") || name.contains("ARMOR1") || name.contains("HELMET") || name.contains("FLAG")) return 75;
-        if (name.contains("IMP")) return 25;
-        if (name.contains("ZOMBOTANY")) return 100;
+        if (name.contains("GARGANTUAR") || name.contains("ZOMBOSS"))
+            return 300;
+        if (name.contains("BRICK") || name.contains("KNIGHT") || name.contains("ARMOR2") || name.contains("CENTURION"))
+            return 150;
+        if (name.contains("BUCKET") || name.contains("BARREL") || name.contains("JALAPENO") || name.contains("SQUASH"))
+            return 125;
+        if (name.contains("CONE") || name.contains("ARMOR1") || name.contains("HELMET") || name.contains("FLAG"))
+            return 75;
+        if (name.contains("IMP"))
+            return 25;
+        if (name.contains("ZOMBOTANY"))
+            return 100;
         return 50;
     }
 
     private static String formatZombieDisplayName(com.PVZ.model.enums.ZombieType type) {
-        if (type == null) return "Zombie";
+        if (type == null)
+            return "Zombie";
         String name = type.name().replace("ZOMBOTANY_", "Zombotany ").replace('_', ' ').toLowerCase();
         StringBuilder sb = new StringBuilder();
         for (String part : name.split(" ")) {
@@ -133,7 +181,7 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     @Override
     public void initializeBoard() {
         super.initializeBoard();
-        // In multiplayer, clear local random seeds so both sides start with an identical empty/synced lawn
+        // Clear random seeds so both sides start identical
         plants.clear();
         if (map != null && getGame() != null) {
             for (int r = 0; r < getGame().getRows(); r++) {
@@ -144,15 +192,14 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         }
         if (myRole.equals("PLANT")) {
             List<PlantType> plantOptions = (selectedPlants != null && !selectedPlants.isEmpty())
-                ? selectedPlants
-                : List.of(
-                    PlantType.PEASHOOTER,
-                    PlantType.SUNFLOWER,
-                    PlantType.WALL_NUT,
-                    PlantType.SNOW_PEA,
-                    PlantType.REPEATER,
-                    PlantType.POTATO_MINE
-                );
+                    ? selectedPlants
+                    : List.of(
+                            PlantType.PEASHOOTER,
+                            PlantType.SUNFLOWER,
+                            PlantType.WALL_NUT,
+                            PlantType.SNOW_PEA,
+                            PlantType.REPEATER,
+                            PlantType.POTATO_MINE);
             float slotSize = 110f;
             float gap = 12f;
             int count = plantOptions.size();
@@ -177,6 +224,17 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
             Gdx.app.postRunnable(() -> handleRemotePlant(typeName, row, col));
         });
 
+        NetworkSession.client().on(MessageType.DRAW_RESPONSE, msg -> {
+            boolean accept = msg.getBoolean("accept", false);
+            Gdx.app.postRunnable(() -> {
+                if (!matchFinished && accept) {
+                    matchFinished = true;
+                    drawResult = true;
+                    matchResultText = "DRAW! BOTH PLAYERS AGREED TO END THE GAME";
+                }
+            });
+        });
+
         NetworkSession.client().on(MessageType.GAME_DEPLOY_INPUT, msg -> {
             String alias = msg.getString("alias");
             int row = msg.getInt("row", -1);
@@ -186,7 +244,8 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
 
         NetworkSession.client().on(MessageType.GAME_OVER, msg -> {
             String winner = msg.getString("winner");
-            Gdx.app.postRunnable(() -> handleRemoteGameOver(winner));
+            String reason = msg.getString("reason", "");
+            Gdx.app.postRunnable(() -> handleRemoteGameOver(winner, reason));
         });
 
         NetworkSession.client().on(MessageType.REACTION_RECEIVED, msg -> {
@@ -195,8 +254,30 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         });
     }
 
+    private void handleRemoteGameOver(String winner, String reason) {
+        if (matchFinished)
+            return;
+        matchFinished = true;
+        wonMatch = myRole.equalsIgnoreCase(winner);
+
+        if ("OPPONENT_DISCONNECTED".equals(reason)) {
+            matchResultText = wonMatch
+                    ? "VICTORY! Opponent disconnected."
+                    : "DEFEAT! You disconnected.";
+        } else if ("SURRENDER".equals(reason)) {
+            matchResultText = wonMatch
+                    ? "VICTORY! Opponent surrendered."
+                    : "DEFEAT! You surrendered.";
+        } else {
+            matchResultText = wonMatch
+                    ? "VICTORY! YOU WIN!"
+                    : "DEFEAT! YOU LOSE!";
+        }
+    }
+
     private void handleRemotePlant(String typeName, int row, int col) {
-        if (map == null || row < 0 || col < 0) return;
+        if (map == null || row < 0 || col < 0)
+            return;
         try {
             PlantType type = PlantType.valueOf(typeName);
             Plant p = PlantFactory.createPlant(type, 1);
@@ -209,13 +290,14 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
     }
 
     private void handleRemoteDeploy(String alias, int row, int col) {
-        if (alias == null || row < 0 || col < 0) return;
+        if (alias == null || row < 0 || col < 0)
+            return;
         spawnZombie(alias, row, col);
     }
 
     private void handleRemoteGameOver(String winner) {
-        if (matchFinished) return;
-        matchFinished = true;
+        if (matchFinished)
+            return;
         wonMatch = myRole.equalsIgnoreCase(winner);
         matchResultText = wonMatch ? "VICTORY! YOU WIN!" : "DEFEAT! YOU LOSE!";
     }
@@ -225,19 +307,18 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
      * دارد تا کسی نتواند با اسپم کلیک، شبکه یا صفحه‌ی حریف را پر کند.
      */
     public void sendReaction(String reactionId) {
-        if (ReactionCatalog.findById(reactionId) == null) return;
-        if (reactionCooldown > 0f) return;
+        if (ReactionCatalog.findById(reactionId) == null)
+            return;
+        if (reactionCooldown > 0f)
+            return;
         reactionCooldown = REACTION_COOLDOWN_SECONDS;
-
-        NetworkMessage msg = NetworkMessage.push(MessageType.SEND_REACTION)
-            .with("reaction", reactionId);
-        NetworkSession.client().sendFireAndForget(msg);
         handleReaction(reactionId, true);
     }
 
     private void handleReaction(String reactionId, boolean mine) {
         ReactionCatalog.Reaction reaction = ReactionCatalog.findById(reactionId);
-        if (reaction == null) return;
+        if (reaction == null)
+            return;
 
         activeReaction = (mine ? "You: " : opponentName + ": ") + reaction.label();
         reactionDisplayTimer = 3.0f;
@@ -266,25 +347,29 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         String res = super.deployZombie(alias, row, col);
         if (res.startsWith("Deployed")) {
             NetworkMessage msg = NetworkMessage.push(MessageType.GAME_DEPLOY_INPUT)
-                .with("alias", alias)
-                .with("row", row)
-                .with("col", col);
+                    .with("alias", alias)
+                    .with("row", row)
+                    .with("col", col);
             NetworkSession.client().sendFireAndForget(msg);
         }
         return res;
     }
 
     public boolean plantByPlayer(PlantType type, int row, int col) {
-        if (!myRole.equals("PLANT") || map == null || getGame() == null) return false;
-        if (col >= getGame().getRedLineCol()) return false;
-        if (map.getPlantAt(row, col) != null) return false;
+        if (!myRole.equals("PLANT") || map == null || getGame() == null)
+            return false;
+        if (col >= getGame().getRedLineCol())
+            return false;
+        if (map.getPlantAt(row, col) != null)
+            return false;
 
         Plant plant = PlantFactory.createPlant(type, 1);
-        if (plant == null) return false;
+        if (plant == null)
+            return false;
 
         int cost = (plant.getInstance() != null && plant.getInstance().getDefinition() != null)
-            ? plant.getInstance().getDefinition().getCost()
-            : 100;
+                ? plant.getInstance().getDefinition().getCost()
+                : 100;
         if (getGame().getSun() < cost) {
             return false;
         }
@@ -296,17 +381,28 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         map.setPlant(row, col, plant);
         plants.add(plant);
         NetworkMessage msg = NetworkMessage.push(MessageType.GAME_PLANT_INPUT)
-            .with("plantType", type.name())
-            .with("row", row)
-            .with("col", col);
+                .with("plantType", type.name())
+                .with("row", row)
+                .with("col", col);
         NetworkSession.client().sendFireAndForget(msg);
         return true;
     }
 
-    public String getMyRole() { return myRole; }
-    public SeedPacketBar getPlantBar() { return plantBar; }
-    public PlantType getSelectedPlantType() { return selectedPlantType; }
-    public void setSelectedPlantType(PlantType selectedPlantType) { this.selectedPlantType = selectedPlantType; }
+    public String getMyRole() {
+        return myRole;
+    }
+
+    public SeedPacketBar getPlantBar() {
+        return plantBar;
+    }
+
+    public PlantType getSelectedPlantType() {
+        return selectedPlantType;
+    }
+
+    public void setSelectedPlantType(PlantType selectedPlantType) {
+        this.selectedPlantType = selectedPlantType;
+    }
 
     @Override
     public void update(float delta) {
@@ -320,16 +416,16 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
                 wonMatch = myRole.equals("PLANT");
                 matchResultText = wonMatch ? "TIME UP - PLANT WINS!" : "TIME UP - ZOMBIE LOSES!";
                 NetworkMessage msg = NetworkMessage.push(MessageType.GAME_OVER)
-                    .with("winner", "PLANT")
-                    .with("reason", "TIME_UP");
+                        .with("winner", "PLANT")
+                        .with("reason", "TIME_UP");
                 NetworkSession.client().sendFireAndForget(msg);
             } else if (getGame() != null && getGame().getBrainsRemaining() <= 0) {
                 matchFinished = true;
                 wonMatch = myRole.equals("ZOMBIE");
                 matchResultText = wonMatch ? "ALL BRAINS EATEN - ZOMBIE WINS!" : "BRAINS LOST - PLANT LOSES!";
                 NetworkMessage msg = NetworkMessage.push(MessageType.GAME_OVER)
-                    .with("winner", "ZOMBIE")
-                    .with("reason", "BRAINS_EATEN");
+                        .with("winner", "ZOMBIE")
+                        .with("reason", "BRAINS_EATEN");
                 NetworkSession.client().sendFireAndForget(msg);
             }
         }
@@ -357,7 +453,8 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
 
     @Override
     protected void drawHud(SpriteBatch batch) {
-        if (getGame() == null || map == null) return;
+        if (getGame() == null || map == null)
+            return;
         ensureTexturesLoaded();
         batch.begin();
         if (myRole.equals("ZOMBIE")) {
@@ -375,12 +472,10 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
                 float rowY = map.getStartY() - (row + 1) * th;
                 float deployX = map.getStartX() + col * tw;
 
-                // Soft brightness boost on the selected tile
                 float pulse = (float) (Math.sin(System.currentTimeMillis() * 0.004) * 0.06 + 0.22);
                 batch.setColor(1f, 1f, 1f, pulse);
                 batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, th - 4f);
 
-                // Elegant subtle border outline (2px)
                 batch.setColor(1f, 0.92f, 0.5f, 0.75f);
                 batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, 2f);
                 batch.draw(hudPixel, deployX + 2f, rowY + th - 4f, tw - 4f, 2f);
@@ -409,7 +504,7 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         String timeStr = String.format("%02d:%02d", mins, secs);
 
         String info = String.format("ROLE: %s | VS: %s | TIME: %s | LEVEL: %d",
-            myRole, opponentName, timeStr, levelId);
+                myRole, opponentName, timeStr, levelId);
         font.setColor(Color.YELLOW);
         font.draw(batch, info, 100f, 1400f);
 
@@ -431,11 +526,24 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
 
     /** استیکرهای متحرک فعال را (انیمیشن PAM واقعی) روی وسط زمین بازی پخش می‌کند. */
     private void drawActiveStickers(SpriteBatch batch) {
-        if (activeStickers.isEmpty()) return;
+        if (activeStickers.isEmpty())
+            return;
         batch.begin();
         for (StickerEffect fx : activeStickers) {
             EntityRenderer.getInstance().renderPam(batch, fx.path, fx.clip, fx.elapsed, fx.x - 128f, fx.y - 128f);
         }
         batch.end();
+    }
+
+    public boolean isMatchFinished() {
+        return matchFinished;
+    }
+
+    public boolean isWonMatch() {
+        return wonMatch;
+    }
+
+    public String getMatchResultText() {
+        return matchResultText;
     }
 }

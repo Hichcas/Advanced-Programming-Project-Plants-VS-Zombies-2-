@@ -18,6 +18,28 @@ public final class GameSyncHandlers {
         dispatcher.register(MessageType.GAME_OVER, GameSyncHandlers::handleGameOver);
         dispatcher.register(MessageType.SEND_REACTION, GameSyncHandlers::handleSendReaction);
         dispatcher.register(MessageType.SELECTION_READY, GameSyncHandlers::handleSelectionReady);
+        dispatcher.register(MessageType.SURRENDER, GameSyncHandlers::handleSurrender);
+        dispatcher.register(MessageType.DRAW_OFFER, GameSyncHandlers::handleDrawOffer);
+        dispatcher.register(MessageType.DRAW_RESPONSE, GameSyncHandlers::handleDrawResponse);
+    }
+
+    private static NetworkMessage handleDrawOffer(ClientSession session, NetworkMessage request) {
+        ClientSession opponent = session.getOpponentSession();
+        if (opponent != null && opponent.isInGame()) {
+            NetworkMessage forward = NetworkMessage.push(MessageType.DRAW_OFFER);
+            opponent.send(forward);
+        }
+        return null;
+    }
+
+    private static NetworkMessage handleDrawResponse(ClientSession session, NetworkMessage request) {
+        ClientSession opponent = session.getOpponentSession();
+        if (opponent != null && opponent.isInGame()) {
+            NetworkMessage forward = NetworkMessage.push(MessageType.DRAW_RESPONSE)
+                .with("accept", request.getBoolean("accept", false));
+            opponent.send(forward);
+        }
+        return null;
     }
 
     private static NetworkMessage handlePlantInput(ClientSession session, NetworkMessage request) {
@@ -54,6 +76,15 @@ public final class GameSyncHandlers {
                 .with("reason", request.getString("reason", ""));
             opponent.send(forward);
         }
+
+        // پاک‌سازی session مربوطه
+        String roomId = session.getCurrentRoomId();
+        if (roomId != null) {
+            OnlineMatchSession matchSession = MatchmakingManager.getInstance().getSession(roomId);
+            if (matchSession != null) {
+                matchSession.markGameFinished();
+            }
+        }
         return null;
     }
 
@@ -74,6 +105,28 @@ public final class GameSyncHandlers {
             OnlineMatchSession matchSession = MatchmakingManager.getInstance().getSession(roomId);
             if (matchSession != null) {
                 matchSession.markReady(session.getUsername());
+            }
+        }
+        return null;
+    }
+
+    private static NetworkMessage handleSurrender(ClientSession session, NetworkMessage request) {
+        ClientSession opponent = session.getOpponentSession();
+        if (opponent != null && opponent.isInGame()) {
+            opponent.setInGame(false);
+            NetworkMessage gameOver = NetworkMessage.push(MessageType.GAME_OVER)
+                .with("winner", opponent.getCurrentRole())
+                .with("reason", "SURRENDER");
+            opponent.send(gameOver);
+        }
+
+        session.setInGame(false);
+        // پاک‌سازی session
+        String roomId = session.getCurrentRoomId();
+        if (roomId != null) {
+            OnlineMatchSession matchSession = MatchmakingManager.getInstance().getSession(roomId);
+            if (matchSession != null) {
+                matchSession.markGameFinished();
             }
         }
         return null;
