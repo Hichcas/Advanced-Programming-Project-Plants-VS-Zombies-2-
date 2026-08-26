@@ -59,13 +59,15 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         final String clip;
         final float x;
         final float y;
+        final float lifetime;
         float elapsed = 0f;
 
-        StickerEffect(String path, String clip, float x, float y) {
+        StickerEffect(String path, String clip, float x, float y, float lifetime) {
             this.path = path;
             this.clip = clip;
             this.x = x;
             this.y = y;
+            this.lifetime = lifetime;
         }
     }
 
@@ -250,7 +252,8 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
 
         NetworkSession.client().on(MessageType.REACTION_RECEIVED, msg -> {
             String reactionId = msg.getString("reaction");
-            Gdx.app.postRunnable(() -> handleReaction(reactionId, false));
+            String sender = msg.getString("from", opponentName);
+            Gdx.app.postRunnable(() -> handleReaction(reactionId, false, sender));
         });
     }
 
@@ -312,22 +315,29 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         if (reactionCooldown > 0f)
             return;
         reactionCooldown = REACTION_COOLDOWN_SECONDS;
-        handleReaction(reactionId, true);
+
+        // این خط اصلی گم شده بود: قبلاً واکنش فقط محلی نمایش داده می‌شد و
+        // هیچ پیامی به سرور/حریف ارسال نمی‌شد، به همین دلیل طرف مقابل چیزی نمی‌دید.
+        NetworkMessage msg = NetworkMessage.push(MessageType.SEND_REACTION)
+                .with("reaction", reactionId);
+        NetworkSession.client().sendFireAndForget(msg);
+
+        handleReaction(reactionId, true, null);
     }
 
-    private void handleReaction(String reactionId, boolean mine) {
+    private void handleReaction(String reactionId, boolean mine, String senderName) {
         ReactionCatalog.Reaction reaction = ReactionCatalog.findById(reactionId);
         if (reaction == null)
             return;
 
         activeReaction = (mine ? "You: " : opponentName + ": ") + reaction.label();
         reactionDisplayTimer = 3.0f;
-        pendingReactionEvents.offer(new ReactionEvent(reactionId, mine));
+        pendingReactionEvents.offer(new ReactionEvent(reactionId, mine, senderName));
 
         if (reaction.kind() == ReactionCatalog.Kind.STICKER && reaction.pamPath() != null && map != null) {
             float centerX = map.getStartX() + (map.getCols() > 0 ? map.getCols() : 9) * map.getTileWidth() / 2f;
             float centerY = map.getStartY() - (map.getRows() > 0 ? map.getRows() : 5) * map.getTileHeight() / 2f;
-            activeStickers.add(new StickerEffect(reaction.pamPath(), reaction.pamClip(), centerX, centerY));
+            activeStickers.add(new StickerEffect(reaction.pamPath(), reaction.pamClip(), centerX, centerY, Math.max(0.6f, reaction.pamLifetimeSeconds())));
         }
     }
 
@@ -444,7 +454,7 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
             while (it.hasNext()) {
                 StickerEffect fx = it.next();
                 fx.elapsed += delta;
-                if (fx.elapsed >= STICKER_LIFETIME_SECONDS) {
+                if (fx.elapsed >= fx.lifetime) {
                     it.remove();
                 }
             }
