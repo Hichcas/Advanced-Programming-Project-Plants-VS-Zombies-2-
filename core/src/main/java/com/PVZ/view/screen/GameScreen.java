@@ -951,8 +951,12 @@ public class GameScreen extends BaseScreen {
                 var reaction = com.PVZ.model.game.reaction.ReactionCatalog.findById(event.reactionId());
                 if (reaction != null) {
                     com.PVZ.view.screen.ui.ReactionBubble bubble = new com.PVZ.view.screen.ui.ReactionBubble(reaction,
-                            event.mine());
-                    bubble.setPosition(VIRTUAL_WIDTH / 2f - 90f, VIRTUAL_HEIGHT - 220f);
+                            event.mine(), event.senderName());
+                    float bottomMargin = 250f; // بالاتر از دکمه‌ی REACTIONS که وسط پایین صفحه‌ست، تا رویش نیفتد
+                    float x = (stage.getViewport().getWorldWidth() - bubble.getWidth()) / 2f;
+                    float y = bottomMargin;
+
+                    bubble.setPosition(x, y);
                     stage.addActor(bubble);
                 }
             }
