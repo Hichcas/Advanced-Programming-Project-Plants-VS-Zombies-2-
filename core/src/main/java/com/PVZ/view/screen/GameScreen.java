@@ -142,7 +142,7 @@ public class GameScreen extends BaseScreen {
         this.mapPath = mapPath;
         this.musicPath = musicPath;
 
-        if (!AppStatus.isMultiplayerMatch) {
+        if (!AppStatus.isMultiplayerMatch && !(gameEngine instanceof com.PVZ.model.game.IZombieGameEngine)) {
             levelStartOverlay = new LevelStartOverlay(resolveStageConfig(), () -> {
                 introStarted = true;
                 introTimer = 0f;
@@ -834,20 +834,33 @@ public class GameScreen extends BaseScreen {
 
     private com.PVZ.view.output.OutputDTO handleCheatAcrossGameModes(
         com.PVZ.view.input.DTO.InGameInputDTO dto) {
-        if (gameEngine instanceof com.PVZ.model.game.RegularGameEngine) {
+        GameEngine active = AppStatus.getGameEngine() != null ? AppStatus.getGameEngine() : gameEngine;
+        if (active instanceof com.PVZ.model.game.RegularGameEngine) {
             return new com.PVZ.controller.menuControllers.InGameMenuController().handle(dto);
         }
 
-        if (!(gameEngine instanceof com.PVZ.model.game.ZombieEngine zombieEngine)) {
+        if (!(active instanceof com.PVZ.model.game.ZombieEngine zombieEngine)) {
             return new com.PVZ.view.output.OutputDTO(false, "Cheats are unavailable in this game mode.");
         }
 
         try {
             return switch (dto.getCommand()) {
-                case CHEAT_ADD_SUNS -> {
+                case CHEAT_ADD_PLANT_SUN, CHEAT_ADD_SUNS -> {
                     int amount = dto.getAmount() == null ? 0 : dto.getAmount();
+                    if (active instanceof com.PVZ.model.game.IZombieLocalVersusEngine versusEngine) {
+                        versusEngine.addPlantSun(amount);
+                        yield new com.PVZ.view.output.OutputDTO(true, "Added " + amount + " Plant Sun. Total: " + versusEngine.getPlantSun());
+                    } else if (active instanceof com.PVZ.model.game.RegularGameEngine reg) {
+                        reg.addSun(amount);
+                        yield new com.PVZ.view.output.OutputDTO(true, "Added " + amount + " Plant Sun.");
+                    }
                     zombieEngine.addSun(amount);
                     yield new com.PVZ.view.output.OutputDTO(true, "Added " + amount + " sun.");
+                }
+                case CHEAT_ADD_ZOMBIE_SUN -> {
+                    int amount = dto.getAmount() == null ? 0 : dto.getAmount();
+                    zombieEngine.addSun(amount);
+                    yield new com.PVZ.view.output.OutputDTO(true, "Added " + amount + " Zombie Sun.");
                 }
                 case CHEAT_SPAWN_ZOMBIE -> {
                     String alias = dto.getZombieType();

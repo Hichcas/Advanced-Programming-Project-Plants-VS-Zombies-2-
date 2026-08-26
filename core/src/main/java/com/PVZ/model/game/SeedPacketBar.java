@@ -50,15 +50,19 @@ public class SeedPacketBar {
     }
 
     public void layoutVertical(List<PlantType> unlockedPlants, float startX, float startY) {
+        layoutVertical(unlockedPlants, startX, startY, VERTICAL_SLOT_SIZE, VERTICAL_GAP);
+    }
+
+    public void layoutVertical(List<PlantType> unlockedPlants, float startX, float startY, float slotSize, float gap) {
         packets.clear();
         lastLayoutWasVertical = true;
         float y = startY;
         for (PlantType type : unlockedPlants) {
-            Rectangle bounds = new Rectangle(startX, y, VERTICAL_SLOT_SIZE, VERTICAL_SLOT_SIZE);
+            Rectangle bounds = new Rectangle(startX, y, slotSize, slotSize);
             SeedPacket packet = new SeedPacket(type, bounds);
             packet.setIcon(getOrLoadIcon(type));
             packets.add(packet);
-            y -= VERTICAL_SLOT_SIZE + VERTICAL_GAP;
+            y -= slotSize + gap;
         }
     }
 
@@ -158,12 +162,15 @@ public class SeedPacketBar {
             batch.setColor(0.1f, 0.1f, 0.1f, 0.6f);
             batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
             if (packet.getPlantType() == selectedPlant) {
-                batch.setColor(1f, 0.85f, 0.2f, 0.9f);
-                // Draw 3px border
-                batch.draw(darkOverlayPixel(), b.x - 3f, b.y - 3f, b.width + 6f, 3f);
-                batch.draw(darkOverlayPixel(), b.x - 3f, b.y + b.height, b.width + 6f, 3f);
-                batch.draw(darkOverlayPixel(), b.x - 3f, b.y, 3f, b.height);
-                batch.draw(darkOverlayPixel(), b.x + b.width, b.y, 3f, b.height);
+                float pulse = (float) (Math.sin(System.currentTimeMillis() * 0.006) * 0.15 + 0.50);
+                batch.setColor(1f, 0.9f, 0.2f, pulse);
+                batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
+                batch.setColor(1f, 0.95f, 0.4f, 1.0f);
+                // Draw 4px golden glowing border
+                batch.draw(darkOverlayPixel(), b.x - 4f, b.y - 4f, b.width + 8f, 4f);
+                batch.draw(darkOverlayPixel(), b.x - 4f, b.y + b.height, b.width + 8f, 4f);
+                batch.draw(darkOverlayPixel(), b.x - 4f, b.y, 4f, b.height);
+                batch.draw(darkOverlayPixel(), b.x + b.width, b.y, 4f, b.height);
             }
             batch.setColor(Color.WHITE);
 

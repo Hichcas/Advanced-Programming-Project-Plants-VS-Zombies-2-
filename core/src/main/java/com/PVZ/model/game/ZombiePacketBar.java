@@ -78,6 +78,23 @@ public class ZombiePacketBar {
         }
     }
 
+    public void layoutVertical(IZombieGame game, float x, float topY) {
+        layoutVertical(game, x, topY, SLOT_SIZE, GAP);
+    }
+
+    public void layoutVertical(IZombieGame game, float x, float topY, float slotSize, float gap) {
+        packets.clear();
+        if (game == null) return;
+        float slotY = topY;
+        for (ZombieOption option : game.getRoster()) {
+            Rectangle bounds = new Rectangle(x, slotY, slotSize, slotSize);
+            ZombiePacket packet = new ZombiePacket(option, bounds);
+            packet.setIcon(null);
+            packets.add(packet);
+            slotY -= (slotSize + gap);
+        }
+    }
+
     public ZombiePacket getPacketAt(float worldX, float worldY) {
         for (ZombiePacket packet : packets) {
             if (packet.contains(worldX, worldY)) return packet;
@@ -95,12 +112,21 @@ public class ZombiePacketBar {
 
         // One skinned backing panel behind the whole roster column, instead of
         // icons floating on bare background - matches the rest of the game's UI.
-        Rectangle first = packets.get(0).getBounds();
-        Rectangle last = packets.get(packets.size() - 1).getBounds();
-        float panelX = first.x - PANEL_PAD;
-        float panelY = last.y - PANEL_PAD;
-        float panelW = first.width + PANEL_PAD * 2f;
-        float panelH = (first.y + first.height) - last.y + PANEL_PAD * 2f;
+        float minX = Float.MAX_VALUE;
+        float minY = Float.MAX_VALUE;
+        float maxX = -Float.MAX_VALUE;
+        float maxY = -Float.MAX_VALUE;
+        for (ZombiePacket p : packets) {
+            Rectangle b = p.getBounds();
+            if (b.x < minX) minX = b.x;
+            if (b.y < minY) minY = b.y;
+            if (b.x + b.width > maxX) maxX = b.x + b.width;
+            if (b.y + b.height > maxY) maxY = b.y + b.height;
+        }
+        float panelX = minX - PANEL_PAD;
+        float panelY = minY - PANEL_PAD;
+        float panelW = (maxX - minX) + PANEL_PAD * 2f;
+        float panelH = (maxY - minY) + PANEL_PAD * 2f;
         if (panelBackground != null) {
             panelBackground.draw(batch, panelX, panelY, panelW, panelH);
         } else {
