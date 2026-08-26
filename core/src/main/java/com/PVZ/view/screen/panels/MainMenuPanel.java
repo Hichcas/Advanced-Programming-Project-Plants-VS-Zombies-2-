@@ -35,8 +35,11 @@ public class MainMenuPanel extends BasePanel {
     private Texture onlineContentTexture;
     private Image contentImage;
 
-    // ================== دکمه‌ی شروع ==================
+    // ================== دکمه‌های شروع و متنی ==================
     private MenuButton startButton;
+    private MenuButton localVersusButton;
+    private MenuButton quitButton;
+    private float buttonsStartY;
 
     // ================== ثابت‌ها ==================
     private static final float BUTTON_HEIGHT = 80f;
@@ -89,14 +92,16 @@ public class MainMenuPanel extends BasePanel {
         Texture markerTex = new Texture(Gdx.files.internal("global/button_marker.png"));
         BitmapFont buttonFont = PvzSkin.get().getFont("FBUSV8C5EI_1_outline");
 
-        float startY = contentY + contentH - 150f - BUTTONS_EXTRA_DOWN;
+        buttonsStartY = contentY + contentH - 150f - BUTTONS_EXTRA_DOWN;
         float centerX = VIRTUAL_WIDTH / 2f;
 
         // دکمه‌ی شروع (متن و اکشن آن بسته به حالت تغییر می‌کند)
         startButton = addButton("START GAME", this::startOfflineGame,
-            greenUpTex, greenDownTex, buttonFont, markerTex, centerX, startY);
-        addButton("QUIT GAME", this::onQuit,
-            greenUpTex, greenDownTex, buttonFont, markerTex, centerX, startY - 90);
+            greenUpTex, greenDownTex, buttonFont, markerTex, centerX, buttonsStartY);
+        localVersusButton = addButton("LOCAL 2-PLAYER", this::startLocalVersusGame,
+            greenUpTex, greenDownTex, buttonFont, markerTex, centerX, buttonsStartY - 85);
+        quitButton = addButton("QUIT GAME", this::onQuit,
+            greenUpTex, greenDownTex, buttonFont, markerTex, centerX, buttonsStartY - 90);
 
         // ---------- دکمهٔ تنظیمات ----------
         Texture settingsNormal = safeTextureFromRegion("IMAGE_UI_HUD_SETTINGSBUTTON_BUTTONS_HUD_SETTINGS_NORMAL");
@@ -222,9 +227,21 @@ public class MainMenuPanel extends BasePanel {
             if (mode == MenuMode.OFFLINE) {
                 startButton.setText("START GAME");
                 startButton.setClickAction(this::startOfflineGame);
+                if (localVersusButton != null) {
+                    localVersusButton.setVisible(false);
+                }
+                if (quitButton != null) {
+                    quitButton.setPosition(VIRTUAL_WIDTH / 2f - quitButton.getWidth() / 2f, buttonsStartY - 90);
+                }
             } else {
                 startButton.setText("PLAY ONLINE");
                 startButton.setClickAction(this::startOnlineGame);
+                if (localVersusButton != null) {
+                    localVersusButton.setVisible(true);
+                }
+                if (quitButton != null) {
+                    quitButton.setPosition(VIRTUAL_WIDTH / 2f - quitButton.getWidth() / 2f, buttonsStartY - 170);
+                }
             }
         }
     }
@@ -234,9 +251,20 @@ public class MainMenuPanel extends BasePanel {
         AppStatus.setCurrentMenuType(MenuType.CHAPTER_AND_LEVEL_SELECTION);
     }
 
+    private void startLocalVersusGame() {
+        AppStatus.isMultiplayerMatch = false;
+        AppStatus.setCurrentMenuType(MenuType.IN_GAME);
+        com.PVZ.model.game.IZombieLocalVersusEngine engine = new com.PVZ.model.game.IZombieLocalVersusEngine(1);
+        AppStatus.setGameEngine(engine);
+        com.PVZ.view.screen.manager.ScreenManager.getInstance().performTransition(() -> new com.PVZ.view.screen.GameScreen(
+            "maps/Frontyard.jpg",
+            "music/TitleScreen.mp3",
+            engine
+        ));
+    }
+
     private void startOnlineGame() {
-        // TODO: بعداً پنل بازی آنلاین واقعی را جایگزین کنید
-        AppStatus.setCurrentMenuType(MenuType.NETWORK); // موقتاً
+        AppStatus.setCurrentMenuType(MenuType.NETWORK);
     }
 
     private void onSettings() {

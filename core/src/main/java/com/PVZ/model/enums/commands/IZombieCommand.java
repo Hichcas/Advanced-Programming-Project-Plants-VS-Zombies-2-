@@ -45,7 +45,7 @@ public enum IZombieCommand {
         }
     },
 
-    CHEAT_ADD_SUNS("^\\s*(?:izombie\\s+)?cheat\\s+add\\s+-n\\s+(?<amount>\\d+)\\s+suns?\\s*$") {
+    CHEAT_ADD_SUNS("^\\s*(?:izombie\\s+|menu\\s+)?cheat\\s+add(?:\\s+-n)?\\s+(?<amount>\\d+)(?:\\s+suns?)?\\s*$") {
         @Override
         public IZombieInputDTO createDTO(Matcher matcher) {
             return new IZombieInputDTO(this, -1, -1, -1, null, Integer.parseInt(matcher.group("amount")));

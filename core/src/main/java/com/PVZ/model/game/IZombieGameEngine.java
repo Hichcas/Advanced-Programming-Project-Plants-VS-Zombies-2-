@@ -46,7 +46,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     private float tickAccumulator = 0f;
 
     private final HashMap<Integer, Zombie> sunZombiesByRow = new HashMap<>();
-    private final SunManager sunManager = new SunManager();
+    protected final SunManager sunManager = new SunManager();
 
     private IZombieGame game;
     private Texture background;
@@ -77,7 +77,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
 
     public void initializeBoard() {
         if (map == null || game == null) return;
-        if (gameStatus != null) {
+        if (gameStatus != null && !(this instanceof IZombieLocalVersusEngine)) {
             gameStatus.setSunflower(game.getSun());
         }
         seedRandomPlants();
@@ -162,7 +162,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     @Override
     public void update(float delta) {
         hudAnimTime += delta;
-        if (game != null && gameStatus != null) {
+        if (game != null && gameStatus != null && !(this instanceof IZombieLocalVersusEngine)) {
             gameStatus.setSunflower(game.getSun());
         }
         if (gameOverTriggered) {
@@ -471,7 +471,7 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
     public void addSun(int amount) {
         if (game != null) {
             game.addSun(amount);
-            if (gameStatus != null) {
+            if (gameStatus != null && !(this instanceof IZombieLocalVersusEngine)) {
                 gameStatus.setSunflower(game.getSun());
             }
         }
