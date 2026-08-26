@@ -35,6 +35,12 @@ public class IZombieInputProcessor extends InputAdapter {
 
     public String getSelectedAlias() { return selectedAlias; }
 
+    public void checkZombieSunCollect() {
+        if (engine instanceof IZombieLocalVersusEngine versusEngine) {
+            versusEngine.collectZombieSunAtTile(selectedRow, selectedCol);
+        }
+    }
+
     @Override
     public boolean keyDown(int keycode) {
         if (engine == null || engine.getGame() == null) return false;
@@ -68,39 +74,28 @@ public class IZombieInputProcessor extends InputAdapter {
         // Keys W / UP: Move target row up
         if (keycode == com.badlogic.gdx.Input.Keys.W || keycode == com.badlogic.gdx.Input.Keys.UP) {
             selectedRow = Math.max(0, selectedRow - 1);
-            System.out.println("[IZombie] Target row: " + selectedRow);
+            checkZombieSunCollect();
             return true;
         }
 
         // Keys S / DOWN: Move target row down
         if (keycode == com.badlogic.gdx.Input.Keys.S || keycode == com.badlogic.gdx.Input.Keys.DOWN) {
             selectedRow = Math.min(engine.getGame().getRows() - 1, selectedRow + 1);
-            System.out.println("[IZombie] Target row: " + selectedRow);
+            checkZombieSunCollect();
             return true;
         }
 
-        // Keys A / LEFT: Move target col left
+        // Keys A / LEFT: Move target col left (allows roaming whole lawn for sun collection)
         if (keycode == com.badlogic.gdx.Input.Keys.A || keycode == com.badlogic.gdx.Input.Keys.LEFT) {
-            if (engine instanceof IZombieMultiplayerGameEngine multiEngine && "PLANT".equalsIgnoreCase(multiEngine.getMyRole())) {
-                selectedCol = Math.max(0, selectedCol - 1);
-            } else {
-                int minZombieCol = engine.getGame().getRedLineCol() + 1;
-                selectedCol = Math.max(minZombieCol, selectedCol - 1);
-            }
-            System.out.println("[IZombie] Target col: " + selectedCol);
+            selectedCol = Math.max(0, selectedCol - 1);
+            checkZombieSunCollect();
             return true;
         }
 
         // Keys D / RIGHT: Move target col right
         if (keycode == com.badlogic.gdx.Input.Keys.D || keycode == com.badlogic.gdx.Input.Keys.RIGHT) {
-            if (engine instanceof IZombieMultiplayerGameEngine multiEngine && "PLANT".equalsIgnoreCase(multiEngine.getMyRole())) {
-                selectedCol = Math.min(engine.getGame().getRedLineCol() - 1, selectedCol + 1);
-            } else {
-                int maxZombieCol = engine.getGame().getCols() - 1;
-                int minZombieCol = engine.getGame().getRedLineCol() + 1;
-                selectedCol = Math.min(maxZombieCol, Math.max(minZombieCol, selectedCol + 1));
-            }
-            System.out.println("[IZombie] Target col: " + selectedCol);
+            selectedCol = Math.min(engine.getGame().getCols() - 1, selectedCol + 1);
+            checkZombieSunCollect();
             return true;
         }
 
@@ -136,7 +131,37 @@ public class IZombieInputProcessor extends InputAdapter {
 
         Vector3 world = camera.unproject(new Vector3(screenX, screenY, 0));
 
-        // 1. Plant Player Interaction:
+        // 1. Plant Player Interaction (Local Versus or Multiplayer Plant Player):
+        if (engine instanceof IZombieLocalVersusEngine versusEngine) {
+            var packet = versusEngine.getPlantBar().getPacketAt(world.x, world.y);
+            if (packet != null) {
+                com.PVZ.model.enums.PlantType pt = packet.getPlantType();
+                if (versusEngine.getSelectedPlantType() == pt) {
+                    versusEngine.setSelectedPlantType(null);
+                } else {
+                    versusEngine.setSelectedPlantType(pt);
+                }
+                return true;
+            }
+
+            if (engine.getMap() != null && versusEngine.getSelectedPlantType() != null) {
+                Map map = engine.getMap();
+                if (world.x >= map.getStartX() && world.x < map.getStartX() + map.getTotalWidth()
+                    && world.y <= map.getStartY() && world.y > map.getStartY() - map.getTotalHeight()) {
+                    int row = map.worldToRow(world.y);
+                    int col = map.worldToCol(world.x);
+                    if (map.isWithinBounds(row, col) && col < engine.getGame().getRedLineCol()) {
+                        boolean success = versusEngine.plantByPlayer(versusEngine.getSelectedPlantType(), row, col);
+                        if (success) {
+                            versusEngine.setSelectedPlantType(null);
+                        }
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         if (engine instanceof IZombieMultiplayerGameEngine multiEngine && "PLANT".equalsIgnoreCase(multiEngine.getMyRole())) {
             var packet = multiEngine.getPlantBar().getPacketAt(world.x, world.y);
             if (packet != null) {

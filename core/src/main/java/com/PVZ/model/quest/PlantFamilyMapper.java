@@ -13,6 +13,10 @@ public class PlantFamilyMapper {
     private static final Map<PlantType, PlantFamily> MINT_OVERRIDES = Map.ofEntries();
 
     public static PlantFamily getFamily(PlantType plantType) {
+        if (plantType == null) {
+            return PlantFamily.GENERAL;
+        }
+
         PlantFamily mintFamily = getMintFamily(plantType);
         if (mintFamily != null) return mintFamily;
 
@@ -23,9 +27,10 @@ public class PlantFamilyMapper {
         if (def == null) return PlantFamily.GENERAL;
 
         PlantCategory category = def.getCategoryEnum();
-        boolean isShroom = def.getTagEnums().contains(PlantTag.SHROOM);
+        boolean isShroom = def.getTagEnums() != null && def.getTagEnums().contains(PlantTag.SHROOM);
 
         if (isShroom) return PlantFamily.MUSHROOM;
+        if (category == null) return PlantFamily.GENERAL;
 
         if (category == PlantCategory.EXPLOSIVE) return PlantFamily.EXPLOSIVE;
         if (category == PlantCategory.SUN_PRODUCER) return PlantFamily.SUN_PRODUCER;
@@ -65,6 +70,7 @@ public class PlantFamilyMapper {
     }
 
     private static PlantFamily getMintFamily(PlantType plantType) {
+        if (plantType == null) return null;
         return switch (plantType) {
             case ENLIGHTEN_MINT -> PlantFamily.ENLIGHTEN_MINT;
             case APPEASE_MINT -> PlantFamily.APPEASE_MINT;
