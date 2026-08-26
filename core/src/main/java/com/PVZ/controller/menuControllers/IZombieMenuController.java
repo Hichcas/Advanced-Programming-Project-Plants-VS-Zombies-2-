@@ -1,6 +1,7 @@
 package com.PVZ.controller.menuControllers;
 
 import com.PVZ.model.game.IZombieGameEngine;
+import com.PVZ.model.game.IZombieLocalVersusEngine;
 import com.PVZ.model.game.Map;
 import com.PVZ.model.minigame.izombie.IZombieGame;
 import com.PVZ.model.minigame.izombie.IZombieLevelDefinition;
@@ -45,6 +46,10 @@ public class IZombieMenuController {
     private OutputDTO handleCheatAddSuns(int amount) {
         if (currentGame == null || currentEngine == null) {
             return new OutputDTO(false, "No active I, Zombie game.");
+        }
+        if (currentEngine instanceof IZombieLocalVersusEngine versusEngine) {
+            versusEngine.addPlantSun(amount);
+            return new OutputDTO(true, "Added " + amount + " Plant Sun. Total: " + versusEngine.getPlantSun());
         }
         currentEngine.addSun(amount);
         return new OutputDTO(true, "Added " + amount + " suns. Total sun: " + currentGame.getSun());

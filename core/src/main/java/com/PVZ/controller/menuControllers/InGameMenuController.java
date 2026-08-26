@@ -47,7 +47,16 @@ public class InGameMenuController {
             case ADVANCE_TIME -> handleAdvanceTime(dto, engine);
             case COLLECT_SUN -> handleCollectSun(dto, engine);
             case SHOW_SUN_AMOUNT -> showSunAmount(engine);
-            case CHEAT_ADD_SUNS -> handleCheatAddSuns(dto, engine);
+            case CHEAT_ADD_PLANT_SUN, CHEAT_ADD_SUNS -> handleCheatAddSuns(dto, engine);
+            case CHEAT_ADD_ZOMBIE_SUN -> {
+                GameEngine ge = AppStatus.getGameEngine();
+                if (ge instanceof ZombieEngine ze) {
+                    int amount = dto.getAmount() == null ? 0 : dto.getAmount();
+                    ze.addSun(amount);
+                    yield new OutputDTO(true, "Added " + amount + " Zombie Sun.");
+                }
+                yield new OutputDTO(false, "Zombie sun is only used in I, Zombie / Versus mode.");
+            }
             case CHEAT_REMOVE_COOLDOWN -> handleCheatRemoveCooldown(engine);
             case CHEAT_ADD_PLANT_FOOD -> handleCheatAddPlantFood(engine);
             case CHEAT_SPAWN_ZOMBIE -> cheatSpawnZombie(dto);
@@ -108,6 +117,11 @@ public class InGameMenuController {
             return new OutputDTO(true, engine.addSunsCheat(dto.getAmount()));
         }
         GameEngine ge = AppStatus.getGameEngine();
+        if (ge instanceof com.PVZ.model.game.IZombieLocalVersusEngine versusEngine) {
+            int amount = dto.getAmount() == null ? 0 : dto.getAmount();
+            versusEngine.addPlantSun(amount);
+            return new OutputDTO(true, "Added " + amount + " Plant Sun. Total: " + versusEngine.getPlantSun());
+        }
         if (ge instanceof ZombieEngine ze) {
             int amount = dto.getAmount() == null ? 0 : dto.getAmount();
             ze.addSun(amount);
