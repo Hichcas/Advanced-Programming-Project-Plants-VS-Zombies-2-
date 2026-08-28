@@ -84,6 +84,7 @@ public class GameScreen extends BaseScreen {
     private boolean npcDialogueStarted = false;
 
     private OnlineMatchResultOverlay onlineMatchResultOverlay;
+    private OnlineMatchResultOverlay localMatchResultOverlay;
     private boolean onlineMatchExitRequested = false;
     private DrawOfferOverlay drawOfferOverlay;
 
@@ -237,6 +238,9 @@ public class GameScreen extends BaseScreen {
         onlineMatchResultOverlay = new OnlineMatchResultOverlay(this::exitOnlineMatch);
         stage.addActor(onlineMatchResultOverlay);
 
+        localMatchResultOverlay = new OnlineMatchResultOverlay(this::exitLocalVersusMatch);
+        stage.addActor(localMatchResultOverlay);
+
         if (gameEngine instanceof IZombieMultiplayerGameEngine) {
             drawOfferOverlay = new DrawOfferOverlay(accept -> {
                 if (gameEngine instanceof IZombieMultiplayerGameEngine onlineEngine) {
@@ -251,6 +255,21 @@ public class GameScreen extends BaseScreen {
         onlineMatchExitRequested = true;
         if (onlineMatchResultOverlay != null) {
             onlineMatchResultOverlay.hide();
+        }
+        AppStatus.isMultiplayerMatch = false;
+        AppStatus.multiplayerRole = null;
+        AppStatus.multiplayerOpponent = null;
+        AppStatus.multiplayerRoomId = null;
+        AppStatus.multiplayerLevelId = 1;
+        AppStatus.SELECTED_PLANTS.clear();
+        AppStatus.SELECTED_ZOMBIES.clear();
+
+        ScreenManager.getInstance().performTransition(MainMenuScreen::new);
+    }
+
+    private void exitLocalVersusMatch() {
+        if (localMatchResultOverlay != null) {
+            localMatchResultOverlay.hide();
         }
         AppStatus.isMultiplayerMatch = false;
         AppStatus.multiplayerRole = null;
@@ -377,6 +396,9 @@ public class GameScreen extends BaseScreen {
         if (AppStatus.isMultiplayerMatch) {
             return onlineMatchResultOverlay != null && onlineMatchResultOverlay.isShowing()
                 || drawOfferOverlay != null && drawOfferOverlay.isShowing();
+        }
+        if (AppStatus.getGameEngine() instanceof IZombieLocalVersusEngine) {
+            return localMatchResultOverlay != null && localMatchResultOverlay.isShowing();
         }
         return (levelStartOverlay != null && levelStartOverlay.isShowing())
             || (introStarted && !introFinished)
@@ -702,6 +724,9 @@ public class GameScreen extends BaseScreen {
         multiplexer.addProcessor(new com.badlogic.gdx.InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
+                if (isSimulationFrozen()) {
+                    return false;
+                }
                 if (keycode == com.badlogic.gdx.Input.Keys.F) {
                     GameEngine active = AppStatus.getGameEngine();
                     if (active instanceof RegularGameEngine reg) {
@@ -941,6 +966,18 @@ public class GameScreen extends BaseScreen {
     }
 
     private GameOverState updateGameOverState(GameEngine activeEngine) {
+        if (activeEngine instanceof IZombieLocalVersusEngine versusEngine) {
+            if (!versusEngine.isMatchFinished()) {
+                localMatchResultOverlay.hide();
+            } else if (!localMatchResultOverlay.isShowing()) {
+                localMatchResultOverlay.showResult(
+                    versusEngine.isWonMatch(),
+                    versusEngine.getMatchResultText()
+                );
+            }
+            return new GameOverState(false, false, false);
+        }
+
         if (activeEngine instanceof IZombieMultiplayerGameEngine onlineEngine) {
             if (!onlineMatchExitRequested && onlineEngine.isMatchFinished() && !onlineMatchResultOverlay.isShowing()) {
                 if (onlineEngine.isDrawResult()) {
