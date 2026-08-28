@@ -1,12 +1,12 @@
 {
   "profile" : {
-    "username" : "suspended",
+    "username" : "fgfdgdfg",
     "nickname" : "ImBack1234#!",
-    "email" : "abc@fgg.fgf",
+    "email" : "fgfdg@gfdgd.fg",
     "gender" : "male",
     "passwordHash" : "ed3d62c24c278bb95cced1e9dd829715d18f59d463256b33d8d8412abb71b6ea",
     "securityQuestion" : "What is your favorite color?",
-    "securityAnswerHash" : "380f3998e3852c1943f5ee98703af4f89fa99353943840b9a31a2bf6949ee0de"
+    "securityAnswerHash" : "0dd654989d6ccf1eb083cad80bab71c45900251334bece4a9bc9578b849ec63b"
   },
   "userStats" : {
     "gamesPlayed" : 0,
@@ -21,16 +21,16 @@
   "progressState" : {
     "completedLevels" : {
       "ANCIENT_EGYPT" : 1,
-      "BIG_WAVE_BEACH" : -1,
+      "DARK_AGES" : -1,
       "FROSTBITE_CAVES" : -1,
-      "DARK_AGES" : -1
+      "BIG_WAVE_BEACH" : -1
     },
     "minigameClearedCounts" : {
-      "WALLNUT_BOWLING" : 0,
+      "BEGHOULED" : 0,
       "VASEBREAKER" : 0,
       "ZOMBOTANY" : 0,
       "I_ZOMBIE" : 0,
-      "BEGHOULED" : 0
+      "WALLNUT_BOWLING" : 0
     }
   },
   "collectionState" : {
@@ -46,85 +46,85 @@
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
-      "readyForPlanting" : true,
-      "empty" : true
+      "empty" : true,
+      "readyForPlanting" : true
     }, {
       "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
-      "readyForPlanting" : true,
-      "empty" : true
+      "empty" : true,
+      "readyForPlanting" : true
     }, {
       "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
-      "readyForPlanting" : true,
-      "empty" : true
+      "empty" : true,
+      "readyForPlanting" : true
     }, {
       "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
-      "readyForPlanting" : true,
-      "empty" : true
+      "empty" : true,
+      "readyForPlanting" : true
     } ], [ {
       "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : true
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : true
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : true
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : true
+      "empty" : true,
+      "readyForPlanting" : false
     } ], [ {
       "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : true
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : true
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : true
+      "empty" : true,
+      "readyForPlanting" : false
     }, {
       "unlocked" : false,
       "plantType" : null,
       "plantedTimeMillis" : 0,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : true
+      "empty" : true,
+      "readyForPlanting" : false
     } ] ],
     "numberOfUnlockedPots" : 4,
     "numberOfLockedPots" : 8
@@ -159,16 +159,16 @@
         "claimed" : false,
         "reward" : {
           "type" : "SEED_PACKETS",
-          "amount" : 15,
+          "amount" : 20,
           "targetPlant" : null
         },
         "parameters" : {
-          "n" : 5
+          "n" : 0
         },
+        "active" : true,
         "runtimeState" : { },
-        "formattedDescription" : "Win without losing more than 5 plants",
-        "formattedTitle" : "Economic Herbivore",
-        "active" : true
+        "formattedDescription" : "Win without losing more than 0 plants",
+        "formattedTitle" : "Economic Herbivore"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -186,10 +186,10 @@
           "targetPlant" : null
         },
         "parameters" : { },
+        "active" : true,
         "runtimeState" : { },
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
-        "formattedTitle" : "Speed Run",
-        "active" : true
+        "formattedTitle" : "Speed Run"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -207,10 +207,10 @@
           "targetPlant" : null
         },
         "parameters" : { },
+        "active" : true,
         "runtimeState" : { },
         "formattedDescription" : "End a level with exactly 0 sun",
-        "formattedTitle" : "Master of Defense",
-        "active" : true
+        "formattedTitle" : "Master of Defense"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -228,10 +228,10 @@
           "targetPlant" : null
         },
         "parameters" : { },
+        "active" : true,
         "runtimeState" : { },
         "formattedDescription" : "Win a day level using only mushrooms",
-        "formattedTitle" : "Day or Night",
-        "active" : true
+        "formattedTitle" : "Day or Night"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -251,10 +251,10 @@
         "parameters" : {
           "n" : 40
         },
+        "active" : true,
         "runtimeState" : { },
         "formattedDescription" : "Kill at least 40 zombies with lawnmowers",
-        "formattedTitle" : "Lawnmower Time",
-        "active" : true
+        "formattedTitle" : "Lawnmower Time"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -274,17 +274,17 @@
         "parameters" : {
           "chapter" : "ANCIENT_EGYPT"
         },
+        "active" : true,
         "runtimeState" : { },
         "formattedDescription" : "Defeat 50 zombies from Ancient Egypt",
-        "formattedTitle" : "Chapter Hunter",
-        "active" : true
+        "formattedTitle" : "Chapter Hunter"
       } ],
       "lastDailyRefresh" : null,
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 1,
       "isDayLevel" : true,
-      "timeUntilReset" : "0h 43m"
+      "timeUntilReset" : "12h 30m"
     }
   }
 }
