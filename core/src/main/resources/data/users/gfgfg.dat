@@ -1,12 +1,12 @@
 {
   "profile" : {
-    "username" : "suspended",
+    "username" : "gfgfg",
     "nickname" : "ImBack1234#!",
-    "email" : "abc@fgg.fgf",
+    "email" : "fgfg@gfgf.fgfg",
     "gender" : "male",
     "passwordHash" : "ed3d62c24c278bb95cced1e9dd829715d18f59d463256b33d8d8412abb71b6ea",
     "securityQuestion" : "What is your favorite color?",
-    "securityAnswerHash" : "380f3998e3852c1943f5ee98703af4f89fa99353943840b9a31a2bf6949ee0de"
+    "securityAnswerHash" : "cd0aa9856147b6c5b4ff2b7dfee5da20aa38253099ef1b4a64aced233c9afe29"
   },
   "userStats" : {
     "gamesPlayed" : 0,
@@ -159,14 +159,14 @@
         "claimed" : false,
         "reward" : {
           "type" : "SEED_PACKETS",
-          "amount" : 15,
+          "amount" : 16,
           "targetPlant" : null
         },
         "parameters" : {
-          "n" : 5
+          "n" : 4
         },
         "runtimeState" : { },
-        "formattedDescription" : "Win without losing more than 5 plants",
+        "formattedDescription" : "Win without losing more than 4 plants",
         "formattedTitle" : "Economic Herbivore",
         "active" : true
       }, {
@@ -239,20 +239,20 @@
         "type" : "EPIC",
         "priority" : "MEDIUM",
         "conditionKey" : "lawnmower_kill",
-        "targetCount" : 40,
+        "targetCount" : 50,
         "currentCount" : 0,
         "completed" : false,
         "claimed" : false,
         "reward" : {
           "type" : "DIAMONDS",
-          "amount" : 40,
+          "amount" : 50,
           "targetPlant" : null
         },
         "parameters" : {
-          "n" : 40
+          "n" : 50
         },
         "runtimeState" : { },
-        "formattedDescription" : "Kill at least 40 zombies with lawnmowers",
+        "formattedDescription" : "Kill at least 50 zombies with lawnmowers",
         "formattedTitle" : "Lawnmower Time",
         "active" : true
       }, {
@@ -284,7 +284,7 @@
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 1,
       "isDayLevel" : true,
-      "timeUntilReset" : "0h 43m"
+      "timeUntilReset" : "0h 42m"
     }
   }
 }
