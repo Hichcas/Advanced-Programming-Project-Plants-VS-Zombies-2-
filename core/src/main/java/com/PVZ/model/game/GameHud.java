@@ -46,6 +46,8 @@ public class GameHud extends Group {
     private int sunflowerCount = 0;
     private int plantFoodCount = 0;
     private int zombieWavePercent = 0;
+    private boolean versusMode = false;
+    private float matchTimeRemaining = -1f;
     private List<Float> waveMarkerRatios = List.of();
     private boolean conveyorBeltMode = false;
     private String beltLine = null;
@@ -100,6 +102,14 @@ public class GameHud extends Group {
         }
         sunflowerCount = engine.gameStatus.getSunflower();
         zombieWavePercent = engine.gameStatus.getRemainingZombieWaveInPercent();
+
+        if (engine instanceof IZombieLocalVersusEngine versusEngine) {
+            versusMode = true;
+            matchTimeRemaining = versusEngine.getMatchTimeRemaining();
+        } else {
+            versusMode = false;
+            matchTimeRemaining = -1f;
+        }
 
         if (engine instanceof RegularGameEngine regularEngine) {
             plantFoodCount = regularEngine.getPlantFoodManager().getPlantFoodCount();
@@ -183,7 +193,11 @@ public class GameHud extends Group {
         float plantFoodPanelY = conveyorBeltMode ? PANEL_TOP_MARGIN : sunPanelY - PANEL_HEIGHT - PANEL_GAP;
         drawCounterPanel(batch, parentAlpha, PLANTFOOD_PAM, plantFoodCount, sunPanelX, plantFoodPanelY, Color.LIME);
 
-        drawWaveBar(batch, parentAlpha, top);
+        if (versusMode) {
+            drawMatchTimer(batch, parentAlpha, top);
+        } else {
+            drawWaveBar(batch, parentAlpha, top);
+        }
 
         float nextLineY = top - PANEL_HEIGHT - PANEL_HEIGHT - PANEL_GAP * 2 - 30f;
 
@@ -274,6 +288,37 @@ public class GameHud extends Group {
         String label = "Zombies: " + zombieWavePercent + "%";
         GlyphLayout layout = new GlyphLayout(font, label);
         font.draw(batch, label, barX + barWidth / 2f - layout.width / 2f, barY + WAVEBAR_HEIGHT / 2f + layout.height / 2f);
+        batch.setColor(1f, 1f, 1f, parentAlpha);
+    }
+
+    private void drawMatchTimer(Batch batch, float parentAlpha, float top) {
+        int totalSeconds = (int) Math.ceil(Math.max(0f, matchTimeRemaining));
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+        String timeText = String.format("%d:%02d", minutes, seconds);
+
+        boolean urgent = matchTimeRemaining <= 10f;
+        BitmapFont timerFont = bigFont;
+        Color timerColor = urgent ? Color.SCARLET : Color.GOLD;
+
+        float boxW = 220f;
+        float boxH = WAVEBAR_HEIGHT + 18f;
+        float boxX = BaseScreen.VIRTUAL_WIDTH / 2f - boxW / 2f;
+        float boxY = 1270f;
+        if (getFallbackSquare() != null) {
+            batch.setColor(0f, 0f, 0f, 0.55f * parentAlpha);
+            batch.draw(getFallbackSquare(), boxX, boxY, boxW, boxH);
+            batch.setColor(timerColor.r, timerColor.g, timerColor.b, 0.9f * parentAlpha);
+            batch.draw(getFallbackSquare(), boxX, boxY, boxW, 2f);
+            batch.draw(getFallbackSquare(), boxX, boxY + boxH - 2f, boxW, 2f);
+            batch.setColor(1f, 1f, 1f, parentAlpha);
+        }
+
+        timerFont.setColor(timerColor);
+        GlyphLayout layout = new GlyphLayout(timerFont, timeText);
+        float textX = BaseScreen.VIRTUAL_WIDTH / 2f - layout.width / 2f;
+        float textY = boxY + boxH / 2f + layout.height / 2f;
+        timerFont.draw(batch, timeText, textX, textY);
         batch.setColor(1f, 1f, 1f, parentAlpha);
     }
 

@@ -35,6 +35,10 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
 
     private boolean matchFinished = false;
     private String matchResultText = "";
+    private boolean plantsWon = false;
+
+    private static final float MATCH_DURATION = 180f; // 3 minutes
+    private float matchTimeRemaining = MATCH_DURATION;
 
     private static com.badlogic.gdx.graphics.g2d.NinePatch zombiePanelBackground;
 
@@ -156,12 +160,18 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
     }
 
     private float skySunTimer = 0f;
-    private float zombiePassiveSunTimer = 0f;
 
     @Override
     public void update(float delta) {
-        super.update(delta);
         animTime += delta;
+
+        // Once the match is decided, freeze the whole simulation so no plants,
+        // zombies or sun can move/change behind the result panel.
+        if (matchFinished) {
+            return;
+        }
+
+        super.update(delta);
 
         // Keep UI Sun count synced with plantSun
         if (gameStatus != null) {
@@ -183,20 +193,50 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
             collectZombieSunAtTile(izInp.getSelectedRow(), izInp.getSelectedCol());
         }
 
-        // 2. Passive Sun generation for Zombie Player (Keyboard user)
-        zombiePassiveSunTimer += delta;
-        if (zombiePassiveSunTimer >= 5.0f && getGame() != null) {
-            zombiePassiveSunTimer = 0f;
-            getGame().addSun(25);
-        }
-
         // Check Victory / Loss
         if (!matchFinished && getGame() != null) {
             if (getGame().getBrainsRemaining() <= 0) {
+                // Logical zombie win condition: every brain on the lawn is eaten.
                 matchFinished = true;
-                matchResultText = "ALL BRAINS EATEN - ZOMBIE WINS!";
+                plantsWon = false;
+                matchResultText = "ALL BRAINS EATEN - ZOMBIE PLAYER WINS!";
+            } else {
+                // Countdown timer: when it hits zero, the match ends.
+                // Plants win by surviving (at least one brain left); otherwise Zombie wins.
+                matchTimeRemaining -= delta;
+                if (matchTimeRemaining <= 0f) {
+                    matchTimeRemaining = 0f;
+                    matchFinished = true;
+                    plantsWon = true;
+                    matchResultText = "TIME UP - PLANTS SURVIVED! PLAYER 1 WINS!";
+                }
             }
         }
+    }
+
+    public boolean isMatchFinished() {
+        return matchFinished;
+    }
+
+    /** True when the Plants (Player 1) side won the match. */
+    public boolean isWonMatch() {
+        return plantsWon;
+    }
+
+    public boolean isDrawResult() {
+        return false;
+    }
+
+    public String getMatchResultText() {
+        return matchResultText;
+    }
+
+    public float getMatchTimeRemaining() {
+        return matchTimeRemaining;
+    }
+
+    public float getMatchDuration() {
+        return MATCH_DURATION;
     }
 
     public int collectZombieSunAtTile(int row, int col) {
@@ -370,17 +410,6 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
         }
         smallFont.setColor(Color.WHITE);
         smallFont.draw(batch, "P1 [MOUSE]: Left Bar to Plant  |  P2 [KEYBOARD]: 1-8 / WASD / Space", bannerX + 30f, bannerY + 30f);
-
-        // 5. Match Result Overlay
-        if (matchFinished) {
-            if (hudPixel != null) {
-                batch.setColor(0f, 0f, 0f, 0.75f);
-                batch.draw(hudPixel, 0, 0, 2560f, 1440f);
-                batch.setColor(Color.WHITE);
-            }
-            headerFont.setColor(Color.YELLOW);
-            headerFont.draw(batch, matchResultText, 2560f / 2f - 250f, 1440f / 2f + 20f);
-        }
 
         batch.end();
     }
