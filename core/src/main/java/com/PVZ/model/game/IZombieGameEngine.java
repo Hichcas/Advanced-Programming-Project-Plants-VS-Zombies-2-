@@ -176,7 +176,9 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
             tickAccumulator -= TICK_SECONDS;
             advanceOneTick((float) TICK_SECONDS);
         }
-        checkLoss();
+        if (!(this instanceof IZombieLocalVersusEngine)) {
+            checkLoss();
+        }
     }
 
     private void advanceOneTick(float delta) {
@@ -283,7 +285,8 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
             if (z.getX() <= brainLineX) {
                 game.eatBrain(row);
                 zombieEngine.kill(z);
-                if (!gameOverTriggered && !gameStatus.isGameOver() && game.isWon()) {
+                if (!(this instanceof IZombieLocalVersusEngine)
+                    && !gameOverTriggered && !gameStatus.isGameOver() && game.isWon()) {
                     if (AppStatus.currentUser != null) {
                         if (AppStatus.currentUser.progressState != null) {
                             AppStatus.currentUser.progressState.clearMinigameStage(MinigameEnum.I_ZOMBIE);

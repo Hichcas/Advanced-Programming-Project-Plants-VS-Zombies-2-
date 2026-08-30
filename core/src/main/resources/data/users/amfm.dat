@@ -34,8 +34,8 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "EXPLODE_O_NUT", "CITRON", "SWEET_POTATO", "WINTER_MELON", "WALL_NUT", "ENCHANT_MINT", "ARMA_MINT", "TWIN_SUNFLOWER", "CAT_TAIL_MINT", "PUMPKIN", "SUN_BEAN", "PEA_POD", "SEA_SHROOM", "GARLIC", "WASABI_WHIP", "ICE_SHROOM", "ELECTRIC_BLUEBERRY", "GRAVE_BUSTER", "HYPNO_SHROOM", "REPEATER", "TALL_NUT", "SUNFLOWER", "SUN_SHROOM", "TORCHWOOD", "PRIMAL_SUNFLOWER", "JALAPENO", "ENLIGHTEN_MINT", "KIWIBEAST", "POTATO_MINE", "BOMBARD_MINT", "HOT_POTATO", "THREEPEATER", "CABBAGE_PULT", "CACTUS", "GIANT_WALLNUT", "ENDURIAN", "GRAPESHOT", "BONK_CHOY", "PUFF_SHROOM", "ENFORCE_MINT", "PEPPER_PULT", "LILY_PAD", "KERNEL_PULT", "ICEBERG_LETTUCE", "CAULIPOWER", "PRIMAL_POTATO_MINE", "TANGLE_KELP", "GOLD_BLOOM", "WALLNUT_BOWLING", "GOO_PEASHOOTER", "PHAT_BEET", "FUME_SHROOM", "SPLIT_PEA", "REINFORCE_MINT", "PIERCE_MINT", "MAGNET_SHROOM", "CHOMPER", "STARFRUIT", "BOWLING_BULB", "DOOM_SHROOM", "ROTOBAGA", "APPEASE_MINT", "MELON_PULT", "FIRE_PEASHOOTER", "IMITATER", "SNOW_PEA", "PEASHOOTER", "CHERRY_BOMB", "SQUASH", "CAT_TAIL", "MEGA_GATLING_PEA" ],
-    "seenZombies" : [ "MUMMY_ARMOR1", "IMP_ICEAGE", "IMP_DRAGON", "DARK_ARMOR4", "EXPLORER", "WEASEL_HOARDER", "DARK_KING", "IMP_DARK", "GARGANTUAR_BASIC", "ZOMBOTANY_PEASHOOTER", "ZOMBOTANY_JALAPENO", "PROSPECTOR", "ICEAGE_ARMOR2", "DARK_ARMOR1", "MUMMY_DEFAULT", "WIZARD", "DARK_DEFAULT", "MUMMY_ARMOR4", "IMP_TUTORIAL", "GARGANTUAR_BEACH", "LOSTCITY_JANE", "ARCADE", "BEACH_SURFER", "ICEAGE_ARMOR3", "BEACH_SNORKEL", "TUTORIAL_ARMOR1", "TUTORIAL_DEFAULT", "ICEAGE_DEFAULT", "DODO", "DARK_ARMOR2", "CAMEL", "TROGLOBITE", "PIANO", "IMP_BEACH", "NEWSPAPER", "GARGANTUAR_EGYPT", "IMP_EGYPT", "BEACH_FISHERMAN", "CRYSTAL_SKULL", "GARGANTUAR_ICEAGE", "ICEAGE_ARMOR1", "TUTORIAL_ARMOR4", "ZOMBOTANY_SQUASH", "TOMB_RAISER", "BEACH_ARMOR2", "TUTORIAL_FLAG", "RA", "GARGANTUAR_DARK", "PHARAOH", "MUMMY_ARMOR2", "TUTORIAL_ARMOR2", "FOOTBALL", "ICEAGE_HUNTER", "BEACH_ARMOR1", "BEACH_FAST_SWIMMER", "BEACH_OCTOPUS", "BEACH_DEFAULT", "DARK_ARMOR3", "DARK_JUGGLER", "ALLSTAR", "ZOMBOSS_EGYPT" ],
+    "unlockedPlants" : [ "PIERCE_MINT", "APPEASE_MINT", "TANGLE_KELP", "CACTUS", "IMITATER", "ELECTRIC_BLUEBERRY", "PHAT_BEET", "GRAPESHOT", "PUFF_SHROOM", "JALAPENO", "SWEET_POTATO", "DOOM_SHROOM", "WALL_NUT", "HYPNO_SHROOM", "MEGA_GATLING_PEA", "TALL_NUT", "POTATO_MINE", "ARMA_MINT", "GARLIC", "MELON_PULT", "GRAVE_BUSTER", "PEPPER_PULT", "WINTER_MELON", "PRIMAL_SUNFLOWER", "GIANT_WALLNUT", "SQUASH", "SUNFLOWER", "GOO_PEASHOOTER", "LILY_PAD", "PEA_POD", "KIWIBEAST", "TWIN_SUNFLOWER", "KERNEL_PULT", "ENDURIAN", "GOLD_BLOOM", "SNOW_PEA", "FIRE_PEASHOOTER", "CITRON", "BOMBARD_MINT", "CHOMPER", "STARFRUIT", "REINFORCE_MINT", "SUN_SHROOM", "PEASHOOTER", "THREEPEATER", "CAT_TAIL_MINT", "HOT_POTATO", "FUME_SHROOM", "ENFORCE_MINT", "CAT_TAIL", "SUN_BEAN", "ENCHANT_MINT", "BOWLING_BULB", "WALLNUT_BOWLING", "SEA_SHROOM", "ROTOBAGA", "MAGNET_SHROOM", "CABBAGE_PULT", "ENLIGHTEN_MINT", "REPEATER", "PRIMAL_POTATO_MINE", "SPLIT_PEA", "BONK_CHOY", "TORCHWOOD", "CAULIPOWER", "ICE_SHROOM", "EXPLODE_O_NUT", "CHERRY_BOMB", "ICEBERG_LETTUCE", "WASABI_WHIP", "PUMPKIN" ],
+    "seenZombies" : [ "TUTORIAL_ARMOR4", "BEACH_FISHERMAN", "DARK_DEFAULT", "LOSTCITY_JANE", "IMP_DRAGON", "PIANO", "GARGANTUAR_BEACH", "ICEAGE_HUNTER", "IMP_EGYPT", "DARK_ARMOR2", "ALLSTAR", "RA", "WIZARD", "GARGANTUAR_EGYPT", "IMP_TUTORIAL", "CRYSTAL_SKULL", "ICEAGE_DEFAULT", "IMP_DARK", "ICEAGE_ARMOR1", "ZOMBOTANY_SQUASH", "IMP_BEACH", "ICEAGE_ARMOR3", "MUMMY_ARMOR4", "ZOMBOSS_EGYPT", "BEACH_SNORKEL", "BEACH_ARMOR1", "WEASEL_HOARDER", "ICEAGE_ARMOR2", "GARGANTUAR_DARK", "TUTORIAL_ARMOR1", "MUMMY_ARMOR2", "WEASEL", "MUMMY_DEFAULT", "EXPLORER", "BEACH_ARMOR2", "TOMB_RAISER", "PROSPECTOR", "BEACH_SURFER", "DODO", "CAMEL", "DARK_ARMOR4", "MUMMY_ARMOR1", "TUTORIAL_DEFAULT", "DARK_JUGGLER", "DARK_KING", "ZOMBOTANY_JALAPENO", "FOOTBALL", "ARCADE", "GARGANTUAR_ICEAGE", "BEACH_OCTOPUS", "BEACH_FAST_SWIMMER", "ZOMBOTANY_PEASHOOTER", "IMP_ICEAGE", "DARK_ARMOR3", "DARK_ARMOR1", "GARGANTUAR_BASIC", "NEWSPAPER", "PHARAOH", "BEACH_DEFAULT", "TUTORIAL_FLAG", "TROGLOBITE", "TUTORIAL_ARMOR2" ],
     "seedPackets" : {
       "SUN_SHROOM" : 5,
       "SUNFLOWER" : 20
@@ -789,6 +789,11 @@
       "read" : false,
       "timestamp" : 1787726399196,
       "formattedText" : "New zombie spotted: ZOMBOTANY_JALAPENO!\n2026/08/26  10:09"
+    }, {
+      "text" : "New zombie spotted: WEASEL!",
+      "read" : false,
+      "timestamp" : 1787943489175,
+      "formattedText" : "New zombie spotted: WEASEL!\n2026/08/28  22:28"
     } ]
   },
   "shopDaily" : {
@@ -798,7 +803,7 @@
     "forToday" : false,
     "availableToday" : false
   },
-  "stayLoggedIn" : false,
+  "stayLoggedIn" : true,
   "questState" : {
     "questManager" : {
       "activeQuests" : [ {
@@ -821,9 +826,9 @@
           "n" : 0
         },
         "active" : false,
-        "formattedDescription" : "Win without losing more than 0 plants",
         "runtimeState" : { },
-        "formattedTitle" : "Economic Herbivore"
+        "formattedTitle" : "Economic Herbivore",
+        "formattedDescription" : "Win without losing more than 0 plants"
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -842,9 +847,9 @@
         },
         "parameters" : { },
         "active" : false,
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "runtimeState" : { },
-        "formattedTitle" : "Speed Run"
+        "formattedTitle" : "Speed Run",
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -863,9 +868,9 @@
         },
         "parameters" : { },
         "active" : false,
-        "formattedDescription" : "End a level with exactly 0 sun",
         "runtimeState" : { },
-        "formattedTitle" : "Master of Defense"
+        "formattedTitle" : "Master of Defense",
+        "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -884,9 +889,9 @@
         },
         "parameters" : { },
         "active" : false,
-        "formattedDescription" : "Win a day level using only mushrooms",
         "runtimeState" : { },
-        "formattedTitle" : "Day or Night"
+        "formattedTitle" : "Day or Night",
+        "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -907,9 +912,9 @@
           "n" : 20
         },
         "active" : true,
-        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
         "runtimeState" : { },
-        "formattedTitle" : "Lawnmower Time"
+        "formattedTitle" : "Lawnmower Time",
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -930,9 +935,9 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
         "runtimeState" : { },
-        "formattedTitle" : "Chapter Hunter"
+        "formattedTitle" : "Chapter Hunter",
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
       }, {
         "id" : "daily_kill_family_1787392580510",
         "title" : "Family Slaughter",
@@ -953,12 +958,12 @@
           "family" : "ENLIGHTEN_MINT"
         },
         "active" : true,
-        "formattedDescription" : "Kill zombies using only ENLIGHTEN_MINT plants",
         "runtimeState" : {
           "familyViolated" : true,
           "anyKill" : true
         },
-        "formattedTitle" : "Family Slaughter"
+        "formattedTitle" : "Family Slaughter",
+        "formattedDescription" : "Kill zombies using only ENLIGHTEN_MINT plants"
       }, {
         "id" : "daily_row_empty_1787392580511",
         "title" : "Defenseless Row",
@@ -979,9 +984,9 @@
           "row" : 5
         },
         "active" : true,
-        "formattedDescription" : "Win with row 5 completely empty",
         "runtimeState" : { },
-        "formattedTitle" : "Defenseless Row"
+        "formattedTitle" : "Defenseless Row",
+        "formattedDescription" : "Win with row 5 completely empty"
       }, {
         "id" : "daily_cross_empty_1787392580511",
         "title" : "Defenseless Cross",
@@ -1003,16 +1008,16 @@
           "row" : 2
         },
         "active" : true,
-        "formattedDescription" : "Win with column 8 and row 2 empty",
         "runtimeState" : { },
-        "formattedTitle" : "Defenseless Cross"
+        "formattedTitle" : "Defenseless Cross",
+        "formattedDescription" : "Win with column 8 and row 2 empty"
       } ],
       "lastDailyRefresh" : "2026-08-22",
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "FROSTBITE_CAVES",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "12h 29m"
+      "timeUntilReset" : "1h 31m"
     }
   }
 }
