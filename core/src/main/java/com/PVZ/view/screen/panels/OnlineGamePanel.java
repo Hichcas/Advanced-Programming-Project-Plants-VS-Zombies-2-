@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import pvz.skin.PvzSkin;
 
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 public class OnlineGamePanel extends BasePanel {
 
@@ -81,7 +82,7 @@ public class OnlineGamePanel extends BasePanel {
         Label ipLabel = new Label("Server IP:", labelStyle);
         mainTable.add(ipLabel).center().padBottom(4f).row();
 
-        serverIpField = createField("localhost");
+        serverIpField = createField(loadLastServerIp());
         mainTable.add(serverIpField).width(FIELD_WIDTH).height(BUTTON_HEIGHT).center().row();
 
         MenuButton connectButton = createButton("CONNECT", this::onConnect, greenUp, greenDown);
@@ -124,15 +125,17 @@ public class OnlineGamePanel extends BasePanel {
         addActor(scrollPane);
     }
 
-    private void connectToServer() {
-        try {
-            if (!NetworkSession.isConnected()) {
-                NetworkSession.connect(serverIpField.getText().trim());
-            }
-            setStatus("Connected to server.", Color.GREEN);
-        } catch (IOException e) {
-            setStatus("Could not connect to server: " + e.getMessage(), Color.SALMON);
-            setButtonsEnabled(false);
+    private static final Preferences NET_PREFS =
+           Preferences.userRoot().node("com/PVZ/network");
+    private static final String LAST_SERVER_IP_KEY = "lastServerIp";
+
+    private static String loadLastServerIp() {
+        return NET_PREFS.get(LAST_SERVER_IP_KEY, "localhost");
+    }
+
+    private static void saveLastServerIp(String ip) {
+        if (ip != null && !ip.isBlank()) {
+            NET_PREFS.put(LAST_SERVER_IP_KEY, ip);
         }
     }
 
@@ -263,10 +266,12 @@ public class OnlineGamePanel extends BasePanel {
 
     private void onConnect() {
         try {
+            String ip = serverIpField.getText().trim();
             if (!NetworkSession.isConnected()) {
-                NetworkSession.connect(serverIpField.getText().trim());
+                NetworkSession.connect(ip);
             }
-            setStatus("Connected to server.", Color.GREEN);
+            saveLastServerIp(ip);
+            setStatus("Connected to server: " + ip, Color.GREEN);
             setButtonsEnabled(true);
         } catch (IOException e) {
             setStatus("Could not connect to server: " + e.getMessage(), Color.SALMON);
