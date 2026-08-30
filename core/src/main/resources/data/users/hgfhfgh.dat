@@ -1,0 +1,337 @@
+{
+  "profile" : {
+    "username" : "hgfhfgh",
+    "nickname" : "ghfg",
+    "email" : "hggfh@gfhfg.ghg",
+    "gender" : "male",
+    "passwordHash" : "17c53e24fe0763642bff075edba284b84cc8b2709f877d420f2c41f7c70bf5f8",
+    "securityQuestion" : "What is your favorite color?",
+    "securityAnswerHash" : "cd0aa9856147b6c5b4ff2b7dfee5da20aa38253099ef1b4a64aced233c9afe29"
+  },
+  "userStats" : {
+    "gamesPlayed" : 0,
+    "coins" : 0,
+    "diamonds" : 2,
+    "stagesCompleted" : 0,
+    "highestScore" : 0,
+    "dailyQuestsCompleted" : 0,
+    "nonDailyQuestsCompleted" : 0,
+    "purchasedPlantFood" : 0
+  },
+  "progressState" : {
+    "completedLevels" : {
+      "BIG_WAVE_BEACH" : 99,
+      "ANCIENT_EGYPT" : 99,
+      "FROSTBITE_CAVES" : 99,
+      "DARK_AGES" : 99
+    },
+    "minigameClearedCounts" : {
+      "ZOMBOTANY" : 0,
+      "VASEBREAKER" : 0,
+      "WALLNUT_BOWLING" : 0,
+      "BEGHOULED" : 0,
+      "I_ZOMBIE" : 0
+    }
+  },
+  "collectionState" : {
+    "unlockedPlants" : [ "SUNFLOWER", "PEASHOOTER" ],
+    "seenZombies" : [ "PHARAOH", "DARK_DEFAULT", "DARK_ARMOR2", "DARK_ARMOR3", "CAMEL", "DARK_JUGGLER", "DARK_ARMOR1", "IMP_DARK", "WIZARD" ],
+    "seedPackets" : { },
+    "plantLevels" : { },
+    "greenhouseBoosts" : [ ]
+  },
+  "greenhouseState" : {
+    "pots" : [ [ {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "readyForPlanting" : true,
+      "empty" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "readyForPlanting" : true,
+      "empty" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "readyForPlanting" : true,
+      "empty" : true
+    }, {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "readyForPlanting" : true,
+      "empty" : true
+    } ], [ {
+      "unlocked" : true,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "readyForPlanting" : true,
+      "empty" : true
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "readyForPlanting" : false,
+      "empty" : true
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "readyForPlanting" : false,
+      "empty" : true
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "readyForPlanting" : false,
+      "empty" : true
+    } ], [ {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "readyForPlanting" : false,
+      "empty" : true
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "readyForPlanting" : false,
+      "empty" : true
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "readyForPlanting" : false,
+      "empty" : true
+    }, {
+      "unlocked" : false,
+      "plantType" : null,
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "readyForPlanting" : false,
+      "empty" : true
+    } ] ],
+    "numberOfLockedPots" : 7,
+    "numberOfUnlockedPots" : 5
+  },
+  "appStats" : {
+    "difficultyLevel" : 3,
+    "soundVolume" : 15
+  },
+  "newsState" : {
+    "news" : [ {
+      "text" : "New zombie spotted: CAMEL!",
+      "read" : false,
+      "timestamp" : 1788077230344,
+      "formattedText" : "New zombie spotted: CAMEL!\n2026/08/30  11:37"
+    }, {
+      "text" : "New zombie spotted: DARK_ARMOR1!",
+      "read" : false,
+      "timestamp" : 1788077240720,
+      "formattedText" : "New zombie spotted: DARK_ARMOR1!\n2026/08/30  11:37"
+    }, {
+      "text" : "New zombie spotted: IMP_DARK!",
+      "read" : false,
+      "timestamp" : 1788077243128,
+      "formattedText" : "New zombie spotted: IMP_DARK!\n2026/08/30  11:37"
+    }, {
+      "text" : "New zombie spotted: DARK_DEFAULT!",
+      "read" : false,
+      "timestamp" : 1788077250345,
+      "formattedText" : "New zombie spotted: DARK_DEFAULT!\n2026/08/30  11:37"
+    }, {
+      "text" : "New zombie spotted: PHARAOH!",
+      "read" : false,
+      "timestamp" : 1788077372250,
+      "formattedText" : "New zombie spotted: PHARAOH!\n2026/08/30  11:39"
+    }, {
+      "text" : "New zombie spotted: DARK_ARMOR2!",
+      "read" : false,
+      "timestamp" : 1788077377958,
+      "formattedText" : "New zombie spotted: DARK_ARMOR2!\n2026/08/30  11:39"
+    }, {
+      "text" : "New zombie spotted: WIZARD!",
+      "read" : false,
+      "timestamp" : 1788077379861,
+      "formattedText" : "New zombie spotted: WIZARD!\n2026/08/30  11:39"
+    }, {
+      "text" : "New zombie spotted: DARK_JUGGLER!",
+      "read" : false,
+      "timestamp" : 1788077477366,
+      "formattedText" : "New zombie spotted: DARK_JUGGLER!\n2026/08/30  11:41"
+    }, {
+      "text" : "New zombie spotted: DARK_ARMOR3!",
+      "read" : false,
+      "timestamp" : 1788077547275,
+      "formattedText" : "New zombie spotted: DARK_ARMOR3!\n2026/08/30  11:42"
+    } ]
+  },
+  "shopDaily" : {
+    "offerPlant" : null,
+    "offerDate" : null,
+    "purchased" : false,
+    "forToday" : false,
+    "availableToday" : false
+  },
+  "stayLoggedIn" : false,
+  "questState" : {
+    "questManager" : {
+      "activeQuests" : [ {
+        "id" : "story_economy",
+        "title" : "Economic Herbivore",
+        "descriptionTemplate" : "Win without losing more than {n} plants",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "max_plant_loss",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 17,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "n" : 3
+        },
+        "formattedDescription" : "Win without losing more than 3 plants",
+        "formattedTitle" : "Economic Herbivore",
+        "runtimeState" : { },
+        "active" : true
+      }, {
+        "id" : "story_speed",
+        "title" : "Speed Run",
+        "descriptionTemplate" : "Kill 10 zombies within 30 seconds of the first wave",
+        "type" : "STORY",
+        "priority" : "MEDIUM",
+        "conditionKey" : "speed_kill",
+        "targetCount" : 10,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "COINS",
+          "amount" : 500,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
+        "formattedTitle" : "Speed Run",
+        "runtimeState" : {
+          "waveStartTime" : 1788077214394
+        },
+        "active" : true
+      }, {
+        "id" : "epic_defense",
+        "title" : "Master of Defense",
+        "descriptionTemplate" : "End a level with exactly 0 sun",
+        "type" : "EPIC",
+        "priority" : "CRITICAL",
+        "conditionKey" : "zero_sun_end",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 200,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "formattedDescription" : "End a level with exactly 0 sun",
+        "formattedTitle" : "Master of Defense",
+        "runtimeState" : { },
+        "active" : true
+      }, {
+        "id" : "epic_night_day",
+        "title" : "Day or Night",
+        "descriptionTemplate" : "Win a day level using only mushrooms",
+        "type" : "EPIC",
+        "priority" : "HIGH",
+        "conditionKey" : "day_with_mushrooms",
+        "targetCount" : 0,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 20,
+          "targetPlant" : null
+        },
+        "parameters" : { },
+        "formattedDescription" : "Win a day level using only mushrooms",
+        "formattedTitle" : "Day or Night",
+        "runtimeState" : { },
+        "active" : true
+      }, {
+        "id" : "epic_lawnmower",
+        "title" : "Lawnmower Time",
+        "descriptionTemplate" : "Kill at least {n} zombies with lawnmowers",
+        "type" : "EPIC",
+        "priority" : "MEDIUM",
+        "conditionKey" : "lawnmower_kill",
+        "targetCount" : 10,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "DIAMONDS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "n" : 10
+        },
+        "formattedDescription" : "Kill at least 10 zombies with lawnmowers",
+        "formattedTitle" : "Lawnmower Time",
+        "runtimeState" : { },
+        "active" : true
+      }, {
+        "id" : "story_chapter_hunt_ANCIENT_EGYPT",
+        "title" : "Chapter Hunter",
+        "descriptionTemplate" : "Defeat 50 zombies from {chapter}",
+        "type" : "STORY",
+        "priority" : "HIGH",
+        "conditionKey" : "chapter_zombie_kill",
+        "targetCount" : 50,
+        "currentCount" : 0,
+        "completed" : false,
+        "claimed" : false,
+        "reward" : {
+          "type" : "SEED_PACKETS",
+          "amount" : 10,
+          "targetPlant" : null
+        },
+        "parameters" : {
+          "chapter" : "ANCIENT_EGYPT"
+        },
+        "formattedDescription" : "Defeat 50 zombies from Ancient Egypt",
+        "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { },
+        "active" : true
+      } ],
+      "lastDailyRefresh" : null,
+      "consecutiveMaxDifficultyWins" : 0,
+      "currentChapter" : "DARK_AGES",
+      "currentDifficulty" : 3,
+      "isDayLevel" : true,
+      "timeUntilReset" : "12h 16m"
+    }
+  }
+}

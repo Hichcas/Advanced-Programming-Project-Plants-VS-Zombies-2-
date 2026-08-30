@@ -225,13 +225,42 @@ public class UpdateHandler {
             // است که در لحظه‌ی اتمام بازی به‌دست آورده است»)، نه صرفا شرط برد.
             if (AppStatus.currentUser != null && AppStatus.currentUser.userStats != null) {
                 int score = engine.myoPointScorer.getTotalScore();
-                AppStatus.currentUser.userStats.updateHighestScore(score);
                 AppStatus.showAnnouncement("Game Over! Final MyoPoint score: " + score);
+                submitScoreToServer(score);
             }
-        } else if (win && AppStatus.currentUser != null && AppStatus.currentUser.userStats != null) {
-            int score = engine.getSunCount() * 10;
-            AppStatus.currentUser.userStats.updateHighestScore(score);
         }
+        // توجه: امتیاز مراحل عادی (adventure) دیگر در ستون «My Point» ثبت نمی‌شود؛
+        // طبق سند فاز شبکه، «My Point» فقط از طریق «بازی امتیازی تحت شبکه» (بالا)
+        // پر می‌شود، وگرنه کاربری که هنوز آن را انجام نداده رکورد ساختگی می‌گیرد.
+    }
+
+    /**
+     * امتیاز پایان‌دور «بازی امتیازی» را به سرور می‌فرستد. سرور فقط در صورتی
+     * که این امتیاز از رکورد فعلی کاربر بیشتر باشد، رکورد را به‌روزرسانی
+     * می‌کند (ستون «My Point» در لیدربورد). اگر کلاینت آفلاین باشد، فقط
+     * یک اعلان نمایش داده می‌شود؛ رکورد سرور دست‌نخورده باقی می‌ماند.
+     */
+    private static void submitScoreToServer(int score) {
+        if (!com.PVZ.network.client.NetworkSession.isConnected()) {
+            AppStatus.showAnnouncement("Offline - score was not submitted to the server.");
+            return;
+        }
+        com.PVZ.network.common.NetworkMessage request =
+                com.PVZ.network.common.NetworkMessage.request(com.PVZ.network.common.MessageType.SUBMIT_SCORE)
+                        .with("score", score);
+        com.PVZ.network.client.NetworkSession.client().sendRequest(request).thenAccept(response -> {
+            if (response.getBoolean("success", false)) {
+                int serverHighest = response.getInt("highestScore", score);
+                // رکورد لوکال را با نتیجه‌ی معتبر سرور هماهنگ می‌کنیم تا SYNC_USER بعدی
+                // به‌اشتباه یک عدد پایین‌تر را روی سرور بازنویسی نکند.
+                if (AppStatus.currentUser != null && AppStatus.currentUser.userStats != null) {
+                    AppStatus.currentUser.userStats.updateHighestScore(serverHighest);
+                }
+                if (response.getBoolean("newRecord", false)) {
+                    AppStatus.showAnnouncement("New MyoPoint record on the server: " + serverHighest);
+                }
+            }
+        }).exceptionally(ex -> null);
     }
 
     public static void resetGameOverState(RegularGameEngine engine) {
