@@ -1,0 +1,34 @@
+package com.PVZ.network.server.handlers;
+
+import com.PVZ.database.UserDatabase;
+import com.PVZ.model.leaderboard.Leaderboard;
+import com.PVZ.model.leaderboard.LeaderboardEntry;
+import com.PVZ.network.common.MessageType;
+import com.PVZ.network.common.NetworkMessage;
+import com.PVZ.network.server.ClientSession;
+import com.PVZ.network.server.RequestDispatcher;
+
+import java.util.List;
+
+public final class LeaderboardHandlers {
+
+    private LeaderboardHandlers() {
+    }
+
+    public static void registerAll(RequestDispatcher dispatcher) {
+        dispatcher.register(MessageType.FETCH_LEADERBOARD, LeaderboardHandlers::handleFetchLeaderboard);
+    }
+
+    private static NetworkMessage handleFetchLeaderboard(ClientSession session, NetworkMessage request) {
+        try {
+            List<LeaderboardEntry> entries = Leaderboard.getEntries(null, true);
+            return NetworkMessage.reply(request.getRequestId(), MessageType.FETCH_LEADERBOARD_RESULT)
+                    .with("success", true)
+                    .with("entries", entries);
+        } catch (Exception e) {
+            return NetworkMessage.reply(request.getRequestId(), MessageType.FETCH_LEADERBOARD_RESULT)
+                    .with("success", false)
+                    .with("message", "Failed to fetch leaderboard: " + e.getMessage());
+        }
+    }
+}

@@ -2,6 +2,7 @@ package com.PVZ.network.server;
 
 import com.PVZ.database.UserDatabase;
 import com.PVZ.network.server.handlers.AuthHandlers;
+import com.PVZ.network.server.handlers.LeaderboardHandlers;
 import com.PVZ.network.server.handlers.MatchmakingHandlers;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class GameServer {
         MatchmakingHandlers.registerAll(dispatcher);
         com.PVZ.network.server.handlers.GameSyncHandlers.registerAll(dispatcher);
         //   ReactionHandlers.registerAll(dispatcher);
-        //   LeaderboardHandlers.registerAll(dispatcher);
+        LeaderboardHandlers.registerAll(dispatcher);
     }
 
     /** برای این‌که بخش‌های دیگر تیم بتوانند از بیرون هم Handler اضافه کنند. */

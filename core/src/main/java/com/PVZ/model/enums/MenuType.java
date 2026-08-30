@@ -11,6 +11,7 @@ public enum MenuType {
     PLANT_SELECTION(new PlantSelectionMenu()),
     SETTINGS(new SettingsMenu()),
     NETWORK(new NetworkMenu()),
+    ONLINE_LEADERBOARD(new OnlineLeaderboardMenu()),
     NEWS(new NewsMenu()),
     PROFILE(new ProfileMenu()),
     COLLECTION(new CollectionMenu()),
