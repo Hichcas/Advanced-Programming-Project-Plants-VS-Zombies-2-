@@ -34,8 +34,8 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "PIERCE_MINT", "APPEASE_MINT", "TANGLE_KELP", "CACTUS", "IMITATER", "ELECTRIC_BLUEBERRY", "PHAT_BEET", "GRAPESHOT", "PUFF_SHROOM", "JALAPENO", "SWEET_POTATO", "DOOM_SHROOM", "WALL_NUT", "HYPNO_SHROOM", "MEGA_GATLING_PEA", "TALL_NUT", "POTATO_MINE", "ARMA_MINT", "GARLIC", "MELON_PULT", "GRAVE_BUSTER", "PEPPER_PULT", "WINTER_MELON", "PRIMAL_SUNFLOWER", "GIANT_WALLNUT", "SQUASH", "SUNFLOWER", "GOO_PEASHOOTER", "LILY_PAD", "PEA_POD", "KIWIBEAST", "TWIN_SUNFLOWER", "KERNEL_PULT", "ENDURIAN", "GOLD_BLOOM", "SNOW_PEA", "FIRE_PEASHOOTER", "CITRON", "BOMBARD_MINT", "CHOMPER", "STARFRUIT", "REINFORCE_MINT", "SUN_SHROOM", "PEASHOOTER", "THREEPEATER", "CAT_TAIL_MINT", "HOT_POTATO", "FUME_SHROOM", "ENFORCE_MINT", "CAT_TAIL", "SUN_BEAN", "ENCHANT_MINT", "BOWLING_BULB", "WALLNUT_BOWLING", "SEA_SHROOM", "ROTOBAGA", "MAGNET_SHROOM", "CABBAGE_PULT", "ENLIGHTEN_MINT", "REPEATER", "PRIMAL_POTATO_MINE", "SPLIT_PEA", "BONK_CHOY", "TORCHWOOD", "CAULIPOWER", "ICE_SHROOM", "EXPLODE_O_NUT", "CHERRY_BOMB", "ICEBERG_LETTUCE", "WASABI_WHIP", "PUMPKIN" ],
-    "seenZombies" : [ "TUTORIAL_ARMOR4", "BEACH_FISHERMAN", "DARK_DEFAULT", "LOSTCITY_JANE", "IMP_DRAGON", "PIANO", "GARGANTUAR_BEACH", "ICEAGE_HUNTER", "IMP_EGYPT", "DARK_ARMOR2", "ALLSTAR", "RA", "WIZARD", "GARGANTUAR_EGYPT", "IMP_TUTORIAL", "CRYSTAL_SKULL", "ICEAGE_DEFAULT", "IMP_DARK", "ICEAGE_ARMOR1", "ZOMBOTANY_SQUASH", "IMP_BEACH", "ICEAGE_ARMOR3", "MUMMY_ARMOR4", "ZOMBOSS_EGYPT", "BEACH_SNORKEL", "BEACH_ARMOR1", "WEASEL_HOARDER", "ICEAGE_ARMOR2", "GARGANTUAR_DARK", "TUTORIAL_ARMOR1", "MUMMY_ARMOR2", "WEASEL", "MUMMY_DEFAULT", "EXPLORER", "BEACH_ARMOR2", "TOMB_RAISER", "PROSPECTOR", "BEACH_SURFER", "DODO", "CAMEL", "DARK_ARMOR4", "MUMMY_ARMOR1", "TUTORIAL_DEFAULT", "DARK_JUGGLER", "DARK_KING", "ZOMBOTANY_JALAPENO", "FOOTBALL", "ARCADE", "GARGANTUAR_ICEAGE", "BEACH_OCTOPUS", "BEACH_FAST_SWIMMER", "ZOMBOTANY_PEASHOOTER", "IMP_ICEAGE", "DARK_ARMOR3", "DARK_ARMOR1", "GARGANTUAR_BASIC", "NEWSPAPER", "PHARAOH", "BEACH_DEFAULT", "TUTORIAL_FLAG", "TROGLOBITE", "TUTORIAL_ARMOR2" ],
+    "unlockedPlants" : [ "CACTUS", "REINFORCE_MINT", "APPEASE_MINT", "SQUASH", "MEGA_GATLING_PEA", "PRIMAL_SUNFLOWER", "TORCHWOOD", "PEASHOOTER", "TWIN_SUNFLOWER", "ENLIGHTEN_MINT", "CAT_TAIL", "CAT_TAIL_MINT", "BONK_CHOY", "ARMA_MINT", "IMITATER", "SEA_SHROOM", "REPEATER", "CITRON", "TALL_NUT", "ROTOBAGA", "PIERCE_MINT", "WALL_NUT", "CHERRY_BOMB", "EXPLODE_O_NUT", "LILY_PAD", "HOT_POTATO", "STARFRUIT", "ENFORCE_MINT", "ENCHANT_MINT", "WINTER_MELON", "SUNFLOWER", "SUN_BEAN", "BOWLING_BULB", "THREEPEATER", "ENDURIAN", "ICEBERG_LETTUCE", "GRAPESHOT", "SPLIT_PEA", "WALLNUT_BOWLING", "CABBAGE_PULT", "FUME_SHROOM", "BOMBARD_MINT", "FIRE_PEASHOOTER", "SNOW_PEA", "KERNEL_PULT", "POTATO_MINE", "GRAVE_BUSTER", "SWEET_POTATO", "PHAT_BEET", "GARLIC", "MAGNET_SHROOM", "PUMPKIN", "JALAPENO", "PEPPER_PULT", "GOO_PEASHOOTER", "TANGLE_KELP", "CAULIPOWER", "HYPNO_SHROOM", "ELECTRIC_BLUEBERRY", "WASABI_WHIP", "PEA_POD", "GOLD_BLOOM", "SUN_SHROOM", "PRIMAL_POTATO_MINE", "KIWIBEAST", "PUFF_SHROOM", "MELON_PULT", "GIANT_WALLNUT", "DOOM_SHROOM", "ICE_SHROOM", "CHOMPER" ],
+    "seenZombies" : [ "IMP_DARK", "ZOMBOSS_EGYPT", "CAMEL", "PROSPECTOR", "DARK_ARMOR3", "CRYSTAL_SKULL", "BEACH_ARMOR2", "DARK_JUGGLER", "EXPLORER", "PIANO", "ZOMBOTANY_JALAPENO", "ICEAGE_DEFAULT", "GARGANTUAR_ICEAGE", "TUTORIAL_DEFAULT", "NEWSPAPER", "ARCADE", "DARK_ARMOR1", "ZOMBOTANY_SQUASH", "MUMMY_ARMOR2", "TUTORIAL_ARMOR2", "TOMB_RAISER", "IMP_TUTORIAL", "RA", "BEACH_FISHERMAN", "ICEAGE_ARMOR2", "FOOTBALL", "GARGANTUAR_DARK", "ZOMBOTANY_PEASHOOTER", "IMP_BEACH", "MUMMY_DEFAULT", "BEACH_ARMOR1", "LOSTCITY_JANE", "PHARAOH", "GARGANTUAR_BEACH", "DARK_ARMOR2", "DARK_ARMOR4", "DARK_DEFAULT", "WEASEL", "WEASEL_HOARDER", "DODO", "DARK_KING", "MUMMY_ARMOR1", "ICEAGE_HUNTER", "BEACH_SURFER", "MUMMY_ARMOR4", "BEACH_OCTOPUS", "BEACH_FAST_SWIMMER", "BEACH_SNORKEL", "TUTORIAL_FLAG", "ICEAGE_ARMOR1", "IMP_DRAGON", "TUTORIAL_ARMOR4", "TUTORIAL_ARMOR1", "BEACH_DEFAULT", "ICEAGE_ARMOR3", "IMP_EGYPT", "ALLSTAR", "WIZARD", "TROGLOBITE", "IMP_ICEAGE", "GARGANTUAR_EGYPT", "GARGANTUAR_BASIC" ],
     "seedPackets" : {
       "SUN_SHROOM" : 5,
       "SUNFLOWER" : 20
@@ -141,657 +141,657 @@
   "newsState" : {
     "news" : [ {
       "text" : "New plant unlocked: Twin Sunflower!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Twin Sunflower!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Sun-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Sun-shroom!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Primal Sunflower!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Primal Sunflower!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Gold Bloom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Gold Bloom!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Repeater!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Repeater!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Threepeater!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Threepeater!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Snow Pea!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Snow Pea!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Rotobaga!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Rotobaga!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Pea Pod!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Pea Pod!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Split Pea!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Split Pea!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Citron!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Citron!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Caulipower!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Caulipower!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Electric Blueberry!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Electric Blueberry!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Bowling Bulb!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Bowling Bulb!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Cactus!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Cactus!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Fire Peashooter!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Fire Peashooter!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Starfruit!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Starfruit!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Goo Peashooter!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Goo Peashooter!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Mega Gatling Pea!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Mega Gatling Pea!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Sea-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Sea-shroom!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Puff-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Puff-shroom!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Fume-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Fume-shroom!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Cabbage-pult!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Cabbage-pult!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Kernel-pult!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Kernel-pult!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Melon-pult!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Melon-pult!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Winter Melon!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Winter Melon!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Pepper-pult!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Pepper-pult!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Potato Mine!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Potato Mine!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Primal Potato Mine!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Primal Potato Mine!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Cherry Bomb!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Cherry Bomb!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Squash!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Squash!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Grapeshot!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Grapeshot!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Jalapeno!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Jalapeno!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Doom-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Doom-shroom!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Tangle Kelp!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Tangle Kelp!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Iceberg Lettuce!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Iceberg Lettuce!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Bonk Choy!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Bonk Choy!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Phat Beet!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Phat Beet!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Chomper!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Chomper!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Wasabi Whip!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Wasabi Whip!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Kiwibeast!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Kiwibeast!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Wall-nut!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Wall-nut!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Tall-nut!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Tall-nut!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Endurian!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Endurian!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Garlic!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Garlic!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Sweet Potato!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Sweet Potato!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Explode-o-nut!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Explode-o-nut!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Pumpkin!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Pumpkin!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Sun Bean!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Sun Bean!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Torchwood!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Torchwood!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Magnet-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Magnet-shroom!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Hypno-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Hypno-shroom!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Cat-tail!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Cat-tail!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Imitater!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Imitater!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Ice-shroom!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Ice-shroom!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Lily Pad!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Lily Pad!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Hot Potato!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Hot Potato!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Grave Buster!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Grave Buster!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Enlighten-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Enlighten-mint!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Appease-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Appease-mint!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Arma-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Arma-mint!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Bombard-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Bombard-mint!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Enforce-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Enforce-mint!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Reinforce-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Reinforce-mint!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Enchant-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Enchant-mint!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Pierce-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Pierce-mint!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: catTail-mint!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: catTail-mint!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Bowling Wallnut!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Bowling Wallnut!\n2026/08/14  17:02"
     }, {
       "text" : "New plant unlocked: Giant Wallnut!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714373220,
       "formattedText" : "New plant unlocked: Giant Wallnut!\n2026/08/14  17:02"
     }, {
       "text" : "New zombie spotted: ICEAGE_DEFAULT!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786714410716,
       "formattedText" : "New zombie spotted: ICEAGE_DEFAULT!\n2026/08/14  17:03"
     }, {
       "text" : "New zombie spotted: TUTORIAL_ARMOR1!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786721127099,
       "formattedText" : "New zombie spotted: TUTORIAL_ARMOR1!\n2026/08/14  18:55"
     }, {
       "text" : "New zombie spotted: MUMMY_DEFAULT!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786721128537,
       "formattedText" : "New zombie spotted: MUMMY_DEFAULT!\n2026/08/14  18:55"
     }, {
       "text" : "New zombie spotted: MUMMY_ARMOR1!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786721136941,
       "formattedText" : "New zombie spotted: MUMMY_ARMOR1!\n2026/08/14  18:55"
     }, {
       "text" : "New zombie spotted: RA!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786721235950,
       "formattedText" : "New zombie spotted: RA!\n2026/08/14  18:57"
     }, {
       "text" : "New zombie spotted: TUTORIAL_DEFAULT!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786726197770,
       "formattedText" : "New zombie spotted: TUTORIAL_DEFAULT!\n2026/08/14  20:19"
     }, {
       "text" : "New zombie spotted: TUTORIAL_ARMOR2!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786726197879,
       "formattedText" : "New zombie spotted: TUTORIAL_ARMOR2!\n2026/08/14  20:19"
     }, {
       "text" : "New zombie spotted: TUTORIAL_ARMOR4!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786726197895,
       "formattedText" : "New zombie spotted: TUTORIAL_ARMOR4!\n2026/08/14  20:19"
     }, {
       "text" : "New zombie spotted: TUTORIAL_FLAG!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786726197911,
       "formattedText" : "New zombie spotted: TUTORIAL_FLAG!\n2026/08/14  20:19"
     }, {
       "text" : "New zombie spotted: MUMMY_ARMOR2!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786728262020,
       "formattedText" : "New zombie spotted: MUMMY_ARMOR2!\n2026/08/14  20:54"
     }, {
       "text" : "New zombie spotted: MUMMY_ARMOR4!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786728262037,
       "formattedText" : "New zombie spotted: MUMMY_ARMOR4!\n2026/08/14  20:54"
     }, {
       "text" : "New zombie spotted: CAMEL!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786728262071,
       "formattedText" : "New zombie spotted: CAMEL!\n2026/08/14  20:54"
     }, {
       "text" : "New zombie spotted: ICEAGE_HUNTER!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786772832710,
       "formattedText" : "New zombie spotted: ICEAGE_HUNTER!\n2026/08/15  09:17"
     }, {
       "text" : "New zombie spotted: IMP_ICEAGE!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786772836313,
       "formattedText" : "New zombie spotted: IMP_ICEAGE!\n2026/08/15  09:17"
     }, {
       "text" : "New zombie spotted: EXPLORER!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786775473811,
       "formattedText" : "New zombie spotted: EXPLORER!\n2026/08/15  10:01"
     }, {
       "text" : "New zombie spotted: PHARAOH!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786776103071,
       "formattedText" : "New zombie spotted: PHARAOH!\n2026/08/15  10:11"
     }, {
       "text" : "New zombie spotted: TOMB_RAISER!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786779679376,
       "formattedText" : "New zombie spotted: TOMB_RAISER!\n2026/08/15  11:11"
     }, {
       "text" : "New zombie spotted: GARGANTUAR_EGYPT!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786816179682,
       "formattedText" : "New zombie spotted: GARGANTUAR_EGYPT!\n2026/08/15  21:19"
     }, {
       "text" : "New zombie spotted: GARGANTUAR_BASIC!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786816179733,
       "formattedText" : "New zombie spotted: GARGANTUAR_BASIC!\n2026/08/15  21:19"
     }, {
       "text" : "New zombie spotted: IMP_EGYPT!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786860834877,
       "formattedText" : "New zombie spotted: IMP_EGYPT!\n2026/08/16  09:43"
     }, {
       "text" : "New zombie spotted: IMP_TUTORIAL!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786860834896,
       "formattedText" : "New zombie spotted: IMP_TUTORIAL!\n2026/08/16  09:43"
     }, {
       "text" : "New zombie spotted: ZOMBOSS_EGYPT!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786861901842,
       "formattedText" : "New zombie spotted: ZOMBOSS_EGYPT!\n2026/08/16  10:01"
     }, {
       "text" : "New zombie spotted: ICEAGE_ARMOR1!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786890690587,
       "formattedText" : "New zombie spotted: ICEAGE_ARMOR1!\n2026/08/16  18:01"
     }, {
       "text" : "New zombie spotted: ICEAGE_ARMOR2!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786890690602,
       "formattedText" : "New zombie spotted: ICEAGE_ARMOR2!\n2026/08/16  18:01"
     }, {
       "text" : "New zombie spotted: ICEAGE_ARMOR3!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786890690607,
       "formattedText" : "New zombie spotted: ICEAGE_ARMOR3!\n2026/08/16  18:01"
     }, {
       "text" : "New zombie spotted: DODO!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786892768230,
       "formattedText" : "New zombie spotted: DODO!\n2026/08/16  18:36"
     }, {
       "text" : "New zombie spotted: TROGLOBITE!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786896110734,
       "formattedText" : "New zombie spotted: TROGLOBITE!\n2026/08/16  19:31"
     }, {
       "text" : "New zombie spotted: BEACH_FISHERMAN!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786948247467,
       "formattedText" : "New zombie spotted: BEACH_FISHERMAN!\n2026/08/17  10:00"
     }, {
       "text" : "New zombie spotted: BEACH_DEFAULT!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786948247918,
       "formattedText" : "New zombie spotted: BEACH_DEFAULT!\n2026/08/17  10:00"
     }, {
       "text" : "New zombie spotted: BEACH_SNORKEL!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786948314527,
       "formattedText" : "New zombie spotted: BEACH_SNORKEL!\n2026/08/17  10:01"
     }, {
       "text" : "New zombie spotted: IMP_BEACH!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786948318033,
       "formattedText" : "New zombie spotted: IMP_BEACH!\n2026/08/17  10:01"
     }, {
       "text" : "New zombie spotted: DARK_DEFAULT!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786948640760,
       "formattedText" : "New zombie spotted: DARK_DEFAULT!\n2026/08/17  10:07"
     }, {
       "text" : "New zombie spotted: BEACH_FAST_SWIMMER!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786951870993,
       "formattedText" : "New zombie spotted: BEACH_FAST_SWIMMER!\n2026/08/17  11:01"
     }, {
       "text" : "New zombie spotted: BEACH_OCTOPUS!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1786971699588,
       "formattedText" : "New zombie spotted: BEACH_OCTOPUS!\n2026/08/17  16:31"
     }, {
       "text" : "New zombie spotted: ZOMBOTANY_PEASHOOTER!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787034075309,
       "formattedText" : "New zombie spotted: ZOMBOTANY_PEASHOOTER!\n2026/08/18  09:51"
     }, {
       "text" : "New zombie spotted: ZOMBOTANY_SQUASH!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787034081406,
       "formattedText" : "New zombie spotted: ZOMBOTANY_SQUASH!\n2026/08/18  09:51"
     }, {
       "text" : "New zombie spotted: BEACH_SURFER!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787040347440,
       "formattedText" : "New zombie spotted: BEACH_SURFER!\n2026/08/18  11:35"
     }, {
       "text" : "New zombie spotted: GARGANTUAR_BEACH!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787040351944,
       "formattedText" : "New zombie spotted: GARGANTUAR_BEACH!\n2026/08/18  11:35"
     }, {
       "text" : "New zombie spotted: BEACH_ARMOR1!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787041547824,
       "formattedText" : "New zombie spotted: BEACH_ARMOR1!\n2026/08/18  11:55"
     }, {
       "text" : "New zombie spotted: BEACH_ARMOR2!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787041706389,
       "formattedText" : "New zombie spotted: BEACH_ARMOR2!\n2026/08/18  11:58"
     }, {
       "text" : "New zombie spotted: IMP_DARK!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787046886647,
       "formattedText" : "New zombie spotted: IMP_DARK!\n2026/08/18  13:24"
     }, {
       "text" : "New zombie spotted: DARK_ARMOR1!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787046900046,
       "formattedText" : "New zombie spotted: DARK_ARMOR1!\n2026/08/18  13:25"
     }, {
       "text" : "New zombie spotted: WIZARD!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787053934340,
       "formattedText" : "New zombie spotted: WIZARD!\n2026/08/18  15:22"
     }, {
       "text" : "New zombie spotted: DARK_ARMOR2!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787053938842,
       "formattedText" : "New zombie spotted: DARK_ARMOR2!\n2026/08/18  15:22"
     }, {
       "text" : "New zombie spotted: DARK_JUGGLER!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787054155023,
       "formattedText" : "New zombie spotted: DARK_JUGGLER!\n2026/08/18  15:25"
     }, {
       "text" : "New zombie spotted: DARK_ARMOR3!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787054168530,
       "formattedText" : "New zombie spotted: DARK_ARMOR3!\n2026/08/18  15:26"
     }, {
       "text" : "New zombie spotted: ALLSTAR!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787073836192,
       "formattedText" : "New zombie spotted: ALLSTAR!\n2026/08/18  20:53"
     }, {
       "text" : "New zombie spotted: FOOTBALL!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787073836432,
       "formattedText" : "New zombie spotted: FOOTBALL!\n2026/08/18  20:53"
     }, {
       "text" : "New zombie spotted: DARK_KING!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787084479717,
       "formattedText" : "New zombie spotted: DARK_KING!\n2026/08/18  23:51"
     }, {
       "text" : "New zombie spotted: IMP_DRAGON!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787117648153,
       "formattedText" : "New zombie spotted: IMP_DRAGON!\n2026/08/19  09:04"
     }, {
       "text" : "New zombie spotted: PROSPECTOR!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787117962191,
       "formattedText" : "New zombie spotted: PROSPECTOR!\n2026/08/19  09:09"
     }, {
       "text" : "New zombie spotted: PIANO!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787118313487,
       "formattedText" : "New zombie spotted: PIANO!\n2026/08/19  09:15"
     }, {
       "text" : "New zombie spotted: LOSTCITY_JANE!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787118787753,
       "formattedText" : "New zombie spotted: LOSTCITY_JANE!\n2026/08/19  09:23"
     }, {
       "text" : "New zombie spotted: CRYSTAL_SKULL!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787118886455,
       "formattedText" : "New zombie spotted: CRYSTAL_SKULL!\n2026/08/19  09:24"
     }, {
       "text" : "New zombie spotted: ARCADE!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787119015943,
       "formattedText" : "New zombie spotted: ARCADE!\n2026/08/19  09:26"
     }, {
       "text" : "New zombie spotted: NEWSPAPER!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787119016198,
       "formattedText" : "New zombie spotted: NEWSPAPER!\n2026/08/19  09:26"
     }, {
       "text" : "New zombie spotted: GARGANTUAR_ICEAGE!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787216386828,
       "formattedText" : "New zombie spotted: GARGANTUAR_ICEAGE!\n2026/08/20  12:29"
     }, {
       "text" : "New zombie spotted: DARK_ARMOR4!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787403303097,
       "formattedText" : "New zombie spotted: DARK_ARMOR4!\n2026/08/22  16:25"
     }, {
       "text" : "New zombie spotted: GARGANTUAR_DARK!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787723435103,
       "formattedText" : "New zombie spotted: GARGANTUAR_DARK!\n2026/08/26  09:20"
     }, {
       "text" : "New zombie spotted: WEASEL_HOARDER!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787726394534,
       "formattedText" : "New zombie spotted: WEASEL_HOARDER!\n2026/08/26  10:09"
     }, {
       "text" : "New zombie spotted: ZOMBOTANY_JALAPENO!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787726399196,
       "formattedText" : "New zombie spotted: ZOMBOTANY_JALAPENO!\n2026/08/26  10:09"
     }, {
       "text" : "New zombie spotted: WEASEL!",
-      "read" : false,
+      "read" : true,
       "timestamp" : 1787943489175,
       "formattedText" : "New zombie spotted: WEASEL!\n2026/08/28  22:28"
     } ]
@@ -803,7 +803,7 @@
     "forToday" : false,
     "availableToday" : false
   },
-  "stayLoggedIn" : true,
+  "stayLoggedIn" : false,
   "questState" : {
     "questManager" : {
       "activeQuests" : [ {
@@ -826,9 +826,9 @@
           "n" : 0
         },
         "active" : false,
-        "runtimeState" : { },
+        "formattedDescription" : "Win without losing more than 0 plants",
         "formattedTitle" : "Economic Herbivore",
-        "formattedDescription" : "Win without losing more than 0 plants"
+        "runtimeState" : { }
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -847,9 +847,9 @@
         },
         "parameters" : { },
         "active" : false,
-        "runtimeState" : { },
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "formattedTitle" : "Speed Run",
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
+        "runtimeState" : { }
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -868,9 +868,9 @@
         },
         "parameters" : { },
         "active" : false,
-        "runtimeState" : { },
+        "formattedDescription" : "End a level with exactly 0 sun",
         "formattedTitle" : "Master of Defense",
-        "formattedDescription" : "End a level with exactly 0 sun"
+        "runtimeState" : { }
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -889,9 +889,9 @@
         },
         "parameters" : { },
         "active" : false,
-        "runtimeState" : { },
+        "formattedDescription" : "Win a day level using only mushrooms",
         "formattedTitle" : "Day or Night",
-        "formattedDescription" : "Win a day level using only mushrooms"
+        "runtimeState" : { }
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -912,9 +912,9 @@
           "n" : 20
         },
         "active" : true,
-        "runtimeState" : { },
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
         "formattedTitle" : "Lawnmower Time",
-        "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
+        "runtimeState" : { }
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -935,9 +935,9 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
-        "runtimeState" : { },
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
         "formattedTitle" : "Chapter Hunter",
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
+        "runtimeState" : { }
       }, {
         "id" : "daily_kill_family_1787392580510",
         "title" : "Family Slaughter",
@@ -958,12 +958,12 @@
           "family" : "ENLIGHTEN_MINT"
         },
         "active" : true,
+        "formattedDescription" : "Kill zombies using only ENLIGHTEN_MINT plants",
+        "formattedTitle" : "Family Slaughter",
         "runtimeState" : {
           "familyViolated" : true,
           "anyKill" : true
-        },
-        "formattedTitle" : "Family Slaughter",
-        "formattedDescription" : "Kill zombies using only ENLIGHTEN_MINT plants"
+        }
       }, {
         "id" : "daily_row_empty_1787392580511",
         "title" : "Defenseless Row",
@@ -984,9 +984,9 @@
           "row" : 5
         },
         "active" : true,
-        "runtimeState" : { },
+        "formattedDescription" : "Win with row 5 completely empty",
         "formattedTitle" : "Defenseless Row",
-        "formattedDescription" : "Win with row 5 completely empty"
+        "runtimeState" : { }
       }, {
         "id" : "daily_cross_empty_1787392580511",
         "title" : "Defenseless Cross",
@@ -1008,16 +1008,16 @@
           "row" : 2
         },
         "active" : true,
-        "runtimeState" : { },
+        "formattedDescription" : "Win with column 8 and row 2 empty",
         "formattedTitle" : "Defenseless Cross",
-        "formattedDescription" : "Win with column 8 and row 2 empty"
+        "runtimeState" : { }
       } ],
       "lastDailyRefresh" : "2026-08-22",
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "FROSTBITE_CAVES",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "1h 31m"
+      "timeUntilReset" : "22h 56m"
     }
   }
 }

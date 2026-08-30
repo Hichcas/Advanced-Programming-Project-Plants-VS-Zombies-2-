@@ -24,6 +24,7 @@ public class OnlineGamePanel extends BasePanel {
     private MenuButton roleButton;
     private MenuButton levelButton;
     private MenuButton challengeButton;
+    private MenuButton leaderboardButton;
     private MenuButton backButton;
 
     private String selectedRole = "PLANT";
@@ -93,7 +94,10 @@ public class OnlineGamePanel extends BasePanel {
         mainTable.add(levelButton).padTop(5f).padBottom(5f).row();
 
         challengeButton = createButton("CHALLENGE", this::onChallengeUser, purpleUp, purpleDown);
-        mainTable.add(challengeButton).padTop(5f).padBottom(20f).row();
+        mainTable.add(challengeButton).padTop(5f).padBottom(15f).row();
+
+        leaderboardButton = createButton("LEADERBOARD", this::onLeaderboard, greenUp, greenDown);
+        mainTable.add(leaderboardButton).padTop(5f).padBottom(20f).row();
 
         statusLabel = new Label("", labelStyle);
         statusLabel.setAlignment(Align.center);
@@ -129,6 +133,7 @@ public class OnlineGamePanel extends BasePanel {
         roleButton.setDisabled(!enabled);
         levelButton.setDisabled(!enabled);
         challengeButton.setDisabled(!enabled);
+        leaderboardButton.setDisabled(!enabled);
         usernameField.setDisabled(!enabled);
         backButton.setDisabled(!enabled);
     }
@@ -138,6 +143,7 @@ public class OnlineGamePanel extends BasePanel {
         roleButton.setDisabled(queueActive);
         levelButton.setDisabled(queueActive);
         challengeButton.setDisabled(queueActive);
+        leaderboardButton.setDisabled(queueActive);
         usernameField.setDisabled(queueActive);
         backButton.setDisabled(queueActive);
     }
@@ -236,6 +242,14 @@ public class OnlineGamePanel extends BasePanel {
                 setStatus("Connection error: " + ex.getMessage(), Color.SALMON));
             return null;
         });
+    }
+
+    private void onLeaderboard() {
+        if (!NetworkSession.isConnected()) {
+            setStatus("Not connected to server.", Color.SALMON);
+            return;
+        }
+        AppStatus.setCurrentMenuType(MenuType.ONLINE_LEADERBOARD);
     }
 
     private void onBack() {

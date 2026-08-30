@@ -19,6 +19,13 @@ public enum NetworkCommand {
         public NetworkInputDTO createDTO(Matcher matcher) {
             return new NetworkInputDTO(this);
         }
+    },
+
+    FETCH_LEADERBOARD("^\\s*menu\\s+leaderboard\\s*online\\s*$") {
+        @Override
+        public NetworkInputDTO createDTO(Matcher matcher) {
+            return new NetworkInputDTO(this);
+        }
     };
 
     private final Pattern pattern;

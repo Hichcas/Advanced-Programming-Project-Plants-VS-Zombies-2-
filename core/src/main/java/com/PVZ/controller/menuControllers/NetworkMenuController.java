@@ -19,8 +19,14 @@ public class NetworkMenuController {
 
         return switch (networkInput.getCommand()) {
             case SHOW_CURRENT_MENU -> new OutputDTO(true, AppStatus.currentMenuType.name());
+            case FETCH_LEADERBOARD -> fetchLeaderboard();
             case EXIT -> exitToMain();
         };
+    }
+
+    private OutputDTO fetchLeaderboard() {
+        AppStatus.setCurrentMenuType(MenuType.ONLINE_LEADERBOARD);
+        return new OutputDTO(true, "Fetching online leaderboard...");
     }
 
     private OutputDTO exitToMain() {
