@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.Align;
 import pvz.skin.PvzSkin;
 
 import java.io.IOException;
-import java.util.prefs.Preferences;
 
 public class OnlineGamePanel extends BasePanel {
 
@@ -81,7 +80,6 @@ public class OnlineGamePanel extends BasePanel {
 
         Label ipLabel = new Label("Server IP:", labelStyle);
         mainTable.add(ipLabel).center().padBottom(4f).row();
-
         serverIpField = createField(loadLastServerIp());
         mainTable.add(serverIpField).width(FIELD_WIDTH).height(BUTTON_HEIGHT).center().row();
 
@@ -125,8 +123,8 @@ public class OnlineGamePanel extends BasePanel {
         addActor(scrollPane);
     }
 
-    private static final Preferences NET_PREFS =
-           Preferences.userRoot().node("com/PVZ/network");
+    private static final java.util.prefs.Preferences NET_PREFS =
+            java.util.prefs.Preferences.userRoot().node("com/PVZ/network");
     private static final String LAST_SERVER_IP_KEY = "lastServerIp";
 
     private static String loadLastServerIp() {
@@ -138,8 +136,7 @@ public class OnlineGamePanel extends BasePanel {
             NET_PREFS.put(LAST_SERVER_IP_KEY, ip);
         }
     }
-
-
+    
     private void setButtonsEnabled(boolean enabled) {
         randomButton.setDisabled(!enabled);
         roleButton.setDisabled(!enabled);

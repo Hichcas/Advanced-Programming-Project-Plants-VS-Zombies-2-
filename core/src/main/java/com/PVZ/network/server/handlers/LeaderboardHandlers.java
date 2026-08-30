@@ -21,7 +21,16 @@ public final class LeaderboardHandlers {
 
     private static NetworkMessage handleFetchLeaderboard(ClientSession session, NetworkMessage request) {
         try {
-            List<LeaderboardEntry> entries = Leaderboard.getEntries(null, true);
+            String sortName = request.getString("sort");
+            com.PVZ.model.leaderboard.LeaderboardSortField sort = null;
+            if (sortName != null) {
+                try {
+                    sort = com.PVZ.model.leaderboard.LeaderboardSortField.valueOf(sortName);
+                } catch (IllegalArgumentException ignored) {
+                }
+            }
+            boolean ascending = request.getBoolean("ascending", true);
+            List<LeaderboardEntry> entries = Leaderboard.getEntries(sort, ascending);
             return NetworkMessage.reply(request.getRequestId(), MessageType.FETCH_LEADERBOARD_RESULT)
                     .with("success", true)
                     .with("entries", entries);

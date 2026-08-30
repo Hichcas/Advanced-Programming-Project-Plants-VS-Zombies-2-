@@ -6,11 +6,16 @@ import com.PVZ.model.leaderboard.Leaderboard;
 import com.PVZ.model.leaderboard.LeaderboardEntry;
 import com.PVZ.model.leaderboard.LeaderboardSortField;
 import com.PVZ.model.status.AppStatus;
+import com.PVZ.network.client.NetworkSession;
+import com.PVZ.network.common.MessageType;
+import com.PVZ.network.common.NetworkMessage;
 import com.PVZ.view.input.DTO.LeaderboardInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 public class LeaderboardMenuController {
 
@@ -30,7 +35,16 @@ public class LeaderboardMenuController {
     }
 
     private OutputDTO showLeaderboard(LeaderboardSortField sort, boolean ascending) {
-        List<LeaderboardEntry> entries = Leaderboard.getEntries(sort, ascending);
+        List<LeaderboardEntry> entries;
+        if (NetworkSession.isConnected()) {
+            entries = fetchFromServer(sort, ascending);
+            if (entries == null) {
+                entries = Leaderboard.getEntries(sort, ascending);
+            }
+        } else {
+            entries = Leaderboard.getEntries(sort, ascending);
+        }
+
         if (entries.isEmpty()) {
             return new OutputDTO(true, "No leaderboard data.");
         }
@@ -45,6 +59,24 @@ public class LeaderboardMenuController {
         }
 
         return new OutputDTO(true, sb.toString());
+    }
+
+    private List<LeaderboardEntry> fetchFromServer(LeaderboardSortField sort, boolean ascending) {
+        try {
+            NetworkMessage request = NetworkMessage.request(MessageType.FETCH_LEADERBOARD)
+                    .with("sort", sort != null ? sort.name() : null)
+                    .with("ascending", ascending);
+            NetworkMessage response = NetworkSession.client().sendRequestBlocking(request);
+            if (!response.getBoolean("success", false)) {
+                return null;
+            }
+            com.fasterxml.jackson.databind.ObjectMapper mapper = com.PVZ.network.common.JsonCodec.mapper();
+            com.fasterxml.jackson.databind.JavaType listType =
+                    mapper.getTypeFactory().constructCollectionType(List.class, LeaderboardEntry.class);
+            return mapper.convertValue(response.get("entries"), listType);
+        } catch (TimeoutException | RuntimeException | IOException e) {
+            return null;
+        }
     }
 
     private OutputDTO exitToGameMenu() {
