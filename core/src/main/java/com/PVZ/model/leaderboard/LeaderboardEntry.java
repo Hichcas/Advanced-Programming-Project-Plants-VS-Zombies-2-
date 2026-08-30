@@ -8,6 +8,9 @@ public class LeaderboardEntry {
     private int nonDailyQuestsCompleted;
     private int highestScore;
 
+    public LeaderboardEntry() {
+    }
+
     public LeaderboardEntry(String username, String lastStageInfo,
                             int minigamesCompleted, int dailyQuestsCompleted,
                             int nonDailyQuestsCompleted, int highestScore) {
