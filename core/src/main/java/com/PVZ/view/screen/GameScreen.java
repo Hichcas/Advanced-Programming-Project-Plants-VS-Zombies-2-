@@ -141,15 +141,6 @@ public class GameScreen extends BaseScreen {
         this.mapPath = mapPath;
         this.musicPath = musicPath;
 
-        if (!AppStatus.isMultiplayerMatch && !(gameEngine instanceof com.PVZ.model.game.IZombieGameEngine)) {
-            levelStartOverlay = new LevelStartOverlay(resolveStageConfig(), () -> {
-                introStarted = true;
-                introTimer = 0f;
-            });
-            stage.addActor(levelStartOverlay);
-            levelStartOverlay.show();
-        }
-
         String bgInternal = mapPath;
         if (com.badlogic.gdx.Gdx.files.internal(bgInternal).exists()) {
             backgroundTexture = new Texture(com.badlogic.gdx.Gdx.files.internal(bgInternal));
@@ -202,6 +193,11 @@ public class GameScreen extends BaseScreen {
         if (gameEngine instanceof com.PVZ.model.game.IZombieMultiplayerGameEngine mpEngine) {
             stage.addActor(new com.PVZ.view.screen.ui.ReactionPanel(mpEngine::sendReaction));
         }
+        // همان پنل واکنش برای مود دونفره‌ی لوکال (هر دو بازیکن روی یک صفحه‌اند، پس
+        // نیازی به شبکه نیست - فقط افکت/حباب روی همان صفحه‌ی مشترک نشان داده می‌شود).
+        if (gameEngine instanceof com.PVZ.model.game.IZombieLocalVersusEngine localEngine) {
+            stage.addActor(new com.PVZ.view.screen.ui.ReactionPanel(localEngine::sendReaction));
+        }
 
         if (gameEngine.getMap() != null) {
             gameMap = gameEngine.getMap();
@@ -249,6 +245,17 @@ public class GameScreen extends BaseScreen {
                 }
             });
             stage.addActor(drawOfferOverlay);
+        }
+
+        // LevelStartOverlay must be the top-most actor so its CONTINUE button
+        // receives the initial click instead of a full-screen HUD actor.
+        if (!AppStatus.isMultiplayerMatch && !(gameEngine instanceof com.PVZ.model.game.IZombieGameEngine)) {
+            levelStartOverlay = new LevelStartOverlay(resolveStageConfig(), () -> {
+                introStarted = true;
+                introTimer = 0f;
+            });
+            stage.addActor(levelStartOverlay);
+            levelStartOverlay.show();
         }
     }
 
@@ -959,6 +966,19 @@ public class GameScreen extends BaseScreen {
                     bubble.setPosition(x, y);
                     stage.addActor(bubble);
                 }
+            }
+        }
+        if (activeEngine instanceof com.PVZ.model.game.IZombieLocalVersusEngine localEngine) {
+            var reaction = localEngine.pollLocalReaction();
+            if (reaction != null) {
+                // مود لوکال است، پس "mine"/senderName معنی ندارد - یک برچسب خنثی نشان می‌دهیم.
+                com.PVZ.view.screen.ui.ReactionBubble bubble = new com.PVZ.view.screen.ui.ReactionBubble(reaction,
+                        true, "PLAYER");
+                float bottomMargin = 250f;
+                float x = (stage.getViewport().getWorldWidth() - bubble.getWidth()) / 2f;
+                float y = bottomMargin;
+                bubble.setPosition(x, y);
+                stage.addActor(bubble);
             }
         }
 

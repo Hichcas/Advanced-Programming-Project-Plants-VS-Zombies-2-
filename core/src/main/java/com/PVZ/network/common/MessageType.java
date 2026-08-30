@@ -75,6 +75,12 @@ public enum MessageType {
 
     // ===== لیدربورد =====
     FETCH_LEADERBOARD,
-    FETCH_LEADERBOARD_RESULT
+    FETCH_LEADERBOARD_RESULT,
+
+    // ===== بازی امتیازی تحت شبکه (فاز شبکه) =====
+    /** Client -> Server: ارسال امتیاز پایان‌دور بازی امتیازی («میوپوینت»). */
+    SUBMIT_SCORE,
+    /** Server -> Client: نتیجه، شامل رکورد نهایی (بعد از مقایسه با رکورد قبلی). */
+    SUBMIT_SCORE_RESULT
 
 }

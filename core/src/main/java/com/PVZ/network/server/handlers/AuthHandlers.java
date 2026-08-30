@@ -39,6 +39,7 @@ public final class AuthHandlers {
         dispatcher.register(MessageType.SYNC_USER, AuthHandlers::handleSyncUser);
         dispatcher.register(MessageType.FETCH_USER, AuthHandlers::handleFetchUser);
         dispatcher.register(MessageType.CHECK_USERNAME, AuthHandlers::handleCheckUsername);
+        dispatcher.register(MessageType.SUBMIT_SCORE, AuthHandlers::handleSubmitScore);
         dispatcher.register(MessageType.PING, (session, request) ->
                 NetworkMessage.reply(request.getRequestId(), MessageType.PONG));
     }
@@ -212,6 +213,42 @@ public final class AuthHandlers {
         boolean available = username != null && UserRegistry.isUsernameAvailable(username);
         return NetworkMessage.reply(request.getRequestId(), MessageType.CHECK_USERNAME_RESULT)
                 .with("available", available);
+    }
+
+    // ===================== SUBMIT_SCORE («بازی امتیازی» تحت شبکه) =====================
+    // طبق سند فاز شبکه: پس از پایان هر دور، امتیاز به سرور ارسال می‌شود و فقط اگر از
+    // رکورد فعلی کاربر روی سرور بیشتر باشد، رکورد به‌روزرسانی می‌شود (نه بازنویسی مطلق).
+    // این مقدار همان چیزی است که ستون «My Point» در لیدربورد از userStats.highestScore
+    // می‌خواند - پس کاربری که هنوز این پیام را نفرستاده، مقداری غیر از صفر پیش‌فرض ندارد.
+
+    private static NetworkMessage handleSubmitScore(ClientSession session, NetworkMessage request) {
+        if (!session.isAuthenticated()) {
+            return fail(request, MessageType.SUBMIT_SCORE_RESULT, "Not logged in.");
+        }
+        int score = request.getInt("score", -1);
+        if (score < 0) {
+            return fail(request, MessageType.SUBMIT_SCORE_RESULT, "Invalid score.");
+        }
+
+        User user = UserRegistry.getUser(session.getUsername());
+        if (user == null || user.userStats == null) {
+            return fail(request, MessageType.SUBMIT_SCORE_RESULT, "User not found.");
+        }
+
+        boolean isNewRecord = score > user.userStats.getHighestScore();
+        if (isNewRecord) {
+            user.userStats.updateHighestScore(score);
+            try {
+                com.PVZ.database.UserDatabase.save(session.getUsername(), user);
+            } catch (Exception e) {
+                return fail(request, MessageType.SUBMIT_SCORE_RESULT, "Failed to save: " + e.getMessage());
+            }
+        }
+
+        return NetworkMessage.reply(request.getRequestId(), MessageType.SUBMIT_SCORE_RESULT)
+                .with("success", true)
+                .with("newRecord", isNewRecord)
+                .with("highestScore", user.userStats.getHighestScore());
     }
 
     // ===================== Helpers (کپی‌شده از RegisterMenuController/LoginMenuController) =====================

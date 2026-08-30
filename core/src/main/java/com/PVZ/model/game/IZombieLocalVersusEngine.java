@@ -36,6 +36,58 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
     private boolean matchFinished = false;
     private String matchResultText = "";
 
+    /** استیکرهای متحرک فعال روی زمین بازی (انیمیشن PAM واقعی) - مود لوکال دو‌نفره. */
+    private final List<LocalStickerEffect> activeStickers = new ArrayList<>();
+    private float reactionCooldown = 0f;
+    private static final float REACTION_COOLDOWN_SECONDS = 0.75f;
+
+    private static final class LocalStickerEffect {
+        final String path;
+        final String clip;
+        final float x;
+        final float y;
+        final float lifetime;
+        float elapsed = 0f;
+
+        LocalStickerEffect(String path, String clip, float x, float y, float lifetime) {
+            this.path = path;
+            this.clip = clip;
+            this.x = x;
+            this.y = y;
+            this.lifetime = lifetime;
+        }
+    }
+
+    /**
+     * برای مود دو‌نفره‌ی لوکال (روی یک صفحه): چون هر دو بازیکن همین صفحه را می‌بینند،
+     * نیازی به ارسال شبکه‌ای نیست - فقط افکت/حباب روی همان صفحه‌ی مشترک نشان داده
+     * می‌شود (دقیقا مثل ری‌اکشن نسخه‌ی آنلاین، منتها بدون شبکه).
+     */
+    public void sendReaction(String reactionId) {
+        com.PVZ.model.game.reaction.ReactionCatalog.Reaction reaction =
+                com.PVZ.model.game.reaction.ReactionCatalog.findById(reactionId);
+        if (reaction == null || reactionCooldown > 0f) return;
+        reactionCooldown = REACTION_COOLDOWN_SECONDS;
+
+        pendingLocalReaction = reaction;
+
+        if (reaction.pamPath() != null && map != null) {
+            float centerX = map.getStartX() + (map.getCols() > 0 ? map.getCols() : 9) * map.getTileWidth() / 2f;
+            float centerY = map.getStartY() - (map.getRows() > 0 ? map.getRows() : 5) * map.getTileHeight() / 2f;
+            activeStickers.add(new LocalStickerEffect(reaction.pamPath(), reaction.pamClip(),
+                    centerX, centerY, Math.max(0.6f, reaction.pamLifetimeSeconds())));
+        }
+    }
+
+    /** آخرین ری‌اکشنی که باید به‌صورت حباب توسط GameScreen نمایش داده شود؛ بعد از خواندن null می‌شود. */
+    private com.PVZ.model.game.reaction.ReactionCatalog.Reaction pendingLocalReaction;
+
+    public com.PVZ.model.game.reaction.ReactionCatalog.Reaction pollLocalReaction() {
+        com.PVZ.model.game.reaction.ReactionCatalog.Reaction r = pendingLocalReaction;
+        pendingLocalReaction = null;
+        return r;
+    }
+
     private static com.badlogic.gdx.graphics.g2d.NinePatch zombiePanelBackground;
 
     private static com.badlogic.gdx.graphics.g2d.NinePatch getZombiePanelBackground() {
@@ -195,6 +247,20 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
             if (getGame().getBrainsRemaining() <= 0) {
                 matchFinished = true;
                 matchResultText = "ALL BRAINS EATEN - ZOMBIE WINS!";
+            }
+        }
+
+        if (reactionCooldown > 0f) {
+            reactionCooldown -= delta;
+        }
+        if (!activeStickers.isEmpty()) {
+            java.util.Iterator<LocalStickerEffect> it = activeStickers.iterator();
+            while (it.hasNext()) {
+                LocalStickerEffect fx = it.next();
+                fx.elapsed += delta;
+                if (fx.elapsed >= fx.lifetime) {
+                    it.remove();
+                }
             }
         }
     }
@@ -380,6 +446,13 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
             }
             headerFont.setColor(Color.YELLOW);
             headerFont.draw(batch, matchResultText, 2560f / 2f - 250f, 1440f / 2f + 20f);
+        }
+
+        // 6. استیکرها/ایموجی‌های واکنش (انیمیشن PAM واقعی) در وسط زمین
+        if (!activeStickers.isEmpty()) {
+            for (LocalStickerEffect fx : activeStickers) {
+                EntityRenderer.getInstance().renderPam(batch, fx.path, fx.clip, fx.elapsed, fx.x - 128f, fx.y - 128f);
+            }
         }
 
         batch.end();
