@@ -68,7 +68,6 @@ public class OnlineGamePanel extends BasePanel {
         fieldStyle.messageFont = bigFont;
 
         buildUi();
-        connectToServer();
     }
 
     private void buildUi() {
@@ -84,6 +83,9 @@ public class OnlineGamePanel extends BasePanel {
 
         serverIpField = createField("localhost");
         mainTable.add(serverIpField).width(FIELD_WIDTH).height(BUTTON_HEIGHT).center().row();
+
+        MenuButton connectButton = createButton("CONNECT", this::onConnect, greenUp, greenDown);
+        mainTable.add(connectButton).padBottom(15f).row();
 
         randomButton = createButton("RANDOM MATCH", this::onRandomMatch, greenUp, greenDown);
         mainTable.add(randomButton).padBottom(15f).row();
@@ -142,7 +144,6 @@ public class OnlineGamePanel extends BasePanel {
         challengeButton.setDisabled(!enabled);
         leaderboardButton.setDisabled(!enabled);
         usernameField.setDisabled(!enabled);
-        serverIpField.setDisabled(!enabled);
         backButton.setDisabled(!enabled);
     }
 
@@ -153,7 +154,6 @@ public class OnlineGamePanel extends BasePanel {
         challengeButton.setDisabled(queueActive);
         leaderboardButton.setDisabled(queueActive);
         usernameField.setDisabled(queueActive);
-        serverIpField.setDisabled(queueActive);
         backButton.setDisabled(queueActive);
     }
 
@@ -259,6 +259,19 @@ public class OnlineGamePanel extends BasePanel {
             return;
         }
         AppStatus.setCurrentMenuType(MenuType.ONLINE_LEADERBOARD);
+    }
+
+    private void onConnect() {
+        try {
+            if (!NetworkSession.isConnected()) {
+                NetworkSession.connect(serverIpField.getText().trim());
+            }
+            setStatus("Connected to server.", Color.GREEN);
+            setButtonsEnabled(true);
+        } catch (IOException e) {
+            setStatus("Could not connect to server: " + e.getMessage(), Color.SALMON);
+            setButtonsEnabled(false);
+        }
     }
 
     private void onBack() {
