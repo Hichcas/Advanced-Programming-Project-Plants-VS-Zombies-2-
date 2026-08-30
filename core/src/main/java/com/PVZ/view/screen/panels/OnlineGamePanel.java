@@ -19,6 +19,7 @@ import java.io.IOException;
 public class OnlineGamePanel extends BasePanel {
 
     private TextField usernameField;
+    private TextField serverIpField;
     private Label statusLabel;
     private MenuButton randomButton;
     private MenuButton roleButton;
@@ -78,6 +79,12 @@ public class OnlineGamePanel extends BasePanel {
         MenuButton title = createTitleButton("ONLINE GAME");
         mainTable.add(title).padBottom(SCREEN_H * 0.02f).row();
 
+        Label ipLabel = new Label("Server IP:", labelStyle);
+        mainTable.add(ipLabel).center().padBottom(4f).row();
+
+        serverIpField = createField("localhost");
+        mainTable.add(serverIpField).width(FIELD_WIDTH).height(BUTTON_HEIGHT).center().row();
+
         randomButton = createButton("RANDOM MATCH", this::onRandomMatch, greenUp, greenDown);
         mainTable.add(randomButton).padBottom(15f).row();
 
@@ -118,7 +125,7 @@ public class OnlineGamePanel extends BasePanel {
     private void connectToServer() {
         try {
             if (!NetworkSession.isConnected()) {
-                NetworkSession.connect("localhost");
+                NetworkSession.connect(serverIpField.getText().trim());
             }
             setStatus("Connected to server.", Color.GREEN);
         } catch (IOException e) {
@@ -135,6 +142,7 @@ public class OnlineGamePanel extends BasePanel {
         challengeButton.setDisabled(!enabled);
         leaderboardButton.setDisabled(!enabled);
         usernameField.setDisabled(!enabled);
+        serverIpField.setDisabled(!enabled);
         backButton.setDisabled(!enabled);
     }
 
@@ -145,6 +153,7 @@ public class OnlineGamePanel extends BasePanel {
         challengeButton.setDisabled(queueActive);
         leaderboardButton.setDisabled(queueActive);
         usernameField.setDisabled(queueActive);
+        serverIpField.setDisabled(queueActive);
         backButton.setDisabled(queueActive);
     }
 
