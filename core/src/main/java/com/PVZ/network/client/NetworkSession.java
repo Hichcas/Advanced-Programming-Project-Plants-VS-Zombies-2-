@@ -118,8 +118,11 @@ public final class NetworkSession {
         }
     }
 
-    public static void logout() {
+    public static void logout(User user) {
         try {
+            if (isConnected() && user != null) {
+                syncUser(user);
+            }
             CLIENT.sendRequestBlocking(NetworkMessage.request(MessageType.LOGOUT));
         } catch (Exception ignored) {
         }

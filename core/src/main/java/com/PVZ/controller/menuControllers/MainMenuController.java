@@ -4,6 +4,7 @@ import com.PVZ.model.enums.MenuType;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.model.user.UserRegistry;
+import com.PVZ.network.client.NetworkSession;
 import com.PVZ.view.input.DTO.MainMenuInputDTO;
 import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
@@ -67,9 +68,10 @@ public class MainMenuController {
         if (currentUser != null) {
             currentUser.setStayLoggedIn(false);
             if (currentUser.profile != null) {
-                UserRegistry.saveUserToDatabase(currentUser.profile.getUsername());
+                UserRegistry.saveUserToDatabase(currentUser.profile.getUsername()); 
             }
         }
+       NetworkSession.logout(currentUser); 
         AppStatus.currentUser = null;
         AppStatus.currentMenuType = MenuType.REGISTER;
         return new OutputDTO(true, "Logged out successfully.\nEntered Register Menu.");

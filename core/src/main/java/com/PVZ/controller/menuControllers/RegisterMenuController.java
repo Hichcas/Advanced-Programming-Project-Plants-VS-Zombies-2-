@@ -6,8 +6,8 @@ import com.PVZ.model.status.AppStatus;
 import com.PVZ.model.user.User;
 import com.PVZ.model.user.UserRegistry;
 import com.PVZ.network.client.NetworkSession;
-import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.input.DTO.RegisterInputDTO;
+import com.PVZ.view.input.InputDTO;
 import com.PVZ.view.output.OutputDTO;
 
 public class RegisterMenuController {
@@ -88,6 +88,7 @@ public class RegisterMenuController {
             return new OutputDTO(false, result.message());
         }
         AppStatus.currentUser = result.user();
+        UserRegistry.cacheUser(AppStatus.currentUser); 
         AppStatus.currentMenuType = MenuType.MAIN;
         return new OutputDTO(true, "Registration successful. Welcome, " + nickname + "!");
     }

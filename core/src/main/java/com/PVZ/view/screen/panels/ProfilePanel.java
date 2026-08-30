@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import pvz.skin.PvzSkin;
+import  com.PVZ.network.client.NetworkSession;
 
 public class ProfilePanel extends BasePanel {
 
@@ -326,9 +327,10 @@ public class ProfilePanel extends BasePanel {
         if (currentUser != null) {
             currentUser.setStayLoggedIn(false);
             if (currentUser.profile != null) {
-                UserRegistry.saveUserToDatabase(currentUser.profile.getUsername());
+                UserRegistry.saveUserToDatabase(currentUser.profile.getUsername()); 
             }
         }
+       NetworkSession.logout(currentUser); 
         AppStatus.currentUser = null;
         AppStatus.currentMenuType = MenuType.REGISTER;
     }

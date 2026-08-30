@@ -84,6 +84,9 @@ public class PVZ extends Game {
 
     @Override
     public void dispose() {
+        if (AppStatus.currentUser != null && NetworkSession.isConnected()) {
+            NetworkSession.syncUser(AppStatus.currentUser);
+        }
         CursorManager.getInstance().dispose();
         UserRegistry.clear();
         MusicManager.getInstance().dispose();

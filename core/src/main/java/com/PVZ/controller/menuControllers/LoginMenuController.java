@@ -67,6 +67,7 @@ public class LoginMenuController {
 
         User user = result.user();
         user.setStayLoggedIn(stayLoggedIn);
+        UserRegistry.cacheUser(user);
         AppStatus.currentUser = user;
         AppStatus.currentMenuType = MenuType.MAIN;
         resetState = ResetState.NONE;

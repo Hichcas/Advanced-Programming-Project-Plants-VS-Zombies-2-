@@ -106,6 +106,11 @@ public final class UserRegistry {
         }
     }
 
+    public static void cacheUser(User user) {
+        if (user == null || user.profile == null || user.profile.getUsername() == null) return;
+        USERS.put(user.profile.getUsername(), user);
+    }
+
     public static void markDirty(String username) {
         if (username != null) DIRTY_USERS.add(username);
     }
