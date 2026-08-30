@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -41,12 +42,22 @@ public class LevelStartOverlay extends Table {
         title.setFontScale(1.4f);
         dialog.add(title).padBottom(18f).row();
 
+        // متن توضیحات بعضی مراحل (مثل «بازی امتیازی») از بقیه بلندتر است. برای اینکه
+        // دکمه‌ی CONTINUE هیچ‌وقت خارج از صفحه یا زیر متن گم نشود، لیست توضیحات را
+        // داخل یک ناحیه‌ی اسکرول‌شونده با ارتفاع محدود می‌گذاریم؛ خود دکمه همیشه
+        // بیرون از این ناحیه و کاملا قابل‌کلیک باقی می‌ماند.
+        Table objectivesTable = new Table();
         for (String objective : buildObjectives(config)) {
             Label line = new Label("- " + objective, new Label.LabelStyle(font, Color.LIGHT_GRAY));
+            line.setFontScale(0.55f);
             line.setWrap(true);
             line.setAlignment(Align.left);
-            dialog.add(line).width(620f).left().padBottom(8f).row();
+            objectivesTable.add(line).width(620f).left().padBottom(8f).row();
         }
+        ScrollPane objectivesScroll = new ScrollPane(objectivesTable);
+        objectivesScroll.setScrollingDisabled(true, false);
+        objectivesScroll.setFadeScrollBars(false);
+        dialog.add(objectivesScroll).width(650f).maxHeight(560f).padBottom(6f).row();
 
         // --- دکمه CONTINUE با MenuButton سفارشی ---
         Drawable purpleUp = PvzSkin.get().getDrawable("image_ui_generic_purplebutton_10");
@@ -61,7 +72,7 @@ public class LevelStartOverlay extends Table {
         continueButton.setSize(220f, 60f);
         dialog.add(continueButton).size(220f, 60f).padTop(16f).row();
 
-        add(dialog);
+        add(dialog).maxHeight(1300f);
     }
 
     private static List<String> buildObjectives(StageConfig config) {

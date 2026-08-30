@@ -70,7 +70,12 @@ public class NpcDialogueOverlay extends Actor {
     public NpcDialogueOverlay() {
         setSize(BaseScreen.VIRTUAL_WIDTH, BaseScreen.VIRTUAL_HEIGHT);
         setVisible(false);
-        setTouchable(Touchable.enabled);
+        // مهم: چون این کلاس مستقیما Actor است (نه Group)، hit() پیش‌فرضش بر خلاف Group
+        // وضعیت isVisible() را چک نمی‌کند - یعنی اگر Touchable.enabled همیشگی باشد، این
+        // Actor تمام‌صفحه حتی وقتی نامرئی/غیرفعال است، کلیک‌های زیرش (مثلا دکمه‌ی
+        // CONTINUE در LevelStartOverlay که قبل از این به Stage اضافه می‌شود) را می‌بلعد.
+        // پس باید دقیقا هم‌زمان با نمایش/عدم‌نمایش دیالوگ، Touchable را هم toggle کنیم.
+        setTouchable(Touchable.disabled);
 
         font = FontManager.getInstance().getEnglishMenuFont();
         bubbleBackground = resolveBubbleBackground();
@@ -120,6 +125,7 @@ public class NpcDialogueOverlay extends Actor {
         animTime = 0f;
         showing = true;
         setVisible(true);
+        setTouchable(Touchable.enabled);
         toFront();
 
         state = State.ENTER;
@@ -340,6 +346,7 @@ public class NpcDialogueOverlay extends Actor {
                 if (stateTimer >= exitDuration) {
                     showing = false;
                     setVisible(false);
+                    setTouchable(Touchable.disabled);
                     state = State.HIDDEN;
                 }
             }
