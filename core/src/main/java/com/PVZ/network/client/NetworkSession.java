@@ -97,6 +97,26 @@ public final class NetworkSession {
         return new AuthResult(true, message, user);
     }
 
+    public static AuthResult syncLocalAccount(User user) {
+        try {
+            NetworkMessage response = CLIENT.sendRequestBlocking(
+                    NetworkMessage.request(MessageType.REGISTER)
+                            .with("username", user.profile.getUsername())
+                            .with("password", user.profile.getPasswordHash())
+                            .with("nickname", user.profile.getNickname())
+                            .with("email", user.profile.getEmail())
+                            .with("gender", user.profile.getGender())
+                            .with("securityQuestion", user.profile.getSecurityQuestion())
+                            .with("securityAnswer", user.profile.getSecurityAnswerHash())
+                            .with("prehashed", true));
+            return toAuthResult(response);
+        } catch (TimeoutException e) {
+            return AuthResult.failure("Server did not respond in time.");
+        } catch (IOException e) {
+            return AuthResult.failure("Connection error: " + e.getMessage());
+        }
+    }
+
     public static boolean checkUsernameAvailable(String username) {
         try {
             NetworkMessage response = CLIENT.sendRequestBlocking(

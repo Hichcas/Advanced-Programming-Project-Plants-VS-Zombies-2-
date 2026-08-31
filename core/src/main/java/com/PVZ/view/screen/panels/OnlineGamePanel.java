@@ -270,9 +270,26 @@ public class OnlineGamePanel extends BasePanel {
             saveLastServerIp(ip);
             setStatus("Connected to server: " + ip, Color.GREEN);
             setButtonsEnabled(true);
+            syncLocalAccountIfNeeded();
         } catch (IOException e) {
             setStatus("Could not connect to server: " + e.getMessage(), Color.SALMON);
             setButtonsEnabled(false);
+        }
+    }
+
+    private void syncLocalAccountIfNeeded() {
+        if (AppStatus.currentUser == null) return;
+        String username = AppStatus.currentUser.profile.getUsername();
+        boolean availableOnServer = NetworkSession.checkUsernameAvailable(username);
+        if (!availableOnServer) {
+            return;
+        }
+        NetworkSession.AuthResult result = NetworkSession.syncLocalAccount(AppStatus.currentUser);
+        if (result.success()) {
+            setStatus("Connected to server: " + serverIpField.getText().trim()
+                    + " (local account synced)", Color.GREEN);
+        } else {
+            setStatus("Connected, but could not sync local account: " + result.message(), Color.GOLD);
         }
     }
 
