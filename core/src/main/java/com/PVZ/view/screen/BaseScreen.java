@@ -13,11 +13,11 @@ import com.PVZ.view.screen.manager.BrightnessController;
 
 public abstract class BaseScreen implements Screen {
     protected final PVZ game;
-    protected OrthographicCamera camera;
+    public OrthographicCamera camera;
     protected FillViewport viewport;
 
-    protected Stage stage;
-    protected InputMultiplexer multiplexer;
+    public Stage stage;
+    public InputMultiplexer multiplexer;
 
     // public: پنل‌ها (که مستقیماً روی Stage با این ویوپورت مجازی کشیده می‌شوند) هم برای
     // محاسبه‌ی سنتر/چیدمان دقیق باید به همین اعداد دسترسی داشته باشند، نه به سایز واقعی پنجره.

@@ -34,7 +34,7 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "PEASHOOTER", "SUNFLOWER" ],
+    "unlockedPlants" : [ "SUNFLOWER", "PEASHOOTER" ],
     "seenZombies" : [ ],
     "seedPackets" : { },
     "plantLevels" : { },
@@ -140,8 +140,8 @@
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "forToday" : false,
-    "availableToday" : false
+    "availableToday" : false,
+    "forToday" : false
   },
   "stayLoggedIn" : false,
   "questState" : {
@@ -284,7 +284,7 @@
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 1,
       "isDayLevel" : true,
-      "timeUntilReset" : "4h 26m"
+      "timeUntilReset" : "7h 51m"
     }
   }
 }

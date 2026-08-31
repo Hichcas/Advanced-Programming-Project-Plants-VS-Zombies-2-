@@ -126,14 +126,14 @@ public class GameScreen extends BaseScreen {
     static {
         // مقادیر پیش‌فرض برای همه فصل‌ها (همون چیزی که الان کار می‌کنه)
         CHAPTER_BG_SETTINGS.put(ChapterEnum.ANCIENT_EGYPT,
-                new BackgroundSettings(1.20f, 1.30f, -100f, -140f));
+            new BackgroundSettings(1.20f, 1.30f, -100f, -140f));
         CHAPTER_BG_SETTINGS.put(ChapterEnum.BIG_WAVE_BEACH,
-                new BackgroundSettings(1.20f, 1.30f, -100f, -140f));
+            new BackgroundSettings(1.20f, 1.30f, -100f, -140f));
         CHAPTER_BG_SETTINGS.put(ChapterEnum.DARK_AGES,
-                new BackgroundSettings(1.20f, 1.30f, -100f, -140f));
+            new BackgroundSettings(1.20f, 1.30f, -100f, -140f));
 
         CHAPTER_BG_SETTINGS.put(ChapterEnum.FROSTBITE_CAVES,
-                new BackgroundSettings(1.23f, 1.32f, -100f, -170f));
+            new BackgroundSettings(1.23f, 1.32f, -100f, -170f));
     }
 
     public GameScreen(String mapPath, String musicPath, GameEngine gameEngine) {
@@ -152,8 +152,8 @@ public class GameScreen extends BaseScreen {
 
         ChapterEnum chapter = AppStatus.getCurrentChapterEnum();
         String actualMusic = (chapter != null && chapter.getMusicPath() != null)
-                ? chapter.getMusicPath()
-                : musicPath;
+            ? chapter.getMusicPath()
+            : musicPath;
 
         MusicManager.getInstance().playMusic(actualMusic);
         this.gameEngine = gameEngine;
@@ -211,8 +211,8 @@ public class GameScreen extends BaseScreen {
         gameOverFont = FontManager.getInstance().getEnglishMenuFont();
 
         if (gameEngine instanceof RegularGameEngine regularGameEngine
-                && regularGameEngine
-                        .getSpecialLevel() instanceof com.PVZ.model.game.chapter.sepecialLevel.TimedWarLevel) {
+            && regularGameEngine
+            .getSpecialLevel() instanceof com.PVZ.model.game.chapter.sepecialLevel.TimedWarLevel) {
             Label.LabelStyle timerStyle = new Label.LabelStyle(hudFont, Color.WHITE);
             try {
                 Skin skin = PvzSkin.get();
@@ -303,9 +303,9 @@ public class GameScreen extends BaseScreen {
         BitmapFont font = FontManager.getInstance().getEnglishMenuFont();
 
         com.badlogic.gdx.graphics.g2d.TextureRegion upRegion = EntityRenderer.getInstance().getTextures()
-                .region("IMAGE_UI_POWERUPS_POWER_FLAMETHROWER");
+            .region("IMAGE_UI_POWERUPS_POWER_FLAMETHROWER");
         com.badlogic.gdx.graphics.g2d.TextureRegion downRegion = EntityRenderer.getInstance().getTextures()
-                .region("IMAGE_UI_POWERUPS_POWER_FLAMETHROWER_DOWN");
+            .region("IMAGE_UI_POWERUPS_POWER_FLAMETHROWER_DOWN");
 
         MenuButton surrenderBtn;
         MenuButton drawBtn;
@@ -372,7 +372,7 @@ public class GameScreen extends BaseScreen {
                 cameraIntroZoom = MAX_ZOOM_OUT;
             } else if (introTimer < INTRO_PAN_RIGHT_DURATION + INTRO_HOLD_RIGHT_DURATION + INTRO_PAN_LEFT_DURATION) {
                 float t = (introTimer - (INTRO_PAN_RIGHT_DURATION + INTRO_HOLD_RIGHT_DURATION))
-                        / INTRO_PAN_LEFT_DURATION;
+                    / INTRO_PAN_LEFT_DURATION;
                 float smoothT = t * t * (3f - 2f * t);
                 cameraIntroOffsetX = MAX_PAN_OFFSET * (1f - smoothT);
                 cameraIntroZoom = MAX_ZOOM_OUT - (MAX_ZOOM_OUT - 1.0f) * smoothT;
@@ -395,7 +395,7 @@ public class GameScreen extends BaseScreen {
     private com.PVZ.model.game.chapter.StageConfig resolveStageConfig() {
         try {
             return com.PVZ.model.game.chapter.ChapterLibrary
-                    .getStageConfig(AppStatus.currentChapterName, AppStatus.currentStageNumber);
+                .getStageConfig(AppStatus.currentChapterName, AppStatus.currentStageNumber);
         } catch (Exception e) {
             return null;
         }
@@ -408,16 +408,16 @@ public class GameScreen extends BaseScreen {
     private boolean isSimulationFrozen() {
         if (AppStatus.isMultiplayerMatch) {
             return onlineMatchResultOverlay != null && onlineMatchResultOverlay.isShowing()
-                    || drawOfferOverlay != null && drawOfferOverlay.isShowing();
+                || drawOfferOverlay != null && drawOfferOverlay.isShowing();
         }
         if (AppStatus.getGameEngine() instanceof IZombieLocalVersusEngine) {
             return localMatchResultOverlay != null && localMatchResultOverlay.isShowing();
         }
         return (levelStartOverlay != null && levelStartOverlay.isShowing())
-                || (introStarted && !introFinished)
-                || (npcDialogueOverlay != null && npcDialogueOverlay.isShowing())
-                || (pauseMenuOverlay != null && pauseMenuOverlay.isPaused())
-                || (winLoseOverlay != null && winLoseOverlay.isShowing());
+            || (introStarted && !introFinished)
+            || (npcDialogueOverlay != null && npcDialogueOverlay.isShowing())
+            || (pauseMenuOverlay != null && pauseMenuOverlay.isPaused())
+            || (winLoseOverlay != null && winLoseOverlay.isShowing());
     }
 
     private Table buildPauseButton() {
@@ -459,7 +459,7 @@ public class GameScreen extends BaseScreen {
             Drawable greenUp = skin.getDrawable("image_ui_generic_greenbutton_10");
             Drawable greenDown = skin.getDrawable("image_ui_generic_greenbutton_down_10");
             button = new MenuButton(greenUp, "START WAVE!", font, greenDown, null, null,
-                    this::startPlantWhatYouGetWaves);
+                this::startPlantWhatYouGetWaves);
         } catch (Exception ex) {
             button = new MenuButton("START WAVE!", font, this::startPlantWhatYouGetWaves);
         }
@@ -471,7 +471,7 @@ public class GameScreen extends BaseScreen {
 
     private void startPlantWhatYouGetWaves() {
         if (AppStatus.getGameEngine() instanceof RegularGameEngine rge
-                && rge.isPlantWhatYouGetMode() && !rge.isZombieWavesStarted()) {
+            && rge.isPlantWhatYouGetMode() && !rge.isZombieWavesStarted()) {
             rge.startWaves();
         }
     }
@@ -480,7 +480,7 @@ public class GameScreen extends BaseScreen {
         if (startWaveButtonRoot == null)
             return;
         boolean shouldShow = AppStatus.getGameEngine() instanceof RegularGameEngine rge
-                && rge.isPlantWhatYouGetMode() && !rge.isZombieWavesStarted();
+            && rge.isPlantWhatYouGetMode() && !rge.isZombieWavesStarted();
         startWaveButtonRoot.setVisible(shouldShow);
         startWaveButtonRoot.setTouchable(shouldShow ? Touchable.childrenOnly : Touchable.disabled);
     }
@@ -512,7 +512,7 @@ public class GameScreen extends BaseScreen {
         });
 
         plantFoodCountLabel = new Label("0",
-                new Label.LabelStyle(FontManager.getInstance().getEnglishMenuFont(), Color.YELLOW));
+            new Label.LabelStyle(FontManager.getInstance().getEnglishMenuFont(), Color.YELLOW));
         plantFoodCountLabel.setFontScale(0.9f);
 
         Stack stack = new Stack();
@@ -534,8 +534,8 @@ public class GameScreen extends BaseScreen {
             if (plantFoodButton != null) {
                 plantFoodButton.clearActions();
                 plantFoodButton.addAction(Actions.sequence(
-                        Actions.color(Color.RED, 0.08f),
-                        Actions.color(new Color(1f, 1f, 1f, 0.4f), 0.3f)));
+                    Actions.color(Color.RED, 0.08f),
+                    Actions.color(new Color(1f, 1f, 1f, 0.4f), 0.3f)));
             }
             System.out.println("No plant food available.");
             return;
@@ -546,8 +546,8 @@ public class GameScreen extends BaseScreen {
             updateShovelButtonState();
             if (plantFoodButton != null) {
                 plantFoodButton.addAction(Actions.sequence(
-                        Actions.scaleTo(1.25f, 1.25f, 0.08f),
-                        Actions.scaleTo(1f, 1f, 0.15f)));
+                    Actions.scaleTo(1.25f, 1.25f, 0.08f),
+                    Actions.scaleTo(1f, 1f, 0.15f)));
             }
         }
         updatePlantFoodButtonState();
@@ -563,8 +563,8 @@ public class GameScreen extends BaseScreen {
             if (!text.equals(plantFoodCountLabel.getText().toString())) {
                 plantFoodCountLabel.setText(text);
                 plantFoodCountLabel.addAction(Actions.sequence(
-                        Actions.scaleTo(1.6f, 1.6f, 0.1f),
-                        Actions.scaleTo(1f, 1f, 0.15f)));
+                    Actions.scaleTo(1.6f, 1.6f, 0.1f),
+                    Actions.scaleTo(1f, 1f, 0.15f)));
             }
         }
         if (count <= 0 && plantFoodModeActive) {
@@ -579,7 +579,7 @@ public class GameScreen extends BaseScreen {
     private void updatePlantFoodButtonState() {
         if (plantFoodButton != null) {
             boolean hasFood = !(AppStatus.getGameEngine() instanceof RegularGameEngine engine)
-                    || engine.getPlantFoodManager().getPlantFoodCount() > 0;
+                || engine.getPlantFoodManager().getPlantFoodCount() > 0;
             float alpha = hasFood ? (plantFoodModeActive ? 1f : 0.85f) : 0.4f;
             plantFoodButton.setColor(1f, 1f, 1f, alpha);
         }
@@ -712,7 +712,7 @@ public class GameScreen extends BaseScreen {
         OutputDTOResultHolder result = restartCurrentStage();
         if (result.success) {
             ScreenManager.getInstance().performTransition(() -> new GameScreen(
-                    mapPath, musicPath, AppStatus.getGameEngine()));
+                mapPath, musicPath, AppStatus.getGameEngine()));
         } else {
             System.err.println("GameScreen: restart failed: " + result.message);
         }
@@ -730,8 +730,8 @@ public class GameScreen extends BaseScreen {
 
     private OutputDTOResultHolder restartCurrentStage() {
         com.PVZ.view.output.OutputDTO result = new com.PVZ.controller.menuControllers.PlantSelectionMenuController()
-                .handle(new com.PVZ.view.input.DTO.PlantSelectionInputDTO(
-                        com.PVZ.model.enums.commands.PlantSelectionCommand.START_GAME, null));
+            .handle(new com.PVZ.view.input.DTO.PlantSelectionInputDTO(
+                com.PVZ.model.enums.commands.PlantSelectionCommand.START_GAME, null));
         return new OutputDTOResultHolder(result.isSuccess(), result.getMessage());
     }
 
@@ -807,13 +807,13 @@ public class GameScreen extends BaseScreen {
                     return true;
                 }
                 return activeInputProcessor() != null
-                        && activeInputProcessor().touchDown(screenX, screenY, pointer, button);
+                    && activeInputProcessor().touchDown(screenX, screenY, pointer, button);
             }
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 return activeInputProcessor() != null
-                        && activeInputProcessor().touchUp(screenX, screenY, pointer, button);
+                    && activeInputProcessor().touchUp(screenX, screenY, pointer, button);
             }
 
             @Override
@@ -839,13 +839,13 @@ public class GameScreen extends BaseScreen {
         if (drawOfferOverlay != null) {
             // لیسنر برای پیشنهاد تساوی
             com.PVZ.network.client.NetworkSession.client().on(
-                    com.PVZ.network.common.MessageType.DRAW_OFFER, msg -> {
-                        Gdx.app.postRunnable(() -> {
-                            if (drawOfferOverlay != null && !drawOfferOverlay.isShowing()) {
-                                drawOfferOverlay.showOffer();
-                            }
-                        });
+                com.PVZ.network.common.MessageType.DRAW_OFFER, msg -> {
+                    Gdx.app.postRunnable(() -> {
+                        if (drawOfferOverlay != null && !drawOfferOverlay.isShowing()) {
+                            drawOfferOverlay.showOffer();
+                        }
                     });
+                });
         }
 
         refreshSeedPacketBar();
@@ -916,16 +916,16 @@ public class GameScreen extends BaseScreen {
                     int col = dto.getX() == null ? 8 : dto.getX();
                     com.PVZ.model.entity.zombies.base.Zombie z = zombieEngine.spawnZombie(alias, row, col);
                     yield new com.PVZ.view.output.OutputDTO(z != null,
-                            z != null ? "Zombie spawned: " + alias : "Could not spawn zombie.");
+                        z != null ? "Zombie spawned: " + alias : "Could not spawn zombie.");
                 }
                 case CHEAT_RELEASE_NUKE, KILL_ALL_ZOMBIES -> {
                     java.util.List<com.PVZ.model.entity.zombies.base.Zombie> zombies = zombieEngine
-                            .getZombiesInLane(-1);
+                        .getZombiesInLane(-1);
                     if (zombies == null || zombies.isEmpty()) {
                         zombies = new java.util.ArrayList<>();
                         for (int r = 0; r < 5; r++) {
                             java.util.List<com.PVZ.model.entity.zombies.base.Zombie> lane = zombieEngine
-                                    .getZombiesInLane(r);
+                                .getZombiesInLane(r);
                             if (lane != null)
                                 zombies.addAll(lane);
                         }
@@ -947,10 +947,10 @@ public class GameScreen extends BaseScreen {
                     new com.PVZ.view.output.OutputDTO(true, "Plant Food is not used by this minigame.");
                 case CHEAT_SET_WATER, CHEAT_SET_DRY -> {
                     yield new com.PVZ.view.output.OutputDTO(false,
-                            "Tile water/dry cheats are not supported by this minigame.");
+                        "Tile water/dry cheats are not supported by this minigame.");
                 }
                 default -> new com.PVZ.view.output.OutputDTO(false,
-                        "Cheat is not supported by this minigame.");
+                    "Cheat is not supported by this minigame.");
             };
         } catch (RuntimeException ex) {
             return new com.PVZ.view.output.OutputDTO(false, "Cheat failed: " + ex.getMessage());
@@ -965,10 +965,10 @@ public class GameScreen extends BaseScreen {
         String pendingAnnouncement = AppStatus.pollAnnouncement();
         if (pendingAnnouncement != null) {
             com.PVZ.view.screen.ui.AnnouncementPopup.show(stage, pendingAnnouncement,
-                    pendingAnnouncement.startsWith("MyoPoint")
-                            || pendingAnnouncement.startsWith("Game Over! Final MyoPoint")
-                                    ? com.badlogic.gdx.graphics.Color.GOLD
-                                    : com.badlogic.gdx.graphics.Color.WHITE);
+                pendingAnnouncement.startsWith("MyoPoint")
+                    || pendingAnnouncement.startsWith("Game Over! Final MyoPoint")
+                    ? com.badlogic.gdx.graphics.Color.GOLD
+                    : com.badlogic.gdx.graphics.Color.WHITE);
         }
 
         refreshSeedPacketBar();
@@ -983,7 +983,7 @@ public class GameScreen extends BaseScreen {
                 var reaction = com.PVZ.model.game.reaction.ReactionCatalog.findById(event.reactionId());
                 if (reaction != null) {
                     com.PVZ.view.screen.ui.ReactionBubble bubble = new com.PVZ.view.screen.ui.ReactionBubble(reaction,
-                            event.mine(), event.senderName());
+                        event.mine(), event.senderName());
                     float bottomMargin = 250f; // بالاتر از دکمه‌ی REACTIONS که وسط پایین صفحه‌ست، تا رویش نیفتد
                     float x = (stage.getViewport().getWorldWidth() - bubble.getWidth()) / 2f;
                     float y = bottomMargin;
@@ -998,7 +998,7 @@ public class GameScreen extends BaseScreen {
             if (reaction != null) {
                 // مود لوکال است، پس "mine"/senderName معنی ندارد - یک برچسب خنثی نشان می‌دهیم.
                 com.PVZ.view.screen.ui.ReactionBubble bubble = new com.PVZ.view.screen.ui.ReactionBubble(reaction,
-                        true, "PLAYER");
+                    true, "PLAYER");
                 float bottomMargin = 250f;
                 float x = (stage.getViewport().getWorldWidth() - bubble.getWidth()) / 2f;
                 float y = bottomMargin;
@@ -1021,13 +1021,13 @@ public class GameScreen extends BaseScreen {
                             com.PVZ.model.entity.Plant plant = reg.getMap().getPlantAt(r, c);
                             if (plant != null && !plant.isDead()) {
                                 boolean isFire = plant.getStats() != null
-                                        && plant.getStats().getBooleanExtra("freezeImmune", false);
+                                    && plant.getStats().getBooleanExtra("freezeImmune", false);
                                 if (!isFire && plant.getDefinition() != null) {
                                     isFire = plant.getDefinition().hasTag(com.PVZ.model.enums.PlantTag.FIRE);
                                 }
                                 if (!isFire) {
                                     int lv = ((Number) plant.getRuntimeState().getOrDefault("freezeLevel", 0))
-                                            .intValue();
+                                        .intValue();
                                     if (lv < 3) {
                                         lv++;
                                         plant.putRuntimeState("freezeLevel", lv);
@@ -1049,20 +1049,20 @@ public class GameScreen extends BaseScreen {
             }
         }
         if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.B)
-                || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.D)) {
+            || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.D)) {
             if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
                 com.PVZ.model.enums.ChapterEnum currentChap = com.PVZ.model.status.AppStatus.getCurrentChapterEnum();
                 boolean isDark = currentChap == com.PVZ.model.enums.ChapterEnum.DARK_AGES
-                        || (com.PVZ.model.status.AppStatus.currentChapterName != null
-                                && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("DARK"));
+                    || (com.PVZ.model.status.AppStatus.currentChapterName != null
+                    && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("DARK"));
                 boolean isBeach = currentChap == com.PVZ.model.enums.ChapterEnum.BIG_WAVE_BEACH
-                        || (com.PVZ.model.status.AppStatus.currentChapterName != null
-                                && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("BEACH"));
+                    || (com.PVZ.model.status.AppStatus.currentChapterName != null
+                    && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("BEACH"));
                 boolean isIce = currentChap == com.PVZ.model.enums.ChapterEnum.FROSTBITE_CAVES
-                        || (com.PVZ.model.status.AppStatus.currentChapterName != null
-                                && (com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("ICE")
-                                        || com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase()
-                                                .contains("FROST")));
+                    || (com.PVZ.model.status.AppStatus.currentChapterName != null
+                    && (com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("ICE")
+                    || com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase()
+                    .contains("FROST")));
                 com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss;
                 if (isDark) {
                     boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark();
@@ -1081,7 +1081,7 @@ public class GameScreen extends BaseScreen {
             }
         }
         if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.M)
-                || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.G)) {
+            || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.G)) {
             if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
                 for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
                     if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
@@ -1105,7 +1105,7 @@ public class GameScreen extends BaseScreen {
             }
         }
         if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.C)
-                || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
+            || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
             if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
                 for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
                     if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
@@ -1205,8 +1205,8 @@ public class GameScreen extends BaseScreen {
                     onlineMatchResultOverlay.showDraw(onlineEngine.getMatchResultText());
                 } else {
                     onlineMatchResultOverlay.showResult(
-                            onlineEngine.isWonMatch(),
-                            onlineEngine.getMatchResultText());
+                        onlineEngine.isWonMatch(),
+                        onlineEngine.getMatchResultText());
                 }
             } else if (!onlineEngine.isMatchFinished()) {
                 onlineMatchResultOverlay.hide();
@@ -1396,14 +1396,14 @@ public class GameScreen extends BaseScreen {
         if (!(activeEngine instanceof RegularGameEngine regularEngine))
             return;
         if (!(regularEngine
-                .getSpecialLevel() instanceof com.PVZ.model.game.chapter.sepecialLevel.TimedWarLevel timedWar))
+            .getSpecialLevel() instanceof com.PVZ.model.game.chapter.sepecialLevel.TimedWarLevel timedWar))
             return;
 
         double remaining = timedWar.getRemainingSeconds();
         StringBuilder text = new StringBuilder("TIME: ").append(String.format("%.1fs", remaining));
         if (timedWar.hasKillGoal() && timedWar.hasSunGoal()) {
             text.append("  |  ZOMBIES LEFT: ").append(timedWar.getKillsRemaining(regularEngine))
-                    .append("  |  SUN LEFT: ").append(timedWar.getSunRemaining(regularEngine));
+                .append("  |  SUN LEFT: ").append(timedWar.getSunRemaining(regularEngine));
         } else if (timedWar.hasKillGoal()) {
             text.append("  |  ZOMBIES LEFT: ").append(timedWar.getKillsRemaining(regularEngine));
         } else {
@@ -1423,7 +1423,7 @@ public class GameScreen extends BaseScreen {
         if (!(activeEngine instanceof RegularGameEngine regularEngine))
             return;
         if (!(regularEngine
-                .getSpecialLevel() instanceof com.PVZ.model.game.chapter.sepecialLevel.DeadLineLevel deadline))
+            .getSpecialLevel() instanceof com.PVZ.model.game.chapter.sepecialLevel.DeadLineLevel deadline))
             return;
         Map activeMap = regularEngine.getMap();
         if (activeMap == null)
@@ -1587,9 +1587,9 @@ public class GameScreen extends BaseScreen {
         }
         camera.zoom = cameraIntroZoom;
         camera.position.set(
-                VIRTUAL_WIDTH / 2f + shakeOffsetX + cameraIntroOffsetX,
-                VIRTUAL_HEIGHT / 2f + shakeOffsetY,
-                0f);
+            VIRTUAL_WIDTH / 2f + shakeOffsetX + cameraIntroOffsetX,
+            VIRTUAL_HEIGHT / 2f + shakeOffsetY,
+            0f);
         camera.update();
     }
 }
