@@ -1,6 +1,7 @@
 package com.PVZ.view.screen.panels;
 
 import com.PVZ.model.enums.MenuType;
+import com.PVZ.model.leaderboard.LeaderboardEntry;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.network.client.NetworkSession;
 import com.PVZ.network.common.MessageType;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import pvz.skin.PvzSkin;
+import com.PVZ.model.leaderboard.LeaderboardEntry;
 
 import java.io.IOException;
 
@@ -258,7 +260,34 @@ public class OnlineGamePanel extends BasePanel {
             setStatus("Not connected to server.", Color.SALMON);
             return;
         }
-        AppStatus.setCurrentMenuType(MenuType.ONLINE_LEADERBOARD);
+
+        NetworkMessage request = NetworkMessage.request(MessageType.FETCH_LEADERBOARD);
+        NetworkSession.client().sendRequest(request).thenAccept(response -> {
+            if (response.getBoolean("success", false)) {
+                Object rawEntries = response.get("entries");
+                if (rawEntries instanceof java.util.List) {
+                    java.util.List<?> entries = (java.util.List<?>) rawEntries;
+                    if (entries.isEmpty()) {
+                        setStatus("No leaderboard data.", Color.WHITE);
+                        return;
+                    }
+                    // REUSE EXACT SAME FORMAT as main menu leaderboard
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(String.format("%-15s %-25s %-10s %-8s %-10s %-10s%n",
+                        "Username", "Last Stage", "Minigames", "Daily", "Non-Daily", "MyoPoint"));
+                    sb.append("-".repeat(80)).append("\n");
+                    for (Object obj : entries) {
+                        if (obj instanceof LeaderboardEntry entry) {
+                            sb.append(String.format("%-15s %-25s %-10d %-8d %-10d %-10d%n",
+                                entry.getUsername(), entry.getLastStageInfo(),
+                                entry.getMinigamesCompleted(), entry.getDailyQuestsCompleted(),
+                                entry.getNonDailyQuestsCompleted(), entry.getHighestScore()));
+                        }
+                    }
+                    setStatus(sb.toString(), Color.WHITE);
+                }
+            }
+        });
     }
 
     private void onConnect() {
