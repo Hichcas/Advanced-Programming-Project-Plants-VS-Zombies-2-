@@ -24,6 +24,7 @@ public final class NetworkSession {
 
     private static final NetworkClient CLIENT = new NetworkClient();
     private static final int DEFAULT_PORT = 5050;
+    private static volatile boolean sessionAuthenticated = false;
 
     private NetworkSession() {
     }
@@ -36,12 +37,17 @@ public final class NetworkSession {
         return CLIENT.isConnected();
     }
 
+    public static boolean isSessionAuthenticated() {
+        return sessionAuthenticated;
+    }
+
     public static void connect(String host) throws IOException {
         connect(host, DEFAULT_PORT);
     }
 
     public static void connect(String host, int port) throws IOException {
         if (CLIENT.isConnected()) return;
+        sessionAuthenticated = false;
         CLIENT.connect(host, port);
     }
 
@@ -58,6 +64,21 @@ public final class NetworkSession {
                     NetworkMessage.request(MessageType.LOGIN)
                             .with("username", username)
                             .with("password", password));
+            return toAuthResult(response);
+        } catch (TimeoutException e) {
+            return AuthResult.failure("Server did not respond in time.");
+        } catch (IOException e) {
+            return AuthResult.failure("Connection error: " + e.getMessage());
+        }
+    }
+
+    public static AuthResult loginPrehashed(String username, String passwordHash) {
+        try {
+            NetworkMessage response = CLIENT.sendRequestBlocking(
+                    NetworkMessage.request(MessageType.LOGIN)
+                            .with("username", username)
+                            .with("password", passwordHash)
+                            .with("prehashed", true));
             return toAuthResult(response);
         } catch (TimeoutException e) {
             return AuthResult.failure("Server did not respond in time.");
@@ -93,6 +114,7 @@ public final class NetworkSession {
         if (!success) {
             return AuthResult.failure(message != null ? message : "Request failed.");
         }
+        sessionAuthenticated = true;
         User user = JsonCodec.convert(response.get("user"), User.class);
         return new AuthResult(true, message, user);
     }
@@ -145,6 +167,8 @@ public final class NetworkSession {
             }
             CLIENT.sendRequestBlocking(NetworkMessage.request(MessageType.LOGOUT));
         } catch (Exception ignored) {
+        } finally {
+            sessionAuthenticated = false;
         }
     }
 }

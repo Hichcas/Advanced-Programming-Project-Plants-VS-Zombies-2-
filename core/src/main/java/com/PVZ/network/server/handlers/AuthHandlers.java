@@ -136,7 +136,9 @@ public final class AuthHandlers {
         }
 
         try {
-            if (!user.profile.getPasswordHash().equals(EncryptionEngine.hash(password))) {
+            boolean prehashed = request.getBoolean("prehashed", false);
+            String suppliedHash = prehashed ? password : EncryptionEngine.hash(password);
+            if (!user.profile.getPasswordHash().equals(suppliedHash)) {
                 return fail(request, MessageType.LOGIN_RESULT, "Invalid username or password.");
             }
         } catch (Exception e) {
