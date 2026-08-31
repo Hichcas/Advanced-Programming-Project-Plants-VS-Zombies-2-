@@ -109,6 +109,7 @@ public class ClientSession implements Runnable {
     private void handleDisconnect() {
         if (username != null) {
             SessionRegistry.markOffline(username);
+            setUsername(null);
         }
         for (Runnable listener : disconnectListeners) {
             try {

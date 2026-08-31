@@ -34,8 +34,8 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "PRIMAL_POTATO_MINE", "WALL_NUT", "GRAPESHOT", "HYPNO_SHROOM", "PUMPKIN", "PEPPER_PULT", "PIERCE_MINT", "MEGA_GATLING_PEA", "FUME_SHROOM", "POTATO_MINE", "FIRE_PEASHOOTER", "CITRON", "SWEET_POTATO", "GOO_PEASHOOTER", "KIWIBEAST", "ENFORCE_MINT", "REPEATER", "KERNEL_PULT", "SUN_BEAN", "CAULIPOWER", "BOWLING_BULB", "ICEBERG_LETTUCE", "REINFORCE_MINT", "WASABI_WHIP", "CHOMPER", "BOMBARD_MINT", "PEASHOOTER", "PEA_POD", "SEA_SHROOM", "LILY_PAD", "HOT_POTATO", "ELECTRIC_BLUEBERRY", "TANGLE_KELP", "GIANT_WALLNUT", "CAT_TAIL", "SPLIT_PEA", "PRIMAL_SUNFLOWER", "SUNFLOWER", "ENLIGHTEN_MINT", "CABBAGE_PULT", "GRAVE_BUSTER", "MELON_PULT", "IMITATER", "ENDURIAN", "TALL_NUT", "TORCHWOOD", "ARMA_MINT", "ENCHANT_MINT", "APPEASE_MINT", "PUFF_SHROOM", "GOLD_BLOOM", "CAT_TAIL_MINT", "WALLNUT_BOWLING", "TWIN_SUNFLOWER", "CHERRY_BOMB", "PHAT_BEET", "WINTER_MELON", "SNOW_PEA", "STARFRUIT", "CACTUS", "MAGNET_SHROOM", "JALAPENO", "ROTOBAGA", "ICE_SHROOM", "GARLIC", "SQUASH", "EXPLODE_O_NUT", "BONK_CHOY", "SUN_SHROOM", "DOOM_SHROOM", "THREEPEATER" ],
-    "seenZombies" : [ "DARK_ARMOR1", "ALLSTAR", "MUMMY_ARMOR4", "BEACH_FISHERMAN", "DARK_JUGGLER", "IMP_ICEAGE", "MUMMY_DEFAULT", "GARGANTUAR_ICEAGE", "ZOMBOTANY_SQUASH", "IMP_DRAGON", "ZOMBOSS_EGYPT", "BEACH_OCTOPUS", "BEACH_DEFAULT", "GARGANTUAR_BEACH", "ZOMBOTANY_PEASHOOTER", "GARGANTUAR_EGYPT", "PIANO", "NEWSPAPER", "RA", "DODO", "FOOTBALL", "ARCADE", "BEACH_SNORKEL", "TUTORIAL_FLAG", "TUTORIAL_ARMOR4", "ICEAGE_ARMOR2", "BEACH_ARMOR2", "WIZARD", "LOSTCITY_JANE", "TOMB_RAISER", "CRYSTAL_SKULL", "DARK_KING", "TUTORIAL_ARMOR2", "DARK_ARMOR4", "GARGANTUAR_BASIC", "ICEAGE_HUNTER", "ICEAGE_DEFAULT", "EXPLORER", "TUTORIAL_DEFAULT", "CAMEL", "GARGANTUAR_DARK", "BEACH_ARMOR1", "PROSPECTOR", "WEASEL", "DARK_ARMOR2", "BEACH_FAST_SWIMMER", "ICEAGE_ARMOR1", "IMP_DARK", "TROGLOBITE", "ICEAGE_ARMOR3", "ZOMBOTANY_JALAPENO", "IMP_BEACH", "BEACH_SURFER", "MUMMY_ARMOR2", "IMP_EGYPT", "DARK_DEFAULT", "WEASEL_HOARDER", "IMP_TUTORIAL", "PHARAOH", "TUTORIAL_ARMOR1", "DARK_ARMOR3", "MUMMY_ARMOR1" ],
+    "unlockedPlants" : [ "PRIMAL_POTATO_MINE", "GRAPESHOT", "WALL_NUT", "HYPNO_SHROOM", "PEPPER_PULT", "PUMPKIN", "PIERCE_MINT", "MEGA_GATLING_PEA", "FUME_SHROOM", "POTATO_MINE", "FIRE_PEASHOOTER", "CITRON", "SWEET_POTATO", "GOO_PEASHOOTER", "ENFORCE_MINT", "KIWIBEAST", "REPEATER", "KERNEL_PULT", "SUN_BEAN", "CAULIPOWER", "BOWLING_BULB", "ICEBERG_LETTUCE", "WASABI_WHIP", "REINFORCE_MINT", "BOMBARD_MINT", "CHOMPER", "PEASHOOTER", "PEA_POD", "SEA_SHROOM", "ELECTRIC_BLUEBERRY", "HOT_POTATO", "LILY_PAD", "TANGLE_KELP", "GIANT_WALLNUT", "CAT_TAIL", "SPLIT_PEA", "PRIMAL_SUNFLOWER", "SUNFLOWER", "CABBAGE_PULT", "ENLIGHTEN_MINT", "MELON_PULT", "GRAVE_BUSTER", "IMITATER", "ENDURIAN", "TALL_NUT", "ARMA_MINT", "TORCHWOOD", "ENCHANT_MINT", "APPEASE_MINT", "PUFF_SHROOM", "GOLD_BLOOM", "CAT_TAIL_MINT", "WALLNUT_BOWLING", "TWIN_SUNFLOWER", "CHERRY_BOMB", "PHAT_BEET", "WINTER_MELON", "SNOW_PEA", "STARFRUIT", "CACTUS", "MAGNET_SHROOM", "JALAPENO", "ROTOBAGA", "ICE_SHROOM", "GARLIC", "SQUASH", "EXPLODE_O_NUT", "BONK_CHOY", "DOOM_SHROOM", "SUN_SHROOM", "THREEPEATER" ],
+    "seenZombies" : [ "DARK_ARMOR1", "ALLSTAR", "MUMMY_ARMOR4", "BEACH_FISHERMAN", "DARK_JUGGLER", "MUMMY_DEFAULT", "IMP_ICEAGE", "GARGANTUAR_ICEAGE", "ZOMBOTANY_SQUASH", "IMP_DRAGON", "ZOMBOSS_EGYPT", "BEACH_OCTOPUS", "BEACH_DEFAULT", "GARGANTUAR_BEACH", "ZOMBOTANY_PEASHOOTER", "GARGANTUAR_EGYPT", "PIANO", "NEWSPAPER", "RA", "DODO", "FOOTBALL", "ARCADE", "BEACH_SNORKEL", "TUTORIAL_FLAG", "TUTORIAL_ARMOR4", "ICEAGE_ARMOR2", "WIZARD", "BEACH_ARMOR2", "LOSTCITY_JANE", "TOMB_RAISER", "CRYSTAL_SKULL", "TUTORIAL_ARMOR2", "DARK_KING", "DARK_ARMOR4", "ICEAGE_HUNTER", "GARGANTUAR_BASIC", "ICEAGE_DEFAULT", "TUTORIAL_DEFAULT", "EXPLORER", "CAMEL", "GARGANTUAR_DARK", "BEACH_ARMOR1", "PROSPECTOR", "WEASEL", "DARK_ARMOR2", "BEACH_FAST_SWIMMER", "ICEAGE_ARMOR1", "IMP_DARK", "TROGLOBITE", "ICEAGE_ARMOR3", "ZOMBOTANY_JALAPENO", "IMP_BEACH", "BEACH_SURFER", "MUMMY_ARMOR2", "IMP_EGYPT", "DARK_DEFAULT", "WEASEL_HOARDER", "IMP_TUTORIAL", "PHARAOH", "TUTORIAL_ARMOR1", "DARK_ARMOR3", "MUMMY_ARMOR1" ],
     "seedPackets" : {
       "SUN_SHROOM" : 5,
       "SUNFLOWER" : 20
@@ -51,88 +51,88 @@
       "plantType" : null,
       "plantedTimeMillis" : 1787392593678,
       "marigold" : true,
-      "readyForPlanting" : false,
-      "empty" : false
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 1787392594526,
       "marigold" : true,
-      "readyForPlanting" : false,
-      "empty" : false
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : "MEGA_GATLING_PEA",
       "plantedTimeMillis" : 1787392595309,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : false
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 1787392596342,
       "marigold" : true,
-      "readyForPlanting" : false,
-      "empty" : false
+      "empty" : false,
+      "readyForPlanting" : false
     } ], [ {
       "unlocked" : true,
       "plantType" : "TORCHWOOD",
       "plantedTimeMillis" : 1787392600592,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : false
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : "JALAPENO",
       "plantedTimeMillis" : 1787392599643,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : false
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 1787392599009,
       "marigold" : true,
-      "readyForPlanting" : false,
-      "empty" : false
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 1787392598225,
       "marigold" : true,
-      "readyForPlanting" : false,
-      "empty" : false
+      "empty" : false,
+      "readyForPlanting" : false
     } ], [ {
       "unlocked" : true,
       "plantType" : "EXPLODE_O_NUT",
       "plantedTimeMillis" : 1787392602593,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : false
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : null,
       "plantedTimeMillis" : 1787392604159,
       "marigold" : true,
-      "readyForPlanting" : false,
-      "empty" : false
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : "CAULIPOWER",
       "plantedTimeMillis" : 1787392605142,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : false
+      "empty" : false,
+      "readyForPlanting" : false
     }, {
       "unlocked" : true,
       "plantType" : "WALLNUT_BOWLING",
       "plantedTimeMillis" : 1787392606176,
       "marigold" : false,
-      "readyForPlanting" : false,
-      "empty" : false
+      "empty" : false,
+      "readyForPlanting" : false
     } ] ],
-    "numberOfUnlockedPots" : 12,
-    "numberOfLockedPots" : 0
+    "numberOfLockedPots" : 0,
+    "numberOfUnlockedPots" : 12
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -803,7 +803,7 @@
     "availableToday" : false,
     "forToday" : false
   },
-  "stayLoggedIn" : true,
+  "stayLoggedIn" : false,
   "questState" : {
     "questManager" : {
       "activeQuests" : [ {
@@ -825,9 +825,9 @@
         "parameters" : {
           "n" : 0
         },
-        "runtimeState" : { },
         "active" : false,
         "formattedTitle" : "Economic Herbivore",
+        "runtimeState" : { },
         "formattedDescription" : "Win without losing more than 0 plants"
       }, {
         "id" : "story_speed",
@@ -846,9 +846,9 @@
           "targetPlant" : null
         },
         "parameters" : { },
-        "runtimeState" : { },
         "active" : false,
         "formattedTitle" : "Speed Run",
+        "runtimeState" : { },
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
         "id" : "epic_defense",
@@ -867,9 +867,9 @@
           "targetPlant" : null
         },
         "parameters" : { },
-        "runtimeState" : { },
         "active" : false,
         "formattedTitle" : "Master of Defense",
+        "runtimeState" : { },
         "formattedDescription" : "End a level with exactly 0 sun"
       }, {
         "id" : "epic_night_day",
@@ -888,9 +888,9 @@
           "targetPlant" : null
         },
         "parameters" : { },
-        "runtimeState" : { },
         "active" : false,
         "formattedTitle" : "Day or Night",
+        "runtimeState" : { },
         "formattedDescription" : "Win a day level using only mushrooms"
       }, {
         "id" : "epic_lawnmower",
@@ -911,9 +911,9 @@
         "parameters" : {
           "n" : 20
         },
-        "runtimeState" : { },
         "active" : true,
         "formattedTitle" : "Lawnmower Time",
+        "runtimeState" : { },
         "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
@@ -934,9 +934,9 @@
         "parameters" : {
           "chapter" : "ANCIENT_EGYPT"
         },
-        "runtimeState" : { },
         "active" : false,
         "formattedTitle" : "Chapter Hunter",
+        "runtimeState" : { },
         "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
       }, {
         "id" : "daily_kill_family_1787392580510",
@@ -957,12 +957,12 @@
         "parameters" : {
           "family" : "ENLIGHTEN_MINT"
         },
+        "active" : true,
+        "formattedTitle" : "Family Slaughter",
         "runtimeState" : {
           "familyViolated" : true,
           "anyKill" : true
         },
-        "active" : true,
-        "formattedTitle" : "Family Slaughter",
         "formattedDescription" : "Kill zombies using only ENLIGHTEN_MINT plants"
       }, {
         "id" : "daily_row_empty_1787392580511",
@@ -983,9 +983,9 @@
         "parameters" : {
           "row" : 5
         },
-        "runtimeState" : { },
         "active" : true,
         "formattedTitle" : "Defenseless Row",
+        "runtimeState" : { },
         "formattedDescription" : "Win with row 5 completely empty"
       }, {
         "id" : "daily_cross_empty_1787392580511",
@@ -1007,9 +1007,9 @@
           "col" : 8,
           "row" : 2
         },
-        "runtimeState" : { },
         "active" : true,
         "formattedTitle" : "Defenseless Cross",
+        "runtimeState" : { },
         "formattedDescription" : "Win with column 8 and row 2 empty"
       } ],
       "lastDailyRefresh" : "2026-08-22",
@@ -1017,7 +1017,7 @@
       "currentChapter" : "FROSTBITE_CAVES",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "0h 25m"
+      "timeUntilReset" : "1h 47m"
     }
   }
 }
