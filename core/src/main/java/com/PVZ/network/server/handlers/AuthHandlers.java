@@ -55,7 +55,8 @@ public final class AuthHandlers {
         String securityQuestion = request.getString("securityQuestion");
         String securityAnswer = request.getString("securityAnswer");
 
-        String error = validateRegisterInput(username, password, nickname, email, gender);
+        boolean prehashed = request.getBoolean("prehashed", false);
+        String error = validateRegisterInput(username, prehashed ? "Aa1!aaaa" : password, nickname, email, gender);
         if (error != null) {
             return fail(request, MessageType.REGISTER_RESULT, error);
         }
@@ -66,9 +67,10 @@ public final class AuthHandlers {
         }
 
         try {
-            String passwordHash = EncryptionEngine.hash(password);
-            String answerHash = EncryptionEngine.hash(
-                    securityAnswer == null ? "" : securityAnswer);
+            String passwordHash = prehashed ? password : EncryptionEngine.hash(password);
+            String answerHash = prehashed
+                    ? (securityAnswer == null ? "" : securityAnswer)
+                    : EncryptionEngine.hash(securityAnswer == null ? "" : securityAnswer);
 
             User createdUser = User.createNewUser(
                     username, passwordHash, nickname, email, gender,

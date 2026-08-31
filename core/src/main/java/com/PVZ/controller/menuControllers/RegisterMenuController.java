@@ -79,21 +79,16 @@ public class RegisterMenuController {
         return registerLocally(username, password, nickname, email, gender, question, answer);
     }
 
-private OutputDTO registerOverNetwork(String username, String password, String nickname,
-                                       String email, String gender,
-                                       String question, String answer) {
+    private OutputDTO registerOverNetwork(String username, String password, String nickname,
+                                           String email, String gender,
+                                           String question, String answer) {
         NetworkSession.AuthResult result = NetworkSession.register(
                 username, password, nickname, email, gender, question, answer);
         if (!result.success()) {
             return new OutputDTO(false, result.message());
         }
-        // Auto-login so client session is authenticated (isAuthenticated() checks username != null)
-        NetworkSession.AuthResult loginResult = NetworkSession.login(username, password);
-        if (!loginResult.success()) {
-            return new OutputDTO(false, "Login after registration failed: " + loginResult.message());
-        }
         AppStatus.currentUser = result.user();
-        UserRegistry.cacheUser(AppStatus.currentUser); 
+        UserRegistry.cacheUser(AppStatus.currentUser);
         AppStatus.currentMenuType = MenuType.MAIN;
         return new OutputDTO(true, "Registration successful. Welcome, " + nickname + "!");
     }
