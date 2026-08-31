@@ -279,17 +279,21 @@ public class OnlineGamePanel extends BasePanel {
 
     private void syncLocalAccountIfNeeded() {
         if (AppStatus.currentUser == null) return;
+        if (NetworkSession.isSessionAuthenticated()) return;
         String username = AppStatus.currentUser.profile.getUsername();
+        String passwordHash = AppStatus.currentUser.profile.getPasswordHash();
         boolean availableOnServer = NetworkSession.checkUsernameAvailable(username);
-        if (!availableOnServer) {
-            return;
-        }
-        NetworkSession.AuthResult result = NetworkSession.syncLocalAccount(AppStatus.currentUser);
+
+        NetworkSession.AuthResult result = availableOnServer
+                ? NetworkSession.syncLocalAccount(AppStatus.currentUser)
+                : NetworkSession.loginPrehashed(username, passwordHash);
+
+        String ip = serverIpField.getText().trim();
         if (result.success()) {
-            setStatus("Connected to server: " + serverIpField.getText().trim()
-                    + " (local account synced)", Color.GREEN);
+            String note = availableOnServer ? " (local account synced)" : " (session authenticated)";
+            setStatus("Connected to server: " + ip + note, Color.GREEN);
         } else {
-            setStatus("Connected, but could not sync local account: " + result.message(), Color.GOLD);
+            setStatus("Connected, but could not authenticate this session: " + result.message(), Color.GOLD);
         }
     }
 
