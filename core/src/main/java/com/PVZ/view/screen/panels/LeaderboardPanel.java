@@ -188,10 +188,38 @@ public class LeaderboardPanel extends BasePanel {
         };
     }
 
+    private List<LeaderboardEntry> fetchEntries() {
+        if (com.PVZ.network.client.NetworkSession.isConnected()) {
+            try {
+                com.PVZ.network.common.NetworkMessage request =
+                        com.PVZ.network.common.NetworkMessage.request(com.PVZ.network.common.MessageType.FETCH_LEADERBOARD)
+                                .with("sort", currentSort != null ? currentSort.name() : null)
+                                .with("ascending", ascending);
+                com.PVZ.network.common.NetworkMessage response =
+                        com.PVZ.network.client.NetworkSession.client().sendRequestBlocking(request);
+                if (response.getBoolean("success", false)) {
+                    com.fasterxml.jackson.databind.ObjectMapper mapper = com.PVZ.network.common.JsonCodec.mapper();
+                    com.fasterxml.jackson.databind.JavaType listType =
+                            mapper.getTypeFactory().constructCollectionType(List.class, LeaderboardEntry.class);
+                    return mapper.convertValue(response.get("entries"), listType);
+                }
+            } catch (Exception e) {
+                // آفلاین شد یا سرور جواب نداد - می‌ریم سراغ fallback زیر
+            }
+        }
+        // آفلاین/بدون سرور: حداقل دیتای محلی رو نشون بده تا صفحه خالی نمونه.
+        return Leaderboard.getEntries(currentSort, ascending);
+    }
+
     private void refreshEntries() {
         entriesTable.clearChildren();
 
-        List<LeaderboardEntry> entries = Leaderboard.getEntries(currentSort, ascending);
+        // این همون جایی بود که همکارتون درست شک کرد: قبلا فیکس رو فقط توی
+        // LeaderboardMenuController زده بودم (که مسیر DTO/کنسولیه) ولی خودِ
+        // این پنل - چیزی که واقعا توی بازی باز می‌شه - مستقیم Leaderboard.getEntries()
+        // رو صدا می‌زد و اصلا از شبکه رد نمی‌شد. الان همینجا هم از سرور می‌خونیم.
+        List<LeaderboardEntry> entries = fetchEntries();
+
         if (entries.isEmpty()) {
             Label empty = new Label("No leaderboard data.", new Label.LabelStyle(bodyFont, Color.LIGHT_GRAY));
             empty.setFontScale(1.2f);

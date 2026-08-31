@@ -136,7 +136,7 @@ public class OnlineGamePanel extends BasePanel {
             NET_PREFS.put(LAST_SERVER_IP_KEY, ip);
         }
     }
-    
+
     private void setButtonsEnabled(boolean enabled) {
         randomButton.setDisabled(!enabled);
         roleButton.setDisabled(!enabled);
