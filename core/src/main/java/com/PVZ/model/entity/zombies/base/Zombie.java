@@ -115,44 +115,33 @@ public abstract class Zombie {
     public void update(float delta, BattleController controller) {
         updateEffects(delta);
         ZombieAnimation.tick(this, delta);
-
         if (dying) {
             animStateTime += delta;
             if (!ZombieAnimation.isActive(this)) {
-                finishDeath(controller);
-            }
-            return;
-        }
+                finishDeath(controller);}
+            return;}
 
         if (!isFrozen()) {
             animStateTime += delta;
         }
-
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
-            startDeath(controller);
-            return;
-        }
+            startDeath(controller);return;}
         if (isFrozen() || isButtered()) {
             hitbox.setPosition((float) x, (float) y);
-            onUpdate(delta, controller);
-            return;
-        }
+            onUpdate(delta, controller);return;}
         if (hypnotized) {
             updateHypnotized(delta, controller);
             hitbox.setPosition((float) x, (float) y);
             onUpdate(delta, controller);
-            return;
-        }
+            return;}
         if (controller == null) {
-            return;
-        }
+            return;}
         if (stationary) {
             moving = false;
             ZombieAnimation.trigger(this, "idle", 1.0);
             hitbox.setPosition((float) x, (float) y);
             onUpdate(delta, controller);
-            return;
-        }
+            return;}
         int tileCol = controller.getTileColumn((float) x);
         col = tileCol;
         Plant plant = controller.getPlantAt((int) row, tileCol);
@@ -161,8 +150,7 @@ public abstract class Zombie {
             attack(plant, delta, controller);
         } else {
             moving = true;
-            move(delta, controller);
-        }
+            move(delta, controller);}
         hitbox.setPosition((float) x, (float) y);
         onUpdate(delta, controller);
     }
@@ -380,7 +368,8 @@ public abstract class Zombie {
         if (armor != null && !armor.isDestroyed()) {
             armor.takeDamage(amount);
             if (armor.isDestroyed() && armor.isDroppable()) {
-                com.PVZ.view.renderer.EntityRenderer.getInstance().spawnFallingArmor((float) x, (float) y, armor.getType(), alias);
+                com.PVZ.view.renderer.EntityRenderer.getInstance().
+                    spawnFallingArmor((float) x, (float) y, armor.getType(), alias);
                 armor = null;
             }
         } else {
@@ -440,45 +429,28 @@ public abstract class Zombie {
             freezeTimer -= delta;
             if (freezeTimer <= 0f) {
                 freezeTimer = 0f;
-                if (icingLevel >= 3) {
-                    thaw();
-                }
-            }
+                if (icingLevel >= 3) {thaw();}}
         }
         if (butterTimer > 0f) {
             butterTimer -= delta;
             if (butterTimer < 0f) {
-                butterTimer = 0f;
-            }
-        }
+                butterTimer = 0f;}}
         if (hitFlashTimer > 0f) {
             hitFlashTimer -= delta;
             if (hitFlashTimer < 0f) {
                 hitFlashTimer = 0f;
             }
         }
-        // Only clear the slow/hypnosis once nothing of that type remains active -
-        // dedupe+refresh above means there's normally at most one ICE entry, but
-        // this stays correct even if something else ever stacks a second one.
         if (!hasStatusEffect(DamageType.ICE)) {
-            currentSpeed = speed;
-        }
-        if (!hasStatusEffect(DamageType.HYPNOTIZE)) {
-            hypnotized = false;
-        }
+            currentSpeed = speed;}
+        if (!hasStatusEffect(DamageType.HYPNOTIZE)) {hypnotized = false;}
         for (StatusEffect e : activeEffects) {
             if (e.getType() == DamageType.POISON) {
-                hitpoints -= poisonDps * delta;
-            }
-        }
+                hitpoints -= poisonDps * delta;}}
         if (isFrozen()) {
             if (iceHp > 0) {
                 iceHp -= (int) (delta * 60);
-                if (iceHp <= 0 && freezeTimer <= 0f) {
-                    thaw();
-                }
-            }
-        }
+                if (iceHp <= 0 && freezeTimer <= 0f) {thaw();}}}
     }
 
     public void startDeath(BattleController controller) {

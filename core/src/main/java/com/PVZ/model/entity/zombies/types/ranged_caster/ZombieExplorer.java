@@ -49,7 +49,8 @@ public class ZombieExplorer extends Zombie {
             Plant plantInFront = controller.getPlantAt((int) row, tileCol);
             if (plantInFront != null && !plantInFront.isDead()) {
                 plantInFront.takeDamage(9999);
-                System.out.println("[ZombieExplorer] Explorer zombie burned plant " + plantInFront.getDefinition().getName() + " instantly with torch!");
+                System.out.println("[ZombieExplorer] Explorer zombie burned plant " +
+                    plantInFront.getDefinition().getName() + " instantly with torch!");
             }
         }
     }
