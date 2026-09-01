@@ -104,8 +104,10 @@ public class SettingsPanel extends BasePanel {
             markerTex,
             false, null, null,
             new SliderBinding() {
-                @Override public int get() { return (int) ((BrightnessController.getInstance().getBrightness() + 1f) * 50f); }
-                @Override public void set(int value) { BrightnessController.getInstance().setBrightness((value / 50f) - 1f); }
+                @Override public int get() {
+                    return (int) ((BrightnessController.getInstance().getBrightness() + 1f) * 50f); }
+                @Override public void set(int value) {
+                    BrightnessController.getInstance().setBrightness((value / 50f) - 1f); }
             },
             null);
         brightnessSlider.setSize(600f, 130f);

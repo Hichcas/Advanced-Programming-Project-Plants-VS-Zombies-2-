@@ -85,10 +85,7 @@ public class OnlineLeaderboardPanel extends BasePanel {
 
     private void fetchLeaderboard() {
         if (!NetworkSession.isConnected()) {
-            setContent("Not connected to server.");
-            return;
-        }
-
+            setContent("Not connected to server.");return;}
         NetworkMessage request = NetworkMessage.request(MessageType.FETCH_LEADERBOARD);
         NetworkSession.client().sendRequest(request).thenAccept(response -> {
             Gdx.app.postRunnable(() -> {
@@ -97,9 +94,7 @@ public class OnlineLeaderboardPanel extends BasePanel {
                     if (rawEntries instanceof List) {
                         List<?> entries = (List<?>) rawEntries;
                         if (entries.isEmpty()) {
-                            setContent("No leaderboard data.");
-                            return;
-                        }
+                            setContent("No leaderboard data.");return;}
                         StringBuilder sb = new StringBuilder();
                         sb.append(String.format("%-20s %-25s %-10s %-10s %-10s %-10s%n",
                                 "Username", "Last Stage", "Minigames", "Daily", "Non-Daily", "Score"));
@@ -113,27 +108,25 @@ public class OnlineLeaderboardPanel extends BasePanel {
                             } else if (obj instanceof Map) {
                                 Map<?, ?> map = (Map<?, ?>) obj;
                                 String username = map.get("username") != null ? map.get("username").toString() : "?";
-                                String lastStage = map.get("lastStageInfo") != null ? map.get("lastStageInfo").toString() : "?";
-                                int minigames = map.get("minigamesCompleted") instanceof Number ? ((Number) map.get("minigamesCompleted")).intValue() : 0;
-                                int daily = map.get("dailyQuestsCompleted") instanceof Number ? ((Number) map.get("dailyQuestsCompleted")).intValue() : 0;
-                                int nonDaily = map.get("nonDailyQuestsCompleted") instanceof Number ? ((Number) map.get("nonDailyQuestsCompleted")).intValue() : 0;
-                                int score = map.get("highestScore") instanceof Number ? ((Number) map.get("highestScore")).intValue() : 0;
+                                String lastStage = map.get("lastStageInfo") != null ?
+                                    map.get("lastStageInfo").toString() : "?";
+                                int minigames = map.get("minigamesCompleted") instanceof Number ?
+                                    ((Number) map.get("minigamesCompleted")).intValue() : 0;
+                                int daily = map.get("dailyQuestsCompleted") instanceof Number ?
+                                    ((Number) map.get("dailyQuestsCompleted")).intValue() : 0;
+                                int nonDaily = map.get("nonDailyQuestsCompleted") instanceof Number ?
+                                    ((Number) map.get("nonDailyQuestsCompleted")).intValue() : 0;
+                                int score = map.get("highestScore") instanceof Number ?
+                                    ((Number) map.get("highestScore")).intValue() : 0;
                                 sb.append(String.format("%-20s %-25s %-10d %-10d %-10d %-10d%n",
-                                        username, lastStage, minigames, daily, nonDaily, score));
-                            }
-                        }
+                                        username, lastStage, minigames, daily, nonDaily, score));}}
                         setContent(sb.toString());
-                    } else {
-                        setContent("Unexpected response format.");
-                    }
-                } else {
-                    setContent(response.getString("message", "Failed to load leaderboard."));
-                }
-            });
+                    } else {setContent("Unexpected response format.");}
+                } else {setContent(response.getString("message",
+                    "Failed to load leaderboard."));}});
         }).exceptionally(ex -> {
             Gdx.app.postRunnable(() -> setContent("Connection error: " + ex.getMessage()));
-            return null;
-        });
+            return null;});
     }
 
     private void setContent(String text) {

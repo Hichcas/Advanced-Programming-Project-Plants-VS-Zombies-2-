@@ -52,7 +52,8 @@ public class CheatPanel extends BasePanel {
     private static final int GRID_COLUMNS = 4;
     private static final float CARD_W = 330f;
     private static final float CARD_H = 300f;
-    private static final String SKULL_PAM = "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_CRYSTALSKULL/ZOMBIE_LOSTCITY_CRYSTALSKULL.PAM";
+    private static final String SKULL_PAM =
+        "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_CRYSTALSKULL/ZOMBIE_LOSTCITY_CRYSTALSKULL.PAM";
     private static final String COIN_PAM = "768/INITIAL/EFFECTS/COIN_GOLD/COIN_GOLD.PAM";
     private static final String DIAMOND_PAM = "768/INITIAL/EFFECTS/COIN_DIAMOND/COIN_DIAMOND.PAM";
     private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
@@ -65,7 +66,8 @@ public class CheatPanel extends BasePanel {
     private final BitmapFont titleFont = FontManager.getInstance().getEnglishTitleFont();
     private final BitmapFont bodyFont = FontManager.getInstance().getEnglishMenuFont();
     private final BitmapFont descFont = FontManager.getInstance().getEnglishTinyFont();
-    private final ChapterAndLevelSelectionMenuController economyController = new ChapterAndLevelSelectionMenuController();
+    private final ChapterAndLevelSelectionMenuController economyController =
+        new ChapterAndLevelSelectionMenuController();
     private final ShopMenuController shopController = new ShopMenuController();
     private final InGameCheatBridge inGameBridge;
 
@@ -150,11 +152,15 @@ public class CheatPanel extends BasePanel {
         root.add(header).growX().height(80f).row();
 
         Table tabs = new Table();
-        tabs.add(makeTextButton("ECONOMY", tabStyle("economy"), () -> switchTab("economy"))).width(280f).height(58f).pad(6f);
-        tabs.add(makeTextButton("CHAPTERS", tabStyle("chapters"), () -> switchTab("chapters"))).width(280f).height(58f).pad(6f);
-        tabs.add(makeTextButton("PLANTS", tabStyle("plants"), () -> switchTab("plants"))).width(280f).height(58f).pad(6f);
+        tabs.add(makeTextButton("ECONOMY", tabStyle("economy"),
+            () -> switchTab("economy"))).width(280f).height(58f).pad(6f);
+        tabs.add(makeTextButton("CHAPTERS", tabStyle("chapters"), ()
+            -> switchTab("chapters"))).width(280f).height(58f).pad(6f);
+        tabs.add(makeTextButton("PLANTS", tabStyle("plants"),
+            () -> switchTab("plants"))).width(280f).height(58f).pad(6f);
         if (inGameBridge != null) {
-            tabs.add(makeTextButton("IN-GAME", tabStyle("ingame"), () -> switchTab("ingame"))).width(280f).height(58f).pad(6f);
+            tabs.add(makeTextButton("IN-GAME", tabStyle("ingame"),
+                () -> switchTab("ingame"))).width(280f).height(58f).pad(6f);
         }
         root.add(tabs).growX().height(70f).row();
 
@@ -271,7 +277,8 @@ public class CheatPanel extends BasePanel {
 
         // دکمه‌های داخل کارت فصل با فونت کوچک‌تر
         cell.add(makeSmallTextButton("COMPLETE", "green_small",
-                () -> runEconomy(ChapterAndLevelSelectionCommand.CHEAT_COMPLETE_CHAPTER, chapter.name(), null, null, null)))
+                () -> runEconomy(ChapterAndLevelSelectionCommand.CHEAT_COMPLETE_CHAPTER, chapter.name(),
+                    null, null, null)))
             .width(HALF_COL).height(50f);
         cell.add(makeSmallTextButton("LOCK", "brown",
                 () -> runEconomy(ChapterAndLevelSelectionCommand.CHEAT_LOCK_CHAPTER, chapter.name(), null, null, null)))
@@ -313,10 +320,12 @@ public class CheatPanel extends BasePanel {
         col = placeCard(sunCell, col);
 
         col = addActionCard(col, "ADD PLANT FOOD", "+1 plant food, up to the cap of 3.",
-            () -> runInGame(new InGameInputDTO(InGameCommand.CHEAT_ADD_PLANT_FOOD, null, null, null, null, null, null)));
+            () -> runInGame(new InGameInputDTO(InGameCommand.CHEAT_ADD_PLANT_FOOD,
+                null, null, null, null, null, null)));
 
         col = addActionCard(col, "REMOVE COOLDOWNS", "Every plant becomes plantable immediately.",
-            () -> runInGame(new InGameInputDTO(InGameCommand.CHEAT_REMOVE_COOLDOWN, null, null, null, null, null, null)));
+            () -> runInGame(new InGameInputDTO(InGameCommand.CHEAT_REMOVE_COOLDOWN,
+                null, null, null, null, null, null)));
 
         col = addActionCard(col, "RELEASE THE NUKE", "Kills every zombie currently on the lawn.",
             () -> runInGame(new InGameInputDTO(InGameCommand.CHEAT_RELEASE_NUKE, null, null, null, null, null, null)));
@@ -331,7 +340,8 @@ public class CheatPanel extends BasePanel {
         cell.setBackground(skin.getDrawable("image_ui_if_bundle_reward1_bg_10"));
         cell.defaults().pad(4f).align(Align.center);
 
-        cell.add(new Label("SPAWN ZOMBIE", new Label.LabelStyle(titleFont, Color.WHITE))).growX().colspan(2).height(32f).row();
+        cell.add(new Label("SPAWN ZOMBIE",
+            new Label.LabelStyle(titleFont, Color.WHITE))).growX().colspan(2).height(32f).row();
 
         SelectBox<ZombieType> zombieSelect = createSelectBox(ZombieType.values());
         cell.add(zombieSelect).width(2f * HALF_COL).height(46f).colspan(2).row();

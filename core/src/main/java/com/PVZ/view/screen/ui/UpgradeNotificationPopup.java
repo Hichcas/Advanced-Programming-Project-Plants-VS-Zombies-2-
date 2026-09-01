@@ -36,75 +36,49 @@ public final class UpgradeNotificationPopup {
                             UpgradeRule rule,
                             Runnable onClose) {
         if (host == null || host.getStage() == null || definition == null || rule == null) {
-            return;
-        }
-
-        Skin skin = PvzSkin.get();
-        FontManager fonts = FontManager.getInstance();
-
+            return;}
+        Skin skin = PvzSkin.get();FontManager fonts = FontManager.getInstance();
         Table notification = new Table();
         notification.setTouchable(Touchable.disabled);
         notification.setBackground(getNotificationBackground(skin));
         notification.pad(14f, 22f, 14f, 22f);
         notification.getColor().a = 0f;
-
         String plantName = definition.getName();
         if (plantName == null || plantName.isBlank()) {
-            plantName = plantType == null ? "Plant" : prettyPlantName(plantType.name());
-        }
-
-        Label title = new Label(
-            "UPGRADE COMPLETE",
+            plantName = plantType == null ? "Plant" : prettyPlantName(plantType.name());}
+        Label title = new Label("UPGRADE COMPLETE",
             new Label.LabelStyle(fonts.getEnglishTitleFont(), Color.GOLD));
         title.setAlignment(Align.center);
-
         Label plantLine = new Label(
             plantName + "  •  Level " + newDisplayLevel,
             new Label.LabelStyle(fonts.getEnglishMenuFont(), Color.WHITE));
         plantLine.setAlignment(Align.center);
-
         Label message = new Label(
             readableUpgradeMessage(definition, rule, newDisplayLevel),
             new Label.LabelStyle(fonts.getEnglishMenuFont(), Color.WHITE));
-        message.setFontScale(0.62f);
-        message.setWrap(true);
+        message.setFontScale(0.62f);message.setWrap(true);
         message.setAlignment(Align.center);
-
         Label levelLine = new Label(
             "Level " + oldDisplayLevel + "  →  " + newDisplayLevel,
             new Label.LabelStyle(fonts.getEnglishMenuFont(), Color.valueOf("D7E8FF")));
         levelLine.setFontScale(0.62f);
         levelLine.setAlignment(Align.center);
-
         notification.add(title).center().growX().padBottom(4f).row();
         notification.add(plantLine).center().growX().padBottom(7f).row();
         notification.add(message).width(520f).center().growX().padBottom(7f).row();
         notification.add(levelLine).center().growX();
-
-        notification.pack();
-        // Wrapped Labels need a second layout pass to report their real (post-wrap)
-        // preferred height - a single pack() can leave the message row squashed to
-        // ~0 height, which is why only the title/plant-name line was ever visible.
-        notification.pack();
-
+        notification.pack();notification.pack();
         float worldWidth = host.getStage().getViewport().getWorldWidth();
         float worldHeight = host.getStage().getViewport().getWorldHeight();
         float x = (worldWidth - notification.getWidth()) * 0.5f;
         float y = worldHeight - notification.getHeight() - 28f;
         notification.setPosition(Math.max(12f, x), Math.max(12f, y));
         host.getStage().addActor(notification);
-
         notification.addAction(Actions.sequence(
-            Actions.fadeIn(FADE_SECONDS),
-            Actions.delay(SHOW_SECONDS),
+            Actions.fadeIn(FADE_SECONDS),Actions.delay(SHOW_SECONDS),
             Actions.fadeOut(FADE_SECONDS),
-            Actions.run(() -> {
-                notification.remove();
-                if (onClose != null) {
-                    onClose.run();
-                }
-            })
-        ));
+            Actions.run(() -> {notification.remove();
+                if (onClose != null) {onClose.run();}})));
     }
 
     private static Drawable getNotificationBackground(Skin skin) {
@@ -121,20 +95,15 @@ public final class UpgradeNotificationPopup {
             for (PlantType type : PlantType.values()) {
                 if (type.getDisplayName().equalsIgnoreCase(definition.getName())) {
                     catalogDescription = UpgradeDescriptionCatalog.find(type.name(), level);
-                    break;
-                }
-            }
-        }
+                    break;}}}
         if (catalogDescription != null && !catalogDescription.isBlank()) {
-            return catalogDescription;
-        }
+            return catalogDescription;}
         UpgradeRule.UpgradeKind kind = rule.getKindEnum();
         if (kind == UpgradeRule.UpgradeKind.STAT) {
             String stat = rule.getStat();
             String unit = rule.getValue() != null ? formatNumber(rule.getValue()) : "";
             String suffix = rule.getRaw() != null && rule.getRaw().contains("%") ? "%" : "";
             UpgradeRule.UpgradeOperation op = rule.getOperationEnum();
-
             if (stat != null) {
                 String value = unit + suffix;
                 String readableStat = switch (stat.toUpperCase(Locale.ROOT)) {
@@ -149,27 +118,18 @@ public final class UpgradeNotificationPopup {
                     case "ATTACK_SPEED" -> "Attack speed";
                     case "EAT_TIME" -> "Eat time";
                     case "TARGETS" -> "Target count";
-                    default -> humanize(stat);
-                };
-
+                    default -> humanize(stat);};
                 return switch (op) {
                     case ADD -> readableStat + " increased by " + value + ".";
                     case SUBTRACT -> readableStat + " reduced by " + value + ".";
                     case SET -> readableStat + " is now " + value + ".";
                     case MULTIPLY -> readableStat + " increased by " + value + ".";
                     default -> "New upgrade: " + firstLetterUpper(rule.getRaw());
-                };
-            }
-        }
-
+                };}}
         if (kind == UpgradeRule.UpgradeKind.SPECIAL) {
-            return "New ability unlocked: " + firstLetterUpper(humanize(rule.getSpecial()));
-        }
-
+            return "New ability unlocked: " + firstLetterUpper(humanize(rule.getSpecial()));}
         if (rule.getRaw() != null && !rule.getRaw().isBlank()) {
-            return "New upgrade unlocked: " + rule.getRaw().trim();
-        }
-
+            return "New upgrade unlocked: " + rule.getRaw().trim();}
         return "A new permanent upgrade is now active.";
     }
 

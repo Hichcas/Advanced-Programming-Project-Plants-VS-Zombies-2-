@@ -83,69 +83,46 @@ public class QuestPanel extends BasePanel {
     private Label popupTextLabel;
     private MenuButton popupCloseBtn;
 
-    public QuestPanel() {
-        setFillParent(true);
-
+    public QuestPanel() {setFillParent(true);
         skin = PvzSkin.get();
         titleFont = FontManager.getInstance().getEnglishTitleFont();
         bodyFont = FontManager.getInstance().getEnglishMenuFont();
         descFont = FontManager.getInstance().getEnglishTinyFont();
-
-        loadTextures();
-
-        Table root = new Table();
-        root.setFillParent(true);
-        addActor(root);
-
+        loadTextures();Table root = new Table();
+        root.setFillParent(true);addActor(root);
         Table header = buildHeader();
         root.add(header).growX().height(HEADER_HEIGHT).row();
-
         Table contentArea = new Table();
         contentArea.setBackground(createDrawableFromTexture(safeTextureFromRegion(LIST_BG)));
-
-        questListTable = new Table();
-        questListTable.top();
-
+        questListTable = new Table();questListTable.top();
         ScrollPane scrollPane = new ScrollPane(questListTable, skin);
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollingDisabled(true, false);
-
         contentArea.add(scrollPane).grow().padTop(170f).padBottom(40f).padLeft(35f).padRight(35f);
-
         root.add(contentArea).grow().row();
-
         dailyResetLabel = new Label("", new Label.LabelStyle(descFont, Color.WHITE));
         statusLabel = new Label("", new Label.LabelStyle(bodyFont, Color.SALMON));
-
         refreshQuests();
-
-        // ===== ساخت Popup جایزه =====
-        popupTable = new Table();
-        popupTable.setVisible(false);
+        popupTable = new Table();popupTable.setVisible(false);
         popupTable.setTouchable(Touchable.enabled);
         popupTable.setSize(600f, 280f);
         popupTable.setPosition(
             (VW - popupTable.getWidth()) / 2f,
-            (VH - popupTable.getHeight()) / 2f
-        );
+            (VH - popupTable.getHeight()) / 2f);
         popupTable.pad(25f);
         popupTable.setBackground(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
-
         popupTextLabel = new Label("", new Label.LabelStyle(bodyFont, Color.WHITE));
         popupTextLabel.setWrap(true);
         popupTextLabel.setAlignment(Align.center);
         popupTable.add(popupTextLabel).width(500f).padBottom(20f).row();
-
         popupCloseBtn = new MenuButton(
             skin.getDrawable("image_ui_generic_greenbutton_10"),
             "OK", bodyFont,
             skin.getDrawable("image_ui_generic_greenbutton_down_10"),
             null, null,
-            () -> popupTable.setVisible(false)
-        );
+            () -> popupTable.setVisible(false));
         popupCloseBtn.setSize(160f, 60f);
         popupTable.add(popupCloseBtn).padTop(10f).row();
-
         addActor(popupTable);
     }
 

@@ -135,7 +135,8 @@ public class CollectionPanel extends BasePanel {
 
         // فیلترها (Sun -> Sun Producer)
         filterRow = new Table();
-        familyFilter = createSelectBox(new String[]{"All Families", "Sun Producer", "Shooter", "Melee", "Wall", "Explosive", "Mushroom", "Modifier"});
+        familyFilter = createSelectBox(new String[]{"All Families", "Sun Producer", "Shooter",
+            "Melee", "Wall", "Explosive", "Mushroom", "Modifier"});
         lockFilter = createSelectBox(new String[]{"All", "Locked", "Unlocked"});
         upgradeFilter = createSelectBox(new String[]{"All", "Upgradable"});
 
@@ -515,7 +516,8 @@ public class CollectionPanel extends BasePanel {
                 int seedPackets = user.collectionState.getSeedPacketCount(selectedPlant);
                 int maxDisplayLevel = def.getMaxLevel();
                 boolean maxedOut = displayLevel >= maxDisplayLevel;
-                int required = maxedOut ? 0 : UpgradeCostPolicy.currentUpgradeRequirement(displayLevel, maxDisplayLevel);
+                int required = maxedOut ? 0 :
+                    UpgradeCostPolicy.currentUpgradeRequirement(displayLevel, maxDisplayLevel);
                 if (maxedOut) {
                     nextUpgradeLabel.setText("MAX LEVEL\nNo further upgrades available.");
                 } else {
@@ -821,7 +823,8 @@ public class CollectionPanel extends BasePanel {
         int previewRequired = UpgradeCostPolicy.currentUpgradeRequirement(previewLevel, previewMaxLevel);
         int previewOwned = user.collectionState.getSeedPacketCount(plant);
         String needText = previewRequired > 0
-            ? "Next upgrade: Level " + (previewLevel + 1) + " • Need " + previewRequired + " seed packets • You have " + previewOwned
+            ? "Next upgrade: Level " + (previewLevel + 1) +
+              " • Need " + previewRequired + " seed packets • You have " + previewOwned
             : "Plant is at max level.";
         Label needInfo = new Label(needText, new Label.LabelStyle(descFont, Color.valueOf("CFE8FF")));
         needInfo.setWrap(true);
@@ -839,9 +842,11 @@ public class CollectionPanel extends BasePanel {
 
         Label seedsInfoLabel = new Label("", new Label.LabelStyle(bodyFont, Color.CYAN));
         Label costInfoLabel = new Label("", new Label.LabelStyle(bodyFont, Color.GOLD));
-        Label diamondBalanceLabel = new Label("Your Diamonds: " + user.userStats.getDiamonds(), new Label.LabelStyle(descFont, Color.LIGHT_GRAY));
+        Label diamondBalanceLabel = new Label("Your Diamonds: " +
+            user.userStats.getDiamonds(), new Label.LabelStyle(descFont, Color.LIGHT_GRAY));
 
-        Label countLabel = new Label(initialPacks + " Pack" + (initialPacks > 1 ? "s" : ""), new Label.LabelStyle(bodyFont, Color.WHITE));
+        Label countLabel = new Label(initialPacks + " Pack" +
+            (initialPacks > 1 ? "s" : ""), new Label.LabelStyle(bodyFont, Color.WHITE));
         countLabel.setAlignment(Align.center);
 
         Runnable updateDialogStats = () -> {
@@ -927,7 +932,8 @@ public class CollectionPanel extends BasePanel {
 
         // ۱. بررسی داشتن Diamond کافی
         if (currentDiamonds < totalDiamonds) {
-            return new OutputDTO(false, "Not enough diamonds! Cost: " + totalDiamonds + " Diamonds, Available: " + currentDiamonds + " Diamonds");
+            return new OutputDTO(false, "Not enough diamonds! Cost: " +
+                totalDiamonds + " Diamonds, Available: " + currentDiamonds + " Diamonds");
         }
 
         // ۲. کسر Diamond و اضافه کردن Seed Packets به حساب کاربر
