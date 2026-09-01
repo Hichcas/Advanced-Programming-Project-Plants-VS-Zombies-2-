@@ -32,59 +32,31 @@ public class ZombieDarkJuggler extends AbstractRangedCasterZombie {
     public void update(float delta, BattleController ctrl) {
         updateEffects(delta);
         ZombieAnimation.tick(this, delta);
-
         if (isDying()) {
             animStateTime += delta;
             if (!ZombieAnimation.isActive(this)) {
-                finishDeath(ctrl);
-            }
-            return;
-        }
-
-        if (!isFrozen()) {
-            animStateTime += delta;
-        }
-
+                finishDeath(ctrl);}return;}
+        if (!isFrozen()) {animStateTime += delta;}
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
-            startDeath(ctrl);
-            return;
-        }
-
+            startDeath(ctrl);return;}
         if (hypnotized) {
             updateHypnotized(delta, ctrl);
             hitbox.setPosition((float) x, (float) y);
-            onUpdate(delta, ctrl);
-            return;
-        }
-
-        // If spinning to deflect projectiles -> Pause movement and play spin animation
+            onUpdate(delta, ctrl);return;}
         if (spinDuration > 0) {
             spinDuration -= delta;
             moving = false;
             ZombieAnimation.trigger(this, "spin", 1.2);
             hitbox.setPosition((float) x, (float) y);
-            if (ctrl != null) {
-                onUpdate(delta, ctrl);
-            }
-            return;
-        }
-
-        if (ctrl == null) {
-            return;
-        }
-
+            if (ctrl != null) {onUpdate(delta, ctrl);}return;}
+        if (ctrl == null) {return;}
         int tileCol = ctrl.getTileColumn((float) x);
         col = tileCol;
-
         Plant plantInFront = ctrl.getPlantAt((int) row, tileCol);
         if (plantInFront != null && !plantInFront.isDead()) {
             moving = false;
             attack(plantInFront, delta, ctrl);
-        } else {
-            moving = true;
-            move(delta, ctrl);
-        }
-
+        } else {moving = true;move(delta, ctrl);}
         hitbox.setPosition((float) x, (float) y);
         onUpdate(delta, ctrl);
     }

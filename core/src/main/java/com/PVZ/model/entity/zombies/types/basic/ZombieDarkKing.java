@@ -57,18 +57,22 @@ public class ZombieDarkKing extends AbstractBasicZombie {
             for (Zombie z : controller.getAllZombies()) {
                 if (z == this || z.isDead()) continue;
                 // Target basic / peasant zombie who doesn't yet have Knight Crown
-                if (z.getArmor() == null || z.getArmor().isDestroyed() || z.getArmor().getType() != ZombieArmor.ArmorType.CROWN) {
+                if (z.getArmor() == null || z.getArmor().isDestroyed() ||
+                    z.getArmor().getType() != ZombieArmor.ArmorType.CROWN) {
                     double dx = Math.abs(z.getX() - this.x);
                     if (dx <= buffRadius && Math.abs(z.getRow() - this.row) <= 2) {
                         crownCooldown = 0f;
                         ZombieAnimation.trigger(this, "special", 3.2333);
                         z.setArmor(new ZombieArmor(ZombieArmor.ArmorType.CROWN, 1600, true, true, true));
                         z.setAlias("ZombieDarkArmor3Default");
-                        com.PVZ.model.game.RegularGameEngine engine = com.PVZ.model.status.AppStatus.getGameEngine() instanceof com.PVZ.model.game.RegularGameEngine re ? re : null;
+                        com.PVZ.model.game.RegularGameEngine engine = com.PVZ.model.status.AppStatus.getGameEngine()
+                            instanceof com.PVZ.model.game.RegularGameEngine re ? re : null;
                         if (engine != null) {
-                            engine.addTimedPamEffect("768/FULL/EFFECTS/DARK_WIZARD_LIGHTNINGBOLT/DARK_WIZARD_LIGHTNINGBOLT.PAM", "animation", 0.6, 1.0f, (float) z.getX() + 20f, (float) z.getY() + 50f);
+                            engine.addTimedPamEffect("768/FULL/EFFECTS/DARK_WIZARD_LIGHTNINGBOLT/DARK_WIZARD_LIGHTNINGBOLT.PAM",
+                                "animation", 0.6, 1.0f, (float) z.getX() + 20f, (float) z.getY() + 50f);
                         }
-                        System.out.println("[ZombieDarkKing] Crowned " + z.getAlias() + " into a Knight Zombie (+1600 Armor HP)!");
+                        System.out.println("[ZombieDarkKing] Crowned " + z.getAlias() +
+                            " into a Knight Zombie (+1600 Armor HP)!");
                         break;
                     }
                 }

@@ -157,7 +157,8 @@ public final class ZombieFactory {
             case "ZombieEgyptImpDefault" -> new ZombieImp(alias, ZombieImp.Theme.EGYPT);
             case "ZombieIceageImpDefault", "ZombieIceAgeImpDefault" -> new ZombieImp(alias, ZombieImp.Theme.ICEAGE);
             case "ZombieBeachImpDefault" -> new ZombieImp(alias, ZombieImp.Theme.BEACH);
-            case "ZombieDarkImpDefault", "ZombieDarkImpDragon", "ZombieDarkImpDragonDefault" -> new ZombieImp(alias, ZombieImp.Theme.DARK);
+            case "ZombieDarkImpDefault", "ZombieDarkImpDragon",
+                 "ZombieDarkImpDragonDefault" -> new ZombieImp(alias, ZombieImp.Theme.DARK);
             default -> null;
         };
     }
@@ -191,8 +192,10 @@ public final class ZombieFactory {
             case "ZombieIceAgeHunter" -> new ZombieIceAgeHunter();
             case "ZombieBeachFisherman", "ZombieBeachFishermanDefault" -> new ZombieBeachFisherman();
             case "ZombieBeachOctopus", "ZombieBeachOctopusDefault" -> new ZombieBeachOctopus();
-            case "ZombieWizardDefault", "ZombieWizard", "ZombieDarkWizard", "ZombieDarkWizardDefault" -> new ZombieWizard();
-            case "ZombieDarkJugglerDefault", "ZombieDarkJuggler", "ZombieDarkJester", "ZombieDarkJesterDefault" -> new ZombieDarkJuggler();
+            case "ZombieWizardDefault",
+                 "ZombieWizard", "ZombieDarkWizard", "ZombieDarkWizardDefault" -> new ZombieWizard();
+            case "ZombieDarkJugglerDefault",
+                 "ZombieDarkJuggler", "ZombieDarkJester", "ZombieDarkJesterDefault" -> new ZombieDarkJuggler();
             case "ZombieDarkKing", "ZombieDarkKingDefault" -> new ZombieDarkKing();
             case "ZombieLostCityCrystalSkull", "ZombieCrystalSkull" -> new ZombieCrystalSkull(alias);
             default -> null;

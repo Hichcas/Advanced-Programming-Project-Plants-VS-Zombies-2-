@@ -48,12 +48,10 @@ public class MeleeEatBehavior implements PlantBehavior {
         int lane = asInt(plant.getRuntimeState().getOrDefault("lane", 0), 0);
         boolean isChomper = plant.getDefinition() != null
             && "chomper".equals(plant.getDefinition().getPlantKey());
-
         if (isChomper) {
             performChomperAttack(plant, context, lane);
             return;
         }
-
         boolean isWasabi = plant.getDefinition() != null
             && "wasabi_whip".equals(plant.getDefinition().getPlantKey());
         if (isWasabi) {
@@ -66,11 +64,9 @@ public class MeleeEatBehavior implements PlantBehavior {
             boolean hit = applyWasabiWhipDamage(plant, context, lane, plantX, range, damage);
             if (hit) {
                 com.PVZ.model.entity.PlantAnimation.trigger(plant, "shooting", 0.4);
-                spawnWhipVisual(plant, context, lane, plantX);
-            }
-            if (hit && plant.isPlantFoodActive()) {
-                context.consumePlantFood(plant);
-            }
+                spawnWhipVisual(plant, context, lane, plantX);}
+            if (hit && plant.isPlantFoodActive())
+            {context.consumePlantFood(plant);}
             return;
         }
 
