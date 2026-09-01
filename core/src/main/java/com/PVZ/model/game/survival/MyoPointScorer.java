@@ -67,31 +67,21 @@ public class MyoPointScorer {
      */
     public void recordKill(RegularGameEngine engine, Zombie zombie, int row, int col,
                             float worldX, float worldY, double survivalTimeSeconds) {
-
         pruneOldKills(survivalTimeSeconds);
-
-        int gained = 10; // امتیاز پایه‌ی هر کشتن
+        int gained = 10;
         StringBuilder breakdown = new StringBuilder("+10 Kill");
-
-        // ----- Quick Kill -----
         Double spawnTime = spawnTimestamps.remove(zombie);
         if (spawnTime != null && (survivalTimeSeconds - spawnTime) <= QUICK_KILL_WINDOW_SECONDS) {
             gained += MyoPointPattern.QUICK_KILL.getBasePoints();
             breakdown.append(", +").append(MyoPointPattern.QUICK_KILL.getBasePoints())
-                    .append(' ').append(MyoPointPattern.QUICK_KILL.getDisplayName());
-        }
-
-        // ----- Single-Shot Multi-Kill (همان سطر) در برابر Simultaneous Kill (سطر متفاوت) -----
+                    .append(' ').append(MyoPointPattern.QUICK_KILL.getDisplayName());}
         boolean sameRowBurst = false;
         boolean crossRowBurst = false;
         for (KillRecord prev : recentKills) {
             if (survivalTimeSeconds - prev.time() > BURST_WINDOW_SECONDS) continue;
             if (prev.row() == row) {
                 sameRowBurst = true;
-            } else {
-                crossRowBurst = true;
-            }
-        }
+            } else {crossRowBurst = true;}}
         if (sameRowBurst) {
             gained += MyoPointPattern.SINGLE_SHOT_MULTI_KILL.getBasePoints();
             breakdown.append(", +").append(MyoPointPattern.SINGLE_SHOT_MULTI_KILL.getBasePoints())
@@ -99,34 +89,23 @@ public class MyoPointScorer {
         } else if (crossRowBurst) {
             gained += MyoPointPattern.SIMULTANEOUS_KILL.getBasePoints();
             breakdown.append(", +").append(MyoPointPattern.SIMULTANEOUS_KILL.getBasePoints())
-                    .append(' ').append(MyoPointPattern.SIMULTANEOUS_KILL.getDisplayName());
-        }
-
-        // ----- Combo Streak -----
+                    .append(' ').append(MyoPointPattern.SIMULTANEOUS_KILL.getDisplayName());        }
         if (survivalTimeSeconds - lastKillTime <= COMBO_WINDOW_SECONDS) {
             comboCount = Math.min(comboCount + 1, COMBO_MAX_STACKS + 1);
-        } else {
-            comboCount = 1;
-        }
+        } else {comboCount = 1;}
         lastKillTime = survivalTimeSeconds;
         if (comboCount >= 2) {
             int comboBonus = (comboCount - 1) * MyoPointPattern.COMBO_STREAK.getBasePoints();
             gained += comboBonus;
             breakdown.append(", +").append(comboBonus)
                     .append(' ').append(MyoPointPattern.COMBO_STREAK.getDisplayName())
-                    .append(" x").append(comboCount - 1);
-        }
-
-        // ----- Clutch Kill -----
+                    .append(" x").append(comboCount - 1);}
         if (col <= CLUTCH_COLUMN_THRESHOLD) {
             gained += MyoPointPattern.CLUTCH_KILL.getBasePoints();
             breakdown.append(", +").append(MyoPointPattern.CLUTCH_KILL.getBasePoints())
-                    .append(' ').append(MyoPointPattern.CLUTCH_KILL.getDisplayName());
-        }
-
+                    .append(' ').append(MyoPointPattern.CLUTCH_KILL.getDisplayName());}
         totalScore += gained;
         recentKills.addLast(new KillRecord(survivalTimeSeconds, row, col, worldX, worldY));
-
         notifyPlayer(engine, gained, breakdown.toString(), worldX, worldY);
     }
 

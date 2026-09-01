@@ -20,62 +20,45 @@ public class UpdateHandler {
 
     public static void update(RegularGameEngine engine, float delta) {
         if (engine.globalIceEffectTimer > 0.0) {
-            engine.globalIceEffectTimer = Math.max(0.0, engine.globalIceEffectTimer - delta);
-        }
+            engine.globalIceEffectTimer = Math.max(0.0, engine.globalIceEffectTimer - delta);}
         if (engine.jalapenoLaneEffectTimer > 0.0) {
-            engine.jalapenoLaneEffectTimer = Math.max(0.0, engine.jalapenoLaneEffectTimer - delta);
-        }
+            engine.jalapenoLaneEffectTimer = Math.max(0.0, engine.jalapenoLaneEffectTimer - delta);}
         if (engine.iceShroomEffectTimer > 0.0) {
-            engine.iceShroomEffectTimer = Math.max(0.0, engine.iceShroomEffectTimer - delta);
-        }
+            engine.iceShroomEffectTimer = Math.max(0.0, engine.iceShroomEffectTimer - delta);}
         if (!engine.timedPamEffects.isEmpty()) {
             java.util.Iterator<RegularGameEngine.TimedPamEffect> it = engine.timedPamEffects.iterator();
             while (it.hasNext()) {
                 RegularGameEngine.TimedPamEffect fx = it.next();
                 fx.remaining -= delta;
-                if (fx.remaining <= 0.0) it.remove();
-            }
-        }
+                if (fx.remaining <= 0.0) it.remove();}}
         if (engine.map != null) {
             for (int r = 0; r < engine.map.getRows(); r++) {
                 for (int c = 0; c < engine.map.getCols(); c++) {
                     Tile tile = engine.map.getTile(r, c);
                     if (tile != null) {
-                        tile.update(delta);
-                    }
-                }
-            }
-        }
+                        tile.update(delta);}}}}
         if (engine.gameOverTriggered) {
             updateGameOverTimer(engine, delta);
-            return;
-        }
+            return;}
         if (engine.gameStatus != null && engine.gameStatus.isGameOver()) return;
         if (engine.survivalScoreMode) {
-            engine.survivalElapsedSeconds += delta;
-        }
+            engine.survivalElapsedSeconds += delta;}
         if (engine.waveManager != null) engine.waveManager.update(delta, engine.zombieEngine);
         if (engine.battleController != null) engine.battleController.update(delta);
         if (engine.sandstormManager != null) engine.sandstormManager.update(delta, engine);
         if (engine.iceWindManager != null) engine.iceWindManager.update(delta, engine);
-
         engine.tickAccumulator += delta;
         while (engine.tickAccumulator >= TICK_SECONDS) {
             engine.tickAccumulator -= TICK_SECONDS;
-            advanceOneTick(engine);
-        }
-
+            advanceOneTick(engine);}
         if (engine.gameStatus != null && !engine.gameStatus.isGameOver() && !engine.gameStatus.isWon()
             && engine.waveManager != null && engine.waveManager.isFinished()) {
             boolean anyAlive = false;
             for (Zombie z : engine.getZombieList()) {
-                if (z != null && !z.isDead()) { anyAlive = true; break; }
-            }
+                if (z != null && !z.isDead()) { anyAlive = true; break; }}
             if (!anyAlive) {
                 System.out.println("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
-                triggerGameOver(engine, true);
-            }
-        }
+                triggerGameOver(engine, true);}}
     }
 
     private static void advanceOneTick(RegularGameEngine engine) {

@@ -32,9 +32,9 @@ final class SunLootRendering {
         switch (type) {
             case COIN: pamPath = "768/INITIAL/EFFECTS/COIN_GOLD/COIN_GOLD.PAM"; clip = "animation"; break;
             case DIAMOND: pamPath = "768/INITIAL/EFFECTS/TUTORIAL_DIAMOND/TUTORIAL_DIAMOND.PAM"; clip = "idle"; break;
-            case PLANT_FOOD: pamPath = "768/INITIAL/EFFECTS/PLANTFOOD_PICKUP/PLANTFOOD_PICKUP.PAM"; clip = "idle"; break;
+            case PLANT_FOOD: pamPath = "768/INITIAL/EFFECTS/PLANTFOOD_PICKUP/PLANTFOOD_PICKUP.PAM";
+            clip = "idle"; break;
             default: return false;
         }
-        return er.renderPam(batch, pamPath, clip, animationTime, x, y);
-    }
+        return er.renderPam(batch, pamPath, clip, animationTime, x, y);}
 }
