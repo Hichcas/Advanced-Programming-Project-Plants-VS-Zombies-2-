@@ -17,12 +17,13 @@ public final class PamAnimationCatalog {
         SYNONYMS.put("idle", new String[]{"idle", "idle1", "idle_stage3", "loop", "plant_idle"});
         SYNONYMS.put("shooting", new String[]{"attack", "attack1", "attack_loop", "bite", "special", "pf_attack"});
         SYNONYMS.put("producing", new String[]{"special", "transition", "growth"});
-        SYNONYMS.put("plantfood", new String[]{"plantfood_on", "plantfood", "plantfood_loop", "pf", "pf_loop", "special"});
+        SYNONYMS.put("plantfood", new String[]{"plantfood_on",
+            "plantfood", "plantfood_loop", "pf", "pf_loop", "special"});
         SYNONYMS.put("water", new String[]{"water"});
         SYNONYMS.put("damage", new String[]{"damage", "damage2", "damage3", "idle_damage"});
         SYNONYMS.put("planting", new String[]{"plant", "intro"});
-        // Zombie states and special abilities
-        SYNONYMS.put("walk", new String[]{"walk", "walk1", "walk2", "walk_stage1", "walk_stage2", "run", "walk_forward", "idle"});
+        SYNONYMS.put("walk", new String[]{"walk", "walk1",
+            "walk2", "walk_stage1", "walk_stage2", "run", "walk_forward", "idle"});
         SYNONYMS.put("eat", new String[]{"eat", "eat1", "chew", "attack", "bite", "eat_norm"});
         SYNONYMS.put("die", new String[]{"death", "die", "fall", "burn", "ash"});
         SYNONYMS.put("zombie_idle", new String[]{"idle", "idle1", "groan", "stand", "idle_norm"});

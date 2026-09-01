@@ -74,94 +74,16 @@ public class ChapterSelectPanel extends BasePanel {
 
     public ChapterSelectPanel() {
         setFillParent(true);
-
         MusicManager.getInstance().playMusic("music/WorldMap.mp3");
         Skin skin = PvzSkin.get();
         BitmapFont bigFont = skin.getFont("FBUSV8C5EI_1_outline");
         Texture purpleUp = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON");
         Texture purpleDown = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON_DOWN");
 
-        float islandWidth = 150f, islandHeight = 150f;
-        float bigWidth = 350f, bigHeight = 350f;
-        float gapBetweenItems = 30f;
-        float gapBetweenChapters = 80f;
-        float verticalOffset = 60f;
-
         Group contentGroup = new Group();
-        float currentX = 100f;
-
-        User user = AppStatus.currentUser;
-
-        for (ChapterEnum chapterEnum : ChapterEnum.values()) {
-            ChapterConfig config = ChapterLibrary.getChapterConfig(chapterEnum.name());
-            if (config == null || config.getStages().isEmpty()) continue;
-
-            int stageCount = config.getStages().size();
-            String[] smallIds = SMALL_ISLANDS.get(chapterEnum);
-            String bigId = BIG_NODES.get(chapterEnum);
-
-            Texture bigTex = safeTextureFromRegion(bigId);
-            Texture[] smallTexs = new Texture[smallIds.length];
-            for (int j = 0; j < smallIds.length; j++) {
-                smallTexs[j] = safeTextureFromRegion(smallIds[j]);
-            }
-
-            if (bigTex != null) {
-                bigWidth = Math.max(350f, bigTex.getWidth());
-                bigHeight = Math.max(350f, bigTex.getHeight());
-            }
-
-            float centerY = Gdx.graphics.getHeight() / 2f;
-            float bossY = centerY - bigHeight / 2f;
-
-            // بلوک بزرگ (غیرتعاملی)
-            Image bossImage = new Image(new TextureRegionDrawable(bigTex));
-            bossImage.setSize(bigWidth, bigHeight);
-            bossImage.setPosition(currentX, bossY);
-            contentGroup.addActor(bossImage);
-
-            float nextX = currentX + bigWidth + gapBetweenItems;
-            for (int i = 0; i < stageCount; i++) {
-                int stageNum = i + 1;
-                Texture tex = smallTexs[i % smallTexs.length];
-                boolean locked = user != null && user.progressState != null
-                    && !user.progressState.isLevelUnlocked(chapterEnum, stageNum);
-
-                float yOff = (stageNum % 2 == 0) ? -verticalOffset : verticalOffset;
-                float islandY = centerY - islandHeight / 2f + yOff;
-
-                MenuButton btn = new MenuButton(
-                    tex, null, null,
-                    tex, tex, null,
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            enterStage(chapterEnum, stageNum);
-                        }
-                    }
-                );
-                btn.setSize(islandWidth, islandHeight);
-                btn.setPosition(nextX, islandY);
-                if (locked) btn.setDisabled(true);
-                contentGroup.addActor(btn);
-
-                Color numberColor = locked ? Color.RED : Color.GREEN;
-                Label numLabel = new Label(String.valueOf(stageNum),
-                    new Label.LabelStyle(bigFont, numberColor));
-                numLabel.setAlignment(Align.center);
-                numLabel.setSize(islandWidth, 30f);
-                numLabel.setPosition(nextX, islandY + islandHeight / 2f - 15f);
-                contentGroup.addActor(numLabel);
-
-                nextX += islandWidth + gapBetweenItems;
-            }
-
-            currentX = nextX + gapBetweenChapters - gapBetweenItems;
-        }
-
-        float contentWidth = Math.max(currentX - gapBetweenChapters + gapBetweenItems,
-            Gdx.graphics.getWidth());
-        contentGroup.setSize(contentWidth, Gdx.graphics.getHeight());
+        float contentWidth = buildChapterContent(contentGroup, skin, bigFont);
+        contentGroup.setSize(Math.max(contentWidth, Gdx.graphics.getWidth()),
+            Gdx.graphics.getHeight());
 
         ScrollPane scrollPane = new ScrollPane(contentGroup, skin);
         scrollPane.setFillParent(true);
@@ -170,7 +92,96 @@ public class ChapterSelectPanel extends BasePanel {
         scrollPane.setOverscroll(false, false);
         addActor(scrollPane);
 
-        // دکمه بازگشت
+        addBackButton(purpleUp, purpleDown, bigFont);
+        addErrorLabel(bigFont);
+    }
+
+    private float buildChapterContent(Group contentGroup, Skin skin, BitmapFont bigFont) {
+        float currentX = 100f;
+        User user = AppStatus.currentUser;
+        for (ChapterEnum chapterEnum : ChapterEnum.values()) {
+            ChapterConfig config = ChapterLibrary.getChapterConfig(chapterEnum.name());
+            if (config == null || config.getStages().isEmpty()) continue;
+            currentX = addChapterNode(contentGroup, chapterEnum, config, user, skin, bigFont, currentX);
+        }
+        return currentX;
+    }
+
+    private float addChapterNode(Group contentGroup, ChapterEnum chapterEnum,
+                                 ChapterConfig config, User user, Skin skin,
+                                 BitmapFont bigFont, float currentX) {
+        int stageCount = config.getStages().size();
+        String[] smallIds = SMALL_ISLANDS.get(chapterEnum);
+        String bigId = BIG_NODES.get(chapterEnum);
+
+        Texture bigTex = safeTextureFromRegion(bigId);
+        Texture[] smallTexs = new Texture[smallIds.length];
+        for (int j = 0; j < smallIds.length; j++) {
+            smallTexs[j] = safeTextureFromRegion(smallIds[j]);
+        }
+
+        float bigWidth = 350f;
+        float bigHeight = 350f;
+        if (bigTex != null) {
+            bigWidth = Math.max(350f, bigTex.getWidth());
+            bigHeight = Math.max(350f, bigTex.getHeight());
+        }
+
+        float centerY = Gdx.graphics.getHeight() / 2f;
+        float bossY = centerY - bigHeight / 2f;
+
+        Image bossImage = new Image(new TextureRegionDrawable(bigTex));
+        bossImage.setSize(bigWidth, bigHeight);
+        bossImage.setPosition(currentX, bossY);
+        contentGroup.addActor(bossImage);
+
+        float nextX = currentX + bigWidth + 30f;
+        for (int i = 0; i < stageCount; i++) {
+            int stageNum = i + 1;
+            Texture tex = smallTexs[i % smallTexs.length];
+            boolean locked = user != null && user.progressState != null
+                && !user.progressState.isLevelUnlocked(chapterEnum, stageNum);
+
+            nextX = addStageIsland(contentGroup, chapterEnum, stageNum, tex, locked,
+                bigFont, nextX, centerY);
+        }
+
+        return nextX + 80f - 30f;
+    }
+
+    private float addStageIsland(Group contentGroup, ChapterEnum chapterEnum,
+                                 int stageNum, Texture tex, boolean locked,
+                                 BitmapFont bigFont, float nextX, float centerY) {
+        float yOff = (stageNum % 2 == 0) ? -60f : 60f;
+        float islandY = centerY - 150f / 2f + yOff;
+
+        MenuButton btn = new MenuButton(
+            tex, null, null,
+            tex, tex, null,
+            new Runnable() {
+                @Override
+                public void run() {
+                    enterStage(chapterEnum, stageNum);
+                }
+            }
+        );
+        btn.setSize(150f, 150f);
+        btn.setPosition(nextX, islandY);
+        if (locked) btn.setDisabled(true);
+        contentGroup.addActor(btn);
+
+        Color numberColor = locked ? Color.RED : Color.GREEN;
+        Label numLabel = new Label(String.valueOf(stageNum),
+            new Label.LabelStyle(bigFont, numberColor));
+        numLabel.setAlignment(Align.center);
+        numLabel.setSize(150f, 30f);
+        numLabel.setPosition(nextX, islandY + 150f / 2f - 15f);
+        contentGroup.addActor(numLabel);
+
+        return nextX + 150f + 30f;
+    }
+
+    private void addBackButton(Texture purpleUp, Texture purpleDown, BitmapFont bigFont) {
         MenuButton backBtn = new MenuButton(purpleUp, "Back", bigFont, purpleDown, null, null,
             new Runnable() {
                 @Override
@@ -182,8 +193,9 @@ public class ChapterSelectPanel extends BasePanel {
         backBtn.setSize(200, 80);
         backBtn.setPosition(50, 50);
         addActor(backBtn);
+    }
 
-        // برچسب خطا
+    private void addErrorLabel(BitmapFont bigFont) {
         errorLabel = new Label("", new Label.LabelStyle(bigFont, Color.RED));
         errorLabel.setAlignment(Align.center);
         errorLabel.setSize(Gdx.graphics.getWidth() * 0.6f, 50);

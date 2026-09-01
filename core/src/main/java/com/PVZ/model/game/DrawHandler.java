@@ -66,87 +66,118 @@ public class DrawHandler {
     private static void drawIceBlocksWithHealthBars(RegularGameEngine engine, SpriteBatch batch) {
         if (engine.map == null) return;
         iceBlockStateTime += com.badlogic.gdx.Gdx.graphics.getDeltaTime();
+
         BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
         font.setColor(Color.WHITE);
+
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 9; col++) {
                 Tile tile = engine.map.getTile(row, col);
                 if (tile != null && tile.getType() == TileType.ICE) {
-                    float tileX = tile.getX();
-                    float tileY = tile.getY();
-                    float width = tile.getWidth();
-                    float height = tile.getHeight();
-
-                    // Render DANGER_NODE_ICEAGE.PAM (locked_idle) scaled to tile size
-                    float centerX = tileX + width / 2f;
-                    float centerY = tileY + height / 2f;
-                    float scale = 0.28f;
-                    Color origIceColor = batch.getColor().cpy();
-
-                    // If a zombie is encased inside, render frozen zombie inside the ice block
-                    if (tile.getEncasedZombieType() != null) {
-                        EntityRenderer.getInstance().renderPam(
-                            batch,
-                            "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM",
-                            "idle",
-                            0f,
-                            centerX - 25f,
-                            centerY - 25f,
-                            0.75f
-                        );
-                    }
-
-                    if (tile.isHitFlashing()) {
-                        batch.setColor(Math.min(2.0f, origIceColor.r * 1.5f + 0.4f),
-                                       Math.min(2.0f, origIceColor.g * 1.5f + 0.4f),
-                                       Math.min(2.0f, origIceColor.b * 1.5f + 0.4f),
-                                       origIceColor.a);
-                    }
-                    boolean rendered = EntityRenderer.getInstance().renderPam(
-                        batch,
-                        "768/FULL/WORLDMAP/DANGER_NODE_ICEAGE/DANGER_NODE_ICEAGE.PAM",
-                        "locked_idle",
-                        iceBlockStateTime,
-                        centerX,
-                        centerY,
-                        scale
-                    );
-                    if (tile.isHitFlashing()) {
-                        batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
-                            com.badlogic.gdx.graphics.GL20.GL_ONE);
-                        batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
-                        EntityRenderer.getInstance().renderPam(
-                            batch,
-                            "768/FULL/WORLDMAP/DANGER_NODE_ICEAGE/DANGER_NODE_ICEAGE.PAM",
-                            "locked_idle",
-                            iceBlockStateTime,
-                            centerX,
-                            centerY,
-                            scale
-                        );
-                        batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
-                            com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
-                    }
-
-                    if (!rendered) {
-                        // Fallback overlay
-                        Color c = batch.getColor();
-                        batch.setColor(0.35f, 0.75f, 1f, 0.75f);
-                        batch.draw(whiteTexture(), tileX + 4f, tileY + 4f, width - 8f, height - 8f);
-                        batch.setColor(c);
-                    }
-                    batch.setColor(origIceColor);
-
-                    // Draw Health Bar (Slider Bar)
-                    int currentHp = Math.max(0, tile.getHp() > 0 ? tile.getHp() : 1800);
-                    float hpPercent = Math.max(0f, Math.min(1.0f, (float) currentHp / 1800f));
-                    HealthBarRenderer.draw(batch, tileX + 10f, tileY + height - 15f, width - 20f, hpPercent, false);
-
-                    String label = "Ice (" + currentHp + "hp)";
-                    font.draw(batch, label, tileX + 10f, tileY + height - 2f);
+                    processIceTile(engine, batch, font, tile);
                 }
             }
         }
+    }
+
+    private static void processIceTile(RegularGameEngine engine, SpriteBatch batch,
+                                       BitmapFont font, Tile tile) {
+        float tileX = tile.getX();
+        float tileY = tile.getY();
+        float width = tile.getWidth();
+        float height = tile.getHeight();
+        float centerX = tileX + width / 2f;
+        float centerY = tileY + height / 2f;
+        float scale = 0.28f;
+        Color origIceColor = batch.getColor().cpy();
+
+        renderFrozenZombieIfPresent(batch, tile, centerX, centerY);
+
+        boolean rendered = renderIceBlockWithFlashing(batch, tile, centerX, centerY,
+            scale, origIceColor);
+
+        if (!rendered) {
+            renderIceFallback(batch, tileX, tileY, width, height);
+        }
+
+        batch.setColor(origIceColor);
+
+        drawIceHealthBarAndLabel(batch, font, tile, tileX, tileY, width, height);
+    }
+
+    private static void renderFrozenZombieIfPresent(SpriteBatch batch, Tile tile,
+                                                    float centerX, float centerY) {
+        if (tile.getEncasedZombieType() != null) {
+            EntityRenderer.getInstance().renderPam(
+                batch,
+                "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM",
+                "idle",
+                0f,
+                centerX - 25f,
+                centerY - 25f,
+                0.75f
+            );
+        }
+    }
+
+    private static boolean renderIceBlockWithFlashing(SpriteBatch batch, Tile tile,
+                                                      float centerX, float centerY,
+                                                      float scale, Color origIceColor) {
+        if (tile.isHitFlashing()) {
+            batch.setColor(Math.min(2.0f, origIceColor.r * 1.5f + 0.4f),
+                Math.min(2.0f, origIceColor.g * 1.5f + 0.4f),
+                Math.min(2.0f, origIceColor.b * 1.5f + 0.4f),
+                origIceColor.a);
+        }
+
+        boolean rendered = EntityRenderer.getInstance().renderPam(
+            batch,
+            "768/FULL/WORLDMAP/DANGER_NODE_ICEAGE/DANGER_NODE_ICEAGE.PAM",
+            "locked_idle",
+            iceBlockStateTime,
+            centerX,
+            centerY,
+            scale
+        );
+
+        if (tile.isHitFlashing()) {
+            batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                com.badlogic.gdx.graphics.GL20.GL_ONE);
+            batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+            EntityRenderer.getInstance().renderPam(
+                batch,
+                "768/FULL/WORLDMAP/DANGER_NODE_ICEAGE/DANGER_NODE_ICEAGE.PAM",
+                "locked_idle",
+                iceBlockStateTime,
+                centerX,
+                centerY,
+                scale
+            );
+            batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+        }
+
+        return rendered;
+    }
+
+    private static void renderIceFallback(SpriteBatch batch, float tileX, float tileY,
+                                          float width, float height) {
+        Color c = batch.getColor();
+        batch.setColor(0.35f, 0.75f, 1f, 0.75f);
+        batch.draw(whiteTexture(), tileX + 4f, tileY + 4f, width - 8f, height - 8f);
+        batch.setColor(c);
+    }
+
+    private static void drawIceHealthBarAndLabel(SpriteBatch batch, BitmapFont font,
+                                                 Tile tile, float tileX, float tileY,
+                                                 float width, float height) {
+        int currentHp = Math.max(0, tile.getHp() > 0 ? tile.getHp() : 1800);
+        float hpPercent = Math.max(0f, Math.min(1.0f, (float) currentHp / 1800f));
+        HealthBarRenderer.draw(batch, tileX + 10f, tileY + height - 15f,
+            width - 20f, hpPercent, false);
+
+        String label = "Ice (" + currentHp + "hp)";
+        font.draw(batch, label, tileX + 10f, tileY + height - 2f);
     }
 
     private static void drawJalapenoLaneEffect(RegularGameEngine engine, SpriteBatch batch) {
@@ -251,94 +282,107 @@ public class DrawHandler {
         if (engine.map == null) return;
         Color orig = batch.getColor();
 
-        // 1. Render chapter-wide Big Wave Beach Ocean layers (UNDER plants and zombies)
-        if ("BIG_WAVE_BEACH".equalsIgnoreCase(com.PVZ.model.status.AppStatus.currentChapterName)
-            || "BEACH".equalsIgnoreCase(com.PVZ.model.status.AppStatus.currentChapterName)) {
+        drawBeachWaterOverlays(engine, batch);
+        drawPerTileOverlays(engine, batch);
 
-            int minWaterCol = 9;
-            for (int r = 0; r < 5; r++) {
-                for (int c = 0; c < 9; c++) {
-                    Tile t = engine.map.getTile(r, c);
-                    if (t != null && (t.getType() == TileType.WATER ||
-                        t.getType() == TileType.TIDE || t.getType() == TileType.LOW_COAST)) {
-                        if (c < minWaterCol) minWaterCol = c;
-                    }
-                }
-            }
+        batch.setColor(orig);
+    }
 
-            if (minWaterCol < 9) {
-                Tile shoreTile = engine.map.getTile(2, minWaterCol);
-                if (shoreTile != null) {
-                    float waterX = shoreTile.getX();
-                    float tileW = shoreTile.getWidth();
-                    float lawnCenterY = (engine.map.getTile(0, 0).getY() + engine.map.getTile(4, 0).getY()
-                        + engine.map.getTile(0, 0).getHeight()) / 2f;
-                    EntityRenderer.getInstance().renderPam(
-                        batch,
-                        "768/FULL/BACKGROUNDS/WATER_UNDERLAYER/WATER_UNDERLAYER.PAM",
-                        "Water",
-                        iceBlockStateTime,
-                        waterX + 250f + 2f * tileW,
-                        lawnCenterY,
-                        1.0f
-                    );
+    private static void drawBeachWaterOverlays(RegularGameEngine engine, SpriteBatch batch) {
+        String chapter = com.PVZ.model.status.AppStatus.currentChapterName;
+        if (!"BIG_WAVE_BEACH".equalsIgnoreCase(chapter) && !"BEACH".equalsIgnoreCase(chapter)) {
+            return;
+        }
 
-                    // 2. Draw WAVE_UPPERLAYER (Animated ocean waves)
-                    EntityRenderer.getInstance().renderPam(
-                        batch,
-                        "768/FULL/BACKGROUNDS/WAVE_UPPERLAYER/WAVE_UPPERLAYER.PAM",
-                        "water",
-                        iceBlockStateTime,
-                        waterX + 250f + 2f * tileW,
-                        lawnCenterY,
-                        1.0f
-                    );
-
-                    // 3. Draw WATER_TIDE_LINE (White foam wave aligned exactly onto the L column)
-                    EntityRenderer.getInstance().renderPam(
-                        batch,
-                        "768/FULL/BACKGROUNDS/WATER_TIDE_LINE/WATER_TIDE_LINE.PAM",
-                        "idle",
-                        iceBlockStateTime,
-                        waterX + 410f + 2f * tileW,
-                        lawnCenterY,
-                        1.0f
-                    );
+        int minWaterCol = 9;
+        for (int r = 0; r < 5; r++) {
+            for (int c = 0; c < 9; c++) {
+                Tile t = engine.map.getTile(r, c);
+                if (t != null && (t.getType() == TileType.WATER ||
+                    t.getType() == TileType.TIDE || t.getType() == TileType.LOW_COAST)) {
+                    if (c < minWaterCol) minWaterCol = c;
                 }
             }
         }
 
-        // 2. Per-tile overlays (Craters, etc.)
+        if (minWaterCol >= 9) return;
+        Tile shoreTile = engine.map.getTile(2, minWaterCol);
+        if (shoreTile == null) return;
+
+        float waterX = shoreTile.getX();
+        float tileW = shoreTile.getWidth();
+        float lawnCenterY = (engine.map.getTile(0, 0).getY() + engine.map.getTile(4, 0).getY()
+            + engine.map.getTile(0, 0).getHeight()) / 2f;
+
+        EntityRenderer.getInstance().renderPam(
+            batch,
+            "768/FULL/BACKGROUNDS/WATER_UNDERLAYER/WATER_UNDERLAYER.PAM",
+            "Water",
+            iceBlockStateTime,
+            waterX + 250f + 2f * tileW,
+            lawnCenterY,
+            1.0f
+        );
+
+        EntityRenderer.getInstance().renderPam(
+            batch,
+            "768/FULL/BACKGROUNDS/WAVE_UPPERLAYER/WAVE_UPPERLAYER.PAM",
+            "water",
+            iceBlockStateTime,
+            waterX + 250f + 2f * tileW,
+            lawnCenterY,
+            1.0f
+        );
+
+        EntityRenderer.getInstance().renderPam(
+            batch,
+            "768/FULL/BACKGROUNDS/WATER_TIDE_LINE/WATER_TIDE_LINE.PAM",
+            "idle",
+            iceBlockStateTime,
+            waterX + 410f + 2f * tileW,
+            lawnCenterY,
+            1.0f
+        );
+    }
+
+    private static void drawPerTileOverlays(RegularGameEngine engine, SpriteBatch batch) {
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 9; col++) {
                 Tile tile = engine.map.getTile(row, col);
                 if (tile == null) continue;
                 TileType type = tile.getType();
+
                 if (type == TileType.CRATER) {
-                    Color c = batch.getColor();
-                    batch.setColor(0.10f, 0.08f, 0.06f, 0.92f);
-                    batch.draw(engine.iceOverlayTexture(), tile.getX() + 5f, tile.getY() + 5f,
-                        tile.getWidth() - 10f, tile.getHeight() - 10f);
-                    batch.setColor(c);
-                    EntityRenderer.getInstance().renderPam(batch,
-                        "768/FULL/EFFECTS/CRATER/CRATER.PAM", "animation", 0f,
-                        tile.getX()+tile.getWidth()/2f, tile.getY()+tile.getHeight()/2f, 0.9f);
+                    drawCraterOverlay(engine, batch, tile);
                 } else if (type == TileType.SLIPPERY_UP) {
-                    float cx = tile.getX() + tile.getWidth() / 2f;
-                    float cy = tile.getY() + tile.getHeight() / 2f;
-                    EntityRenderer.getInstance().renderPam(batch,
-                        "768/FULL/EFFECTS/TILESLIDER_ICEAGE_UP/TILESLIDER_ICEAGE_UP.PAM", "idle",
-                        iceBlockStateTime, cx, cy, 0.32f);
+                    drawSlipperyOverlay(batch, tile, true);
                 } else if (type == TileType.SLIPPERY_DOWN) {
-                    float cx = tile.getX() + tile.getWidth() / 2f;
-                    float cy = tile.getY() + tile.getHeight() / 2f;
-                    EntityRenderer.getInstance().renderPam(batch,
-                        "768/FULL/EFFECTS/TILESLIDER_ICEAGE_DOWN/TILESLIDER_ICEAGE_DOWN.PAM", "idle",
-                        iceBlockStateTime, cx, cy, 0.32f);
+                    drawSlipperyOverlay(batch, tile, false);
                 }
             }
         }
-        batch.setColor(orig);
+    }
+
+    private static void drawCraterOverlay(RegularGameEngine engine, SpriteBatch batch, Tile tile) {
+        Color c = batch.getColor();
+        batch.setColor(0.10f, 0.08f, 0.06f, 0.92f);
+        batch.draw(engine.iceOverlayTexture(), tile.getX() + 5f, tile.getY() + 5f,
+            tile.getWidth() - 10f, tile.getHeight() - 10f);
+        batch.setColor(c);
+
+        EntityRenderer.getInstance().renderPam(batch,
+            "768/FULL/EFFECTS/CRATER/CRATER.PAM", "animation", 0f,
+            tile.getX() + tile.getWidth() / 2f, tile.getY() + tile.getHeight() / 2f, 0.9f);
+    }
+
+    private static void drawSlipperyOverlay(SpriteBatch batch, Tile tile, boolean isUp) {
+        float cx = tile.getX() + tile.getWidth() / 2f;
+        float cy = tile.getY() + tile.getHeight() / 2f;
+        String pamPath = isUp
+            ? "768/FULL/EFFECTS/TILESLIDER_ICEAGE_UP/TILESLIDER_ICEAGE_UP.PAM"
+            : "768/FULL/EFFECTS/TILESLIDER_ICEAGE_DOWN/TILESLIDER_ICEAGE_DOWN.PAM";
+        EntityRenderer.getInstance().renderPam(batch, pamPath, "idle",
+            iceBlockStateTime, cx, cy, 0.32f);
     }
 
     private static void drawTombstonesWithHealthBars(RegularGameEngine engine, SpriteBatch batch) {

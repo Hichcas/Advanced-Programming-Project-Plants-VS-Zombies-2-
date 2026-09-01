@@ -142,25 +142,38 @@ public class GameScreen extends BaseScreen {
         this.mapPath = mapPath;
         this.musicPath = musicPath;
 
-        String bgInternal = mapPath;
+        loadBackground(mapPath);
+        playChapterMusic(musicPath);
+
+        this.gameEngine = gameEngine;
+        AppStatus.setGameEngine(gameEngine);
+        initPreviewZombies();
+
+        initializeHudAndOverlays();
+        initializeGameMapAndRenderers();
+        initializeRegularEngineFeatures();
+        initializeMatchResultOverlays();
+        initializeLevelStartOverlayIfNeeded();
+    }
+
+    private void loadBackground(String bgInternal) {
         if (com.badlogic.gdx.Gdx.files.internal(bgInternal).exists()) {
             backgroundTexture = new Texture(com.badlogic.gdx.Gdx.files.internal(bgInternal));
         } else {
             System.out.println("GameScreen: background not found: " + bgInternal);
             backgroundTexture = null;
         }
+    }
 
+    private void playChapterMusic(String fallbackMusic) {
         ChapterEnum chapter = AppStatus.getCurrentChapterEnum();
         String actualMusic = (chapter != null && chapter.getMusicPath() != null)
             ? chapter.getMusicPath()
-            : musicPath;
-
+            : fallbackMusic;
         MusicManager.getInstance().playMusic(actualMusic);
-        this.gameEngine = gameEngine;
-        AppStatus.setGameEngine(gameEngine);
+    }
 
-        initPreviewZombies();
-
+    private void initializeHudAndOverlays() {
         gameHud = new GameHud();
         stage.addActor(gameHud);
 
@@ -179,27 +192,29 @@ public class GameScreen extends BaseScreen {
         stage.addActor(npcDialogueOverlay);
 
         stage.addActor(buildPauseButton());
+
         if (gameEngine instanceof RegularGameEngine) {
             stage.addActor(buildPlantFoodButton());
             stage.addActor(buildShovelButton());
         }
+
         if (gameEngine instanceof RegularGameEngine rge && rge.isPlantWhatYouGetMode()) {
             startWaveButtonRoot = buildStartWaveButton();
             stage.addActor(startWaveButtonRoot);
         }
+
         com.PVZ.view.screen.panels.CheatPanel.attachToggleButton(stage, this::handleCheatAcrossGameModes);
 
-        // پنل واکنش (فقط برای بازی دونفره‌ی «من، زامبی» در فاز شبکه) - دقیقا مثل
-        // ری‌اکشن بین دو بازیکن در کلش‌آف‌کلنز.
         if (gameEngine instanceof com.PVZ.model.game.IZombieMultiplayerGameEngine mpEngine) {
             stage.addActor(new com.PVZ.view.screen.ui.ReactionPanel(mpEngine::sendReaction));
         }
-        // همان پنل واکنش برای مود دونفره‌ی لوکال (هر دو بازیکن روی یک صفحه‌اند، پس
-        // نیازی به شبکه نیست - فقط افکت/حباب روی همان صفحه‌ی مشترک نشان داده می‌شود).
+
         if (gameEngine instanceof com.PVZ.model.game.IZombieLocalVersusEngine localEngine) {
             stage.addActor(new com.PVZ.view.screen.ui.ReactionPanel(localEngine::sendReaction));
         }
+    }
 
+    private void initializeGameMapAndRenderers() {
         if (gameEngine.getMap() != null) {
             gameMap = gameEngine.getMap();
         } else {
@@ -209,10 +224,15 @@ public class GameScreen extends BaseScreen {
         shapeDebug = new ShapeRenderer();
         hudFont = FontManager.getInstance().getEnglishMenuFont();
         gameOverFont = FontManager.getInstance().getEnglishMenuFont();
+    }
 
-        if (gameEngine instanceof RegularGameEngine regularGameEngine
-            && regularGameEngine
-            .getSpecialLevel() instanceof com.PVZ.model.game.chapter.sepecialLevel.TimedWarLevel) {
+    private void initializeRegularEngineFeatures() {
+        if (!(gameEngine instanceof RegularGameEngine regularGameEngine)) {
+            return;
+        }
+
+        if (regularGameEngine.getSpecialLevel()
+            instanceof com.PVZ.model.game.chapter.sepecialLevel.TimedWarLevel) {
             Label.LabelStyle timerStyle = new Label.LabelStyle(hudFont, Color.WHITE);
             try {
                 Skin skin = PvzSkin.get();
@@ -232,28 +252,25 @@ public class GameScreen extends BaseScreen {
             stage.addActor(timedWarLabel);
         }
 
-        if (gameEngine instanceof RegularGameEngine regularGameEngine) {
-            layoutSeedPacketBar(regularGameEngine);
-        }
+        layoutSeedPacketBar(regularGameEngine);
+    }
 
+    private void initializeMatchResultOverlays() {
         onlineMatchResultOverlay = new OnlineMatchResultOverlay(this::exitOnlineMatch);
         stage.addActor(onlineMatchResultOverlay);
 
         localMatchResultOverlay = new OnlineMatchResultOverlay(this::exitLocalVersusMatch);
         stage.addActor(localMatchResultOverlay);
 
-        if (gameEngine instanceof IZombieMultiplayerGameEngine) {
-            drawOfferOverlay = new DrawOfferOverlay(accept -> {
-                if (gameEngine instanceof IZombieMultiplayerGameEngine onlineEngine) {
-                    onlineEngine.respondDrawOffer(accept);
-                }
-            });
+        if (gameEngine instanceof IZombieMultiplayerGameEngine onlineEngine) {
+            drawOfferOverlay = new DrawOfferOverlay(onlineEngine::respondDrawOffer);
             stage.addActor(drawOfferOverlay);
         }
+    }
 
-        // LevelStartOverlay must be the top-most actor so its CONTINUE button
-        // receives the initial click instead of a full-screen HUD actor.
-        if (!AppStatus.isMultiplayerMatch && !(gameEngine instanceof com.PVZ.model.game.IZombieGameEngine)) {
+    private void initializeLevelStartOverlayIfNeeded() {
+        if (!AppStatus.isMultiplayerMatch
+            && !(gameEngine instanceof com.PVZ.model.game.IZombieGameEngine)) {
             levelStartOverlay = new LevelStartOverlay(resolveStageConfig(), () -> {
                 introStarted = true;
                 introTimer = 0f;
@@ -741,114 +758,122 @@ public class GameScreen extends BaseScreen {
         AppStatus.registerCameraShakeTrigger(this::activeCameraShake);
         multiplexer.clear();
         multiplexer.addProcessor(stage);
-        multiplexer.addProcessor(new com.badlogic.gdx.InputAdapter() {
-            @Override
-            public boolean keyDown(int keycode) {
-                if (isSimulationFrozen()) {
-                    return false;
-                }
-                if (keycode == com.badlogic.gdx.Input.Keys.F) {
-                    GameEngine active = AppStatus.getGameEngine();
-                    if (active instanceof RegularGameEngine reg) {
-                        CombatHandler.freezeAllZombies(reg, 5.0);
-                        System.out.println("[Cheat Hotkey F] All zombies frozen for 5.0 seconds!");
-                        return true;
-                    }
-                } else if (keycode == com.badlogic.gdx.Input.Keys.X) {
-                    GameEngine active = AppStatus.getGameEngine();
-                    if (active instanceof RegularGameEngine reg) {
-                        BattleController bc = reg.getBattleController();
-                        List<Zombie> list = reg.getZombieList();
-                        for (int i = list.size() - 1; i >= 0; i--) {
-                            Zombie z = list.get(i);
-                            if (z != null && !z.isDead()) {
-                                z.setDeathType(com.PVZ.model.enums.DeathType.ASH);
-                                z.die(bc);
-                            }
-                        }
-                        System.out.println("[Cheat Hotkey X] All zombies powdered into ash!");
-                        return true;
-                    }
-                }
-                if (activeInputProcessor() != null && activeInputProcessor().keyDown(keycode)) {
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean keyUp(int keycode) {
-                if (activeInputProcessor() != null && activeInputProcessor().keyUp(keycode)) {
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean keyTyped(char character) {
-                if (activeInputProcessor() != null && activeInputProcessor().keyTyped(character)) {
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                if (isSimulationFrozen()) {
-                    return false;
-                }
-                if (handleLootAtScreenPoint(screenX, screenY)) {
-                    return true;
-                }
-                if (plantFoodModeActive && handlePlantFoodAtScreenPoint(screenX, screenY)) {
-                    return true;
-                }
-                if (pluckModeActive && handlePluckAtScreenPoint(screenX, screenY)) {
-                    return true;
-                }
-                return activeInputProcessor() != null
-                    && activeInputProcessor().touchDown(screenX, screenY, pointer, button);
-            }
-
-            @Override
-            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                return activeInputProcessor() != null
-                    && activeInputProcessor().touchUp(screenX, screenY, pointer, button);
-            }
-
-            @Override
-            public boolean touchDragged(int screenX, int screenY, int pointer) {
-                return activeInputProcessor() != null && activeInputProcessor().touchDragged(screenX, screenY, pointer);
-            }
-
-            @Override
-            public boolean mouseMoved(int screenX, int screenY) {
-                if (isSimulationFrozen()) {
-                    return false;
-                }
-                return activeInputProcessor() != null && activeInputProcessor().mouseMoved(screenX, screenY);
-            }
-
-            @Override
-            public boolean scrolled(float amountX, float amountY) {
-                return activeInputProcessor() != null && activeInputProcessor().scrolled(amountX, amountY);
-            }
-        });
+        multiplexer.addProcessor(new GameInputAdapter());
         super.show();
 
-        if (drawOfferOverlay != null) {
-            // لیسنر برای پیشنهاد تساوی
-            com.PVZ.network.client.NetworkSession.client().on(
-                com.PVZ.network.common.MessageType.DRAW_OFFER, msg -> {
-                    Gdx.app.postRunnable(() -> {
-                        if (drawOfferOverlay != null && !drawOfferOverlay.isShowing()) {
-                            drawOfferOverlay.showOffer();
-                        }
-                    });
+        setupDrawOfferListener();
+        refreshSeedPacketBar();
+    }
+
+    private void setupDrawOfferListener() {
+        if (drawOfferOverlay == null) return;
+
+        com.PVZ.network.client.NetworkSession.client().on(
+            com.PVZ.network.common.MessageType.DRAW_OFFER, msg -> {
+                Gdx.app.postRunnable(() -> {
+                    if (drawOfferOverlay != null && !drawOfferOverlay.isShowing()) {
+                        drawOfferOverlay.showOffer();
+                    }
                 });
+            });
+    }
+
+    private boolean handleCheatHotkeys(int keycode) {
+        if (keycode == com.badlogic.gdx.Input.Keys.F) {
+            GameEngine active = AppStatus.getGameEngine();
+            if (active instanceof RegularGameEngine reg) {
+                CombatHandler.freezeAllZombies(reg, 5.0);
+                System.out.println("[Cheat Hotkey F] All zombies frozen for 5.0 seconds!");
+                return true;
+            }
+        } else if (keycode == com.badlogic.gdx.Input.Keys.X) {
+            GameEngine active = AppStatus.getGameEngine();
+            if (active instanceof RegularGameEngine reg) {
+                BattleController bc = reg.getBattleController();
+                List<Zombie> list = reg.getZombieList();
+                for (int i = list.size() - 1; i >= 0; i--) {
+                    Zombie z = list.get(i);
+                    if (z != null && !z.isDead()) {
+                        z.setDeathType(com.PVZ.model.enums.DeathType.ASH);
+                        z.die(bc);
+                    }
+                }
+                System.out.println("[Cheat Hotkey X] All zombies powdered into ash!");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private class GameInputAdapter extends com.badlogic.gdx.InputAdapter {
+        @Override
+        public boolean keyDown(int keycode) {
+            if (isSimulationFrozen()) {
+                return false;
+            }
+            if (handleCheatHotkeys(keycode)) {
+                return true;
+            }
+            com.badlogic.gdx.InputProcessor active = activeInputProcessor();
+            return active != null && active.keyDown(keycode);
         }
 
-        refreshSeedPacketBar();
+        @Override
+        public boolean keyUp(int keycode) {
+            com.badlogic.gdx.InputProcessor active = activeInputProcessor();
+            return active != null && active.keyUp(keycode);
+        }
+
+        @Override
+        public boolean keyTyped(char character) {
+            com.badlogic.gdx.InputProcessor active = activeInputProcessor();
+            return active != null && active.keyTyped(character);
+        }
+
+        @Override
+        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            if (isSimulationFrozen()) {
+                return false;
+            }
+            if (handleLootAtScreenPoint(screenX, screenY)) {
+                return true;
+            }
+            if (plantFoodModeActive && handlePlantFoodAtScreenPoint(screenX, screenY)) {
+                return true;
+            }
+            if (pluckModeActive && handlePluckAtScreenPoint(screenX, screenY)) {
+                return true;
+            }
+            com.badlogic.gdx.InputProcessor active = activeInputProcessor();
+            return active != null && active.touchDown(screenX, screenY, pointer, button);
+        }
+
+        @Override
+        public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+            com.badlogic.gdx.InputProcessor active = activeInputProcessor();
+            return active != null && active.touchUp(screenX, screenY, pointer, button);
+        }
+
+        @Override
+        public boolean touchDragged(int screenX, int screenY, int pointer) {
+            com.badlogic.gdx.InputProcessor active = activeInputProcessor();
+            return active != null && active.touchDragged(screenX, screenY, pointer);
+        }
+
+        @Override
+        public boolean mouseMoved(int screenX, int screenY) {
+            if (isSimulationFrozen()) {
+                return false;
+            }
+            com.badlogic.gdx.InputProcessor active = activeInputProcessor();
+            return active != null && active.mouseMoved(screenX, screenY);
+        }
+
+        @Override
+        public boolean scrolled(float amountX, float amountY) {
+            com.badlogic.gdx.InputProcessor active = activeInputProcessor();
+            return active != null && active.scrolled(amountX, amountY);
+        }
     }
 
     private com.badlogic.gdx.InputProcessor activeInputProcessor() {
@@ -880,82 +905,120 @@ public class GameScreen extends BaseScreen {
     }
 
     private com.PVZ.view.output.OutputDTO handleCheatAcrossGameModes(
-
         com.PVZ.view.input.DTO.InGameInputDTO dto) {
-        GameEngine active = AppStatus.getGameEngine() != null ? AppStatus.getGameEngine() : gameEngine;
+        GameEngine active = AppStatus.getGameEngine() != null
+            ? AppStatus.getGameEngine() : gameEngine;
         if (active instanceof com.PVZ.model.game.RegularGameEngine) {
             return new com.PVZ.controller.menuControllers.InGameMenuController().handle(dto);
         }
-
         if (!(active instanceof com.PVZ.model.game.ZombieEngine zombieEngine)) {
-            return new com.PVZ.view.output.OutputDTO(false, "Cheats are unavailable in this game mode.");
+            return new com.PVZ.view.output.OutputDTO(false,
+                "Cheats are unavailable in this game mode.");
         }
-
         try {
-            return switch (dto.getCommand()) {
-                case CHEAT_ADD_PLANT_SUN, CHEAT_ADD_SUNS -> {
-                    int amount = dto.getAmount() == null ? 0 : dto.getAmount();
-                    if (active instanceof com.PVZ.model.game.IZombieLocalVersusEngine versusEngine) {
-                        versusEngine.addPlantSun(amount);
-                        yield new com.PVZ.view.output.OutputDTO(true,
-                            "Added " + amount + " Plant Sun. Total: " + versusEngine.getPlantSun());
-                    } else if (active instanceof com.PVZ.model.game.RegularGameEngine reg) {
-                        reg.addSun(amount);
-                        yield new com.PVZ.view.output.OutputDTO(true, "Added " + amount + " Plant Sun.");
-                    }
-                    zombieEngine.addSun(amount);
-                    yield new com.PVZ.view.output.OutputDTO(true, "Added " + amount + " sun.");
-                }
-                case CHEAT_ADD_ZOMBIE_SUN -> {
-                    int amount = dto.getAmount() == null ? 0 : dto.getAmount();
-                    zombieEngine.addSun(amount);
-                    yield new com.PVZ.view.output.OutputDTO(true, "Added " + amount + " Zombie Sun.");
-                }
-                case CHEAT_SPAWN_ZOMBIE -> {
-                    String alias = dto.getZombieType();
-                    int row = dto.getY() == null ? 2 : dto.getY();
-                    int col = dto.getX() == null ? 8 : dto.getX();
-                    com.PVZ.model.entity.zombies.base.Zombie z = zombieEngine.spawnZombie(alias, row, col);
-                    yield new com.PVZ.view.output.OutputDTO(z != null,
-                        z != null ? "Zombie spawned: " + alias : "Could not spawn zombie.");
-                }
-                case CHEAT_RELEASE_NUKE, KILL_ALL_ZOMBIES -> {
-                    java.util.List<com.PVZ.model.entity.zombies.base.Zombie> zombies = zombieEngine
-                        .getZombiesInLane(-1);
-                    if (zombies == null || zombies.isEmpty()) {
-                        zombies = new java.util.ArrayList<>();
-                        for (int r = 0; r < 5; r++) {
-                            java.util.List<com.PVZ.model.entity.zombies.base.Zombie> lane = zombieEngine
-                                .getZombiesInLane(r);
-                            if (lane != null)
-                                zombies.addAll(lane);
-                        }
-                    }
-                    for (com.PVZ.model.entity.zombies.base.Zombie z : zombies) {
-                        if (z != null && !z.isDead())
-                            zombieEngine.kill(z);
-                    }
-                    yield new com.PVZ.view.output.OutputDTO(true, "All zombies killed.");
-                }
-                case CHEAT_REMOVE_COOLDOWN -> {
-                    if (gameEngine instanceof com.PVZ.model.game.ZombotanyGameEngine z) {
-                        z.clearPlantCooldowns();
-                        yield new com.PVZ.view.output.OutputDTO(true, "Plant cooldowns removed.");
-                    }
-                    yield new com.PVZ.view.output.OutputDTO(true, "No plant cooldowns in this minigame.");
-                }
-                case CHEAT_ADD_PLANT_FOOD ->
-                    new com.PVZ.view.output.OutputDTO(true, "Plant Food is not used by this minigame.");
-                case CHEAT_SET_WATER, CHEAT_SET_DRY -> {
-                    yield new com.PVZ.view.output.OutputDTO(false,
-                        "Tile water/dry cheats are not supported by this minigame.");
-                }
-                default -> new com.PVZ.view.output.OutputDTO(false,
-                    "Cheat is not supported by this minigame.");
-            };
+            return handleZombieCheat(active, zombieEngine, dto);
         } catch (RuntimeException ex) {
-            return new com.PVZ.view.output.OutputDTO(false, "Cheat failed: " + ex.getMessage());
+            return new com.PVZ.view.output.OutputDTO(false,
+                "Cheat failed: " + ex.getMessage());
         }
+    }
+
+    private com.PVZ.view.output.OutputDTO handleZombieCheat(
+        GameEngine active, com.PVZ.model.game.ZombieEngine zombieEngine,
+        com.PVZ.view.input.DTO.InGameInputDTO dto) {
+        switch (dto.getCommand()) {
+            case CHEAT_ADD_PLANT_SUN:
+            case CHEAT_ADD_SUNS:
+                return cheatAddSun(active, zombieEngine, dto);
+            case CHEAT_ADD_ZOMBIE_SUN:
+                return cheatAddZombieSun(zombieEngine, dto);
+            case CHEAT_SPAWN_ZOMBIE:
+                return cheatSpawnZombie(zombieEngine, dto);
+            case CHEAT_RELEASE_NUKE:
+            case KILL_ALL_ZOMBIES:
+                return cheatKillAllZombies(zombieEngine);
+            case CHEAT_REMOVE_COOLDOWN:
+                return cheatRemoveCooldown(gameEngine);
+            case CHEAT_ADD_PLANT_FOOD:
+                return new com.PVZ.view.output.OutputDTO(true,
+                    "Plant Food is not used by this minigame.");
+            case CHEAT_SET_WATER:
+            case CHEAT_SET_DRY:
+                return new com.PVZ.view.output.OutputDTO(false,
+                    "Tile water/dry cheats are not supported by this minigame.");
+            default:
+                return new com.PVZ.view.output.OutputDTO(false,
+                    "Cheat is not supported by this minigame.");
+        }
+    }
+
+    private com.PVZ.view.output.OutputDTO cheatAddSun(
+        GameEngine active, com.PVZ.model.game.ZombieEngine zombieEngine,
+        com.PVZ.view.input.DTO.InGameInputDTO dto) {
+        int amount = dto.getAmount() == null ? 0 : dto.getAmount();
+        if (active instanceof com.PVZ.model.game.IZombieLocalVersusEngine versusEngine) {
+            versusEngine.addPlantSun(amount);
+            return new com.PVZ.view.output.OutputDTO(true,
+                "Added " + amount + " Plant Sun. Total: " + versusEngine.getPlantSun());
+        } else if (active instanceof com.PVZ.model.game.RegularGameEngine reg) {
+            reg.addSun(amount);
+            return new com.PVZ.view.output.OutputDTO(true,
+                "Added " + amount + " Plant Sun.");
+        }
+        zombieEngine.addSun(amount);
+        return new com.PVZ.view.output.OutputDTO(true, "Added " + amount + " sun.");
+    }
+
+    private com.PVZ.view.output.OutputDTO cheatAddZombieSun(
+        com.PVZ.model.game.ZombieEngine zombieEngine,
+        com.PVZ.view.input.DTO.InGameInputDTO dto) {
+        int amount = dto.getAmount() == null ? 0 : dto.getAmount();
+        zombieEngine.addSun(amount);
+        return new com.PVZ.view.output.OutputDTO(true,
+            "Added " + amount + " Zombie Sun.");
+    }
+
+    private com.PVZ.view.output.OutputDTO cheatSpawnZombie(
+        com.PVZ.model.game.ZombieEngine zombieEngine,
+        com.PVZ.view.input.DTO.InGameInputDTO dto) {
+        String alias = dto.getZombieType();
+        int row = dto.getY() == null ? 2 : dto.getY();
+        int col = dto.getX() == null ? 8 : dto.getX();
+        com.PVZ.model.entity.zombies.base.Zombie z =
+            zombieEngine.spawnZombie(alias, row, col);
+        return new com.PVZ.view.output.OutputDTO(z != null,
+            z != null ? "Zombie spawned: " + alias : "Could not spawn zombie.");
+    }
+
+    private com.PVZ.view.output.OutputDTO cheatKillAllZombies(
+        com.PVZ.model.game.ZombieEngine zombieEngine) {
+        java.util.List<com.PVZ.model.entity.zombies.base.Zombie> zombies =
+            zombieEngine.getZombiesInLane(-1);
+        if (zombies == null || zombies.isEmpty()) {
+            zombies = new java.util.ArrayList<>();
+            for (int r = 0; r < 5; r++) {
+                java.util.List<com.PVZ.model.entity.zombies.base.Zombie> lane =
+                    zombieEngine.getZombiesInLane(r);
+                if (lane != null) {
+                    zombies.addAll(lane);
+                }
+            }
+        }
+        for (com.PVZ.model.entity.zombies.base.Zombie z : zombies) {
+            if (z != null && !z.isDead()) {
+                zombieEngine.kill(z);
+            }
+        }
+        return new com.PVZ.view.output.OutputDTO(true, "All zombies killed.");
+    }
+
+    private com.PVZ.view.output.OutputDTO cheatRemoveCooldown(GameEngine gameEngine) {
+        if (gameEngine instanceof com.PVZ.model.game.ZombotanyGameEngine z) {
+            z.clearPlantCooldowns();
+            return new com.PVZ.view.output.OutputDTO(true, "Plant cooldowns removed.");
+        }
+        return new com.PVZ.view.output.OutputDTO(true,
+            "No plant cooldowns in this minigame.");
     }
 
     @Override
@@ -963,223 +1026,16 @@ public class GameScreen extends BaseScreen {
         updateIntro(delta);
         applyCameraShake();
 
-        String pendingAnnouncement = AppStatus.pollAnnouncement();
-        if (pendingAnnouncement != null) {
-            com.PVZ.view.screen.ui.AnnouncementPopup.show(stage, pendingAnnouncement,
-                pendingAnnouncement.startsWith("MyoPoint")
-                    || pendingAnnouncement.startsWith("Game Over! Final MyoPoint")
-                    ? com.badlogic.gdx.graphics.Color.GOLD
-                    : com.badlogic.gdx.graphics.Color.WHITE);
-        }
-
+        handleAnnouncements();
         refreshSeedPacketBar();
+
         GameEngine activeEngine = AppStatus.getGameEngine();
         if (activeEngine == null) {
             activeEngine = gameEngine;
         }
 
-        if (activeEngine instanceof com.PVZ.model.game.IZombieMultiplayerGameEngine mpEngine) {
-            com.PVZ.model.game.reaction.ReactionEvent event = mpEngine.pollReactionEvent();
-            if (event != null) {
-                var reaction = com.PVZ.model.game.reaction.ReactionCatalog.findById(event.reactionId());
-                if (reaction != null) {
-                    com.PVZ.view.screen.ui.ReactionBubble bubble = new com.PVZ.view.screen.ui.ReactionBubble(reaction,
-                        event.mine(), event.senderName());
-                    float bottomMargin = 250f; // بالاتر از دکمه‌ی REACTIONS که وسط پایین صفحه‌ست، تا رویش نیفتد
-                    float x = (stage.getViewport().getWorldWidth() - bubble.getWidth()) / 2f;
-                    float y = bottomMargin;
-
-                    bubble.setPosition(x, y);
-                    stage.addActor(bubble);
-                }
-            }
-        }
-        if (activeEngine instanceof com.PVZ.model.game.IZombieLocalVersusEngine localEngine) {
-            var reaction = localEngine.pollLocalReaction();
-            if (reaction != null) {
-                // مود لوکال است، پس "mine"/senderName معنی ندارد - یک برچسب خنثی نشان می‌دهیم.
-                com.PVZ.view.screen.ui.ReactionBubble bubble = new com.PVZ.view.screen.ui.ReactionBubble(reaction,
-                    true, "PLAYER");
-                float bottomMargin = 250f;
-                float x = (stage.getViewport().getWorldWidth() - bubble.getWidth()) / 2f;
-                float y = bottomMargin;
-                bubble.setPosition(x, y);
-                stage.addActor(bubble);
-            }
-        }
-
-        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.S)) {
-            if (activeEngine instanceof RegularGameEngine reg && reg.getSandstormManager() != null) {
-                reg.getSandstormManager().triggerSandstorm(reg, 2);
-            }
-        }
-        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.I)) {
-            if (activeEngine instanceof RegularGameEngine reg && reg.getIceWindManager() != null) {
-                reg.getIceWindManager().triggerIceWind(reg, new int[] { 0, 1, 2, 3, 4 });
-                if (reg.getMap() != null) {
-                    for (int r = 0; r < 5; r++) {
-                        for (int c = 0; c < 9; c++) {
-                            com.PVZ.model.entity.Plant plant = reg.getMap().getPlantAt(r, c);
-                            if (plant != null && !plant.isDead()) {
-                                boolean isFire = plant.getStats() != null
-                                    && plant.getStats().getBooleanExtra("freezeImmune", false);
-                                if (!isFire && plant.getDefinition() != null) {
-                                    isFire = plant.getDefinition().hasTag(com.PVZ.model.enums.PlantTag.FIRE);
-                                }
-                                if (!isFire) {
-                                    int lv = ((Number) plant.getRuntimeState().getOrDefault("freezeLevel", 0))
-                                        .intValue();
-                                    if (lv < 3) {
-                                        lv++;
-                                        plant.putRuntimeState("freezeLevel", lv);
-                                        if (lv >= 3) {
-                                            plant.putRuntimeState("iceHp", 600);
-                                            plant.disableForTicks(5);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.F)) {
-            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
-                reg.getBattleController().freezeAllZombies(5.0);
-            }
-        }
-        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.B)
-            || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.D)) {
-            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
-                com.PVZ.model.enums.ChapterEnum currentChap = com.PVZ.model.status.AppStatus.getCurrentChapterEnum();
-                boolean isDark = currentChap == com.PVZ.model.enums.ChapterEnum.DARK_AGES
-                    || (com.PVZ.model.status.AppStatus.currentChapterName != null
-                    && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("DARK"));
-                boolean isBeach = currentChap == com.PVZ.model.enums.ChapterEnum.BIG_WAVE_BEACH
-                    || (com.PVZ.model.status.AppStatus.currentChapterName != null
-                    && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("BEACH"));
-                boolean isIce = currentChap == com.PVZ.model.enums.ChapterEnum.FROSTBITE_CAVES
-                    || (com.PVZ.model.status.AppStatus.currentChapterName != null
-                    && (com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("ICE")
-                    || com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase()
-                    .contains("FROST")));
-                com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss;
-                if (isDark) {
-                    boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark();
-                } else if (isBeach) {
-                    boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach();
-                } else if (isIce) {
-                    boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge();
-                } else {
-                    boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt();
-                }
-                boss.initPosition(1750f, 400f, 1);
-                boss.setRow(1);
-                boss.setCol(8);
-                reg.getBattleController().addZombie(boss);
-                System.out.println("[CHEAT B/D] Spawned " + boss.getAlias() + " for current world!");
-            }
-        }
-        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.M)
-            || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.G)) {
-            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
-                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
-                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
-                        boss.triggerMissileAttack(reg.getBattleController());
-                        System.out.println("[CHEAT M/G] Triggered Egypt Zomboss Missile Attack!");
-                        break;
-                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
-                        darkBoss.triggerFireballAttack(reg.getBattleController());
-                        System.out.println("[CHEAT M/G] Triggered Dragon Fireball Attack!");
-                        break;
-                    } else if (z instanceof
-                        com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
-                        beachBoss.triggerSmallSharksAttack(reg.getBattleController());
-                        System.out.println("[CHEAT M/G] Triggered Beach Zomboss Small Sharks Attack!");
-                        break;
-                    } else if (z instanceof
-                        com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
-                        iceBoss.triggerIceMissileAttack(reg.getBattleController());
-                        System.out.println("[CHEAT M/G] Triggered Mammoth Ice Missile Attack!");
-                        break;
-                    }
-                }
-            }
-        }
-        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.C)
-            || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
-            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
-                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
-                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
-                        boss.triggerChargeAttack(reg.getBattleController());
-                        System.out.println("[CHEAT C/R] Triggered Egypt Zomboss Charge Attack!");
-                        break;
-                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
-                        darkBoss.triggerFireBreath(reg.getBattleController());
-                        System.out.println("[CHEAT C/R] Triggered Dragon Fire Breath Attack!");
-                        break;
-                    } else if (z instanceof
-                        com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
-                        beachBoss.triggerTurbineSuction(reg.getBattleController());
-                        System.out.println("[CHEAT C/R] Triggered Beach Zomboss Turbine Suction Attack!");
-                        break;
-                    } else if (z instanceof
-                        com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
-                        iceBoss.triggerIceWindBreath(reg.getBattleController());
-                        System.out.println("[CHEAT C/R] Triggered Mammoth Ice Wind Breath!");
-                        break;
-                    }
-                }
-            }
-        }
-        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.P)) {
-            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
-                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
-                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
-                        boss.triggerPortalSpawn(reg.getBattleController());
-                        System.out.println("[CHEAT P] Triggered Egypt Zomboss Portal Wave!");
-                        break;
-                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
-                        darkBoss.triggerSummonWave(reg.getBattleController());
-                        System.out.println("[CHEAT P] Triggered Dark Zomboss Summon Wave!");
-                        break;
-                    } else if (z instanceof com.PVZ.model.
-                        entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
-                        beachBoss.triggerSummonWave(reg.getBattleController());
-                        System.out.println("[CHEAT P] Triggered Beach Zomboss Summon Wave!");
-                        break;
-                    } else if (z instanceof com.PVZ.model.entity.zombies.
-                        types.zomboss.ZombieZombossMechIceAge iceBoss) {
-                        iceBoss.triggerGlacierSummon(reg.getBattleController());
-                        System.out.println("[CHEAT P] Triggered Mammoth Glacier Encased Summon!");
-                        break;
-                    }
-                }
-            }
-        }
-        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.K)) {
-            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
-                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
-                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
-                        boss.takeDamage(99999999);
-                        System.out.println("[CHEAT K] Triggered Boss Death Animation!");
-                        break;
-                    }
-                }
-            }
-        }
-        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.T)) {
-            if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
-                for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
-                    if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
-                        boss.triggerStun(4.0f);
-                        System.out.println("[CHEAT T] Triggered Boss Stun (4s)!");
-                        break;
-                    }
-                }
-            }
-        }
+        handleReactionEvents(activeEngine);
+        handleCheatKeys(activeEngine);
 
         GameOverState overState = updateGameOverState(activeEngine);
         drawBackgroundAndEngine(activeEngine, delta);
@@ -1191,6 +1047,266 @@ public class GameScreen extends BaseScreen {
         drawSeedPacketBar(activeEngine);
         drawGameOverOverlay(overState);
         drawTileDebug(activeEngine);
+    }
+
+    private void handleAnnouncements() {
+        String pendingAnnouncement = AppStatus.pollAnnouncement();
+        if (pendingAnnouncement != null) {
+            boolean isMyoPoint = pendingAnnouncement.startsWith("MyoPoint")
+                || pendingAnnouncement.startsWith("Game Over! Final MyoPoint");
+            com.badlogic.gdx.graphics.Color color = isMyoPoint
+                ? com.badlogic.gdx.graphics.Color.GOLD
+                : com.badlogic.gdx.graphics.Color.WHITE;
+            com.PVZ.view.screen.ui.AnnouncementPopup.show(stage, pendingAnnouncement, color);
+        }
+    }
+
+    private void handleReactionEvents(GameEngine activeEngine) {
+        if (activeEngine instanceof com.PVZ.model.game.IZombieMultiplayerGameEngine mpEngine) {
+            com.PVZ.model.game.reaction.ReactionEvent event = mpEngine.pollReactionEvent();
+            if (event != null) {
+                var reaction = com.PVZ.model.game.reaction.ReactionCatalog.findById(event.reactionId());
+                if (reaction != null) {
+                    com.PVZ.view.screen.ui.ReactionBubble bubble =
+                        new com.PVZ.view.screen.ui.ReactionBubble(reaction,
+                            event.mine(), event.senderName());
+                    float bottomMargin = 250f;
+                    float x = (stage.getViewport().getWorldWidth() - bubble.getWidth()) / 2f;
+                    bubble.setPosition(x, bottomMargin);
+                    stage.addActor(bubble);
+                }
+            }
+        }
+
+        if (activeEngine instanceof com.PVZ.model.game.IZombieLocalVersusEngine localEngine) {
+            var reaction = localEngine.pollLocalReaction();
+            if (reaction != null) {
+                com.PVZ.view.screen.ui.ReactionBubble bubble =
+                    new com.PVZ.view.screen.ui.ReactionBubble(reaction,
+                        true, "PLAYER");
+                float bottomMargin = 250f;
+                float x = (stage.getViewport().getWorldWidth() - bubble.getWidth()) / 2f;
+                bubble.setPosition(x, bottomMargin);
+                stage.addActor(bubble);
+            }
+        }
+    }
+
+    private void handleCheatKeys(GameEngine activeEngine) {
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.S)) {
+            cheatSandstorm(activeEngine);
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.I)) {
+            cheatIceWind(activeEngine);
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.F)) {
+            cheatFreezeZombies(activeEngine);
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.B)
+            || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.D)) {
+            cheatSpawnBoss(activeEngine);
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.M)
+            || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.G)) {
+            cheatBossAttack1(activeEngine);
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.C)
+            || com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.R)) {
+            cheatBossAttack2(activeEngine);
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.P)) {
+            cheatBossAttack3(activeEngine);
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.K)) {
+            cheatBossDeath(activeEngine);
+        }
+        if (com.badlogic.gdx.Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.T)) {
+            cheatBossStun(activeEngine);
+        }
+    }
+
+    private void cheatSandstorm(GameEngine activeEngine) {
+        if (activeEngine instanceof RegularGameEngine reg && reg.getSandstormManager() != null) {
+            reg.getSandstormManager().triggerSandstorm(reg, 2);
+        }
+    }
+
+    private void cheatIceWind(GameEngine activeEngine) {
+        if (!(activeEngine instanceof RegularGameEngine reg) || reg.getIceWindManager() == null) {
+            return;
+        }
+        reg.getIceWindManager().triggerIceWind(reg, new int[] { 0, 1, 2, 3, 4 });
+        if (reg.getMap() == null) return;
+
+        for (int r = 0; r < 5; r++) {
+            for (int c = 0; c < 9; c++) {
+                com.PVZ.model.entity.Plant plant = reg.getMap().getPlantAt(r, c);
+                if (plant == null || plant.isDead()) continue;
+
+                boolean isFire = plant.getStats() != null
+                    && plant.getStats().getBooleanExtra("freezeImmune", false);
+                if (!isFire && plant.getDefinition() != null) {
+                    isFire = plant.getDefinition().hasTag(com.PVZ.model.enums.PlantTag.FIRE);
+                }
+                if (isFire) continue;
+
+                int lv = ((Number) plant.getRuntimeState().getOrDefault("freezeLevel", 0)).intValue();
+                if (lv < 3) {
+                    lv++;
+                    plant.putRuntimeState("freezeLevel", lv);
+                    if (lv >= 3) {
+                        plant.putRuntimeState("iceHp", 600);
+                        plant.disableForTicks(5);
+                    }
+                }
+            }
+        }
+    }
+
+    private void cheatFreezeZombies(GameEngine activeEngine) {
+        if (activeEngine instanceof RegularGameEngine reg && reg.getBattleController() != null) {
+            reg.getBattleController().freezeAllZombies(5.0);
+        }
+    }
+
+    private void cheatSpawnBoss(GameEngine activeEngine) {
+        if (!(activeEngine instanceof RegularGameEngine reg) || reg.getBattleController() == null) {
+            return;
+        }
+
+        com.PVZ.model.enums.ChapterEnum currentChap = com.PVZ.model.status.AppStatus.getCurrentChapterEnum();
+        String chapterName = com.PVZ.model.status.AppStatus.currentChapterName;
+        boolean isDark = currentChap == com.PVZ.model.enums.ChapterEnum.DARK_AGES
+            || (chapterName != null && chapterName.toUpperCase().contains("DARK"));
+        boolean isBeach = currentChap == com.PVZ.model.enums.ChapterEnum.BIG_WAVE_BEACH
+            || (chapterName != null && chapterName.toUpperCase().contains("BEACH"));
+        boolean isIce = currentChap == com.PVZ.model.enums.ChapterEnum.FROSTBITE_CAVES
+            || (chapterName != null
+            && (chapterName.toUpperCase().contains("ICE")
+            || chapterName.toUpperCase().contains("FROST")));
+
+        com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss;
+        if (isDark) {
+            boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark();
+        } else if (isBeach) {
+            boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach();
+        } else if (isIce) {
+            boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge();
+        } else {
+            boss = new com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt();
+        }
+
+        boss.initPosition(1750f, 400f, 1);
+        boss.setRow(1);
+        boss.setCol(8);
+        reg.getBattleController().addZombie(boss);
+        System.out.println("[CHEAT B/D] Spawned " + boss.getAlias() + " for current world!");
+    }
+
+    private void cheatBossAttack1(GameEngine activeEngine) {
+        if (!(activeEngine instanceof RegularGameEngine reg) || reg.getBattleController() == null) {
+            return;
+        }
+
+        for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+            if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
+                boss.triggerMissileAttack(reg.getBattleController());
+                System.out.println("[CHEAT M/G] Triggered Egypt Zomboss Missile Attack!");
+                break;
+            } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
+                darkBoss.triggerFireballAttack(reg.getBattleController());
+                System.out.println("[CHEAT M/G] Triggered Dragon Fireball Attack!");
+                break;
+            } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                beachBoss.triggerSmallSharksAttack(reg.getBattleController());
+                System.out.println("[CHEAT M/G] Triggered Beach Zomboss Small Sharks Attack!");
+                break;
+            } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                iceBoss.triggerIceMissileAttack(reg.getBattleController());
+                System.out.println("[CHEAT M/G] Triggered Mammoth Ice Missile Attack!");
+                break;
+            }
+        }
+    }
+
+    private void cheatBossAttack2(GameEngine activeEngine) {
+        if (!(activeEngine instanceof RegularGameEngine reg) || reg.getBattleController() == null) {
+            return;
+        }
+
+        for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+            if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
+                boss.triggerChargeAttack(reg.getBattleController());
+                System.out.println("[CHEAT C/R] Triggered Egypt Zomboss Charge Attack!");
+                break;
+            } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
+                darkBoss.triggerFireBreath(reg.getBattleController());
+                System.out.println("[CHEAT C/R] Triggered Dragon Fire Breath Attack!");
+                break;
+            } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                beachBoss.triggerTurbineSuction(reg.getBattleController());
+                System.out.println("[CHEAT C/R] Triggered Beach Zomboss Turbine Suction Attack!");
+                break;
+            } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                iceBoss.triggerIceWindBreath(reg.getBattleController());
+                System.out.println("[CHEAT C/R] Triggered Mammoth Ice Wind Breath!");
+                break;
+            }
+        }
+    }
+
+    private void cheatBossAttack3(GameEngine activeEngine) {
+        if (!(activeEngine instanceof RegularGameEngine reg) || reg.getBattleController() == null) {
+            return;
+        }
+
+        for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+            if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechEgypt boss) {
+                boss.triggerPortalSpawn(reg.getBattleController());
+                System.out.println("[CHEAT P] Triggered Egypt Zomboss Portal Wave!");
+                break;
+            } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechDark darkBoss) {
+                darkBoss.triggerSummonWave(reg.getBattleController());
+                System.out.println("[CHEAT P] Triggered Dark Zomboss Summon Wave!");
+                break;
+            } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                beachBoss.triggerSummonWave(reg.getBattleController());
+                System.out.println("[CHEAT P] Triggered Beach Zomboss Summon Wave!");
+                break;
+            } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                iceBoss.triggerGlacierSummon(reg.getBattleController());
+                System.out.println("[CHEAT P] Triggered Mammoth Glacier Encased Summon!");
+                break;
+            }
+        }
+    }
+
+    private void cheatBossDeath(GameEngine activeEngine) {
+        if (!(activeEngine instanceof RegularGameEngine reg) || reg.getBattleController() == null) {
+            return;
+        }
+
+        for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+            if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+                boss.takeDamage(99999999);
+                System.out.println("[CHEAT K] Triggered Boss Death Animation!");
+                break;
+            }
+        }
+    }
+
+    private void cheatBossStun(GameEngine activeEngine) {
+        if (!(activeEngine instanceof RegularGameEngine reg) || reg.getBattleController() == null) {
+            return;
+        }
+
+        for (com.PVZ.model.entity.zombies.base.Zombie z : reg.getZombieList()) {
+            if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+                boss.triggerStun(4.0f);
+                System.out.println("[CHEAT T] Triggered Boss Stun (4s)!");
+                break;
+            }
+        }
     }
 
     private GameOverState updateGameOverState(GameEngine activeEngine) {

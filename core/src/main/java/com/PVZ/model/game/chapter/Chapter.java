@@ -466,13 +466,13 @@ public class Chapter {
                     tile.setHp(hp);tile.setMaxHp(hp);
                     if (config != null && "DARK_AGES".equalsIgnoreCase(config.getName())) {
                         if (tombIndex % 3 == 0) {
-                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_SUN);} else if (tombIndex % 3 == 1) {
+                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_SUN);}
+                        else if (tombIndex % 3 == 1) {
                             tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD);} else {
                             tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_NOOP);}
                         tombIndex++;} else {
                         tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.EGYPT);}}}}
-        if (stage.getTiles() != null) {
-            int tileIndex = 0;
+        if (stage.getTiles() != null) {int tileIndex = 0;
             for (StageConfig.TileEntry te : stage.getTiles()) {
                 Tile tile = map.getTile(te.getRow(), te.getCol());
                 if (tile != null) {

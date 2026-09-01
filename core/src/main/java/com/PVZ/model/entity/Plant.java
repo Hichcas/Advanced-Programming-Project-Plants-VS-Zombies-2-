@@ -229,10 +229,7 @@ public class Plant {
                 "768/FULL/EFFECTS/DARK_WIZARD_SHEEPENING/DARK_WIZARD_SHEEPENING.PAM",
                 "idle", animStateTime, ax, ay);
             if (drewSheep) {
-                return true;
-            }
-        }
-
+                return true;}}
         boolean drewAnimated;
         if (isPlantFoodActive()) {
             double pfVisualTime = asDouble(getRuntimeState("plantFoodVisualTime"), 0.0);
@@ -244,11 +241,9 @@ public class Plant {
                     Math.max(0f, (float) (pfVisualTime - 0.5)), ax, ay);
                 if (!drewAnimated) {
                     drewAnimated = renderer.renderPlant(batch, key, "plantfood",
-                        animStateTime, ax, ay);
-                }
+                        animStateTime, ax, ay);}
             } else {
-                drewAnimated = true;
-            }
+                drewAnimated = true;}
             renderer.renderPam(batch,
                 "768/INITIAL/EFFECTS/PLANTFOOD_FX/PLANTFOOD_FX.PAM",
                 "plantfood", (float) pfVisualTime, ax, ay);
@@ -257,19 +252,16 @@ public class Plant {
 
         if (com.PVZ.model.entity.PlantAnimation.isActive(instance)) {
             String state = com.PVZ.model.entity.PlantAnimation.getState(instance);
-            return renderer.renderPlant(batch, key, state, animStateTime, ax, ay);
-        }
+            return renderer.renderPlant(batch, key, state, animStateTime, ax, ay);}
 
         if ("PEA_POD".equals(key)) {
-            return drawPeaPod(batch, renderer, key, ax, ay);
-        }
+            return drawPeaPod(batch, renderer, key, ax, ay);}
 
         if (idleVariant != null) {
             boolean drew = renderer.renderPlantExact(batch, key, idleVariant,
                 animStateTime, ax, ay);
             if (!drew) {
-                drew = renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);
-            }
+                drew = renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);}
             return drew;
         }
 
