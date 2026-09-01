@@ -37,58 +37,42 @@ public class PauseMenuOverlay extends Table {
         setTouchable(Touchable.disabled);
         BitmapFont font = FontManager.getInstance().getEnglishMenuFont();
         setBackground(new NinePatchDrawable(dimNinePatch()));
-
-        Table dialog = new Table();
-        dialog.pad(30f);
+        Table dialog = new Table();dialog.pad(30f);
         dialog.setBackground(resolveDialogBackground());
-
         Label title = new Label("GAME PAUSED", new Label.LabelStyle(font, Color.WHITE));
         title.setFontScale(1.6f);
-
         Label missionLabel = new Label("", new Label.LabelStyle(font, Color.LIGHT_GRAY));
         missionLabel.setWrap(true);
         missionLabel.setAlignment(Align.center);
         this.missionLabelRef = missionLabel;
-
-        // اسلایدرهای سفارشی
         Table sliders = buildCustomSliders(font);
-
-        // دکمه‌ها با MenuButton (مانند قبل)
         Drawable brownUp   = PvzSkin.get().getDrawable("image_ui_generic_brownbutton_10");
         Drawable brownDown = PvzSkin.get().getDrawable("image_ui_generic_brownbutton_down_10");
         Drawable greenUp   = PvzSkin.get().getDrawable("image_ui_generic_greenbutton_10");
         Drawable greenDown = PvzSkin.get().getDrawable("image_ui_generic_greenbutton_down_10");
         Drawable purpleUp   = PvzSkin.get().getDrawable("image_ui_generic_purplebutton_10");
         Drawable purpleDown = PvzSkin.get().getDrawable("image_ui_generic_purplebutton_down_10");
-
         MenuButton saveAndExit = new MenuButton(brownUp, "SAVE AND EXIT", font,
-            brownDown, null, null, () -> {
-            hide();
-            if (exitHandler != null) exitHandler.onSaveAndExit();
-        });
+            brownDown, null, null, () -> {hide();
+            if (exitHandler != null) exitHandler.onSaveAndExit();});
         saveAndExit.setSize(260f, 64f);
-
         MenuButton restart = new MenuButton(greenUp, "RESTART", font,
             greenDown, null, null, () -> {
             hide();
             if (restartHandler != null) restartHandler.onRestart();
         });
         restart.setSize(200f, 64f);
-
         MenuButton resume = new MenuButton(purpleUp, "RESUME", font,
             purpleDown, null, null, this::hide);
         resume.setSize(200f, 64f);
-
         Table buttonRow = new Table();
         buttonRow.add(saveAndExit).size(260f, 64f).padRight(16f);
         buttonRow.add(restart).size(200f, 64f).padRight(16f);
         buttonRow.add(resume).size(200f, 64f);
-
         dialog.add(title).padBottom(18f).row();
         dialog.add(missionLabel).width(700f).padBottom(14f).row();
         dialog.add(sliders).width(700f).padBottom(20f).row();
         dialog.add(buttonRow).row();
-
         add(dialog);
     }
 
@@ -100,19 +84,13 @@ public class PauseMenuOverlay extends Table {
     private Table buildCustomSliders(BitmapFont font) {
         Table table = new Table();
         Skin skin = PvzSkin.get();
-
-        // Drawable‌های اسلایدر از PvzSkin
         Drawable track = skin.getDrawable("image_ui_almanac_plants_plant_fuelbar_10");
         Drawable fill  = skin.getDrawable("image_ui_almanac_general_fuelbar_fill_10");
         Drawable knob  = skin.getDrawable("image_ui_generic_navdot");
-
-        // اسلایدر موسیقی
         Label musicLabel = new Label("Music", new Label.LabelStyle(font, Color.WHITE));
         MenuSlider musicSlider = new MenuSlider(
-            "", font,                // بدون برچسب (خودمان جداگانه داریم)
-            track, fill, knob,
-            null,                    // markerTexture (null = بدون مارکر)
-            false, null, null,       // بدون آیکون قطع/وصل
+            "", font,track, fill, knob,null,
+            false, null, null,
             new SliderBinding() {
                 @Override
                 public int get() {
@@ -123,9 +101,9 @@ public class PauseMenuOverlay extends Table {
                     MusicManager.getInstance().setVolume(value / 100f);
                 }
             },
-            null                     // ToggleBinding null
+            null
         );
-        musicSlider.setSize(420f, 40f);  // ارتفاع کمتر از پیش‌فرض
+        musicSlider.setSize(420f, 40f);
 
         // اسلایدر افکت‌ها
         Label soundLabel = new Label("Sound FX", new Label.LabelStyle(font, Color.WHITE));

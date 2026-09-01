@@ -100,57 +100,38 @@ public class WorldBackgroundRenderer {
         String key = chapterKey.toUpperCase();
         WorldConfig cfg = worldConfigs.get(key);
         if (cfg == null) return null;
-
         if (loadedTextures.containsKey(key)) {
-            return loadedTextures.get(key);
-        }
-
-        // 1. Try loading pre-stitched file if present in assets/maps/
+            return loadedTextures.get(key);}
         if (cfg.preStitchedPath != null && Gdx.files.internal(cfg.preStitchedPath).exists()) {
             try {
                 Texture tex = new Texture(Gdx.files.internal(cfg.preStitchedPath));
                 tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-                loadedTextures.put(key, tex);
-                return tex;
+                loadedTextures.put(key, tex);return tex;
             } catch (Exception ex) {
-                System.err.println("WorldBackgroundRenderer: failed to load pre-stitched " + cfg.preStitchedPath + ": " + ex.getMessage());
-            }
-        }
-
-        // 2. Otherwise, auto-stitch dynamically in memory from the official atlas PNG!
+                System.err.println("WorldBackgroundRenderer: failed to load pre-stitched "
+                    + cfg.preStitchedPath + ": " + ex.getMessage());}}
         if (cfg.atlasPath != null && Gdx.files.internal(cfg.atlasPath).exists()) {
             try {
                 Pixmap atlasPixmap = new Pixmap(Gdx.files.internal(cfg.atlasPath));
                 int totalW = cfg.leftRect[2] + cfg.centerRect[2] + cfg.rightRect[2];
                 int totalH = Math.max(cfg.leftRect[3], Math.max(cfg.centerRect[3], cfg.rightRect[3]));
-
                 Pixmap stitchedPixmap = new Pixmap(totalW, totalH, Pixmap.Format.RGBA8888);
-
-                // Left piece (House)
                 stitchedPixmap.drawPixmap(atlasPixmap, 0, 0,
                     cfg.leftRect[0], cfg.leftRect[1], cfg.leftRect[2], cfg.leftRect[3]);
-                // Center piece (Lawn)
                 stitchedPixmap.drawPixmap(atlasPixmap, cfg.leftRect[2], 0,
                     cfg.centerRect[0], cfg.centerRect[1], cfg.centerRect[2], cfg.centerRect[3]);
-                // Right piece (Zombie staging ground)
                 stitchedPixmap.drawPixmap(atlasPixmap, cfg.leftRect[2] + cfg.centerRect[2], 0,
                     cfg.rightRect[0], cfg.rightRect[1], cfg.rightRect[2], cfg.rightRect[3]);
-
                 Texture tex = new Texture(stitchedPixmap);
                 tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
-                atlasPixmap.dispose();
-                stitchedPixmap.dispose();
-
+                atlasPixmap.dispose();stitchedPixmap.dispose();
                 loadedTextures.put(key, tex);
-                System.out.println("WorldBackgroundRenderer: dynamically stitched " + key + " in-memory (" + totalW + "x" + totalH + ").");
+                System.out.println("WorldBackgroundRenderer: dynamically stitched "
+                    + key + " in-memory (" + totalW + "x" + totalH + ").");
                 return tex;
             } catch (Exception ex) {
-                System.err.println("WorldBackgroundRenderer: failed to dynamic-stitch " + cfg.atlasPath + ": " + ex.getMessage());
-            }
-        }
-
-        return null;
+                System.err.println("WorldBackgroundRenderer: failed to dynamic-stitch "
+                    + cfg.atlasPath + ": " + ex.getMessage());}}return null;
     }
 
     /**

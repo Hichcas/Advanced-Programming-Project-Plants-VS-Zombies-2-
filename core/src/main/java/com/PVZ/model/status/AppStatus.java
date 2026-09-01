@@ -63,7 +63,7 @@ public final class AppStatus {
      * و لایه‌ی View (GameScreen) هر فریم یکی را برمی‌دارد و به‌صورت
      * پاپ‌آپ نشان می‌دهد (نگاه کنید به AnnouncementPopup).
      */
-    private static final java.util.Queue<String> announcementQueue = new java.util.ArrayDeque<>();
+    private static java.util.Queue<String> announcementQueue = new java.util.ArrayDeque<>();
 
     public static void showAnnouncement(String text) {
         if (text == null || text.isBlank()) return;

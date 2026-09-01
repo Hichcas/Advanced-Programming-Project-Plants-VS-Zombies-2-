@@ -392,76 +392,50 @@ public class QuestManager {
 
     private void evaluateQuestCondition(Quest q, LevelResult res) {
         switch (q.getConditionKey()) {
-            case "symmetry" -> {
-                if (res.getFinalMap() != null && checkSymmetry(res.getFinalMap())) q.setCompleted(true);
-            }
-            case "no_symmetry" -> {
-                if (res.getFinalMap() != null && checkNoSymmetry(res.getFinalMap())) q.setCompleted(true);
-            }
-            case "column_empty" -> {
-                if (res.getFinalMap() != null) {
+            case "symmetry" -> {if (res.getFinalMap() != null && checkSymmetry(res.getFinalMap())) q.setCompleted(true);}
+            case "no_symmetry" -> {if (res.getFinalMap() != null && checkNoSymmetry(res.getFinalMap())) q.setCompleted(true);}
+            case "column_empty" -> {if (res.getFinalMap() != null) {
                     int col = (int) q.getParameters().get("col");
-                    if (isColumnEmpty(res.getFinalMap(), col)) q.setCompleted(true);
-                }
-            }
+                    if (isColumnEmpty(res.getFinalMap(), col)) q.setCompleted(true);}}
             case "row_empty" -> {
-                if (res.getFinalMap() != null) {
-                    int row = (int) q.getParameters().get("row");
-                    if (isRowEmpty(res.getFinalMap(), row)) q.setCompleted(true);
-                }
-            }
+                if (res.getFinalMap() != null) {int row = (int) q.getParameters().get("row");
+                    if (isRowEmpty(res.getFinalMap(), row)) q.setCompleted(true);}}
             case "cross_empty" -> {
                 if (res.getFinalMap() != null) {
                     int c = (int) q.getParameters().get("col");
                     int r = (int) q.getParameters().get("row");
-                    if (isColumnEmpty(res.getFinalMap(), c) && isRowEmpty(res.getFinalMap(), r)) q.setCompleted(true);
-                }
-            }
-            case "zero_sun_end" -> {
-                if (res.getFinalSunCount() == 0) q.setCompleted(true);
-            }
+                    if (isColumnEmpty(res.getFinalMap(), c) && isRowEmpty(res.getFinalMap(), r)) q.setCompleted(true);}}
+            case "zero_sun_end" -> {if (res.getFinalSunCount() == 0) q.setCompleted(true);}
             case "max_plant_loss" -> {
                 int max = (int) q.getParameters().get("n");
-                if (res.getPlantsLost() <= max) q.setCompleted(true);
-            }
+                if (res.getPlantsLost() <= max) q.setCompleted(true);}
             case "day_with_mushrooms" -> {
                 if (isDayLevel && res.getPlantTypesUsed().stream().allMatch(pt ->
                     PlantFamilyMapper.getFamily(pt) == PlantFamily.MUSHROOM))
-                    q.setCompleted(true);
-            }
+                    q.setCompleted(true);}
             case "no_family_used" -> {
-                if (!res.getPlantFamiliesUsed().contains(getFamilyParam(q))) q.setCompleted(true);
-            }
+                if (!res.getPlantFamiliesUsed().contains(getFamilyParam(q))) q.setCompleted(true);}
             case "lawnmower_kill" -> {
                 int k = res.getZombiesKilledByLawnmower();
-                if (k > 0) q.incrementProgress(k);
-            }
+                if (k > 0) q.incrementProgress(k);}
             case "lawnless_col1_kill" -> {
                 int k = res.getLawnlessCol1Kills();
-                if (k > 0) q.incrementProgress(k);
-            }
+                if (k > 0) q.incrementProgress(k);}
             case "streak" -> {
                 if (consecutiveMaxDifficultyWins >= q.getTargetCount()) {
                     q.setCurrentCount(q.getTargetCount());
-                    q.setCompleted(true);
-                }
-            }
+                    q.setCompleted(true);}}
             case "family_kill_only" -> {
                 Boolean violated = (Boolean) q.getRuntimeState().get("familyViolated");
                 Boolean anyKill = (Boolean) q.getRuntimeState().get("anyKill");
                 if (Boolean.TRUE.equals(anyKill) && (violated == null || !violated)) {
-                    q.setCompleted(true);
-                }
-            }
+                    q.setCompleted(true);}}
             case "max_sun_producers" -> {
                 if (res.getFinalMap() != null && countSunProducers(res.getFinalMap()) <= q.getTargetCount())
-                    q.setCompleted(true);
-            }
+                    q.setCompleted(true);}
             case "speed_kill", "use_explosive" -> {
                 if (q.getCurrentCount() >= q.getTargetCount()) q.setCompleted(true);
-                else q.resetProgress();
-            }
-        }
+                else q.resetProgress();}}
     }
 
     private boolean checkSymmetry(Map map) {
