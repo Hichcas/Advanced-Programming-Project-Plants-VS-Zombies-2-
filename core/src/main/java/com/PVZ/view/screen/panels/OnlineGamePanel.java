@@ -74,47 +74,34 @@ public class OnlineGamePanel extends BasePanel {
         Table mainTable = new Table();
         mainTable.defaults().pad(8f);
         mainTable.align(Align.center);
-
         MenuButton title = createTitleButton("ONLINE GAME");
         mainTable.add(title).padBottom(SCREEN_H * 0.02f).row();
-
         Label ipLabel = new Label("Server IP:", labelStyle);
         mainTable.add(ipLabel).center().padBottom(4f).row();
         serverIpField = createField(loadLastServerIp());
         mainTable.add(serverIpField).width(FIELD_WIDTH).height(BUTTON_HEIGHT).center().row();
-
         MenuButton connectButton = createButton("CONNECT", this::onConnect, greenUp, greenDown);
         mainTable.add(connectButton).padBottom(15f).row();
-
         randomButton = createButton("RANDOM MATCH", this::onRandomMatch, greenUp, greenDown);
         mainTable.add(randomButton).padBottom(15f).row();
-
         Label userLabel = new Label("Opponent Username:", labelStyle);
         mainTable.add(userLabel).center().padBottom(6f).row();
-
         usernameField = createField("Enter username");
         mainTable.add(usernameField).width(FIELD_WIDTH).height(BUTTON_HEIGHT).center().row();
-
         roleButton = createButton("PLAY AS: " + selectedRole, this::onToggleRole, greenUp, greenDown);
         mainTable.add(roleButton).padTop(10f).padBottom(5f).row();
-
         levelButton = createButton("LEVEL: " + selectedLevel, this::onToggleLevel, purpleUp, purpleDown);
         mainTable.add(levelButton).padTop(5f).padBottom(5f).row();
-
         challengeButton = createButton("CHALLENGE", this::onChallengeUser, purpleUp, purpleDown);
         mainTable.add(challengeButton).padTop(5f).padBottom(15f).row();
-
         leaderboardButton = createButton("LEADERBOARD", this::onLeaderboard, greenUp, greenDown);
         mainTable.add(leaderboardButton).padTop(5f).padBottom(20f).row();
-
         statusLabel = new Label("", labelStyle);
         statusLabel.setAlignment(Align.center);
         statusLabel.setWrap(true);
         mainTable.add(statusLabel).width(FIELD_WIDTH * 1.5f).height(80f).padBottom(15f).row();
-
         backButton = createButton("BACK", this::onBack, purpleUp, purpleDown);
         mainTable.add(backButton).padTop(10f).row();
-
         ScrollPane scrollPane = new ScrollPane(mainTable, PvzSkin.get());
         scrollPane.setFillParent(true);
         scrollPane.setFadeScrollBars(false);

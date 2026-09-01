@@ -109,18 +109,31 @@ public class PlantSelectionPanel extends BasePanel {
         align(Align.center);
 
         BitmapFont font = FontManager.getInstance().getEnglishMenuFont();
+        addBackground(chapterName);
+
+        Table selectedTray = buildSelectedTray();
+        Table detailPanel = buildDetailPanel(font);
+        ScrollPane scrollPane = createCardsScrollPane(font);
+        createBottomControls(font);
+
+        Table window = createWindow(selectedTray, detailPanel, scrollPane);
+        add(window).center();
+        refresh();
+    }
+
+    private void addBackground(String chapterName) {
         String mapPath = ChapterMapPaths.resolve(chapterName);
         Image levelBackground = new Image(new Texture(com.badlogic.gdx.Gdx.files.internal(mapPath)));
         levelBackground.setFillParent(true);
         levelBackground.setScaling(com.badlogic.gdx.utils.Scaling.fill);
         addActor(levelBackground);
+    }
 
-        Table selectedTray = buildSelectedTray();
-        Table detailPanel = buildDetailPanel(font);
-
+    private ScrollPane createCardsScrollPane(BitmapFont font) {
+        Drawable cardSlotBg = resolveCardSlotBackground();
         Table grid = new Table();
         grid.top().left();
-        Drawable cardSlotBg = resolveCardSlotBackground();
+
         int col = 0;
         for (PlantType type : PlantType.values()) {
             PlantCardActor card = new PlantCardActor(type, font);
@@ -149,18 +162,24 @@ public class PlantSelectionPanel extends BasePanel {
 
         ScrollPane scrollPane = new ScrollPane(grid);
         scrollPane.setFadeScrollBars(false);
+        return scrollPane;
+    }
 
+    private void createBottomControls(BitmapFont font) {
         countLabel = new Label("0 / 8 selected", new Label.LabelStyle(font, Color.WHITE));
         statusLabel = new Label("", new Label.LabelStyle(font, Color.SALMON));
         timerLabel = new Label("30", new Label.LabelStyle(font, Color.YELLOW));
         timerLabel.setFontScale(1.2f);
 
-        Texture greenUp   = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON");
+        Texture greenUp = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON");
         Texture greenDown = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON_DOWN");
-        MenuButton letsRock = new MenuButton(greenUp, "LET'S ROCK", font, greenDown, null, null, this::onLetsRock);
+        MenuButton letsRock = new MenuButton(greenUp, "LET'S ROCK", font, greenDown, null, null,
+            this::onLetsRock);
         letsRock.setSize(240f, 64f);
-        this.letsRockButton = letsRock; // ذخیره دکمه
+        this.letsRockButton = letsRock;
+    }
 
+    private Table createWindow(Table selectedTray, Table detailPanel, ScrollPane scrollPane) {
         Table window = new Table();
         window.pad(24f);
         window.add(selectedTray).padBottom(10f).row();
@@ -169,7 +188,7 @@ public class PlantSelectionPanel extends BasePanel {
         window.add(countLabel).padTop(8f).row();
         window.add(timerLabel).padTop(4f).row();
         window.add(statusLabel).padTop(4f).row();
-        window.add(letsRock).padTop(12f).size(240f, 64f).row();
+        window.add(letsRockButton).padTop(12f).size(240f, 64f).row();
 
         Image windowBackdrop = new Image(resolveWindowBackground());
         windowBackdrop.setColor(1f, 1f, 1f, 0.6f);
@@ -185,9 +204,9 @@ public class PlantSelectionPanel extends BasePanel {
             windowStack.add(closeOverlay);
         }
 
-        add(windowStack).center();
-
-        refresh();
+        return new Table() {{
+            add(windowStack).center();
+        }};
     }
 
     private Table buildSelectedTray() {

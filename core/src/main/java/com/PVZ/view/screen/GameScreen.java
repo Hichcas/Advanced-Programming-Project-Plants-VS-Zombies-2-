@@ -53,8 +53,8 @@ public class GameScreen extends BaseScreen {
     private final String musicPath;
     private Map gameMap;
     private ShapeRenderer shapeDebug;
-    private final BitmapFont hudFont;
-    private final BitmapFont gameOverFont;
+    private BitmapFont hudFont;
+    private BitmapFont gameOverFont;
     private Texture backgroundTexture;
     private float gameOverAlpha = 0f;
     private boolean gameOverShown = false;

@@ -50,60 +50,42 @@ public class NewsPanel extends BasePanel {
     public NewsPanel() {
         setFillParent(true);
         align(Align.top);
-
         float screenW = Gdx.graphics.getWidth();
         SCREEN_H = Gdx.graphics.getHeight();
         FIELD_WIDTH   = screenW * 0.7f;
         BUTTON_HEIGHT = SCREEN_H * 0.08f;
-
         skin = PvzSkin.get();
         bigFont = skin.getFont("FBUSV8C5EI_1_outline");
         purpleUp   = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON");
         purpleDown = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON_DOWN");
         Texture marker = new Texture(Gdx.files.internal("global/button_marker.png"));
-
-        // ==================== عنوان ====================
         Label titleLabel = new Label("NEWS", new Label.LabelStyle(bigFont, Color.YELLOW));
         titleLabel.setAlignment(Align.center);
         titleLabel.setFontScale(1.3f);
         add(titleLabel).padTop(SCREEN_H * 0.03f).padBottom(10f).row();
-
-        // ==================== دکمه‌های انتخاب All / Unread ====================
         Table toggleRow = new Table();
-
         btnUnread = new MenuButton(purpleUp, "Unread", bigFont, purpleDown, null, marker, () -> {
             showUnreadOnly = true;
-            refreshUI();
-        });
+            refreshUI();});
         btnUnread.setSize(220f, BUTTON_HEIGHT * 0.9f);
-
         btnAll = new MenuButton(purpleUp, "All", bigFont, purpleDown, null, marker, () -> {
             showUnreadOnly = false;
-            refreshUI();
-        });
+            refreshUI();});
         btnAll.setSize(220f, BUTTON_HEIGHT * 0.9f);
-
         toggleRow.add(btnUnread).padRight(20f);
         toggleRow.add(btnAll);
         add(toggleRow).padBottom(15f).row();
-
-        // ==================== لیست خبرها ====================
         newsListTable = new Table();
         newsListTable.defaults().pad(10f);
         ScrollPane scrollPane = new ScrollPane(newsListTable, skin);
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollingDisabled(true, false);
         add(scrollPane).width(FIELD_WIDTH).height(SCREEN_H * 0.65f).row();
-
-        // ==================== دکمه Back ====================
         MenuButton backBtn = new MenuButton(purpleUp, "Back", bigFont, purpleDown, null, marker, () -> {
             markDisplayedAsRead();
-            AppStatus.setCurrentMenuType(MenuType.MAIN);
-        });
+            AppStatus.setCurrentMenuType(MenuType.MAIN);});
         backBtn.setSize(200f, BUTTON_HEIGHT);
-        add(backBtn).padTop(15f).row();
-
-        refreshUI();
+        add(backBtn).padTop(15f).row();refreshUI();
     }
 
     private void refreshUI() {

@@ -864,7 +864,7 @@
         "active" : true,
         "formattedTitle" : "Speed Run",
         "runtimeState" : {
-          "waveStartTime" : 1788196232251
+          "waveStartTime" : 1788282532684
         },
         "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
       }, {
@@ -960,8 +960,8 @@
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
-      "isDayLevel" : true,
-      "timeUntilReset" : "3h 18m"
+      "isDayLevel" : false,
+      "timeUntilReset" : "3h 20m"
     }
   }
 }

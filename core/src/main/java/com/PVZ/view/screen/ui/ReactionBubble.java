@@ -21,25 +21,23 @@ public final class ReactionBubble extends Table {
         } catch (Exception ignored) {}
 
         Color accent = mine ? Color.SKY : Color.SALMON;
-        String who = mine ? "YOU" : (senderName == null || senderName.isBlank() ? "OPPONENT" : senderName.toUpperCase());
+        String who = mine ? "YOU" : (senderName == null ||
+            senderName.isBlank() ? "OPPONENT" : senderName.toUpperCase());
         Label whoLabel = new Label(who, new Label.LabelStyle(
             FontManager.getInstance().getEnglishMenuFont(), accent));
         whoLabel.setFontScale(0.40f);
         whoLabel.setAlignment(Align.center);
         add(whoLabel).colspan(1).center().row();
-
         String label = switch (reaction.kind()) {
             case EMOJI -> "✦ " + reaction.label() + " ✦";
             case STICKER -> "★ " + reaction.label() + " ★";
-            case TEXT -> reaction.label();
-        };
+            case TEXT -> reaction.label();};
         Label reactionLabel = new Label(label, new Label.LabelStyle(
                 FontManager.getInstance().getEnglishMenuFont(), Color.WHITE));
         reactionLabel.setFontScale(0.66f);
         reactionLabel.setAlignment(Align.center);
         reactionLabel.setWrap(true);
         add(reactionLabel).width(320f).center();
-
         setTouchable(Touchable.disabled);
         getColor().a = 0f;
         setTransform(true);
@@ -49,7 +47,5 @@ public final class ReactionBubble extends Table {
                 Actions.scaleTo(1f, 1f, 0.12f),
                 Actions.delay(LIFE),
                 Actions.parallel(Actions.fadeOut(0.28f), Actions.scaleTo(0.94f, 0.94f, 0.28f)),
-                Actions.removeActor()
-        ));
-    }
+                Actions.removeActor()));}
 }

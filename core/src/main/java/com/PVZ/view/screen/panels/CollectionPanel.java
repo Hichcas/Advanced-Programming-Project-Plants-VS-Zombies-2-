@@ -49,7 +49,7 @@ public class CollectionPanel extends BasePanel {
     private static final float CARD_SLOT_W = 135f * 1.5f;
     private static final float CARD_SLOT_H = 155f * 1.5f;
     private static final float DETAIL_PREVIEW_SIZE = 140f;
-    private static final int GRID_COLS = 6; // ۶ ستون برای پر کردن کامل فضای سمت چپ
+    private static final int GRID_COLS = 6;
 
     private Skin skin;
     private BitmapFont titleFont, bodyFont, descFont;
@@ -106,12 +106,19 @@ public class CollectionPanel extends BasePanel {
         root.pad(15f);
         addActor(root);
 
-        // عنوان
+        buildTitleAndTabs(root);
+        buildFilterRow(root);
+        buildMainBody(root);
+        buildStatusAndBack(root);
+
+        switchTab(false);
+    }
+
+    private void buildTitleAndTabs(Table root) {
         Label title = new Label("COLLECTION", new Label.LabelStyle(titleFont, Color.GOLD));
         title.setFontScale(1.2f);
         root.add(title).colspan(2).padBottom(5f).row();
 
-        // تب‌ها
         Table tabs = new Table();
         MenuButton plantsTab = new MenuButton(
             skin.getDrawable("image_ui_generic_greenbutton_10"),
@@ -132,8 +139,9 @@ public class CollectionPanel extends BasePanel {
         tabs.add(plantsTab).padRight(15f);
         tabs.add(zombiesTab);
         root.add(tabs).colspan(2).padBottom(8f).row();
+    }
 
-        // فیلترها (Sun -> Sun Producer)
+    private void buildFilterRow(Table root) {
         filterRow = new Table();
         familyFilter = createSelectBox(new String[]{"All Families", "Sun Producer", "Shooter",
             "Melee", "Wall", "Explosive", "Mushroom", "Modifier"});
@@ -158,11 +166,11 @@ public class CollectionPanel extends BasePanel {
         filterRow.add(upgradeFilter).width(130f);
 
         root.add(filterRow).colspan(2).padBottom(10f).row();
+    }
 
-        // بدنه اصلی (استفاده کامل و متوازن از کل فضای صفحه)
+    private void buildMainBody(Table root) {
         Table mainBody = new Table();
 
-        // گرید کارت‌ها (سمت چپ)
         contentGrid = new Table();
         contentGrid.top().left();
         ScrollPane scroll = new ScrollPane(contentGrid, skin);
@@ -170,18 +178,17 @@ public class CollectionPanel extends BasePanel {
         scroll.setScrollingDisabled(true, false);
         mainBody.add(scroll).width(1500).growY().padRight(50f);
 
-        // پنل جزئیات (سمت راست - رشد گسترده برای پر کردن کل فضای باقی‌مانده)
         detailPanel = buildDetailPanel();
         mainBody.add(detailPanel).width(900f).growY().top();
 
         root.add(mainBody).colspan(2).grow().row();
+    }
 
-        // پیام وضعیت
+    private void buildStatusAndBack(Table root) {
         statusLabel = new Label("", new Label.LabelStyle(bodyFont, Color.SALMON));
         statusLabel.setAlignment(Align.center);
         root.add(statusLabel).colspan(2).growX().height(25f).padTop(5f).row();
 
-        // دکمه بازگشت
         MenuButton backBtn = new MenuButton(
             skin.getDrawable("image_ui_generic_brownbutton_10"),
             "BACK", bodyFont,
@@ -191,8 +198,6 @@ public class CollectionPanel extends BasePanel {
         );
         backBtn.setSize(180f, 45f);
         root.add(backBtn).colspan(2).padTop(5f).row();
-
-        switchTab(false);
     }
 
     private void switchTab(boolean zombies) {
@@ -225,110 +230,117 @@ public class CollectionPanel extends BasePanel {
         if (user == null) return;
 
         if (showingZombies) {
-            int col = 0;
-            for (ZombieType zt : ZombieType.values()) {
-                boolean seen = user.collectionState.getSeenZombies().contains(zt);
-                Stack cell = new Stack();
-                cell.setSize(CARD_SLOT_W, CARD_SLOT_H);
-
-                Drawable slotBg = skin.getDrawable("image_ui_cards_almanac_plant_card_10");
-                if (slotBg != null) {
-                    Table frame = new Table();
-                    frame.setBackground(slotBg);
-                    cell.add(frame);
-                }
-
-                if (seen) {
-                    ZombiePreviewActor preview = new ZombiePreviewActor();
-                    preview.setType(zt);
-                    cell.add(preview);
-                    cell.setTouchable(Touchable.enabled);
-                    cell.addListener(new ClickListener() {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            selectedZombie = zt;
-                            selectedPlant = null;
-                            refreshDetail();
-                        }
-                    });
-                } else {
-                    Label unknown = new Label("?", new Label.LabelStyle(bodyFont, Color.GRAY));
-                    unknown.setAlignment(Align.center);
-                    cell.add(unknown);
-                }
-
-                contentGrid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(15f);
-                col++;
-                if (col >= GRID_COLS) {
-                    col = 0;
-                    contentGrid.row();
-                }
-            }
+            refreshZombieGrid(contentGrid, user);
         } else {
-            int col = 0;
-            for (PlantType type : PlantType.values()) {
-                if (!passesPlantFilter(type, user)) continue;
+            refreshPlantGrid(contentGrid, user);
+        }
+    }
 
-                Stack cell = new Stack();
-                cell.setSize(CARD_SLOT_W, CARD_SLOT_H);
+    private void refreshZombieGrid(Table grid, User user) {
+        int col = 0;
+        for (ZombieType zt : ZombieType.values()) {
+            boolean seen = user.collectionState.getSeenZombies().contains(zt);
+            Stack cell = new Stack();
+            cell.setSize(CARD_SLOT_W, CARD_SLOT_H);
 
-                Drawable slotBg = skin.getDrawable("image_ui_cards_almanac_plant_card_10");
-                if (slotBg != null) {
-                    Table frame = new Table();
-                    frame.setBackground(slotBg);
-                    cell.add(frame);
-                }
+            Drawable slotBg = skin.getDrawable("image_ui_cards_almanac_plant_card_10");
+            if (slotBg != null) {
+                Table frame = new Table();
+                frame.setBackground(slotBg);
+                cell.add(frame);
+            }
 
-                PlantCardActor card = new PlantCardActor(type, bodyFont);
-                boolean unlocked = user.collectionState.isPlantUnlocked(type);
-                card.setLocked(!unlocked);
-                card.setOnClick(() -> {
-                    selectedPlant = type;
-                    selectedZombie = null;
-                    refreshDetail();
+            if (seen) {
+                ZombiePreviewActor preview = new ZombiePreviewActor();
+                preview.setType(zt);
+                cell.add(preview);
+                cell.setTouchable(Touchable.enabled);
+                cell.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        selectedZombie = zt;
+                        selectedPlant = null;
+                        refreshDetail();
+                    }
                 });
-                cell.add(card);
+            } else {
+                Label unknown = new Label("?", new Label.LabelStyle(bodyFont, Color.GRAY));
+                unknown.setAlignment(Align.center);
+                cell.add(unknown);
+            }
 
-                // تبدیل لول به Base 1
-                int level = user.collectionState.getPlantLevel(type);
-                int displayLevel = level + 1;
-                int seedPackets = user.collectionState.getSeedPacketCount(type);
-                int maxDisplayLevel = PlantLibrary.findByType(type)
-                    .map(PlantDefinition::getMaxLevel)
-                    .orElse(4);
-                boolean maxedOut = displayLevel >= maxDisplayLevel;
-                int requiredPackets = maxedOut ? 0
-                    : UpgradeCostPolicy.currentUpgradeRequirement(displayLevel, maxDisplayLevel);
+            grid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(15f);
+            col++;
+            if (col >= GRID_COLS) {
+                col = 0;
+                grid.row();
+            }
+        }
+    }
 
-                Table info = new Table();
-                info.setFillParent(true);          // کل سطح کارت را بگیرد
-                info.top().right();                // محتوا را بالا‑راست بچیند
-                info.pad(-7f);
-                info.padRight(-8f);
-                info.setTouchable(Touchable.disabled);
+    private void refreshPlantGrid(Table grid, User user) {
+        int col = 0;
+        for (PlantType type : PlantType.values()) {
+            if (!passesPlantFilter(type, user)) continue;
 
-                Label lvl = new Label(
-                    maxedOut ? "MAX" : "Lv." + displayLevel,
-                    new Label.LabelStyle(bodyFont, Color.YELLOW)
-                );
-                lvl.setFontScale(1f);            // کمی بزرگ‌تر و خوانا
+            Stack cell = new Stack();
+            cell.setSize(CARD_SLOT_W, CARD_SLOT_H);
 
-                Label seeds = new Label(
-                    maxedOut ? "" : seedPackets + "/" + requiredPackets,
-                    new Label.LabelStyle(descFont, Color.WHITE)
-                );
+            Drawable slotBg = skin.getDrawable("image_ui_cards_almanac_plant_card_10");
+            if (slotBg != null) {
+                Table frame = new Table();
+                frame.setBackground(slotBg);
+                cell.add(frame);
+            }
 
-                info.add(lvl).right().row();
-                info.add(seeds).right();
+            PlantCardActor card = new PlantCardActor(type, bodyFont);
+            boolean unlocked = user.collectionState.isPlantUnlocked(type);
+            card.setLocked(!unlocked);
+            card.setOnClick(() -> {
+                selectedPlant = type;
+                selectedZombie = null;
+                refreshDetail();
+            });
+            cell.add(card);
 
-                cell.add(info);
+            int level = user.collectionState.getPlantLevel(type);
+            int displayLevel = level + 1;
+            int seedPackets = user.collectionState.getSeedPacketCount(type);
+            int maxDisplayLevel = PlantLibrary.findByType(type)
+                .map(PlantDefinition::getMaxLevel)
+                .orElse(4);
+            boolean maxedOut = displayLevel >= maxDisplayLevel;
+            int requiredPackets = maxedOut ? 0
+                : UpgradeCostPolicy.currentUpgradeRequirement(displayLevel, maxDisplayLevel);
 
-                contentGrid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(15f);
-                col++;
-                if (col >= GRID_COLS) {
-                    col = 0;
-                    contentGrid.row();
-                }
+            Table info = new Table();
+            info.setFillParent(true);
+            info.top().right();
+            info.pad(-7f);
+            info.padRight(-8f);
+            info.setTouchable(Touchable.disabled);
+
+            Label lvl = new Label(
+                maxedOut ? "MAX" : "Lv." + displayLevel,
+                new Label.LabelStyle(bodyFont, Color.YELLOW)
+            );
+            lvl.setFontScale(1f);
+
+            Label seeds = new Label(
+                maxedOut ? "" : seedPackets + "/" + requiredPackets,
+                new Label.LabelStyle(descFont, Color.WHITE)
+            );
+
+            info.add(lvl).right().row();
+            info.add(seeds).right();
+
+            cell.add(info);
+
+            grid.add(cell).size(CARD_SLOT_W, CARD_SLOT_H).pad(15f);
+            col++;
+            if (col >= GRID_COLS) {
+                col = 0;
+                grid.row();
             }
         }
     }
@@ -360,7 +372,7 @@ public class CollectionPanel extends BasePanel {
             int maxRawLevel = PlantLibrary.findByType(type)
                 .map(PlantDefinition::getMaxLevel)
                 .orElse(4) - 1;
-            if (currentLevel >= maxRawLevel) return false; // already maxed - never "upgradable"
+            if (currentLevel >= maxRawLevel) return false;
             int needed = currentLevel + 1;
             if (user.collectionState.getSeedPacketCount(type) < needed) return false;
         }
@@ -379,7 +391,6 @@ public class CollectionPanel extends BasePanel {
         detailNameLabel.setAlignment(Align.center);
         panel.add(detailNameLabel).colspan(2).growX().padBottom(15f).row();
 
-        // بخش نمایش انیمیشن
         Stack previewStack = new Stack();
         detailPreviewActor = new DetailPreviewActor();
         zombiePreviewActor = new ZombiePreviewActor();
@@ -388,9 +399,24 @@ public class CollectionPanel extends BasePanel {
 
         panel.add(previewStack).size(DETAIL_PREVIEW_SIZE).padRight(15f).top();
 
-        // ==================== Plant Stats Table (تفکیک ۳ ستونه برای عدم تداخل متن و اسلایدر) ====================
-        plantStatsTable = new Table();
-        plantStatsTable.top().left();
+        plantStatsTable = buildPlantStatsTable();
+        zombieStatsTable = buildZombieStatsTable();
+
+        Stack statsStack = new Stack();
+        statsStack.add(plantStatsTable);
+        statsStack.add(zombieStatsTable);
+
+        panel.add(statsStack).growX().top().row();
+
+        actionButtons = buildActionButtons();
+        panel.add(actionButtons).colspan(2).padTop(25f).center();
+
+        return panel;
+    }
+
+    private Table buildPlantStatsTable() {
+        Table table = new Table();
+        table.top().left();
 
         hpSlider = createStatSlider(0, 1000);
         costSlider = createStatSlider(0, 300);
@@ -413,19 +439,23 @@ public class CollectionPanel extends BasePanel {
         seedTitleLabel = new Label("Seeds", new Label.LabelStyle(bodyFont, Color.WHITE));
         seedValueLabel = new Label("0/0", new Label.LabelStyle(bodyFont, Color.GOLD));
 
-        addStatRow(plantStatsTable, hpTitleLabel, hpSlider, hpValueLabel);
-        addStatRow(plantStatsTable, damageTitleLabel, damageSlider, damageValueLabel);
-        addStatRow(plantStatsTable, costTitleLabel, costSlider, costValueLabel);
-        addStatRow(plantStatsTable, levelTitleLabel, levelSlider, levelValueLabel);
-        addStatRow(plantStatsTable, seedTitleLabel, seedSlider, seedValueLabel);
+        addStatRow(table, hpTitleLabel, hpSlider, hpValueLabel);
+        addStatRow(table, damageTitleLabel, damageSlider, damageValueLabel);
+        addStatRow(table, costTitleLabel, costSlider, costValueLabel);
+        addStatRow(table, levelTitleLabel, levelSlider, levelValueLabel);
+        addStatRow(table, seedTitleLabel, seedSlider, seedValueLabel);
+
         nextUpgradeLabel = new Label("", new Label.LabelStyle(descFont, Color.valueOf("D7E8FF")));
         nextUpgradeLabel.setWrap(true);
         nextUpgradeLabel.setAlignment(Align.center);
-        plantStatsTable.add(nextUpgradeLabel).colspan(3).growX().padTop(4f).padBottom(8f).row();
+        table.add(nextUpgradeLabel).colspan(3).growX().padTop(4f).padBottom(8f).row();
 
-        // ==================== Zombie Stats Table (تفکیک ۳ ستونه) ====================
-        zombieStatsTable = new Table();
-        zombieStatsTable.top().left();
+        return table;
+    }
+
+    private Table buildZombieStatsTable() {
+        Table table = new Table();
+        table.top().left();
 
         zombieHpSlider = createStatSlider(0, 2000);
         zombieSpeedSlider = createStatSlider(0, 10);
@@ -440,23 +470,20 @@ public class CollectionPanel extends BasePanel {
         zombieDamageTitleLabel = new Label("Damage", new Label.LabelStyle(bodyFont, Color.WHITE));
         zombieDamageValueLabel = new Label("100", new Label.LabelStyle(bodyFont, Color.GOLD));
 
-        zombieInfoLabel = new Label("Zombie Information Details", new Label.LabelStyle(descFont, Color.LIGHT_GRAY));
+        zombieInfoLabel = new Label("Zombie Information Details",
+            new Label.LabelStyle(descFont, Color.LIGHT_GRAY));
         zombieInfoLabel.setWrap(true);
 
-        addStatRow(zombieStatsTable, zombieHpTitleLabel, zombieHpSlider, zombieHpValueLabel);
-        addStatRow(zombieStatsTable, zombieSpeedTitleLabel, zombieSpeedSlider, zombieSpeedValueLabel);
-        addStatRow(zombieStatsTable, zombieDamageTitleLabel, zombieDamageSlider, zombieDamageValueLabel);
-        zombieStatsTable.add(zombieInfoLabel).colspan(3).growX().padTop(10f).row();
+        addStatRow(table, zombieHpTitleLabel, zombieHpSlider, zombieHpValueLabel);
+        addStatRow(table, zombieSpeedTitleLabel, zombieSpeedSlider, zombieSpeedValueLabel);
+        addStatRow(table, zombieDamageTitleLabel, zombieDamageSlider, zombieDamageValueLabel);
+        table.add(zombieInfoLabel).colspan(3).growX().padTop(10f).row();
 
-        // قرار دادن جداول مشخصات در یک استک
-        Stack statsStack = new Stack();
-        statsStack.add(plantStatsTable);
-        statsStack.add(zombieStatsTable);
+        return table;
+    }
 
-        panel.add(statsStack).growX().top().row();
-
-        // دکمه‌های عملیاتی (Upgrade و Buy)
-        actionButtons = new Table();
+    private Table buildActionButtons() {
+        Table table = new Table();
         upgradeBtn = new MenuButton(
             skin.getDrawable("image_ui_generic_purplebutton_10"),
             "UPGRADE", bodyFont,
@@ -473,12 +500,10 @@ public class CollectionPanel extends BasePanel {
         );
         buyBtn.setSize(140f, 48f);
 
-        actionButtons.add(upgradeBtn).padRight(10f);
-        actionButtons.add(buyBtn);
+        table.add(upgradeBtn).padRight(10f);
+        table.add(buyBtn);
 
-        panel.add(actionButtons).colspan(2).padTop(25f).center();
-
-        return panel;
+        return table;
     }
 
     private Slider createStatSlider(float min, float max) {
@@ -494,114 +519,156 @@ public class CollectionPanel extends BasePanel {
     }
 
     private void refreshDetail() {
-        detailNameLabel.setText("");
-        detailPreviewActor.setType(null);
-        zombiePreviewActor.setType(null);
-
-        plantStatsTable.setVisible(false);
-        zombieStatsTable.setVisible(false);
-        actionButtons.setVisible(false);
+        resetDetail();
 
         User user = AppStatus.getCurrentUser();
         if (user == null) return;
 
         if (!showingZombies && selectedPlant != null) {
-            PlantDefinition def = PlantLibrary.findByType(selectedPlant).orElse(null);
-            boolean unlocked = user.collectionState.isPlantUnlocked(selectedPlant);
-
-            if (def != null) {
-                detailNameLabel.setText(def.getName());
-                int level = user.collectionState.getPlantLevel(selectedPlant);
-                int displayLevel = level + 1; // display level is 1-based
-                int seedPackets = user.collectionState.getSeedPacketCount(selectedPlant);
-                int maxDisplayLevel = def.getMaxLevel();
-                boolean maxedOut = displayLevel >= maxDisplayLevel;
-                int required = maxedOut ? 0 :
-                    UpgradeCostPolicy.currentUpgradeRequirement(displayLevel, maxDisplayLevel);
-                if (maxedOut) {
-                    nextUpgradeLabel.setText("MAX LEVEL\nNo further upgrades available.");
-                } else {
-                    int nextLevel = displayLevel + 1;
-                    String nextDescription = UpgradeDescriptionCatalog.find(def.getName(), nextLevel);
-                    if (nextDescription == null || nextDescription.isBlank()) {
-                        nextDescription = "New permanent upgrade available.";
-                    }
-                    nextUpgradeLabel.setText("NEXT UPGRADE — LEVEL " + nextLevel + "\n" + nextDescription);
-                }
-                // The sheet defines the actual upgrade effect per target level.
-                // Seed cost is handled centrally and increases with each tier.
-
-                // Show the player's ACTUAL current stats (HP/cost upgrades already
-                // applied), not the plant's static level-1 baseline - otherwise the
-                // detail sheet never visibly changes after an upgrade even though
-                // the upgrade genuinely applied in-game.
-                com.PVZ.model.entity.plants.PlantStats currentStats =
-                    com.PVZ.model.entity.plants.UpgradeResolver.resolveStats(def, displayLevel);
-
-                hpSlider.setRange(0, Math.max(1000, currentStats.getMaxHp()));
-                hpSlider.setValue(currentStats.getMaxHp());
-                hpValueLabel.setText(String.valueOf(currentStats.getMaxHp()));
-
-                damageSlider.setRange(0, Math.max(300, currentStats.getDamage()));
-                damageSlider.setValue(currentStats.getDamage());
-                damageValueLabel.setText(String.valueOf(currentStats.getDamage()));
-
-                costSlider.setRange(0, 300);
-                costSlider.setValue(currentStats.getCost());
-                costValueLabel.setText(String.valueOf(currentStats.getCost()));
-
-                levelSlider.setRange(1, Math.max(1, maxDisplayLevel));
-                levelSlider.setValue(displayLevel);
-                levelValueLabel.setText("Lv." + displayLevel + "/" + maxDisplayLevel);
-
-                seedSlider.setRange(0, Math.max(1, required));
-                seedSlider.setValue(Math.min(seedPackets, required));
-                seedValueLabel.setText(maxedOut ? "MAX" : seedPackets + "/" + required);
-
-                plantStatsTable.setVisible(true);
-                actionButtons.setVisible(true);
-
-                if (!unlocked) {
-                    buyBtn.setVisible(true);
-                    upgradeBtn.setVisible(false);
-                } else {
-                    buyBtn.setVisible(true);
-                    upgradeBtn.setVisible(true);
-                    upgradeBtn.setDisabled(maxedOut);
-                    upgradeBtn.setText(maxedOut ? "MAX LEVEL" : "UPGRADE");
-                }
-            }
-            detailPreviewActor.setType(selectedPlant);
-
+            refreshPlantDetail(user);
         } else if (showingZombies && selectedZombie != null) {
-            detailNameLabel.setText(selectedZombie.name().replace('_', ' '));
-            zombiePreviewActor.setType(selectedZombie);
-
-            // محاسبه و تنظیم مقادیر زامبی
-            int hp = getZombieHp(selectedZombie);
-            float speed = getZombieSpeed(selectedZombie);
-            int damage = getZombieDamage(selectedZombie);
-
-            zombieHpSlider.setRange(0, Math.max(2000, hp));
-            zombieHpSlider.setValue(hp);
-            zombieHpValueLabel.setText(String.valueOf(hp));
-
-            zombieSpeedSlider.setRange(0, 10);
-            zombieSpeedSlider.setValue(speed);
-            zombieSpeedValueLabel.setText(String.format("%.1f", speed));
-
-            zombieDamageSlider.setRange(0, 500);
-            zombieDamageSlider.setValue(damage);
-            zombieDamageValueLabel.setText(String.valueOf(damage));
-
-            zombieInfoLabel.setText(getZombieDescription(selectedZombie));
-
-            zombieStatsTable.setVisible(true);
-            actionButtons.setVisible(false);
+            refreshZombieDetail();
         }
     }
 
+    private void resetDetail() {
+        detailNameLabel.setText("");
+        detailPreviewActor.setType(null);
+        zombiePreviewActor.setType(null);
+        plantStatsTable.setVisible(false);
+        zombieStatsTable.setVisible(false);
+        actionButtons.setVisible(false);
+    }
+
+    private void refreshPlantDetail(User user) {
+        PlantDefinition def = PlantLibrary.findByType(selectedPlant).orElse(null);
+        boolean unlocked = user.collectionState.isPlantUnlocked(selectedPlant);
+        if (def == null) return;
+
+        detailNameLabel.setText(def.getName());
+        int level = user.collectionState.getPlantLevel(selectedPlant);
+        int displayLevel = level + 1;
+        int seedPackets = user.collectionState.getSeedPacketCount(selectedPlant);
+        int maxDisplayLevel = def.getMaxLevel();
+        boolean maxedOut = displayLevel >= maxDisplayLevel;
+        int required = maxedOut ? 0 :
+            UpgradeCostPolicy.currentUpgradeRequirement(displayLevel, maxDisplayLevel);
+
+        updateUpgradeLabel(maxedOut, displayLevel, maxDisplayLevel, def);
+        updatePlantStats(def, displayLevel, seedPackets, required, maxedOut, maxDisplayLevel);
+
+        plantStatsTable.setVisible(true);
+        actionButtons.setVisible(true);
+        updateBuyUpgradeButtons(unlocked, maxedOut);
+
+        detailPreviewActor.setType(selectedPlant);
+    }
+
+    private void updateUpgradeLabel(boolean maxedOut, int displayLevel,
+                                    int maxDisplayLevel, PlantDefinition def) {
+        if (maxedOut) {
+            nextUpgradeLabel.setText("MAX LEVEL\nNo further upgrades available.");
+            return;
+        }
+        int nextLevel = displayLevel + 1;
+        String nextDescription = UpgradeDescriptionCatalog.find(def.getName(), nextLevel);
+        if (nextDescription == null || nextDescription.isBlank()) {
+            nextDescription = "New permanent upgrade available.";
+        }
+        nextUpgradeLabel.setText("NEXT UPGRADE — LEVEL " + nextLevel + "\n" + nextDescription);
+    }
+
+    private void updatePlantStats(PlantDefinition def, int displayLevel,
+                                  int seedPackets, int required, boolean maxedOut,
+                                  int maxDisplayLevel) {
+        com.PVZ.model.entity.plants.PlantStats currentStats =
+            com.PVZ.model.entity.plants.UpgradeResolver.resolveStats(def, displayLevel);
+
+        hpSlider.setRange(0, Math.max(1000, currentStats.getMaxHp()));
+        hpSlider.setValue(currentStats.getMaxHp());
+        hpValueLabel.setText(String.valueOf(currentStats.getMaxHp()));
+
+        damageSlider.setRange(0, Math.max(300, currentStats.getDamage()));
+        damageSlider.setValue(currentStats.getDamage());
+        damageValueLabel.setText(String.valueOf(currentStats.getDamage()));
+
+        costSlider.setRange(0, 300);
+        costSlider.setValue(currentStats.getCost());
+        costValueLabel.setText(String.valueOf(currentStats.getCost()));
+
+        levelSlider.setRange(1, Math.max(1, maxDisplayLevel));
+        levelSlider.setValue(displayLevel);
+        levelValueLabel.setText("Lv." + displayLevel + "/" + maxDisplayLevel);
+
+        seedSlider.setRange(0, Math.max(1, required));
+        seedSlider.setValue(Math.min(seedPackets, required));
+        seedValueLabel.setText(maxedOut ? "MAX" : seedPackets + "/" + required);
+    }
+
+    private void updateBuyUpgradeButtons(boolean unlocked, boolean maxedOut) {
+        if (!unlocked) {
+            buyBtn.setVisible(true);
+            upgradeBtn.setVisible(false);
+        } else {
+            buyBtn.setVisible(true);
+            upgradeBtn.setVisible(true);
+            upgradeBtn.setDisabled(maxedOut);
+            upgradeBtn.setText(maxedOut ? "MAX LEVEL" : "UPGRADE");
+        }
+    }
+
+    private void refreshZombieDetail() {
+        detailNameLabel.setText(selectedZombie.name().replace('_', ' '));
+        zombiePreviewActor.setType(selectedZombie);
+
+        int hp = getZombieHp(selectedZombie);
+        float speed = getZombieSpeed(selectedZombie);
+        int damage = getZombieDamage(selectedZombie);
+
+        zombieHpSlider.setRange(0, Math.max(2000, hp));
+        zombieHpSlider.setValue(hp);
+        zombieHpValueLabel.setText(String.valueOf(hp));
+
+        zombieSpeedSlider.setRange(0, 10);
+        zombieSpeedSlider.setValue(speed);
+        zombieSpeedValueLabel.setText(String.format("%.1f", speed));
+
+        zombieDamageSlider.setRange(0, 500);
+        zombieDamageSlider.setValue(damage);
+        zombieDamageValueLabel.setText(String.valueOf(damage));
+
+        zombieInfoLabel.setText(getZombieDescription(selectedZombie));
+
+        zombieStatsTable.setVisible(true);
+        actionButtons.setVisible(false);
+    }
+
     private int getZombieHp(ZombieType zt) {
+        int hp = getBasicZombieHp(zt);
+        if (hp != -1) return hp;
+
+        hp = getArmorZombieHp(zt);
+        if (hp != -1) return hp;
+
+        hp = getGargantuarHp(zt);
+        if (hp != -1) return hp;
+
+        hp = getImpHp(zt);
+        if (hp != -1) return hp;
+
+        hp = getSpecialZombieHp(zt);
+        if (hp != -1) return hp;
+
+        hp = getZombossHp(zt);
+        if (hp != -1) return hp;
+
+        hp = getZombotanyHp(zt);
+        if (hp != -1) return hp;
+
+        return 200;
+    }
+
+    private int getBasicZombieHp(ZombieType zt) {
         switch (zt) {
             case TUTORIAL_DEFAULT:
             case MUMMY_DEFAULT:
@@ -609,7 +676,13 @@ public class CollectionPanel extends BasePanel {
             case BEACH_DEFAULT:
             case DARK_DEFAULT:
                 return 200;
+            default:
+                return -1;
+        }
+    }
 
+    private int getArmorZombieHp(ZombieType zt) {
+        switch (zt) {
             case TUTORIAL_ARMOR1:
             case MUMMY_ARMOR1:
             case ICEAGE_ARMOR1:
@@ -629,20 +702,39 @@ public class CollectionPanel extends BasePanel {
             case DARK_ARMOR4:
                 return 2200;
 
+            default:
+                return -1;
+        }
+    }
+
+    private int getGargantuarHp(ZombieType zt) {
+        switch (zt) {
             case GARGANTUAR_BASIC:
             case GARGANTUAR_EGYPT:
             case GARGANTUAR_ICEAGE:
             case GARGANTUAR_BEACH:
             case GARGANTUAR_DARK:
                 return 3000;
+            default:
+                return -1;
+        }
+    }
 
+    private int getImpHp(ZombieType zt) {
+        switch (zt) {
             case IMP_TUTORIAL:
             case IMP_EGYPT:
             case IMP_ICEAGE:
             case IMP_BEACH:
             case IMP_DARK:
                 return 80;
+            default:
+                return -1;
+        }
+    }
 
+    private int getSpecialZombieHp(ZombieType zt) {
+        switch (zt) {
             case PHARAOH:
             case CAMEL:
                 return 500;
@@ -674,20 +766,32 @@ public class CollectionPanel extends BasePanel {
             case DARK_KING:
                 return 2000;
 
+            default:
+                return -1;
+        }
+    }
+
+    private int getZombossHp(ZombieType zt) {
+        switch (zt) {
             case ZOMBOSS_EGYPT:
             case ZOMBOSS_PIRATE:
             case ZOMBOSS_COWBOY:
             case ZOMBOSS_DARK:
                 return 20000;
+            default:
+                return -1;
+        }
+    }
 
+    private int getZombotanyHp(ZombieType zt) {
+        switch (zt) {
             case ZOMBOTANY_PEASHOOTER:
             case ZOMBOTANY_WALLNUT:
             case ZOMBOTANY_JALAPENO:
             case ZOMBOTANY_SQUASH:
                 return 250;
-
             default:
-                return 200;
+                return -1;
         }
     }
 
@@ -796,12 +900,10 @@ public class CollectionPanel extends BasePanel {
         showBuyDialog(selectedPlant);
     }
 
-    // ====================== پاپ‌آپ اختصاصی و بدون نیاز به WindowStyle (حل کاملاً قطعی Crash) ======================
     private void showBuyDialog(PlantType plant) {
         User user = AppStatus.getCurrentUser();
         if (user == null || getStage() == null) return;
 
-        // لایه تیره مدال روی کل صفحه برای بلاک کردن کلیک‌های پس‌زمینه
         Table modalOverlay = new Table();
         modalOverlay.setFillParent(true);
         modalOverlay.setTouchable(Touchable.enabled);
@@ -810,43 +912,67 @@ public class CollectionPanel extends BasePanel {
         dialogBox.setBackground(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
         dialogBox.pad(25f);
 
-        Label dialogTitle = new Label("BUY SEED PACKETS", new Label.LabelStyle(titleFont, Color.GOLD));
+        PlantDefinition def = PlantLibrary.findByType(plant).orElse(null);
+        addPlantInfo(dialogBox, plant, user, def);
+
+        final int[] packCount = calculateInitialPacks(user, plant, def);
+        addPurchaseControls(dialogBox, user, plant, def, packCount);
+        addActionButtons(dialogBox, modalOverlay, plant, packCount);
+
+        modalOverlay.add(dialogBox).center();
+        getStage().addActor(modalOverlay);
+    }
+
+    private void addPlantInfo(Table dialogBox, PlantType plant, User user, PlantDefinition def) {
+        Label dialogTitle = new Label("BUY SEED PACKETS",
+            new Label.LabelStyle(titleFont, Color.GOLD));
         dialogBox.add(dialogTitle).colspan(3).padBottom(15f).row();
 
-        PlantDefinition def = PlantLibrary.findByType(plant).orElse(null);
         String plantName = (def != null) ? def.getName() : plant.name();
-        Label plantInfo = new Label("Plant: " + plantName, new Label.LabelStyle(bodyFont, Color.WHITE));
+        Label plantInfo = new Label("Plant: " + plantName,
+            new Label.LabelStyle(bodyFont, Color.WHITE));
         dialogBox.add(plantInfo).colspan(3).padBottom(6f).row();
 
         int previewLevel = user.collectionState.getPlantLevel(plant) + 1;
         int previewMaxLevel = def == null ? 4 : def.getMaxLevel();
-        int previewRequired = UpgradeCostPolicy.currentUpgradeRequirement(previewLevel, previewMaxLevel);
+        int previewRequired = UpgradeCostPolicy.currentUpgradeRequirement(
+            previewLevel, previewMaxLevel);
         int previewOwned = user.collectionState.getSeedPacketCount(plant);
         String needText = previewRequired > 0
             ? "Next upgrade: Level " + (previewLevel + 1) +
               " • Need " + previewRequired + " seed packets • You have " + previewOwned
             : "Plant is at max level.";
-        Label needInfo = new Label(needText, new Label.LabelStyle(descFont, Color.valueOf("CFE8FF")));
+        Label needInfo = new Label(needText,
+            new Label.LabelStyle(descFont, Color.valueOf("CFE8FF")));
         needInfo.setWrap(true);
         dialogBox.add(needInfo).width(380f).colspan(3).padBottom(10f).row();
+    }
 
-        final int DIAMOND_COST_PER_PACK = UpgradeCostPolicy.diamondsPerShopPack();
-        final int SEEDS_PER_PACK = UpgradeCostPolicy.seedsPerShopPack();
+    private int[] calculateInitialPacks(User user, PlantType plant, PlantDefinition def) {
         int currentLevel = user.collectionState.getPlantLevel(plant) + 1;
         int maxLevel = def == null ? 4 : def.getMaxLevel();
         int requiredSeeds = UpgradeCostPolicy.currentUpgradeRequirement(currentLevel, maxLevel);
         int ownedSeeds = user.collectionState.getSeedPacketCount(plant);
         int missingSeeds = Math.max(0, requiredSeeds - ownedSeeds);
-        int initialPacks = Math.max(1, (missingSeeds + SEEDS_PER_PACK - 1) / SEEDS_PER_PACK);
-        final int[] packCount = {initialPacks};
+        int seedsPerPack = UpgradeCostPolicy.seedsPerShopPack();
+        int initialPacks = Math.max(1, (missingSeeds + seedsPerPack - 1) / seedsPerPack);
+        return new int[]{initialPacks};
+    }
+
+    private void addPurchaseControls(Table dialogBox, User user, PlantType plant,
+                                     PlantDefinition def, int[] packCount) {
+        final int DIAMOND_COST_PER_PACK = UpgradeCostPolicy.diamondsPerShopPack();
+        final int SEEDS_PER_PACK = UpgradeCostPolicy.seedsPerShopPack();
 
         Label seedsInfoLabel = new Label("", new Label.LabelStyle(bodyFont, Color.CYAN));
         Label costInfoLabel = new Label("", new Label.LabelStyle(bodyFont, Color.GOLD));
         Label diamondBalanceLabel = new Label("Your Diamonds: " +
-            user.userStats.getDiamonds(), new Label.LabelStyle(descFont, Color.LIGHT_GRAY));
+            user.userStats.getDiamonds(),
+            new Label.LabelStyle(descFont, Color.LIGHT_GRAY));
 
-        Label countLabel = new Label(initialPacks + " Pack" +
-            (initialPacks > 1 ? "s" : ""), new Label.LabelStyle(bodyFont, Color.WHITE));
+        Label countLabel = new Label(packCount[0] + " Pack" +
+            (packCount[0] > 1 ? "s" : ""),
+            new Label.LabelStyle(bodyFont, Color.WHITE));
         countLabel.setAlignment(Align.center);
 
         Runnable updateDialogStats = () -> {
@@ -862,11 +988,11 @@ public class CollectionPanel extends BasePanel {
             skin.getDrawable("image_ui_generic_brownbutton_down_10"), null, null, () -> {
             if (packCount[0] > 1) {
                 packCount[0]--;
-                countLabel.setText(packCount[0] + " Pack" + (packCount[0] > 1 ? "s" : ""));
+                countLabel.setText(packCount[0] + " Pack" +
+                    (packCount[0] > 1 ? "s" : ""));
                 updateDialogStats.run();
             }
-        }
-        );
+        });
 
         MenuButton plusBtn = new MenuButton(
             skin.getDrawable("image_ui_generic_brownbutton_10"), "+", bodyFont,
@@ -876,8 +1002,7 @@ public class CollectionPanel extends BasePanel {
                 countLabel.setText(packCount[0] + " Packs");
                 updateDialogStats.run();
             }
-        }
-        );
+        });
 
         Table packSelector = new Table();
         packSelector.add(minusBtn).size(45f, 40f).padRight(10f);
@@ -888,8 +1013,10 @@ public class CollectionPanel extends BasePanel {
         dialogBox.add(seedsInfoLabel).colspan(3).padBottom(5f).row();
         dialogBox.add(costInfoLabel).colspan(3).padBottom(5f).row();
         dialogBox.add(diamondBalanceLabel).colspan(3).padBottom(20f).row();
+    }
 
-        // دکمه‌های تایید و انصراف
+    private void addActionButtons(Table dialogBox, Table modalOverlay,
+                                  PlantType plant, int[] packCount) {
         MenuButton confirmBuyBtn = new MenuButton(
             skin.getDrawable("image_ui_generic_greenbutton_10"), "BUY", bodyFont,
             skin.getDrawable("image_ui_generic_greenbutton_down_10"), null, null, () -> {
@@ -899,14 +1026,13 @@ public class CollectionPanel extends BasePanel {
             modalOverlay.remove();
             refreshGrid();
             refreshDetail();
-        }
-        );
+        });
         confirmBuyBtn.setSize(130f, 45f);
 
         MenuButton cancelBtn = new MenuButton(
             skin.getDrawable("image_ui_generic_brownbutton_10"), "CANCEL", bodyFont,
-            skin.getDrawable("image_ui_generic_brownbutton_down_10"), null, null, modalOverlay::remove
-        );
+            skin.getDrawable("image_ui_generic_brownbutton_down_10"), null, null,
+            modalOverlay::remove);
         cancelBtn.setSize(130f, 45f);
 
         Table actionTable = new Table();
@@ -914,12 +1040,8 @@ public class CollectionPanel extends BasePanel {
         actionTable.add(cancelBtn);
 
         dialogBox.add(actionTable).colspan(3).center();
-
-        modalOverlay.add(dialogBox).center();
-        getStage().addActor(modalOverlay);
     }
 
-    // ====================== متد عملیاتی بررسی و خرید بر اساس Diamond ======================
     private OutputDTO purchasePackets(PlantType plant, int packCount) {
         User user = AppStatus.getCurrentUser();
         if (user == null) {
@@ -930,13 +1052,11 @@ public class CollectionPanel extends BasePanel {
         int totalSeeds = packCount * 10;
         int currentDiamonds = user.userStats.getDiamonds();
 
-        // ۱. بررسی داشتن Diamond کافی
         if (currentDiamonds < totalDiamonds) {
             return new OutputDTO(false, "Not enough diamonds! Cost: " +
                 totalDiamonds + " Diamonds, Available: " + currentDiamonds + " Diamonds");
         }
 
-        // ۲. کسر Diamond و اضافه کردن Seed Packets به حساب کاربر
         user.userStats.setDiamonds(currentDiamonds - totalDiamonds);
         user.collectionState.addSeedPackets(plant, totalSeeds);
 
@@ -952,8 +1072,6 @@ public class CollectionPanel extends BasePanel {
     public void dispose() {
         super.dispose();
     }
-
-    // ====================== Actors ======================
 
     private static class DetailPreviewActor extends Actor {
         private PlantType type;
