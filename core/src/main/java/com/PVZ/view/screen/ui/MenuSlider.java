@@ -292,16 +292,11 @@ public class MenuSlider extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         float trackCenterY = getY() + 40f;
         float sliderLeftOffset = hasIcon ? (iconSize + 15f) : 0f;
-
-        // برچسب
         if (labelText != null && !labelText.isEmpty() && labelLayout != null) {
             font.setColor(1f, 1f, 1f, hoverAlpha);
             float labelX = getX() + (getWidth() - labelLayout.width) / 2f;
             float labelY = trackCenterY + trackHeight + 20f + labelLayout.height;
-            font.draw(batch, labelText, labelX, labelY);
-        }
-
-        // آیکون قطع/وصل
+            font.draw(batch, labelText, labelX, labelY);}
         if (hasIcon) {
             iconBounds.set(padding, 40f - iconSize / 2f, iconSize, iconSize);
             boolean isMuted = toggleBinding != null ? toggleBinding.get() : (value == 0);
@@ -309,34 +304,22 @@ public class MenuSlider extends Actor {
             if (currentIcon != null) {
                 batch.setColor(1f, 1f, 1f, hoverAlpha);
                 batch.draw(currentIcon, getX() + iconBounds.x, getY() + iconBounds.y,
-                    iconBounds.width, iconBounds.height);
-            }
-        }
-
+                    iconBounds.width, iconBounds.height);}}
         float startX = getX() + padding + sliderLeftOffset;
         float trackW = getWidth() - padding * 2f - sliderLeftOffset;
         float fillWidth = trackW * (value / 100f);
-
-        // رسم track
         drawElement(batch, trackDrawable, trackRegion, trackTexture,
             startX, trackCenterY - trackHeight / 2f, trackW, trackHeight, hoverAlpha);
-        // رسم fill
         drawElement(batch, fillDrawable, fillRegion, fillTexture,
             startX, trackCenterY - trackHeight / 2f, fillWidth, trackHeight, hoverAlpha);
-
-        // رسم knob
         float knobX = startX + fillWidth - knobWidth / 2f;
         float knobY = trackCenterY - knobHeight / 2f;
         drawElement(batch, knobDrawable, knobRegion, knobTexture,
             knobX, knobY, knobWidth, knobHeight, hoverAlpha);
-
-        // عدد مقدار
         font.setColor(1f, 1f, 1f, hoverAlpha);
         float textX = getX() + getWidth() + 25f;
         float textY = trackCenterY + textLayout.height / 2f;
         font.draw(batch, valueText, textX, textY);
-
-        // مارکرهای هاور
         if (isHovered && markerTexture != null) {
             batch.setColor(1f, 1f, 1f, hoverAlpha);
             float markerW = 40f, markerH = 30f;
