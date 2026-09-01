@@ -109,7 +109,8 @@ public class MinigameSelectionPanel extends BasePanel {
         title.setFontScale(1.15f);
         top.add(title).padBottom(18f).row();
 
-        Label subtitle = new Label("Hover over a card to see the levels", new Label.LabelStyle(bodyFont, Color.LIGHT_GRAY));
+        Label subtitle = new Label("Hover over a card to see the levels",
+            new Label.LabelStyle(bodyFont, Color.LIGHT_GRAY));
         top.add(subtitle).padBottom(18f).row();
 
         Table row = new Table();
@@ -117,11 +118,16 @@ public class MinigameSelectionPanel extends BasePanel {
         row.defaults().padRight(CARD_GAP);
 
         List<MinigameInfo> infos = List.of(
-            new MinigameInfo(MinigameEnum.VASEBREAKER, "vasebreaker", "vasebreaker_cover.png", "Break vases to reveal plants, zombies, and seeds."),
-            new MinigameInfo(MinigameEnum.WALLNUT_BOWLING, "wallnut_bowling", "wallnut_bowling_cover.png", "Launch nuts left of the red line and clear the lane."),
-            new MinigameInfo(MinigameEnum.I_ZOMBIE, "i_zombie", "i_zombie_cover.png", "Pick zombies instead of plants and break through the line."),
-            new MinigameInfo(MinigameEnum.BEGHOULED, "beghouled", "beghouled_cover.png", "Swap plants to make matches and unlock stronger upgrades."),
-            new MinigameInfo(MinigameEnum.ZOMBOTANY, "zombotany", "zombotany_cover.png", "Plant-zombie chaos: place zombie plants and survive the waves.")
+            new MinigameInfo(MinigameEnum.VASEBREAKER, "vasebreaker", "vasebreaker_cover.png",
+                "Break vases to reveal plants, zombies, and seeds."),
+            new MinigameInfo(MinigameEnum.WALLNUT_BOWLING, "wallnut_bowling", "wallnut_bowling_cover.png",
+                "Launch nuts left of the red line and clear the lane."),
+            new MinigameInfo(MinigameEnum.I_ZOMBIE, "i_zombie", "i_zombie_cover.png",
+                "Pick zombies instead of plants and break through the line."),
+            new MinigameInfo(MinigameEnum.BEGHOULED, "beghouled", "beghouled_cover.png",
+                "Swap plants to make matches and unlock stronger upgrades."),
+            new MinigameInfo(MinigameEnum.ZOMBOTANY, "zombotany", "zombotany_cover.png",
+                "Plant-zombie chaos: place zombie plants and survive the waves.")
         );
 
         float cardWidth = Math.max(300f, Math.min(340f, (VW - (OUTER_MARGIN * 2f) - (CARD_GAP * 4f)) / 5f));
@@ -277,7 +283,8 @@ public class MinigameSelectionPanel extends BasePanel {
             case VASEBREAKER -> result = new VasebreakerMenuController().handle(
                 new VasebreakerInputDTO(com.PVZ.model.enums.commands.VasebreakerCommand.START_LEVEL, levelId, -1, -1));
             case WALLNUT_BOWLING -> result = new WallnutBowlingMenuController().handle(
-                new WallnutBowlingInputDTO(com.PVZ.model.enums.commands.WallnutBowlingCommand.START_LEVEL, levelId, -1, -1));
+                new WallnutBowlingInputDTO(
+                    com.PVZ.model.enums.commands.WallnutBowlingCommand.START_LEVEL, levelId, -1, -1));
             case I_ZOMBIE -> result = new IZombieMenuController().handle(
                 new IZombieInputDTO(com.PVZ.model.enums.commands.IZombieCommand.START_LEVEL, levelId, -1, -1, null));
             case BEGHOULED -> result = new BeghouledMenuController().handle(

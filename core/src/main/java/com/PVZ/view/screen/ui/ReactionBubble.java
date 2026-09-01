@@ -22,7 +22,8 @@ public final class ReactionBubble extends Table {
 
         Color accent = mine ? Color.SKY : Color.SALMON;
         String who = mine ? "YOU" : (senderName == null || senderName.isBlank() ? "OPPONENT" : senderName.toUpperCase());
-        Label whoLabel = new Label(who, new Label.LabelStyle(FontManager.getInstance().getEnglishMenuFont(), accent));
+        Label whoLabel = new Label(who, new Label.LabelStyle(
+            FontManager.getInstance().getEnglishMenuFont(), accent));
         whoLabel.setFontScale(0.40f);
         whoLabel.setAlignment(Align.center);
         add(whoLabel).colspan(1).center().row();

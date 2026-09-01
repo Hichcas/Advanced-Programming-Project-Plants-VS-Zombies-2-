@@ -109,7 +109,8 @@ public class PlantCardActor extends Actor {
             batch.setColor(0f, 0f, 0f, 0.55f * parentAlpha);
             batch.draw(frameTexture, x, y, w, h);
             batch.setColor(1f, 1f, 1f, parentAlpha);
-            boolean drewLock = EntityRenderer.getInstance().renderPam((SpriteBatch) batch, LOCK_ICON_PAM, animTime, plantCx, y + h * 0.5f);
+            boolean drewLock = EntityRenderer.getInstance().renderPam((SpriteBatch) batch,
+                LOCK_ICON_PAM, animTime, plantCx, y + h * 0.5f);
             if (!drewLock && lockOverlayTexture != null) {
                 float lw = 28f;
                 float lh = 28f;

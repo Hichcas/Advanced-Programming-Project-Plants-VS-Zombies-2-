@@ -495,7 +495,8 @@ public class PlantSelectionPanel extends BasePanel {
                 && user.collectionState.isPlantUnlocked(type);
             boolean stageLocked = !AppStatus.isMultiplayerMatch && AppStatus.CURRENT_STAGE_LOCKED_PLANTS.contains(type);
             boolean selected = AppStatus.SELECTED_PLANTS.contains(type);
-            boolean familyLocked = !AppStatus.isMultiplayerMatch && !selected && plantController.isFamilyLockedByOtherPick(type);
+            boolean familyLocked = !AppStatus.isMultiplayerMatch &&
+                !selected && plantController.isFamilyLockedByOtherPick(type);
             card.setLocked(!owned || stageLocked || familyLocked);
             card.setSelected(selected);
         }
@@ -531,7 +532,8 @@ public class PlantSelectionPanel extends BasePanel {
             float cx = getX() + getWidth() / 2f;
             float cy = getY() + getHeight() / 2f;
             batch.setColor(1f, 1f, 1f, parentAlpha);
-            EntityRenderer.getInstance().renderPam((com.badlogic.gdx.graphics.g2d.SpriteBatch) batch, SUN_PAM, animTime, cx, cy);
+            EntityRenderer.getInstance().renderPam(
+                (com.badlogic.gdx.graphics.g2d.SpriteBatch) batch, SUN_PAM, animTime, cx, cy);
             batch.setColor(Color.WHITE);
         }
     }

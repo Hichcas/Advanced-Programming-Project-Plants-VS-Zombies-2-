@@ -192,7 +192,8 @@ public class LeaderboardPanel extends BasePanel {
         if (com.PVZ.network.client.NetworkSession.isConnected()) {
             try {
                 com.PVZ.network.common.NetworkMessage request =
-                        com.PVZ.network.common.NetworkMessage.request(com.PVZ.network.common.MessageType.FETCH_LEADERBOARD)
+                        com.PVZ.network.common.NetworkMessage.
+                            request(com.PVZ.network.common.MessageType.FETCH_LEADERBOARD)
                                 .with("sort", currentSort != null ? currentSort.name() : null)
                                 .with("ascending", ascending);
                 com.PVZ.network.common.NetworkMessage response =
@@ -255,7 +256,8 @@ public class LeaderboardPanel extends BasePanel {
             addBodyCell(entriesTable, String.valueOf(e.getMinigamesCompleted()), rowColor, 2);
             addBodyCell(entriesTable, String.valueOf(e.getDailyQuestsCompleted()), rowColor, 3);
             addBodyCell(entriesTable, String.valueOf(e.getNonDailyQuestsCompleted()), rowColor, 4);
-            addBodyCell(entriesTable, String.valueOf(e.getHighestScore()), rowColor, 5);
+            addBodyCell(entriesTable, String.valueOf(
+                e.getHighestScore()), rowColor, 5);
             entriesTable.row();
             index++;
         }
