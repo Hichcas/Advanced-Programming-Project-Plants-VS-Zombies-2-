@@ -16,13 +16,8 @@ public class LobberBehavior implements PlantBehavior {
         }
 
         String key = plant.getDefinition() == null ? "" : plant.getDefinition().getPlantKey();
-
-        // Release a pult projectile slightly into the attack PAM instead of exactly at the
-        // cooldown boundary. This keeps the visible projectile launch synchronized with the
-        // plant's throwing motion.
         double pending = asDouble(plant.getRuntimeState().getOrDefault("pendingLobShot", 0.0), 0.0);
-        if (pending > 0.0) {
-            pending -= deltaTime;
+        if (pending > 0.0) { pending -= deltaTime;
             if (pending <= 0.0) {
                 LobShotParams params = (LobShotParams) plant.getRuntimeState().get("pendingLobParams");
                 if (params != null) {
@@ -90,8 +85,8 @@ public class LobberBehavior implements PlantBehavior {
             damage = Math.max(1, plant.getStats().getDamage());
             double butterChance = 0.25;
             if (plant.getDefinition().getBaseAbility() != null) {
-                butterChance = plant.getDefinition().getBaseAbility().getDoubleParam("butterChancePercent", 25.0) / 100.0;
-            }
+                butterChance = plant.getDefinition().getBaseAbility().getDoubleParam(
+                    "butterChancePercent", 25.0) / 100.0;}
             stunShot = Math.random() < butterChance;
         } else if (tiers != null && tiers.size() > 1) {
             damage = tiers.get(0);

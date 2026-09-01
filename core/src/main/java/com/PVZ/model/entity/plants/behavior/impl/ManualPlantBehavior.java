@@ -514,7 +514,8 @@ public class ManualPlantBehavior implements PlantBehavior {
     }
 
     private void launchBulbOnCycle(PlantInstance plant, BehaviorContext context, int lane, double deltaTime,
-                                   double periodSeconds, String timerKey, int damage, String visualKey, double verticalSign) {
+                                   double periodSeconds, String timerKey, int damage,
+                                   String visualKey, double verticalSign) {
         double timer = asDouble(plant.getRuntimeState().getOrDefault(timerKey, 0.0), 0.0);
         timer += deltaTime;
         if (timer < periodSeconds) {

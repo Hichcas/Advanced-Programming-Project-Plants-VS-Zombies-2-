@@ -33,55 +33,32 @@ public class ZombieBeachOctopus extends AbstractRangedCasterZombie {
     public void update(float delta, BattleController ctrl) {
         updateEffects(delta);
         ZombieAnimation.tick(this, delta);
-
         if (isDying()) {
             animStateTime += delta;
             if (!ZombieAnimation.isActive(this)) {
-                finishDeath(ctrl);
-            }
-            return;
-        }
-
-        if (!isFrozen()) {
-            animStateTime += delta;
-        }
-
+                finishDeath(ctrl);}return;}
+        if (!isFrozen()) {animStateTime += delta;}
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
-            startDeath(ctrl);
-            return;
-        }
+            startDeath(ctrl);return;}
         if (hypnotized) {
             updateHypnotized(delta, ctrl);
             hitbox.setPosition((float) x, (float) y);
-            onUpdate(delta, ctrl);
-            return;
-        }
-        if (ctrl == null) {
-            return;
-        }
+            onUpdate(delta, ctrl);return;}
+        if (ctrl == null) {return;}
         int tileCol = ctrl.getTileColumn((float) x);
         col = tileCol;
-
         Plant plantInFront = ctrl.getPlantAt((int) row, tileCol);
-
         if (plantInFront != null && !plantInFront.isDead()) {
             moving = false;
             attack(plantInFront, delta, ctrl);
-        } else {
-            moving = true;
-            move(delta, ctrl);
-        }
-
-        // Ranged Octopus toss cooldown check across ALL rows and columns
+        } else {moving = true;
+            move(delta, ctrl);}
         rangedCooldown += delta;
         if (rangedCooldown >= attackCooldown) {
             Plant target = findRandomValidPlant(ctrl);
             if (target != null) {
                 shoot(ctrl, target);
-                rangedCooldown = 0;
-            }
-        }
-
+                rangedCooldown = 0;}}
         hitbox.setPosition((float) x, (float) y);
         onUpdate(delta, ctrl);
     }
@@ -132,7 +109,8 @@ public class ZombieBeachOctopus extends AbstractRangedCasterZombie {
                 spawnX, spawnY, targetX, targetY, targetRow, this, target, targetTile
             );
             controller.addZombieProjectile(proj);
-            System.out.println(alias + " tossed octopus projectile from (" + spawnX + ", " + spawnY + ") -> plant at (" + targetCol + ", " + targetRow + ")");
+            System.out.println(alias + " tossed octopus projectile from (" + spawnX + ", "
+                + spawnY + ") -> plant at (" + targetCol + ", " + targetRow + ")");
         }
     }
 

@@ -41,63 +41,35 @@ public class ZombieGargantuar extends AbstractGargantuar {
     public void update(float delta, BattleController ctrl) {
         updateEffects(delta);
         ZombieAnimation.tick(this, delta);
-
         if (isDying()) {
             animStateTime += delta;
             if (!ZombieAnimation.isActive(this)) {
-                finishDeath(ctrl);
-            }
-            return;
-        }
-
-        if (!isFrozen()) {
-            animStateTime += delta;
-        }
-
+                finishDeath(ctrl);}return;}
+        if (!isFrozen()) {animStateTime += delta;}
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
-            startDeath(ctrl);
-            return;
-        }
+            startDeath(ctrl);return;}
         if (hypnotized) {
             updateHypnotized(delta, ctrl);
             hitbox.setPosition((float) x, (float) y);
-            onUpdate(delta, ctrl);
-            return;
-        }
-
-        if (ctrl == null) {
-            return;
-        }
-
-        int tileCol = ctrl.getTileColumn((float) x);
-        col = tileCol;
-
+            onUpdate(delta, ctrl);return;}
+        if (ctrl == null) {return;}
+        int tileCol = ctrl.getTileColumn((float) x);col = tileCol;
         if (!impThrown && hitpoints <= maxHitpoints * healthThresholdToThrowImp) {
-            throwImp(ctrl);
-            impThrown = true;
-        }
-
+            throwImp(ctrl);impThrown = true;}
         if (smashing) {
             smashTimer += delta;
             if (smashTimer >= smashDuration) {
                 smashing = false;
-                smashTimer = 0;
-            }
+                smashTimer = 0;}
             moving = false;
             hitbox.setPosition((float) x, (float) y);
-            onUpdate(delta, ctrl);
-            return;
-        }
-
+            onUpdate(delta, ctrl);return;}
         Plant plant = ctrl.getPlantAt((int) row, tileCol);
         if (plant != null && !plant.isDead()) {
             moving = false;
             smash(ctrl, plant);
-        } else {
-            moving = true;
-            move(delta, ctrl);
-        }
-
+        } else {moving = true;
+            move(delta, ctrl);}
         hitbox.setPosition((float) x, (float) y);
         onUpdate(delta, ctrl);
     }
