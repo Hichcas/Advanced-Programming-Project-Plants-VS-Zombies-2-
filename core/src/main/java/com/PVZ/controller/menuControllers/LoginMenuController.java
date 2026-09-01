@@ -106,7 +106,8 @@ public class LoginMenuController {
         String email = input.getEmail();
 
         User user = UserRegistry.getUser(username);
-        if (user == null || user.profile == null || email == null || !email.equals(user.profile.getEmail())) {
+        if (user == null || user.profile == null || email == null
+            || !email.equals(user.profile.getEmail())) {
             return new OutputDTO(false, "Invalid username or email.");
         }
 
@@ -151,7 +152,9 @@ public class LoginMenuController {
 
         String newPassword = input.getNewPassword();
         if (!isStrongPassword(newPassword)) {
-            return new OutputDTO(false, "Weak password. Use at least 8 characters with a mix of upper, lower, digit, and special character.");
+            return new OutputDTO(false,
+                "Weak password. Use at least 8 characters with a mix of "
+                    + "upper, lower, digit, and special character.");
         }
 
         String oldPasswordHash = pendingResetUser.profile.getPasswordHash();
