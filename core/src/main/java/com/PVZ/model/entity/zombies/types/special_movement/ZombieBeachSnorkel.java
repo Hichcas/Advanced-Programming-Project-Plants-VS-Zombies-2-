@@ -34,63 +34,37 @@ public class ZombieBeachSnorkel extends AbstractSpecialMovementZombie {
     public void update(float delta, BattleController ctrl) {
         updateEffects(delta);
         com.PVZ.model.entity.zombies.base.ZombieAnimation.tick(this, delta);
-
         if (isDying()) {
             animStateTime += delta;
             if (!com.PVZ.model.entity.zombies.base.ZombieAnimation.isActive(this)) {
-                finishDeath(ctrl);
-            }
-            return;
-        }
-
-        if (!isFrozen()) {
-            animStateTime += delta;
-        }
-
+                finishDeath(ctrl);}return;}
+        if (!isFrozen()) {animStateTime += delta;}
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
-            startDeath(ctrl);
-            return;
-        }
+            startDeath(ctrl);return;}
         if (hypnotized) {
             updateHypnotized(delta, ctrl);
             hitbox.setPosition((float) x, (float) y);
-            onUpdate(delta, ctrl);
-            return;
-        }
-        if (ctrl == null) {
-            return;
-        }
+            onUpdate(delta, ctrl);return;}
+        if (ctrl == null) {return;}
         int tileCol = ctrl.getTileColumn((float) x);
         col = tileCol;
         Plant plant = ctrl.getPlantAt((int) row, tileCol);
         boolean hasPlant = plant != null && !plant.isDead();
         TileType currentTileType = ctrl.getTileTypeAt((int) row, tileCol);
         boolean inWater = (currentTileType == TileType.WATER || currentTileType == TileType.TIDE);
-
-        if (!inWater) {
-            submerged = false;
-        }
-
-        if (hasPlant) {
-            surface();
+        if (!inWater) {submerged = false;}
+        if (hasPlant) {surface();
             surfaceTimer = SURFACE_EAT_TIME;
-            moving = false;
-            attack(plant, delta, ctrl);
+            moving = false;attack(plant, delta, ctrl);
         } else if (inWater) {
             if (surfaceTimer > 0) {
                 surfaceTimer -= delta;
                 moving = true;
                 move(delta, ctrl);
-            } else {
-                dive();
-                moving = true;
-                move(delta, ctrl);
-            }
-        } else {
-            submerged = false;
+            } else {dive();moving = true;move(delta, ctrl);}
+        } else {submerged = false;
             moving = true;
-            move(delta, ctrl);
-        }
+            move(delta, ctrl);}
         hitbox.setPosition((float) x, (float) y);
         onUpdate(delta, ctrl);
     }

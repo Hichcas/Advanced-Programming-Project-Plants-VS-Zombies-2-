@@ -53,8 +53,6 @@ public class ZombieTombRaiser extends Zombie {
     @Override
     public void onUpdate(float delta, BattleController controller) {
         this.map = controller != null ? controller.getMap() : this.map;
-        
-        // 1. Update flying bone projectiles & tombstone creation on landing
         if (map != null) {
             for (int i = bones.size() - 1; i >= 0; i--) {
                 ZombieProjectile bone = bones.get(i);
@@ -62,57 +60,36 @@ public class ZombieTombRaiser extends Zombie {
                 boolean reached = boneCol <= bone.getTargetCol();
                 if (bone.isDestroyed() || reached) {
                     Tile tile = map.getTile((int) row, bone.getTargetCol());
-                    if (tile != null && tile.getType() == TileType.NORMAL && tile.getPlant() == null && canRaiseTomb()) {
+                    if (tile != null && tile.getType() == TileType.NORMAL
+                        && tile.getPlant() == null && canRaiseTomb()) {
                         tile.setType(TileType.TOMBSTONE);
-                        tile.setHp(700);
-                        tile.setMaxHp(700);
-                        tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.EGYPT);
-                        raiseTomb();
+                        tile.setHp(700);tile.setMaxHp(700);
+                        tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.EGYPT);raiseTomb();
                         if (controller != null && controller.getEngine() != null) {
                             float[] center = controller.getEngine().getPlantWorldCenter((int) row, bone.getTargetCol());
                             controller.getEngine().addTimedPamEffect(
-                                "768/INITIAL/EFFECTS/ZOMBIE_EGYPT_TOMBRAISER_BONE_HIT/ZOMBIE_EGYPT_TOMBRAISER_BONE_HIT.PAM",
-                                "animation", 1.3333, 1.0f, center[0], center[1]);
-                        }
-                        System.out.println("[ZombieTombRaiser] Bone landed! Raised Tombstone (700 HP) at tile (" + (int) row + ", " + bone.getTargetCol() + ")!");
-                    }
-                    bone.destroy();
+                                "768/INITIAL/EFFECTS/ZOMBIE_EGYPT_TOMBRAISER_BONE_HIT"+
+                                    "/ZOMBIE_EGYPT_TOMBRAISER_BONE_HIT.PAM",
+                                "animation", 1.3333, 1.0f, center[0], center[1]);}
+                        System.out.println("[ZombieTombRaiser] Bone landed! Raised Tombstone (700 HP) at tile (" +
+                            (int) row + ", " + bone.getTargetCol() + ")!");}bone.destroy();
                     if (controller != null) controller.removeZombieProjectile(bone);
-                    bones.remove(i);
-                }
-            }
-        }
-
-        if (map == null || !canRaiseTomb()) {
-            return;
-        }
-
-        // 2. Handle casting state (releasing bone projectile at 0.8s of power animation)
-        if (isCastingPower) {
-            castTimer += delta;
+                    bones.remove(i);}}}
+        if (map == null || !canRaiseTomb()) {return;}
+        if (isCastingPower) {castTimer += delta;
             if (castTimer >= 0.8f && pendingTargetCol != -1) {
                 ZombieProjectile bone = new ZombieProjectile(
                     (float) x, (float) y, 0, 180f, (int) row, this, pendingTargetCol, true);
                 bones.add(bone);
-                if (controller != null) {
-                    controller.addZombieProjectile(bone);
-                }
-                System.out.println("[ZombieTombRaiser] Bone projectile released from hands towards column " + pendingTargetCol + "!");
-                pendingTargetCol = -1;
-            }
+                if (controller != null) {controller.addZombieProjectile(bone);}
+                System.out.println("[ZombieTombRaiser] Bone projectile released from hands towards column "
+                    + pendingTargetCol + "!");pendingTargetCol = -1;}
             if (castTimer >= 3.0f) {
-                isCastingPower = false;
-                castTimer = 0.0f;
-            }
-            return;
-        }
-
-        // 3. Cooldown timer for throwing bones
+                isCastingPower = false;castTimer = 0.0f;}return;}
         throwCooldownTimer += delta;
         if (throwCooldownTimer >= THROW_INTERVAL_SECONDS) {
             throwCooldownTimer = 0f;
-            prepareBoneThrow(controller);
-        }
+            prepareBoneThrow(controller);}
     }
 
     private void prepareBoneThrow(BattleController controller) {

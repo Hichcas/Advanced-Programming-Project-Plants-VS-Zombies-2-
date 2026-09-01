@@ -68,7 +68,8 @@ public class ZombieAllStar extends AbstractSpecialMovementZombie {
                 kicking = true;
                 kickTimer = 0f;
                 ZombieAnimation.trigger(this, "kick", 1.6);
-                System.out.println("[ZombieAllStar] Football Zombie kicked plant: " + (targetPlant.getDefinition() != null ? targetPlant.getDefinition().getName() : "plant"));
+                System.out.println("[ZombieAllStar] Football Zombie kicked plant: " +
+                    (targetPlant.getDefinition() != null ? targetPlant.getDefinition().getName() : "plant"));
             }
             if (kickTimer >= 0.5f) {
                 targetPlant.takeDamage(1800, this, controller);

@@ -40,7 +40,8 @@ public class ZombieBeachSurfer extends AbstractSpecialMovementZombie {
                     t.setType(TileType.TOMBSTONE);
                     t.setHp(400);
                 }
-                System.out.println(alias + " crushed plant and left surfboard obstacle at (" + targetCol + ", " + (int) row + ")!");
+                System.out.println(alias + " crushed plant and left surfboard obstacle at (" +
+                    targetCol + ", " + (int) row + ")!");
                 loseSurfboard();
             }
         }
