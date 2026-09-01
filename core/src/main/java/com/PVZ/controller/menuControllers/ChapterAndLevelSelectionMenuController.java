@@ -77,9 +77,11 @@ public class ChapterAndLevelSelectionMenuController {
         AppStatus.CURRENT_STAGE_EXCLUSIVE_FAMILIES.clear();
         AppStatus.CURRENT_STAGE_TAG_EXCLUSIVITY_ENABLED = false;
 
-        StageConfig stageConfig = ChapterLibrary.getStageConfig(
-            AppStatus.currentChapterName, AppStatus.currentStageNumber);
+        StageConfig stageConfig = ChapterLibrary.getStageConfig(name, stageNum);
+        return prepareStageForGame(stageConfig);
+    }
 
+    private OutputDTO prepareStageForGame(StageConfig stageConfig) {
         if (GameLauncher.isConveyorBeltStage(stageConfig)) {
             GameLauncher.launch(stageConfig);
             return new OutputDTO(true, "Entered stage directly: " + AppStatus.currentChapterName
