@@ -172,45 +172,29 @@ public class GameHud extends Group {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-
         float top = BaseScreen.VIRTUAL_HEIGHT - PANEL_TOP_MARGIN;
         float sunPanelY;
         float sunPanelX;
         if (conveyorBeltMode) {
-            // Conveyor belt levels get a vertical plant bar down the left side, so
-            // push sun/plant-food down to the bottom-right instead of their usual
-            // top-left spot - nothing to collide with there.
             float panelWidthGuess = PANEL_ICON_SIZE + 90f;
             sunPanelX = BaseScreen.VIRTUAL_WIDTH - panelWidthGuess - PANEL_LEFT_MARGIN;
             sunPanelY = PANEL_TOP_MARGIN + PANEL_HEIGHT + PANEL_GAP;
-        } else {
-            sunPanelY = top - PANEL_HEIGHT;
-            sunPanelX = PANEL_LEFT_MARGIN;
-        }
-
+        } else {sunPanelY = top - PANEL_HEIGHT;
+            sunPanelX = PANEL_LEFT_MARGIN;}
         drawCounterPanel(batch, parentAlpha, SUN_PAM, sunflowerCount, sunPanelX, sunPanelY, Color.GOLD);
-
         float plantFoodPanelY = conveyorBeltMode ? PANEL_TOP_MARGIN : sunPanelY - PANEL_HEIGHT - PANEL_GAP;
         drawCounterPanel(batch, parentAlpha, PLANTFOOD_PAM, plantFoodCount, sunPanelX, plantFoodPanelY, Color.LIME);
-
         if (versusMode) {
-            drawMatchTimer(batch, parentAlpha, top);
-        } else {
-            drawWaveBar(batch, parentAlpha, top);
-        }
-
+            drawMatchTimer(batch, parentAlpha, top);} else {
+            drawWaveBar(batch, parentAlpha, top);}
         float nextLineY = top - PANEL_HEIGHT - PANEL_HEIGHT - PANEL_GAP * 2 - 30f;
-
         if (beltLine != null) {
             font.setColor(Color.CYAN);
             font.draw(batch, beltLine, sunPanelX, nextLineY);
-            nextLineY -= 40f;
-        }
-
+            nextLineY -= 40f;}
         if (!lockedPlantsForHud.isEmpty()) {
             font.setColor(Color.ORANGE);
             font.draw(batch, "Locked:", sunPanelX, nextLineY);
-
             float iconX = sunPanelX;
             float iconY = nextLineY - LOCKED_ICON_SIZE - 6;
             for (PlantType type : lockedPlantsForHud) {
@@ -218,11 +202,8 @@ public class GameHud extends Group {
                 if (icon != null) {
                     batch.setColor(1f, 1f, 1f, 0.85f);
                     batch.draw(icon, iconX, iconY, LOCKED_ICON_SIZE, LOCKED_ICON_SIZE);
-                    batch.setColor(1f, 1f, 1f, 1f);
-                }
-                iconX += LOCKED_ICON_SIZE + LOCKED_ICON_GAP;
-            }
-        }
+                    batch.setColor(1f, 1f, 1f, 1f);}
+                iconX += LOCKED_ICON_SIZE + LOCKED_ICON_GAP;}}
         font.setColor(Color.WHITE);
     }
 
@@ -287,7 +268,8 @@ public class GameHud extends Group {
         font.setColor(Color.WHITE);
         String label = "Zombies: " + zombieWavePercent + "%";
         GlyphLayout layout = new GlyphLayout(font, label);
-        font.draw(batch, label, barX + barWidth / 2f - layout.width / 2f, barY + WAVEBAR_HEIGHT / 2f + layout.height / 2f);
+        font.draw(batch, label, barX + barWidth / 2f - layout.width / 2f,
+            barY + WAVEBAR_HEIGHT / 2f + layout.height / 2f);
         batch.setColor(1f, 1f, 1f, parentAlpha);
     }
 

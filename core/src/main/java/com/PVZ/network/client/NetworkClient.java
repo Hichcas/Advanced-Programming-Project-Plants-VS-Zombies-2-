@@ -158,8 +158,8 @@ public class NetworkClient {
             return failed;
         }
         if (request.getRequestId() == null) {
-            throw new IllegalArgumentException("Use NetworkMessage.request(type) to create a request (needs a requestId).");
-        }
+            throw new IllegalArgumentException(
+                "Use NetworkMessage.request(type) to create a request (needs a requestId).");}
         CompletableFuture<NetworkMessage> future = new CompletableFuture<>();
         pendingRequests.put(request.getRequestId(), future);
         channel.send(request);

@@ -338,7 +338,8 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
                 && reaction.pamPath() != null && map != null) {
             float centerX = map.getStartX() + (map.getCols() > 0 ? map.getCols() : 9) * map.getTileWidth() / 2f;
             float centerY = map.getStartY() - (map.getRows() > 0 ? map.getRows() : 5) * map.getTileHeight() / 2f;
-            activeStickers.add(new StickerEffect(reaction.pamPath(), reaction.pamClip(), centerX, centerY, Math.max(0.6f, reaction.pamLifetimeSeconds())));
+            activeStickers.add(new StickerEffect(reaction.pamPath(), reaction.pamClip(),
+                centerX, centerY, Math.max(0.6f, reaction.pamLifetimeSeconds())));
         }
     }
 

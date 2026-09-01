@@ -109,9 +109,6 @@ public class ZombiePacketBar {
         advancePreviewAnimation();
         ensureSkinBackgrounds();
         BitmapFont smallFont = timerFont != null ? timerFont : font;
-
-        // One skinned backing panel behind the whole roster column, instead of
-        // icons floating on bare background - matches the rest of the game's UI.
         float minX = Float.MAX_VALUE;
         float minY = Float.MAX_VALUE;
         float maxX = -Float.MAX_VALUE;
@@ -121,36 +118,24 @@ public class ZombiePacketBar {
             if (b.x < minX) minX = b.x;
             if (b.y < minY) minY = b.y;
             if (b.x + b.width > maxX) maxX = b.x + b.width;
-            if (b.y + b.height > maxY) maxY = b.y + b.height;
-        }
+            if (b.y + b.height > maxY) maxY = b.y + b.height;}
         float panelX = minX - PANEL_PAD;
         float panelY = minY - PANEL_PAD;
         float panelW = (maxX - minX) + PANEL_PAD * 2f;
         float panelH = (maxY - minY) + PANEL_PAD * 2f;
         if (panelBackground != null) {
-            panelBackground.draw(batch, panelX, panelY, panelW, panelH);
-        } else {
+            panelBackground.draw(batch, panelX, panelY, panelW, panelH);} else {
             batch.setColor(0.05f, 0.05f, 0.05f, 0.55f);
             batch.draw(darkOverlayPixel(), panelX, panelY, panelW, panelH);
-            batch.setColor(Color.WHITE);
-        }
-
+            batch.setColor(Color.WHITE);}
         for (ZombiePacket packet : packets) {
             Rectangle b = packet.getBounds();
             boolean affordable = game.getSun() >= packet.getOption().getCost();
             boolean selected = packet.getOption().getAlias().equalsIgnoreCase(
                     selectedAlias == null ? "" : selectedAlias);
-
             if (slotBackground != null) {
-                slotBackground.draw(batch, b.x, b.y, b.width, b.height);
-            }
-
+                slotBackground.draw(batch, b.x, b.y, b.width, b.height);}
             boolean pamDrawn = drawPamIcon(batch, packet.getOption().getAlias(), b);
-            if (!pamDrawn) {
-                // Keep the slot visually clean even if a PAM cannot be loaded.
-                // No extra text is rendered here by design.
-            }
-
             if (!affordable) {
                 batch.setColor(0f, 0f, 0f, 0.50f);
                 batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
@@ -158,9 +143,7 @@ public class ZombiePacketBar {
             } else if (selected) {
                 batch.setColor(1f, 0.85f, 0f, 0.28f);
                 batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
-                batch.setColor(Color.WHITE);
-            }
-        }
+                batch.setColor(Color.WHITE);}}
     }
 
     private boolean drawPamIcon(SpriteBatch batch, String alias, Rectangle b) {

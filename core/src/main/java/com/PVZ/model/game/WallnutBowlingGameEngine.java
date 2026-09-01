@@ -357,7 +357,8 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
         if (hudPixel == null || map == null || game == null) return;
         float x = map.getStartX() + (game.getRedLineCol() + 1) * map.getTileWidth();
         batch.setColor(0.95f, 0.12f, 0.10f, 0.95f);
-        batch.draw(hudPixel, x - 5f, map.getStartY() - game.getRows() * map.getTileHeight(), 10f, game.getRows() * map.getTileHeight());
+        batch.draw(hudPixel, x - 5f, map.getStartY() - game.getRows() *
+            map.getTileHeight(), 10f, game.getRows() * map.getTileHeight());
         batch.setColor(Color.WHITE);
     }
 
