@@ -82,8 +82,7 @@ public class PauseMenuOverlay extends Table {
 
     // ---------- اسلایدرهای سفارشی ----------
     private Table buildCustomSliders(BitmapFont font) {
-        Table table = new Table();
-        Skin skin = PvzSkin.get();
+        Table table = new Table();Skin skin = PvzSkin.get();
         Drawable track = skin.getDrawable("image_ui_almanac_plants_plant_fuelbar_10");
         Drawable fill  = skin.getDrawable("image_ui_almanac_general_fuelbar_fill_10");
         Drawable knob  = skin.getDrawable("image_ui_generic_navdot");
@@ -99,17 +98,12 @@ public class PauseMenuOverlay extends Table {
                 @Override
                 public void set(int value) {
                     MusicManager.getInstance().setVolume(value / 100f);
-                }
-            },
-            null
-        );
+                }},
+            null);
         musicSlider.setSize(420f, 40f);
-
-        // اسلایدر افکت‌ها
         Label soundLabel = new Label("Sound FX", new Label.LabelStyle(font, Color.WHITE));
         MenuSlider soundSlider = new MenuSlider(
-            "", font,
-            track, fill, knob,
+            "", font,track, fill, knob,
             null,
             false, null, null,
             new SliderBinding() {
@@ -121,17 +115,12 @@ public class PauseMenuOverlay extends Table {
                 public void set(int value) {
                     SoundManager.getInstance().setVolume(value / 100f);
                 }
-            },
-            null
-        );
+            },null);
         soundSlider.setSize(420f, 40f);
-
-        // چیدمان مشابه قبل
         table.add(musicLabel).left().padRight(12f);
         table.add(musicSlider).size(420f, 40f).growX().row();
         table.add(soundLabel).left().padRight(12f).padTop(8f);
         table.add(soundSlider).size(420f, 40f).growX().padTop(8f).row();
-
         return table;
     }
 

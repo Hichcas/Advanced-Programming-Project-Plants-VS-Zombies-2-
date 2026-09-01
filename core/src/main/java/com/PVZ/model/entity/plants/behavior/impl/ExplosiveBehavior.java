@@ -209,60 +209,39 @@ public class ExplosiveBehavior implements PlantBehavior {
         if (context instanceof com.PVZ.model.game.RegularGameEngine rge
             && rge.map != null) {
             com.PVZ.model.entity.Tile tile = rge.map.getTile(row, col);
-            if (tile == null) {
-                context.removePlant(row, col);
-                return;
-            }
+            if (tile == null) {context.removePlant(row, col);return;}
             if (tile.getType() != com.PVZ.model.enums.TileType.TOMBSTONE
                 && tile.getType() != com.PVZ.model.enums.TileType.NECROMANCY) {
-                context.removePlant(row, col);
-                return;
-            }
-
+                context.removePlant(row, col);return;}
             double eatDuration = 4.5;
             Object reduction = plant.getStats().getExtra("eatTimeReduction");
             if (reduction != null) {
-                eatDuration = Math.max(1.5, 4.5 - asDouble(reduction, 1.0));
-            }
-
+                eatDuration = Math.max(1.5, 4.5 - asDouble(reduction, 1.0));}
             double eatTimer = asDouble(plant.getRuntimeState().getOrDefault("eatTimer", 0.0), 0.0)
-                + deltaTime;
-            plant.putRuntimeState("eatTimer", eatTimer);
-
+                + deltaTime;plant.putRuntimeState("eatTimer", eatTimer);
             PlantAnimation.trigger(plant, "attack", 1.0);
-
             int startHp = asInt(plant.getRuntimeState().getOrDefault("initialGraveHp", 700), 700);
             plant.putRuntimeState("initialGraveHp", startHp);
             double progress = Math.min(1.0, eatTimer / eatDuration);
             int remainingHp = (int) (startHp * (1.0 - progress));
-            tile.setHp(Math.max(1, remainingHp));
-
-            if (eatTimer >= eatDuration) {
+            tile.setHp(Math.max(1, remainingHp));if (eatTimer >= eatDuration) {
                 com.PVZ.model.enums.GraveVariant variant = tile.getGraveVariant();
-                tile.setType(com.PVZ.model.enums.TileType.NORMAL);
-                tile.setHp(0);
-
+                tile.setType(com.PVZ.model.enums.TileType.NORMAL);tile.setHp(0);
                 float[] center = rge.getPlantWorldCenter(row, col);
                 String fxPam = (variant != null && variant.getDamageFxPamPath() != null)
                     ? variant.getDamageFxPamPath()
                     : "768/INITIAL/EFFECTS/TOMBSTONE_EGYPT_HIEROGLYPH_DAMAGE/"
                       + "TOMBSTONE_EGYPT_HIEROGLYPH_DAMAGE.PAM";
                 rge.addTimedPamEffect(fxPam, "animation", 1.0, 1.0f, center[0], center[1]);
-
                 if (variant == com.PVZ.model.enums.GraveVariant.DARK_SUN) {
-                    rge.addSun(100);
-                    rge.spawnSunAt(row, col, 100);
+                    rge.addSun(100);rge.spawnSunAt(row, col, 100);
                 } else if (variant == com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD) {
                     if (rge.getPlantFoodManager() != null) {
-                        rge.getPlantFoodManager().addPlantFood(1);
-                    }
+                        rge.getPlantFoodManager().addPlantFood(1);}
                     if (rge.getLootManager() != null) {
                         rge.getLootManager().spawnLootDrop(
                             center[0], center[1],
-                            com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
-                    }
-                }
-
+                            com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);}}
                 boolean explodeOnFinish = plant.getStats() != null
                     && plant.getStats().getBooleanExtra("explodeOnFinish", false);
                 if (explodeOnFinish) {
@@ -270,15 +249,8 @@ public class ExplosiveBehavior implements PlantBehavior {
                     rge.addTimedPamEffect(
                         "768/INITIAL/EFFECTS/GRAVEBUSTER_EXPLOSION_POTATOMINE/"
                             + "GRAVEBUSTER_EXPLOSION_POTATOMINE.PAM",
-                        "animation", 1.1667, 1.2f, center[0], center[1]);
-                }
-
-                context.removePlant(row, col);
-            }
-        } else {
-            context.removePlant(row, col);
-        }
-    }
+                        "animation", 1.1667, 1.2f, center[0], center[1]);}
+                context.removePlant(row, col);}} else {context.removePlant(row, col);}}
 
     private void handleJalapeno(PlantInstance plant, BehaviorContext context, int lane) {
         int laneDamage = Math.max(calculateDamage(plant), 5000);

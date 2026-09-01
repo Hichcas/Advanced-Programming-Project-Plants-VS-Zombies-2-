@@ -6,13 +6,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -38,8 +36,7 @@ public class MainMenuScreen extends BaseScreen {
 
     private Texture blurParticleTexture;
     private final ArrayList<VoidParticle> particles;
-    private final int PARTICLE_COUNT = 50;
-    private final float MAX_HEIGHT_ZONE = 1200f;
+    private final float mAX_HEIGHT_ZONE = 1200f;
 
     private boolean particlesEnabled = true;
     private static final String DEFAULT_BACKGROUND = "MainMenu/MainMenu_BackGround2.png";
@@ -58,9 +55,9 @@ public class MainMenuScreen extends BaseScreen {
         MusicManager.getInstance().playMusic("music/TitleScreen.mp3");
 
         particles = new ArrayList<>();
-        for (int i = 0; i < PARTICLE_COUNT; i++) {
+        for (int i = 0; i < 50; i++) {
             particles.add(new VoidParticle());
-            particles.get(i).y = MathUtils.random(0f, MAX_HEIGHT_ZONE);
+            particles.get(i).y = MathUtils.random(0f, mAX_HEIGHT_ZONE);
             if (particles.get(i).y > 850f) {
                 particles.get(i).triggerFadeState();
             }
@@ -74,7 +71,8 @@ public class MainMenuScreen extends BaseScreen {
 
         switch (AppStatus.currentMenuType) {
             case MAIN -> PanelManager.getInstance().performPanelTransition(new MainMenuPanel());
-            case CHAPTER_AND_LEVEL_SELECTION -> PanelManager.getInstance().performPanelTransition(new ChapterSelectPanel());
+            case CHAPTER_AND_LEVEL_SELECTION -> PanelManager.getInstance().
+                performPanelTransition(new ChapterSelectPanel());
             case MINIGAME_SELECTION -> PanelManager.getInstance().performPanelTransition(new MinigameSelectionPanel());
             case LOGIN -> PanelManager.getInstance().performPanelTransition(new LoginPanel());
             case REGISTER -> PanelManager.getInstance().performPanelTransition(new RegisterPanel());
@@ -90,7 +88,6 @@ public class MainMenuScreen extends BaseScreen {
 
     private void addGlobalNavigationDock() {
         Skin skin = PvzSkin.get();
-
         ImageButton.ImageButtonStyle almanacStyle =
             skin.get("almanac", ImageButton.ImageButtonStyle.class);
         ImageButton.ImageButtonStyle minigamesStyle =
@@ -99,48 +96,35 @@ public class MainMenuScreen extends BaseScreen {
             skin.get("hud_zg", ImageButton.ImageButtonStyle.class);
         ImageButton.ImageButtonStyle questsStyle =
             skin.get("hud_quests", ImageButton.ImageButtonStyle.class);
-
         Table navDock = new Table();
         navDock.setFillParent(true);
         navDock.top().left().padTop(20f).padLeft(50f);
         navDock.setTouchable(Touchable.childrenOnly);
-
-        float btnSize = 120f;
-        float spacing = 20f;
-
+        float btnSize = 120f;float spacing = 20f;
         MenuButton collectionBtn = new MenuButton(
             almanacStyle.imageUp, null, null,
             almanacStyle.imageDown, null, null,
-            () -> AppStatus.setCurrentMenuType(MenuType.COLLECTION)
-        );
+            () -> AppStatus.setCurrentMenuType(MenuType.COLLECTION));
         collectionBtn.setSize(btnSize, btnSize);
-
         MenuButton minigamesBtn = new MenuButton(
             minigamesStyle.imageUp, null, null,
             minigamesStyle.imageDown, null, null,
-            () -> AppStatus.setCurrentMenuType(MenuType.MINIGAME_SELECTION)
-        );
+            () -> AppStatus.setCurrentMenuType(MenuType.MINIGAME_SELECTION));
         minigamesBtn.setSize(btnSize, btnSize);
-
         MenuButton greenhouseBtn = new MenuButton(
             zgStyle.imageUp, null, null,
             zgStyle.imageDown, null, null,
-            () -> AppStatus.setCurrentMenuType(MenuType.GREENHOUSE)
-        );
+            () -> AppStatus.setCurrentMenuType(MenuType.GREENHOUSE));
         greenhouseBtn.setSize(btnSize, btnSize);
-
         MenuButton questsBtn = new MenuButton(
             questsStyle.imageUp, null, null,
             questsStyle.imageDown, null, null,
-            () -> AppStatus.setCurrentMenuType(MenuType.QUEST)
-        );
+            () -> AppStatus.setCurrentMenuType(MenuType.QUEST));
         questsBtn.setSize(btnSize, btnSize);
-
         navDock.add(collectionBtn).size(btnSize).padRight(spacing);
         navDock.add(minigamesBtn).size(btnSize).padRight(spacing);
         navDock.add(greenhouseBtn).size(btnSize).padRight(spacing);
         navDock.add(questsBtn).size(btnSize);
-
         stage.addActor(navDock);
         PanelManager.getInstance().addPersistentOverlay(navDock);
     }
@@ -218,7 +202,6 @@ public class MainMenuScreen extends BaseScreen {
         float alpha;
         boolean isFading;
         float fadeProgress;
-        private final float FADE_DURATION = 2.0f;
 
         public VoidParticle() {
             resetPosition();
@@ -244,12 +227,12 @@ public class MainMenuScreen extends BaseScreen {
             y += currentSpeedY * delta;
             if (!isFading && y >= 850f) isFading = true;
             if (isFading) {
-                fadeProgress += delta / FADE_DURATION;
+                fadeProgress += delta / 2.0f;
                 if (fadeProgress > 1.0f) fadeProgress = 1.0f;
                 alpha = 1.0f - fadeProgress;
                 currentSpeedY = MathUtils.lerp(initialSpeedY, initialSpeedY * 0.25f, fadeProgress);
             }
-            if (alpha <= 0.001f || currentSpeedY <= 0.1f || y >= MAX_HEIGHT_ZONE) {
+            if (alpha <= 0.001f || currentSpeedY <= 0.1f || y >= mAX_HEIGHT_ZONE) {
                 resetPosition();
             }
         }
@@ -265,8 +248,6 @@ public class MainMenuScreen extends BaseScreen {
 
     // ====================== HUD اقتصادی ======================
     private static class EconomyHud extends Table {
-        private final float MARGIN_RIGHT = 30f;
-        private final float MARGIN_TOP = 110f;
 
         private final CurrencyButton coinButton;
         private final CurrencyButton gemButton;
@@ -323,11 +304,10 @@ public class MainMenuScreen extends BaseScreen {
                 coinButton.setValue(0);
                 gemButton.setValue(0);
             }
-
-            pack(); // به‌روزرسانی عرض بر اساس اعداد جدید
+            pack();
             setPosition(
-                VIRTUAL_WIDTH - getWidth() - MARGIN_RIGHT,
-                VIRTUAL_HEIGHT - MARGIN_TOP
+                VIRTUAL_WIDTH - getWidth() - 30f,
+                VIRTUAL_HEIGHT - 110f
             );
         }
 

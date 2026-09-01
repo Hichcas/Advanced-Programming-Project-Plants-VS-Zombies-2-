@@ -140,30 +140,22 @@ public class PlantHandler {
                                               boolean isAquatic, boolean isLilyPad) {
         Plant plant = createPlantInstance(engine, plantedType);
         if (plant == null) return "Cannot create plant.";
-
         if (plantedType == PlantType.PEA_POD) {
-            plant.putRuntimeState("peaPodHeads", 1);
-        }
-
+            plant.putRuntimeState("peaPodHeads", 1);}
         if (!engine.conveyorBeltMode) {
             int cost = originalType == PlantType.IMITATER
                 ? PlantLibrary.getEffectiveCost(PlantType.IMITATER)
                 : plant.getStats().getCost();
             if (engine.getSunCount() < cost) return "Not enough sun.";
-            engine.addSun(-cost);
-        }
+            engine.addSun(-cost);}
 
         if (isLilyPad) {
             engine.map.setBasePlant(row, col, plant);
-        } else {
-            engine.map.setPlant(row, col, plant);
-        }
-
+        } else {engine.map.setPlant(row, col, plant);}
         plant.setPlanted(true);
         plant.putRuntimeState("row", row);
         plant.putRuntimeState("col", col);
         plant.putRuntimeState("lane", row);
-
         if (targetTile != null) {
             float fxX = targetTile.getX() + targetTile.getWidth() / 2f;
             float fxY = targetTile.getY() + targetTile.getHeight() / 2f;
@@ -172,8 +164,7 @@ public class PlantHandler {
                 "tomb_dirt_anim", 0.5, 1f, fxX, fxY);
             engine.addTimedPamEffect(
                 "768/INITIAL/ZEN_GARDEN/PLANT_POOF/PLANT_POOF.PAM",
-                "animation", 0.6, 1f, fxX, fxY);
-        }
+                "animation", 0.6, 1f, fxX, fxY);}
 
         handlePostPlanting(engine, originalType, plant);
 

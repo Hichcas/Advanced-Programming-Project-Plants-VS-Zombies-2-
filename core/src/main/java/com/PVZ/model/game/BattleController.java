@@ -293,110 +293,153 @@ public class BattleController implements BehaviorContext {
     }
 
     private boolean handleTileCollision(Projectile p) {
-        if (p.getType() == ProjectileType.LOB || map == null) {return false;}
+        if (p.getType() == ProjectileType.LOB || map == null) {
+            return false;
+        }
+
         int pRow = map.worldToRow((float) p.getPositionY());
         int pCol = map.worldToCol((float) p.getPositionX());
-        if (!map.isWithinBounds(pRow, pCol)) {return false;}
+        if (!map.isWithinBounds(pRow, pCol)) {
+            return false;
+        }
+
         Tile tile = map.getTile(pRow, pCol);
-        if (tile == null) {return false;}
+        if (tile == null) {
+            return false;
+        }
+
         if (tile.getOctopusHp() > 0) {
-            int dmg = Math.max(1, (int) p.getDamage());
-            int newHp = tile.getOctopusHp() - dmg;
-            if (newHp <= 0) {
-                tile.setOctopusHp(0);
-                Plant octoPlant = tile.getPlant();
-                if (octoPlant != null) {
-                    octoPlant.putRuntimeState("disabledTicks", 0);}
-                Plant octoBase = tile.getBasePlant();
-                if (octoBase != null) {
-                    octoBase.putRuntimeState("disabledTicks", 0);}
-                System.out.println("Octopus destroyed on tile (" + pRow + "," + pCol + ") — plant freed!");
-            } else {tile.setOctopusHp(newHp);}
-            SoundManager.getInstance().playSFX(SFX_IMPACT);
-            return true;}
+            return handleOctopusHit(p, tile, pRow, pCol);
+        }
+
         TileType type = tile.getType();
-        if (type != TileType.TOMBSTONE
-            && type != TileType.NECROMANCY
-            && type != TileType.ICE) {
-            return false;}
-        int dmg = Math.max(1, (int) p.getDamage());
-        int newHp = tile.getHp() - dmg;
         if (type == TileType.ICE) {
-            tile.triggerHitFlash();
-            if (newHp <= 0) {
-                tile.setType(TileType.NORMAL);
-                tile.setHp(0);
-                if (engine != null) {
-                    float[] center = engine.getPlantWorldCenter(pRow, pCol);
-                    engine.addTimedPamEffect(
-                        "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM",
-                        "animation", 1.0, 1.1f, center[0], center[1]);}
-                String encased = tile.getEncasedZombieType();
-                if (encased != null) {
-                    tile.setEncasedZombieType(null);
-                    Zombie z = com.PVZ.model.entity.zombies.factory.ZombieFactory.createZombie(encased);
-                    if (z != null) {
-                        float posX = tile.getX() + (tile.getWidth() - 70f) / 2f;
-                        float posY = tile.getY() + (tile.getHeight() - 70f) / 2f;
-                        z.initPosition(posX, posY, pRow);
-                        z.setRow(pRow);
-                        z.setCol(pCol);
-                        this.addZombie(z);
-                        System.out.println("[ICE BREAK] Ice block shattered! Released " +
-                            encased + " at (" + pRow + ", " + pCol + ")!");
-                    }
-                }
-            } else {tile.setHp(newHp);}
+            return handleIceHit(p, tile, pRow, pCol);
         } else if (type == TileType.TOMBSTONE || type == TileType.NECROMANCY) {
-            com.PVZ.model.enums.GraveVariant variant = tile.getGraveVariant();
-            if (variant == null) {
-                String chap = AppStatus.currentChapterName;
-                if ("DARK_AGES".equalsIgnoreCase(chap) || type == TileType.NECROMANCY) {
-                    variant = com.PVZ.model.enums.GraveVariant.DARK_NOOP;
-                } else {
-                    variant = com.PVZ.model.enums.GraveVariant.EGYPT;
-                }
-                tile.setGraveVariant(variant);
-            }
+            return handleTombstoneHit(p, tile, pRow, pCol);
+        }
 
-            if (engine != null) {
-                float[] center = engine.getPlantWorldCenter(pRow, pCol);
-                String hitFx = variant.getDamageFxPamPath() != null ? variant.getDamageFxPamPath()
-                    : "768/INITIAL/EFFECTS/TOMBSTONE_EGYPT_HIEROGLYPH_DAMAGE/TOMBSTONE_EGYPT_HIEROGLYPH_DAMAGE.PAM";
-                engine.addTimedPamEffect(hitFx, "animation", 1.0, 1.0f, center[0], center[1]);
-            }
+        return false;
+    }
 
-            if (newHp <= 0) {
-                tile.setType(TileType.NORMAL);
-                tile.setHp(0);
+    private boolean handleOctopusHit(Projectile p, Tile tile, int pRow, int pCol) {
+        int dmg = Math.max(1, (int) p.getDamage());
+        int newHp = tile.getOctopusHp() - dmg;
 
-                if (engine != null) {
-                    float[] center = engine.getPlantWorldCenter(pRow, pCol);
-                    if (variant == com.PVZ.model.enums.GraveVariant.DARK_SUN) {
-                        engine.addSun(100);
-                        engine.spawnSunAt(pRow, pCol, 100);
-                    } else if (variant == com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD) {
-                        if (plantFoodManager != null) {
-                            plantFoodManager.addPlantFood(1);
-                        } else if (engine.getPlantFoodManager() != null) {
-                            engine.getPlantFoodManager().addPlantFood(1);
-                        }
-                        if (lootManager != null) {
-                            lootManager.spawnLootDrop(center[0], center[1],
-                                com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
-                        } else if (engine.getLootManager() != null) {
-                            engine.getLootManager().spawnLootDrop(center[0],
-                                center[1], com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
-                        }
-                    }
-                }
-            } else {
-                tile.setHp(newHp);
+        if (newHp <= 0) {
+            tile.setOctopusHp(0);
+            Plant octoPlant = tile.getPlant();
+            if (octoPlant != null) {
+                octoPlant.putRuntimeState("disabledTicks", 0);
             }
+            Plant octoBase = tile.getBasePlant();
+            if (octoBase != null) {
+                octoBase.putRuntimeState("disabledTicks", 0);
+            }
+            System.out.println("Octopus destroyed on tile (" + pRow + "," + pCol + ") — plant freed!");
+        } else {
+            tile.setOctopusHp(newHp);
         }
 
         SoundManager.getInstance().playSFX(SFX_IMPACT);
         return true;
+    }
+
+    private boolean handleIceHit(Projectile p, Tile tile, int pRow, int pCol) {
+        int dmg = Math.max(1, (int) p.getDamage());
+        int newHp = tile.getHp() - dmg;
+
+        tile.triggerHitFlash();
+        if (newHp <= 0) {
+            tile.setType(TileType.NORMAL);
+            tile.setHp(0);
+            if (engine != null) {
+                float[] center = engine.getPlantWorldCenter(pRow, pCol);
+                engine.addTimedPamEffect(
+                    "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM",
+                    "animation", 1.0, 1.1f, center[0], center[1]);
+            }
+
+            String encased = tile.getEncasedZombieType();
+            if (encased != null) {
+                tile.setEncasedZombieType(null);
+                Zombie z = com.PVZ.model.entity.zombies.factory.ZombieFactory.createZombie(encased);
+                if (z != null) {
+                    float posX = tile.getX() + (tile.getWidth() - 70f) / 2f;
+                    float posY = tile.getY() + (tile.getHeight() - 70f) / 2f;
+                    z.initPosition(posX, posY, pRow);
+                    z.setRow(pRow);
+                    z.setCol(pCol);
+                    this.addZombie(z);
+                    System.out.println("[ICE BREAK] Ice block shattered! Released " +
+                        encased + " at (" + pRow + ", " + pCol + ")!");
+                }
+            }
+        } else {
+            tile.setHp(newHp);
+        }
+
+        SoundManager.getInstance().playSFX(SFX_IMPACT);
+        return true;
+    }
+
+    private boolean handleTombstoneHit(Projectile p, Tile tile, int pRow, int pCol) {
+        int dmg = Math.max(1, (int) p.getDamage());
+        int newHp = tile.getHp() - dmg;
+
+        com.PVZ.model.enums.GraveVariant variant = tile.getGraveVariant();
+        if (variant == null) {
+            String chap = AppStatus.currentChapterName;
+            if ("DARK_AGES".equalsIgnoreCase(chap) || tile.getType() == TileType.NECROMANCY) {
+                variant = com.PVZ.model.enums.GraveVariant.DARK_NOOP;
+            } else {
+                variant = com.PVZ.model.enums.GraveVariant.EGYPT;
+            }
+            tile.setGraveVariant(variant);
+        }
+
+        if (engine != null) {
+            float[] center = engine.getPlantWorldCenter(pRow, pCol);
+            String hitFx = variant.getDamageFxPamPath() != null
+                ? variant.getDamageFxPamPath()
+                : "768/INITIAL/EFFECTS/TOMBSTONE_EGYPT_HIEROGLYPH_DAMAGE/TOMBSTONE_EGYPT_HIEROGLYPH_DAMAGE.PAM";
+            engine.addTimedPamEffect(hitFx, "animation", 1.0, 1.0f, center[0], center[1]);
+        }
+
+        if (newHp <= 0) {
+            tile.setType(TileType.NORMAL);
+            tile.setHp(0);
+            if (engine != null) {
+                float[] center = engine.getPlantWorldCenter(pRow, pCol);
+                if (variant == com.PVZ.model.enums.GraveVariant.DARK_SUN) {
+                    engine.addSun(100);
+                    engine.spawnSunAt(pRow, pCol, 100);
+                } else if (variant == com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD) {
+                    handlePlantFoodDrop(center);
+                }
+            }
+        } else {
+            tile.setHp(newHp);
+        }
+
+        SoundManager.getInstance().playSFX(SFX_IMPACT);
+        return true;
+    }
+
+    private void handlePlantFoodDrop(float[] center) {
+        if (plantFoodManager != null) {
+            plantFoodManager.addPlantFood(1);
+        } else if (engine.getPlantFoodManager() != null) {
+            engine.getPlantFoodManager().addPlantFood(1);
+        }
+
+        if (lootManager != null) {
+            lootManager.spawnLootDrop(center[0], center[1],
+                com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
+        } else if (engine.getLootManager() != null) {
+            engine.getLootManager().spawnLootDrop(center[0], center[1],
+                com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
+        }
     }
 
     private boolean handleZombieCollision(Projectile p) {

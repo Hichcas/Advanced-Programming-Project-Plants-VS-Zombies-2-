@@ -115,7 +115,8 @@ public class ZombieRa extends AbstractRangedCasterZombie {
                     engine.getSunManager().spawn(x + offsetX, y + offsetY, sunPerEntity);
                 }
                 System.out.println("[ZombieRa] Ra zombie died! Dropped "
-                    + count + " sun(s) (" + stolenSunAmount + " sun total) at position (" + Math.round(x) + ", " + Math.round(y) + ").");
+                    + count + " sun(s) (" + stolenSunAmount +
+                    " sun total) at position (" + Math.round(x) + ", " + Math.round(y) + ").");
             } else if (controller != null) {
                 controller.addSun(stolenSunAmount);
                 System.out.println("[ZombieRa] Ra zombie died! Returned "

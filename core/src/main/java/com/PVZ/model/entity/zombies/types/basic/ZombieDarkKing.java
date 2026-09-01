@@ -68,7 +68,8 @@ public class ZombieDarkKing extends AbstractBasicZombie {
                         com.PVZ.model.game.RegularGameEngine engine = com.PVZ.model.status.AppStatus.getGameEngine()
                             instanceof com.PVZ.model.game.RegularGameEngine re ? re : null;
                         if (engine != null) {
-                            engine.addTimedPamEffect("768/FULL/EFFECTS/DARK_WIZARD_LIGHTNINGBOLT/DARK_WIZARD_LIGHTNINGBOLT.PAM",
+                            engine.addTimedPamEffect(
+                                "768/FULL/EFFECTS/DARK_WIZARD_LIGHTNINGBOLT/DARK_WIZARD_LIGHTNINGBOLT.PAM",
                                 "animation", 0.6, 1.0f, (float) z.getX() + 20f, (float) z.getY() + 50f);
                         }
                         System.out.println("[ZombieDarkKing] Crowned " + z.getAlias() +

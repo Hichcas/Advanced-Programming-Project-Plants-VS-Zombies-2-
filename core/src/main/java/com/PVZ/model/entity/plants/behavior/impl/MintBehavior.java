@@ -9,33 +9,22 @@ import com.PVZ.model.entity.plants.behavior.PlantBehavior;
 public class MintBehavior implements PlantBehavior {
     @Override
     public void onUpdate(PlantInstance plant, BehaviorContext context, double deltaTime) {
-        if (plant == null || context == null) {
-            return;
-        }
-
+        if (plant == null || context == null) {return;}
         Boolean triggered = (Boolean) plant.getRuntimeState().getOrDefault("mintTriggered", Boolean.FALSE);
-        if (triggered != null && triggered) {
-            return;
-        }
+        if (triggered != null && triggered) {return;}
         plant.putRuntimeState("mintTriggered", Boolean.TRUE);
-
         com.PVZ.model.enums.PlantType mintType = plant.getType();
         com.PVZ.model.enums.PlantFamily targetFamily =
             com.PVZ.model.quest.PlantFamilyMapper.getMintTargetFamily(mintType);
-
         int selfRow = asInt(plant.getRuntimeState().getOrDefault("row", -1), -1);
         int selfCol = asInt(plant.getRuntimeState().getOrDefault("col", -1), -1);
-
         for (Plant other : context.getAllPlants()) {
             if (other == null || other.getDefinition() == null) {
-                continue;
-            }
+                continue;}
             int otherRow = asInt(other.getRuntimeState("row"), -2);
             int otherCol = asInt(other.getRuntimeState("col"), -2);
             boolean isSelf = otherRow == selfRow && otherCol == selfCol;
-            if (isSelf) {
-                continue;
-            }
+            if (isSelf) {continue;}
             com.PVZ.model.enums.PlantFamily otherFamily =
                 com.PVZ.model.quest.PlantFamilyMapper.getFamily(other.getType());
             boolean matches = switch (targetFamily) {
@@ -55,9 +44,7 @@ public class MintBehavior implements PlantBehavior {
                 default -> otherFamily == targetFamily;
             };
             if (matches && other.hasPlantFoodEffect()) {
-                other.applyPlantFood(context);
-            }
-        }
+                other.applyPlantFood(context);}}
         context.removePlant(selfRow, selfCol);
     }
 

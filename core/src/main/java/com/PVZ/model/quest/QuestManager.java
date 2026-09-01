@@ -392,8 +392,10 @@ public class QuestManager {
 
     private void evaluateQuestCondition(Quest q, LevelResult res) {
         switch (q.getConditionKey()) {
-            case "symmetry" -> {if (res.getFinalMap() != null && checkSymmetry(res.getFinalMap())) q.setCompleted(true);}
-            case "no_symmetry" -> {if (res.getFinalMap() != null && checkNoSymmetry(res.getFinalMap())) q.setCompleted(true);}
+            case "symmetry" -> {if (res.getFinalMap() != null &&
+                checkSymmetry(res.getFinalMap())) q.setCompleted(true);}
+            case "no_symmetry" -> {if (res.getFinalMap() != null &&
+                checkNoSymmetry(res.getFinalMap())) q.setCompleted(true);}
             case "column_empty" -> {if (res.getFinalMap() != null) {
                     int col = (int) q.getParameters().get("col");
                     if (isColumnEmpty(res.getFinalMap(), col)) q.setCompleted(true);}}
@@ -418,8 +420,7 @@ public class QuestManager {
             case "lawnmower_kill" -> {
                 int k = res.getZombiesKilledByLawnmower();
                 if (k > 0) q.incrementProgress(k);}
-            case "lawnless_col1_kill" -> {
-                int k = res.getLawnlessCol1Kills();
+            case "lawnless_col1_kill" -> {int k = res.getLawnlessCol1Kills();
                 if (k > 0) q.incrementProgress(k);}
             case "streak" -> {
                 if (consecutiveMaxDifficultyWins >= q.getTargetCount()) {
@@ -432,8 +433,7 @@ public class QuestManager {
                     q.setCompleted(true);}}
             case "max_sun_producers" -> {
                 if (res.getFinalMap() != null && countSunProducers(res.getFinalMap()) <= q.getTargetCount())
-                    q.setCompleted(true);}
-            case "speed_kill", "use_explosive" -> {
+                    q.setCompleted(true);}case "speed_kill", "use_explosive" -> {
                 if (q.getCurrentCount() >= q.getTargetCount()) q.setCompleted(true);
                 else q.resetProgress();}}
     }
