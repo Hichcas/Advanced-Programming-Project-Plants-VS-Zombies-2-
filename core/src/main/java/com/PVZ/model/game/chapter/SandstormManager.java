@@ -24,7 +24,8 @@ public class SandstormManager {
         private float stateTime = 0f;
         private final float speed;
 
-        public Sandstorm(int row, int targetCol, float startX, float targetX, float y, String zombieAlias, float speed) {
+        public Sandstorm(int row, int targetCol, float startX, float targetX,
+                         float y, String zombieAlias, float speed) {
             this.row = row;
             this.targetCol = targetCol;
             this.currentX = startX;
