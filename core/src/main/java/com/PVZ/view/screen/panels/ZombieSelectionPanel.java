@@ -93,9 +93,12 @@ public class ZombieSelectionPanel extends BasePanel {
         if (type == null) return 50;
         String name = type.name().toUpperCase();
         if (name.contains("GARGANTUAR") || name.contains("ZOMBOSS")) return 300;
-        if (name.contains("BRICK") || name.contains("KNIGHT") || name.contains("ARMOR2") || name.contains("CENTURION")) return 150;
-        if (name.contains("BUCKET") || name.contains("BARREL") || name.contains("JALAPENO") || name.contains("SQUASH")) return 125;
-        if (name.contains("CONE") || name.contains("ARMOR1") || name.contains("HELMET") || name.contains("FLAG")) return 75;
+        if (name.contains("BRICK") || name.contains("KNIGHT") ||
+            name.contains("ARMOR2") || name.contains("CENTURION")) return 150;
+        if (name.contains("BUCKET") || name.contains("BARREL") ||
+            name.contains("JALAPENO") || name.contains("SQUASH")) return 125;
+        if (name.contains("CONE") || name.contains("ARMOR1") ||
+            name.contains("HELMET") || name.contains("FLAG")) return 75;
         if (name.contains("IMP")) return 25;
         if (name.contains("ZOMBOTANY")) return 100;
         return 50;

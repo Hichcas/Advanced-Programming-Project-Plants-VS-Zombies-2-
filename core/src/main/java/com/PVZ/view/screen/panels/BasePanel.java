@@ -69,9 +69,8 @@ public abstract class BasePanel extends Table {
         }
         TextureRegion region = bank.region(resourceId);
         if (region == null) {
-            System.err.println("WARNING: TextureBank region is null for ID '" + resourceId + "'. Check resource ID or asset path.");
-            // می‌توانید با برداشتن کامنت خط زیر، فهرست کامل شناسه‌ها را در کنسول ببینید
-            // printAvailableImageIds();
+            System.err.println("WARNING: TextureBank region is null for ID '"
+                + resourceId + "'. Check resource ID or asset path.");
             return createDummyTexture();
         }
         return textureFromRegion(region);

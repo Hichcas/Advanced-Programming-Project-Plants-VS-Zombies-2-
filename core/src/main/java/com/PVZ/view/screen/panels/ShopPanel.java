@@ -67,53 +67,38 @@ public class ShopPanel extends BasePanel {
 
     private void buildOverlay() {
         clearChildren();
-
-        // لایهٔ تاریک پس‌زمینهٔ Overlay
         Image dim = new Image(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
         dim.setFillParent(true);
         dim.setColor(0f, 0f, 0f, 0.7f);
         addActor(dim);
-
-        // پنجرهٔ اصلی فروشگاه (وسط صفحه) - پس‌زمینه زشت و رنگی حذف شد تا شفاف/هم‌رنگ زمینه باشد
         Table window = new Table();
         window.setSize(1300f, 850f);
         window.setPosition((VW - 1300f) / 2f, (VH - 850f) / 2f);
         window.pad(25f);
         addActor(window);
-
-        // Header
         Label title = new Label("SHOP", new Label.LabelStyle(titleFont, Color.WHITE));
         title.setAlignment(Align.center);
         title.setFontScale(1.3f);
         window.add(title).growX().height(64f).top().row();
-
         window.add(buildBalanceRow()).height(72f).padBottom(10f).row();
-
-        // Tabs
         Table tabs = new Table();
         tabs.defaults().space(10f);
         tabs.add(tabButton("PERMANENT ITEMS", "permanent")).width(340f).height(58f);
         tabs.add(tabButton("DAILY OFFER", "daily")).width(340f).height(58f);
         window.add(tabs).height(64f).padBottom(14f).row();
-
-        // Content - پس‌زمینه کرم‌رنگ خالی کلاً برداشته شد
         content = new Table();
         content.defaults().pad(10f);
-        content.top().center(); // وسط‌چین کردن کارت‌ها برای ظاهر بسیار تمیزتر
+        content.top().center();
         window.add(content).grow().row();
-
-        // Footer
         Table footer = new Table();
         footer.defaults().pad(8f);
         statusLabel = new Label("", new Label.LabelStyle(bodyFont, Color.WHITE));
         statusLabel.setAlignment(Align.center);
         statusLabel.setFontScale(0.7f);
         footer.add(statusLabel).growX().width(720f);
-
         TextButton closeButton = makeTextButton("BACK", "brown", this::closeOverlay);
         footer.add(closeButton).width(180f).height(62f);
         window.add(footer).growX().height(80f).bottom();
-
         refresh();
     }
 
@@ -250,53 +235,39 @@ public class ShopPanel extends BasePanel {
     private void buildDailyPanel(User user) {
         ShopDaily daily = user.shopDaily;
         if (daily == null) {
-            daily = new ShopDaily();
-            user.shopDaily = daily;
-        }
+            daily = new ShopDaily();user.shopDaily = daily;}
         daily.generateIfNeeded();
         PlantType offer = daily.getOfferPlant();
-
         Table panel = new Table();
         panel.setBackground(skin.getDrawable("image_ui_if_bundle_reward1_bg_10"));
         panel.defaults().pad(10f);
-
         Label name = new Label("TODAY'S OFFER", new Label.LabelStyle(titleFont, Color.GOLD));
         name.setAlignment(Align.center);
         name.setFontScale(1.0f);
         panel.add(name).growX().height(56f).row();
-
-        Stack preview = new Stack();
-        if (offer != null) {
+        Stack preview = new Stack();if (offer != null) {
             preview.add(new PamIconActor(
                 "768/INITIAL/UI/STORE/CARD_SPARKLE/CARD_SPARKLE.PAM", null, 390f, 220f));
             Table plantWrap = new Table();
             plantWrap.add(new PlantPreviewActor(offer.name())).size(170f);
-            preview.add(plantWrap);
-        }
+            preview.add(plantWrap);}
         panel.add(preview).size(220f).padTop(4f).padBottom(4f).row();
-
         String plantName = offer == null ? "No unlocked plant" : offer.getDisplayName();
         Label desc = new Label("10 seed packets for " + plantName, new Label.LabelStyle(bodyFont, Color.WHITE));
-        desc.setAlignment(Align.center);
-        desc.setFontScale(0.85f);
+        desc.setAlignment(Align.center);desc.setFontScale(0.85f);
         panel.add(desc).growX().height(40f).row();
-
         Label discount = new Label("Base price 2000 coins  -  20% off today",
             new Label.LabelStyle(bodyFont, Color.LIGHT_GRAY));
         discount.setAlignment(Align.center);
         discount.setFontScale(0.62f);
         panel.add(discount).growX().height(32f).row();
-
         if (dailyCountdown == null) {
-            dailyCountdown = new CountdownLabel(bodyFont);
-        }
+            dailyCountdown = new CountdownLabel(bodyFont);}
         Table countdownRow = new Table();
         Label refreshText = new Label("Refreshes in", new Label.LabelStyle(bodyFont, Color.LIGHT_GRAY));
-        refreshText.setFontScale(0.62f);
-        countdownRow.add(refreshText).padRight(10f);
+        refreshText.setFontScale(0.62f);countdownRow.add(refreshText).padRight(10f);
         countdownRow.add(dailyCountdown);
         panel.add(countdownRow).height(44f).padTop(4f).row();
-
         boolean available = daily.isAvailableToday();
         Table buyChip = buildPriceButton(1600, false,
             available ? () -> confirmPurchase("Today's Offer (10 seed packets for " + plantName + ")",
@@ -306,10 +277,7 @@ public class ShopPanel extends BasePanel {
             Label purchased = new Label("ALREADY PURCHASED TODAY", new Label.LabelStyle(bodyFont, Color.SALMON));
             purchased.setFontScale(0.6f);
             panel.add(purchased).height(50f).padTop(10f).row();
-        } else {
-            panel.add(buyChip).size(260f, 66f).padTop(10f).row();
-        }
-
+        } else {panel.add(buyChip).size(260f, 66f).padTop(10f).row();}
         content.add(panel).width(460f).height(560f);
     }
 
