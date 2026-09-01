@@ -150,7 +150,8 @@ public class ZombieZombossMechDark extends AbstractZomboss {
             }
         }
 
-        System.out.println("[ZombossDark] Dragon breathed fire across rows " + r1 + " & " + r2 + "! Scorch tiles created.");
+        System.out.println("[ZombossDark] Dragon breathed fire across rows "
+            + r1 + " & " + r2 + "! Scorch tiles created.");
     }
 
     private void applyContinuousFireDamage(BattleController ctrl, float delta) {
@@ -260,7 +261,8 @@ public class ZombieZombossMechDark extends AbstractZomboss {
             if (p != null) {
                 p.takeDamage(999999);
                 map.removePlant(fb.targetRow, fb.targetCol);
-                System.out.println("[ZombossDark] Fireball destroyed plant at (" + fb.targetRow + ", " + fb.targetCol + ")");
+                System.out.println("[ZombossDark] Fireball destroyed plant at ("
+                    + fb.targetRow + ", " + fb.targetCol + ")");
             }
         }
     }
@@ -279,8 +281,10 @@ public class ZombieZombossMechDark extends AbstractZomboss {
         ZombieAnimation.trigger(this, "summoning", 2.5);
 
         String[] darkTypes = currentPhase >= 3 ?
-            new String[]{"ZombieDarkArmor3Default", "ZombieWizardDefault", "ZombieDarkKingDefault", "ZombieDarkImpDragonDefault", "ZombieDarkJugglerDefault"} :
-            new String[]{"ZombieDarkArmor1Default", "ZombieDarkArmor2Default", "ZombieDarkImpDragonDefault", "ZombieDarkJugglerDefault"};
+            new String[]{"ZombieDarkArmor3Default", "ZombieWizardDefault",
+                "ZombieDarkKingDefault", "ZombieDarkImpDragonDefault", "ZombieDarkJugglerDefault"} :
+            new String[]{"ZombieDarkArmor1Default", "ZombieDarkArmor2Default",
+                "ZombieDarkImpDragonDefault", "ZombieDarkJugglerDefault"};
 
         int count = 2 + currentPhase;
         float zombossX = (float) this.getX() - 80f;

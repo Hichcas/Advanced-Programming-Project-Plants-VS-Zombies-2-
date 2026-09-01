@@ -75,46 +75,57 @@ public class ZombieIceAgeDodo extends AbstractSpecialMovementZombie {
             return;
         }
 
+        performUpdate(delta, ctrl);
+    }
+
+    private void performUpdate(float delta, BattleController ctrl) {
         int tileCol = ctrl.getTileColumn((float) x);
         col = tileCol;
         Plant plantInFront = ctrl.getPlantAt((int) row, tileCol);
 
         if (isFlying) {
-            flightTimer += delta;
-            ZombieAnimation.trigger(this, "fly", 2.6667);
-
-            // Check if blocked by a tall defensive plant (e.g. Tall-nut)
-            if (plantInFront != null && (plantInFront.getMaxHp() >= 4000 || plantInFront.getType().name().contains("TALL"))) {
-                // Land immediately when hitting a tall barricade
-                isFlying = false;
-                flightTimer = 0.0f;
-                moving = false;
-                attack(plantInFront, delta, ctrl);
-            } else {
-                moving = true;
-                // Fly forward over ground obstacles
-                x -= currentSpeed * delta * 150; // faster flight speed
-
-                // If flown beyond distance (4 full tiles ~ 320 units), land
-                float tileW = ctrl.getMap() != null ? ctrl.getMap().getTileWidth() : 80.0f;
-                if (flightStartX > 0 && (flightStartX - x) >= (flightDistanceTiles * tileW)) {
-                    isFlying = false;
-                    flightTimer = 0.0f;
-                }
-            }
+            handleFlying(delta, ctrl, plantInFront);
         } else {
-            // Walking on the ground
-            if (plantInFront != null && !plantInFront.isDead()) {
-                moving = false;
-                attack(plantInFront, delta, ctrl);
-            } else {
-                moving = true;
-                move(delta, ctrl);
-            }
+            handleGround(delta, ctrl, plantInFront);
         }
 
         hitbox.setPosition((float) x, (float) y);
         onUpdate(delta, ctrl);
+    }
+
+    private void handleFlying(float delta, BattleController ctrl, Plant plantInFront) {
+        flightTimer += delta;
+        ZombieAnimation.trigger(this, "fly", 2.6667);
+
+        boolean blockedByTallPlant = plantInFront != null
+            && (plantInFront.getMaxHp() >= 4000
+            || plantInFront.getType().name().contains("TALL"));
+
+        if (blockedByTallPlant) {
+            isFlying = false;
+            flightTimer = 0.0f;
+            moving = false;
+            attack(plantInFront, delta, ctrl);
+        } else {
+            moving = true;
+            x -= currentSpeed * delta * 150; // faster flight speed
+
+            float tileW = ctrl.getMap() != null ? ctrl.getMap().getTileWidth() : 80.0f;
+            if (flightStartX > 0 && (flightStartX - x) >= (flightDistanceTiles * tileW)) {
+                isFlying = false;
+                flightTimer = 0.0f;
+            }
+        }
+    }
+
+    private void handleGround(float delta, BattleController ctrl, Plant plantInFront) {
+        if (plantInFront != null && !plantInFront.isDead()) {
+            moving = false;
+            attack(plantInFront, delta, ctrl);
+        } else {
+            moving = true;
+            move(delta, ctrl);
+        }
     }
 
     @Override

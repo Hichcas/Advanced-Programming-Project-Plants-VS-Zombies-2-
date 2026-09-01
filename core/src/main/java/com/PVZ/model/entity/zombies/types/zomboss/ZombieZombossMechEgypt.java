@@ -152,7 +152,8 @@ public class ZombieZombossMechEgypt extends AbstractZomboss {
 
         // Play boss missile animation
         ZombieAnimation.trigger(this, "missile_start", 1.5);
-        System.out.println("[ZombossEgypt] Fired vertical missile targeting (" + missileTargetRow + ", " + missileTargetCol + ")!");
+        System.out.println("[ZombossEgypt] Fired vertical missile targeting ("
+            + missileTargetRow + ", " + missileTargetCol + ")!");
     }
 
     private void updateMissile(float delta, BattleController ctrl) {
@@ -190,7 +191,8 @@ public class ZombieZombossMechEgypt extends AbstractZomboss {
             if (p != null) {
                 p.takeDamage(999999);
                 map.removePlant(missileTargetRow, missileTargetCol);
-                System.out.println("[ZombossEgypt] Missile destroyed plant at (" + missileTargetRow + ", " + missileTargetCol + ")");
+                System.out.println("[ZombossEgypt] Missile destroyed plant at ("
+                    + missileTargetRow + ", " + missileTargetCol + ")");
             }
 
             // Spawn 2 tombstones in 2 random available empty tiles on the lawn
@@ -310,7 +312,8 @@ public class ZombieZombossMechEgypt extends AbstractZomboss {
         ZombieAnimation.trigger(this, "zombie_portal_start", 2.2667);
 
         String[] egyptTypes = currentPhase >= 3 ?
-            new String[]{"ZombiePharaohDefault", "ZombieTombRaiserDefault", "ZombieMummyArmor2Default", "ZombieMummyArmor1Default"} :
+            new String[]{"ZombiePharaohDefault", "ZombieTombRaiserDefault",
+                "ZombieMummyArmor2Default", "ZombieMummyArmor1Default"} :
             new String[]{"ZombieMummyDefault", "ZombieMummyArmor1Default", "ZombieMummyArmor2Default"};
 
         int count = 2 + currentPhase;

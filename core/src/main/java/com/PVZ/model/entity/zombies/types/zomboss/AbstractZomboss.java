@@ -124,6 +124,17 @@ public abstract class AbstractZomboss extends Zombie {
             return;
         }
 
+        handleNormalUpdate(delta, ctrl);
+    }
+
+    private void handleNormalUpdate(float delta, BattleController ctrl) {
+        updateMapPosition(delta, ctrl);
+        handlePhaseTransitions(delta, ctrl);
+        handleAbility(delta, ctrl);
+        onUpdate(delta, ctrl);
+    }
+
+    private void updateMapPosition(float delta, BattleController ctrl) {
         if (ctrl.getMap() != null) {
             // Occupies 2 rows (targetRow and targetRow + 1)
             targetRow = Math.max(0, Math.min(3, targetRow));
@@ -142,21 +153,28 @@ public abstract class AbstractZomboss extends Zombie {
             }
         }
         hitbox.setPosition((float) x, (float) y);
+    }
 
+    private void handlePhaseTransitions(float delta, BattleController ctrl) {
         double hpRatio = hitpoints / maxHitpoints;
         if (totalPhases == 3 && currentPhase < totalPhases) {
             double threshold = phaseTransitionThreshold;
-            if (currentPhase == 2) threshold = phaseTransitionThreshold * 0.5;
+            if (currentPhase == 2) {
+                threshold = phaseTransitionThreshold * 0.5;
+            }
             if (hpRatio <= threshold) {
                 currentPhase++;
-                System.out.println("[" + alias + "] advanced to PHASE " + currentPhase + " (HP ratio=" + String.format(
-                        "%.2f", hpRatio) + ")");
+                String hpStr = String.format("%.2f", hpRatio);
+                System.out.println("[" + alias + "] advanced to PHASE " + currentPhase
+                    + " (HP ratio=" + hpStr + ")");
                 triggerStun(4.0f);
                 onPhaseTransition(ctrl);
                 abilityTimer = Math.max(abilityTimer, 4.0f);
             }
         }
+    }
 
+    private void handleAbility(float delta, BattleController ctrl) {
         abilityTimer -= delta;
         if (abilityTimer <= 0) {
             if (usePortalNext) {
@@ -177,8 +195,6 @@ public abstract class AbstractZomboss extends Zombie {
             }
             targetRow = newRow;
         }
-
-        onUpdate(delta, ctrl);
     }
 
     @Override

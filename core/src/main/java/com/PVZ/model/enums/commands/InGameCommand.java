@@ -26,19 +26,22 @@ public enum InGameCommand {
             return new InGameInputDTO(this, null, null, null, null, null, null);
         }
     },
-    CHEAT_ADD_PLANT_SUN("^\\s*(?:izombie\\s+|menu\\s+)?cheat\\s+add(?:\\s+-n)?\\s+(?<amount>\\d+)\\s+(?:plant-?suns?|plants?|plant_sun)\\s*$") {
+    CHEAT_ADD_PLANT_SUN("^\\s*(?:izombie\\s+|menu\\s+)?cheat\\s+add(?:\\"+
+        "s+-n)?\\s+(?<amount>\\d+)\\s+(?:plant-?suns?|plants?|plant_sun)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, Integer.parseInt(matcher.group("amount")), null, null, null, null);
         }
     },
-    CHEAT_ADD_ZOMBIE_SUN("^\\s*(?:izombie\\s+|menu\\s+)?cheat\\s+add(?:\\s+-n)?\\s+(?<amount>\\d+)\\s+(?:zombie-?suns?|zombies?|zombie_sun)\\s*$") {
+    CHEAT_ADD_ZOMBIE_SUN("^\\s*(?:izombie\\s+|menu\\s+)?cheat\\s+add(?:\\s+-n)?\\"+
+        "s+(?<amount>\\d+)\\s+(?:zombie-?suns?|zombies?|zombie_sun)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, Integer.parseInt(matcher.group("amount")), null, null, null, null);
         }
     },
-    CHEAT_ADD_SUNS("^\\s*(?:izombie\\s+|menu\\s+)?cheat\\s+add(?:\\s+-n)?\\s+(?<amount>\\d+)(?:\\s+suns?|\\s+sun_amount)?\\s*$") {
+    CHEAT_ADD_SUNS("^\\s*(?:izombie\\s+|menu\\s+)?cheat\\s+add(?:\\s+-n)?\\"+
+        "s+(?<amount>\\d+)(?:\\s+suns?|\\s+sun_amount)?\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, Integer.parseInt(matcher.group("amount")), null, null, null, null);
@@ -224,7 +227,8 @@ public enum InGameCommand {
             return new InGameInputDTO(this, null, null, null, null, null, null);
         }
     },
-    CHEAT_ASH_ALL("^\\s*(cheat\\s+ash-all|cheat\\s+powder-all|powder-all\\s+zombies|ash-all\\s+zombies|cheat\\s+powder|cheat\\s+ash)\\s*$") {
+    CHEAT_ASH_ALL("^\\s*(cheat\\s+ash-all|cheat\\s+powder-all|powder-all\\"+
+        "s+zombies|ash-all\\s+zombies|cheat\\s+powder|cheat\\s+ash)\\s*$") {
         @Override
         public InGameInputDTO createDTO(Matcher matcher) {
             return new InGameInputDTO(this, null, null, null, null, null, null);

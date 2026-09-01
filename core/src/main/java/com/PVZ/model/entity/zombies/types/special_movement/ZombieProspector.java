@@ -74,7 +74,8 @@ public class ZombieProspector extends AbstractSpecialMovementZombie {
                     this.x = ctrl.getMap().getStartX() + tileW * 0.6f;
                 }
                 flewToLeft = true;
-                System.out.println("[ZombieProspector] Dynamite blasted Prospector to Column 0; walking backwards towards plants!");
+                System.out.println("[ZombieProspector] Dynamite blasted "+
+                    "Prospector to Column 0; walking backwards towards plants!");
             }
         }
     }

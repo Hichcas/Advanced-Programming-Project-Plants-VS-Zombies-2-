@@ -40,67 +40,37 @@ public class ZombieIceAgeTroglobite extends AbstractSpecialMovementZombie {
 
     @Override
     public void update(float delta, BattleController ctrl) {
-        updateEffects(delta);
-        ZombieAnimation.tick(this, delta);
-
-        if (isDying()) {
-            animStateTime += delta;
+        updateEffects(delta);ZombieAnimation.tick(this, delta);
+        if (isDying()) {animStateTime += delta;
             if (!ZombieAnimation.isActive(this)) {
-                finishDeath(ctrl);
-            }
-            return;
-        }
-
-        if (!isFrozen()) {
-            animStateTime += delta;
-        }
-
+                finishDeath(ctrl);}return;}
+        if (!isFrozen()) {animStateTime += delta;}
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
-            startDeath(ctrl);
-            return;
-        }
+            startDeath(ctrl);return;}
         if (isFrozen()) {
             hitbox.setPosition((float) x, (float) y);
-            onUpdate(delta, ctrl);
-            return;
-        }
+            onUpdate(delta, ctrl);return;}
         if (hypnotized) {
             updateHypnotized(delta, ctrl);
             hitbox.setPosition((float) x, (float) y);
-            onUpdate(delta, ctrl);
-            return;
-        }
-        if (ctrl == null) {
-            return;
-        }
-
+            onUpdate(delta, ctrl);return;}
+        if (ctrl == null) {return;}
         int tileCol = ctrl.getTileColumn((float) x);
         col = tileCol;
         Plant plantInFront = ctrl.getPlantAt((int) row, tileCol);
-
-        // Spawn initial ice block immediately in front on spawn
         if (!initialBlockSpawned && ctrl.getMap() != null) {
             initialBlockSpawned = true;
             int initialCol = Math.min(8, Math.max(0, tileCol - 1));
             pushIceBlockToTile(ctrl, (int) row, initialCol);
-            lastBlockCol = col;
-        }
-
-        // Push the same ice block forward as Troglobite advances to a new column
+            lastBlockCol = col;        }
         if (Math.abs(lastBlockCol - col) >= 1) {
             int targetCol = Math.max(0, tileCol - 1);
             pushIceBlockToTile(ctrl, (int) row, targetCol);
-            lastBlockCol = col;
-        }
-
+            lastBlockCol = col;}
         if (plantInFront != null && !plantInFront.isDead()) {
             moving = false;
             attack(plantInFront, delta, ctrl);
-        } else {
-            moving = true;
-            move(delta, ctrl);
-        }
-
+        } else {moving = true;move(delta, ctrl);}
         hitbox.setPosition((float) x, (float) y);
         onUpdate(delta, ctrl);
     }
@@ -134,7 +104,8 @@ public class ZombieIceAgeTroglobite extends AbstractSpecialMovementZombie {
             currentBlockCol = targetCol;
         }
 
-        System.out.println("[Troglobite] Moved ice block to (" + targetRow + ", " + targetCol + ") with " + currentBlockHp + " HP");
+        System.out.println("[Troglobite] Moved ice block to (" +
+            targetRow + ", " + targetCol + ") with " + currentBlockHp + " HP");
     }
 
     @Override

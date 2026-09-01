@@ -45,7 +45,8 @@ public class ZombieIceAgeHunter extends AbstractRangedCasterZombie {
             if (freezeLevel >= 3) {
                 target.putRuntimeState("iceHp", 600);
             }
-            System.out.println("[HunterZombie] Plant at row " + (int) row + " freeze level increased to " + freezeLevel);
+            System.out.println("[HunterZombie] Plant at row " +
+                (int) row + " freeze level increased to " + freezeLevel);
         }
     }
 

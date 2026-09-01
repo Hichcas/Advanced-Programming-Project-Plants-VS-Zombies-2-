@@ -202,15 +202,10 @@ public class ZombieZombossMechBeach extends AbstractZomboss {
                             if (p != null && !p.isDead()) {
                                 p.takeDamage(999999);
                                 map.removePlant(shark.row, c);
-                                System.out.println("[ZombossBeach] Small Shark devoured plant at (" + shark.row + ", " + c + ")!");
+                                System.out.println("[ZombossBeach] Small Shark devoured plant at ("
+                                    + shark.row + ", " + c + ")!");
                                 toRemove.add(shark);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+                                break;}}}}}}
         activeSharks.removeAll(toRemove);
     }
 
@@ -228,8 +223,10 @@ public class ZombieZombossMechBeach extends AbstractZomboss {
         ZombieAnimation.trigger(this, "spawn", 2.2);
 
         String[] beachTypes = currentPhase >= 3 ?
-            new String[]{"ZombieBeachOctopusDefault", "ZombieBeachFishermanDefault", "ZombieBeachSurferDefault", "ZombieBeachArmor2Default", "ZombieBeachImpDefault"} :
-            new String[]{"ZombieBeachSurferDefault", "ZombieBeachDefault", "ZombieBeachImpDefault", "ZombieBeachArmor1Default"};
+            new String[]{"ZombieBeachOctopusDefault", "ZombieBeachFishermanDefault",
+                "ZombieBeachSurferDefault", "ZombieBeachArmor2Default", "ZombieBeachImpDefault"} :
+            new String[]{"ZombieBeachSurferDefault", "ZombieBeachDefault",
+                "ZombieBeachImpDefault", "ZombieBeachArmor1Default"};
 
         int count = 2 + currentPhase;
         float zombossX = (float) this.getX() - 80f;

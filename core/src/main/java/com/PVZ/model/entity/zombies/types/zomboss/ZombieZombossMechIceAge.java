@@ -257,7 +257,8 @@ public class ZombieZombossMechIceAge extends AbstractZomboss {
             if (p != null) {
                 p.takeDamage(999999);
                 map.removePlant(im.targetRow, im.targetCol);
-                System.out.println("[ZombossIceAge] Ice Missile crushed plant at (" + im.targetRow + ", " + im.targetCol + ")");
+                System.out.println("[ZombossIceAge] Ice Missile crushed plant at ("
+                    + im.targetRow + ", " + im.targetCol + ")");
             }
         }
     }
@@ -274,18 +275,16 @@ public class ZombieZombossMechIceAge extends AbstractZomboss {
     public void triggerGlacierSummon(BattleController ctrl) {
         if (ctrl == null) return;
         ZombieAnimation.trigger(this, "glacier_column_intro", 2.5);
-
         String[] iceTypes = currentPhase >= 3 ?
-            new String[]{"ZombieIceAgeHunter", "ZombieIceAgeDodo", "ZombieWeaselHoarderDefault", "ZombieIceAgeArmor2Default", "ZombieIceAgeImpDefault"} :
-            new String[]{"ZombieIceAgeDefault", "ZombieIceAgeDodo", "ZombieIceAgeImpDefault", "ZombieIceAgeArmor1Default"};
-
+            new String[]{"ZombieIceAgeHunter", "ZombieIceAgeDodo",
+                "ZombieWeaselHoarderDefault", "ZombieIceAgeArmor2Default", "ZombieIceAgeImpDefault"} :
+            new String[]{"ZombieIceAgeDefault", "ZombieIceAgeDodo",
+                "ZombieIceAgeImpDefault", "ZombieIceAgeArmor1Default"};
         int count = 2 + currentPhase;
         float zombossX = (float) this.getX() - 80f;
         int zombossRow = (int) this.getRow();
-
         Tile tile = ctrl.getMap() != null ? ctrl.getMap().getTile(zombossRow, 7) : null;
         float spawnY = tile != null ? (tile.getY() + (tile.getHeight() - 70f) / 2f) : (float) this.getY();
-
         for (int i = 0; i < count; i++) {
             String type = iceTypes[(int) (Math.random() * iceTypes.length)];
             Zombie z = ZombieFactory.createZombie(type);
@@ -294,43 +293,26 @@ public class ZombieZombossMechIceAge extends AbstractZomboss {
                 z.initPosition(zombossX - (i * 35f), spawnY, spawnRow);
                 z.setRow(spawnRow);
                 z.setCol(7);
-                ctrl.addZombie(z);
-            }
-        }
-
-        // Spawn Glacier Ice Blocks on forward tiles with encased zombies inside!
-        if (ctrl.getMap() != null) {
+                ctrl.addZombie(z);}}if (ctrl.getMap() != null) {
             int numBlocks = 1 + (currentPhase > 1 ? 1 : 0);
             for (int b = 0; b < numBlocks; b++) {
                 int r = Math.min(4, Math.max(0, zombossRow + (b % 2)));
                 int c = 3 + (int)(Math.random() * 4); // Forward columns 3..6
                 Tile t = ctrl.getMap().getTile(r, c);
                 if (t != null) {
-                    // 1. Destroy any plant occupying that spot
                     Plant p = ctrl.getMap().getPlantAt(r, c);
                     if (p != null) {
                         p.takeDamage(999999);
-                        ctrl.getMap().removePlant(r, c);
-                    }
-
-                    // 2. Set the tile as ICE obstacle with 600 HP and encased zombie inside
-                    t.setType(TileType.ICE);
-                    t.setHp(600);
-                    t.setMaxHp(600);
-                    String[] encasedOptions = new String[]{"ZombieIceAgeDefault", "ZombieIceAgeDodo", "ZombieIceAgeHunter"};
+                        ctrl.getMap().removePlant(r, c);}
+                    t.setType(TileType.ICE);t.setHp(600);t.setMaxHp(600);
+                    String[] encasedOptions = new String[]{"ZombieIceAgeDefault",
+                        "ZombieIceAgeDodo", "ZombieIceAgeHunter"};
                     t.setEncasedZombieType(encasedOptions[(int)(Math.random() * encasedOptions.length)]);
-
-                    // 3. Play glacier impact effect
                     if (ctrl.getEngine() != null) {
                         ctrl.getEngine().addTimedPamEffect(
                             "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM",
-                            "animation", 1.2, 1.0f, t.getX() + t.getWidth() / 2f, t.getY() + t.getHeight() / 2f
-                        );
-                    }
-                }
-            }
-        }
-
+                            "animation", 1.2, 1.0f, t.getX() +
+                                t.getWidth() / 2f, t.getY() + t.getHeight() / 2f);}}}}
         System.out.println("[ZombossIceAge] Summoned " + count + " Ice Age zombies and Encased Ice Zombies!");
     }
 
