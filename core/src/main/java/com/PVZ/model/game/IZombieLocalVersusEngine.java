@@ -98,14 +98,16 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
         if (zombiePanelBackground == null) {
             int border = 10;
             int size = border * 2 + 4;
-            com.badlogic.gdx.graphics.Pixmap pixmap = new com.badlogic.gdx.graphics.Pixmap(size, size, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+            com.badlogic.gdx.graphics.Pixmap pixmap = new com.badlogic.gdx.graphics.
+                Pixmap(size, size, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
             pixmap.setColor(0.06f, 0.05f, 0.03f, 0.72f);
             pixmap.fill();
             pixmap.setColor(0.85f, 0.65f, 0.25f, 1f);
             pixmap.drawRectangle(0, 0, size, size);
             com.badlogic.gdx.graphics.Texture texture = new com.badlogic.gdx.graphics.Texture(pixmap);
             pixmap.dispose();
-            zombiePanelBackground = new com.badlogic.gdx.graphics.g2d.NinePatch(texture, border, border, border, border);
+            zombiePanelBackground =
+                new com.badlogic.gdx.graphics.g2d.NinePatch(texture, border, border, border, border);
         }
         return zombiePanelBackground;
     }
@@ -163,9 +165,12 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
         if (type == null) return 50;
         String name = type.name().toUpperCase();
         if (name.contains("GARGANTUAR")) return 300;
-        if (name.contains("BRICK") || name.contains("KNIGHT") || name.contains("ARMOR4") || name.contains("CENTURION")) return 150;
-        if (name.contains("BUCKET") || name.contains("BARREL") || name.contains("ARMOR2") || name.contains("JALAPENO") || name.contains("SQUASH")) return 125;
-        if (name.contains("CONE") || name.contains("ARMOR1") || name.contains("HELMET") || name.contains("FLAG")) return 75;
+        if (name.contains("BRICK") || name.contains("KNIGHT") ||
+            name.contains("ARMOR4") || name.contains("CENTURION")) return 150;
+        if (name.contains("BUCKET") || name.contains("BARREL") ||
+            name.contains("ARMOR2") || name.contains("JALAPENO") || name.contains("SQUASH")) return 125;
+        if (name.contains("CONE") || name.contains("ARMOR1") || name.contains("HELMET")
+            || name.contains("FLAG")) return 75;
         if (name.contains("IMP")) return 25;
         if (name.contains("ZOMBOTANY")) return 100;
         return 50;
@@ -173,7 +178,9 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
 
     private static String formatZombieDisplayName(ZombieType type) {
         if (type == null) return "Zombie";
-        String name = type.name().replace("ZOMBOTANY_", "Zombotany ").replace("TUTORIAL_", "").replace("MUMMY_", "").replace("ICEAGE_", "").replace('_', ' ').toLowerCase();
+        String name = type.name().replace("ZOMBOTANY_", "Zombotany ")
+            .replace("TUTORIAL_", "").replace("MUMMY_", "").replace("ICEAGE_", "").
+            replace('_', ' ').toLowerCase();
         StringBuilder sb = new StringBuilder();
         for (String part : name.split(" ")) {
             if (!part.isEmpty()) {
@@ -216,68 +223,39 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
     @Override
     public void update(float delta) {
         animTime += delta;
-
-        // Once the match is decided, freeze the whole simulation so no plants,
-        // zombies or sun can move/change behind the result panel.
-        if (matchFinished) {
-            return;
-        }
-
+        if (matchFinished) {return;}
         super.update(delta);
-
-        // Keep UI Sun count synced with plantSun
-        if (gameStatus != null) {
-            gameStatus.setSunflower(plantSun);
-        }
-
-        // 1. Natural Sky Sun falling across the whole lawn (Plant & Zombie competition!)
+        if (gameStatus != null) {gameStatus.setSunflower(plantSun);}
         skySunTimer += delta;
         if (skySunTimer >= 4.5f && map != null) {
             skySunTimer = 0f;
             float dropX = map.getStartX() + (float)(Math.random() * (map.getCols() * map.getTileWidth()));
             float startY = 1400f;
             float groundY = map.getStartY() - (float)(Math.random() * (map.getRows() * map.getTileHeight()));
-            sunManager.spawnFalling(dropX, startY, 50, groundY, com.PVZ.model.entity.Sun.SunType.NORMAL, 75.0);
-        }
-
-        // Collect sun if Zombie player's cursor is currently standing on a sun
+            sunManager.spawnFalling(dropX, startY, 50, groundY, com.PVZ.model.entity.Sun.SunType.NORMAL, 75.0);}
         if (inputProcessor instanceof IZombieInputProcessor izInp) {
-            collectZombieSunAtTile(izInp.getSelectedRow(), izInp.getSelectedCol());
-        }
-
-        // Check Victory / Loss
+            collectZombieSunAtTile(izInp.getSelectedRow(), izInp.getSelectedCol());}
         if (!matchFinished && getGame() != null) {
             if (getGame().getBrainsRemaining() <= 0) {
-                // Logical zombie win condition: every brain on the lawn is eaten.
                 matchFinished = true;
                 plantsWon = false;
                 matchResultText = "ALL BRAINS EATEN - ZOMBIE PLAYER WINS!";
             } else {
-                // Countdown timer: when it hits zero, the match ends.
-                // Plants win by surviving (at least one brain left); otherwise Zombie wins.
                 matchTimeRemaining -= delta;
                 if (matchTimeRemaining <= 0f) {
                     matchTimeRemaining = 0f;
                     matchFinished = true;
                     plantsWon = true;
-                    matchResultText = "TIME UP - PLANTS SURVIVED! PLAYER 1 WINS!";
-                }
-            }
-        }
-
+                    matchResultText = "TIME UP - PLANTS SURVIVED! PLAYER 1 WINS!";}}}
         if (reactionCooldown > 0f) {
-            reactionCooldown -= delta;
-        }
+            reactionCooldown -= delta;}
         if (!activeStickers.isEmpty()) {
             java.util.Iterator<LocalStickerEffect> it = activeStickers.iterator();
             while (it.hasNext()) {
                 LocalStickerEffect fx = it.next();
                 fx.elapsed += delta;
                 if (fx.elapsed >= fx.lifetime) {
-                    it.remove();
-                }
-            }
-        }
+                    it.remove();}}}
     }
 
     public boolean isMatchFinished() {
@@ -311,7 +289,8 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
         float th = map.getTileHeight();
         float tileX = map.getStartX() + col * tw;
         float tileY = map.getStartY() - (row + 1) * th;
-        com.badlogic.gdx.math.Rectangle tileRect = new com.badlogic.gdx.math.Rectangle(tileX - 15f, tileY - 15f, tw + 30f, th + 30f);
+        com.badlogic.gdx.math.Rectangle tileRect =
+            new com.badlogic.gdx.math.Rectangle(tileX - 15f, tileY - 15f, tw + 30f, th + 30f);
         int collected = sunManager.collectAt(tileRect);
         if (collected > 0) {
             getGame().addSun(collected);
@@ -321,7 +300,8 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
 
     @Override
     public int collectSunAtWorldPoint(float worldX, float worldY) {
-        com.badlogic.gdx.math.Rectangle pointer = new com.badlogic.gdx.math.Rectangle(worldX - 12f, worldY - 12f, 24f, 24f);
+        com.badlogic.gdx.math.Rectangle pointer =
+            new com.badlogic.gdx.math.Rectangle(worldX - 12f, worldY - 12f, 24f, 24f);
         int collected = sunManager.collectAt(pointer);
         if (collected > 0) {
             plantSun += collected;
@@ -369,75 +349,90 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
         }
     }
 
-    @Override
     protected void drawHud(SpriteBatch batch) {
         if (getGame() == null || map == null) return;
         ensureTexturesLoaded();
 
         batch.begin();
 
-        // 1. Draw Plant Bar (Left Vertical - Player 1)
-        plantBar.drawIconsAndLabels(batch, FontManager.getInstance().getEnglishMenuFont(), null, selectedPlantType);
-
-        // 2. Draw Zombie Bar (Right Vertical - Player 2)
         IZombieInputProcessor izInput = (inputProcessor instanceof IZombieInputProcessor inp) ? inp : null;
         String selectedAlias = izInput != null ? izInput.getSelectedAlias() : null;
+
+        drawPlayerBars(batch, izInput, selectedAlias);
+        drawZombieCursor(batch, izInput);
+        drawHoverPlantIndicator(batch);
+        drawZombieSunBank(batch);
+        drawInstructionBanner(batch, font, tinyFont);
+        drawMatchResultOverlay(batch);
+        drawActiveStickers(batch);
+
+        batch.end();
+    }
+
+    private void drawPlayerBars(SpriteBatch batch, IZombieInputProcessor izInput, String selectedAlias) {
+        plantBar.drawIconsAndLabels(batch, FontManager.getInstance().getEnglishMenuFont(), null, selectedPlantType);
         zombiePacketBar.draw(batch, font, tinyFont, getGame(), selectedAlias);
+    }
 
-        // 3. Draw Zombie Cursor / Target Tile Indicator (Follows Arrow Keys / WASD across full lawn)
-        if (izInput != null && hudPixel != null) {
-            int row = izInput.getSelectedRow();
-            int col = Math.max(0, Math.min(getGame().getCols() - 1, izInput.getSelectedCol()));
-            float th = map.getTileHeight();
-            float tw = map.getTileWidth();
-            float rowY = map.getStartY() - (row + 1) * th;
-            float deployX = map.getStartX() + col * tw;
+    private void drawZombieCursor(SpriteBatch batch, IZombieInputProcessor izInput) {
+        if (izInput == null || hudPixel == null) return;
 
-            float pulse = (float) (Math.sin(System.currentTimeMillis() * 0.004) * 0.06 + 0.22);
-            boolean isSpawnable = col > getGame().getRedLineCol();
+        int row = izInput.getSelectedRow();
+        int col = Math.max(0, Math.min(getGame().getCols() - 1, izInput.getSelectedCol()));
+        float th = map.getTileHeight();
+        float tw = map.getTileWidth();
+        float rowY = map.getStartY() - (row + 1) * th;
+        float deployX = map.getStartX() + col * tw;
 
-            if (isSpawnable) {
-                batch.setColor(1f, 0.92f, 0.5f, pulse);
-                batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, th - 4f);
-                batch.setColor(1f, 0.92f, 0.5f, 0.85f);
-            } else {
-                batch.setColor(0.3f, 0.8f, 1f, pulse * 0.8f);
-                batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, th - 4f);
-                batch.setColor(0.4f, 0.9f, 1f, 0.85f);
-            }
-            batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, 2f);
-            batch.draw(hudPixel, deployX + 2f, rowY + th - 4f, tw - 4f, 2f);
-            batch.draw(hudPixel, deployX + 2f, rowY + 2f, 2f, th - 4f);
-            batch.draw(hudPixel, deployX + tw - 4f, rowY + 2f, 2f, th - 4f);
-            batch.setColor(Color.WHITE);
+        float pulse = (float) (Math.sin(System.currentTimeMillis() * 0.004) * 0.06 + 0.22);
+        boolean isSpawnable = col > getGame().getRedLineCol();
+
+        if (isSpawnable) {
+            batch.setColor(1f, 0.92f, 0.5f, pulse);
+            batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, th - 4f);
+            batch.setColor(1f, 0.92f, 0.5f, 0.85f);
+        } else {
+            batch.setColor(0.3f, 0.8f, 1f, pulse * 0.8f);
+            batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, th - 4f);
+            batch.setColor(0.4f, 0.9f, 1f, 0.85f);
         }
+        batch.draw(hudPixel, deployX + 2f, rowY + 2f, tw - 4f, 2f);
+        batch.draw(hudPixel, deployX + 2f, rowY + th - 4f, tw - 4f, 2f);
+        batch.draw(hudPixel, deployX + 2f, rowY + 2f, 2f, th - 4f);
+        batch.draw(hudPixel, deployX + tw - 4f, rowY + 2f, 2f, th - 4f);
+        batch.setColor(Color.WHITE);
+    }
 
-        // 3.5 Draw Hover Target Tile Indicator for Selected Plant (Mouse)
-        if (selectedPlantType != null && hudPixel != null && map != null) {
-            com.badlogic.gdx.graphics.OrthographicCamera cam = com.PVZ.model.status.AppStatus.getCamera();
-            if (cam != null) {
-                com.badlogic.gdx.math.Vector3 world = cam.unproject(new com.badlogic.gdx.math.Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-                int row = map.worldToRow(world.y);
-                int col = map.worldToCol(world.x);
-                if (map.isWithinBounds(row, col) && col < getGame().getRedLineCol()) {
-                    float th = map.getTileHeight();
-                    float tw = map.getTileWidth();
-                    float tileY = map.getStartY() - (row + 1) * th;
-                    float tileX = map.getStartX() + col * tw;
-                    float pulse = (float) (Math.sin(System.currentTimeMillis() * 0.005) * 0.08 + 0.25);
-                    batch.setColor(0.2f, 1f, 0.3f, pulse);
-                    batch.draw(hudPixel, tileX + 2f, tileY + 2f, tw - 4f, th - 4f);
-                    batch.setColor(0.3f, 1f, 0.4f, 0.8f);
-                    batch.draw(hudPixel, tileX + 2f, tileY + 2f, tw - 4f, 2f);
-                    batch.draw(hudPixel, tileX + 2f, tileY + th - 4f, tw - 4f, 2f);
-                    batch.draw(hudPixel, tileX + 2f, tileY + 2f, 2f, th - 4f);
-                    batch.draw(hudPixel, tileX + tw - 4f, tileY + 2f, 2f, th - 4f);
-                    batch.setColor(Color.WHITE);
-                }
-            }
-        }
+    private void drawHoverPlantIndicator(SpriteBatch batch) {
+        if (selectedPlantType == null || hudPixel == null || map == null) return;
 
-        // 4. Beautiful Zombie Sun Bank (Top-Right, aligned with Zombie Cards and away from pause button)
+        com.badlogic.gdx.graphics.OrthographicCamera cam = com.PVZ.model.status.AppStatus.getCamera();
+        if (cam == null) return;
+
+        com.badlogic.gdx.math.Vector3 world =
+            cam.unproject(new com.badlogic.gdx.math.Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        int row = map.worldToRow(world.y);
+        int col = map.worldToCol(world.x);
+
+        if (!map.isWithinBounds(row, col) || col >= getGame().getRedLineCol()) return;
+
+        float th = map.getTileHeight();
+        float tw = map.getTileWidth();
+        float tileY = map.getStartY() - (row + 1) * th;
+        float tileX = map.getStartX() + col * tw;
+        float pulse = (float) (Math.sin(System.currentTimeMillis() * 0.005) * 0.08 + 0.25);
+
+        batch.setColor(0.2f, 1f, 0.3f, pulse);
+        batch.draw(hudPixel, tileX + 2f, tileY + 2f, tw - 4f, th - 4f);
+        batch.setColor(0.3f, 1f, 0.4f, 0.8f);
+        batch.draw(hudPixel, tileX + 2f, tileY + 2f, tw - 4f, 2f);
+        batch.draw(hudPixel, tileX + 2f, tileY + th - 4f, tw - 4f, 2f);
+        batch.draw(hudPixel, tileX + 2f, tileY + 2f, 2f, th - 4f);
+        batch.draw(hudPixel, tileX + tw - 4f, tileY + 2f, 2f, th - 4f);
+        batch.setColor(Color.WHITE);
+    }
+
+    private void drawZombieSunBank(SpriteBatch batch) {
         float panelHeight = 84f;
         float iconSize = 74f;
         float panelWidth = iconSize + 100f;
@@ -454,18 +449,19 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
         BitmapFont headerFont = FontManager.getInstance().getEnglishMenuFont();
         headerFont.setColor(Color.GOLD);
         String zSunText = String.valueOf(getGame().getSun());
-        com.badlogic.gdx.graphics.g2d.GlyphLayout layout = new com.badlogic.gdx.graphics.g2d.GlyphLayout(headerFont, zSunText);
+        com.badlogic.gdx.graphics.g2d.GlyphLayout layout =
+            new com.badlogic.gdx.graphics.g2d.GlyphLayout(headerFont, zSunText);
         float textX = bankX + iconSize + 14f;
         float textY = bankY + panelHeight / 2f + layout.height / 2f;
         headerFont.draw(batch, zSunText, textX, textY);
+    }
 
-        BitmapFont smallFont = font != null ? font : headerFont;
-
-        // 4.5 Clean Instruction Banner (Top-Center, below progress bar without overlap)
+    private void drawInstructionBanner(SpriteBatch batch, BitmapFont smallFont, BitmapFont tinyFont) {
         float bannerW = 860f;
         float bannerH = 44f;
         float bannerX = (2560f - bannerW) / 2f;
         float bannerY = 1330f;
+
         if (hudPixel != null) {
             batch.setColor(0f, 0f, 0f, 0.70f);
             batch.draw(hudPixel, bannerX, bannerY, bannerW, bannerH);
@@ -474,28 +470,31 @@ public class IZombieLocalVersusEngine extends IZombieGameEngine {
             batch.draw(hudPixel, bannerX, bannerY + bannerH - 1.5f, bannerW, 1.5f);
             batch.setColor(Color.WHITE);
         }
-        smallFont.setColor(Color.WHITE);
-        smallFont.draw(batch, "P1 [MOUSE]: Left Bar to Plant  |  P2 [KEYBOARD]: 1-8 / WASD / Space", bannerX + 30f, bannerY + 30f);
-
-
-        // 5. Match Result Overlay
-        if (matchFinished) {
-            if (hudPixel != null) {
-                batch.setColor(0f, 0f, 0f, 0.75f);
-                batch.draw(hudPixel, 0, 0, 2560f, 1440f);
-                batch.setColor(Color.WHITE);
-            }
-            headerFont.setColor(Color.YELLOW);
-            headerFont.draw(batch, matchResultText, 2560f / 2f - 250f, 1440f / 2f + 20f);
-        }
-
-        // 6. استیکرها/ایموجی‌های واکنش (انیمیشن PAM واقعی) در وسط زمین
-        if (!activeStickers.isEmpty()) {
-            for (LocalStickerEffect fx : activeStickers) {
-                EntityRenderer.getInstance().renderPam(batch, fx.path, fx.clip, fx.elapsed, fx.x - 128f, fx.y - 128f);
-            }
-        }
-
-        batch.end();
+        BitmapFont fontToUse = smallFont != null ? smallFont : tinyFont;
+        fontToUse.setColor(Color.WHITE);
+        String bannerText = "P1 [MOUSE]: Left Bar to Plant  |  P2 [KEYBOARD]: 1-8 / WASD / Space";
+        fontToUse.draw(batch, bannerText, bannerX + 30f, bannerY + 30f);
     }
+
+    private void drawMatchResultOverlay(SpriteBatch batch) {
+        if (!matchFinished) return;
+
+        if (hudPixel != null) {
+            batch.setColor(0f, 0f, 0f, 0.75f);
+            batch.draw(hudPixel, 0, 0, 2560f, 1440f);
+            batch.setColor(Color.WHITE);
+        }
+        BitmapFont headerFont = FontManager.getInstance().getEnglishMenuFont();
+        headerFont.setColor(Color.YELLOW);
+        headerFont.draw(batch, matchResultText, 2560f / 2f - 250f, 1440f / 2f + 20f);
+    }
+
+    private void drawActiveStickers(SpriteBatch batch) {
+        if (activeStickers.isEmpty()) return;
+
+        for (LocalStickerEffect fx : activeStickers) {
+            EntityRenderer.getInstance().renderPam(batch, fx.path, fx.clip, fx.elapsed, fx.x - 128f, fx.y - 128f);
+        }
+    }
+
 }

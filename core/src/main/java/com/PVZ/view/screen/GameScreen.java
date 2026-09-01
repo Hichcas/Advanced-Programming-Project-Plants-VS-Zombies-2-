@@ -897,7 +897,8 @@ public class GameScreen extends BaseScreen {
                     int amount = dto.getAmount() == null ? 0 : dto.getAmount();
                     if (active instanceof com.PVZ.model.game.IZombieLocalVersusEngine versusEngine) {
                         versusEngine.addPlantSun(amount);
-                        yield new com.PVZ.view.output.OutputDTO(true, "Added " + amount + " Plant Sun. Total: " + versusEngine.getPlantSun());
+                        yield new com.PVZ.view.output.OutputDTO(true,
+                            "Added " + amount + " Plant Sun. Total: " + versusEngine.getPlantSun());
                     } else if (active instanceof com.PVZ.model.game.RegularGameEngine reg) {
                         reg.addSun(amount);
                         yield new com.PVZ.view.output.OutputDTO(true, "Added " + amount + " Plant Sun.");
@@ -1092,11 +1093,13 @@ public class GameScreen extends BaseScreen {
                         darkBoss.triggerFireballAttack(reg.getBattleController());
                         System.out.println("[CHEAT M/G] Triggered Dragon Fireball Attack!");
                         break;
-                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                    } else if (z instanceof
+                        com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
                         beachBoss.triggerSmallSharksAttack(reg.getBattleController());
                         System.out.println("[CHEAT M/G] Triggered Beach Zomboss Small Sharks Attack!");
                         break;
-                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                    } else if (z instanceof
+                        com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
                         iceBoss.triggerIceMissileAttack(reg.getBattleController());
                         System.out.println("[CHEAT M/G] Triggered Mammoth Ice Missile Attack!");
                         break;
@@ -1116,11 +1119,13 @@ public class GameScreen extends BaseScreen {
                         darkBoss.triggerFireBreath(reg.getBattleController());
                         System.out.println("[CHEAT C/R] Triggered Dragon Fire Breath Attack!");
                         break;
-                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                    } else if (z instanceof
+                        com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
                         beachBoss.triggerTurbineSuction(reg.getBattleController());
                         System.out.println("[CHEAT C/R] Triggered Beach Zomboss Turbine Suction Attack!");
                         break;
-                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                    } else if (z instanceof
+                        com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
                         iceBoss.triggerIceWindBreath(reg.getBattleController());
                         System.out.println("[CHEAT C/R] Triggered Mammoth Ice Wind Breath!");
                         break;
@@ -1139,11 +1144,13 @@ public class GameScreen extends BaseScreen {
                         darkBoss.triggerSummonWave(reg.getBattleController());
                         System.out.println("[CHEAT P] Triggered Dark Zomboss Summon Wave!");
                         break;
-                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
+                    } else if (z instanceof com.PVZ.model.
+                        entity.zombies.types.zomboss.ZombieZombossMechBeach beachBoss) {
                         beachBoss.triggerSummonWave(reg.getBattleController());
                         System.out.println("[CHEAT P] Triggered Beach Zomboss Summon Wave!");
                         break;
-                    } else if (z instanceof com.PVZ.model.entity.zombies.types.zomboss.ZombieZombossMechIceAge iceBoss) {
+                    } else if (z instanceof com.PVZ.model.entity.zombies.
+                        types.zomboss.ZombieZombossMechIceAge iceBoss) {
                         iceBoss.triggerGlacierSummon(reg.getBattleController());
                         System.out.println("[CHEAT P] Triggered Mammoth Glacier Encased Summon!");
                         break;
@@ -1193,12 +1200,8 @@ public class GameScreen extends BaseScreen {
             } else if (!localMatchResultOverlay.isShowing()) {
                 localMatchResultOverlay.showResult(
                     versusEngine.isWonMatch(),
-                    versusEngine.getMatchResultText()
-                );
-            }
-            return new GameOverState(false, false, false);
-        }
-
+                    versusEngine.getMatchResultText());}
+            return new GameOverState(false, false, false);}
         if (activeEngine instanceof IZombieMultiplayerGameEngine onlineEngine) {
             if (!onlineMatchExitRequested && onlineEngine.isMatchFinished() && !onlineMatchResultOverlay.isShowing()) {
                 if (onlineEngine.isDrawResult()) {
@@ -1206,41 +1209,31 @@ public class GameScreen extends BaseScreen {
                 } else {
                     onlineMatchResultOverlay.showResult(
                         onlineEngine.isWonMatch(),
-                        onlineEngine.getMatchResultText());
-                }
+                        onlineEngine.getMatchResultText());}
             } else if (!onlineEngine.isMatchFinished()) {
-                onlineMatchResultOverlay.hide();
-            }
-            return new GameOverState(false, false, false);
-        }
+                onlineMatchResultOverlay.hide();}
+            return new GameOverState(false, false, false);}
 
         if (activeEngine instanceof RegularGameEngine regularGameEngine) {
             if (regularGameEngine.isGameOverTriggered()) {
                 if (!gameOverShown) {
-                    gameOverShown = true;
-                    gameOverAlpha = 0f;
+                    gameOverShown = true;gameOverAlpha = 0f;
                 }
                 boolean inEndOfGame = AppStatus.currentMenuType == MenuType.END_OF_GAME;
                 float displayTime = regularGameEngine.getGameOverTimer();
                 if (displayTime < 1.0f) {
                     gameOverAlpha = Math.min(1.0f, displayTime);
-                } else {
-                    gameOverAlpha = 1.0f;
-                }
+                } else {gameOverAlpha = 1.0f;}
 
                 if (displayTime >= 1.2f && winLoseOverlay != null && !winLoseOverlay.isShowing()) {
-                    winLoseOverlay.showResult(regularGameEngine.isGameOverWin());
-                }
+                    winLoseOverlay.showResult(regularGameEngine.isGameOverWin());}
                 return new GameOverState(true, regularGameEngine.isGameOverWin(), inEndOfGame);
             } else {
                 gameOverShown = false;
                 gameOverAlpha = 0f;
                 if (winLoseOverlay != null && winLoseOverlay.isShowing()) {
-                    winLoseOverlay.hide();
-                }
-                return new GameOverState(false, false, false);
-            }
-        }
+                    winLoseOverlay.hide();}
+                return new GameOverState(false, false, false);}}
         return new GameOverState(false, false, false);
     }
 
@@ -1258,104 +1251,63 @@ public class GameScreen extends BaseScreen {
 
     private boolean drawChapterBackground(SpriteBatch batch, Map activeMap) {
         ChapterEnum chapter = AppStatus.getCurrentChapterEnum();
-        if (chapter == null) {
-            return false;
-        }
-
+        if (chapter == null) {return false;}
         String leftId = CHAPTER_BG_LEFT.get(chapter);
         String rightId = CHAPTER_BG_RIGHT.get(chapter);
-        if (leftId == null) {
-            return false;
-        }
-
+        if (leftId == null) {return false;}
         TextureBank bank = EntityRenderer.getInstance().getTextures();
-        if (bank == null) {
-            return false;
-        }
-
+        if (bank == null) {return false;}
         TextureRegion leftRegion = bank.region(leftId);
         TextureRegion rightRegion = bank.region(rightId);
-
-        if (leftRegion == null) {
-            return false;
-        }
-
+        if (leftRegion == null) {return false;}
         BackgroundSettings settings = CHAPTER_BG_SETTINGS.get(chapter);
         if (settings == null) {
-            settings = new BackgroundSettings(1.20f, 1.30f, -100f, -140f);
-        }
-
-        float scaleX = settings.scaleX;
-        float scaleY = settings.scaleY;
-        float offsetX = settings.offsetX;
-        float offsetY = settings.offsetY;
-
+            settings = new BackgroundSettings(1.20f, 1.30f, -100f, -140f);        }
+        float scaleX = settings.scaleX;float scaleY = settings.scaleY;
+        float offsetX = settings.offsetX;float offsetY = settings.offsetY;
         float baseScale = VIRTUAL_HEIGHT / (float) leftRegion.getRegionHeight();
         float leftW = leftRegion.getRegionWidth() * baseScale * scaleX;
         float leftH = VIRTUAL_HEIGHT * scaleY;
-
         float startX = offsetX;
         float startY = offsetY;
-
         batch.draw(leftRegion, startX, startY, leftW, leftH);
-
         if (rightRegion != null) {
             float rightW = rightRegion.getRegionWidth() * baseScale * scaleX;
             float rightH = VIRTUAL_HEIGHT * scaleY;
-            batch.draw(rightRegion, startX + leftW, startY, rightW, rightH);
-        }
-
+            batch.draw(rightRegion, startX + leftW, startY, rightW, rightH);}
         return true;
     }
 
     private void drawBackgroundAndEngine(GameEngine activeEngine, float delta) {
         gameBatch.setProjectionMatrix(camera.combined);
         gameBatch.begin();
-
         Map activeMap = activeEngine.getMap() != null ? activeEngine.getMap() : gameMap;
-
         boolean chapterBackgroundDrawn = false;
-
         if (activeEngine instanceof RegularGameEngine) {
-            chapterBackgroundDrawn = drawChapterBackground(gameBatch, activeMap);
-        }
-
+            chapterBackgroundDrawn = drawChapterBackground(gameBatch, activeMap);}
         if (!chapterBackgroundDrawn) {
             Texture activeBackground = activeEngine.getBackgroundOverride();
             Texture activeBackgroundRight = activeEngine.getBackgroundOverrideRight();
             if (activeBackground == null) {
-                activeBackground = backgroundTexture;
-            }
-
-            float scaleX = 1.20f;
-            float scaleY = 1.30f;
-            float offsetX = -100f;
-            float offsetY = -140f;
-
+                activeBackground = backgroundTexture;}
+            float scaleX = 1.20f;float scaleY = 1.30f;
+            float offsetX = -100f;float offsetY = -140f;
             if (activeBackgroundRight != null && activeBackground != null) {
                 float baseScale = VIRTUAL_HEIGHT / (float) activeBackground.getHeight();
                 float leftW = activeBackground.getWidth() * baseScale * scaleX;
                 float leftH = VIRTUAL_HEIGHT * scaleY;
                 float rightW = activeBackgroundRight.getWidth() * baseScale * scaleX;
                 float rightH = VIRTUAL_HEIGHT * scaleY;
-                float startX = offsetX;
-                float startY = offsetY;
+                float startX = offsetX;float startY = offsetY;
                 gameBatch.draw(activeBackground, startX, startY, leftW, leftH);
                 gameBatch.draw(activeBackgroundRight, startX + leftW, startY, rightW, rightH);
             } else if (activeBackground != null) {
                 float finalW = VIRTUAL_WIDTH * scaleX;
                 float finalH = VIRTUAL_HEIGHT * scaleY;
-                float startX = offsetX;
-                float startY = offsetY;
-                gameBatch.draw(activeBackground, startX, startY, finalW, finalH);
-            }
-        }
-
+                float startX = offsetX;float startY = offsetY;
+                gameBatch.draw(activeBackground, startX, startY, finalW, finalH);}}
         if (!(activeEngine instanceof com.PVZ.model.game.IZombieGameEngine)) {
-            drawPreviewZombies(gameBatch);
-        }
-        gameBatch.end();
-
+            drawPreviewZombies(gameBatch);}gameBatch.end();
         float renderDelta = isSimulationFrozen() ? 0f : Math.min(delta, 1 / 30f);
         activeEngine.render(renderDelta, gameBatch);
     }

@@ -52,7 +52,6 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
     final List<PlantType> conveyorBeltQueue = new ArrayList<>();
     boolean lockedPlantsMode = false;
     final java.util.Set<PlantType> lockedPlantsForStage = new java.util.LinkedHashSet<>();
-    /** PLANT WHAT YOU GET: fixed starting sun, no sky sun, unlimited free planting until the player starts the waves. */
     boolean plantWhatYouGetMode = false;
 
     final SeedPacketBar seedPacketBar = new SeedPacketBar();
@@ -87,13 +86,15 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         public final float x;
         public final float y;
         public TimedPamEffect(String path, String clip, double remaining, float scale, float x, float y) {
-            this.path = path; this.clip = clip; this.totalDuration = remaining; this.remaining = remaining; this.scale = scale; this.x = x; this.y = y;
+            this.path = path; this.clip = clip; this.totalDuration =
+                remaining; this.remaining = remaining; this.scale = scale; this.x = x; this.y = y;
         }
     }
     final com.PVZ.model.entity.LawnMower[] lawnMowers = new com.PVZ.model.entity.LawnMower[ROWS];
     com.badlogic.gdx.graphics.Texture iceOverlayTex;
 
-    final com.PVZ.model.game.chapter.SandstormManager sandstormManager = new com.PVZ.model.game.chapter.SandstormManager();
+    final com.PVZ.model.game.chapter.SandstormManager sandstormManager =
+        new com.PVZ.model.game.chapter.SandstormManager();
     final com.PVZ.model.game.chapter.IceWindManager iceWindManager = new com.PVZ.model.game.chapter.IceWindManager();
 
     public com.PVZ.model.game.chapter.SandstormManager getSandstormManager() {
@@ -196,7 +197,8 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         if (map == null || !map.isWithinBounds(lane, 0)) return false;
         for (int c = Math.max(0, fromCol); c < map.getCols(); c++) {
             Tile t = map.getTile(lane, c);
-            if (t != null && (t.getType() == TileType.TOMBSTONE || t.getType() == TileType.NECROMANCY || t.getType() == TileType.ICE)) {
+            if (t != null && (t.getType() == TileType.TOMBSTONE ||
+                t.getType() == TileType.NECROMANCY || t.getType() == TileType.ICE)) {
                 return true;
             }
         }

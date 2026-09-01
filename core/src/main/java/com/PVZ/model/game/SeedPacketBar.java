@@ -119,7 +119,8 @@ public class SeedPacketBar {
             boolean affordable = engine == null
                 || engine.isConveyorBeltMode()
                 || packet.getPlantType().getDefinition() == null
-                || engine.getSunCount() >= com.PVZ.model.entity.plants.PlantLibrary.getEffectiveCost(packet.getPlantType());
+                || engine.getSunCount() >=
+                com.PVZ.model.entity.plants.PlantLibrary.getEffectiveCost(packet.getPlantType());
             boolean onCooldown = engine != null && !engine.isConveyorBeltMode()
                 && engine.isOnCooldown(packet.getPlantType());
 
@@ -151,14 +152,10 @@ public class SeedPacketBar {
 
     public void drawIconsAndLabels(SpriteBatch batch, BitmapFont font, SeedBarEngine engine, PlantType selectedPlant) {
         animTime += Gdx.graphics.getDeltaTime();
-
         if (lastLayoutWasVertical && !packets.isEmpty()) {
-            drawVerticalBarBackground(batch);
-        }
-
+            drawVerticalBarBackground(batch);}
         for (SeedPacket packet : packets) {
             Rectangle b = packet.getBounds();
-            // Draw backing slot frame
             batch.setColor(0.1f, 0.1f, 0.1f, 0.6f);
             batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
             if (packet.getPlantType() == selectedPlant) {
@@ -166,42 +163,28 @@ public class SeedPacketBar {
                 batch.setColor(1f, 0.9f, 0.2f, pulse);
                 batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
                 batch.setColor(1f, 0.95f, 0.4f, 1.0f);
-                // Draw 4px golden glowing border
                 batch.draw(darkOverlayPixel(), b.x - 4f, b.y - 4f, b.width + 8f, 4f);
                 batch.draw(darkOverlayPixel(), b.x - 4f, b.y + b.height, b.width + 8f, 4f);
                 batch.draw(darkOverlayPixel(), b.x - 4f, b.y, 4f, b.height);
-                batch.draw(darkOverlayPixel(), b.x + b.width, b.y, 4f, b.height);
-            }
+                batch.draw(darkOverlayPixel(), b.x + b.width, b.y, 4f, b.height);}
             batch.setColor(Color.WHITE);
-
             float centerX = b.x + b.width / 2f;
             float centerY = b.y + b.height * 0.55f;
             boolean drewAnimated = EntityRenderer.getInstance()
                 .renderPlant(batch, packet.getPlantType().name(), animTime, centerX, centerY);
             if (!drewAnimated) {
-                // Fall back to the static icon (or the plain label if even that is missing)
-                // so nothing on the bar ever silently disappears.
                 if (packet.getIcon() != null) {
                     batch.draw(packet.getIcon(), b.x, b.y, b.width, b.height);
-                } else {
-                    font.setColor(Color.WHITE);
-                    font.draw(batch, packet.getPlantType().getDisplayName(), b.x + 4, b.y + b.height - 8, b.width - 8, -1,
-                        true);
-                }
-            }
-
-            if (engine == null) {
-                continue;
-            }
+                } else {font.setColor(Color.WHITE);
+                    font.draw(batch, packet.getPlantType().getDisplayName(),
+                        b.x + 4, b.y + b.height - 8, b.width - 8, -1,
+                        true);}}
+            if (engine == null) {continue;}
             double remaining = engine.getRechargeRemainingSeconds(packet.getPlantType());
-            if (remaining <= 0) {
-                continue;
-            }
-
+            if (remaining <= 0) {continue;}
             batch.setColor(0f, 0f, 0f, 0.55f);
             batch.draw(darkOverlayPixel(), b.x, b.y, b.width, b.height);
             batch.setColor(Color.WHITE);
-
             font.setColor(Color.WHITE);
             String countdown = (Math.ceil(remaining * 10) / 10.0) + "s";
             font.draw(batch, countdown, b.x, b.y + b.height / 2f + 8, b.width, 1, true);

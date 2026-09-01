@@ -163,7 +163,6 @@ public class NpcDialogueOverlay extends Actor {
     private void appendStageLines(StageConfig sc, List<String> result) {
         String special = sc.getSpecialLevel();
         String type = sc.getType();
-
         if (special != null && !special.isBlank()) {
             switch (special.toUpperCase().replace('-', '_')) {
                 case "NIGHT_OPS" -> result.add(
@@ -180,29 +179,18 @@ public class NpcDialogueOverlay extends Actor {
                     "Locked Plants! Some plants are unavailable in this level.");
                 default -> result.add(
                     "Special level: " + special.replace('_', ' ') + ". Complete the objective!");
-            }
-            return;
-        }
-
+            }return;}
         if (type != null && !type.isBlank()) {
             String upper = type.toUpperCase();
             if (upper.contains("CONVEYOR_BELT")) {
                 result.add("Conveyor Belt! Seeds arrive automatically. Use what the belt gives you.");
-                return;
-            }
-            if (upper.contains("LOCKED_PLANTS")) {
+                return;}if (upper.contains("LOCKED_PLANTS")) {
                 result.add("Locked Plants! Some plants are unavailable in this level.");
-                return;
-            }
-            if (upper.contains("SURVIVAL_SCORE")) {
+                return;}if (upper.contains("SURVIVAL_SCORE")) {
                 result.add("MyoPoint time! Quick kills, multi-kills, and clutch saves earn extra points - meow!");
-                return;
-            }
-        }
-
+                return;}        }
         ChapterEnum chapter = AppStatus.getCurrentChapterEnum();
-        if (chapter != null) {
-            switch (chapter) {
+        if (chapter != null) {switch (chapter) {
                 case ANCIENT_EGYPT -> result.add(
                     "Ancient Egypt! Beware of mummies, tombstones, and Ra stealing your sun.");
                 case FROSTBITE_CAVES -> result.add(
@@ -210,11 +198,8 @@ public class NpcDialogueOverlay extends Actor {
                 case BIG_WAVE_BEACH -> result.add(
                     "Big Wave Beach! The tide rises. Use Lily Pads and watch for snorkel zombies.");
                 case DARK_AGES -> result.add(
-                    "Dark Ages! Necromancy tiles can summon zombies. Destroy them quickly!");
-            }
-        } else {
-            result.add("Defend your house from the zombie attack!");
-        }
+                    "Dark Ages! Necromancy tiles can summon zombies. Destroy them quickly!");}} else {
+            result.add("Defend your house from the zombie attack!");}
     }
 
     private void appendMinigameLines(MenuType menuType, List<String> result) {
@@ -292,67 +277,33 @@ public class NpcDialogueOverlay extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-
-        if (!showing) {
-            return;
-        }
-
+        if (!showing) {return;}
         animTime += delta;
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)
             || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            advanceDialogue();
-        }
+            advanceDialogue();}
 
         switch (state) {
-            case ENTER -> {
-                stateTimer += delta;
+            case ENTER -> {stateTimer += delta;
                 if (stateTimer >= ENTER_DURATION) {
                     if (lines.isEmpty()) {
-                        state = State.EXIT;
-                        stateTimer = 0f;
-                        animTime = 0f;
-                    } else {
-                        lineIndex = 0;
-                        beginLine();
-                    }
-                }
-            }
-            case TALK -> {
-                typeTimer += delta;
+                        state = State.EXIT;stateTimer = 0f;animTime = 0f;
+                    } else {lineIndex = 0;beginLine();}}}
+            case TALK -> {typeTimer += delta;
                 visibleChars = Math.min(lines.get(lineIndex).length(),
                     (int) (typeTimer * CHARS_PER_SECOND));
-
                 if (visibleChars >= lines.get(lineIndex).length()) {
-                    state = State.WAIT;
-                    stateTimer = 0f;
-                }
-            }
-            case WAIT -> {
-                // منتظر کلیک / Enter
-            }
-            case SHOUT -> {
-                stateTimer += delta;
+                    state = State.WAIT;stateTimer = 0f;}}
+            case WAIT -> {}
+            case SHOUT -> {stateTimer += delta;
                 if (stateTimer >= SHOUT_DURATION) {
-                    state = State.EXIT;
-                    stateTimer = 0f;
-                    animTime = 0f;
-                }
-            }
-            case EXIT -> {
-                stateTimer += delta;
-                // جلوگیری از پرش دوباره انیمیشن خروج
+                    state = State.EXIT;stateTimer = 0f;animTime = 0f;}}
+            case EXIT -> {stateTimer += delta;
                 animTime = Math.min(animTime, exitDuration);
                 if (stateTimer >= exitDuration) {
-                    showing = false;
-                    setVisible(false);
+                    showing = false;setVisible(false);
                     setTouchable(Touchable.disabled);
-                    state = State.HIDDEN;
-                }
-            }
-            default -> {
-            }
-        }
+                    state = State.HIDDEN;}}default -> {}}
     }
 
     @Override

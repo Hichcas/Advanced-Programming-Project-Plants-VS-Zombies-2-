@@ -17,121 +17,177 @@ public class PlantHandler {
     public static String plantPlant(RegularGameEngine engine, PlantType type, int x, int y) {
         if (engine.map == null) return "Map is not ready.";
         if (type == null) return "Unknown plant type.";
+
         int row = engine.normalizeIndex(y);
         int col = engine.normalizeIndex(x);
         if (!engine.map.isWithinBounds(row, col)) return "Invalid tile.";
+
         Tile targetTile = engine.map.getTile(row, col);
         if (targetTile != null && targetTile.isScorched()) {
             return "Cannot plant on a tile while it is on fire!";
         }
+
         TileType targetTileType = targetTile != null ? targetTile.getType() : TileType.NORMAL;
-        if (targetTileType == TileType.CRATER) return "This tile is a permanent Doom-shroom crater and cannot be planted on.";
+        if (targetTileType == TileType.CRATER) {
+            return "This tile is a permanent Doom-shroom crater and cannot be planted on.";
+        }
+
         boolean isWater = targetTileType == TileType.WATER || targetTileType == TileType.TIDE;
         Plant existingTop = engine.map.getPlantAt(row, col);
         Plant existingBase = engine.map.getBasePlantAt(row, col);
         boolean isLilyPad = type == PlantType.LILY_PAD;
-        boolean isAquatic = PlantLibrary.findByType(type).map(def -> def.hasTag(PlantTag.WATER)).orElse(false);
+        boolean isAquatic = PlantLibrary.findByType(type)
+            .map(def -> def.hasTag(PlantTag.WATER)).orElse(false);
         boolean addingPeaPodHead = type == PlantType.PEA_POD
             && existingTop != null
             && existingTop.getType() == PlantType.PEA_POD;
-        if (isAquatic && !isWater) return "Aquatic plants must be planted on water tiles.";
-        if (isWater && !isAquatic && !isLilyPad && existingBase == null)
-            return "Non-aquatic plants need a Lily Pad on water tiles.";
-        if (isLilyPad && !isWater) return "Lily Pad must be planted on water tiles.";
-        if (isLilyPad && existingBase != null) return "This tile already has a Lily Pad.";
-        if (type != PlantType.GRAVE_BUSTER && (targetTileType == TileType.TOMBSTONE || targetTileType == TileType.NECROMANCY)) {
-            return "Cannot plant on a grave.";
-        }
-        if (type == PlantType.GRAVE_BUSTER && targetTileType != TileType.TOMBSTONE && targetTileType != TileType.NECROMANCY) {
-            return "Grave Buster can only be planted on graves.";
-        }
-        if (!addingPeaPodHead) {
-            if (isWater && !isAquatic && !isLilyPad && existingTop != null) return "Tile is occupied.";
-            if (!isWater && existingTop != null) return "Tile is occupied.";
-        }
-        String availabilityError = checkPlantAvailability(engine, type);
-        if (availabilityError != null) return availabilityError;
+
+        String error = validatePlanting(engine, type, targetTileType, isWater,
+            existingTop, existingBase, isLilyPad, isAquatic, addingPeaPodHead);
+        if (error != null) return error;
 
         if (addingPeaPodHead) {
-            int heads = 1;
-            Object state = existingTop.getRuntimeState("peaPodHeads");
-            if (state instanceof Number n) heads = n.intValue();
-            if (heads >= 5) return "Pea Pod is already at 5 heads.";
-            if (!engine.conveyorBeltMode) {
-                int cost = existingTop.getStats().getCost();
-                if (engine.getSunCount() < cost) return "Not enough sun.";
-                engine.addSun(-cost);
-            }
-            heads++;
-            existingTop.putRuntimeState("peaPodHeads", heads);
-            String idleState = heads == 1 ? "idle" : "idle" + heads;
-            com.PVZ.model.entity.PlantAnimation.trigger(existingTop.getInstance(), idleState, 1.0);
-            handlePostPlanting(engine, type, existingTop);
-            return "Pea Pod grew to " + heads + " heads at (" + col + ", " + row + ").";
+            return handlePeaPodGrowth(engine, existingTop, col, row);
         }
 
-        // Imitater copies a selected plant for the actual board slot so the copied plant
-        // gets the normal behavior/rendering pipeline rather than remaining an inert shell.
-        PlantType plantedType = type;
-        if (type == PlantType.IMITATER) {
-            PlantType copyTarget = null;
-            for (PlantType selected : AppStatus.SELECTED_PLANTS) {
-                if (selected != null && selected != PlantType.IMITATER) {
-                    copyTarget = selected;
-                    break;
-                }
-            }
-            if (copyTarget == null) {
-                return "Select another plant beside Imitater so it can copy that plant.";
-            }
-            plantedType = copyTarget;
+        PlantType plantedType = resolveImitaterCopy(type);
+        if (plantedType == null) {
+            return "Select another plant beside Imitater so it can copy that plant.";
         }
 
+        return createAndPlacePlant(engine, type, plantedType, row, col,
+            targetTile, isWater, isAquatic, isLilyPad);
+    }
+
+    private static String validatePlanting(RegularGameEngine engine, PlantType type,
+                                           TileType targetTileType, boolean isWater,
+                                           Plant existingTop, Plant existingBase,
+                                           boolean isLilyPad, boolean isAquatic,
+                                           boolean addingPeaPodHead) {
+        if (isAquatic && !isWater) {
+            return "Aquatic plants must be planted on water tiles.";
+        }
+        if (isWater && !isAquatic && !isLilyPad && existingBase == null) {
+            return "Non-aquatic plants need a Lily Pad on water tiles.";
+        }
+        if (isLilyPad && !isWater) {
+            return "Lily Pad must be planted on water tiles.";
+        }
+        if (isLilyPad && existingBase != null) {
+            return "This tile already has a Lily Pad.";
+        }
+        if (type != PlantType.GRAVE_BUSTER &&
+            (targetTileType == TileType.TOMBSTONE ||
+                targetTileType == TileType.NECROMANCY)) {
+            return "Cannot plant on a grave.";
+        }
+        if (type == PlantType.GRAVE_BUSTER &&
+            targetTileType != TileType.TOMBSTONE &&
+            targetTileType != TileType.NECROMANCY) {
+            return "Grave Buster can only be planted on graves.";
+        }
+
+        if (!addingPeaPodHead) {
+            if (isWater && !isAquatic && !isLilyPad && existingTop != null) {
+                return "Tile is occupied.";
+            }
+            if (!isWater && existingTop != null) {
+                return "Tile is occupied.";
+            }
+        }
+
+        String availabilityError = checkPlantAvailability(engine, type);
+        if (availabilityError != null) return availabilityError;
+        return null;
+    }
+
+    private static String handlePeaPodGrowth(RegularGameEngine engine, Plant existingTop,
+                                             int col, int row) {
+        int heads = 1;
+        Object state = existingTop.getRuntimeState("peaPodHeads");
+        if (state instanceof Number n) heads = n.intValue();
+        if (heads >= 5) return "Pea Pod is already at 5 heads.";
+
+        if (!engine.conveyorBeltMode) {
+            int cost = existingTop.getStats().getCost();
+            if (engine.getSunCount() < cost) return "Not enough sun.";
+            engine.addSun(-cost);
+        }
+        heads++;
+        existingTop.putRuntimeState("peaPodHeads", heads);
+        String idleState = heads == 1 ? "idle" : "idle" + heads;
+        com.PVZ.model.entity.PlantAnimation.trigger(existingTop.getInstance(), idleState, 1.0);
+        handlePostPlanting(engine, PlantType.PEA_POD, existingTop);
+        return "Pea Pod grew to " + heads + " heads at (" + col + ", " + row + ").";
+    }
+
+    private static PlantType resolveImitaterCopy(PlantType type) {
+        if (type != PlantType.IMITATER) return type;
+
+        PlantType copyTarget = null;
+        for (PlantType selected : AppStatus.SELECTED_PLANTS) {
+            if (selected != null && selected != PlantType.IMITATER) {
+                copyTarget = selected;
+                break;
+            }
+        }
+        return copyTarget; // null indicates error
+    }
+
+    private static String createAndPlacePlant(RegularGameEngine engine, PlantType originalType,
+                                              PlantType plantedType, int row, int col,
+                                              Tile targetTile, boolean isWater,
+                                              boolean isAquatic, boolean isLilyPad) {
         Plant plant = createPlantInstance(engine, plantedType);
         if (plant == null) return "Cannot create plant.";
+
         if (plantedType == PlantType.PEA_POD) {
             plant.putRuntimeState("peaPodHeads", 1);
         }
+
         if (!engine.conveyorBeltMode) {
-            int cost = type == PlantType.IMITATER
+            int cost = originalType == PlantType.IMITATER
                 ? PlantLibrary.getEffectiveCost(PlantType.IMITATER)
                 : plant.getStats().getCost();
             if (engine.getSunCount() < cost) return "Not enough sun.";
             engine.addSun(-cost);
         }
-        if (isLilyPad)
+
+        if (isLilyPad) {
             engine.map.setBasePlant(row, col, plant);
-        else if (isWater && !isAquatic)
+        } else {
             engine.map.setPlant(row, col, plant);
-        else
-            engine.map.setPlant(row, col, plant);
+        }
+
         plant.setPlanted(true);
         plant.putRuntimeState("row", row);
         plant.putRuntimeState("col", col);
         plant.putRuntimeState("lane", row);
+
         if (targetTile != null) {
             float fxX = targetTile.getX() + targetTile.getWidth() / 2f;
             float fxY = targetTile.getY() + targetTile.getHeight() / 2f;
-            // افکت کاشتن: خاک زیر گیاه پخش می‌شود + یک پاف کوچیک وقتی گیاه سبز می‌شود -
-            // دقیقا همون دو تا اسپلاین آماده‌ای که خود بازی رسمی برای این لحظه استفاده می‌کند.
             engine.addTimedPamEffect(
-                "768/INITIAL/EFFECTS/DIRT_SPAWN_GRASS/DIRT_SPAWN_GRASS.PAM", "tomb_dirt_anim",
-                0.5, 1f, fxX, fxY);
+                "768/INITIAL/EFFECTS/DIRT_SPAWN_GRASS/DIRT_SPAWN_GRASS.PAM",
+                "tomb_dirt_anim", 0.5, 1f, fxX, fxY);
             engine.addTimedPamEffect(
-                "768/INITIAL/ZEN_GARDEN/PLANT_POOF/PLANT_POOF.PAM", "animation",
-                0.6, 1f, fxX, fxY);
+                "768/INITIAL/ZEN_GARDEN/PLANT_POOF/PLANT_POOF.PAM",
+                "animation", 0.6, 1f, fxX, fxY);
         }
-        handlePostPlanting(engine, type, plant);
+
+        handlePostPlanting(engine, originalType, plant);
+
         if (AppStatus.currentUser != null && AppStatus.currentUser.questState != null) {
-            AppStatus.currentUser.questState.getQuestManager().onPlantPlaced(type);
+            AppStatus.currentUser.questState.getQuestManager().onPlantPlaced(originalType);
         }
-        engine.questPlantTypesUsed.add(type);
-        engine.questPlantFamiliesUsed.add(PlantFamilyMapper.getFamily(type));
-        if (type == PlantType.IMITATER) {
+        engine.questPlantTypesUsed.add(originalType);
+        engine.questPlantFamiliesUsed.add(PlantFamilyMapper.getFamily(originalType));
+
+        if (originalType == PlantType.IMITATER) {
             return "Planted Imitater copying " + plantedType.getDisplayName()
                 + " at (" + col + ", " + row + ").";
         }
-        return "Planted " + type.getDisplayName() + " at (" + col + ", " + row + ").";
+        return "Planted " + originalType.getDisplayName() + " at (" + col + ", " + row + ").";
     }
 
     private static String checkPlantAvailability(RegularGameEngine engine, PlantType type) {

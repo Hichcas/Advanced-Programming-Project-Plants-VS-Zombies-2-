@@ -68,7 +68,8 @@ public class MatchmakingManager {
 
     // ===================== Challenge =====================
 
-    public synchronized String challenge(ClientSession challenger, String targetUsername, String requestedRole, int levelId) {
+    public synchronized String challenge(ClientSession challenger,
+                                         String targetUsername, String requestedRole, int levelId) {
         if (!challenger.isAuthenticated()) return "You must be logged in.";
         if (targetUsername == null || targetUsername.isBlank()) return "Please enter a username.";
         if (targetUsername.equals(challenger.getUsername())) return "You cannot challenge yourself.";
