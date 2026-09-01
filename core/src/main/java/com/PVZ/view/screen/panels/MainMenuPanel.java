@@ -62,18 +62,29 @@ public class MainMenuPanel extends BasePanel {
 
     public MainMenuPanel() {
         setFillParent(true);
-        setTouchable(Touchable.enabled);   // برای دریافت Swipe
-
-        // ---------- آهنگ منو ----------
+        setTouchable(Touchable.enabled);
         MusicManager.getInstance().playMusic("music/TitleScreen.mp3");
 
-        // ---------- لوگو ----------
+        setupLogo();
+        setupContentImages();
+        setupTextButtons();
+        setupSettingsButton();
+        setupProfileButton();
+        setupNewsButton();
+        setupLeaderboardButton();
+
+        addSwipeListener();
+        applyMode(MenuMode.OFFLINE);
+    }
+
+    private void setupLogo() {
         Texture logoTexture = safeTextureFromRegion("IMAGE_UI_MAINMENU_PVZ2_LOGO_HORIZONTAL");
         float logoX = (VIRTUAL_WIDTH - logoTexture.getWidth()) / 2f;
         float logoY = VIRTUAL_HEIGHT - logoTexture.getHeight() - 50f - 300f;
         addArt(logoTexture, logoX, logoY, logoTexture.getWidth(), logoTexture.getHeight());
+    }
 
-        // ---------- دو تصویر محتوای مرکزی (آفلاین و آنلاین) ----------
+    private void setupContentImages() {
         offlineContentTexture = safeTextureFromRegion("IMAGE_UI_MAINMENU_MAINMENU_CONTENT_OFFLINE");
         onlineContentTexture = safeTextureFromRegion("IMAGE_UI_MAINMENU_MAINMENU_CONTENT_DOWNLOADING");
 
@@ -85,27 +96,30 @@ public class MainMenuPanel extends BasePanel {
         contentImage = new Image(new TextureRegionDrawable(offlineContentTexture));
         contentImage.setBounds(contentX, contentY, contentW, contentH);
         addActor(contentImage);
+    }
 
-        // ---------- دکمه‌های متنی ----------
+    private void setupTextButtons() {
         Texture greenUpTex = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON");
         Texture greenDownTex = safeTextureFromRegion("IMAGE_UI_GENERIC_GREENBUTTON_DOWN");
         Texture markerTex = new Texture(Gdx.files.internal("global/button_marker.png"));
         BitmapFont buttonFont = PvzSkin.get().getFont("FBUSV8C5EI_1_outline");
 
-        buttonsStartY = contentY + contentH - 150f - BUTTONS_EXTRA_DOWN;
+        buttonsStartY = contentImage.getY() + contentImage.getHeight() - 150f - BUTTONS_EXTRA_DOWN;
         float centerX = VIRTUAL_WIDTH / 2f;
 
-        // دکمه‌ی شروع (متن و اکشن آن بسته به حالت تغییر می‌کند)
         startButton = addButton("START GAME", this::startOfflineGame,
             greenUpTex, greenDownTex, buttonFont, markerTex, centerX, buttonsStartY);
         localVersusButton = addButton("LOCAL 2-PLAYER", this::startLocalVersusGame,
             greenUpTex, greenDownTex, buttonFont, markerTex, centerX, buttonsStartY - 85);
         quitButton = addButton("QUIT GAME", this::onQuit,
             greenUpTex, greenDownTex, buttonFont, markerTex, centerX, buttonsStartY - 90);
+    }
 
-        // ---------- دکمهٔ تنظیمات ----------
-        Texture settingsNormal = safeTextureFromRegion("IMAGE_UI_HUD_SETTINGSBUTTON_BUTTONS_HUD_SETTINGS_NORMAL");
-        Texture settingsSelected = safeTextureFromRegion("IMAGE_UI_HUD_SETTINGSBUTTON_BUTTONS_HUD_SETTINGS_SELECTED");
+    private void setupSettingsButton() {
+        Texture settingsNormal = safeTextureFromRegion(
+            "IMAGE_UI_HUD_SETTINGSBUTTON_BUTTONS_HUD_SETTINGS_NORMAL");
+        Texture settingsSelected = safeTextureFromRegion(
+            "IMAGE_UI_HUD_SETTINGSBUTTON_BUTTONS_HUD_SETTINGS_SELECTED");
 
         MenuButton settingsBtn = new MenuButton(
             settingsNormal, null, null,
@@ -117,8 +131,9 @@ public class MainMenuPanel extends BasePanel {
         float settingsY = SETTINGS_BOTTOM_MARGIN;
         settingsBtn.setPosition(settingsX, settingsY);
         addActor(settingsBtn);
+    }
 
-        // ---------- دکمهٔ پروفایل ----------
+    private void setupProfileButton() {
         Texture profileTex = createProfileButtonTexture();
         MenuButton profileBtn = new MenuButton(
             profileTex, null, null,
@@ -127,13 +142,17 @@ public class MainMenuPanel extends BasePanel {
         );
         profileBtn.setSize(SETTINGS_SIZE, SETTINGS_SIZE);
         float gap = 20f;
-        float profileX = settingsX - SETTINGS_SIZE - gap;
-        profileBtn.setPosition(profileX, settingsY);
+        float profileX = VIRTUAL_WIDTH - SETTINGS_SIZE - SETTINGS_RIGHT_MARGIN
+            - SETTINGS_SIZE - gap;
+        profileBtn.setPosition(profileX, SETTINGS_BOTTOM_MARGIN);
         addActor(profileBtn);
+    }
 
-        // ---------- دکمهٔ News ----------
-        Texture newsNormal = safeTextureFromRegion("IMAGE_UI_HUD_NEWSBUTTON_BUTTONS_HUD_NEWS_NORMAL");
-        Texture newsSelected = safeTextureFromRegion("IMAGE_UI_HUD_NEWSBUTTON_BUTTONS_HUD_NEWS_SELECTED");
+    private void setupNewsButton() {
+        Texture newsNormal = safeTextureFromRegion(
+            "IMAGE_UI_HUD_NEWSBUTTON_BUTTONS_HUD_NEWS_NORMAL");
+        Texture newsSelected = safeTextureFromRegion(
+            "IMAGE_UI_HUD_NEWSBUTTON_BUTTONS_HUD_NEWS_SELECTED");
 
         MenuButton newsBtn = new MenuButton(
             newsNormal, null, null,
@@ -151,10 +170,13 @@ public class MainMenuPanel extends BasePanel {
         newsBadge.setPosition(newsX + SETTINGS_SIZE - newsBadge.getWidth() / 2f,
             newsY + SETTINGS_SIZE - newsBadge.getHeight() / 2f);
         addActor(newsBadge);
+    }
 
-        // ---------- دکمهٔ Leaderboard ----------
-        Texture leaderboardNormal = safeTextureFromRegion("IMAGE_UI_GAMECENTER_ANDROID_LEADERBOARD");
-        Texture leaderboardSelected = safeTextureFromRegion("IMAGE_UI_GAMECENTER_ANDROID_LEADERBOARD_SELECT");
+    private void setupLeaderboardButton() {
+        Texture leaderboardNormal = safeTextureFromRegion(
+            "IMAGE_UI_GAMECENTER_ANDROID_LEADERBOARD");
+        Texture leaderboardSelected = safeTextureFromRegion(
+            "IMAGE_UI_GAMECENTER_ANDROID_LEADERBOARD_SELECT");
 
         MenuButton leaderboardBtn = new MenuButton(
             leaderboardNormal, null, null,
@@ -162,17 +184,11 @@ public class MainMenuPanel extends BasePanel {
             this::onLeaderboard
         );
         leaderboardBtn.setSize(SETTINGS_SIZE, SETTINGS_SIZE);
-        float leaderboardX = newsX + SETTINGS_SIZE + gap;
-        leaderboardBtn.setPosition(leaderboardX, settingsY);
+        float gap = 20f;
+        float leaderboardX = SETTINGS_RIGHT_MARGIN + SETTINGS_SIZE + gap;
+        leaderboardBtn.setPosition(leaderboardX, SETTINGS_BOTTOM_MARGIN);
         addActor(leaderboardBtn);
-
-        // ---------- Swipe برای جابه‌جایی آفلاین / آنلاین ----------
-        addSwipeListener();
-
-        // حالت اولیه را اعمال کن
-        applyMode(MenuMode.OFFLINE);
     }
-
     // ======================== Swipe ========================
     private final Vector2 touchStart = new Vector2();
     private final Vector2 touchEnd = new Vector2();
@@ -256,7 +272,8 @@ public class MainMenuPanel extends BasePanel {
         AppStatus.setCurrentMenuType(MenuType.IN_GAME);
         com.PVZ.model.game.IZombieLocalVersusEngine engine = new com.PVZ.model.game.IZombieLocalVersusEngine(1);
         AppStatus.setGameEngine(engine);
-        com.PVZ.view.screen.manager.ScreenManager.getInstance().performTransition(() -> new com.PVZ.view.screen.GameScreen(
+        com.PVZ.view.screen.manager.ScreenManager.getInstance().
+            performTransition(() -> new com.PVZ.view.screen.GameScreen(
             "maps/Frontyard.jpg",
             "music/TitleScreen.mp3",
             engine

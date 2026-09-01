@@ -85,67 +85,43 @@ public class GreenhousePanel extends BasePanel {
         TextureBank bank = getTextureBank();
         TextureRegion originalBg = bank.region("IMAGE_BACKGROUNDS_ZEN_GARDEN");
         if (originalBg != null) {
-            int cropLeft = 180;
-            int cropRight = 180;
+            int cropLeft = 180;int cropRight = 180;
             TextureRegion croppedBg = new TextureRegion(
                 originalBg.getTexture(),
-                originalBg.getRegionX() + cropLeft,
-                originalBg.getRegionY(),
+                originalBg.getRegionX() + cropLeft,originalBg.getRegionY(),
                 originalBg.getRegionWidth() - cropLeft - cropRight,
-                originalBg.getRegionHeight()
-            );
+                originalBg.getRegionHeight());
             Image bgImage = new Image(new TextureRegionDrawable(croppedBg));
-            bgImage.setFillParent(true);
-            bgImage.setScaling(Scaling.fill);
-            addActor(bgImage);
-        }
-
-        Skin skin = PvzSkin.get();
+            bgImage.setFillParent(true);bgImage.setScaling(Scaling.fill);
+            addActor(bgImage);}Skin skin = PvzSkin.get();
         BitmapFont font = skin.getFont("FBUSV8C5EI_1_outline");
         Texture purpleUp = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON");
         Texture purpleDown = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON_DOWN");
         Texture marker = new Texture(Gdx.files.internal("global/button_marker.png"));
-
-        gridGroup = new Group();
-        gridGroup.setSize(BaseScreen.VIRTUAL_WIDTH, BaseScreen.VIRTUAL_HEIGHT);
-        addActor(gridGroup);
-
+        gridGroup = new Group();gridGroup.setSize(BaseScreen.VIRTUAL_WIDTH,
+            BaseScreen.VIRTUAL_HEIGHT);addActor(gridGroup);
         statusLabel = new Label("", new Label.LabelStyle(font, Color.SALMON));
-        statusLabel.setAlignment(Align.center);
-        addActor(statusLabel);
-
+        statusLabel.setAlignment(Align.center);addActor(statusLabel);
         MenuButton backBtn = new MenuButton(purpleUp, "Back", font, purpleDown, null, marker,
-            this::onBack);
-        backBtn.setSize(200f, 70f);
+            this::onBack);backBtn.setSize(200f, 70f);
         backBtn.setPosition(BaseScreen.VIRTUAL_WIDTH - 250f, 30f);
-        addActor(backBtn);
-
-        addActor(buildShopButton());
-
-        buildGrid();
-
-        // ======================= Popup جایزه (بدون آیکون) =======================
-        popupTable = new Table();
-        popupTable.setVisible(false);
+        addActor(backBtn);addActor(buildShopButton());buildGrid();
+        popupTable = new Table();popupTable.setVisible(false);
         popupTable.setTouchable(Touchable.enabled);
         popupTable.setSize(500f, 220f);
         popupTable.setPosition(
             (BaseScreen.VIRTUAL_WIDTH - popupTable.getWidth()) / 2f,
-            (BaseScreen.VIRTUAL_HEIGHT - popupTable.getHeight()) / 2f
-        );
+            (BaseScreen.VIRTUAL_HEIGHT - popupTable.getHeight()) / 2f);
         popupTable.pad(20f);
         popupTable.setBackground(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
-
         popupTextLabel = new Label("", new Label.LabelStyle(font, Color.WHITE));
         popupTextLabel.setWrap(true);
         popupTextLabel.setAlignment(Align.center);
         popupTable.add(popupTextLabel).width(400f).padBottom(10f).row();
-
         popupCloseBtn = new MenuButton(purpleUp, "OK", font, purpleDown, null, marker,
             () -> popupTable.setVisible(false));
         popupCloseBtn.setSize(140f, 60f);
         popupTable.add(popupCloseBtn).padTop(10f).row();
-
         addActor(popupTable);
     }
 

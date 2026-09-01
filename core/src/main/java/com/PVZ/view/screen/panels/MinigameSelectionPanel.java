@@ -98,12 +98,33 @@ public class MinigameSelectionPanel extends BasePanel {
         Drawable cardBg = resolveCardBackground();
         Drawable popupBg = resolvePopupBackground();
 
+        Table root = createRootTable(titleBg);
+        addActor(root);
+
+        root.add(createTopTable()).expandX().padTop(70f).row();
+        root.add(createCardsRow(cardBg)).expand().fill().padTop(20f).row();
+        root.add(createBottomTable()).expandX().padBottom(46f);
+
+        popup = buildPopup(popupBg);
+        popup.setVisible(false);
+        popup.setTouchable(Touchable.enabled);
+        addActor(popup);
+
+        if (!cards.isEmpty()) {
+            hidePopup();
+        }
+    }
+
+    private Table createRootTable(Drawable bg) {
         Table root = new Table();
         root.setFillParent(true);
         root.center();
-        root.setBackground(titleBg);
+        root.setBackground(bg);
         root.pad(22f, 42f, 22f, 42f);
+        return root;
+    }
 
+    private Table createTopTable() {
         Table top = new Table();
         Label title = new Label("MINIGAMES", new Label.LabelStyle(titleFont, Color.WHITE));
         title.setFontScale(1.15f);
@@ -112,12 +133,32 @@ public class MinigameSelectionPanel extends BasePanel {
         Label subtitle = new Label("Hover over a card to see the levels",
             new Label.LabelStyle(bodyFont, Color.LIGHT_GRAY));
         top.add(subtitle).padBottom(18f).row();
+        return top;
+    }
 
+    private Table createCardsRow(Drawable cardBg) {
         Table row = new Table();
         row.center();
         row.defaults().padRight(CARD_GAP);
 
-        List<MinigameInfo> infos = List.of(
+        List<MinigameInfo> infos = createMinigameInfos();
+
+        float cardWidth = Math.max(300f, Math.min(340f,
+            (VW - (OUTER_MARGIN * 2f) - (CARD_GAP * 4f)) / 5f));
+        float cardHeight = Math.max(380f, Math.min(430f, VH * 0.31f));
+
+        for (int i = 0; i < infos.size(); i++) {
+            MinigameInfo info = infos.get(i);
+            MinigameCard card = new MinigameCard(info, cardBg, cardWidth, cardHeight);
+            cards.add(card);
+            row.add(card).size(cardWidth, cardHeight)
+                .padRight(i == infos.size() - 1 ? 0f : CARD_GAP);
+        }
+        return row;
+    }
+
+    private List<MinigameInfo> createMinigameInfos() {
+        return List.of(
             new MinigameInfo(MinigameEnum.VASEBREAKER, "vasebreaker", "vasebreaker_cover.png",
                 "Break vases to reveal plants, zombies, and seeds."),
             new MinigameInfo(MinigameEnum.WALLNUT_BOWLING, "wallnut_bowling", "wallnut_bowling_cover.png",
@@ -129,36 +170,15 @@ public class MinigameSelectionPanel extends BasePanel {
             new MinigameInfo(MinigameEnum.ZOMBOTANY, "zombotany", "zombotany_cover.png",
                 "Plant-zombie chaos: place zombie plants and survive the waves.")
         );
+    }
 
-        float cardWidth = Math.max(300f, Math.min(340f, (VW - (OUTER_MARGIN * 2f) - (CARD_GAP * 4f)) / 5f));
-        float cardHeight = Math.max(380f, Math.min(430f, VH * 0.31f));
-
-        for (int i = 0; i < infos.size(); i++) {
-            MinigameInfo info = infos.get(i);
-            MinigameCard card = new MinigameCard(info, cardBg, cardWidth, cardHeight);
-            cards.add(card);
-            row.add(card).size(cardWidth, cardHeight).padRight(i == infos.size() - 1 ? 0f : CARD_GAP);
-        }
-
+    private Table createBottomTable() {
         Table bottom = new Table();
         MenuButton backButton = new MenuButton(purpleUp, "BACK", titleFont, purpleDown, null, markerTexture,
             () -> AppStatus.setCurrentMenuType(MenuType.MAIN));
         backButton.setSize(220f, 66f);
         bottom.add(backButton).size(220f, 66f).padTop(18f);
-
-        root.add(top).expandX().padTop(70f).row();
-        root.add(row).expand().fill().padTop(20f).row();
-        root.add(bottom).expandX().padBottom(46f);
-        addActor(root);
-
-        popup = buildPopup(popupBg);
-        popup.setVisible(false);
-        popup.setTouchable(Touchable.enabled);
-        addActor(popup);
-
-        if (!cards.isEmpty()) {
-            hidePopup();
-        }
+        return bottom;
     }
 
     private Table buildPopup(Drawable popupBg) {
@@ -271,8 +291,6 @@ public class MinigameSelectionPanel extends BasePanel {
 
     private void launchMinigame(MinigameInfo info, int levelId) {
         if (info.displayName == MinigameEnum.I_ZOMBIE) {
-            // I, Zombie gets its own roster-selection screen (like Plant Selection)
-            // instead of jumping straight into the level with a random loadout.
             AppStatus.pendingIZombieLevelId = levelId;
             AppStatus.SELECTED_ZOMBIES.clear();
             AppStatus.currentMenuType = MenuType.I_ZOMBIE_SELECTION;
