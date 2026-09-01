@@ -1,4 +1,3 @@
-
 package com.PVZ.controller.menuControllers;
 
 import com.PVZ.model.entity.plants.PlantDefinition;
@@ -149,9 +148,15 @@ public class CollectionMenuController {
             }
 
             int currentDisplayLevel = currentLevel + 1;
-            int requiredSeedPackets = UpgradeCostPolicy.currentUpgradeRequirement(currentDisplayLevel, maxRawLevel + 1);
+            int requiredSeedPackets = UpgradeCostPolicy.currentUpgradeRequirement(
+                currentDisplayLevel,
+                maxRawLevel + 1
+            );
             if (!user.collectionState.spendSeedPackets(type, requiredSeedPackets)) {
-                return new OutputDTO(false, "Not enough seed packets. Need " + requiredSeedPackets + " to reach Level " + (currentDisplayLevel + 1) + ".");
+                return new OutputDTO(false,
+                    "Not enough seed packets. Need " + requiredSeedPackets
+                        + " to reach Level " + (currentDisplayLevel + 1) + "."
+                );
             }
             user.collectionState.setPlantLevel(type, currentLevel + 1);
             UserRegistry.touch(user.profile.getUsername());
