@@ -63,7 +63,8 @@ public class ShooterBehavior implements PlantBehavior {
         if ("threepeater".equals(key)) {
             int top = Math.max(0, lane - 1);
             int bottom = Math.min(context.getRowCount() - 1, lane + 1);
-            if (!context.getZombiesInLane(top).isEmpty() || context.hasObstacleAheadInLane(top, plantCol)) return true;
+            if (!context.getZombiesInLane(top).isEmpty() ||
+                context.hasObstacleAheadInLane(top, plantCol)) return true;
             if (!context.getZombiesInLane(bottom).isEmpty() || context.hasObstacleAheadInLane(bottom, plantCol)) return true;
         }
         return false;

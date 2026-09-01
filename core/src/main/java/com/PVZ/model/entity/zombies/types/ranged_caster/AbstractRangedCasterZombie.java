@@ -40,61 +40,39 @@ public abstract class AbstractRangedCasterZombie extends Zombie {
     public void update(float delta, BattleController ctrl) {
         updateEffects(delta);
         com.PVZ.model.entity.zombies.base.ZombieAnimation.tick(this, delta);
-
         if (isDying()) {
             animStateTime += delta;
             if (!com.PVZ.model.entity.zombies.base.ZombieAnimation.isActive(this)) {
-                finishDeath(ctrl);
-            }
-            return;
-        }
-
+                finishDeath(ctrl);}return;}
         if (!isFrozen()) {
-            animStateTime += delta;
-        }
-
+            animStateTime += delta;}
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
-            startDeath(ctrl);
-            return;
-        }
+            startDeath(ctrl);return;}
         if (hypnotized) {
             updateHypnotized(delta, ctrl);
             hitbox.setPosition((float) x, (float) y);
-            onUpdate(delta, ctrl);
-            return;
-        }
-        if (ctrl == null) {
-            return;
-        }
+            onUpdate(delta, ctrl);return;}
+        if (ctrl == null) {return;}
         if (isStationary()) {
             moving = false;
             com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(this, "idle", 1.0);
             hitbox.setPosition((float) x, (float) y);
-            onUpdate(delta, ctrl);
-            return;
-        }
+            onUpdate(delta, ctrl);return;}
         int tileCol = ctrl.getTileColumn((float) x);
         col = tileCol;
-
         Plant plantInFront = ctrl.getPlantAt((int) row, tileCol);
         Plant rangedTarget = findNearestPlantInRange(ctrl);
-
         if (plantInFront != null && !plantInFront.isDead()) {
             moving = false;
             attack(plantInFront, delta, ctrl);
         } else {
             moving = true;
             move(delta, ctrl);
-
             if (rangedTarget != null) {
                 rangedCooldown += delta;
                 if (rangedCooldown >= attackCooldown) {
                     shoot(ctrl, rangedTarget);
-                    rangedCooldown = 0;
-                }
-            }
-        }
-
+                    rangedCooldown = 0;}}}
         hitbox.setPosition((float) x, (float) y);
         onUpdate(delta, ctrl);
     }

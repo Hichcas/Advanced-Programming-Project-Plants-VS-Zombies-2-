@@ -120,15 +120,18 @@ public final class PamAnimationCatalog {
         if (canonicalState != null) {
             String needle = canonicalState.toLowerCase();
             for (String name : e.clips.keySet()) {
-                if (name.toLowerCase().contains(needle)) {
+                if (name.toLowerCase()
+                    .contains(needle)) {
                     return name;
                 }
             }
         }
-        if (e.clips.containsKey("idle")) {
+        if (e.clips.
+            containsKey("idle")) {
             return "idle";
         }
-        return e.clips.keySet().iterator().next();
+        return e.clips.keySet().
+            iterator().next();
     }
 
     private static class Root {

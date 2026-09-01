@@ -39,15 +39,19 @@ public class MintBehavior implements PlantBehavior {
             com.PVZ.model.enums.PlantFamily otherFamily =
                 com.PVZ.model.quest.PlantFamilyMapper.getFamily(other.getType());
             boolean matches = switch (targetFamily) {
-                case SUN_PRODUCER -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.SUN_PRODUCER;
+                case SUN_PRODUCER -> other.getDefinition().getCategoryEnum()
+                    == com.PVZ.model.enums.PlantCategory.SUN_PRODUCER;
                 case SHOOTER -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.SHOOTER;
                 case LOBBER -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.LOBBER;
-                case PIERCE_MINT -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.THROUGH_STRIKE;
-                case CAT_TAIL_MINT -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.HOMING;
+                case PIERCE_MINT -> other.getDefinition().getCategoryEnum()
+                    == com.PVZ.model.enums.PlantCategory.THROUGH_STRIKE;
+                case CAT_TAIL_MINT -> other.getDefinition().getCategoryEnum()
+                    == com.PVZ.model.enums.PlantCategory.HOMING;
                 case MODIFIER -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.MODIFIER;
                 case WALL -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.WALL;
                 case MELEE -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.MELEE;
-                case EXPLOSIVE -> other.getDefinition().getCategoryEnum() == com.PVZ.model.enums.PlantCategory.EXPLOSIVE;
+                case EXPLOSIVE -> other.getDefinition().getCategoryEnum()
+                    == com.PVZ.model.enums.PlantCategory.EXPLOSIVE;
                 default -> otherFamily == targetFamily;
             };
             if (matches && other.hasPlantFoodEffect()) {

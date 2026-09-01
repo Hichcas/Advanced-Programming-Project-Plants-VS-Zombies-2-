@@ -175,10 +175,12 @@ public class Plant {
         try {
             drawPlantInternal(batch);
             if (isHitFlashing()) {
-                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                    com.badlogic.gdx.graphics.GL20.GL_ONE);
                 batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
                 drawPlantInternal(batch);
-                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                    com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
             }
         } finally {
             batch.setColor(origColor);
@@ -187,70 +189,18 @@ public class Plant {
 
     private void drawPlantInternal(SpriteBatch batch) {
         if (isDead()) {
-            Object timer = getRuntimeState("deathFxTimer");
-            if (timer instanceof Number n && n.doubleValue() > 0.0) {
-                float[] anchor = getVisualAnchor();
-                com.PVZ.view.renderer.EntityRenderer.getInstance().renderPam(batch,
-                    "768/FULL/EFFECTS/GENERIC_EXPLOSION_FRONT/GENERIC_EXPLOSION_FRONT.PAM",
-                    "animation", (float)(0.9 - n.doubleValue()), anchor[0], anchor[1], 0.75f);
-            }
+            drawDeathEffect(batch);
             return;
         }
         Rectangle box = getHitbox();
-
         String key = getType() != null ? getType().name() : null;
-        com.PVZ.view.renderer.EntityRenderer renderer = com.PVZ.view.renderer.EntityRenderer.getInstance();
+        com.PVZ.view.renderer.EntityRenderer renderer =
+            com.PVZ.view.renderer.EntityRenderer.getInstance();
         if (renderer != null && key != null) {
             float[] anchor = getVisualAnchor();
             float ax = anchor[0];
             float ay = anchor[1];
-
-            if (Boolean.TRUE.equals(getRuntimeState("isSheep"))) {
-                boolean drewSheep = renderer.renderPam(batch,
-                    "768/FULL/EFFECTS/DARK_WIZARD_SHEEPENING/DARK_WIZARD_SHEEPENING.PAM",
-                    "idle", animStateTime, ax, ay);
-                if (drewSheep) {
-                    return;
-                }
-            }
-
-            boolean drewAnimated;
-            if (isPlantFoodActive()) {
-                double pfVisualTime = asDouble(getRuntimeState("plantFoodVisualTime"), 0.0);
-                boolean drewOn = pfVisualTime < 0.5
-                    && renderer.renderPlantExact(batch, key, "plantfood_on", (float) pfVisualTime, ax, ay);
-                if (!drewOn) {
-                    drewAnimated = renderer.renderPlantExact(batch, key, "plantfood",
-                        Math.max(0f, (float) (pfVisualTime - 0.5)), ax, ay);
-                    if (!drewAnimated) {
-                        drewAnimated = renderer.renderPlant(batch, key, "plantfood", animStateTime, ax, ay);
-                    }
-                } else {
-                    drewAnimated = true;
-                }
-                // The native PvZ2 plant-food aura is a separate PAM effect.
-                renderer.renderPam(batch,
-                    "768/INITIAL/EFFECTS/PLANTFOOD_FX/PLANTFOOD_FX.PAM",
-                    "plantfood", (float) pfVisualTime, ax, ay);
-            } else if (com.PVZ.model.entity.PlantAnimation.isActive(instance)) {
-                String state = com.PVZ.model.entity.PlantAnimation.getState(instance);
-                drewAnimated = renderer.renderPlant(batch, key, state, animStateTime, ax, ay);
-            } else if ("PEA_POD".equals(key)) {
-                int heads = Math.max(1, Math.min(5, asInt(getRuntimeState("peaPodHeads"), 1)));
-                String idleState = heads <= 1 ? "idle" : "idle" + heads;
-                drewAnimated = renderer.renderPlantExact(batch, key, idleState, animStateTime, ax, ay);
-                if (!drewAnimated) {
-                    drewAnimated = renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);
-                }
-            } else if (idleVariant != null) {
-                drewAnimated = renderer.renderPlantExact(batch, key, idleVariant, animStateTime, ax, ay);
-                if (!drewAnimated) {
-                    drewAnimated = renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);
-                }
-            } else {
-                drewAnimated = renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);
-            }
-            if (drewAnimated) {
+            if (drawSpecialStates(batch, renderer, key, ax, ay)) {
                 return;
             }
         }
@@ -259,6 +209,84 @@ public class Plant {
             bodyTexture = loadTexture();
         }
         batch.draw(bodyTexture, box.x, box.y, box.width, box.height);
+    }
+
+    private void drawDeathEffect(SpriteBatch batch) {
+        Object timer = getRuntimeState("deathFxTimer");
+        if (timer instanceof Number n && n.doubleValue() > 0.0) {
+            float[] anchor = getVisualAnchor();
+            com.PVZ.view.renderer.EntityRenderer.getInstance().renderPam(batch,
+                "768/FULL/EFFECTS/GENERIC_EXPLOSION_FRONT/GENERIC_EXPLOSION_FRONT.PAM",
+                "animation", (float)(0.9 - n.doubleValue()), anchor[0], anchor[1], 0.75f);
+        }
+    }
+
+    private boolean drawSpecialStates(SpriteBatch batch,
+                                      com.PVZ.view.renderer.EntityRenderer renderer,
+                                      String key, float ax, float ay) {
+        if (Boolean.TRUE.equals(getRuntimeState("isSheep"))) {
+            boolean drewSheep = renderer.renderPam(batch,
+                "768/FULL/EFFECTS/DARK_WIZARD_SHEEPENING/DARK_WIZARD_SHEEPENING.PAM",
+                "idle", animStateTime, ax, ay);
+            if (drewSheep) {
+                return true;
+            }
+        }
+
+        boolean drewAnimated;
+        if (isPlantFoodActive()) {
+            double pfVisualTime = asDouble(getRuntimeState("plantFoodVisualTime"), 0.0);
+            boolean drewOn = pfVisualTime < 0.5
+                && renderer.renderPlantExact(batch, key, "plantfood_on",
+                (float) pfVisualTime, ax, ay);
+            if (!drewOn) {
+                drewAnimated = renderer.renderPlantExact(batch, key, "plantfood",
+                    Math.max(0f, (float) (pfVisualTime - 0.5)), ax, ay);
+                if (!drewAnimated) {
+                    drewAnimated = renderer.renderPlant(batch, key, "plantfood",
+                        animStateTime, ax, ay);
+                }
+            } else {
+                drewAnimated = true;
+            }
+            renderer.renderPam(batch,
+                "768/INITIAL/EFFECTS/PLANTFOOD_FX/PLANTFOOD_FX.PAM",
+                "plantfood", (float) pfVisualTime, ax, ay);
+            return drewAnimated;
+        }
+
+        if (com.PVZ.model.entity.PlantAnimation.isActive(instance)) {
+            String state = com.PVZ.model.entity.PlantAnimation.getState(instance);
+            return renderer.renderPlant(batch, key, state, animStateTime, ax, ay);
+        }
+
+        if ("PEA_POD".equals(key)) {
+            return drawPeaPod(batch, renderer, key, ax, ay);
+        }
+
+        if (idleVariant != null) {
+            boolean drew = renderer.renderPlantExact(batch, key, idleVariant,
+                animStateTime, ax, ay);
+            if (!drew) {
+                drew = renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);
+            }
+            return drew;
+        }
+
+        return renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);
+    }
+
+    private boolean drawPeaPod(SpriteBatch batch,
+                               com.PVZ.view.renderer.EntityRenderer renderer,
+                               String key, float ax, float ay) {
+        int heads = Math.max(1, Math.min(5, asInt(getRuntimeState("peaPodHeads"), 1)));
+        String idleState = heads <= 1 ? "idle" : "idle" + heads;
+        boolean drew = renderer.renderPlantExact(batch, key, idleState,
+            animStateTime, ax, ay);
+        if (!drew) {
+            drew = renderer.renderPlant(batch, key, "idle", animStateTime, ax, ay);
+        }
+        return drew;
     }
 
     private float[] getVisualAnchor() {
@@ -278,7 +306,8 @@ public class Plant {
         int row = asInt(getRuntimeState("row"), 0);
         int col = asInt(getRuntimeState("col"), 0);
         float tileSize = 100f;
-        return new float[]{col * tileSize + tileSize / 2f, row * tileSize + (tileSize - 70f) / 2f};
+        return new float[]{col * tileSize + tileSize / 2f,
+            row * tileSize + (tileSize - 70f) / 2f};
     }
 
     private com.badlogic.gdx.graphics.Texture loadTexture() {
@@ -290,15 +319,19 @@ public class Plant {
                 try {
                     if (com.badlogic.gdx.Gdx.files.internal(path).exists()) {
                         com.badlogic.gdx.graphics.Texture tex =
-                            new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(path));
-                        tex.setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear,
+                            new com.badlogic.gdx.graphics.Texture(
+                                com.badlogic.gdx.Gdx.files.internal(path));
+                        tex.setFilter(
+                            com.badlogic.gdx.graphics.Texture.TextureFilter.Linear,
                             com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
                         return tex;
                     }
-                    System.out.println("[Plant] no icon found for " + key + " at assets/" + path
+                    System.out.println("[Plant] no icon found for " + key
+                        + " at assets/" + path
                         + " -> falling back to placeholder circle");
                 } catch (RuntimeException ex) {
-                    System.out.println("[Plant] failed loading texture for " + key + " at assets/" + path
+                    System.out.println("[Plant] failed loading texture for " + key
+                        + " at assets/" + path
                         + " -> " + ex.getMessage());
                 }
             }
@@ -310,7 +343,8 @@ public class Plant {
         int w = 64;
         int h = 64;
         com.badlogic.gdx.graphics.Pixmap pixmap =
-            new com.badlogic.gdx.graphics.Pixmap(w, h, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+            new com.badlogic.gdx.graphics.Pixmap(w, h,
+                com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
         int hash = getType() != null ? getType().name().hashCode() : 0;
         float r = 0.3f + ((hash & 0xFF) / 255f) * 0.6f;
         float g = 0.5f + (((hash >> 8) & 0xFF) / 255f) * 0.5f;
@@ -319,7 +353,8 @@ public class Plant {
         pixmap.fillCircle(w / 2, h / 2, w / 2 - 2);
         pixmap.setColor(0f, 0f, 0f, 0.6f);
         pixmap.drawCircle(w / 2, h / 2, w / 2 - 2);
-        com.badlogic.gdx.graphics.Texture tex = new com.badlogic.gdx.graphics.Texture(pixmap);
+        com.badlogic.gdx.graphics.Texture tex =
+            new com.badlogic.gdx.graphics.Texture(pixmap);
         tex.setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear,
             com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
         pixmap.dispose();
@@ -390,7 +425,8 @@ public class Plant {
         if (pamPath == null) {
             return null;
         }
-        java.util.Set<String> names = com.PVZ.model.entity.PamAnimationCatalog.clipNames(pamPath);
+        java.util.Set<String> names =
+            com.PVZ.model.entity.PamAnimationCatalog.clipNames(pamPath);
         if (names == null) {
             return null;
         }
@@ -429,8 +465,10 @@ public class Plant {
         if (wx instanceof Number && wy instanceof Number) {
             float width = tw instanceof Number ? ((Number) tw).floatValue() * 0.7f : 80f;
             float height = th instanceof Number ? ((Number) th).floatValue() * 0.7f : 80f;
-            float x = ((Number) wx).floatValue() + (tw instanceof Number ? ((Number) tw).floatValue() * 0.15f : 0f);
-            float y = ((Number) wy).floatValue() + (th instanceof Number ? ((Number) th).floatValue() * 0.15f : 0f);
+            float x = ((Number) wx).floatValue()
+                + (tw instanceof Number ? ((Number) tw).floatValue() * 0.15f : 0f);
+            float y = ((Number) wy).floatValue()
+                + (th instanceof Number ? ((Number) th).floatValue() * 0.15f : 0f);
             return new Rectangle(x, y, width, height);
         }
         int row = asInt(getRuntimeState("row"), 0);

@@ -37,42 +37,46 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
     public void update(float delta, BattleController ctrl) {
         updateEffects(delta);
         ZombieAnimation.tick(this, delta);
-
         if (isDying()) {
             animStateTime += delta;
             if (!ZombieAnimation.isActive(this)) {
                 finishDeath(ctrl);
-            }
-            return;
-        }
-
+            }return;}
         if (!isFrozen()) {
-            animStateTime += delta;
-        }
-
+            animStateTime += delta;}
         if (hitpoints <= 0 && (armor == null || armor.isDestroyed())) {
             startDeath(ctrl);
-            return;
-        }
+            return;}
         if (hypnotized) {
             updateHypnotized(delta, ctrl);
             hitbox.setPosition((float) x, (float) y);
-            onUpdate(delta, ctrl);
-            return;
-        }
-        if (ctrl == null) {
-            return;
-        }
+            onUpdate(delta, ctrl);return;}
+        if (ctrl == null) {return;}
+        performUpdate(delta, ctrl);
+    }
 
+    private void performUpdate(float delta, BattleController ctrl) {
         int tileCol = ctrl.getTileColumn((float) x);
         col = tileCol;
 
         Plant plantInFront = ctrl.getPlantAt((int) row, tileCol);
         Plant targetPlant = findFarthestPlantInLane(ctrl);
 
+        boolean[] waterStatus = determineWaterStatus(ctrl, tileCol);
+        boolean inDeepWater = waterStatus[0];
+        boolean nextIsDeepWater = waterStatus[1];
+
+        boolean canMove = canMoveInWater(ctrl, tileCol, inDeepWater, nextIsDeepWater);
+
+        handleCombat(delta, ctrl, plantInFront, targetPlant, canMove);
+
+        hitbox.setPosition((float) x, (float) y);
+        onUpdate(delta, ctrl);
+    }
+
+    private boolean[] determineWaterStatus(BattleController ctrl, int tileCol) {
         boolean inDeepWater = false;
         boolean nextIsDeepWater = false;
-
         if (ctrl.getMap() != null) {
             float gridRight = ctrl.getMap().getStartX() + ctrl.getMap().getTotalWidth();
             if (x >= gridRight - 15f) {
@@ -82,7 +86,6 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
                 Tile currentTile = ctrl.getMap().getTile((int) row, tileCol);
                 TileType ctType = currentTile != null ? currentTile.getType() : TileType.NORMAL;
                 inDeepWater = (ctType == TileType.WATER || ctType == TileType.TIDE);
-
                 int nextCol = tileCol - 1;
                 if (nextCol >= 0) {
                     TileType ntType = ctrl.getTileTypeAt((int) row, nextCol);
@@ -91,19 +94,20 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
             }
         }
 
-        boolean canMove = false;
-        if (inDeepWater) {
-            if (nextIsDeepWater) {
-                canMove = true;
-            } else {
-                Tile currentTile = (ctrl.getMap() != null && tileCol >= 0 && tileCol < ctrl.getMap().getCols()) ? ctrl.getMap().getTile((int) row, tileCol) : null;
-                // Never enter LOW_COAST or NORMAL! Stop at right side of the current water tile.
-                if (currentTile != null && x > currentTile.getX() + currentTile.getWidth() * 0.5f) {
-                    canMove = true;
-                }
-            }
-        }
+        return new boolean[]{inDeepWater, nextIsDeepWater};
+    }
 
+    private boolean canMoveInWater(BattleController ctrl, int tileCol,
+                                   boolean inDeepWater, boolean nextIsDeepWater) {
+        if (!inDeepWater) {return false;        }
+        if (nextIsDeepWater) {return true;}
+        Tile currentTile = (ctrl.getMap() != null && tileCol >= 0 && tileCol < ctrl.getMap().getCols()) ?
+            ctrl.getMap().getTile((int) row, tileCol) : null;
+        return currentTile != null && x > currentTile.getX() + currentTile.getWidth() * 0.5f;
+    }
+
+    private void handleCombat(float delta, BattleController ctrl, Plant plantInFront,
+                              Plant targetPlant, boolean canMove) {
         if (plantInFront != null && !plantInFront.isDead()) {
             moving = false;
             attack(plantInFront, delta, ctrl);
@@ -127,9 +131,6 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
                 }
             }
         }
-
-        hitbox.setPosition((float) x, (float) y);
-        onUpdate(delta, ctrl);
     }
 
     private Plant findFarthestPlantInLane(BattleController ctrl) {
@@ -145,47 +146,30 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
     public void shoot(BattleController controller, Plant target) {
         if (target != null && !target.isDead() && controller != null && controller.getMap() != null) {
             ZombieAnimation.trigger(this, "cast", 1.2667);
-
-            // Hook impact damage
             target.takeDamage(100, this, controller);
-
-            // Find current tile row and col of the plant in map
             int plantRow = (int) this.row;
             int plantCol = -1;
             for (int c = 0; c < 9; c++) {
                 if (controller.getPlantAt(plantRow, c) == target) {
-                    plantCol = c;
-                    break;
-                }
-            }
+                    plantCol = c;break;}}
             if (plantCol == -1) {
                 for (int r = 0; r < 5; r++) {
                     for (int c = 0; c < 9; c++) {
                         if (controller.getPlantAt(r, c) == target) {
-                            plantRow = r;
-                            plantCol = c;
-                            break;
-                        }
-                    }
-                }
-            }
+                            plantRow = r;plantCol = c;break;}}}}
             if (plantCol == -1) return;
-
             if (target.isDead()) {
                 controller.removePlant(plantRow, plantCol);
                 System.out.println("[Fisherman] Hook strike killed plant at (" + plantRow + ", " + plantCol + ")");
-                return;
-            }
-
-            int newCol = plantCol + 1;
+                return;}int newCol = plantCol + 1;
             TileType newTileType = controller.getTileTypeAt(plantRow, newCol);
             boolean pulledIntoWater = newCol >= 8 || newTileType == TileType.WATER || newTileType == TileType.TIDE;
-
             if (pulledIntoWater) {
                 ZombieAnimation.trigger(this, "toss", 2.4333);
                 target.takeDamage(99999, this, controller);
                 controller.removePlant(plantRow, plantCol);
-                System.out.println("[Fisherman] Yanked and drowned plant at (" + plantRow + ", " + plantCol + ") into the sea!");
+                System.out.println("[Fisherman] Yanked and drowned plant at ("
+                    + plantRow + ", " + plantCol + ") into the sea!");
             } else {
                 ZombieAnimation.trigger(this, "reel", 1.4667);
                 if (controller.getPlantAt(plantRow, newCol) == null) {
@@ -195,10 +179,7 @@ public class ZombieBeachFisherman extends AbstractRangedCasterZombie {
                 } else {
                     target.takeDamage(99999, this, controller);
                     controller.removePlant(plantRow, plantCol);
-                    System.out.println("[Fisherman] Hooked plant collided with occupied tile — crushed!");
-                }
-            }
-        }
+                    System.out.println("[Fisherman] Hooked plant collided with occupied tile — crushed!");}}}
     }
 
     @Override
