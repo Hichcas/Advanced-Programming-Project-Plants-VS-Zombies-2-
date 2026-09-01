@@ -259,17 +259,28 @@ public enum ZombieType {
             if ("ZombieBeachFishermanDefault".equals(alias)) return BEACH_FISHERMAN;
             if ("ZombieBeachImp".equals(alias)) return IMP_BEACH;
             if ("ZombieBeachFlag".equals(alias)) return BEACH_DEFAULT;
-            if ("ZombieDarkJester".equals(alias) || "ZombieDarkJuggler".equals(alias) || "ZombieDarkJugglerDefault".equals(alias)) return DARK_JUGGLER;
-            if ("ZombieWizard".equals(alias) || "ZombieDarkWizard".equals(alias) || "ZombieWizardDefault".equals(alias)) return WIZARD;
-            if ("ZombieDarkKing".equals(alias) || "ZombieDarkKingDefault".equals(alias)) return DARK_KING;
-            if ("ZombieDarkImpDragon".equals(alias) || "ZombieDarkImpDragonDefault".equals(alias) || "ZombieImpDragon".equals(alias)) return IMP_DRAGON;
-            if ("ZombieModernAllStar".equals(alias) || "ZombieAllStar".equals(alias) || "ZombieFootball".equals(alias)) return ALLSTAR;
-            if ("ZombieArcade".equals(alias) || "Zombie80sArcade".equals(alias) || "ZombieArcadeDefault".equals(alias)) return ARCADE;
-            if ("ZombieLostCityJane".equals(alias) || "ZombieLostCityJaneDefault".equals(alias) || "ZombieJane".equals(alias)) return LOSTCITY_JANE;
-            if ("ZombieCrystalSkull".equals(alias) || "ZombieLostCityCrystalSkull".equals(alias) || "ZombieCrystalSkullDefault".equals(alias)) return CRYSTAL_SKULL;
-            if ("ZombieProspector".equals(alias) || "ZombieProspectorDefault".equals(alias) || "ZombieWestProspector".equals(alias)) return PROSPECTOR;
-            if ("ZombiePiano".equals(alias) || "ZombiePianoDefault".equals(alias) || "ZombieWestPiano".equals(alias)) return PIANO;
-            if ("ZombieNewspaper".equals(alias) || "ZombieModernNewspaper".equals(alias) || "ZombieNewspaperDefault".equals(alias)) return NEWSPAPER;
+            if ("ZombieDarkJester".equals(alias) || "ZombieDarkJuggler".equals(alias)
+                || "ZombieDarkJugglerDefault".equals(alias)) return DARK_JUGGLER;
+            if ("ZombieWizard".equals(alias) || "ZombieDarkWizard".equals(alias)
+                || "ZombieWizardDefault".equals(alias)) return WIZARD;
+            if ("ZombieDarkKing".equals(alias) ||
+                "ZombieDarkKingDefault".equals(alias)) return DARK_KING;
+            if ("ZombieDarkImpDragon".equals(alias) || "ZombieDarkImpDragonDefault".equals(alias)
+                || "ZombieImpDragon".equals(alias)) return IMP_DRAGON;
+            if ("ZombieModernAllStar".equals(alias) || "ZombieAllStar".equals(alias) ||
+                "ZombieFootball".equals(alias)) return ALLSTAR;
+            if ("ZombieArcade".equals(alias) || "Zombie80sArcade".equals(alias) ||
+                "ZombieArcadeDefault".equals(alias)) return ARCADE;
+            if ("ZombieLostCityJane".equals(alias) || "ZombieLostCityJaneDefault".equals(alias)
+                || "ZombieJane".equals(alias)) return LOSTCITY_JANE;
+            if ("ZombieCrystalSkull".equals(alias) || "ZombieLostCityCrystalSkull".equals(alias)
+                || "ZombieCrystalSkullDefault".equals(alias)) return CRYSTAL_SKULL;
+            if ("ZombieProspector".equals(alias) || "ZombieProspectorDefault".equals(alias)
+                || "ZombieWestProspector".equals(alias)) return PROSPECTOR;
+            if ("ZombiePiano".equals(alias) || "ZombiePianoDefault".equals(alias)
+                || "ZombieWestPiano".equals(alias)) return PIANO;
+            if ("ZombieNewspaper".equals(alias) || "ZombieModernNewspaper".equals(alias)
+                || "ZombieNewspaperDefault".equals(alias)) return NEWSPAPER;
 
             if (alias.endsWith("Default")) {
                 zt = BY_ALIAS.get(alias.substring(0, alias.length() - 7));

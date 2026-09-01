@@ -52,7 +52,8 @@ public class Chapter {
             for (int r = 0; r < 5; r++) {
                 for (int c = 0; c < 9; c++) {
                     Tile tile = map.getTile(r, c);
-                    if (tile != null && (tile.getType() == TileType.TOMBSTONE || tile.getType() == TileType.NECROMANCY) && tile.getHp() <= 0) {
+                    if (tile != null && (tile.getType() == TileType.TOMBSTONE ||
+                        tile.getType() == TileType.NECROMANCY) && tile.getHp() <= 0) {
                         tile.setType(TileType.NORMAL);
                         tile.setHp(0);
                     }
@@ -191,7 +192,8 @@ public class Chapter {
                 for (int r = 0; r < 5; r++) {
                     for (int c = 0; c < 9; c++) {
                         Tile t = map.getTile(r, c);
-                        if (t != null && (t.getType() == TileType.LOW_COAST || t.getType() == TileType.WATER || t.getType() == TileType.TIDE)) {
+                        if (t != null && (t.getType() == TileType.LOW_COAST ||
+                            t.getType() == TileType.WATER || t.getType() == TileType.TIDE)) {
                             if (c < lowestCoast) lowestCoast = c;
                         }
                     }
@@ -346,7 +348,8 @@ public class Chapter {
         if (plant == null) return false;
         if (plant.getType() != null) {
             String name = plant.getType().name().toUpperCase();
-            if (name.contains("LILY") || name.contains("KELP") || name.contains("WATER") || name.contains("AQUA") || name.contains("TANGLE")) {
+            if (name.contains("LILY") || name.contains("KELP") || name.contains("WATER") ||
+                name.contains("AQUA") || name.contains("TANGLE")) {
                 return true;
             }
         }
@@ -376,7 +379,8 @@ public class Chapter {
 
                 if (topPlant != null && !protectedByLilyPad) {
                     if (!isWaterPlant(topPlant)) {
-                        System.out.println("[RisingTide] Water flooded column " + targetCol + "! Non-aquatic plant " + topPlant.getType() + " at (" + targetCol + ", " + r + ") drowned in the rising tide.");
+                        System.out.println("[RisingTide] Water flooded column " + targetCol + "! Non-aquatic plant " +
+                            topPlant.getType() + " at (" + targetCol + ", " + r + ") drowned in the rising tide.");
                         topPlant.takeDamage(99999);
                         map.removePlant(r, targetCol);
                     }
@@ -451,9 +455,7 @@ public class Chapter {
     }
 
     public void applySetup(com.PVZ.model.game.Map map, StageConfig stage) {
-        if (map == null || stage == null) {
-            return;
-        }
+        if (map == null || stage == null) {return;}
         if (stage.getTombstones() != null) {
             int tombIndex = 0;
             for (StageConfig.TombstoneEntry t : stage.getTombstones()) {
@@ -461,23 +463,14 @@ public class Chapter {
                 if (tile != null) {
                     tile.setType(TileType.TOMBSTONE);
                     int hp = t.getHp() > 0 ? t.getHp() : 700;
-                    tile.setHp(hp);
-                    tile.setMaxHp(hp);
+                    tile.setHp(hp);tile.setMaxHp(hp);
                     if (config != null && "DARK_AGES".equalsIgnoreCase(config.getName())) {
                         if (tombIndex % 3 == 0) {
-                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_SUN);
-                        } else if (tombIndex % 3 == 1) {
-                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD);
-                        } else {
-                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_NOOP);
-                        }
-                        tombIndex++;
-                    } else {
-                        tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.EGYPT);
-                    }
-                }
-            }
-        }
+                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_SUN);} else if (tombIndex % 3 == 1) {
+                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD);} else {
+                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_NOOP);}
+                        tombIndex++;} else {
+                        tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.EGYPT);}}}}
         if (stage.getTiles() != null) {
             int tileIndex = 0;
             for (StageConfig.TileEntry te : stage.getTiles()) {
@@ -486,24 +479,15 @@ public class Chapter {
                     TileType tt = TileType.valueOf(te.getType());
                     tile.setType(tt);
                     if (tt == TileType.NECROMANCY || tt == TileType.TOMBSTONE) {
-                        tile.setHp(700);
-                        tile.setMaxHp(700);
+                        tile.setHp(700);tile.setMaxHp(700);
                         if (config != null && "DARK_AGES".equalsIgnoreCase(config.getName())) {
                             if (tileIndex % 3 == 0) {
                                 tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_SUN);
                             } else if (tileIndex % 3 == 1) {
-                                tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD);
-                            } else {
-                                tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_NOOP);
-                            }
-                            tileIndex++;
-                        } else {
-                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.EGYPT);
-                        }
-                    }
-                }
-            }
-        }
+                                tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_PLANTFOOD);} else {
+                                tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.DARK_NOOP);}
+                            tileIndex++;} else {
+                            tile.setGraveVariant(com.PVZ.model.enums.GraveVariant.EGYPT);}}}}}
     }
 
     public void update(com.PVZ.model.game.Map map, RegularGameEngine engine) {

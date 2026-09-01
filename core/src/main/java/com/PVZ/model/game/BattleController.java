@@ -249,9 +249,11 @@ public class BattleController implements BehaviorContext {
                     zp.getOwner().onProjectileHit(p);
                 }
                 if (zp.getVisualKey() != null && engine != null) {
-                    String hitFx = com.PVZ.model.entity.plants.behavior.impl.ProjectileVisuals.getHitPathForVisualKey(zp.getVisualKey());
+                    String hitFx = com.PVZ.model.entity.plants.behavior.impl.ProjectileVisuals.
+                        getHitPathForVisualKey(zp.getVisualKey());
                     if (hitFx != null) {
-                        String hitClip = com.PVZ.model.entity.plants.behavior.impl.ProjectileVisuals.getHitClipForVisualKey(zp.getVisualKey());
+                        String hitClip = com.PVZ.model.entity.plants.behavior.impl.
+                            ProjectileVisuals.getHitClipForVisualKey(zp.getVisualKey());
                         engine.addTimedPamEffect(hitFx, hitClip == null ? "animation" : hitClip, 0.8, 0.7f,
                             zp.getX(), zp.getY());
                     }
@@ -291,56 +293,34 @@ public class BattleController implements BehaviorContext {
     }
 
     private boolean handleTileCollision(Projectile p) {
-        if (p.getType() == ProjectileType.LOB || map == null) {
-            return false;
-        }
-
+        if (p.getType() == ProjectileType.LOB || map == null) {return false;}
         int pRow = map.worldToRow((float) p.getPositionY());
         int pCol = map.worldToCol((float) p.getPositionX());
-        if (!map.isWithinBounds(pRow, pCol)) {
-            return false;
-        }
-
+        if (!map.isWithinBounds(pRow, pCol)) {return false;}
         Tile tile = map.getTile(pRow, pCol);
-        if (tile == null) {
-            return false;
-        }
-
-        // اختاپوس
+        if (tile == null) {return false;}
         if (tile.getOctopusHp() > 0) {
             int dmg = Math.max(1, (int) p.getDamage());
             int newHp = tile.getOctopusHp() - dmg;
-
             if (newHp <= 0) {
                 tile.setOctopusHp(0);
                 Plant octoPlant = tile.getPlant();
                 if (octoPlant != null) {
-                    octoPlant.putRuntimeState("disabledTicks", 0);
-                }
+                    octoPlant.putRuntimeState("disabledTicks", 0);}
                 Plant octoBase = tile.getBasePlant();
                 if (octoBase != null) {
-                    octoBase.putRuntimeState("disabledTicks", 0);
-                }
+                    octoBase.putRuntimeState("disabledTicks", 0);}
                 System.out.println("Octopus destroyed on tile (" + pRow + "," + pCol + ") — plant freed!");
-            } else {
-                tile.setOctopusHp(newHp);
-            }
-
+            } else {tile.setOctopusHp(newHp);}
             SoundManager.getInstance().playSFX(SFX_IMPACT);
-            return true;
-        }
-
+            return true;}
         TileType type = tile.getType();
         if (type != TileType.TOMBSTONE
             && type != TileType.NECROMANCY
             && type != TileType.ICE) {
-            return false;
-        }
-
+            return false;}
         int dmg = Math.max(1, (int) p.getDamage());
         int newHp = tile.getHp() - dmg;
-
-        // If it's an ice obstacle tile
         if (type == TileType.ICE) {
             tile.triggerHitFlash();
             if (newHp <= 0) {
@@ -350,9 +330,7 @@ public class BattleController implements BehaviorContext {
                     float[] center = engine.getPlantWorldCenter(pRow, pCol);
                     engine.addTimedPamEffect(
                         "768/FULL/EFFECTS/ICESHROOM_FX/ICESHROOM_FX.PAM",
-                        "animation", 1.0, 1.1f, center[0], center[1]
-                    );
-                }
+                        "animation", 1.0, 1.1f, center[0], center[1]);}
                 String encased = tile.getEncasedZombieType();
                 if (encased != null) {
                     tile.setEncasedZombieType(null);
@@ -364,12 +342,11 @@ public class BattleController implements BehaviorContext {
                         z.setRow(pRow);
                         z.setCol(pCol);
                         this.addZombie(z);
-                        System.out.println("[ICE BREAK] Ice block shattered! Released " + encased + " at (" + pRow + ", " + pCol + ")!");
+                        System.out.println("[ICE BREAK] Ice block shattered! Released " +
+                            encased + " at (" + pRow + ", " + pCol + ")!");
                     }
                 }
-            } else {
-                tile.setHp(newHp);
-            }
+            } else {tile.setHp(newHp);}
         } else if (type == TileType.TOMBSTONE || type == TileType.NECROMANCY) {
             com.PVZ.model.enums.GraveVariant variant = tile.getGraveVariant();
             if (variant == null) {
@@ -405,9 +382,11 @@ public class BattleController implements BehaviorContext {
                             engine.getPlantFoodManager().addPlantFood(1);
                         }
                         if (lootManager != null) {
-                            lootManager.spawnLootDrop(center[0], center[1], com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
+                            lootManager.spawnLootDrop(center[0], center[1],
+                                com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
                         } else if (engine.getLootManager() != null) {
-                            engine.getLootManager().spawnLootDrop(center[0], center[1], com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
+                            engine.getLootManager().spawnLootDrop(center[0],
+                                center[1], com.PVZ.model.entity.LootDrop.LootType.PLANT_FOOD);
                         }
                     }
                 }
@@ -528,7 +507,8 @@ public class BattleController implements BehaviorContext {
             (int) p.getDamage(), (float) Math.max(300.0, p.getSpeed()), (int) jj.getRow(), jj,
             visualKey, p);
         addZombieProjectile(reflected);
-        System.out.println(jj.getAlias() + " reflected [" + (visualKey != null ? visualKey : "projectile") + "] back towards plants!");
+        System.out.println(jj.getAlias() + " reflected [" +
+            (visualKey != null ? visualKey : "projectile") + "] back towards plants!");
     }
 
     private void spawnProjectileHitEffect(Projectile p, Zombie z) {
@@ -597,7 +577,8 @@ public class BattleController implements BehaviorContext {
             notifyZombieKilled(regEngine, z, killer);
         }
 
-        boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit")) || Boolean.TRUE.equals(p.getExtra("kernelButter"));
+        boolean isButter = Boolean.TRUE.equals(p.getExtra("stunOnHit"))
+            || Boolean.TRUE.equals(p.getExtra("kernelButter"));
         if (isButter) {
             Object butterDuration = p.getExtra("butterDurationSeconds");
             float seconds = butterDuration instanceof Number n ? n.floatValue() : 4.0f;
@@ -644,7 +625,8 @@ public class BattleController implements BehaviorContext {
         if (map == null || !map.isWithinBounds(lane, 0)) return false;
         for (int c = Math.max(0, fromCol); c < map.getCols(); c++) {
             Tile t = map.getTile(lane, c);
-            if (t != null && (t.getType() == TileType.TOMBSTONE || t.getType() == TileType.NECROMANCY || t.getType() == TileType.ICE)) {
+            if (t != null && (t.getType() == TileType.TOMBSTONE ||
+                t.getType() == TileType.NECROMANCY || t.getType() == TileType.ICE)) {
                 return true;
             }
         }
@@ -701,66 +683,43 @@ public class BattleController implements BehaviorContext {
     }
 
     private void placeProjectileOnMap(Projectile p) {
-        if (p == null || p.isWorldPositioned()) {
-            return;
-        }
-
+        if (p == null || p.isWorldPositioned()) {return;}
         int row = p.getRow();
-        float tileWidth = 177f;
-        float tileHeight = 234f;
-        float startX = 550f;
-        float startY = 1240f;
-
+        float tileWidth = 177f;float tileHeight = 234f;
+        float startX = 550f;float startY = 1240f;
         if (map != null) {
             tileWidth = map.getTileWidth();
             tileHeight = map.getTileHeight();
             startX = map.getStartX();
-            startY = map.getStartY();
-        }
-
-        int col = 0;
+            startY = map.getStartY();}int col = 0;
         Object colState = p.getExtra("originCol");
         if (colState instanceof Number number) {
-            col = number.intValue();
-        }
-
+            col = number.intValue();}
         float worldX = startX + col * tileWidth + tileWidth * resolveDx(p);
         Object spawnXOffset = p.getExtra("spawnXOffset");
         if (spawnXOffset instanceof Number number) {
-            worldX += number.floatValue();
-        }
+            worldX += number.floatValue();}
         float worldY = startY - (row + 1) * tileHeight + tileHeight * resolveDy(p);
-
         float speedPxPerSec = tileWidth * 1.5f;
         if (p.getType() == ProjectileType.LOB) {
-            speedPxPerSec = tileWidth * 0.9f;
-        }
-
+            speedPxPerSec = tileWidth * 0.9f;}
         float speedMultiplier = (float) Math.max(0.1, Math.abs(p.getSpeed()));
         speedPxPerSec *= speedMultiplier;
-
         double horizontalSign = p.getSpeed() < 0 ? -1.0 : 1.0;
         if (Boolean.TRUE.equals(p.getExtra("reverseDirection"))) {
-            horizontalSign = -horizontalSign;
-        }
-
+            horizontalSign = -horizontalSign;}
         double verticalSpeed = 0.0;
         Object targetLaneState = p.getExtra("targetLane");
         if (targetLaneState instanceof Number number) {
             int targetLane = number.intValue();
             if (targetLane != row) {
-                verticalSpeed = Math.signum(targetLane - row) * speedPxPerSec;
-            }
-        }
-
+                verticalSpeed = Math.signum(targetLane - row) * speedPxPerSec;}}
         if (p.getType() == ProjectileType.LOB) {
             p.initArcPosition(worldX, worldY,
                 (float) (horizontalSign * speedPxPerSec));
-        } else {
-            p.initWorldPosition(worldX, worldY,
+        } else {p.initWorldPosition(worldX, worldY,
                 (float) (horizontalSign * speedPxPerSec),
-                (float) verticalSpeed);
-        }
+                (float) verticalSpeed);}
     }
 
     private static float resolveDx(Projectile p) {
@@ -825,7 +784,8 @@ public class BattleController implements BehaviorContext {
                             if (p != null) p.putRuntimeState("disabledTicks", 0);
                             Plant bp = t.getBasePlant();
                             if (bp != null) bp.putRuntimeState("disabledTicks", 0);
-                            System.out.println("Octopus destroyed by explosion at (" + r + "," + c + ") — plant freed!");
+                            System.out.println("Octopus destroyed by explosion at (" +
+                                r + "," + c + ") — plant freed!");
                         } else {
                             t.setOctopusHp(newOctoHp);
                         }
@@ -1012,7 +972,8 @@ public class BattleController implements BehaviorContext {
             return DamageType.FIRE;
         }
         String vk = (String) p.getExtra("visualKey");
-        if (vk != null && (vk.contains("FIRE") || vk.contains("PEPPER") || vk.contains("JALAPENO") || vk.contains("WASABI") || vk.contains("BLAZING"))) {
+        if (vk != null && (vk.contains("FIRE") || vk.contains("PEPPER") || vk.contains("JALAPENO")
+            || vk.contains("WASABI") || vk.contains("BLAZING"))) {
             return DamageType.FIRE;
         }
         return DamageType.NORMAL;

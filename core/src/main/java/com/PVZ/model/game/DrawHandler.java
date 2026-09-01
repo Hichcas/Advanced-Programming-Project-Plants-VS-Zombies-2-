@@ -112,7 +112,8 @@ public class DrawHandler {
                         scale
                     );
                     if (tile.isHitFlashing()) {
-                        batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                        batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                            com.badlogic.gdx.graphics.GL20.GL_ONE);
                         batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
                         EntityRenderer.getInstance().renderPam(
                             batch,
@@ -123,7 +124,8 @@ public class DrawHandler {
                             centerY,
                             scale
                         );
-                        batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+                        batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                            com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
                     }
 
                     if (!rendered) {
@@ -179,7 +181,8 @@ public class DrawHandler {
                 if (tile == null) continue;
                 Color cell = batch.getColor();
                 batch.setColor(0.55f, 0.82f, 1f, 0.18f);
-                batch.draw(engine.iceOverlayTexture(), tile.getX()+2f, tile.getY()+2f, tile.getWidth()-4f, tile.getHeight()-4f);
+                batch.draw(engine.iceOverlayTexture(), tile.getX()+2f,
+                    tile.getY()+2f, tile.getWidth()-4f, tile.getHeight()-4f);
                 batch.setColor(cell);
             }
         }
@@ -225,7 +228,8 @@ public class DrawHandler {
     }
 
     private static void drawBattleProjectiles(RegularGameEngine engine, SpriteBatch batch) {
-        if (engine.battleController != null) engine.battleController.drawProjectiles(batch);
+        if (engine.battleController != null)
+            engine.battleController.drawProjectiles(batch);
         for (Projectile p : engine.projectiles) p.draw(batch);
     }
 
@@ -255,7 +259,8 @@ public class DrawHandler {
             for (int r = 0; r < 5; r++) {
                 for (int c = 0; c < 9; c++) {
                     Tile t = engine.map.getTile(r, c);
-                    if (t != null && (t.getType() == TileType.WATER || t.getType() == TileType.TIDE || t.getType() == TileType.LOW_COAST)) {
+                    if (t != null && (t.getType() == TileType.WATER ||
+                        t.getType() == TileType.TIDE || t.getType() == TileType.LOW_COAST)) {
                         if (c < minWaterCol) minWaterCol = c;
                     }
                 }
@@ -266,9 +271,8 @@ public class DrawHandler {
                 if (shoreTile != null) {
                     float waterX = shoreTile.getX();
                     float tileW = shoreTile.getWidth();
-                    float lawnCenterY = (engine.map.getTile(0, 0).getY() + engine.map.getTile(4, 0).getY() + engine.map.getTile(0, 0).getHeight()) / 2f;
-
-                    // 1. Draw WATER_UNDERLAYER (Aligned so the water edge starts right at the L column / 3rd from right)
+                    float lawnCenterY = (engine.map.getTile(0, 0).getY() + engine.map.getTile(4, 0).getY()
+                        + engine.map.getTile(0, 0).getHeight()) / 2f;
                     EntityRenderer.getInstance().renderPam(
                         batch,
                         "768/FULL/BACKGROUNDS/WATER_UNDERLAYER/WATER_UNDERLAYER.PAM",
@@ -350,92 +354,115 @@ public class DrawHandler {
                 if (tile.getType() != TileType.TOMBSTONE && tile.getType() != TileType.NECROMANCY) {
                     continue;
                 }
-
-                tile.update(delta);
-
-                float tileX = tile.getX();
-                float tileY = tile.getY();
-                float width = tile.getWidth();
-                float height = tile.getHeight();
-                float centerX = tileX + width / 2f;
-                float centerY = tileY + height / 2f;
-
-                int maxHp = tile.getMaxHp() > 0 ? tile.getMaxHp() : 700;
-                int currentHp = Math.max(0, tile.getHp() > 0 ? tile.getHp() : maxHp);
-                float hpPercent = Math.max(0f, Math.min(1.0f, (float) currentHp / (float) maxHp));
-
-                // 1. Determine Grave Variant and PAM Path
-                com.PVZ.model.enums.GraveVariant variant = tile.getGraveVariant();
-                if (variant == null) {
-                    String chap = com.PVZ.model.status.AppStatus.currentChapterName;
-                    if ("DARK_AGES".equalsIgnoreCase(chap) || tile.getType() == TileType.NECROMANCY) {
-                        variant = com.PVZ.model.enums.GraveVariant.DARK_NOOP;
-                    } else {
-                        variant = com.PVZ.model.enums.GraveVariant.EGYPT;
-                    }
-                    tile.setGraveVariant(variant);
-                }
-
-                String pamPath = variant.getPamPath();
-                String clipName = com.PVZ.model.enums.GraveVariant.getClipForHpRatio(hpPercent);
-
-                Color origGraveColor = batch.getColor().cpy();
-                if (tile.isHitFlashing()) {
-                    batch.setColor(Math.min(2.0f, origGraveColor.r * 1.5f + 0.4f),
-                                   Math.min(2.0f, origGraveColor.g * 1.5f + 0.4f),
-                                   Math.min(2.0f, origGraveColor.b * 1.5f + 0.4f),
-                                   origGraveColor.a);
-                }
-
-                // 2. Render Gravestone PAM animation (static damage frame, time=0 to avoid looping/flashing)
-                EntityRenderer.getInstance().renderPam(
-                    batch,
-                    pamPath,
-                    clipName,
-                    0f,
-                    centerX,
-                    centerY,
-                    0.95f
-                );
-                if (tile.isHitFlashing()) {
-                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
-                    batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
-                    EntityRenderer.getInstance().renderPam(
-                        batch,
-                        pamPath,
-                        clipName,
-                        0f,
-                        centerX,
-                        centerY,
-                        0.95f
-                    );
-                    batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
-                }
-                batch.setColor(origGraveColor);
-
-                // 3. If Grave Buster is eating this grave, render Grave Buster dirt effect
-                Plant plantOnGrave = tile.getPlant();
-                if (plantOnGrave != null && plantOnGrave.getType() == com.PVZ.model.enums.PlantType.GRAVE_BUSTER && !plantOnGrave.isDead()) {
-                    EntityRenderer.getInstance().renderPam(
-                        batch,
-                        "768/INITIAL/EFFECTS/GRAVEBUSTER_DIRT/GRAVEBUSTER_DIRT.PAM",
-                        "gravebuster_dirt_anim",
-                        tile.getGraveAnimTime(),
-                        centerX,
-                        centerY - 10f,
-                        0.95f
-                    );
-                }
-
-                // 4. Render Health Bar & Label if damaged or in Dark Ages
-                if (currentHp < maxHp || tile.getType() == TileType.NECROMANCY) {
-                    HealthBarRenderer.draw(batch, tileX + 10f, tileY + height - 15f, width - 20f, hpPercent, true);
-                    String label = "DARK_SUN".equals(variant.name()) ? "Sun Tomb (" + currentHp + "hp)"
-                        : "DARK_PLANTFOOD".equals(variant.name()) ? "PF Tomb (" + currentHp + "hp)"
-                        : "Tomb (" + currentHp + "hp)";
-                    font.draw(batch, label, tileX + 10f, tileY + height - 2f);
-                }
+                processTombstoneTile(engine, batch, font, delta, tile);
             }
+        }
+    }
+
+    private static void processTombstoneTile(RegularGameEngine engine, SpriteBatch batch,
+                                             BitmapFont font, float delta, Tile tile) {
+        tile.update(delta);
+
+        float tileX = tile.getX();
+        float tileY = tile.getY();
+        float width = tile.getWidth();
+        float height = tile.getHeight();
+        float centerX = tileX + width / 2f;
+        float centerY = tileY + height / 2f;
+
+        int maxHp = tile.getMaxHp() > 0 ? tile.getMaxHp() : 700;
+        int currentHp = Math.max(0, tile.getHp() > 0 ? tile.getHp() : maxHp);
+        float hpPercent = Math.max(0f, Math.min(1.0f, (float) currentHp / (float) maxHp));
+
+        com.PVZ.model.enums.GraveVariant variant = resolveGraveVariant(tile);
+        renderGraveWithFlashing(batch, variant, hpPercent, centerX, centerY, tile);
+
+        renderGraveBusterDirtIfPresent(batch, tile, centerX, centerY);
+        renderHealthBarIfNeeded(batch, font, tile, currentHp, maxHp, hpPercent, variant);
+    }
+
+    private static com.PVZ.model.enums.GraveVariant resolveGraveVariant(Tile tile) {
+        com.PVZ.model.enums.GraveVariant variant = tile.getGraveVariant();
+        if (variant == null) {
+            String chap = com.PVZ.model.status.AppStatus.currentChapterName;
+            if ("DARK_AGES".equalsIgnoreCase(chap) || tile.getType() == TileType.NECROMANCY) {
+                variant = com.PVZ.model.enums.GraveVariant.DARK_NOOP;
+            } else {
+                variant = com.PVZ.model.enums.GraveVariant.EGYPT;
+            }
+            tile.setGraveVariant(variant);
+        }
+        return variant;
+    }
+
+    private static void renderGraveWithFlashing(SpriteBatch batch,
+                                                com.PVZ.model.enums.GraveVariant variant,
+                                                float hpPercent, float centerX, float centerY, Tile tile) {
+        String pamPath = variant.getPamPath();
+        String clipName = com.PVZ.model.enums.GraveVariant.getClipForHpRatio(hpPercent);
+
+        Color origGraveColor = batch.getColor().cpy();
+        if (tile.isHitFlashing()) {
+            batch.setColor(Math.min(2.0f, origGraveColor.r * 1.5f + 0.4f),
+                Math.min(2.0f, origGraveColor.g * 1.5f + 0.4f),
+                Math.min(2.0f, origGraveColor.b * 1.5f + 0.4f),
+                origGraveColor.a);
+        }
+
+        EntityRenderer.getInstance().renderPam(batch, pamPath, clipName, 0f,
+            centerX, centerY, 0.95f);
+
+        if (tile.isHitFlashing()) {
+            batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                com.badlogic.gdx.graphics.GL20.GL_ONE);
+            batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+            EntityRenderer.getInstance().renderPam(batch, pamPath, clipName, 0f,
+                centerX, centerY, 0.95f);
+            batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+        }
+        batch.setColor(origGraveColor);
+    }
+
+    private static void renderGraveBusterDirtIfPresent(SpriteBatch batch, Tile tile,
+                                                       float centerX, float centerY) {
+        Plant plantOnGrave = tile.getPlant();
+        if (plantOnGrave != null && plantOnGrave.getType() ==
+            com.PVZ.model.enums.PlantType.GRAVE_BUSTER && !plantOnGrave.isDead()) {
+            EntityRenderer.getInstance().renderPam(
+                batch,
+                "768/INITIAL/EFFECTS/GRAVEBUSTER_DIRT/GRAVEBUSTER_DIRT.PAM",
+                "gravebuster_dirt_anim",
+                tile.getGraveAnimTime(),
+                centerX,
+                centerY - 10f,
+                0.95f
+            );
+        }
+    }
+
+    private static void renderHealthBarIfNeeded(SpriteBatch batch, BitmapFont font,
+                                                Tile tile, int currentHp, int maxHp,
+                                                float hpPercent,
+                                                com.PVZ.model.enums.GraveVariant variant) {
+        if (currentHp < maxHp || tile.getType() == TileType.NECROMANCY) {
+            float tileX = tile.getX();
+            float tileY = tile.getY();
+            float width = tile.getWidth();
+            float height = tile.getHeight();
+
+            HealthBarRenderer.draw(batch, tileX + 10f, tileY + height - 15f,
+                width - 20f, hpPercent, true);
+
+            String label;
+            if ("DARK_SUN".equals(variant.name())) {
+                label = "Sun Tomb (" + currentHp + "hp)";
+            } else if ("DARK_PLANTFOOD".equals(variant.name())) {
+                label = "PF Tomb (" + currentHp + "hp)";
+            } else {
+                label = "Tomb (" + currentHp + "hp)";
+            }
+            font.draw(batch, label, tileX + 10f, tileY + height - 2f);
         }
     }
 
@@ -490,31 +517,21 @@ public class DrawHandler {
                 batch.setColor(Math.min(2.0f, origOctColor.r * 1.5f + 0.4f),
                                Math.min(2.0f, origOctColor.g * 1.5f + 0.4f),
                                Math.min(2.0f, origOctColor.b * 1.5f + 0.4f),
-                               origOctColor.a);
-            }
-            boolean rendered = EntityRenderer.getInstance().renderPam(
-                batch,
+                               origOctColor.a);}
+            boolean rendered = EntityRenderer.getInstance().renderPam(batch,
                 "768/FULL/EFFECTS/ZOMBIE_OCTOPUS_PROJECTILE/ZOMBIE_OCTOPUS_PROJECTILE.PAM",
-                "animation3",
-                iceBlockStateTime,
-                centerX,
-                centerY,
-                1.0f
-            );
+                "animation3",iceBlockStateTime,centerX,centerY,1.0f);
             if (tile.isHitFlashing()) {
-                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.
+                    GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
                 batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
                 EntityRenderer.getInstance().renderPam(
                     batch,
                     "768/FULL/EFFECTS/ZOMBIE_OCTOPUS_PROJECTILE/ZOMBIE_OCTOPUS_PROJECTILE.PAM",
                     "animation3",
-                    iceBlockStateTime,
-                    centerX,
-                    centerY,
-                    1.0f
-                );
-                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
-            }
+                    iceBlockStateTime,centerX,centerY,1.0f);
+                batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                    com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);}
             if (!rendered) {
                 Color c = batch.getColor();
                 batch.setColor(0.9f, 0.4f, 0.1f, 0.75f);
@@ -522,8 +539,6 @@ public class DrawHandler {
                 batch.setColor(c);
             }
             batch.setColor(origOctColor);
-
-            // Draw Octopus Health Bar
             float hpPercent = Math.max(0f, Math.min(1.0f, (float) tile.getOctopusHp() / 200f));
             HealthBarRenderer.draw(batch, box.x, box.y + box.height + 14f, box.width, hpPercent, false);
             BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
@@ -538,66 +553,39 @@ public class DrawHandler {
         if (plant == null || box == null) return;
         float centerX = box.x + box.width / 2f;
         float centerY = box.y + box.height / 2f;
-
         boolean isFire = plant.getStats() != null && plant.getStats().getBooleanExtra("freezeImmune", false);
         if (!isFire && plant.getDefinition() != null) {
-            isFire = plant.getDefinition().hasTag(com.PVZ.model.enums.PlantTag.FIRE);
-        }
-
-        boolean isFrostbite = com.PVZ.model.status.AppStatus.getCurrentChapterEnum() == com.PVZ.model.enums.ChapterEnum.FROSTBITE_CAVES
-            || (com.PVZ.model.status.AppStatus.currentChapterName != null && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("FROSTBITE"));
-
+            isFire = plant.getDefinition().hasTag(com.PVZ.model.enums.PlantTag.FIRE);}
+        boolean isFrostbite = com.PVZ.model.status.AppStatus.getCurrentChapterEnum()
+            == com.PVZ.model.enums.ChapterEnum.FROSTBITE_CAVES
+            || (com.PVZ.model.status.AppStatus.currentChapterName != null
+            && com.PVZ.model.status.AppStatus.currentChapterName.toUpperCase().contains("FROSTBITE"));
         if (isFire && isFrostbite) {
-            EntityRenderer.getInstance().renderPam(
-                batch,
+            EntityRenderer.getInstance().renderPam(batch,
                 "768/INITIAL/EFFECTS/FROSTBITE_HEAT_PLANT/FROSTBITE_HEAT_PLANT.PAM",
-                "animation",
-                iceBlockStateTime,
-                centerX,
-                centerY,
-                0.95f
-            );
-            return;
-        }
-
+                "animation",iceBlockStateTime,centerX,centerY,0.95f);return;}
         Object freezeLv = plant.getRuntimeState("freezeLevel");
         if (freezeLv instanceof Number) {
             int lv = ((Number) freezeLv).intValue();
             if (lv >= 3) {
-                boolean rendered = EntityRenderer.getInstance().renderPam(
-                    batch,
+                boolean rendered = EntityRenderer.getInstance().renderPam(batch,
                     "768/FULL/EFFECTS/FROSTBITE_ICE_BLOCK_PLANT/FROSTBITE_ICE_BLOCK_PLANT.PAM",
-                    "freeze_idle",
-                    iceBlockStateTime,
-                    centerX,
-                    centerY,
-                    0.95f
-                );
+                    "freeze_idle",iceBlockStateTime,centerX,centerY,0.95f);
                 if (!rendered) {
                     Color c = batch.getColor();
                     batch.setColor(0.3f, 0.6f, 1f, 0.65f);
                     batch.draw(engine.iceOverlayTexture(), box.x, box.y, box.width, box.height);
-                    batch.setColor(c);
-                }
+                    batch.setColor(c);}
             } else if (lv > 0) {
                 String clip = lv == 1 ? "chill_stage1" : "chill_stage2";
-                boolean rendered = EntityRenderer.getInstance().renderPam(
-                    batch,
+                boolean rendered = EntityRenderer.getInstance().renderPam(batch,
                     "768/FULL/EFFECTS/FROSTBITE_CHILL_PLANT/FROSTBITE_CHILL_PLANT.PAM",
-                    clip,
-                    iceBlockStateTime,
-                    centerX,
-                    centerY,
-                    0.95f
-                );
+                    clip,iceBlockStateTime,centerX,centerY,0.95f);
                 if (!rendered) {
                     Color c = batch.getColor();
                     batch.setColor(0.3f, 0.6f, 1f, 0.25f * lv);
                     batch.draw(engine.iceOverlayTexture(), box.x, box.y, box.width, box.height);
-                    batch.setColor(c);
-                }
-            }
-        }
+                    batch.setColor(c);}}}
     }
 
     private static void drawZombiesWithHealthBars(RegularGameEngine engine, SpriteBatch batch) {
@@ -620,7 +608,8 @@ public class DrawHandler {
         }
     }
 
-    private static void drawBossHealthBar(RegularGameEngine engine, SpriteBatch batch, com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
+    private static void drawBossHealthBar(RegularGameEngine engine, SpriteBatch batch,
+                                          com.PVZ.model.entity.zombies.types.zomboss.AbstractZomboss boss) {
         float barX = 580f;
         float barY = 1010f;
         float barW = 760f;
@@ -637,7 +626,8 @@ public class DrawHandler {
             batch.draw(whiteTexture(), barX, barY, barW, barH);
 
             // Health Fill
-            float hpRatio = (float) Math.max(0.0, Math.min(1.0, boss.getHitpoints() / Math.max(1.0, boss.getMaxHitpoints())));
+            float hpRatio = (float) Math.max(0.0, Math.min(1.0,
+                boss.getHitpoints() / Math.max(1.0, boss.getMaxHitpoints())));
             if (boss.getCurrentPhase() == 3) {
                 batch.setColor(0.95f, 0.15f, 0.15f, 1.0f); // Bright red for final phase
             } else if (boss.getCurrentPhase() == 2) {
@@ -656,7 +646,8 @@ public class DrawHandler {
             BitmapFont font = FontManager.getInstance().getEnglishTinyFont();
             font.setColor(Color.WHITE);
             String status = boss.isStunned() ? " [STUNNED!]" : "";
-            String title = "DR. ZOMBOSS - PHASE " + boss.getCurrentPhase() + "/3" + status + " (" + (int)(hpRatio * 100) + "%)";
+            String title = "DR. ZOMBOSS - PHASE " + boss.getCurrentPhase() +
+                "/3" + status + " (" + (int)(hpRatio * 100) + "%)";
             font.draw(batch, title, barX + 15f, barY + barH - 7f);
         } finally {
             batch.setColor(origColor);
