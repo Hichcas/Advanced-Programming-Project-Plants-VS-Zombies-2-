@@ -13,6 +13,12 @@ public class MatchmakingManager {
     private static final MatchmakingManager INSTANCE = new MatchmakingManager();
 
     private final Queue<ClientSession> randomQueue = new ConcurrentLinkedQueue<>();
+    // چون ClientSession.onDisconnect چندین listener رو قبول می‌کنه (لیست)، اگه
+    // هر بار joinRandomQueue صدا زده بشه بدون این چک، هر بار یه listener جدید
+    // اضافه می‌شه (نشتی حافظه‌ی کوچیک روی سشن‌های طولانی). این Set فقط برای
+    // اینه که هر session فقط یک بار cleanup ثبت کنه.
+    private final java.util.Set<ClientSession> disconnectHookRegistered =
+            java.util.Collections.newSetFromMap(new ConcurrentHashMap<>());
     private record PendingChallenge(ClientSession challenger, String challengerRole, int levelId) {}
     private final Map<String, PendingChallenge> pendingInvitations = new ConcurrentHashMap<>();
     private final Map<String, OnlineMatchSession> activeSessions = new ConcurrentHashMap<>();
@@ -31,6 +37,15 @@ public class MatchmakingManager {
     // ===================== Random Match =====================
 
     public synchronized void joinRandomQueue(ClientSession session) {
+        if (session.isInGame()) return; // از قبل توی یه بازی‌ست - دوباره صف نره که match تداخل نکنه
+
+        // اگه کسی وسط انتظار توی صف قطع بشه (بست برنامه/افتادن نت)، باید از صف
+        // حذف بشه؛ وگرنه یه بازیکن واقعی می‌تونه با یه session مرده match بشه و
+        // برای همیشه منتظر بمونه (چون طرف مقابل هیچ‌وقت GAME_START_SYNC نمی‌فرسته).
+        if (disconnectHookRegistered.add(session)) {
+            session.onDisconnect(() -> leaveRandomQueue(session));
+        }
+
         randomQueue.remove(session);
         randomQueue.add(session);
 
