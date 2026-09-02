@@ -1128,7 +1128,14 @@ public class CollectionPanel extends BasePanel {
             if (type == null) return;
             float renderX = getX() + getWidth() / 2f;
             float renderY = getY() + getHeight() / 2f;
-            if (cachedZombie != null) {
+            if (cachedZombie instanceof com.PVZ.model.entity.zombies.types.basic.ZombieCamel) {
+                float scale = Math.min(getWidth() / 420f, getHeight() / 200f);
+                if (scale <= 0f) {
+                    scale = 0.35f;
+                }
+                EntityRenderer.getInstance().renderZombieAlias((SpriteBatch) batch,
+                    "ZombieCamelDefault", "idle", time, renderX - 120f * scale, renderY, scale);
+            } else if (cachedZombie != null) {
                 com.PVZ.model.entity.zombies.base.ZombieAnimation.trigger(cachedZombie, "idle", 999999f);
                 cachedZombie.setX(renderX);
                 cachedZombie.setY(renderY);

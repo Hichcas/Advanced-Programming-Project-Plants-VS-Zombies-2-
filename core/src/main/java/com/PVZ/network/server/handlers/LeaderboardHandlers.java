@@ -1,8 +1,8 @@
 package com.PVZ.network.server.handlers;
 
-import com.PVZ.database.UserDatabase;
 import com.PVZ.model.leaderboard.Leaderboard;
 import com.PVZ.model.leaderboard.LeaderboardEntry;
+import com.PVZ.model.user.UserRegistry;
 import com.PVZ.network.common.MessageType;
 import com.PVZ.network.common.NetworkMessage;
 import com.PVZ.network.server.ClientSession;
@@ -30,6 +30,7 @@ public final class LeaderboardHandlers {
                 }
             }
             boolean ascending = request.getBoolean("ascending", true);
+            UserRegistry.saveAllDirtyUsers();
             List<LeaderboardEntry> entries = Leaderboard.getEntries(sort, ascending);
             return NetworkMessage.reply(request.getRequestId(), MessageType.FETCH_LEADERBOARD_RESULT)
                     .with("success", true)

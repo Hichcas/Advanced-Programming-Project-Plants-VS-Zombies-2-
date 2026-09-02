@@ -45,4 +45,28 @@ public class LeaderboardEntry {
     public int getHighestScore() {
         return highestScore;
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setLastStageInfo(String lastStageInfo) {
+        this.lastStageInfo = lastStageInfo;
+    }
+
+    public void setMinigamesCompleted(int minigamesCompleted) {
+        this.minigamesCompleted = minigamesCompleted;
+    }
+
+    public void setDailyQuestsCompleted(int dailyQuestsCompleted) {
+        this.dailyQuestsCompleted = dailyQuestsCompleted;
+    }
+
+    public void setNonDailyQuestsCompleted(int nonDailyQuestsCompleted) {
+        this.nonDailyQuestsCompleted = nonDailyQuestsCompleted;
+    }
+
+    public void setHighestScore(int highestScore) {
+        this.highestScore = highestScore;
+    }
 }

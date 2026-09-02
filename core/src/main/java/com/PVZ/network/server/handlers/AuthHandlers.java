@@ -186,6 +186,7 @@ public final class AuthHandlers {
 
         try {
             com.PVZ.database.UserDatabase.save(session.getUsername(), incoming);
+            UserRegistry.cacheUser(incoming);
         } catch (Exception e) {
             return fail(request, MessageType.SYNC_USER_RESULT, "Failed to save: " + e.getMessage());
         }

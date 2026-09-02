@@ -1,11 +1,12 @@
 package com.PVZ.view.screen.panels;
 
 import com.PVZ.model.enums.MenuType;
+import com.PVZ.model.leaderboard.Leaderboard;
+import com.PVZ.model.leaderboard.LeaderboardEntry;
 import com.PVZ.model.status.AppStatus;
 import com.PVZ.network.client.NetworkSession;
 import com.PVZ.network.common.MessageType;
 import com.PVZ.network.common.NetworkMessage;
-import com.PVZ.model.leaderboard.LeaderboardEntry;
 import com.PVZ.view.screen.ui.MenuButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -16,12 +17,11 @@ import com.badlogic.gdx.utils.Align;
 import pvz.skin.PvzSkin;
 
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class OnlineLeaderboardPanel extends BasePanel {
 
-    private static final float VW = com.PVZ.view.screen.BaseScreen.VIRTUAL_WIDTH;
-    private static final float VH = com.PVZ.view.screen.BaseScreen.VIRTUAL_HEIGHT;
+    private static final float BUTTON_HEIGHT_RATIO = 0.08f;
 
     private final BitmapFont bigFont;
     private final BitmapFont bodyFont;
@@ -30,15 +30,17 @@ public class OnlineLeaderboardPanel extends BasePanel {
 
     private final float BUTTON_HEIGHT;
     private final float SCREEN_H;
+    private final float FIELD_WIDTH;
 
     private Label contentLabel;
+    private int fetchGeneration;
 
     public OnlineLeaderboardPanel() {
         setFillParent(true);
 
-        float screenW = Gdx.graphics.getWidth();
         SCREEN_H = Gdx.graphics.getHeight();
-        BUTTON_HEIGHT = SCREEN_H * 0.08f;
+        BUTTON_HEIGHT = SCREEN_H * BUTTON_HEIGHT_RATIO;
+        FIELD_WIDTH = Gdx.graphics.getWidth() * 0.25f;
 
         purpleUp = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON");
         purpleDown = safeTextureFromRegion("IMAGE_UI_GENERIC_PURPLEBUTTON_DOWN");
@@ -83,50 +85,63 @@ public class OnlineLeaderboardPanel extends BasePanel {
         addActor(scrollPane);
     }
 
+    private CompletableFuture<NetworkMessage> syncCurrentUserIfNeeded() {
+        if (NetworkSession.isSessionAuthenticated() && AppStatus.currentUser != null) {
+            return NetworkSession.client().sendRequest(
+                NetworkMessage.request(MessageType.SYNC_USER).with("user", AppStatus.currentUser));
+        }
+        return CompletableFuture.completedFuture(null);
+    }
+
     private void fetchLeaderboard() {
+        int generation = ++fetchGeneration;
         if (!NetworkSession.isConnected()) {
-            setContent("Not connected to server.");return;}
-        NetworkMessage request = NetworkMessage.request(MessageType.FETCH_LEADERBOARD);
-        NetworkSession.client().sendRequest(request).thenAccept(response -> {
-            Gdx.app.postRunnable(() -> {
+            setContent("Not connected to server.");
+            return;
+        }
+        setContent("Loading...");
+        syncCurrentUserIfNeeded()
+            .exceptionally(ex -> null)
+            .thenCompose(ignored -> NetworkSession.client().sendRequest(
+                NetworkMessage.request(MessageType.FETCH_LEADERBOARD)
+                    .with("sort", "HIGHEST_SCORE")
+                    .with("ascending", false)))
+            .thenAccept(response -> Gdx.app.postRunnable(() -> {
+                if (generation != fetchGeneration) {
+                    return;
+                }
                 if (response.getBoolean("success", false)) {
-                    Object rawEntries = response.get("entries");
-                    if (rawEntries instanceof List) {
-                        List<?> entries = (List<?>) rawEntries;
-                        if (entries.isEmpty()) {
-                            setContent("No leaderboard data.");return;}
-                        StringBuilder sb = new StringBuilder();
-                        sb.append(String.format("%-20s %-25s %-10s %-10s %-10s %-10s%n",
-                                "Username", "Last Stage", "Minigames", "Daily", "Non-Daily", "Score"));
-                        sb.append("-".repeat(90)).append("\n");
-                        for (Object obj : entries) {
-                            if (obj instanceof LeaderboardEntry entry) {
-                                sb.append(String.format("%-20s %-25s %-10d %-10d %-10d %-10d%n",
-                                        entry.getUsername(), entry.getLastStageInfo(),
-                                        entry.getMinigamesCompleted(), entry.getDailyQuestsCompleted(),
-                                        entry.getNonDailyQuestsCompleted(), entry.getHighestScore()));
-                            } else if (obj instanceof Map) {
-                                Map<?, ?> map = (Map<?, ?>) obj;
-                                String username = map.get("username") != null ? map.get("username").toString() : "?";
-                                String lastStage = map.get("lastStageInfo") != null ?
-                                    map.get("lastStageInfo").toString() : "?";
-                                int minigames = map.get("minigamesCompleted") instanceof Number ?
-                                    ((Number) map.get("minigamesCompleted")).intValue() : 0;
-                                int daily = map.get("dailyQuestsCompleted") instanceof Number ?
-                                    ((Number) map.get("dailyQuestsCompleted")).intValue() : 0;
-                                int nonDaily = map.get("nonDailyQuestsCompleted") instanceof Number ?
-                                    ((Number) map.get("nonDailyQuestsCompleted")).intValue() : 0;
-                                int score = map.get("highestScore") instanceof Number ?
-                                    ((Number) map.get("highestScore")).intValue() : 0;
-                                sb.append(String.format("%-20s %-25s %-10d %-10d %-10d %-10d%n",
-                                        username, lastStage, minigames, daily, nonDaily, score));}}
-                        setContent(sb.toString());
-                    } else {setContent("Unexpected response format.");}
-                } else {setContent(response.getString("message",
-                    "Failed to load leaderboard."));}});
-        }).exceptionally(ex -> {
-            Gdx.app.postRunnable(() -> setContent("Connection error: " + ex.getMessage()));
-            return null;});
+                    renderEntries(Leaderboard.parseEntries(response.get("entries")));
+                } else {
+                    setContent(response.getString("message", "Failed to load leaderboard."));
+                }
+            }))
+            .exceptionally(ex -> {
+                Gdx.app.postRunnable(() -> {
+                    if (generation == fetchGeneration) {
+                        setContent("Connection error: " + ex.getMessage());
+                    }
+                });
+                return null;
+            });
+    }
+
+    private void renderEntries(List<LeaderboardEntry> entries) {
+        if (entries == null || entries.isEmpty()) {
+            setContent("No leaderboard data.");
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%-20s %-25s %-10s %-10s %-10s %-10s%n",
+            "Username", "Last Stage", "Minigames", "Daily", "Non-Daily", "MyoPoint"));
+        sb.append("-".repeat(90)).append("\n");
+        for (LeaderboardEntry entry : entries) {
+            sb.append(String.format("%-20s %-25s %-10d %-10d %-10d %-10d%n",
+                entry.getUsername(), entry.getLastStageInfo(),
+                entry.getMinigamesCompleted(), entry.getDailyQuestsCompleted(),
+                entry.getNonDailyQuestsCompleted(), entry.getHighestScore()));
+        }
+        setContent(sb.toString());
     }
 
     private void setContent(String text) {
@@ -153,6 +168,4 @@ public class OnlineLeaderboardPanel extends BasePanel {
         btn.setSize(Math.max(btn.getTextWidth() + 60f, 200f), BUTTON_HEIGHT);
         return btn;
     }
-
-    private final float FIELD_WIDTH = Gdx.graphics.getWidth() * 0.25f;
 }
