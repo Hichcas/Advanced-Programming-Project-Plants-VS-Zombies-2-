@@ -153,9 +153,15 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     }
 
     // GameHud reads gameStatus.getRemainingZombieWaveInPercent() to fill the "Zombies: x%"
-    // bar regardless of which engine is active. RegularGameEngine keeps this in sync via
-    // UpdateHandler, but this engine never did, so the bar stayed frozen at 0%. Mirror the
-    // same killed/total percentage logic WaveManager.getProgressPercent() uses.
+    // bar. This used to be derived by re-scanning zombieEngine.getZombies() each tick and
+    // counting isDead() entries, but several kill paths (giant-nut instant kill, lawn mower
+    // kills) call zombieEngine.kill(z), which removes the zombie from that list immediately
+    // - so those kills vanished from the count the instant they happened, and the bar could
+    // visibly drop back down (even to 0%) as soon as enough kills went through that path.
+    // confirmedKills below is an explicit running tally incremented exactly once per zombie,
+    // at the moment it actually dies, regardless of what happens to it afterwards.
+    private int confirmedKills = 0;
+
     private void updateWaveProgress() {
         if (game == null) return;
         int total = game.getTotalZombies();
@@ -163,11 +169,23 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
             gameStatus.setRemainingZombieWaveInPercent(0);
             return;
         }
-        int killed = 0;
-        for (Zombie z : zombieEngine.getZombies()) {
-            if (z != null && z.isDead()) killed++;
-        }
-        gameStatus.setRemainingZombieWaveInPercent(Math.min(100, killed * 100 / total));
+        gameStatus.setRemainingZombieWaveInPercent(Math.min(100, confirmedKills * 100 / total));
+    }
+
+    /** Kills a zombie via the engine and counts it, but only once even if called twice. */
+    private void killZombieAndCount(Zombie z) {
+        if (z == null) return;
+        boolean wasDead = z.isDead();
+        zombieEngine.kill(z);
+        if (!wasDead) confirmedKills++;
+    }
+
+    /** Applies damage and counts the kill exactly once, at the moment hp actually hits 0. */
+    private void damageZombieAndCount(Zombie z, double amount) {
+        if (z == null) return;
+        boolean wasDead = z.isDead();
+        z.takeDamage(amount);
+        if (!wasDead && z.isDead()) confirmedKills++;
     }
 
     private void updateWaves(float delta) {
@@ -232,14 +250,14 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
     private void handleHit(BowlingNut nut, Zombie zombie) {
         switch (nut.getType()) {
             case NORMAL -> {
-                zombie.takeDamage(game.getNutDamage());
+                damageZombieAndCount(zombie, game.getNutDamage());
                 applyTurn(nut);
             }
             case EXPLOSIVE -> {
                 explode(nut);
                 nut.kill();
             }
-            case GIANT -> zombieEngine.kill(zombie);
+            case GIANT -> killZombieAndCount(zombie);
         }
     }
 
@@ -252,7 +270,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
             for (Zombie z : zombieEngine.getZombiesInLane(r)) {
                 int zCol = map.worldToCol((float) z.getX());
                 if (Math.abs(zCol - centerCol) <= 1) {
-                    z.takeDamage(game.getExplosionDamage());
+                    damageZombieAndCount(z, game.getExplosionDamage());
                 }
             }
         }
@@ -274,7 +292,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
                 for (Zombie z : getZombiesInLane(mower.getRow())) {
                     if (z != null && !z.isDead() && z.getX() <= mower.getFrontX()) {
                         mower.trigger();
-                        zombieEngine.kill(z);
+                        killZombieAndCount(z);
                         break;
                     }
                 }
@@ -284,7 +302,7 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
                 mower.advance(delta);
                 for (Zombie z : getZombiesInLane(mower.getRow())) {
                     if (z != null && !z.isDead() && mower.getHitbox().overlaps(z.getHitbox())) {
-                        zombieEngine.kill(z);
+                        killZombieAndCount(z);
                     }
                 }
             }
