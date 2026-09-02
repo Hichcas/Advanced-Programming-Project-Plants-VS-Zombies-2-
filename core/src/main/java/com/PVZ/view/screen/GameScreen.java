@@ -39,6 +39,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import pvz.libpvz.textures.TextureBank;
+import com.PVZ.view.screen.manager.CursorManager;
 
 public class GameScreen extends BaseScreen {
 
@@ -568,6 +569,7 @@ public class GameScreen extends BaseScreen {
             }
         }
         updatePlantFoodButtonState();
+        updateActionCursor();
     }
 
     private void updatePlantFoodHud() {
@@ -586,6 +588,7 @@ public class GameScreen extends BaseScreen {
         }
         if (count <= 0 && plantFoodModeActive) {
             plantFoodModeActive = false;
+            updateActionCursor();
         }
         if (plantFoodButton != null && System.currentTimeMillis() >= plantFoodFlashUntil) {
             float alpha = count <= 0 ? 0.4f : (plantFoodModeActive ? 1f : 0.85f);
@@ -599,6 +602,54 @@ public class GameScreen extends BaseScreen {
                 || engine.getPlantFoodManager().getPlantFoodCount() > 0;
             float alpha = hasFood ? (plantFoodModeActive ? 1f : 0.85f) : 0.4f;
             plantFoodButton.setColor(1f, 1f, 1f, alpha);
+        }
+    }
+
+    /**
+     * Keeps AppStatus.hoveredTileRow/Col (and the shovel-hover flag) in sync with the
+     * mouse so DrawHandler can light up the tile under the cursor while the shovel is
+     * armed. Cleared (-1,-1 / false) whenever the mouse isn't over a valid board tile or
+     * the shovel isn't active, so the highlight disappears immediately.
+     */
+    private void updateHoveredTile(int screenX, int screenY) {
+        if (!pluckModeActive || !(AppStatus.getGameEngine() instanceof RegularGameEngine regularEngine)) {
+            AppStatus.shovelHoverActive = false;
+            AppStatus.hoveredTileRow = -1;
+            AppStatus.hoveredTileCol = -1;
+            return;
+        }
+        Map map = regularEngine.getMap();
+        if (map == null) {
+            AppStatus.shovelHoverActive = false;
+            return;
+        }
+        Vector3 world = camera.unproject(new Vector3(screenX, screenY, 0f));
+        int row = map.worldToRow(world.y);
+        int col = map.worldToCol(world.x);
+        if (!map.isWithinBounds(row, col)) {
+            AppStatus.shovelHoverActive = false;
+            AppStatus.hoveredTileRow = -1;
+            AppStatus.hoveredTileCol = -1;
+            return;
+        }
+        AppStatus.shovelHoverActive = true;
+        AppStatus.hoveredTileRow = row;
+        AppStatus.hoveredTileCol = col;
+    }
+
+    /**
+     * Swaps the OS cursor to the shovel/plant-food icon while the matching tool is
+     * armed, and back to the normal arrow otherwise. Safe to call repeatedly (on every
+     * mouse move and every time a mode toggles) since CursorManager caches the built
+     * cursors and setCursor() on an already-active cursor is a cheap no-op on desktop.
+     */
+    private void updateActionCursor() {
+        if (pluckModeActive) {
+            CursorManager.getInstance().setShovelMode();
+        } else if (plantFoodModeActive) {
+            CursorManager.getInstance().setFoodMode();
+        } else {
+            CursorManager.getInstance().setPointerMode(false);
         }
     }
 
@@ -617,6 +668,7 @@ public class GameScreen extends BaseScreen {
             if (result.startsWith("Collected Plant Food!")) {
                 plantFoodModeActive = false;
                 updatePlantFoodButtonState();
+                updateActionCursor();
             }
             return true;
         }
@@ -642,6 +694,7 @@ public class GameScreen extends BaseScreen {
         if (result != null && result.startsWith("Plant fed at")) {
             plantFoodModeActive = false;
             updatePlantFoodButtonState();
+            updateActionCursor();
         }
         return true;
     }
@@ -673,6 +726,7 @@ public class GameScreen extends BaseScreen {
                     updatePlantFoodButtonState();
                 }
                 updateShovelButtonState();
+                updateActionCursor();
             }
         });
 
@@ -705,6 +759,8 @@ public class GameScreen extends BaseScreen {
         if (result != null && result.startsWith("Plant plucked from")) {
             pluckModeActive = false;
             updateShovelButtonState();
+            updateActionCursor();
+            AppStatus.shovelHoverActive = false;
         }
         return true;
     }
@@ -865,6 +921,8 @@ public class GameScreen extends BaseScreen {
             if (isSimulationFrozen()) {
                 return false;
             }
+            updateHoveredTile(screenX, screenY);
+            updateActionCursor();
             com.badlogic.gdx.InputProcessor active = activeInputProcessor();
             return active != null && active.mouseMoved(screenX, screenY);
         }
@@ -1626,6 +1684,11 @@ public class GameScreen extends BaseScreen {
         if (gameEngine != null)
             gameEngine.dispose();
         pluckModeActive = false;
+        plantFoodModeActive = false;
+        AppStatus.shovelHoverActive = false;
+        AppStatus.hoveredTileRow = -1;
+        AppStatus.hoveredTileCol = -1;
+        CursorManager.getInstance().setPointerMode(false);
         shovelButton = null;
         startWaveButton = null;
         startWaveButtonRoot = null;
