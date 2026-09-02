@@ -99,6 +99,7 @@ public abstract class Zombie {
         this.activeEffects = new ArrayList<>();
         this.poisonDps = 10.0f;
         this.hitbox = new Rectangle();
+        this.col = 8;
     }
 
     public void initPosition(double x, double y, double row) {

@@ -4,8 +4,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.graphics.Color;
 import pvz.libpvz.pam.ClipRef;
+import com.PVZ.model.entity.LawnMower;
 import com.PVZ.model.entity.zombies.base.Zombie;
 import com.PVZ.model.entity.zombies.base.ZombieAnimation;
+import com.PVZ.model.game.GameEngine;
+import com.PVZ.model.game.ZombieEngine;
+import com.PVZ.model.status.AppStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,13 +88,23 @@ final class ZombieRendering {
     }
 
     /**
-     * True once a hostile zombie has crawled into column 0-1, i.e. it is one
-     * step away from reaching the house / lawnmower row. Hypnotized zombies
-     * fight for the player now, and dying zombies are already handled, so
-     * neither should trigger the danger warning.
+     * True once a hostile zombie on a live lawn has crawled into the last two
+     * columns, i.e. it is about to reach that row's parked lawnmower.
+     * Almanac / collection previews are not on the battlefield, so they must
+     * never flash. Modes without a lawnmower (e.g. I, Zombie) also stay quiet.
      */
     private static boolean isEndangeringHouse(Zombie zombie) {
-        return !zombie.isDying() && !zombie.isHypnotized() && zombie.getCol() <= 1.0;
+        if (zombie.isDying() || zombie.isHypnotized()) return false;
+        GameEngine engine = AppStatus.getGameEngine();
+        if (engine == null) return false;
+        int row = (int) Math.round(zombie.getRow());
+        if (!(engine instanceof ZombieEngine ze)) return false;
+        java.util.List<Zombie> lane = ze.getZombiesInLane(row);
+        if (lane == null || !lane.contains(zombie)) return false;
+        LawnMower mower = engine.getLawnMower(row);
+        if (mower == null || mower.isUsed()) return false;
+        float warningReach = engine.getMap() != null ? engine.getMap().getTileWidth() * 2f : 280f;
+        return zombie.getX() <= mower.getFrontX() + warningReach;
     }
 
     private static String resolveState(Zombie z) {

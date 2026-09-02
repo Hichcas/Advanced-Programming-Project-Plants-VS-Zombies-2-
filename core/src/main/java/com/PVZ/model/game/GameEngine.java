@@ -1,5 +1,6 @@
 package com.PVZ.model.game;
 
+import com.PVZ.model.entity.LawnMower;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,6 +32,11 @@ public abstract class GameEngine {
 
     public Map getMap() {
         return map;
+    }
+
+    /** Parked lawnmower for this row, or null when this mode has none. */
+    public LawnMower getLawnMower(int row) {
+        return null;
     }
 
     public Texture getBackgroundOverride() {
