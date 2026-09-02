@@ -688,6 +688,12 @@ public class RegularGameEngine extends GameEngine implements ZombieEngine, Behav
         return zombies;
     }
 
+    @Override
+    public com.PVZ.model.entity.LawnMower getLawnMower(int row) {
+        if (row < 0 || row >= lawnMowers.length) return null;
+        return lawnMowers[row];
+    }
+
     int normalizeIndex(int value) {
         return value;
     }

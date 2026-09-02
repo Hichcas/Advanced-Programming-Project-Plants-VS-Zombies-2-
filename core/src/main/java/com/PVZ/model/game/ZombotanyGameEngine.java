@@ -106,6 +106,12 @@ public class ZombotanyGameEngine extends GameEngine implements ZombieEngine, See
     }
 
     @Override
+    public LawnMower getLawnMower(int row) {
+        if (lawnMowers == null || row < 0 || row >= lawnMowers.length) return null;
+        return lawnMowers[row];
+    }
+
+    @Override
     public void update(float delta) {
         if (gameOverTriggered) {
             updateGameOverTimer(delta);

@@ -100,6 +100,12 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
         }
     }
 
+    @Override
+    public LawnMower getLawnMower(int row) {
+        if (lawnMowers == null || row < 0 || row >= lawnMowers.length) return null;
+        return lawnMowers[row];
+    }
+
     public boolean launchHeldNut(int row, int col) {
         if (game == null || map == null) return false;
         if (!game.canLaunchAt(row, col)) return false;
