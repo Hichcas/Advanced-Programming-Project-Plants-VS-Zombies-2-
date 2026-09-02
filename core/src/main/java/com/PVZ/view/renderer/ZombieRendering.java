@@ -61,13 +61,50 @@ final class ZombieRendering {
         renderButter(er, batch, zombie, effectiveTime);
         renderZombotanyHead(er, batch, zombie, effectiveTime);
         batch.setColor(orig);
+        if (zombie.isHitFlashing()) {
+            batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                com.badlogic.gdx.graphics.GL20.GL_ONE);
+            batch.setColor(1.0f, 1.0f, 1.0f, 0.32f);
+            drawClip(er, batch, clip, effectiveTime, zombie.getX(), zombie.getY(), visibility);
+            batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+            batch.setColor(orig);
+        }
+        if (isEndangeringHouse(zombie)) {
+            float pulse = (float) (Math.sin(System.currentTimeMillis() * 0.008) * 0.18 + 0.30);
+            batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                com.badlogic.gdx.graphics.GL20.GL_ONE);
+            batch.setColor(1.0f, 0.12f, 0.12f, pulse);
+            drawClip(er, batch, clip, effectiveTime, zombie.getX(), zombie.getY(), visibility);
+            batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+            batch.setColor(orig);
+        }
         er.renderFallingArmors(batch);
+    }
+
+    /**
+     * True once a hostile zombie has crawled into column 0-1, i.e. it is one
+     * step away from reaching the house / lawnmower row. Hypnotized zombies
+     * fight for the player now, and dying zombies are already handled, so
+     * neither should trigger the danger warning.
+     */
+    private static boolean isEndangeringHouse(Zombie zombie) {
+        return !zombie.isDying() && !zombie.isHypnotized() && zombie.getCol() <= 1.0;
     }
 
     private static String resolveState(Zombie z) {
         String state = ZombieAnimation.getState(z);
         if (state == null) state = "walk";
-        if (z.isDying()) return "die";
+        // NOTE: previously this hardcoded "die" whenever the zombie was
+        // dying, discarding whatever specific death-clip variant
+        // ZombieAnimation.getState() had already resolved (e.g. "die2" -
+        // see Zombie.pickDeathAnimState()). That's exactly what made every
+        // zombie of a given type play the same death animation. `state`
+        // already correctly holds "die" for the common case and the
+        // randomly-picked variant for zombies that have more than one, so
+        // just use it.
+        if (z.isDying()) return state;
         if (z instanceof com.PVZ.model.entity.zombies.types.special_movement.ZombieBeachSnorkel snorkel) {
             return snorkel.isSubmerged() ? "particles" : snorkel.isMoving() ? "walk" : "eat";
         }
