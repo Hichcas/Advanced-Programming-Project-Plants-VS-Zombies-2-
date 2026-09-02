@@ -100,21 +100,25 @@ public class CursorManager {
     }
 
     /**
-     * Crops the named region out of the skin's spritesheet texture and turns it into a
-     * hardware cursor. Returns null (caller falls back to the normal arrow) if the skin,
-     * the drawable, or the underlying pixmap data isn't available.
+     * Crops the icon out of the given ImageButton style's spritesheet region and turns it
+     * into a hardware cursor. The style itself (e.g. "ingame_shovel") isn't a Drawable -
+     * it's an ImageButtonStyle whose *imageUp* (foreground icon) or, failing that, *up*
+     * (background) field is. Returns null (caller falls back to the normal arrow) if the
+     * skin, the style, or the underlying pixmap data isn't available.
      */
-    private Cursor buildCursorFromSkinDrawable(String drawableName) {
+    private Cursor buildCursorFromSkinDrawable(String styleName) {
         try {
             Skin skin = pvz.skin.PvzSkin.get();
-            if (skin == null || !skin.has(drawableName, Drawable.class)) {
+            if (skin == null || !skin.has(styleName, com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle.class)) {
                 return null;
             }
-            Drawable drawable = skin.getDrawable(drawableName);
-            if (!(drawable instanceof TextureRegionDrawable)) {
+            com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle style =
+                skin.get(styleName, com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle.class);
+            Drawable source = style.imageUp != null ? style.imageUp : style.up;
+            if (!(source instanceof TextureRegionDrawable)) {
                 return null;
             }
-            TextureRegion region = ((TextureRegionDrawable) drawable).getRegion();
+            TextureRegion region = ((TextureRegionDrawable) source).getRegion();
             Texture texture = region.getTexture();
             TextureData data = texture.getTextureData();
             if (!data.isPrepared()) {
