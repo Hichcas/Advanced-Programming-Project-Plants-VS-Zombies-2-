@@ -98,6 +98,36 @@ public final class PamAnimationCatalog {
         Entry e = byPath.get(normalize(pamPath));
         return (e == null || e.clips == null) ? null : e.clips.keySet();
     }
+
+    private static final java.util.regex.Pattern DIE_VARIANT_PATTERN =
+        java.util.regex.Pattern.compile("^die\\d*$");
+
+    /**
+     * Plain numbered death-clip variants for a zombie's PAM (e.g. "die",
+     * "die2", "die3" as seen on a handful of zombie types), sorted so the
+     * result is deterministic before the caller randomizes among them.
+     * Deliberately excludes narrative/contextual death clips such as
+     * "die_talk", "die_exit", "surf_die", "final_die" or "monkey_die" -
+     * those belong to a specific scripted sequence (e.g. a Zomboss defeat),
+     * not an interchangeable "which death animation plays" choice, so mixing
+     * them in here would break those zombies' actual death sequence.
+     */
+    public static java.util.List<String> dieVariants(String pamPath) {
+        ensureLoaded();
+        Entry e = byPath.get(normalize(pamPath));
+        if (e == null || e.clips == null) {
+            return java.util.Collections.emptyList();
+        }
+        java.util.List<String> variants = new java.util.ArrayList<>();
+        for (String name : e.clips.keySet()) {
+            if (DIE_VARIANT_PATTERN.matcher(name.toLowerCase()).matches()) {
+                variants.add(name);
+            }
+        }
+        java.util.Collections.sort(variants);
+        return variants;
+    }
+
     public static Double clipDuration(String pamPath, String clipName) {
         ensureLoaded();
         Entry e = byPath.get(normalize(pamPath));

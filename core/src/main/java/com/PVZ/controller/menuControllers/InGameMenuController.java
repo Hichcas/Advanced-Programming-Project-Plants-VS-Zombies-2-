@@ -158,7 +158,16 @@ public class InGameMenuController {
     }
 
     private OutputDTO nukeAction() {
-        return new OutputDTO(true, "Nuke released.");
+        RegularGameEngine rge = getEngine();
+        if (rge == null) {
+            return new OutputDTO(false, "Not in a regular game.");
+        }
+        BattleController bc = rge.getBattleController();
+        List<Zombie> list = rge.getZombieEngine().getZombies();
+        for (int i = list.size() - 1; i >= 0; i--) {
+            list.get(i).die(bc);
+        }
+        return new OutputDTO(true, "Nuke released. All zombies killed.");
     }
 
     private OutputDTO handleCheatSandstorm(InGameInputDTO dto, RegularGameEngine engine) {

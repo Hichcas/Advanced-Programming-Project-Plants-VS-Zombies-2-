@@ -470,13 +470,40 @@ public abstract class Zombie {
             }
             ZombieAnimation.trigger(this, "die", 0.05);
         } else {
-            ZombieAnimation.trigger(this, "die", 2.8333);
+            ZombieAnimation.trigger(this, pickDeathAnimState(), 2.8333);
         }
 
         if (isGlowing) {
             controller.grantPlantFoodDrop(x, y);
         }
         controller.rollLootDrop(x, y);
+    }
+
+    /**
+     * Picks which death animation this zombie plays. Most zombie types only
+     * have a single "die" clip and always get it. A handful of types (e.g.
+     * the Valentines/Birthday zombies, the pirate barrel-pusher, the seagull)
+     * ship two or three plain numbered death clips ("die", "die2", "die3") -
+     * for those, pick one at random per zombie so death animations don't all
+     * look identical. Contextual death clips (die_talk, die_exit, surf_die,
+     * final_die, etc.) are intentionally excluded by
+     * {@link com.PVZ.model.entity.PamAnimationCatalog#dieVariants}, since
+     * those belong to a scripted sequence rather than a random pick.
+     */
+    private String pickDeathAnimState() {
+        String pamAlias = com.PVZ.model.entity.zombies.base.ZombieTexturePaths
+            .getEffectivePamAlias(this);
+        String pamPath = com.PVZ.model.entity.zombies.base.ZombieTexturePaths
+            .getPamPath(pamAlias);
+        if (pamPath == null) {
+            return "die";
+        }
+        java.util.List<String> variants =
+            com.PVZ.model.entity.PamAnimationCatalog.dieVariants(pamPath);
+        if (variants.size() <= 1) {
+            return "die";
+        }
+        return variants.get((int) (Math.random() * variants.size()));
     }
 
     public void finishDeath(BattleController controller) {

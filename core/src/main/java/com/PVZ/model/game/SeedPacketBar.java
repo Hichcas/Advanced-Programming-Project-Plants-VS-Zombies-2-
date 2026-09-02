@@ -53,16 +53,47 @@ public class SeedPacketBar {
         layoutVertical(unlockedPlants, startX, startY, VERTICAL_SLOT_SIZE, VERTICAL_GAP);
     }
 
+    /** How quickly belt slots ease into their new position; higher = snappier. */
+    private static final float BELT_SLIDE_SPEED = 10f;
+
+    /**
+     * Smoothed y-position of each belt slot, kept across frames so slots visibly
+     * slide into place (instead of snapping) whenever the conveyor queue shifts -
+     * a plant is taken off the front, or a new one is dropped on the back.
+     */
+    private final List<Float> beltDisplayedY = new ArrayList<>();
+
     public void layoutVertical(List<PlantType> unlockedPlants, float startX, float startY, float slotSize, float gap) {
+        List<Float> previousY = new ArrayList<>(beltDisplayedY);
+        // Only animate when this bar has already been laid out before (i.e. it is
+        // being refreshed every frame, like the regular-mode conveyor belt). A
+        // one-shot layout call (e.g. I-Zombie versus board setup, called once)
+        // must land exactly on its target the first time, with nothing to ease from.
+        boolean animate = !previousY.isEmpty();
         packets.clear();
         lastLayoutWasVertical = true;
+        beltDisplayedY.clear();
+        float delta = Gdx.graphics.getDeltaTime();
+        float t = Math.min(1f, BELT_SLIDE_SPEED * delta);
         float y = startY;
+        int index = 0;
         for (PlantType type : unlockedPlants) {
-            Rectangle bounds = new Rectangle(startX, y, slotSize, slotSize);
+            float targetY = y;
+            float displayY = targetY;
+            if (animate) {
+                // A slot with no prior frame (belt just grew) starts one step further
+                // down the belt and eases up into its slot, matching the direction
+                // items already on the belt travel.
+                float startingY = index < previousY.size() ? previousY.get(index) : targetY - (slotSize + gap);
+                displayY = startingY + (targetY - startingY) * t;
+            }
+            Rectangle bounds = new Rectangle(startX, displayY, slotSize, slotSize);
             SeedPacket packet = new SeedPacket(type, bounds);
             packet.setIcon(getOrLoadIcon(type));
             packets.add(packet);
+            beltDisplayedY.add(displayY);
             y -= slotSize + gap;
+            index++;
         }
     }
 
