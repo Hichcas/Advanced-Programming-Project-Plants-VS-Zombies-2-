@@ -3,13 +3,30 @@ package com.PVZ.view.screen.manager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class CursorManager {
     private static CursorManager instance;
 
+    // Cursor icons are capped to this size (px) so a large HUD button texture doesn't
+    // become an oversized hardware cursor. Most OSes also refuse cursors above ~32-64px.
+    private static final int MAX_CURSOR_SIZE = 48;
+
     // Store native OS-managed hardware cursor objects
     private Cursor normalCursor;
     private Cursor pointerCursor;
+
+    // Built lazily from the existing UI spritesheet (skin) the first time each mode is
+    // used, then cached and reused for the rest of the session.
+    private Cursor shovelCursor;
+    private Cursor foodCursor;
+    private boolean shovelCursorBuildAttempted = false;
+    private boolean foodCursorBuildAttempted = false;
 
     private CursorManager() {
         // 1. Load the PNG images into temporary Pixmaps
@@ -48,6 +65,102 @@ public class CursorManager {
     }
 
     /**
+     * Switches the cursor to the shovel icon (used while shovel/pluck mode is active).
+     * Built on demand from the "ingame_shovel" region of the existing UI skin spritesheet
+     * so we don't need a dedicated cursor asset. Falls back to the normal arrow if the
+     * skin isn't ready yet or the region can't be turned into a cursor for any reason.
+     */
+    public void setShovelMode() {
+        if (!shovelCursorBuildAttempted) {
+            shovelCursorBuildAttempted = true;
+            shovelCursor = buildCursorFromSkinDrawable("ingame_shovel");
+        }
+        if (shovelCursor != null) {
+            Gdx.graphics.setCursor(shovelCursor);
+        } else {
+            setPointerMode(false);
+        }
+    }
+
+    /**
+     * Switches the cursor to the plant-food icon (used while plant-food targeting is
+     * active, i.e. after the plant-food button was clicked and before a tile is chosen).
+     * Built on demand from the "plantfood" region of the existing UI skin spritesheet.
+     */
+    public void setFoodMode() {
+        if (!foodCursorBuildAttempted) {
+            foodCursorBuildAttempted = true;
+            foodCursor = buildCursorFromSkinDrawable("plantfood");
+        }
+        if (foodCursor != null) {
+            Gdx.graphics.setCursor(foodCursor);
+        } else {
+            setPointerMode(false);
+        }
+    }
+
+    /**
+     * Crops the named region out of the skin's spritesheet texture and turns it into a
+     * hardware cursor. Returns null (caller falls back to the normal arrow) if the skin,
+     * the drawable, or the underlying pixmap data isn't available.
+     */
+    private Cursor buildCursorFromSkinDrawable(String drawableName) {
+        try {
+            Skin skin = pvz.skin.PvzSkin.get();
+            if (skin == null || !skin.has(drawableName, Drawable.class)) {
+                return null;
+            }
+            Drawable drawable = skin.getDrawable(drawableName);
+            if (!(drawable instanceof TextureRegionDrawable)) {
+                return null;
+            }
+            TextureRegion region = ((TextureRegionDrawable) drawable).getRegion();
+            Texture texture = region.getTexture();
+            TextureData data = texture.getTextureData();
+            if (!data.isPrepared()) {
+                data.prepare();
+            }
+            Pixmap sheet = data.consumePixmap();
+
+            int rw = region.getRegionWidth();
+            int rh = region.getRegionHeight();
+            if (rw <= 0 || rh <= 0) {
+                if (data.disposePixmap()) sheet.dispose();
+                return null;
+            }
+
+            Pixmap cropped = new Pixmap(rw, rh, sheet.getFormat());
+            cropped.setBlending(Pixmap.Blending.None);
+            cropped.drawPixmap(sheet, 0, 0, region.getRegionX(), region.getRegionY(), rw, rh);
+            if (data.disposePixmap()) {
+                sheet.dispose();
+            }
+
+            Pixmap cursorPixmap = cropped;
+            if (rw > MAX_CURSOR_SIZE || rh > MAX_CURSOR_SIZE) {
+                float scale = Math.min((float) MAX_CURSOR_SIZE / rw, (float) MAX_CURSOR_SIZE / rh);
+                int nw = Math.max(1, Math.round(rw * scale));
+                int nh = Math.max(1, Math.round(rh * scale));
+                Pixmap scaled = new Pixmap(nw, nh, cropped.getFormat());
+                scaled.setFilter(Pixmap.Filter.BiLinear);
+                scaled.drawPixmap(cropped, 0, 0, rw, rh, 0, 0, nw, nh);
+                cropped.dispose();
+                cursorPixmap = scaled;
+            }
+
+            // Hotspot at the icon's center: neither icon needs a precise "tip" pixel since
+            // the click is resolved from the actual mouse position, not the cursor bitmap.
+            int hotspotX = cursorPixmap.getWidth() / 2;
+            int hotspotY = cursorPixmap.getHeight() / 2;
+            Cursor cursor = Gdx.graphics.newCursor(cursorPixmap, hotspotX, hotspotY);
+            cursorPixmap.dispose();
+            return cursor;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    /**
      * Clears allocated hardware cursor resources from GPU memory on game exit.
      */
     public void dispose() {
@@ -56,6 +169,12 @@ public class CursorManager {
         }
         if (pointerCursor != null) {
             pointerCursor.dispose();
+        }
+        if (shovelCursor != null) {
+            shovelCursor.dispose();
+        }
+        if (foodCursor != null) {
+            foodCursor.dispose();
         }
     }
 }

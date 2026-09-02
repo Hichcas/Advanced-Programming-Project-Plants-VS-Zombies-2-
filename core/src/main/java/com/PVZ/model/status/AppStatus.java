@@ -55,6 +55,16 @@ public final class AppStatus {
     public static boolean lastGameResultWin = false;
     public static MainMenuScreen lastMainMenu;
 
+    /**
+     * Tile the mouse is currently hovering while the shovel (pluck) tool is armed,
+     * kept in sync by GameScreen's input handler each time the mouse moves. DrawHandler
+     * reads these to brighten the hovered tile (only meaningful when a plant sits on it),
+     * mirroring the "goldtile" highlight PopCap uses to hint at a valid targeted tile.
+     */
+    public static boolean shovelHoverActive = false;
+    public static int hoveredTileRow = -1;
+    public static int hoveredTileCol = -1;
+
     // ====================== سیستم اعلان وسط بازی ======================
     /**
      * صف اعلان‌های در انتظار نمایش. چون بازی امتیازی می‌تواند در یک لحظه

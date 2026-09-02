@@ -149,6 +149,25 @@ public class WallnutBowlingGameEngine extends GameEngine implements ZombieEngine
         for (Zombie z : zombieEngine.getZombies()) {
             if (!z.isDead()) z.updateEffects(delta);
         }
+        updateWaveProgress();
+    }
+
+    // GameHud reads gameStatus.getRemainingZombieWaveInPercent() to fill the "Zombies: x%"
+    // bar regardless of which engine is active. RegularGameEngine keeps this in sync via
+    // UpdateHandler, but this engine never did, so the bar stayed frozen at 0%. Mirror the
+    // same killed/total percentage logic WaveManager.getProgressPercent() uses.
+    private void updateWaveProgress() {
+        if (game == null) return;
+        int total = game.getTotalZombies();
+        if (total <= 0) {
+            gameStatus.setRemainingZombieWaveInPercent(0);
+            return;
+        }
+        int killed = 0;
+        for (Zombie z : zombieEngine.getZombies()) {
+            if (z != null && z.isDead()) killed++;
+        }
+        gameStatus.setRemainingZombieWaveInPercent(Math.min(100, killed * 100 / total));
     }
 
     private void updateWaves(float delta) {

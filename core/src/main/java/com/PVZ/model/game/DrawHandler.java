@@ -284,8 +284,34 @@ public class DrawHandler {
 
         drawBeachWaterOverlays(engine, batch);
         drawPerTileOverlays(engine, batch);
+        drawShovelHoverHighlight(engine, batch);
 
         batch.setColor(orig);
+    }
+
+    private static float shovelHighlightStateTime = 0f;
+
+    /**
+     * Brightens the tile under the mouse while the shovel is armed and it's hovering a
+     * planted tile, using the same GOLDTILE pam PopCap uses for "this tile can be acted
+     * on" hints (768/FULL/BACKGROUNDS/GOLDTILE/GOLDTILE.PAM, "active_idle" clip).
+     * GameScreen keeps AppStatus.shovelHoverActive/hoveredTileRow/hoveredTileCol in sync
+     * with the mouse each time it moves.
+     */
+    private static void drawShovelHoverHighlight(RegularGameEngine engine, SpriteBatch batch) {
+        shovelHighlightStateTime += com.badlogic.gdx.Gdx.graphics.getDeltaTime();
+        if (!com.PVZ.model.status.AppStatus.shovelHoverActive) return;
+
+        int row = com.PVZ.model.status.AppStatus.hoveredTileRow;
+        int col = com.PVZ.model.status.AppStatus.hoveredTileCol;
+        Tile tile = engine.map.getTile(row, col);
+        if (tile == null || tile.getPlant() == null) return;
+
+        float cx = tile.getX() + tile.getWidth() / 2f;
+        float cy = tile.getY() + tile.getHeight() / 2f;
+        EntityRenderer.getInstance().renderPam(batch,
+            "768/FULL/BACKGROUNDS/GOLDTILE/GOLDTILE.PAM", "active_idle",
+            shovelHighlightStateTime, cx, cy);
     }
 
     private static void drawBeachWaterOverlays(RegularGameEngine engine, SpriteBatch batch) {
