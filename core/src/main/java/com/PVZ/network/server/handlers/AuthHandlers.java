@@ -40,8 +40,7 @@ public final class AuthHandlers {
         dispatcher.register(MessageType.FETCH_USER, AuthHandlers::handleFetchUser);
         dispatcher.register(MessageType.CHECK_USERNAME, AuthHandlers::handleCheckUsername);
         dispatcher.register(MessageType.SUBMIT_SCORE, AuthHandlers::handleSubmitScore);
-        dispatcher.register(MessageType.PING, (session, request) ->
-                NetworkMessage.reply(request.getRequestId(), MessageType.PONG));
+        dispatcher.register(MessageType.PING, (session, request) -> null);
     }
 
     // ===================== REGISTER =====================

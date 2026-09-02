@@ -44,18 +44,23 @@ public class NetworkClient {
     private MessageChannel channel;
     private Thread listenerThread;
     private volatile boolean connected = false;
+    private volatile int connectionGeneration = 0;
 
     private final Map<String, CompletableFuture<NetworkMessage>> pendingRequests = new ConcurrentHashMap<>();
     private final Map<MessageType, List<Consumer<NetworkMessage>>> pushListeners = new ConcurrentHashMap<>();
     private final List<Runnable> disconnectListeners = new CopyOnWriteArrayList<>();
 
-    public void connect(String host, int port) throws IOException {
+    public synchronized void connect(String host, int port) throws IOException {
+        disconnectQuietly();
+        int generation = ++connectionGeneration;
         socket = new Socket(host, port);
+        socket.setTcpNoDelay(true);
+        socket.setKeepAlive(true);
         channel = new MessageChannel(socket);
         connected = true;
         startHeartbeat();
 
-        listenerThread = new Thread(this::listenLoop, "NetworkClient-Listener");
+        listenerThread = new Thread(() -> listenLoop(generation), "NetworkClient-Listener");
         listenerThread.setDaemon(true);
         listenerThread.start();
     }
@@ -88,16 +93,19 @@ public class NetworkClient {
         }
     }
 
-    private void listenLoop() {
+    private void listenLoop(int generation) {
         try {
             NetworkMessage message;
-            while (connected && (message = channel.receive()) != null) {
+            while (connected && generation == connectionGeneration
+                    && (message = channel.receive()) != null) {
                 handleIncoming(message);
             }
-        } catch (IOException e) {
-            // اتصال قطع شد (سرور خاموش شد یا شبکه قطع شد)
+        } catch (Exception e) {
+            // سوکت بسته شد، JSON خراب بود، یا سرور قطع شد
         } finally {
-            handleDisconnect();
+            if (generation == connectionGeneration) {
+                handleDisconnect();
+            }
         }
     }
 
@@ -125,7 +133,9 @@ public class NetworkClient {
     private void handleDisconnect() {
         connected = false;
         stopHeartbeat();
-        // به تمام درخواست‌های معلق خطا بده تا کسی برای همیشه منتظر نماند
+        if (channel != null) {
+            channel.close();
+        }
         for (CompletableFuture<NetworkMessage> future : pendingRequests.values()) {
             future.completeExceptionally(new IOException("Connection to server lost."));
         }
@@ -152,7 +162,7 @@ public class NetworkClient {
      * یا به‌صورت async با {@code .thenAccept(...)}.
      */
     public CompletableFuture<NetworkMessage> sendRequest(NetworkMessage request) {
-        if (!connected) {
+        if (!connected || channel == null) {
             CompletableFuture<NetworkMessage> failed = new CompletableFuture<>();
             failed.completeExceptionally(new IOException("Not connected to server."));
             return failed;
@@ -195,12 +205,28 @@ public class NetworkClient {
     }
 
     public boolean isConnected() {
-        return connected;
+        Socket s = socket;
+        return connected && s != null && s.isConnected() && !s.isClosed();
     }
 
     public void disconnect() {
+        disconnectQuietly();
+    }
+
+    private void disconnectQuietly() {
         connected = false;
-        if (channel != null) channel.close();
-        if (listenerThread != null) listenerThread.interrupt();
+        stopHeartbeat();
+        if (channel != null) {
+            channel.close();
+        }
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException ignored) {
+            }
+        }
+        if (listenerThread != null) {
+            listenerThread.interrupt();
+        }
     }
 }

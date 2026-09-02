@@ -10,7 +10,7 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 4991700,
+    "coins" : 4991750,
     "diamonds" : 5000177,
     "stagesCompleted" : 0,
     "highestScore" : 27750,
@@ -34,8 +34,8 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "SWEET_POTATO", "APPEASE_MINT", "ICE_SHROOM", "BONK_CHOY", "CAT_TAIL_MINT", "SQUASH", "CAT_TAIL", "FIRE_PEASHOOTER", "ENCHANT_MINT", "LILY_PAD", "SEA_SHROOM", "GRAVE_BUSTER", "THREEPEATER", "PRIMAL_POTATO_MINE", "KIWIBEAST", "CABBAGE_PULT", "WASABI_WHIP", "PRIMAL_SUNFLOWER", "SUN_BEAN", "EXPLODE_O_NUT", "POTATO_MINE", "GRAPESHOT", "WINTER_MELON", "MAGNET_SHROOM", "SPLIT_PEA", "TWIN_SUNFLOWER", "PEASHOOTER", "CACTUS", "ROTOBAGA", "REINFORCE_MINT", "FUME_SHROOM", "GOO_PEASHOOTER", "MELON_PULT", "GIANT_WALLNUT", "STARFRUIT", "HOT_POTATO", "CHERRY_BOMB", "SUNFLOWER", "KERNEL_PULT", "CAULIPOWER", "PUMPKIN", "ENFORCE_MINT", "PUFF_SHROOM", "HYPNO_SHROOM", "ARMA_MINT", "ENLIGHTEN_MINT", "MEGA_GATLING_PEA", "REPEATER", "TALL_NUT", "CHOMPER", "PEA_POD", "TORCHWOOD", "WALLNUT_BOWLING", "PHAT_BEET", "CITRON", "TANGLE_KELP", "GOLD_BLOOM", "SNOW_PEA", "DOOM_SHROOM", "SUN_SHROOM", "GARLIC", "PIERCE_MINT", "IMITATER", "WALL_NUT", "JALAPENO", "ENDURIAN", "ELECTRIC_BLUEBERRY", "BOWLING_BULB", "ICEBERG_LETTUCE", "BOMBARD_MINT", "PEPPER_PULT" ],
-    "seenZombies" : [ "DARK_ARMOR1", "PIANO", "TUTORIAL_ARMOR4", "ZOMBOSS_DARK", "IMP_BEACH", "IMP_EGYPT", "RA", "TOMB_RAISER", "GARGANTUAR_ICEAGE", "ICEAGE_HUNTER", "BEACH_OCTOPUS", "ZOMBOSS_EGYPT", "ZOMBOSS_COWBOY", "BEACH_DEFAULT", "ICEAGE_ARMOR2", "GARGANTUAR_BASIC", "ZOMBOSS_PIRATE", "GARGANTUAR_BEACH", "LOSTCITY_JANE", "PROSPECTOR", "IMP_DARK", "DODO", "IMP_DRAGON", "ALLSTAR", "DARK_KING", "NEWSPAPER", "TUTORIAL_ARMOR2", "MUMMY_ARMOR4", "WEASEL_HOARDER", "WIZARD", "TUTORIAL_FLAG", "DARK_DEFAULT", "ARCADE", "CRYSTAL_SKULL", "IMP_ICEAGE", "MUMMY_ARMOR1", "BEACH_SURFER", "PHARAOH", "ICEAGE_DEFAULT", "CAMEL", "BEACH_FAST_SWIMMER", "DARK_JUGGLER", "BEACH_SNORKEL", "GARGANTUAR_DARK", "MUMMY_ARMOR2", "FOOTBALL", "WEASEL", "ZOMBOTANY_PEASHOOTER", "BEACH_FISHERMAN", "ZOMBOTANY_WALLNUT", "ICEAGE_ARMOR1", "DARK_ARMOR4", "TROGLOBITE", "ICEAGE_ARMOR3", "ZOMBOTANY_JALAPENO", "IMP_TUTORIAL", "DARK_ARMOR2", "ZOMBOTANY_SQUASH", "BEACH_ARMOR2", "GARGANTUAR_EGYPT", "TUTORIAL_DEFAULT", "EXPLORER", "TUTORIAL_ARMOR1", "MUMMY_DEFAULT", "DARK_ARMOR3", "BEACH_ARMOR1" ],
+    "unlockedPlants" : [ "ICE_SHROOM", "TORCHWOOD", "GRAPESHOT", "ENLIGHTEN_MINT", "REINFORCE_MINT", "GOO_PEASHOOTER", "WALL_NUT", "POTATO_MINE", "ENFORCE_MINT", "STARFRUIT", "ARMA_MINT", "PIERCE_MINT", "TWIN_SUNFLOWER", "PEPPER_PULT", "CITRON", "KIWIBEAST", "PRIMAL_POTATO_MINE", "WINTER_MELON", "KERNEL_PULT", "APPEASE_MINT", "GOLD_BLOOM", "ROTOBAGA", "CHOMPER", "PEA_POD", "SUN_SHROOM", "MELON_PULT", "PEASHOOTER", "THREEPEATER", "SEA_SHROOM", "HYPNO_SHROOM", "SUN_BEAN", "REPEATER", "TALL_NUT", "SQUASH", "CHERRY_BOMB", "GARLIC", "SUNFLOWER", "ENCHANT_MINT", "DOOM_SHROOM", "BOMBARD_MINT", "FUME_SHROOM", "SNOW_PEA", "ELECTRIC_BLUEBERRY", "SPLIT_PEA", "LILY_PAD", "ICEBERG_LETTUCE", "CAT_TAIL_MINT", "GIANT_WALLNUT", "SWEET_POTATO", "WALLNUT_BOWLING", "JALAPENO", "BOWLING_BULB", "CAULIPOWER", "CAT_TAIL", "MAGNET_SHROOM", "PRIMAL_SUNFLOWER", "CABBAGE_PULT", "BONK_CHOY", "FIRE_PEASHOOTER", "HOT_POTATO", "IMITATER", "WASABI_WHIP", "TANGLE_KELP", "PHAT_BEET", "PUMPKIN", "CACTUS", "EXPLODE_O_NUT", "ENDURIAN", "MEGA_GATLING_PEA", "GRAVE_BUSTER", "PUFF_SHROOM" ],
+    "seenZombies" : [ "PIANO", "DARK_ARMOR1", "DARK_ARMOR3", "WEASEL_HOARDER", "GARGANTUAR_EGYPT", "ZOMBOSS_DARK", "BEACH_ARMOR1", "IMP_DRAGON", "TUTORIAL_ARMOR1", "ZOMBOSS_PIRATE", "MUMMY_ARMOR1", "ZOMBOTANY_JALAPENO", "EXPLORER", "MUMMY_ARMOR2", "BEACH_FAST_SWIMMER", "WEASEL", "GARGANTUAR_DARK", "CRYSTAL_SKULL", "ZOMBOTANY_PEASHOOTER", "GARGANTUAR_ICEAGE", "BEACH_ARMOR2", "DARK_ARMOR4", "TUTORIAL_FLAG", "DARK_DEFAULT", "ZOMBOSS_EGYPT", "ICEAGE_ARMOR1", "ARCADE", "MUMMY_ARMOR4", "GARGANTUAR_BASIC", "ICEAGE_HUNTER", "IMP_ICEAGE", "WIZARD", "LOSTCITY_JANE", "ZOMBOTANY_SQUASH", "RA", "BEACH_SURFER", "ZOMBOTANY_WALLNUT", "NEWSPAPER", "ICEAGE_ARMOR3", "IMP_BEACH", "TROGLOBITE", "MUMMY_DEFAULT", "ICEAGE_DEFAULT", "PROSPECTOR", "BEACH_FISHERMAN", "IMP_EGYPT", "TUTORIAL_ARMOR4", "TUTORIAL_ARMOR2", "DARK_JUGGLER", "GARGANTUAR_BEACH", "BEACH_SNORKEL", "DARK_ARMOR2", "TOMB_RAISER", "PHARAOH", "IMP_DARK", "TUTORIAL_DEFAULT", "IMP_TUTORIAL", "CAMEL", "FOOTBALL", "BEACH_OCTOPUS", "ICEAGE_ARMOR2", "DODO", "BEACH_DEFAULT", "ZOMBOSS_COWBOY", "DARK_KING", "ALLSTAR" ],
     "seedPackets" : {
       "SUN_SHROOM" : 5,
       "SUNFLOWER" : 20,
@@ -133,8 +133,8 @@
       "empty" : false,
       "readyForPlanting" : false
     } ] ],
-    "numberOfLockedPots" : 0,
-    "numberOfUnlockedPots" : 12
+    "numberOfUnlockedPots" : 12,
+    "numberOfLockedPots" : 0
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -822,8 +822,8 @@
     "offerPlant" : "FIRE_PEASHOOTER",
     "offerDate" : "2026-08-15",
     "purchased" : false,
-    "forToday" : false,
-    "availableToday" : false
+    "availableToday" : false,
+    "forToday" : false
   },
   "stayLoggedIn" : false,
   "questState" : {
@@ -1003,7 +1003,10 @@
           "family" : "ENLIGHTEN_MINT"
         },
         "active" : true,
-        "runtimeState" : { },
+        "runtimeState" : {
+          "familyViolated" : true,
+          "anyKill" : true
+        },
         "formattedDescription" : "Kill zombies using only ENLIGHTEN_MINT plants",
         "formattedTitle" : "Family Slaughter"
       }, {
@@ -1035,8 +1038,8 @@
         "priority" : "MEDIUM",
         "conditionKey" : "collect_sun",
         "targetCount" : 3000,
-        "currentCount" : 0,
-        "completed" : false,
+        "currentCount" : 3000,
+        "completed" : true,
         "claimed" : false,
         "reward" : {
           "type" : "COINS",
@@ -1046,17 +1049,17 @@
         "parameters" : {
           "sun_amount" : 3000
         },
-        "active" : true,
+        "active" : false,
         "runtimeState" : { },
         "formattedDescription" : "Collect 3000 sun in one day",
         "formattedTitle" : "Daily Sun Catcher"
       } ],
       "lastDailyRefresh" : "2026-09-02",
       "consecutiveMaxDifficultyWins" : 0,
-      "currentChapter" : "BIG_WAVE_BEACH",
+      "currentChapter" : "DARK_AGES",
       "currentDifficulty" : 3,
-      "isDayLevel" : true,
-      "timeUntilReset" : "17h 21m"
+      "isDayLevel" : false,
+      "timeUntilReset" : "16h 28m"
     }
   }
 }
