@@ -7,6 +7,7 @@ import com.PVZ.model.status.AppStatus;
 import com.PVZ.view.renderer.EntityRenderer;
 import com.PVZ.view.screen.BaseScreen;
 import com.PVZ.view.screen.manager.FontManager;
+import com.PVZ.view.screen.ui.MenuButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -17,6 +18,9 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import pvz.skin.PvzSkin;
 
@@ -35,6 +39,11 @@ public class GameHud extends Group {
     private static final float PANEL_GAP = 14f;
     private static final float PANEL_TOP_MARGIN = 30f;
     private static final float PANEL_LEFT_MARGIN = 24f;
+    private static final float PANEL_WIDTH = PANEL_ICON_SIZE + 90f;
+    private static final float DEBUG_BTN_SIZE = 56f;
+    private static final float DEBUG_BTN_GAP = 8f;
+    private static final int DEBUG_SUN_AMOUNT = 100;
+    private static final int DEBUG_PLANT_FOOD_AMOUNT = 1;
 
     private static final float WAVEBAR_HEIGHT = 30f;
     private static final float WAVEBAR_TOP_MARGIN = 18f;
@@ -61,11 +70,20 @@ public class GameHud extends Group {
     private static NinePatch waveBarTrack;
     private static NinePatch waveBarFill;
 
+    private float sunPanelX;
+    private float sunPanelY;
+    private float plantFoodPanelY;
+
+    private MenuButton debugSunButton;
+    private MenuButton debugPlantFoodButton;
+
     public GameHud() {
         this.font = FontManager.getInstance().getEnglishMenuFont();
         this.bigFont = FontManager.getInstance().getEnglishMenuFont();
         setSize(BaseScreen.VIRTUAL_WIDTH, BaseScreen.VIRTUAL_HEIGHT);
+        setTouchable(Touchable.childrenOnly);
         ensureBackgrounds();
+        createDebugButtons();
     }
 
     private static void ensureBackgrounds() {
@@ -98,6 +116,7 @@ public class GameHud extends Group {
 
         GameEngine engine = AppStatus.getGameEngine();
         if (engine == null || engine.gameStatus == null) {
+            layoutDebugButtons(engine);
             return;
         }
         sunflowerCount = engine.gameStatus.getSunflower();
@@ -136,6 +155,98 @@ public class GameHud extends Group {
         } else {
             lockedPlantsForHud = List.of();
         }
+
+        updateCounterLayout();
+        layoutDebugButtons(engine);
+    }
+
+    private void createDebugButtons() {
+        debugSunButton = createDebugPlusButton(this::debugAddSun);
+        debugPlantFoodButton = createDebugPlusButton(this::debugAddPlantFood);
+        addActor(debugSunButton);
+        addActor(debugPlantFoodButton);
+        debugSunButton.setVisible(false);
+        debugPlantFoodButton.setVisible(false);
+    }
+
+    private MenuButton createDebugPlusButton(Runnable action) {
+        MenuButton button;
+        try {
+            Skin skin = PvzSkin.get();
+            if (skin != null && skin.has("green_small", TextButton.TextButtonStyle.class)) {
+                TextButton.TextButtonStyle style = skin.get("green_small", TextButton.TextButtonStyle.class);
+                Drawable hover = style.over != null ? style.over : style.down;
+                button = new MenuButton(style.up, "+", font,
+                    hover != null ? hover : style.up, style.disabled, null, action);
+            } else {
+                button = new MenuButton("+", font, action);
+            }
+        } catch (RuntimeException ex) {
+            button = new MenuButton("+", font, action);
+        }
+        button.setSize(DEBUG_BTN_SIZE, DEBUG_BTN_SIZE);
+        return button;
+    }
+
+    private void updateCounterLayout() {
+        float top = BaseScreen.VIRTUAL_HEIGHT - PANEL_TOP_MARGIN;
+        if (conveyorBeltMode) {
+            sunPanelX = BaseScreen.VIRTUAL_WIDTH - PANEL_WIDTH - PANEL_LEFT_MARGIN;
+            sunPanelY = PANEL_TOP_MARGIN + PANEL_HEIGHT + PANEL_GAP;
+            plantFoodPanelY = PANEL_TOP_MARGIN;
+        } else {
+            sunPanelX = PANEL_LEFT_MARGIN;
+            sunPanelY = top - PANEL_HEIGHT;
+            plantFoodPanelY = sunPanelY - PANEL_HEIGHT - PANEL_GAP;
+        }
+    }
+
+    private void layoutDebugButtons(GameEngine engine) {
+        boolean debug = AppStatus.isDebugMode();
+        boolean showSun = debug && engine instanceof ZombieEngine;
+        boolean showPlantFood = debug && engine instanceof RegularGameEngine;
+
+        positionDebugButton(debugSunButton, sunPanelY, showSun);
+        positionDebugButton(debugPlantFoodButton, plantFoodPanelY, showPlantFood);
+    }
+
+    private void positionDebugButton(MenuButton button, float panelY, boolean show) {
+        if (button == null) {
+            return;
+        }
+        button.setVisible(show);
+        button.setTouchable(show ? Touchable.enabled : Touchable.disabled);
+        if (!show) {
+            return;
+        }
+        float btnX = conveyorBeltMode
+            ? sunPanelX - DEBUG_BTN_SIZE - DEBUG_BTN_GAP
+            : sunPanelX + PANEL_WIDTH + DEBUG_BTN_GAP;
+        float btnY = panelY + (PANEL_HEIGHT - DEBUG_BTN_SIZE) / 2f;
+        button.setBounds(btnX, btnY, DEBUG_BTN_SIZE, DEBUG_BTN_SIZE);
+    }
+
+    private void debugAddSun() {
+        if (!AppStatus.isDebugMode()) {
+            return;
+        }
+        GameEngine engine = AppStatus.getGameEngine();
+        if (engine instanceof IZombieLocalVersusEngine versusEngine) {
+            versusEngine.addPlantSun(DEBUG_SUN_AMOUNT);
+            return;
+        }
+        if (engine instanceof ZombieEngine zombieEngine) {
+            zombieEngine.addSun(DEBUG_SUN_AMOUNT);
+        }
+    }
+
+    private void debugAddPlantFood() {
+        if (!AppStatus.isDebugMode()) {
+            return;
+        }
+        if (AppStatus.getGameEngine() instanceof RegularGameEngine regularEngine) {
+            regularEngine.getPlantFoodManager().addPlantFood(DEBUG_PLANT_FOOD_AMOUNT);
+        }
     }
 
     private String formatBelt(List<PlantType> queue) {
@@ -171,18 +282,9 @@ public class GameHud extends Group {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
+        updateCounterLayout();
         float top = BaseScreen.VIRTUAL_HEIGHT - PANEL_TOP_MARGIN;
-        float sunPanelY;
-        float sunPanelX;
-        if (conveyorBeltMode) {
-            float panelWidthGuess = PANEL_ICON_SIZE + 90f;
-            sunPanelX = BaseScreen.VIRTUAL_WIDTH - panelWidthGuess - PANEL_LEFT_MARGIN;
-            sunPanelY = PANEL_TOP_MARGIN + PANEL_HEIGHT + PANEL_GAP;
-        } else {sunPanelY = top - PANEL_HEIGHT;
-            sunPanelX = PANEL_LEFT_MARGIN;}
         drawCounterPanel(batch, parentAlpha, SUN_PAM, sunflowerCount, sunPanelX, sunPanelY, Color.GOLD);
-        float plantFoodPanelY = conveyorBeltMode ? PANEL_TOP_MARGIN : sunPanelY - PANEL_HEIGHT - PANEL_GAP;
         drawCounterPanel(batch, parentAlpha, PLANTFOOD_PAM, plantFoodCount, sunPanelX, plantFoodPanelY, Color.LIME);
         if (versusMode) {
             drawMatchTimer(batch, parentAlpha, top);} else {
@@ -205,13 +307,13 @@ public class GameHud extends Group {
                     batch.setColor(1f, 1f, 1f, 1f);}
                 iconX += LOCKED_ICON_SIZE + LOCKED_ICON_GAP;}}
         font.setColor(Color.WHITE);
+        super.draw(batch, parentAlpha);
     }
 
     private void drawCounterPanel(Batch batch, float parentAlpha, String pamPath, int value,
                                    float x, float y, Color textColor) {
         batch.setColor(1f, 1f, 1f, parentAlpha);
-        float panelWidth = PANEL_ICON_SIZE + 90f;
-        panelBackground.draw(batch, x, y, panelWidth, PANEL_HEIGHT);
+        panelBackground.draw(batch, x, y, PANEL_WIDTH, PANEL_HEIGHT);
 
         float iconCx = x + PANEL_ICON_SIZE / 2f + 6f;
         float iconCy = y + PANEL_HEIGHT / 2f;
