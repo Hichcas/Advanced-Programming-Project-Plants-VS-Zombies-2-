@@ -10,8 +10,8 @@
   },
   "userStats" : {
     "gamesPlayed" : 0,
-    "coins" : 4991800,
-    "diamonds" : 5000178,
+    "coins" : 4993300,
+    "diamonds" : 5000204,
     "stagesCompleted" : 0,
     "highestScore" : 27750,
     "dailyQuestsCompleted" : 0,
@@ -34,16 +34,20 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "APPEASE_MINT", "REPEATER", "CABBAGE_PULT", "ENCHANT_MINT", "THREEPEATER", "EXPLODE_O_NUT", "CHERRY_BOMB", "SNOW_PEA", "KIWIBEAST", "CHOMPER", "PRIMAL_SUNFLOWER", "FUME_SHROOM", "TALL_NUT", "ENFORCE_MINT", "PEA_POD", "PRIMAL_POTATO_MINE", "PEPPER_PULT", "WINTER_MELON", "CITRON", "STARFRUIT", "GARLIC", "CACTUS", "DOOM_SHROOM", "SWEET_POTATO", "BOWLING_BULB", "SEA_SHROOM", "PEASHOOTER", "TANGLE_KELP", "WALL_NUT", "BOMBARD_MINT", "SUN_SHROOM", "CAT_TAIL_MINT", "CAULIPOWER", "HOT_POTATO", "BONK_CHOY", "KERNEL_PULT", "SUNFLOWER", "POTATO_MINE", "HYPNO_SHROOM", "PIERCE_MINT", "WASABI_WHIP", "SUN_BEAN", "LILY_PAD", "CAT_TAIL", "REINFORCE_MINT", "FIRE_PEASHOOTER", "MEGA_GATLING_PEA", "GIANT_WALLNUT", "JALAPENO", "WALLNUT_BOWLING", "IMITATER", "PUMPKIN", "GRAPESHOT", "ICEBERG_LETTUCE", "ENLIGHTEN_MINT", "ICE_SHROOM", "MELON_PULT", "PUFF_SHROOM", "TWIN_SUNFLOWER", "ARMA_MINT", "ROTOBAGA", "GRAVE_BUSTER", "GOO_PEASHOOTER", "SQUASH", "SPLIT_PEA", "ENDURIAN", "PHAT_BEET", "MAGNET_SHROOM", "GOLD_BLOOM", "TORCHWOOD", "ELECTRIC_BLUEBERRY" ],
-    "seenZombies" : [ "BEACH_SNORKEL", "CAMEL", "ZOMBOTANY_WALLNUT", "ICEAGE_ARMOR1", "DARK_KING", "BEACH_ARMOR2", "LOSTCITY_JANE", "ICEAGE_ARMOR2", "PHARAOH", "NEWSPAPER", "ZOMBOSS_PIRATE", "DARK_ARMOR1", "ZOMBOSS_COWBOY", "ARCADE", "ALLSTAR", "TUTORIAL_ARMOR2", "CRYSTAL_SKULL", "ICEAGE_DEFAULT", "DARK_ARMOR4", "MUMMY_ARMOR1", "ICEAGE_HUNTER", "IMP_ICEAGE", "GARGANTUAR_BASIC", "TOMB_RAISER", "PIANO", "IMP_DRAGON", "TUTORIAL_FLAG", "MUMMY_ARMOR4", "ZOMBOSS_EGYPT", "TUTORIAL_DEFAULT", "TROGLOBITE", "BEACH_DEFAULT", "ZOMBOTANY_PEASHOOTER", "IMP_BEACH", "DARK_ARMOR3", "IMP_DARK", "BEACH_OCTOPUS", "ICEAGE_ARMOR3", "EXPLORER", "GARGANTUAR_ICEAGE", "WEASEL_HOARDER", "BEACH_SURFER", "TUTORIAL_ARMOR1", "GARGANTUAR_DARK", "DARK_ARMOR2", "FOOTBALL", "RA", "DARK_DEFAULT", "ZOMBOTANY_JALAPENO", "TUTORIAL_ARMOR4", "WIZARD", "DARK_JUGGLER", "WEASEL", "IMP_TUTORIAL", "BEACH_ARMOR1", "MUMMY_ARMOR2", "GARGANTUAR_BEACH", "ZOMBOSS_DARK", "DODO", "GARGANTUAR_EGYPT", "ZOMBOTANY_SQUASH", "BEACH_FAST_SWIMMER", "MUMMY_DEFAULT", "BEACH_FISHERMAN", "IMP_EGYPT", "PROSPECTOR" ],
+    "unlockedPlants" : [ "REPEATER", "APPEASE_MINT", "CABBAGE_PULT", "ENCHANT_MINT", "THREEPEATER", "EXPLODE_O_NUT", "CHERRY_BOMB", "SNOW_PEA", "KIWIBEAST", "CHOMPER", "PRIMAL_SUNFLOWER", "FUME_SHROOM", "ENFORCE_MINT", "TALL_NUT", "PEA_POD", "PRIMAL_POTATO_MINE", "PEPPER_PULT", "WINTER_MELON", "CITRON", "STARFRUIT", "GARLIC", "CACTUS", "SWEET_POTATO", "DOOM_SHROOM", "BOWLING_BULB", "SEA_SHROOM", "PEASHOOTER", "TANGLE_KELP", "WALL_NUT", "SUN_SHROOM", "CAULIPOWER", "CAT_TAIL_MINT", "BOMBARD_MINT", "HOT_POTATO", "KERNEL_PULT", "BONK_CHOY", "SUNFLOWER", "HYPNO_SHROOM", "POTATO_MINE", "WASABI_WHIP", "PIERCE_MINT", "SUN_BEAN", "LILY_PAD", "REINFORCE_MINT", "CAT_TAIL", "FIRE_PEASHOOTER", "MEGA_GATLING_PEA", "JALAPENO", "GIANT_WALLNUT", "WALLNUT_BOWLING", "IMITATER", "PUMPKIN", "GRAPESHOT", "ICEBERG_LETTUCE", "ENLIGHTEN_MINT", "MELON_PULT", "ICE_SHROOM", "PUFF_SHROOM", "TWIN_SUNFLOWER", "ARMA_MINT", "ROTOBAGA", "GRAVE_BUSTER", "GOO_PEASHOOTER", "SQUASH", "SPLIT_PEA", "ENDURIAN", "PHAT_BEET", "MAGNET_SHROOM", "GOLD_BLOOM", "TORCHWOOD", "ELECTRIC_BLUEBERRY" ],
+    "seenZombies" : [ "BEACH_SNORKEL", "ZOMBOTANY_WALLNUT", "CAMEL", "ICEAGE_ARMOR1", "DARK_KING", "BEACH_ARMOR2", "LOSTCITY_JANE", "ICEAGE_ARMOR2", "PHARAOH", "NEWSPAPER", "ZOMBOSS_PIRATE", "DARK_ARMOR1", "ZOMBOSS_COWBOY", "ARCADE", "ALLSTAR", "TUTORIAL_ARMOR2", "CRYSTAL_SKULL", "ICEAGE_DEFAULT", "DARK_ARMOR4", "MUMMY_ARMOR1", "ICEAGE_HUNTER", "IMP_ICEAGE", "GARGANTUAR_BASIC", "TOMB_RAISER", "PIANO", "IMP_DRAGON", "TUTORIAL_FLAG", "MUMMY_ARMOR4", "ZOMBOSS_EGYPT", "TUTORIAL_DEFAULT", "TROGLOBITE", "BEACH_DEFAULT", "IMP_BEACH", "ZOMBOTANY_PEASHOOTER", "DARK_ARMOR3", "IMP_DARK", "ICEAGE_ARMOR3", "EXPLORER", "BEACH_OCTOPUS", "GARGANTUAR_ICEAGE", "BEACH_SURFER", "WEASEL_HOARDER", "TUTORIAL_ARMOR1", "GARGANTUAR_DARK", "DARK_ARMOR2", "FOOTBALL", "RA", "DARK_DEFAULT", "ZOMBOTANY_JALAPENO", "TUTORIAL_ARMOR4", "WIZARD", "DARK_JUGGLER", "WEASEL", "IMP_TUTORIAL", "MUMMY_ARMOR2", "BEACH_ARMOR1", "ZOMBOSS_DARK", "DODO", "GARGANTUAR_BEACH", "GARGANTUAR_EGYPT", "ZOMBOTANY_SQUASH", "BEACH_FAST_SWIMMER", "MUMMY_DEFAULT", "BEACH_FISHERMAN", "PROSPECTOR", "IMP_EGYPT" ],
     "seedPackets" : {
       "SUN_SHROOM" : 5,
-      "SUNFLOWER" : 20,
+      "SUNFLOWER" : 30,
       "BONK_CHOY" : 20,
-      "SEA_SHROOM" : 10
+      "SEA_SHROOM" : 10,
+      "GARLIC" : 0,
+      "CACTUS" : 55
     },
     "plantLevels" : {
-      "SUNFLOWER" : 3
+      "SUNFLOWER" : 3,
+      "GARLIC" : 1,
+      "CACTUS" : 3
     },
     "greenhouseBoosts" : [ ]
   },
@@ -51,15 +55,15 @@
     "pots" : [ [ {
       "unlocked" : true,
       "plantType" : null,
-      "plantedTimeMillis" : 1787392593678,
-      "marigold" : true,
-      "empty" : false,
-      "readyForPlanting" : false
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
     }, {
       "unlocked" : true,
-      "plantType" : null,
-      "plantedTimeMillis" : 1787392594526,
-      "marigold" : true,
+      "plantType" : "SEA_SHROOM",
+      "plantedTimeMillis" : 1788331948481,
+      "marigold" : false,
       "empty" : false,
       "readyForPlanting" : false
     }, {
@@ -93,10 +97,10 @@
     }, {
       "unlocked" : true,
       "plantType" : null,
-      "plantedTimeMillis" : 1787392599009,
-      "marigold" : true,
-      "empty" : false,
-      "readyForPlanting" : false
+      "plantedTimeMillis" : 0,
+      "marigold" : false,
+      "empty" : true,
+      "readyForPlanting" : true
     }, {
       "unlocked" : true,
       "plantType" : null,
@@ -133,8 +137,8 @@
       "empty" : false,
       "readyForPlanting" : false
     } ] ],
-    "numberOfUnlockedPots" : 12,
-    "numberOfLockedPots" : 0
+    "numberOfLockedPots" : 0,
+    "numberOfUnlockedPots" : 12
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -819,11 +823,11 @@
     } ]
   },
   "shopDaily" : {
-    "offerPlant" : "FIRE_PEASHOOTER",
-    "offerDate" : "2026-08-15",
+    "offerPlant" : "WINTER_MELON",
+    "offerDate" : "2026-09-02",
     "purchased" : false,
-    "availableToday" : false,
-    "forToday" : false
+    "forToday" : true,
+    "availableToday" : true
   },
   "stayLoggedIn" : true,
   "questState" : {
@@ -1056,7 +1060,7 @@
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "16h 9m"
+      "timeUntilReset" : "12h 47m"
     }
   }
 }
