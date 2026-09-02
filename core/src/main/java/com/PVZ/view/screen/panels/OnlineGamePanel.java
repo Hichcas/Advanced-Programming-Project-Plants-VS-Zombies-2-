@@ -154,8 +154,7 @@ public class OnlineGamePanel extends BasePanel {
     }
 
     private void onRandomMatch() {
-        if (!NetworkSession.isConnected()) {
-            setStatus("Not connected to server.", Color.SALMON);
+        if (!ensureOnlineSession()) {
             return;
         }
 
@@ -213,8 +212,7 @@ public class OnlineGamePanel extends BasePanel {
             setStatus("Please enter a username.", Color.SALMON);
             return;
         }
-        if (!NetworkSession.isConnected()) {
-            setStatus("Not connected to server.", Color.SALMON);
+        if (!ensureOnlineSession()) {
             return;
         }
 
@@ -241,23 +239,57 @@ public class OnlineGamePanel extends BasePanel {
     }
 
     private void onLeaderboard() {
-        if (!NetworkSession.isConnected()) {
-            setStatus("Not connected to server.", Color.SALMON);
+        if (!ensureOnlineSession()) {
             return;
         }
         AppStatus.setCurrentMenuType(MenuType.ONLINE_LEADERBOARD);
     }
 
+    private boolean ensureOnlineSession() {
+        try {
+            String ip = serverIpField.getText().trim();
+            if (ip.isEmpty()) {
+                ip = loadLastServerIp();
+            }
+            NetworkSession.connect(ip);
+            saveLastServerIp(ip);
+            if (!NetworkSession.isSessionAuthenticated()) {
+                syncLocalAccountIfNeeded();
+            }
+            if (!NetworkSession.isConnected()) {
+                setStatus("Not connected to server.", Color.SALMON);
+                return false;
+            }
+            if (!NetworkSession.isSessionAuthenticated()) {
+                setStatus("Connected, but this account is not logged in on the server.", Color.SALMON);
+                return false;
+            }
+            return true;
+        } catch (IOException e) {
+            setStatus("Could not connect to server: " + e.getMessage(), Color.SALMON);
+            return false;
+        }
+    }
+
     private void onConnect() {
         try {
             String ip = serverIpField.getText().trim();
-            if (!NetworkSession.isConnected()) {
-                NetworkSession.connect(ip);
+            if (ip.isEmpty()) {
+                ip = "127.0.0.1";
+                serverIpField.setText(ip);
             }
+            NetworkSession.connect(ip);
             saveLastServerIp(ip);
-            setStatus("Connected to server: " + ip, Color.GREEN);
+            if (!NetworkSession.isConnected()) {
+                setStatus("Could not connect to server.", Color.SALMON);
+                setButtonsEnabled(false);
+                return;
+            }
             setButtonsEnabled(true);
             syncLocalAccountIfNeeded();
+            if (NetworkSession.isSessionAuthenticated()) {
+                setStatus("Connected to server: " + ip, Color.GREEN);
+            }
         } catch (IOException e) {
             setStatus("Could not connect to server: " + e.getMessage(), Color.SALMON);
             setButtonsEnabled(false);

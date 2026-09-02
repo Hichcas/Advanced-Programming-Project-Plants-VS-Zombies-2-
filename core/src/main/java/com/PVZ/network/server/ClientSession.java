@@ -47,7 +47,7 @@ public class ClientSession implements Runnable {
 
     private volatile long lastActivity = System.currentTimeMillis();
     private final ScheduledExecutorService heartbeatChecker = Executors.newSingleThreadScheduledExecutor();
-    private static final long HEARTBEAT_TIMEOUT_MS = 5000; // 5 ثانیه
+    private static final long HEARTBEAT_TIMEOUT_MS = 15000;
 
     private void startHeartbeatChecker() {
         heartbeatChecker.scheduleAtFixedRate(() -> {
@@ -88,6 +88,7 @@ public class ClientSession implements Runnable {
     public ClientSession(Socket socket, RequestDispatcher dispatcher) throws IOException {
         this.channel = new MessageChannel(socket);
         this.dispatcher = dispatcher;
+        startHeartbeatChecker();
     }
 
     @Override
@@ -95,12 +96,11 @@ public class ClientSession implements Runnable {
         try {
             NetworkMessage message;
             while ((message = channel.receive()) != null) {
-                updateLastActivity(); // ← این خط اضافه شود
+                updateLastActivity();
                 dispatcher.dispatch(this, message);
             }
-        } catch (IOException e) {
-            // اتصال به‌صورت غیرمنتظره قطع شد (کاربر برنامه را بست، شبکه قطع شد و ...)
-            // - این حالت عادی است، خطا لاگ نمی‌کنیم که کنسول سرور شلوغ نشود.
+        } catch (Exception e) {
+            // اتصال به‌صورت غیرمنتظره قطع شد یا پیام خراب بود
         } finally {
             handleDisconnect();
         }

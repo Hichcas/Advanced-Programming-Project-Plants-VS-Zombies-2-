@@ -16,7 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
@@ -59,12 +61,14 @@ public class MainMenuPanel extends BasePanel {
     private static final float VIRTUAL_HEIGHT = com.PVZ.view.screen.BaseScreen.VIRTUAL_HEIGHT;
 
     private NewsBadge newsBadge;
+    private Label usernameLabel;
 
     public MainMenuPanel() {
         setFillParent(true);
         setTouchable(Touchable.enabled);
         MusicManager.getInstance().playMusic("music/TitleScreen.mp3");
 
+        setupUsernameLabel();
         setupLogo();
         setupContentImages();
         setupTextButtons();
@@ -75,6 +79,30 @@ public class MainMenuPanel extends BasePanel {
 
         addSwipeListener();
         applyMode(MenuMode.OFFLINE);
+    }
+
+    private void setupUsernameLabel() {
+        BitmapFont font = PvzSkin.get().getFont("FBUSV8C5EI_1_outline");
+        Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
+        usernameLabel = new Label("", style);
+        usernameLabel.setAlignment(Align.center);
+        usernameLabel.setFontScale(1.2f);
+        usernameLabel.setSize(VIRTUAL_WIDTH, 70f);
+        usernameLabel.setPosition(0f, VIRTUAL_HEIGHT - 90f);
+        addActor(usernameLabel);
+        refreshUsername();
+    }
+
+    private void refreshUsername() {
+        if (usernameLabel == null) return;
+        String name = "Guest";
+        if (AppStatus.currentUser != null && AppStatus.currentUser.profile != null) {
+            String username = AppStatus.currentUser.profile.getUsername();
+            if (username != null && !username.isBlank()) {
+                name = username;
+            }
+        }
+        usernameLabel.setText(name);
     }
 
     private void setupLogo() {
@@ -367,6 +395,7 @@ public class MainMenuPanel extends BasePanel {
     @Override
     public void act(float delta) {
         super.act(delta);
+        refreshUsername();
         if (newsBadge != null) {
             newsBadge.updateVisibility();
         }

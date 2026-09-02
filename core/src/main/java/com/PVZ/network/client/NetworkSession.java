@@ -25,6 +25,8 @@ public final class NetworkSession {
     private static final NetworkClient CLIENT = new NetworkClient();
     private static final int DEFAULT_PORT = 5050;
     private static volatile boolean sessionAuthenticated = false;
+    private static volatile String connectedHost;
+    private static volatile int connectedPort = DEFAULT_PORT;
 
     private NetworkSession() {
     }
@@ -46,9 +48,20 @@ public final class NetworkSession {
     }
 
     public static void connect(String host, int port) throws IOException {
-        if (CLIENT.isConnected()) return;
+        String target = (host == null || host.isBlank()) ? "127.0.0.1" : host.trim();
+        if (CLIENT.isConnected()
+                && target.equalsIgnoreCase(connectedHost)
+                && port == connectedPort) {
+            return;
+        }
         sessionAuthenticated = false;
-        CLIENT.connect(host, port);
+        CLIENT.connect(target, port);
+        connectedHost = target;
+        connectedPort = port;
+    }
+
+    public static String lastHost() {
+        return connectedHost != null ? connectedHost : "127.0.0.1";
     }
 
     /** نتیجه‌ی یک عملیات احراز هویت - یا موفق با کاربر برگشتی، یا ناموفق با پیام خطا. */
