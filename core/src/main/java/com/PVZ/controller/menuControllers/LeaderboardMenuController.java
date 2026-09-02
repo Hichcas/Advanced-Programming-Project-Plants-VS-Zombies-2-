@@ -70,10 +70,7 @@ public class LeaderboardMenuController {
             if (!response.getBoolean("success", false)) {
                 return null;
             }
-            com.fasterxml.jackson.databind.ObjectMapper mapper = com.PVZ.network.common.JsonCodec.mapper();
-            com.fasterxml.jackson.databind.JavaType listType =
-                    mapper.getTypeFactory().constructCollectionType(List.class, LeaderboardEntry.class);
-            return mapper.convertValue(response.get("entries"), listType);
+            return Leaderboard.parseEntries(response.get("entries"));
         } catch (TimeoutException | RuntimeException | IOException e) {
             return null;
         }

@@ -3,8 +3,11 @@ package com.PVZ.model.leaderboard;
 import com.PVZ.database.UserDatabase;
 import com.PVZ.model.enums.ChapterEnum;
 import com.PVZ.model.user.User;
+import com.PVZ.model.user.UserRegistry;
+import com.PVZ.network.common.JsonCodec;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -12,11 +15,12 @@ import java.util.Map;
 public class Leaderboard {
 
     public static List<LeaderboardEntry> getEntries(LeaderboardSortField sort, boolean ascending) {
+        UserRegistry.saveAllDirtyUsers();
         List<LeaderboardEntry> entries = new ArrayList<>();
         try {
             List<String> usernames = UserDatabase.loadIndex();
             for (String username : usernames) {
-                User user = UserDatabase.load(username);
+                User user = UserRegistry.getUser(username);
                 if (user != null) {
                     entries.add(buildEntry(user));
                 }
@@ -27,11 +31,14 @@ public class Leaderboard {
 
         Comparator<LeaderboardEntry> comparator;
         if (sort == null) {
-            comparator = Comparator.comparing(LeaderboardEntry::getUsername);
+            comparator = Comparator.comparing(LeaderboardEntry::getUsername,
+                Comparator.nullsLast(String::compareToIgnoreCase));
         } else {
             comparator = switch (sort) {
-                case USERNAME -> Comparator.comparing(LeaderboardEntry::getUsername);
-                case LAST_STAGE -> Comparator.comparing(LeaderboardEntry::getLastStageInfo);
+                case USERNAME -> Comparator.comparing(LeaderboardEntry::getUsername,
+                    Comparator.nullsLast(String::compareToIgnoreCase));
+                case LAST_STAGE -> Comparator.comparing(LeaderboardEntry::getLastStageInfo,
+                    Comparator.nullsLast(String::compareToIgnoreCase));
                 case MINIGAMES -> Comparator.comparingInt(LeaderboardEntry::getMinigamesCompleted);
                 case DAILY_QUESTS -> Comparator.comparingInt(LeaderboardEntry::getDailyQuestsCompleted);
                 case NON_DAILY_QUESTS -> Comparator.comparingInt(LeaderboardEntry::getNonDailyQuestsCompleted);
@@ -41,6 +48,21 @@ public class Leaderboard {
 
         entries.sort(ascending ? comparator : comparator.reversed());
         return entries;
+    }
+
+    public static List<LeaderboardEntry> parseEntries(Object rawEntries) {
+        if (rawEntries == null) {
+            return Collections.emptyList();
+        }
+        try {
+            com.fasterxml.jackson.databind.ObjectMapper mapper = JsonCodec.mapper();
+            com.fasterxml.jackson.databind.JavaType listType =
+                mapper.getTypeFactory().constructCollectionType(List.class, LeaderboardEntry.class);
+            List<LeaderboardEntry> parsed = mapper.convertValue(rawEntries, listType);
+            return parsed != null ? parsed : Collections.emptyList();
+        } catch (IllegalArgumentException e) {
+            return Collections.emptyList();
+        }
     }
 
     private static LeaderboardEntry buildEntry(User user) {

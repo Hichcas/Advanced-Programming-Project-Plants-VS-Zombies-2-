@@ -5,6 +5,9 @@ import com.PVZ.model.leaderboard.Leaderboard;
 import com.PVZ.model.leaderboard.LeaderboardEntry;
 import com.PVZ.model.leaderboard.LeaderboardSortField;
 import com.PVZ.model.status.AppStatus;
+import com.PVZ.network.client.NetworkSession;
+import com.PVZ.network.common.MessageType;
+import com.PVZ.network.common.NetworkMessage;
 import com.PVZ.view.screen.ui.MenuButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -19,6 +22,7 @@ import com.badlogic.gdx.utils.Align;
 import pvz.skin.PvzSkin;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class LeaderboardPanel extends BasePanel {
 
@@ -63,6 +67,7 @@ public class LeaderboardPanel extends BasePanel {
 
     private LeaderboardSortField currentSort = LeaderboardSortField.USERNAME;
     private boolean ascending = true;
+    private int fetchGeneration;
 
     public LeaderboardPanel() {
         setFillParent(true);
@@ -132,9 +137,16 @@ public class LeaderboardPanel extends BasePanel {
         );
         ascendingButton.setSize(220f, 62f);
 
+        MenuButton refreshButton = new MenuButton(
+            purpleUp, "Refresh", bodyFont, purpleDown, null, marker,
+            this::refreshEntries
+        );
+        refreshButton.setSize(180f, 62f);
+
         controls.add(sortLabel).padRight(14f);
         controls.add(sortBox).width(280f).height(60f).padRight(24f);
-        controls.add(ascendingButton).size(220f, 62f);
+        controls.add(ascendingButton).size(220f, 62f).padRight(16f);
+        controls.add(refreshButton).size(180f, 62f);
 
         header.add(controls).center().padBottom(10f).row();
         root.add(header).growX().height(HEADER_HEIGHT).row();
@@ -188,38 +200,62 @@ public class LeaderboardPanel extends BasePanel {
         };
     }
 
-    private List<LeaderboardEntry> fetchEntries() {
-        if (com.PVZ.network.client.NetworkSession.isConnected()) {
-            try {
-                com.PVZ.network.common.NetworkMessage request =
-                        com.PVZ.network.common.NetworkMessage.
-                            request(com.PVZ.network.common.MessageType.FETCH_LEADERBOARD)
-                                .with("sort", currentSort != null ? currentSort.name() : null)
-                                .with("ascending", ascending);
-                com.PVZ.network.common.NetworkMessage response =
-                        com.PVZ.network.client.NetworkSession.client().sendRequestBlocking(request);
-                if (response.getBoolean("success", false)) {
-                    com.fasterxml.jackson.databind.ObjectMapper mapper = com.PVZ.network.common.JsonCodec.mapper();
-                    com.fasterxml.jackson.databind.JavaType listType =
-                            mapper.getTypeFactory().constructCollectionType(List.class, LeaderboardEntry.class);
-                    return mapper.convertValue(response.get("entries"), listType);
-                }
-            } catch (Exception e) {
-                // آفلاین شد یا سرور جواب نداد - می‌ریم سراغ fallback زیر
-            }
-        }
-        // آفلاین/بدون سرور: حداقل دیتای محلی رو نشون بده تا صفحه خالی نمونه.
+    private List<LeaderboardEntry> localEntries() {
         return Leaderboard.getEntries(currentSort, ascending);
     }
 
-    private void refreshEntries() {
-        entriesTable.clearChildren();
+    private CompletableFuture<NetworkMessage> syncCurrentUserIfNeeded() {
+        if (NetworkSession.isSessionAuthenticated() && AppStatus.currentUser != null) {
+            return NetworkSession.client().sendRequest(
+                NetworkMessage.request(MessageType.SYNC_USER).with("user", AppStatus.currentUser));
+        }
+        return CompletableFuture.completedFuture(null);
+    }
 
-        // این همون جایی بود که همکارتون درست شک کرد: قبلا فیکس رو فقط توی
-        // LeaderboardMenuController زده بودم (که مسیر DTO/کنسولیه) ولی خودِ
-        // این پنل - چیزی که واقعا توی بازی باز می‌شه - مستقیم Leaderboard.getEntries()
-        // رو صدا می‌زد و اصلا از شبکه رد نمی‌شد. الان همینجا هم از سرور می‌خونیم.
-        List<LeaderboardEntry> entries = fetchEntries();
+    private void requestRemoteEntries(int generation) {
+        syncCurrentUserIfNeeded()
+            .exceptionally(ex -> null)
+            .thenCompose(ignored -> {
+                NetworkMessage request = NetworkMessage.request(MessageType.FETCH_LEADERBOARD)
+                    .with("sort", currentSort != null ? currentSort.name() : null)
+                    .with("ascending", ascending);
+                return NetworkSession.client().sendRequest(request);
+            })
+            .thenAccept(response -> Gdx.app.postRunnable(() -> {
+                if (generation != fetchGeneration) {
+                    return;
+                }
+                if (response != null && response.getBoolean("success", false)) {
+                    populateTable(Leaderboard.parseEntries(response.get("entries")));
+                } else {
+                    populateTable(localEntries());
+                }
+            }))
+            .exceptionally(ex -> {
+                Gdx.app.postRunnable(() -> {
+                    if (generation == fetchGeneration) {
+                        populateTable(localEntries());
+                    }
+                });
+                return null;
+            });
+    }
+
+    private void refreshEntries() {
+        int generation = ++fetchGeneration;
+        if (NetworkSession.isConnected()) {
+            entriesTable.clearChildren();
+            Label loading = new Label("Loading...", new Label.LabelStyle(bodyFont, Color.LIGHT_GRAY));
+            loading.setFontScale(1.2f);
+            entriesTable.add(loading).pad(40f).row();
+            requestRemoteEntries(generation);
+            return;
+        }
+        populateTable(localEntries());
+    }
+
+    private void populateTable(List<LeaderboardEntry> entries) {
+        entriesTable.clearChildren();
 
         if (entries.isEmpty()) {
             Label empty = new Label("No leaderboard data.", new Label.LabelStyle(bodyFont, Color.LIGHT_GRAY));

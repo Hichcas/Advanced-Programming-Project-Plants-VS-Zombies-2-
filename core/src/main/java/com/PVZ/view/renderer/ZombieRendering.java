@@ -235,6 +235,10 @@ final class ZombieRendering {
             renderZombotanyAlias(er, batch, alias, state, time, x, y, scale);
             return;
         }
+        if (isCamelAlias(alias)) {
+            renderCamelAlias(er, batch, alias, state, time, x, y, scale);
+            return;
+        }
         ClipRef clip = getClip(er, alias, state != null ? state : "idle");
         if (clip == null) clip = getClip(er, alias, "walk");
         if (clip == null) clip = getClip(er, "DEFAULT", "walk");
@@ -357,10 +361,102 @@ final class ZombieRendering {
         }
     }
 
+    private static boolean isCamelAlias(String alias) {
+        return "ZombieCamelDefault".equals(alias)
+            || "ZombieCamelMiddle".equals(alias)
+            || "ZombieCamelRear".equals(alias);
+    }
+
     private static void renderCamel(EntityRenderer er, SpriteBatch batch,
                                     com.PVZ.model.entity.zombies.types.basic.ZombieCamel camel,
                                     float stateTime) {
-        // کد کامل رندر شتر در صورت نیاز؛ برای خلاصه‌سازی حذف می‌شود
-        // در نسخه نهایی می‌توانید پیاده‌سازی کامل را اضافه کنید
+        float x = (float) camel.getX();
+        float y = (float) camel.getY();
+        float effectiveTime = (camel.isFrozen() || camel.isButtered()) ? 0f : stateTime;
+        String state = ZombieAnimation.getState(camel);
+        if (state == null) state = "walk";
+        boolean isDying = "die".equals(state) || camel.isDead() || camel.isDying();
+        Color origColor = new Color(batch.getColor());
+        applyTint(batch, camel, stateTime);
+        drawCamelSegments(er, batch, state, effectiveTime, x, y, isDying,
+            camel.getFrontSegment() != null && (!camel.getFrontSegment().isDestroyed() || isDying),
+            camel.getMiddleSegment() != null && (!camel.getMiddleSegment().isDestroyed() || isDying),
+            camel.getRearSegment() != null && (!camel.getRearSegment().isDestroyed() || isDying));
+        batch.setColor(origColor);
+    }
+
+    /**
+     * Collection / I,Zombie cards don't have a live {@code ZombieCamel}, only an
+     * alias. Draw the same three PAM boards (head / hump / tail) the in-game
+     * camel used before the entity-renderer linter emptied {@code renderCamel}.
+     */
+    private static void renderCamelAlias(EntityRenderer er, SpriteBatch batch,
+                                         String alias, String state, float time,
+                                         float x, float y, float scale) {
+        String clipState = state == null ? "idle" : state;
+        boolean allSegments = "ZombieCamelDefault".equals(alias);
+        boolean middle = allSegments || "ZombieCamelMiddle".equals(alias);
+        boolean rear = allSegments || "ZombieCamelRear".equals(alias);
+        boolean front = allSegments || "ZombieCamelDefault".equals(alias);
+        Matrix4 old = null;
+        if (scale != 1f) {
+            old = batch.getTransformMatrix().cpy();
+            Matrix4 scaled = old.cpy()
+                .translate(x, y, 0f)
+                .scale(scale, scale, 1f)
+                .translate(-x, -y, 0f);
+            batch.setTransformMatrix(scaled);
+        }
+        drawCamelSegments(er, batch, clipState, time, x, y, false, front, middle, rear);
+        if (old != null) {
+            batch.setTransformMatrix(old);
+        }
+    }
+
+    private static void drawCamelSegments(EntityRenderer er, SpriteBatch batch,
+                                          String state, float time, float x, float y,
+                                          boolean isDying,
+                                          boolean front, boolean middle, boolean rear) {
+        String walkOrIdle = "eat".equals(state) ? "idle" : state;
+        String rearState = isDying ? "die" : walkOrIdle;
+        String middleState = isDying ? "die" : walkOrIdle;
+        String frontState = isDying ? "die" : state;
+
+        if (rear) {
+            ClipRef rearClip = getClip(er, "ZombieCamelRear", rearState);
+            if (rearClip == null) rearClip = getClip(er, "ZombieCamelRear", "walk");
+            if (rearClip != null) {
+                Map<String, Boolean> vis = new HashMap<>();
+                vis.put("_zombie_camel_board_tail_states", true);
+                vis.put("_zombie_camel_board_tail_norm", true);
+                vis.put("_zombie_camel_board_head_states", false);
+                vis.put("_zombie_camel_board_hump_states", false);
+                drawClip(er, batch, rearClip, time, x + 240f, y, vis);
+            }
+        }
+        if (middle) {
+            ClipRef middleClip = getClip(er, "ZombieCamelMiddle", middleState);
+            if (middleClip == null) middleClip = getClip(er, "ZombieCamelMiddle", "walk");
+            if (middleClip != null) {
+                Map<String, Boolean> vis = new HashMap<>();
+                vis.put("_zombie_camel_board_hump_states", true);
+                vis.put("_zombie_camel_board_hump_norm", true);
+                vis.put("_zombie_camel_board_head_states", false);
+                vis.put("_zombie_camel_board_tail_states", false);
+                drawClip(er, batch, middleClip, time, x + 120f, y, vis);
+            }
+        }
+        if (front) {
+            ClipRef frontClip = getClip(er, "ZombieCamelDefault", frontState);
+            if (frontClip == null) frontClip = getClip(er, "ZombieCamelDefault", "walk");
+            if (frontClip != null) {
+                Map<String, Boolean> vis = new HashMap<>();
+                vis.put("_zombie_camel_board_head_states", true);
+                vis.put("_zombie_camel_board_head_norm", true);
+                vis.put("_zombie_camel_board_hump_states", false);
+                vis.put("_zombie_camel_board_tail_states", false);
+                drawClip(er, batch, frontClip, time, x, y, vis);
+            }
+        }
     }
 }
