@@ -153,10 +153,9 @@ public class ZombiePacketBar {
         // gameplay zombie. This makes the roster preview independent of combat state and
         // also works for aliases whose gameplay class has custom initialisation.
         try {
-            // Scale the PAM up while keeping its full canvas inside the packet.
-            float scale = 0.48f;
             float px = b.x + b.width * 0.5f;
-            float py = b.y + b.height * 0.5f;
+            float py = b.y + 18f;
+            float scale = PREVIEW_SCALE;
             EntityRenderer.getInstance().renderZombieAlias(
                     batch, alias, "idle", previewAnimationTime, px, py, scale);
             return true;

@@ -1,5 +1,7 @@
 package com.PVZ.model.minigame.izombie;
 
+import com.PVZ.model.enums.ZombieType;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -153,23 +155,58 @@ public class IZombieGame {
 
     public List<ZombieOption> getRoster() { return roster; }
 
+    public static final int MAX_SELECTED_ROSTER = 8;
+
     /**
-     * Restricts the playable roster to the aliases the player actually picked on the
-     * roster-selection screen (mirrors AppStatus.SELECTED_PLANTS for regular levels).
-     * Order follows the level's original roster order. No-op if the selection is empty
-     * or matches nothing, so the full level roster is always a safe fallback.
+     * Replaces the in-game packet list with the zombies the player actually picked
+     * (at most 8), in pick order. Unknown aliases still become playable cards instead
+     * of falling back to the whole catalog.
      */
     public void restrictRosterTo(java.util.Collection<String> selectedAliases) {
         if (selectedAliases == null || selectedAliases.isEmpty()) return;
-        Set<String> wanted = new HashSet<>();
+        List<ZombieOption> next = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
         for (String alias : selectedAliases) {
-            if (alias != null) wanted.add(alias.toLowerCase());
+            if (alias == null || alias.isBlank()) continue;
+            String key = alias.toLowerCase();
+            if (!seen.add(key)) continue;
+            ZombieOption option = findOption(alias);
+            next.add(option != null ? option : optionFromAlias(alias));
+            if (next.size() >= MAX_SELECTED_ROSTER) break;
         }
-        List<ZombieOption> filtered = new ArrayList<>();
-        for (ZombieOption option : roster) {
-            if (wanted.contains(option.getAlias().toLowerCase())) filtered.add(option);
+        if (!next.isEmpty()) this.roster = next;
+    }
+
+    private static ZombieOption optionFromAlias(String alias) {
+        ZombieType type = ZombieType.fromAlias(alias);
+        return new ZombieOption(alias, costFor(type), displayNameFor(type));
+    }
+
+    private static int costFor(ZombieType type) {
+        if (type == null) return 50;
+        String name = type.name().toUpperCase();
+        if (name.contains("GARGANTUAR") || name.contains("ZOMBOSS")) return 300;
+        if (name.contains("BRICK") || name.contains("KNIGHT") ||
+            name.contains("ARMOR2") || name.contains("CENTURION")) return 150;
+        if (name.contains("BUCKET") || name.contains("BARREL") ||
+            name.contains("JALAPENO") || name.contains("SQUASH")) return 125;
+        if (name.contains("CONE") || name.contains("ARMOR1") ||
+            name.contains("HELMET") || name.contains("FLAG")) return 75;
+        if (name.contains("IMP")) return 25;
+        if (name.contains("ZOMBOTANY")) return 100;
+        return 50;
+    }
+
+    private static String displayNameFor(ZombieType type) {
+        if (type == null) return "Zombie";
+        String name = type.name().replace("ZOMBOTANY_", "Zombotany ").replace('_', ' ').toLowerCase();
+        StringBuilder sb = new StringBuilder();
+        for (String part : name.split(" ")) {
+            if (!part.isEmpty()) {
+                sb.append(Character.toUpperCase(part.charAt(0))).append(part.substring(1)).append(" ");
+            }
         }
-        if (!filtered.isEmpty()) this.roster = filtered;
+        return sb.toString().trim();
     }
 
     public ZombieOption findOption(String alias) {

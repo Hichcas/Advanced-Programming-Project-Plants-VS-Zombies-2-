@@ -387,7 +387,7 @@ public class ZombieSelectionPanel extends BasePanel {
     private static final class ZombieCardActor extends com.badlogic.gdx.scenes.scene2d.Actor {
         private static final float WIDTH = 150f;
         private static final float HEIGHT = 170f;
-        private static final float PREVIEW_SCALE = 0.32f;
+        private static final float PREVIEW_SCALE = 0.28f;
 
         private final ZombieOption option;
         private final BitmapFont font;
@@ -440,7 +440,7 @@ public class ZombieSelectionPanel extends BasePanel {
             batch.setColor(1f, 1f, 1f, parentAlpha);
 
             float cx = x + w / 2f;
-            float cy = y + h * 0.62f;
+            float cy = y + 36f;
             try {
                 EntityRenderer.getInstance().renderZombieAlias(
                     (com.badlogic.gdx.graphics.g2d.SpriteBatch) batch, option.getAlias(), "idle",
@@ -469,7 +469,7 @@ public class ZombieSelectionPanel extends BasePanel {
 
     private static final class ZombiePreviewActor extends com.badlogic.gdx.scenes.scene2d.Actor {
         private String alias;
-        private float scale = 1f;
+        private float scale = 0.16f;
         private float animTime;
 
         void setAlias(String alias) {
@@ -483,7 +483,7 @@ public class ZombieSelectionPanel extends BasePanel {
         @Override public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
             if (alias == null) return;
             float cx = getX() + getWidth() / 2f;
-            float cy = getY() + getHeight() / 2f;
+            float cy = getY() + 10f;
             Color prev = batch.getColor().cpy();
             batch.setColor(prev.r, prev.g, prev.b, prev.a * parentAlpha);
             try {

@@ -131,6 +131,7 @@ public class IZombieMultiplayerGameEngine extends IZombieGameEngine {
         if (selectedZombies != null && !selectedZombies.isEmpty()) {
             java.util.List<com.PVZ.model.minigame.izombie.ZombieOption> customRoster = new java.util.ArrayList<>();
             for (String alias : selectedZombies) {
+                if (customRoster.size() >= IZombieGame.MAX_SELECTED_ROSTER) break;
                 com.PVZ.model.enums.ZombieType zt = null;
                 for (com.PVZ.model.enums.ZombieType t : com.PVZ.model.enums.ZombieType.values()) {
                     if (t.alias.equalsIgnoreCase(alias)) {

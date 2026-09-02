@@ -239,14 +239,63 @@ final class ZombieRendering {
         if (clip == null) clip = getClip(er, alias, "walk");
         if (clip == null) clip = getClip(er, "DEFAULT", "walk");
         if (clip == null) return;
-        if (scale == 1f) {
-            er.getPamPlayer().draw(batch, clip, time, x, y, true);
+        drawClipScaled(er, batch, clip, time, x, y, scale, previewArmorVisibility(alias));
+    }
+
+    /**
+     * SpriteBatch only uploads a new transform when setTransformMatrix is called.
+     * Mutating getTransformMatrix() in place left previews at the origin, so I,Zombie
+     * cards and packet icons appeared in the wrong place.
+     */
+    private static void drawClipScaled(EntityRenderer er, SpriteBatch batch, ClipRef clip,
+                                       float time, float x, float y, float scale,
+                                       Map<String, Boolean> vis) {
+        Matrix4 old = null;
+        if (scale != 1f) {
+            old = batch.getTransformMatrix().cpy();
+            Matrix4 scaled = old.cpy()
+                .translate(x, y, 0f)
+                .scale(scale, scale, 1f)
+                .translate(-x, -y, 0f);
+            batch.setTransformMatrix(scaled);
+        }
+        if (vis != null) {
+            er.getPamPlayer().draw(batch, clip, time, x, y, true, vis);
         } else {
-            Matrix4 old = batch.getTransformMatrix().cpy();
-            batch.getTransformMatrix().translate(x, y, 0).scale(scale, scale, 1f);
-            er.getPamPlayer().draw(batch, clip, time, 0, 0, true);
+            er.getPamPlayer().draw(batch, clip, time, x, y, true);
+        }
+        if (old != null) {
             batch.setTransformMatrix(old);
         }
+    }
+
+    /** Cone / bucket / brick / crown pieces live in the same PAM as the base zombie. */
+    private static Map<String, Boolean> previewArmorVisibility(String alias) {
+        String track = null;
+        if (alias.contains("Armor1")) {
+            track = "zombie_armor_cone_norm";
+        } else if (alias.contains("Armor2")) {
+            track = "zombie_armor_bucket_norm";
+        } else if (alias.contains("Armor4")) {
+            track = "zombie_armor_brick_norm";
+        } else if (alias.contains("Armor3")) {
+            track = alias.startsWith("ZombieDark")
+                ? "zombie_armor_crown_norm"
+                : "zombie_armor_brick_norm";
+        }
+        if (track == null) return null;
+        Map<String, Boolean> vis = new HashMap<>();
+        String[] tracks = {"zombie_armor_cone_norm","zombie_armor_cone_damage_01",
+            "zombie_armor_cone_damage_02","zombie_armor_bucket_norm",
+            "zombie_armor_bucket_damage_01","zombie_armor_bucket_damage_02",
+            "zombie_armor_brick_norm","zombie_armor_brick_damage_01",
+            "zombie_armor_brick_damage_02","zombie_armor_crown_norm",
+            "zombie_armor_crown_damage_01","zombie_armor_crown_damage_02"};
+        for (String t : tracks) vis.put(t, false);
+        vis.put("_zombie_egypt_armor1_states", false);
+        vis.put("_zombie_egypt_armor2_states", false);
+        vis.put(track, true);
+        return vis;
     }
 
     private static void renderZombotanyAlias(EntityRenderer er, SpriteBatch batch,
@@ -259,19 +308,32 @@ final class ZombieRendering {
         vis.put("anim_head1", false); vis.put("anim_head2", false);
         vis.put("anim_head", false); vis.put("anim_hair", false);
         vis.put("Zombie_tie", false);
+        Matrix4 old = null;
+        if (scale != 1f) {
+            old = batch.getTransformMatrix().cpy();
+            Matrix4 scaled = old.cpy()
+                .translate(x, y, 0f)
+                .scale(scale, scale, 1f)
+                .translate(-x, -y, 0f);
+            batch.setTransformMatrix(scaled);
+        }
         er.getPamPlayer().draw(batch, body, time, x, y, true, vis);
         String plant = zombotanyPlantType(alias);
         ClipRef head = er.getPlantClip(plant, "idle");
-        if (head == null) return;
-        float s, dx, dy;
-        switch (plant) {
-            case "PEASHOOTER": s=0.34f; dx=-4f; dy=78f; break;
-            case "WALL_NUT": s=0.32f; dx=-2f; dy=76f; break;
-            case "JALAPENO": s=0.31f; dx=-2f; dy=78f; break;
-            case "SQUASH": s=0.33f; dx=-3f; dy=78f; break;
-            default: s=0.32f; dx=-2f; dy=76f;
+        if (head != null) {
+            float dx, dy;
+            switch (plant) {
+                case "PEASHOOTER": dx=-4f; dy=78f; break;
+                case "WALL_NUT": dx=-2f; dy=76f; break;
+                case "JALAPENO": dx=-2f; dy=78f; break;
+                case "SQUASH": dx=-3f; dy=78f; break;
+                default: dx=-2f; dy=76f;
+            }
+            er.getPamPlayer().draw(batch, head, time, x+dx, y+dy, true);
         }
-        er.getPamPlayer().draw(batch, head, time, x+dx, y+dy, true);
+        if (old != null) {
+            batch.setTransformMatrix(old);
+        }
     }
 
     private static boolean isZombotany(Zombie z) {
