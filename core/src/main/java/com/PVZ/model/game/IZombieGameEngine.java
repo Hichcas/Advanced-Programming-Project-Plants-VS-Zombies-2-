@@ -82,21 +82,20 @@ public class IZombieGameEngine extends GameEngine implements ZombieEngine {
         }
         seedRandomPlants();
         spawnSunZombies();
+        if (game != null) {
+            game.restrictRosterTo(AppStatus.SELECTED_ZOMBIES);
+        }
         layoutZombieBar();
     }
 
-    private void layoutZombieBar() {
-        // Horizontal roster bar centered along the top of the screen (like the
-        // plant-selection seed-packet bar), instead of a vertical column on the side.
-        // Centering uses the actual roster size, since the player's selection can be
-        // anywhere from 1 to 8 zombies.
-        float slotSize = 130f;
-        float gap = 14f;
-        int count = Math.max(1, game.getRoster().size());
-        float barWidth = count * slotSize + (count - 1) * gap;
-        float barX = (2560f - barWidth) / 2f;
-        float topY = 1440f - 40f - slotSize;
-        zombiePacketBar.layout(game, barX, topY);
+    protected void layoutZombieBar() {
+        if (game == null) return;
+        // Only the player's chosen loadout (1–8), stacked on the right like local versus.
+        float slotSize = 118f;
+        float gap = 10f;
+        float rightX = 2210f;
+        float topY = 1180f;
+        zombiePacketBar.layoutVertical(game, rightX, topY, slotSize, gap);
     }
 
     public ZombiePacketBar getZombiePacketBar() { return zombiePacketBar; }

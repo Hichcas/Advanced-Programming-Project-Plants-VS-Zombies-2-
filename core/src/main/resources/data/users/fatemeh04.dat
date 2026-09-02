@@ -11,7 +11,7 @@
   "userStats" : {
     "gamesPlayed" : 0,
     "coins" : 279794000,
-    "diamonds" : 0,
+    "diamonds" : 800,
     "stagesCompleted" : 5,
     "highestScore" : 0,
     "dailyQuestsCompleted" : 0,
@@ -20,10 +20,10 @@
   },
   "progressState" : {
     "completedLevels" : {
-      "ANCIENT_EGYPT" : 2,
-      "BIG_WAVE_BEACH" : 1,
-      "DARK_AGES" : -1,
-      "FROSTBITE_CAVES" : 3
+      "ANCIENT_EGYPT" : 99,
+      "BIG_WAVE_BEACH" : 99,
+      "DARK_AGES" : 99,
+      "FROSTBITE_CAVES" : 99
     },
     "minigameClearedCounts" : {
       "WALLNUT_BOWLING" : 0,
@@ -34,8 +34,8 @@
     }
   },
   "collectionState" : {
-    "unlockedPlants" : [ "SWEET_POTATO", "ICE_SHROOM", "APPEASE_MINT", "BONK_CHOY", "SQUASH", "CAT_TAIL_MINT", "CAT_TAIL", "FIRE_PEASHOOTER", "ENCHANT_MINT", "LILY_PAD", "SEA_SHROOM", "GRAVE_BUSTER", "THREEPEATER", "PRIMAL_POTATO_MINE", "KIWIBEAST", "CABBAGE_PULT", "WASABI_WHIP", "PRIMAL_SUNFLOWER", "SUN_BEAN", "EXPLODE_O_NUT", "POTATO_MINE", "GRAPESHOT", "WINTER_MELON", "MAGNET_SHROOM", "TWIN_SUNFLOWER", "SPLIT_PEA", "PEASHOOTER", "CACTUS", "ROTOBAGA", "MELON_PULT", "FUME_SHROOM", "REINFORCE_MINT", "GOO_PEASHOOTER", "STARFRUIT", "HOT_POTATO", "CHERRY_BOMB", "SUNFLOWER", "CAULIPOWER", "KERNEL_PULT", "ENFORCE_MINT", "PUMPKIN", "PUFF_SHROOM", "HYPNO_SHROOM", "MEGA_GATLING_PEA", "ENLIGHTEN_MINT", "ARMA_MINT", "REPEATER", "TALL_NUT", "CHOMPER", "PEA_POD", "TORCHWOOD", "PHAT_BEET", "CITRON", "TANGLE_KELP", "GOLD_BLOOM", "SNOW_PEA", "DOOM_SHROOM", "SUN_SHROOM", "GARLIC", "PIERCE_MINT", "IMITATER", "WALL_NUT", "JALAPENO", "ENDURIAN", "ELECTRIC_BLUEBERRY", "BOWLING_BULB", "BOMBARD_MINT", "ICEBERG_LETTUCE", "PEPPER_PULT" ],
-    "seenZombies" : [ "BEACH_SURFER", "TUTORIAL_ARMOR4", "ZOMBOSS_DARK", "ICEAGE_DEFAULT", "PHARAOH", "IMP_BEACH", "CAMEL", "IMP_EGYPT", "DARK_JUGGLER", "BEACH_FAST_SWIMMER", "BEACH_SNORKEL", "RA", "GARGANTUAR_ICEAGE", "TOMB_RAISER", "MUMMY_ARMOR2", "ICEAGE_HUNTER", "BEACH_OCTOPUS", "ZOMBOSS_EGYPT", "BEACH_DEFAULT", "GARGANTUAR_BASIC", "ICEAGE_ARMOR2", "ZOMBOTANY_PEASHOOTER", "ZOMBOSS_PIRATE", "BEACH_FISHERMAN", "GARGANTUAR_BEACH", "IMP_DARK", "ZOMBOTANY_WALLNUT", "DARK_ARMOR4", "DARK_KING", "IMP_TUTORIAL", "ZOMBOTANY_SQUASH", "DARK_ARMOR2", "TUTORIAL_ARMOR2", "BEACH_ARMOR2", "GARGANTUAR_EGYPT", "MUMMY_ARMOR4", "TUTORIAL_DEFAULT", "EXPLORER", "WEASEL_HOARDER", "TUTORIAL_ARMOR1", "DARK_DEFAULT", "MUMMY_DEFAULT", "BEACH_ARMOR1", "MUMMY_ARMOR1", "IMP_ICEAGE" ],
+    "unlockedPlants" : [ "ARMA_MINT", "WASABI_WHIP", "TALL_NUT", "PEASHOOTER", "ENDURIAN", "ELECTRIC_BLUEBERRY", "THREEPEATER", "MELON_PULT", "ENLIGHTEN_MINT", "PRIMAL_POTATO_MINE", "ICE_SHROOM", "SQUASH", "HYPNO_SHROOM", "ICEBERG_LETTUCE", "KIWIBEAST", "GARLIC", "PEPPER_PULT", "ENFORCE_MINT", "WINTER_MELON", "GOLD_BLOOM", "PRIMAL_SUNFLOWER", "CAT_TAIL_MINT", "JALAPENO", "APPEASE_MINT", "KERNEL_PULT", "SNOW_PEA", "GRAPESHOT", "LILY_PAD", "CABBAGE_PULT", "CHOMPER", "POTATO_MINE", "GRAVE_BUSTER", "FIRE_PEASHOOTER", "EXPLODE_O_NUT", "SEA_SHROOM", "MEGA_GATLING_PEA", "MAGNET_SHROOM", "STARFRUIT", "SUNFLOWER", "DOOM_SHROOM", "BOMBARD_MINT", "ENCHANT_MINT", "BONK_CHOY", "BOWLING_BULB", "PUFF_SHROOM", "SPLIT_PEA", "TORCHWOOD", "CITRON", "PEA_POD", "SUN_BEAN", "TWIN_SUNFLOWER", "PUMPKIN", "CACTUS", "HOT_POTATO", "CAULIPOWER", "WALL_NUT", "CAT_TAIL", "PHAT_BEET", "SWEET_POTATO", "PIERCE_MINT", "REINFORCE_MINT", "GOO_PEASHOOTER", "SUN_SHROOM", "IMITATER", "TANGLE_KELP", "ROTOBAGA", "REPEATER", "FUME_SHROOM", "CHERRY_BOMB" ],
+    "seenZombies" : [ "GARGANTUAR_BASIC", "DARK_JUGGLER", "TUTORIAL_ARMOR4", "IMP_ICEAGE", "ZOMBOTANY_WALLNUT", "DARK_ARMOR1", "BEACH_SURFER", "WEASEL_HOARDER", "CRYSTAL_SKULL", "GARGANTUAR_ICEAGE", "IMP_BEACH", "DARK_ARMOR2", "NEWSPAPER", "ICEAGE_HUNTER", "FOOTBALL", "DARK_DEFAULT", "ALLSTAR", "PROSPECTOR", "BEACH_ARMOR1", "ZOMBOTANY_SQUASH", "CAMEL", "LOSTCITY_JANE", "MUMMY_ARMOR2", "WEASEL", "TUTORIAL_FLAG", "TROGLOBITE", "TUTORIAL_DEFAULT", "MUMMY_ARMOR4", "ARCADE", "ZOMBOSS_DARK", "ZOMBOTANY_PEASHOOTER", "PIANO", "IMP_DARK", "IMP_DRAGON", "GARGANTUAR_BEACH", "BEACH_DEFAULT", "RA", "MUMMY_ARMOR1", "ZOMBOSS_PIRATE", "ICEAGE_ARMOR2", "DARK_ARMOR4", "WIZARD", "GARGANTUAR_DARK", "BEACH_FAST_SWIMMER", "EXPLORER", "GARGANTUAR_EGYPT", "IMP_TUTORIAL", "TOMB_RAISER", "BEACH_FISHERMAN", "PHARAOH", "ZOMBOSS_EGYPT", "ZOMBOSS_COWBOY", "TUTORIAL_ARMOR2", "ICEAGE_DEFAULT", "MUMMY_DEFAULT", "BEACH_ARMOR2", "TUTORIAL_ARMOR1", "ZOMBOTANY_JALAPENO", "DARK_KING", "DARK_ARMOR3", "ICEAGE_ARMOR1", "IMP_EGYPT", "BEACH_SNORKEL", "ICEAGE_ARMOR3", "BEACH_OCTOPUS", "DODO" ],
     "seedPackets" : { },
     "plantLevels" : { },
     "greenhouseBoosts" : [ ]
@@ -190,14 +190,119 @@
     "soundVolume" : 15
   },
   "newsState" : {
-    "news" : [ ]
+    "news" : [ {
+      "text" : "New zombie spotted: TUTORIAL_FLAG!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: TUTORIAL_FLAG!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: ICEAGE_ARMOR1!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: ICEAGE_ARMOR1!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: ICEAGE_ARMOR3!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: ICEAGE_ARMOR3!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: DARK_ARMOR1!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: DARK_ARMOR1!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: DARK_ARMOR3!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: DARK_ARMOR3!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: GARGANTUAR_DARK!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: GARGANTUAR_DARK!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: TROGLOBITE!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: TROGLOBITE!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: DODO!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: DODO!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: WEASEL!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: WEASEL!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: WIZARD!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: WIZARD!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: ZOMBOSS_COWBOY!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: ZOMBOSS_COWBOY!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: ZOMBOTANY_JALAPENO!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: ZOMBOTANY_JALAPENO!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: ALLSTAR!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: ALLSTAR!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: FOOTBALL!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: FOOTBALL!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: IMP_DRAGON!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: IMP_DRAGON!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: ARCADE!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: ARCADE!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: LOSTCITY_JANE!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: LOSTCITY_JANE!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: CRYSTAL_SKULL!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: CRYSTAL_SKULL!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: PROSPECTOR!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: PROSPECTOR!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: PIANO!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: PIANO!\n2026/09/02  07:11"
+    }, {
+      "text" : "New zombie spotted: NEWSPAPER!",
+      "read" : false,
+      "timestamp" : 1788320475327,
+      "formattedText" : "New zombie spotted: NEWSPAPER!\n2026/09/02  07:11"
+    } ]
   },
   "shopDaily" : {
     "offerPlant" : null,
     "offerDate" : null,
     "purchased" : false,
-    "forToday" : false,
-    "availableToday" : false
+    "availableToday" : false,
+    "forToday" : false
   },
   "stayLoggedIn" : true,
   "questState" : null
