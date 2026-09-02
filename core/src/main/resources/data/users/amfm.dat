@@ -137,8 +137,8 @@
       "empty" : false,
       "readyForPlanting" : false
     } ] ],
-    "numberOfUnlockedPots" : 12,
-    "numberOfLockedPots" : 0
+    "numberOfLockedPots" : 0,
+    "numberOfUnlockedPots" : 12
   },
   "appStats" : {
     "difficultyLevel" : 3,
@@ -826,8 +826,8 @@
     "offerPlant" : "WINTER_MELON",
     "offerDate" : "2026-09-02",
     "purchased" : false,
-    "availableToday" : true,
-    "forToday" : true
+    "forToday" : true,
+    "availableToday" : true
   },
   "stayLoggedIn" : true,
   "questState" : {
@@ -852,9 +852,9 @@
           "n" : 0
         },
         "active" : false,
+        "formattedDescription" : "Win without losing more than 0 plants",
         "formattedTitle" : "Economic Herbivore",
-        "runtimeState" : { },
-        "formattedDescription" : "Win without losing more than 0 plants"
+        "runtimeState" : { }
       }, {
         "id" : "story_speed",
         "title" : "Speed Run",
@@ -873,9 +873,9 @@
         },
         "parameters" : { },
         "active" : false,
+        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave",
         "formattedTitle" : "Speed Run",
-        "runtimeState" : { },
-        "formattedDescription" : "Kill 10 zombies within 30 seconds of the first wave"
+        "runtimeState" : { }
       }, {
         "id" : "epic_defense",
         "title" : "Master of Defense",
@@ -894,9 +894,9 @@
         },
         "parameters" : { },
         "active" : false,
+        "formattedDescription" : "End a level with exactly 0 sun",
         "formattedTitle" : "Master of Defense",
-        "runtimeState" : { },
-        "formattedDescription" : "End a level with exactly 0 sun"
+        "runtimeState" : { }
       }, {
         "id" : "epic_night_day",
         "title" : "Day or Night",
@@ -915,9 +915,9 @@
         },
         "parameters" : { },
         "active" : false,
+        "formattedDescription" : "Win a day level using only mushrooms",
         "formattedTitle" : "Day or Night",
-        "runtimeState" : { },
-        "formattedDescription" : "Win a day level using only mushrooms"
+        "runtimeState" : { }
       }, {
         "id" : "epic_lawnmower",
         "title" : "Lawnmower Time",
@@ -938,9 +938,9 @@
           "n" : 20
         },
         "active" : true,
+        "formattedDescription" : "Kill at least 20 zombies with lawnmowers",
         "formattedTitle" : "Lawnmower Time",
-        "runtimeState" : { },
-        "formattedDescription" : "Kill at least 20 zombies with lawnmowers"
+        "runtimeState" : { }
       }, {
         "id" : "story_chapter_hunt_ANCIENT_EGYPT",
         "title" : "Chapter Hunter",
@@ -961,9 +961,9 @@
           "chapter" : "ANCIENT_EGYPT"
         },
         "active" : false,
+        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT",
         "formattedTitle" : "Chapter Hunter",
-        "runtimeState" : { },
-        "formattedDescription" : "Defeat 50 zombies from ANCIENT_EGYPT"
+        "runtimeState" : { }
       }, {
         "id" : "story_chapter_hunt_FROSTBITE_CAVES",
         "title" : "Chapter Hunter",
@@ -984,9 +984,9 @@
           "chapter" : "FROSTBITE_CAVES"
         },
         "active" : true,
+        "formattedDescription" : "Defeat 50 zombies from FROSTBITE_CAVES",
         "formattedTitle" : "Chapter Hunter",
-        "runtimeState" : { },
-        "formattedDescription" : "Defeat 50 zombies from FROSTBITE_CAVES"
+        "runtimeState" : { }
       }, {
         "id" : "daily_kill_family_1788318304526",
         "title" : "Family Slaughter",
@@ -1007,12 +1007,12 @@
           "family" : "ENLIGHTEN_MINT"
         },
         "active" : true,
+        "formattedDescription" : "Kill zombies using only ENLIGHTEN_MINT plants",
         "formattedTitle" : "Family Slaughter",
         "runtimeState" : {
           "familyViolated" : true,
           "anyKill" : true
-        },
-        "formattedDescription" : "Kill zombies using only ENLIGHTEN_MINT plants"
+        }
       }, {
         "id" : "daily_streak_1788318304528",
         "title" : "Win Streak",
@@ -1031,9 +1031,9 @@
         },
         "parameters" : { },
         "active" : true,
+        "formattedDescription" : "Win 5 levels in a row on maximum difficulty",
         "formattedTitle" : "Win Streak",
-        "runtimeState" : { },
-        "formattedDescription" : "Win 5 levels in a row on maximum difficulty"
+        "runtimeState" : { }
       }, {
         "id" : "daily_sun_1788318304528",
         "title" : "Daily Sun Catcher",
@@ -1054,16 +1054,16 @@
           "sun_amount" : 3000
         },
         "active" : false,
+        "formattedDescription" : "Collect 3000 sun in one day",
         "formattedTitle" : "Daily Sun Catcher",
-        "runtimeState" : { },
-        "formattedDescription" : "Collect 3000 sun in one day"
+        "runtimeState" : { }
       } ],
       "lastDailyRefresh" : "2026-09-02",
       "consecutiveMaxDifficultyWins" : 0,
       "currentChapter" : "ANCIENT_EGYPT",
       "currentDifficulty" : 3,
       "isDayLevel" : true,
-      "timeUntilReset" : "1h 31m"
+      "timeUntilReset" : "1h 20m"
     }
   }
 }

@@ -55,16 +55,21 @@ public class WaveManager {
             return;
         }
 
+        // تنظیمات > سرعت پیشروی: هرچه AppStatus.getGameSpeed() بیشتر باشد (۱ تا ۳)،
+        // زمان‌سنج‌های موج (تأخیر شروع، فاصله‌ی اسپان زامبی‌ها، انتظار بین موج‌ها) سریع‌تر
+        // پیش می‌روند و در نتیجه موج بعدی زودتر از راه می‌رسد.
+        float scaledDelta = delta * AppStatus.getGameSpeed();
+
         if (!spawning && !waitingForHP) {
-            checkAndBeginWave(delta);
+            checkAndBeginWave(scaledDelta);
         }
 
         if (spawning) {
-            updateSpawning(delta, engine);
+            updateSpawning(scaledDelta, engine);
         }
 
         if (waitingForHP) {
-            updateWaitingForHP(delta);
+            updateWaitingForHP(scaledDelta);
         }
     }
 
